@@ -493,7 +493,7 @@ namespace GHL {
 	/// set current index buffer
 	void GHL_CALL RenderOpenGL::SetIndexBuffer(const IndexBuffer* buf) {
 		if (buf==0) {
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
+			glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB,0);
 			CHECK_GL_ERROR
 			return;
 		}
@@ -512,7 +512,7 @@ namespace GHL {
 	/// set current vertex buffer
 	void GHL_CALL RenderOpenGL::SetVertexBuffer(const VertexBuffer* buf) {
 		if (buf==0) {
-			glBindBuffer(GL_ARRAY_BUFFER,0);
+			glBindBufferARB(GL_ARRAY_BUFFER_ARB,0);
 			CHECK_GL_ERROR
 			return;
 		}
