@@ -29,10 +29,10 @@ namespace GHL {
 		GLuint m_framebuffer;
 		GLuint m_depth_renderbuffer;
 	public:
-		RenderTargetOpenGL(RenderOpenGL* parent,UInt32 w,UInt32 h,bool depth);
+		RenderTargetOpenGL(RenderOpenGL* parent,UInt32 w,UInt32 h,TextureFormat fmt,bool depth);
 		~RenderTargetOpenGL();
 		
-		void bind();
+		void bind() const;
 		static void unbind();
 		
 		bool check() const;
@@ -45,6 +45,8 @@ namespace GHL {
 		virtual	bool GHL_CALL HaveDepth() const { return m_have_depth;}
 		/// get texture
 		virtual Texture* GHL_CALL GetTexture() const;
+		/// 
+		virtual void GHL_CALL GetPixels(UInt32 x,UInt32 y,UInt32 w,UInt32 h,Byte* data);
 		/// release
 		virtual void GHL_CALL Release() ;
 		

@@ -34,6 +34,8 @@ namespace GHL
 	{
 		TEXTURE_FORMAT_RGB,		///< r,g,b channels
 		TEXTURE_FORMAT_RGBA,	///< r,g,b,alpha channels
+		TEXTURE_FORMAT_565,		///< 5-6-5
+		TEXTURE_FORMAT_4444		///< 4-4-4-4
 	};
 
 
@@ -89,8 +91,6 @@ namespace GHL
 
 		/// set texture pixels
 		virtual void GHL_CALL SetData(UInt32 x,UInt32 y,UInt32 w,UInt32 h,const Byte* data,UInt32 level=0) = 0;
-		/// get texture pixels
-		virtual void GHL_CALL GetData(UInt32 x,UInt32 y,UInt32 w,UInt32 h,Byte* data,UInt32 level=0) = 0;
 		/// generate mipmaps
 		virtual void GHL_CALL GenerateMipmaps() = 0;
 	};

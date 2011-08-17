@@ -10,6 +10,8 @@
 #include "shader_glsl.h"
 #include "render_opengl.h"
 
+#ifndef GHL_SHADERS_UNSUPPORTED
+
 namespace GHL {
 
 	VertexShaderGLSL::VertexShaderGLSL(RenderOpenGL* parent,GLhandleARB handle_) : m_parent(parent),m_handle(handle_) {
@@ -93,3 +95,6 @@ namespace GHL {
 	}
 	
 }
+
+
+#endif /*GHL_SHADERS_UNSUPPORTED*/

@@ -38,6 +38,7 @@ namespace GHL {
 		UInt32 	m_width;
 		UInt32	m_height;
 		RenderTargetImpl* m_scene_target;
+		bool	m_scene_started;
 #ifdef GHL_DEBUG
 		void TextureCreated(const Texture*);
 		bool CheckTexture(const Texture*);
@@ -46,6 +47,7 @@ namespace GHL {
 		bool CheckRenderTarget(const RenderTarget*);
 		void RenderTargetReleased(const RenderTarget*);
 #endif
+		const Texture*	m_current_texture;
 	public:
 		RenderImpl(UInt32 w,UInt32 h);
 		virtual ~RenderImpl();

@@ -48,7 +48,7 @@ namespace GHL
 		void ReleaseFragmentShader(FragmentShaderGLSL* fs);
 		void ReleaseShaderProgram(ShaderProgramGLSL* sp);
 #endif
-		
+		void RestoreTexture();
 		/// Render impl
 		
 		/// clear scene
@@ -104,7 +104,7 @@ namespace GHL
 		virtual void GHL_CALL DrawPrimitivesFromMemory(PrimitiveType type,VertexType v_type,const void* vertices,UInt32 v_amount,const UInt16* indexes,UInt32 prim_amoun);
 		
 			
-		virtual RenderTarget* GHL_CALL CreateRenderTarget(UInt32 w,UInt32 h,bool depth);
+		virtual RenderTarget* GHL_CALL CreateRenderTarget(UInt32 w,UInt32 h,TextureFormat fmt,bool depth);
 		
 		
 		virtual VertexShader* GHL_CALL CreateVertexShader(DataStream* ds) ;

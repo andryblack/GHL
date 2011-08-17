@@ -26,6 +26,8 @@ namespace GHL {
 		virtual	bool GHL_CALL HaveDepth() const = 0;
 		/// get texture
 		virtual Texture* GHL_CALL GetTexture() const = 0;
+		/// read pixels
+		virtual void GHL_CALL GetPixels(UInt32 x,UInt32 y,UInt32 w,UInt32 h,Byte* data) = 0;
 		/// release
 		virtual void GHL_CALL Release() = 0;
 	};

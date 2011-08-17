@@ -33,6 +33,8 @@ namespace GHL {
 	m_width(w),m_height(h),m_sfont_texture(0)
     {
         m_scene_target = 0;
+		m_current_texture = 0;
+		m_scene_started = false;
     }
 	
     RenderImpl::~RenderImpl()
@@ -47,20 +49,24 @@ namespace GHL {
 	
     /// Begin graphics scene (frame)
     void GHL_CALL RenderImpl::BeginScene(RenderTarget* target) {
-        ResetRenderState();
+		assert(!m_scene_started);
         m_scene_target = static_cast<RenderTargetImpl*>(target);
         SetViewport(0,0,GetWidth(),GetHeight());
 		if (m_scene_target) {
 			m_scene_target->BeginScene(this);
 		}
+		ResetRenderState();
+        m_scene_started = true;
     }
 	
     /// End graphics scene (frame)
     void GHL_CALL RenderImpl::EndScene()  {
+		assert(m_scene_started);
 		if (m_scene_target) {
 			m_scene_target->EndScene(this);
 		}
         m_scene_target = 0;
+		m_scene_started = false;
     }
 	
 	
@@ -112,8 +118,9 @@ namespace GHL {
 	
     void GHL_CALL RenderImpl::DebugDrawText(Int32 x, Int32 y, const char *text) {
         if (m_sfont_texture) {
+			const Texture* oldTexture = m_current_texture;
             SetTexture(m_sfont_texture);
-            Vertex vtxbuf[128];
+            static Vertex vtxbuf[128];
             static const UInt16 indxbuf[] = {
                 0,1,2,2,3,0,
                 0+4*1,1+4*1,2+4*1,2+4*1,3+4*1,0+4*1,
@@ -198,6 +205,7 @@ namespace GHL {
                 chars = 0;
                 v = vtxbuf;
             }
+			SetTexture(oldTexture);
         }
     }
 	

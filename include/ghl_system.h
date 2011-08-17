@@ -17,6 +17,12 @@ namespace GHL {
 	struct System {
 		///
 		virtual void GHL_CALL Exit() = 0;
+		///
+		virtual void GHL_CALL SwapBuffers() = 0;
+		///
+		virtual void GHL_CALL ShowKeyboard() = 0;
+		///
+		virtual void GHL_CALL HideKeyboard() = 0;
 	};
 }
 

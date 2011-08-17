@@ -38,6 +38,7 @@ namespace GHL
 	{
 		PRIMITIVE_TYPE_TRIANGLES,		///< triangles
 		PRIMITIVE_TYPE_TRIANGLE_STRIP,	///< tringle strip
+		PRIMITIVE_TYPE_TRIANGLE_FAN,	///< tringle fan
 	};
 
 	/// vertex data
@@ -218,7 +219,7 @@ namespace GHL
 		/// draw primitives from memory
 		virtual void GHL_CALL DrawPrimitivesFromMemory(PrimitiveType type,VertexType v_type,const void* vertices,UInt32 v_amount,const UInt16* indexes,UInt32 prim_amount) = 0;
 		
-		virtual RenderTarget* GHL_CALL CreateRenderTarget(UInt32 w,UInt32 h,bool depth) = 0;
+		virtual RenderTarget* GHL_CALL CreateRenderTarget(UInt32 w,UInt32 h,TextureFormat fmt,bool depth) = 0;
 		
 		virtual VertexShader* GHL_CALL CreateVertexShader(DataStream* ds) = 0;
 		virtual FragmentShader* GHL_CALL CreateFragmentShader(DataStream* ds) = 0;

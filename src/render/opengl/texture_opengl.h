@@ -71,8 +71,6 @@ namespace GHL {
 		
 		/// set texture pixels
 		virtual void GHL_CALL SetData(UInt32 x,UInt32 y,UInt32 w,UInt32 h,const Byte* data,UInt32 level);
-		/// get texture pixels
-		virtual void GHL_CALL GetData(UInt32 x,UInt32 y,UInt32 w,UInt32 h,Byte* data,UInt32 level);
 		/// generate mipmaps
 		virtual void GHL_CALL GenerateMipmaps();
 	};

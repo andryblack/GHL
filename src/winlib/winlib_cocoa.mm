@@ -1,0 +1,456 @@
+//
+//  winlib_cocoa.m
+//  SR
+//
+//  Created by Андрей Куницын on 03.02.11.
+//  Copyright 2011 andryblack. All rights reserved.
+//
+
+
+#include "../GHL/render/opengl/render_opengl.h"
+
+#import "winlib_cocoa.h"
+
+#import <Cocoa/Cocoa.h>
+
+#include "winlib_application.h"
+#include "winlib_settings.h"
+
+#include "../GHL/ghl_system.h"
+#include "../GHL/vfs/vfs_cocoa.h"
+#include "../GHL/image/image_decoders.h"
+#include "../GHL/sound/openal/ghl_sound_openal.h"
+
+
+class SystemCocoa : public GHL::System {
+public:
+	virtual void GHL_CALL Exit() {
+		[[NSApplication sharedApplication] terminate:nil];
+	}
+};
+
+
+
+@implementation WinLibWindow
+
+- (BOOL)canBecomeKeyWindow
+{
+	return YES;
+}
+
+- (BOOL) acceptsFirstResponder
+{
+    // We want this view to be able to receive key events
+    return YES;
+}
+
+- (void)keyDown:(NSEvent *)event {
+	unichar c = [[event charactersIgnoringModifiers] characterAtIndex:0];
+	switch (c) {
+		case 27:
+			[self close];
+			return;
+	}
+	[super keyDown:event];
+}
+
+- (BOOL)isMainWindow
+{
+	return YES;
+}
+
+- (void)close {
+	NSLog(@"close");
+	[super close];
+	[[NSApplication sharedApplication] terminate:self];
+}
+
+
+@end
+
+
+@implementation WinLibFSView
+
+- (void)drawRect:(NSRect)dirtyRect {
+	[[NSColor blackColor] set];
+	[NSBezierPath fillRect: dirtyRect];
+}
+
+@end
+
+
+@implementation WinLibOpenGLView
+
+- (id) initWithFrame:(NSRect)frameRect pixelFormat:(NSOpenGLPixelFormat *)format
+{
+	self = [super initWithFrame:frameRect pixelFormat:format];
+	if (self) {
+		
+	}
+	m_render = 0;
+	m_loaded = false;
+	return self;
+}
+-(void)setApplication:(WinLibAppDelegate*) app {
+	m_application = app;
+}
+
+static GHL::Key translate_key(unichar c,unsigned short kk) {
+	GHL::Key key = GHL::KEY_NONE;
+	switch (c) {
+		case NSDownArrowFunctionKey:
+			key = GHL::KEY_DOWN;
+			break;
+		case NSUpArrowFunctionKey:
+			key = GHL::KEY_UP;
+			break;
+		case NSLeftArrowFunctionKey:
+			key = GHL::KEY_LEFT;
+			break;
+		case NSRightArrowFunctionKey:
+			key = GHL::KEY_RIGHT;
+			break;
+		default:
+			switch (kk) {
+				case 0x12: key = GHL::KEY_1; break;
+				case 0x13: key = GHL::KEY_2; break;
+				case 0x14: key = GHL::KEY_3; break;
+				case 0x15: key = GHL::KEY_4; break;
+				case 0x17: key = GHL::KEY_5; break;
+				case 0x16: key = GHL::KEY_6; break;
+				case 0x1a: key = GHL::KEY_7; break;
+				case 0x1c: key = GHL::KEY_8; break;
+				case 0x19: key = GHL::KEY_9; break;
+				case 0x1d: key = GHL::KEY_0; break;	
+					
+				case 0x1b: key = GHL::KEY_MINUS; break;		
+				case 0x18: key = GHL::KEY_EQUALS; break;
+				
+				case 0x21: key = GHL::KEY_LBRACKET; break;
+				case 0x1e: key = GHL::KEY_RBRACKET; break;
+					
+				case 0x29: key = GHL::KEY_SEMICOLON; break;	
+				case 0x27: key = GHL::KEY_SEMICOLON; break;	
+					
+				case 0x32: key = GHL::KEY_APOSTROPHE; break;	
+					
+					
+					
+				case 0x00: key = GHL::KEY_A; break;	
+				case 0x0b: key = GHL::KEY_B; break;		
+				case 0x08: key = GHL::KEY_C; break;	
+				case 0x02: key = GHL::KEY_D; break;	
+				case 0x0e: key = GHL::KEY_E; break;	
+				case 0x03: key = GHL::KEY_F; break;	
+				case 0x05: key = GHL::KEY_G; break;	
+				case 0x04: key = GHL::KEY_H; break;	
+				case 0x22: key = GHL::KEY_I; break;	
+				case 0x26: key = GHL::KEY_J; break;	
+				case 0x28: key = GHL::KEY_K; break;	
+				case 0x25: key = GHL::KEY_L; break;	
+				case 0x2e: key = GHL::KEY_M; break;	
+				case 0x2d: key = GHL::KEY_N; break;	
+				case 0x1f: key = GHL::KEY_O; break;	
+				case 0x23: key = GHL::KEY_P; break;	
+				case 0x0c: key = GHL::KEY_Q; break;	
+				case 0x0f: key = GHL::KEY_R; break;	
+				case 0x01: key = GHL::KEY_S; break;	
+				case 0x11: key = GHL::KEY_T; break;	
+				case 0x20: key = GHL::KEY_U; break;	
+				case 0x09: key = GHL::KEY_V; break;	
+				case 0x0d: key = GHL::KEY_W; break;	
+				case 0x07: key = GHL::KEY_X; break;
+				case 0x10: key = GHL::KEY_Y; break;
+				case 0x06: key = GHL::KEY_Z; break;
+				
+				case 0x30: key = GHL::KEY_TAB; break;	
+				case 0x31: key = GHL::KEY_SPACE; break;
+				case 0x24: key = GHL::KEY_ENTER; break;
+				case 0x33: key = GHL::KEY_BACKSPACE; break;
+				case 0x35: key = GHL::KEY_ESCAPE; break;
+					
+					
+				default:
+					break;
+			};
+			break;
+	}
+	return key;
+}
+
+- (void)keyDown:(NSEvent *)event {
+	unichar c = [[event charactersIgnoringModifiers] characterAtIndex:0];
+	unsigned short kk = [event keyCode];
+	GHL::Key key = translate_key(c,kk);
+	if (key==GHL::KEY_NONE) {
+		[super keyDown:event];
+	} else {
+		[m_application getApplication]->OnKeyDown(key);
+	}
+}
+- (void)keyUp:(NSEvent *)event {
+	unichar c = [[event charactersIgnoringModifiers] characterAtIndex:0];
+	unsigned short kk = [event keyCode];
+	GHL::Key key = translate_key(c,kk);
+	if (key==GHL::KEY_NONE) {
+		[super keyDown:event];
+	} else {
+		[m_application getApplication]->OnKeyUp(key);
+	}
+}
+
+- (BOOL) acceptsFirstResponder
+{
+    // We want this view to be able to receive key events
+    return YES;
+}
+
+- (BOOL)canBecomeKeyView {
+	return YES;
+}
+
+- (void)prepareOpenGL {
+	/// @todo create render there
+	NSLog( @"prepareOpenGL" ); 
+	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+	[[self openGLContext] makeCurrentContext];
+	m_render = new GHL::RenderOpenGL(GHL::UInt32([self bounds].size.width),
+									 GHL::UInt32([self bounds].size.height));
+	m_render->RenderInit();
+	[m_application getApplication]->SetRender(m_render);
+	if ([m_application getApplication]->Load()) {
+		m_timer = [NSTimer scheduledTimerWithTimeInterval: 1.0f/200.0f target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
+		[m_timer fire];
+		m_loaded = true;
+	}
+	::gettimeofday(&m_timeval,0);
+	[pool drain];
+	//[pool release];
+}
+
+- (void)drawRect:(NSRect)dirtyRect {
+    (void)dirtyRect;
+	if (m_loaded) {
+		::timeval time;
+		::gettimeofday(&time,0);
+		GHL::UInt32 dt = static_cast<GHL::UInt32>((time.tv_sec - m_timeval.tv_sec)*1000000 + time.tv_usec - m_timeval.tv_usec);
+		m_timeval = time;
+		
+		[[self openGLContext] makeCurrentContext];
+		m_render->ResetRenderState();
+		WinLib::Application* app = [m_application getApplication];
+		app->OnFrame(dt);
+		[[self openGLContext] flushBuffer];
+	}
+}
+
+- (void)timerFireMethod:(NSTimer*)theTimer {
+    (void)theTimer;
+	[self drawRect:[self bounds]];
+}
+
+-(void)dealloc {
+	if (m_timer) {
+		[m_timer release];
+	}
+	if (m_render) {
+		m_render->RenderDone();
+		delete m_render;
+		m_render = 0;
+	}
+	[super dealloc];
+}
+
+@end
+
+
+@implementation WinLibAppDelegate
+
+
+- (id)init {
+    self = [super init];
+    if (self) {
+        // Initialization code here.
+		m_system = new SystemCocoa();
+		m_appName = (NSString*)[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
+		m_vfs = new GHL::VFSCocoaImpl();
+		m_imageDecoder = new GHL::ImageDecoderImpl();
+		m_sound = 0;
+    }
+    return self;
+}
+
+-(void) initSound {
+	m_sound = new GHL::SoundOpenAL();
+	if (!m_sound->SoundInit()) {
+		delete m_sound;
+		m_sound = 0;
+	}
+}
+
+-(void) setApplication:(WinLib::Application*) app {
+	m_application = app;
+}
+
+-(WinLib::Application*) getApplication {
+	return m_application;
+}
+-(SystemCocoa*) getSystem {
+	return m_system;
+}
+
+-(GHL::VFSCocoaImpl*) getVFS {
+	return m_vfs;
+}
+-(GHL::ImageDecoderImpl*) getImageDecoder {
+	return m_imageDecoder;
+}
+-(GHL::SoundOpenAL*) getSound {
+	return m_sound;
+}
+-(NSString*) getAppName {
+	return m_appName;
+}
+
+-(void)dealloc {
+	if (m_application)
+		m_application->Release();
+	delete m_vfs;
+	delete m_imageDecoder;
+	delete m_system;
+	if (m_sound) {
+		m_sound->SoundDone();
+		delete m_sound;
+		m_sound = 0;
+	}
+	[super dealloc];
+}
+
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+    (void)aNotification;
+	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+	// Insert code here to initialize your application 
+	WinLib::Settings settings;
+	settings.width = 800;
+	settings.height = 600;
+	settings.fullscreen = false;
+	m_application->FillSettings(&settings);
+	
+	
+	[self initSound];
+	m_application->SetSound([self getSound]);
+
+	NSOpenGLPixelFormatAttribute attrs[] =
+	{
+		NSOpenGLPFADoubleBuffer,
+		NSOpenGLPFAColorSize, 24,
+		NSOpenGLPFAAlphaSize, 8,
+		NSOpenGLPFAStencilSize, 8,
+		NSOpenGLPFADepthSize, 24,
+		0
+	};
+	
+	
+	NSRect rect = NSMakeRect(0,0,settings.width,settings.height);
+	
+	NSOpenGLPixelFormat* pf = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
+	WinLibOpenGLView* gl = [[[WinLibOpenGLView alloc] initWithFrame:rect pixelFormat:pf] autorelease];
+	[gl setApplication:self];
+	NSInteger style = NSTitledWindowMask | NSClosableWindowMask;
+	if (settings.fullscreen) {
+		style = NSBorderlessWindowMask;
+		rect = [[NSScreen mainScreen] frame];
+	}
+	
+			
+		m_window = [[WinLibWindow alloc] initWithContentRect:rect
+												   styleMask:style 
+													 backing:NSBackingStoreBuffered defer:YES];
+		
+		
+		if (settings.fullscreen) {
+			NSView* fs_view = [[WinLibFSView alloc] initWithFrame:rect];
+			[gl setFrameOrigin:NSMakePoint(
+										   (NSWidth([fs_view bounds]) - NSWidth([gl frame])) / 2,
+										   (NSHeight([fs_view bounds]) - NSHeight([gl frame])) / 2
+										   )];
+			[gl setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin];
+			[m_window setOpaque:YES];
+			[m_window setHidesOnDeactivate:YES];
+			[fs_view addSubview:gl];
+			[[m_window contentView] addSubview:fs_view];
+			[m_window setLevel:NSMainMenuWindowLevel+1];
+		} else {
+			[[m_window contentView] addSubview:gl];
+		}
+		[m_window makeKeyAndOrderFront:nil];
+	
+
+	
+	[pool release];
+}
+
+- (void)applicationWillTerminate:(NSNotification *)aNotification {
+    (void)aNotification;
+	if (m_application)
+		m_application->Release();
+	m_application = 0;
+	delete m_vfs;
+	m_vfs = 0;
+	delete m_imageDecoder;
+	m_imageDecoder = 0;
+	if (m_sound) {
+		m_sound->SoundDone();
+		delete m_sound;
+		m_sound = 0;
+	}
+	if (m_window)
+		[m_window release];
+	
+}
+
+@end
+
+
+
+
+
+WINLIB_API int WINLIB_CALL WinLib_StartApplication( WinLib::Application* app , int /*argc*/, char** /*argv*/) {
+    
+	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+	[NSApplication sharedApplication];
+	WinLibAppDelegate* delegate = [[WinLibAppDelegate alloc] init];
+	[delegate setApplication:app];
+	app->SetSystem([delegate getSystem]);
+	app->SetVFS([delegate getVFS]);
+	app->SetImageDecoder([delegate getImageDecoder]);
+	
+	/// create menu
+	NSMenu * mainMenu = [[[NSMenu alloc] initWithTitle:@"MainMenu"] autorelease];
+	
+	
+	// The titles of the menu items are for identification purposes only
+	//and shouldn't be localized.
+	// The strings in the menu bar come from the submenu titles,
+	// except for the application menu, whose title is ignored at runtime.
+	NSMenuItem *item = [mainMenu addItemWithTitle:@"Apple" action:NULL keyEquivalent:@""];
+	NSMenu *submenu = [[[NSMenu alloc] initWithTitle:@"Apple"] autorelease];
+	[NSApp performSelector:@selector(setAppleMenu:) withObject:submenu];
+	
+	NSMenuItem * appItem = [submenu addItemWithTitle:[NSString stringWithFormat:@"%@ %@",
+																 NSLocalizedString(@"Quit", nil), [delegate getAppName]]
+														 action:@selector(terminate:)
+												  keyEquivalent:@"q"];
+	[appItem setTarget:NSApp];
+
+								  
+	[mainMenu setSubmenu:submenu forItem:item];
+	[NSApp setMainMenu:mainMenu];
+	
+	[NSApp setDelegate:delegate];
+	
+	[pool release];
+	[NSApp run];
+	
+	return 0;
+}

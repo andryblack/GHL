@@ -34,7 +34,11 @@ namespace GHL {
 	};
 	
 	void set_texture_stage(UInt32 stage) {
-		glActiveTexture(texture_stages[stage]);
+        static UInt32 oldStage = 1000;
+        if (oldStage!=stage) {
+            glActiveTexture(texture_stages[stage]);
+            oldStage=stage;
+        }
 	}
 	
 	static inline GLenum convert_blend(BlendFactor bf ) {
@@ -305,10 +309,16 @@ namespace GHL {
 #endif
 		delete tex;
 	}
+	
+	void RenderOpenGL::RestoreTexture() {
+		SetTexture(m_current_texture, 0);
+	}
 
 	/// set current texture
 	void GHL_CALL RenderOpenGL::SetTexture(const Texture* texture, UInt32 stage) {
 		if (stage>=2) return;
+		if (stage==0)
+			m_current_texture = texture;
 		set_texture_stage(stage);
 		//glClientActiveTexture(texture_stages[stage]);
 		if (texture) {
@@ -322,9 +332,11 @@ namespace GHL {
 				}
 #endif
 			}
+            glEnable(GL_TEXTURE_2D);
 			tex->bind();
 		} else {
 			glBindTexture(GL_TEXTURE_2D, 0);
+            glDisable(GL_TEXTURE_2D);
 		}
 		set_texture_stage(0);
 		//glClientActiveTexture(texture_stages[0]);
@@ -411,7 +423,7 @@ namespace GHL {
 			{
 				glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE0_ALPHA,_arg1);
 				glTexEnvi(GL_TEXTURE_ENV,GL_OPERAND0_ALPHA,_op1);
-				glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
+				glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE);
 			} else if (op==TEX_OP_SELECT_2) 
 			{
 				glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE0_ALPHA,_arg2);
@@ -435,6 +447,7 @@ namespace GHL {
 				glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, mode);
 			}
 		}
+		set_texture_stage(0);
 		CHECK_GL_ERROR
 	}
 	
@@ -493,7 +506,7 @@ namespace GHL {
 	/// set current index buffer
 	void GHL_CALL RenderOpenGL::SetIndexBuffer(const IndexBuffer* buf) {
 		if (buf==0) {
-			glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB,0);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
 			CHECK_GL_ERROR
 			return;
 		}
@@ -512,7 +525,7 @@ namespace GHL {
 	/// set current vertex buffer
 	void GHL_CALL RenderOpenGL::SetVertexBuffer(const VertexBuffer* buf) {
 		if (buf==0) {
-			glBindBufferARB(GL_ARRAY_BUFFER_ARB,0);
+			glBindBuffer(GL_ARRAY_BUFFER,0);
 			CHECK_GL_ERROR
 			return;
 		}
@@ -568,6 +581,9 @@ namespace GHL {
 		if (type==PRIMITIVE_TYPE_TRIANGLE_STRIP) {
 			element = GL_TRIANGLE_STRIP;
 			indexes_amount = prim_amount + 2;
+		} else if (type==PRIMITIVE_TYPE_TRIANGLE_FAN) {
+			element = GL_TRIANGLE_FAN;
+			indexes_amount = prim_amount + 2;
 		}
 		glTexCoordPointer(2, GL_FLOAT, vertex_size, &v->tx);
 		glColorPointer(4, GL_UNSIGNED_BYTE, vertex_size, v->color);
@@ -581,8 +597,10 @@ namespace GHL {
 	
 	
 	/// create render target
-	RenderTarget* GHL_CALL RenderOpenGL::CreateRenderTarget(UInt32 w,UInt32 h,bool depth) {
-		RenderTargetOpenGL* rt = new RenderTargetOpenGL(this,w,h,depth);
+	RenderTarget* GHL_CALL RenderOpenGL::CreateRenderTarget(UInt32 w,UInt32 h,TextureFormat fmt,bool depth) {
+		assert(!m_scene_started);
+		CHECK_GL_ERROR_F("before CreateRenderTarget");
+		RenderTargetOpenGL* rt = new RenderTargetOpenGL(this,w,h,fmt,depth);
 		CHECK_GL_ERROR
 		if (!rt->check()) {
 			std::cout << "rendertarget check failed" << std::endl;

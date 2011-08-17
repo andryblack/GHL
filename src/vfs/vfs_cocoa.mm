@@ -157,8 +157,13 @@ namespace GHL {
 	void GHL_CALL VFSCocoaImpl::AttachPack(DataStream* /*ds*/) {
 	}
 	/// file is exists
-	bool GHL_CALL VFSCocoaImpl::IsFileExists(const char* /*file*/) const {
-		return false;
+	bool GHL_CALL VFSCocoaImpl::IsFileExists(const char* file) const {
+		std::string filename = file;
+		for (size_t i=0;i<filename.length();i++) {
+			if (filename[i]=='\\') filename[i]='/';
+		}
+		NSString* path = [NSString stringWithUTF8String:filename.c_str()];
+		return [[NSFileManager defaultManager] fileExistsAtPath:path] == YES;
 	}
 	/// remove file
 	bool GHL_CALL VFSCocoaImpl::DoRemoveFile(const char* /*file*/) {
@@ -170,13 +175,17 @@ namespace GHL {
 	}
 	/// open file
 	DataStream* GHL_CALL VFSCocoaImpl::OpenFile(const char* file,FileOperation ot) {
+		std::string filename = file;
+		for (size_t i=0;i<filename.length();i++) {
+			if (filename[i]=='\\') filename[i]='/';
+		}
 		if (ot == FILE_READ) {
-			NSFileHandle* handle = [NSFileHandle fileHandleForReadingAtPath:[NSString stringWithUTF8String:file]];
+			NSFileHandle* handle = [NSFileHandle fileHandleForReadingAtPath:[NSString stringWithUTF8String:filename.c_str()]];
 			if (handle) {
 				return new CocoaReadFileStream(handle);
 			}
 		} else if (ot==FILE_WRITE) {
-			NSString* path = [NSString stringWithUTF8String:file];
+			NSString* path = [NSString stringWithUTF8String:filename.c_str()];
 			NSFileHandle* handle = [NSFileHandle fileHandleForWritingAtPath:path];
 			if (handle) {
 				return new CocoaWriteFileStream(handle);

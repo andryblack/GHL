@@ -14,13 +14,25 @@ namespace GHL {
 	static inline GLenum convert_int_format( TextureFormat fmt ) {
 		if (fmt==TEXTURE_FORMAT_RGB )
 			return GL_RGB;
+		if (fmt==TEXTURE_FORMAT_565)
+			return GL_RGB;
 		return GL_RGBA;
 	}
 
 	static inline GLenum convert_format( TextureFormat fmt ) {
 		if (fmt==TEXTURE_FORMAT_RGB )
 			return GL_RGB;
+		if (fmt==TEXTURE_FORMAT_565)
+			return GL_RGB;
 		return GL_RGBA;
+	}
+	
+	static inline GLenum convert_storage( TextureFormat fmt ) {
+		if (fmt==TEXTURE_FORMAT_565)
+			return GL_UNSIGNED_SHORT_5_6_5;
+		if (fmt==TEXTURE_FORMAT_4444)
+			return GL_UNSIGNED_SHORT_4_4_4_4;
+		return GL_UNSIGNED_BYTE;
 	}
 	
 	static inline GLenum convert_wrap( TextureWrapMode m ) {
@@ -46,7 +58,7 @@ namespace GHL {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexImage2D(GL_TEXTURE_2D, 0, convert_int_format(m_fmt), w, h, 0, convert_format(m_fmt), GL_UNSIGNED_BYTE, 0);
+		glTexImage2D(GL_TEXTURE_2D, 0, convert_int_format(m_fmt), w, h, 0, convert_format(m_fmt), convert_storage(m_fmt), 0);
 	}
 	
 	void TextureOpenGL::bind() const {
@@ -61,14 +73,18 @@ namespace GHL {
 	
 	void TextureOpenGL::calc_filtration_min() {
 		GLenum filter = min_filters[m_mip_filter][m_min_filter];
+		glActiveTexture(GL_TEXTURE0);
 		bind();
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+		m_parent->RestoreTexture();
 	}
 	
 	void TextureOpenGL::calc_filtration_mag() {
+		glActiveTexture(GL_TEXTURE0);
 		bind();
 		GLenum filter = min_filters[0][m_min_filter];
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+		m_parent->RestoreTexture();
 	}
 	
 	void TextureOpenGL::check_mips() {
@@ -107,13 +123,17 @@ namespace GHL {
 	
 	/// set texture wrap U
 	void GHL_CALL TextureOpenGL::SetWrapModeU(TextureWrapMode wm) {
+		glActiveTexture(GL_TEXTURE0);
 		bind();
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, convert_wrap(wm));
+		m_parent->RestoreTexture();
 	}
 	/// set texture wrap V
 	void GHL_CALL TextureOpenGL::SetWrapModeV(TextureWrapMode wm) {
+		glActiveTexture(GL_TEXTURE0);
 		bind();
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, convert_wrap(wm));
+		m_parent->RestoreTexture();
 	}
 	
 	/// set texture pixels
@@ -125,22 +145,13 @@ namespace GHL {
 #ifndef GHL_OPENGLES
 		glPixelStorei(GL_UNPACK_ROW_LENGTH,w);
 #endif
-		glTexSubImage2D(GL_TEXTURE_2D, level, x, y, w, h, convert_format(m_fmt), GL_UNSIGNED_BYTE, data);
+		glTexSubImage2D(GL_TEXTURE_2D, level, x, y, w, h, convert_format(m_fmt), convert_storage(m_fmt), data);
 		glPixelStorei(GL_UNPACK_ALIGNMENT,4);
 #ifndef GHL_OPENGLES
 		glPixelStorei(GL_UNPACK_ROW_LENGTH,0);
 #endif
+		m_parent->RestoreTexture();
 	}
-	/// get texture pixels
-	void GHL_CALL TextureOpenGL::GetData(UInt32 x,UInt32 y,UInt32 w,UInt32 h,Byte* data,UInt32 level) {
-            /// @todo
-            GHL_UNUSED(x);
-            GHL_UNUSED(y);
-            GHL_UNUSED(w);
-            GHL_UNUSED(h);
-            GHL_UNUSED(data);
-            GHL_UNUSED(level);
-        }
 	/// generate mipmaps
 	void GHL_CALL TextureOpenGL::GenerateMipmaps() {
 		/// @todo
