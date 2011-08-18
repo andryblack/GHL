@@ -5,6 +5,7 @@
 #define USE_DYNAMIC_GL_VERSION_1_2
 #define USE_DYNAMIC_GL_VERSION_1_3
 #define USE_DYNAMIC_GL_VERSION_1_4
+#define USE_DYNAMIC_GL_VERSION_1_5
 
 
 //#define USE_DYNAMIC_GL_SGIS_texture_edge_clamp
@@ -13,7 +14,7 @@
 
 //#define USE_DYNAMIC_GL_ARB_texture_env_combine
 
-#define USE_DYNAMIC_GL_ARB_vertex_buffer_object
+//#define USE_DYNAMIC_GL_ARB_vertex_buffer_object
 
 #define USE_DYNAMIC_GL_EXT_framebuffer_object
 

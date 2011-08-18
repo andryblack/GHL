@@ -173,11 +173,11 @@ namespace GHL {
 			std::cout << "!DinamicGLFeature_VERSION_1_4_Supported" << std::endl;
 			//return false;
 		}
-            
-		if (!DinamicGLFeature_ARB_vertex_buffer_object_Supported()) {
-			std::cout << "!DinamicGLFeature_ARB_vertex_buffer_object_Supported"<< std::endl;
+		if (!DinamicGLFeature_VERSION_1_5_Supported()) {
+			std::cout << "!DinamicGLFeature_VERSION_1_4_Supported" << std::endl;
 			//return false;
 		}
+            
 		if (!DinamicGLFeature_EXT_framebuffer_object_Supported()) {
 			std::cout << "!DinamicGLFeature_EXT_framebuffer_object_Supported"<< std::endl;
 			//return false;
@@ -760,7 +760,7 @@ namespace GHL {
 	
 }
 
-GHL_API GHL::Render* GHL_CALL GHL_CreateRenderOpenGL(GHL::UInt32 w,GHL::UInt32 h) {
+GHL_API GHL::RenderImpl* GHL_CALL GHL_CreateRenderOpenGL(GHL::UInt32 w,GHL::UInt32 h) {
 	GHL::RenderOpenGL* render = new GHL::RenderOpenGL(w,h);
 	if (!render->RenderInit()) {
 		delete render;
@@ -768,7 +768,7 @@ GHL_API GHL::Render* GHL_CALL GHL_CreateRenderOpenGL(GHL::UInt32 w,GHL::UInt32 h
 	}
 	return render;
 } 
-GHL_API void GHL_DestroyRenderOpenGL(GHL::Render* render_) {
+GHL_API void GHL_DestroyRenderOpenGL(GHL::RenderImpl* render_) {
 	GHL::RenderOpenGL* render = reinterpret_cast<GHL::RenderOpenGL*>(render_);
 	if (render) {
 		render->RenderDone();

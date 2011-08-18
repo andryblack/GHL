@@ -232,8 +232,14 @@ namespace GHL
 		/// get textures memory
 		virtual UInt32 GHL_CALL GetTexturesMemory() const = 0;
 	};
+	
+	
+
 
 }/*namespace*/
+
+
+
 
 
 #endif /*GHL_RENDER_H*/

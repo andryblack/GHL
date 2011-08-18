@@ -54,6 +54,15 @@ namespace GHL
 		/// get stream from memory
 		virtual DataStream* GHL_CALL CreateStreamFromMemory(Byte* data,UInt32 size) = 0;
 	};
+	
+	
+
 
 }/*namespace*/
+
+
+GHL_API GHL::VFS* GHL_CALL GHL_CreateVFS();
+GHL_API void GHL_CALL GHL_DestroyVFS(GHL::VFS* vfs);
+
+
 #endif /*GHL_VFS_H*/

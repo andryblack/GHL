@@ -85,4 +85,10 @@ namespace GHL {
 	}; 
 
 }
+
+
+GHL_API GHL::RenderImpl* GHL_CALL GHL_CreateRenderOpenGL(GHL::UInt32 w,GHL::UInt32 h);
+GHL_API void GHL_DestroyRenderOpenGL(GHL::RenderImpl* render);
+
+
 #endif /*RENDER_IMPL_H*/
