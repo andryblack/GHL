@@ -108,6 +108,125 @@ int drawGLScene(GLvoid)
     return True;    
 }
 
+
+
+static void X11_SetSizeHints( )
+{
+	XSizeHints *hints;
+
+	hints = XAllocSizeHints();
+	if ( hints ) {
+		{
+			hints->min_width = hints->max_width = GLWin.width;
+			hints->min_height = hints->max_height = GLWin.height;
+			hints->flags = PMaxSize | PMinSize;
+		}
+		if ( GLWin.fs ) {
+			hints->x = 0;
+			hints->y = 0;
+			hints->flags |= USPosition;
+		} else {
+		    /* Center it, if desired */
+		    /*if ( X11_WindowPosition( GLWin.wi, &hints->x, &hints->y, w, h) ) {
+			hints->flags |= USPosition;
+			XMoveWindow(SDL_Display, WMwindow, hints->x, hints->y);
+
+			//Flush the resize event so we don't catch it later 
+			XSync(SDL_Display, True);
+		    }*/
+		}
+		XSetWMNormalHints(GLWin.dpy,GLWin.win, hints);
+		XFree(hints);
+	}
+
+	/* Respect the window caption style */
+	if ( GLWin.fs ) {
+		bool set;
+		Atom WM_HINTS;
+
+		set = false;
+
+		/* First try to set MWM hints */
+		WM_HINTS = XInternAtom(GLWin.dpy, "_MOTIF_WM_HINTS", True);
+		if ( WM_HINTS != None ) {
+			/* Hints used by Motif compliant window managers */
+			struct {
+				unsigned long flags;
+				unsigned long functions;
+				unsigned long decorations;
+				long input_mode;
+				unsigned long status;
+			} MWMHints = { (1L << 1), 0, 0, 0, 0 };
+
+			XChangeProperty(GLWin.dpy, GLWin.win,
+			                WM_HINTS, WM_HINTS, 32,
+			                PropModeReplace,
+					(unsigned char *)&MWMHints,
+					sizeof(MWMHints)/sizeof(long));
+			set = True;
+		}
+		/* Now try to set KWM hints */
+		WM_HINTS = XInternAtom(GLWin.dpy, "KWM_WIN_DECORATION", True);
+		if ( WM_HINTS != None ) {
+			long KWMHints = 0;
+
+			XChangeProperty(GLWin.dpy, GLWin.win,
+			                WM_HINTS, WM_HINTS, 32,
+			                PropModeReplace,
+					(unsigned char *)&KWMHints,
+					sizeof(KWMHints)/sizeof(long));
+			set = True;
+		}
+		/* Now try to set GNOME hints */
+		WM_HINTS = XInternAtom(GLWin.dpy, "_WIN_HINTS", True);
+		if ( WM_HINTS != None ) {
+			long GNOMEHints = 0;
+
+			XChangeProperty(GLWin.dpy, GLWin.win,
+			                WM_HINTS, WM_HINTS, 32,
+			                PropModeReplace,
+					(unsigned char *)&GNOMEHints,
+					sizeof(GNOMEHints)/sizeof(long));
+			set = True;
+		}
+		/* Finally set the transient hints if necessary */
+		if (!set) {
+		    XSetTransientForHint(GLWin.dpy,GLWin.win,None);
+		}
+	} else {
+		bool set;
+		Atom WM_HINTS;
+
+		/* We haven't modified the window manager hints yet */
+		set = False;
+
+		/* First try to unset MWM hints */
+		WM_HINTS = XInternAtom(GLWin.dpy, "_MOTIF_WM_HINTS", True);
+		if ( WM_HINTS != None ) {
+			XDeleteProperty(GLWin.dpy, GLWin.win, WM_HINTS);
+			set = True;
+		}
+		/* Now try to unset KWM hints */
+		WM_HINTS = XInternAtom(GLWin.dpy, "KWM_WIN_DECORATION", True);
+		if ( WM_HINTS != None ) {
+			XDeleteProperty(GLWin.dpy, GLWin.win, WM_HINTS);
+			set = True;
+		}
+		/* Now try to unset GNOME hints */
+		WM_HINTS = XInternAtom(GLWin.dpy, "_WIN_HINTS", True);
+		if ( WM_HINTS != None ) {
+			XDeleteProperty(GLWin.dpy, GLWin.win, WM_HINTS);
+			set = True;
+		}
+		/* Finally unset the transient hints if necessary */
+		if ( ! set ) {
+			/* NOTE: Does this work? */
+			XSetTransientForHint(GLWin.dpy, GLWin.win, None);
+		}
+	}
+}
+
+
 /* function to release/destroy our resources and restoring the old desktop */
 GLvoid killGLWindow(GLvoid)
 {
@@ -231,6 +350,9 @@ Bool createGLWindow(char* title, int width, int height,
         XMapRaised(GLWin.dpy, GLWin.win);
     }       
     
+    X11_SetSizeHints();
+
+    
 #ifdef HAVE_XF86VMODE    
     XFree(modes);
 #endif
@@ -265,6 +387,8 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int argc, cha
     app->FillSettings(&settings);
 
     GLWin.application = app;
+    GLWin.width = settings.width;
+    GLWin.height = settings.height;
 
 
     XEvent event;
