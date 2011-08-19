@@ -23,33 +23,33 @@
 #ifndef MEMORY_STREAM_H
 #define MEMORY_STREAM_H
 
-#include <ghl_data_stream.h>
+#include "ghl_data_stream.h"
 
-namespace GHL 
+namespace GHL
 {
 
-	class MemoryStream : public DataStream
-	{
-		protected:
-			Byte*	m_data;
-			UInt32	m_size;
-			UInt32	m_pos;
-		public:
-			MemoryStream(Byte* data,UInt32 size);
-			virtual ~MemoryStream();
-			
-			Byte* GetData() { return m_data;}
-			
-			virtual UInt32 GHL_CALL Read(Byte* dest,UInt32 bytes) ;
-			virtual UInt32 GHL_CALL Write(const Byte* src,UInt32 bytes) ;
-			virtual UInt32 GHL_CALL Tell() const;
-			virtual	bool GHL_CALL Seek(Int32 offset,FileSeekType st) ;
-			virtual bool GHL_CALL Eof() const;
-			virtual void GHL_CALL Release() ;
-			
-	};
-	
-	
+    class MemoryStream : public DataStream
+    {
+        protected:
+            Byte*	m_data;
+            UInt32	m_size;
+            UInt32	m_pos;
+        public:
+            MemoryStream(Byte* data,UInt32 size);
+            virtual ~MemoryStream();
+
+            Byte* GetData() { return m_data;}
+
+            virtual UInt32 GHL_CALL Read(Byte* dest,UInt32 bytes) ;
+            virtual UInt32 GHL_CALL Write(const Byte* src,UInt32 bytes) ;
+            virtual UInt32 GHL_CALL Tell() const;
+            virtual	bool GHL_CALL Seek(Int32 offset,FileSeekType st) ;
+            virtual bool GHL_CALL Eof() const;
+            virtual void GHL_CALL Release() ;
+
+    };
+
+
 }
 
 #endif /*MEMORY_STREAM_H*/

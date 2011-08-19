@@ -26,40 +26,41 @@
 #include "ghl_types.h"
 #include "ghl_api.h"
 
-namespace GHL 
+namespace GHL
 {
 
-	/// image color format
-	enum ImageFormat
-	{
-		IMAGE_FORMAT_GRAY,		///< grayscale
-		IMAGE_FORMAT_RGB,		///< r,g,b channels
-		IMAGE_FORMAT_RGBA,		///< r,g,b,alpha channels
-	};
+    /// image color format
+    enum ImageFormat
+    {
+        IMAGE_FORMAT_UNKNOWN,   ///< unknown
+        IMAGE_FORMAT_GRAY,		///< grayscale
+        IMAGE_FORMAT_RGB,		///< r,g,b channels
+        IMAGE_FORMAT_RGBA		///< r,g,b,alpha channels
+    };
 
-	/// image object interface
-	struct Image
-	{
-		/// release image
-		virtual void GHL_CALL Release() = 0;
-		/// get image width
-		virtual UInt32 GHL_CALL GetWidth() const = 0;
-		/// get image height
-		virtual UInt32 GHL_CALL GetHeight() const = 0;
-		/// get image format
-		virtual ImageFormat GHL_CALL GetFormat() const = 0;
-		/// get image data
-		virtual const Byte* GHL_CALL GetData() const = 0;
-		/// convert image to format
-		virtual void GHL_CALL Convert(ImageFormat fmt) = 0;
-		/// set alpha from another image
-		/**
-		 * @arg img image with format IMAGE_FORMAT_GRAY or IMAGE_FORMAT_RGBA
-		 */
-		virtual void GHL_CALL SetAlpha(const Image* img) = 0;
-		/// create sub image
-		virtual Image* GHL_CALL SubImage(UInt32 x,UInt32 y,UInt32 w,UInt32 h) const = 0;
-	};
+    /// image object interface
+    struct Image
+    {
+        /// release image
+        virtual void GHL_CALL Release() = 0;
+        /// get image width
+        virtual UInt32 GHL_CALL GetWidth() const = 0;
+        /// get image height
+        virtual UInt32 GHL_CALL GetHeight() const = 0;
+        /// get image format
+        virtual ImageFormat GHL_CALL GetFormat() const = 0;
+        /// get image data
+        virtual const Byte* GHL_CALL GetData() const = 0;
+        /// convert image to format
+        virtual void GHL_CALL Convert(ImageFormat fmt) = 0;
+        /// set alpha from another image
+        /**
+         * @arg img image with format IMAGE_FORMAT_GRAY or IMAGE_FORMAT_RGBA
+         */
+        virtual void GHL_CALL SetAlpha(const Image* img) = 0;
+        /// create sub image
+        virtual Image* GHL_CALL SubImage(UInt32 x,UInt32 y,UInt32 w,UInt32 h) const = 0;
+    };
 
 } /*namespace*/
 
