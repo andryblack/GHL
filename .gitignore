@@ -1,2 +1,5 @@
 lib
 projects/linux/build
+projects/GHL-build-desktop
+*.user
+*-build-desktop
