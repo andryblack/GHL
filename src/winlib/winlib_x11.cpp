@@ -171,7 +171,7 @@ int drawGLScene()
     GLWin.lastTime = nowTime;
     GLWin.render->ResetRenderState();
     if (GLWin.application->OnFrame( frameTime )) {
-    glXSwapBuffers(GLWin.dpy, GLWin.win);
+        glXSwapBuffers(GLWin.dpy, GLWin.win);
     }
     return True;
 }
@@ -287,20 +287,6 @@ static void X11_SetSizeHints( )
         }
     }
 
-    XGrabKeyboard(GLWin.dpy, GLWin.win, True, GrabModeAsync,
-        GrabModeAsync, CurrentTime);
-
-    if (GLWin.fs) {
-        //XMapRaised(GLWin.dpy,GLWin.win);
-        //XWarpPointer(GLWin.dpy, None, GLWin.win, 0, 0, 0, 0, 0, 0);
-        /*
-        XGrabPointer(GLWin.dpy, GLWin.win, True, ButtonPressMask,
-            GrabModeAsync, GrabModeAsync, GLWin.win, None, CurrentTime);
-            */
-    } else {
-        //XMapWindow(GLWin.dpy,GLWin.win);
-        //XWarpPointer(GLWin.dpy, None, 0, 0, 0, 0, 0, 0, 0);
-    }
 }
 
 
@@ -309,10 +295,10 @@ GLvoid killGLWindow()
 {
     if (GLWin.ctx)
     {
-    if (GLWin.render) {
-        GHL_DestroyRenderOpenGL(GLWin.render);
-        GLWin.render = 0;
-    }
+        if (GLWin.render) {
+            GHL_DestroyRenderOpenGL(GLWin.render);
+            GLWin.render = 0;
+        }
         if (!glXMakeCurrent(GLWin.dpy, None, NULL))
         {
             std::cout << "Could not release drawing context." << std::endl;
@@ -342,33 +328,55 @@ static void switchGLWindow() {
         XF86VidModeSetViewPort(GLWin.dpy, GLWin.screen, 0, 0);
     } else {
         XF86VidModeSwitchToMode(GLWin.dpy, GLWin.screen, &GLWin.fsMode);
-        XF86VidModeSetViewPort(GLWin.dpy, GLWin.screen, 0, 0);
+        XF86VidModeSetViewPort(GLWin.dpy, GLWin.screen, GLWin.width, GLWin.height);
     }
 #endif
 
-    unsigned int attributesMask = 0;
-    if (GLWin.fs) {
-        GLWin.attr.override_redirect = True;
-        GLWin.attr.event_mask = ExposureMask | KeyPressMask | ButtonPressMask |
-            StructureNotifyMask;
-        attributesMask = CWBorderPixel | CWColormap | CWEventMask | CWOverrideRedirect;
-    }
-    else
-    {
-        attributesMask = CWBorderPixel | CWColormap | CWEventMask | CWOverrideRedirect;
-        GLWin.attr.event_mask = ExposureMask | KeyPressMask | ButtonPressMask |
-            StructureNotifyMask;
-        GLWin.attr.override_redirect = False;
-    }
-    XChangeWindowAttributes(GLWin.dpy, GLWin.win,attributesMask,&GLWin.attr);
+
+
 
 
      X11_SetSizeHints();
-     XMapRaised(GLWin.dpy, GLWin.win);
+
      if (GLWin.fs) {
          XMoveWindow(GLWin.dpy, GLWin.win, 0, 0);
      }
+
+     /*
+     unsigned int attributesMask = CWOverrideRedirect;
+     if (GLWin.fs) {
+         GLWin.attr.override_redirect = True;
+     }
+     else
+     {
+         GLWin.attr.override_redirect = False;
+     }
+
+     XChangeWindowAttributes(GLWin.dpy, GLWin.win,attributesMask,&GLWin.attr);
+     */
+
+
      XSync(GLWin.dpy, True);
+
+#ifdef HAVE_XF86VMODE
+    if (GLWin.fs) {
+        XWarpPointer(GLWin.dpy, None, GLWin.win, 0, 0, 0, 0, 0, 0);
+        XSync(GLWin.dpy, True);
+        XF86VidModeSetViewPort(GLWin.dpy, GLWin.screen, 0, 0);
+        XMapRaised(GLWin.dpy,GLWin.win);
+        XSync(GLWin.dpy, True);
+        while (XGrabPointer(GLWin.dpy, GLWin.win, True, 0,
+                    GrabModeAsync, GrabModeAsync, GLWin.win, None, CurrentTime)!=Success) {
+            sleep(1);
+        }
+        XRaiseWindow(GLWin.dpy,  GLWin.win);
+    } else {
+        XMapRaised(GLWin.dpy,GLWin.win);
+        /*XGrabPointer(GLWin.dpy, GLWin.win, True, ButtonPressMask,
+                    GrabModeAsync, GrabModeAsync, GLWin.win, None, CurrentTime);*/
+    }
+#endif
+
     glXMakeCurrent(GLWin.dpy, GLWin.win, GLWin.ctx);
     Window winDummy;
     unsigned int borderDummy;
@@ -448,23 +456,15 @@ Bool createGLWindow(const char* title, int width, int height,
     }
     int w = width;
     int h = height;
-    unsigned int attributesMask = 0;
+    unsigned int attributesMask = CWEventMask | CWBorderPixel | CWColormap ;
+    GLWin.attr.event_mask = ExposureMask | KeyPressMask | ButtonPressMask | StructureNotifyMask;
+
     if (GLWin.fs) {
-        /* create a fullscreen window */
-        GLWin.attr.override_redirect = True;
-        GLWin.attr.event_mask = ExposureMask | KeyPressMask | ButtonPressMask |
-            StructureNotifyMask;
-        attributesMask = CWBorderPixel | CWColormap | CWEventMask | CWOverrideRedirect;
         w = dpyWidth;
         h = dpyHeight;
     }
     else
     {
-        /* create a window in window mode*/
-        attributesMask = CWBorderPixel | CWColormap | CWEventMask;
-        GLWin.attr.event_mask = ExposureMask | KeyPressMask | ButtonPressMask |
-            StructureNotifyMask;
-        GLWin.attr.override_redirect = False;
     }
 
     GLWin.win = XCreateWindow(GLWin.dpy, GLWin.root,
