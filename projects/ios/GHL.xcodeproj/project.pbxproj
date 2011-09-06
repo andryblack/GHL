@@ -89,12 +89,23 @@
 		A4772A7D14169C19006A9887 /* pngdebug.h in Headers */ = {isa = PBXBuildFile; fileRef = A4772A7114169C19006A9887 /* pngdebug.h */; };
 		A4772A7E14169C19006A9887 /* pngerror.c in Sources */ = {isa = PBXBuildFile; fileRef = A4772A7214169C19006A9887 /* pngerror.c */; };
 		A4772A7F14169C19006A9887 /* pnginfo.h in Headers */ = {isa = PBXBuildFile; fileRef = A4772A7314169C19006A9887 /* pnginfo.h */; };
-		A4772A8014169C19006A9887 /* pngpread.c in Sources */ = {isa = PBXBuildFile; fileRef = A4772A7414169C19006A9887 /* pngpread.c */; };
 		A4772A8114169C19006A9887 /* pngpriv.h in Headers */ = {isa = PBXBuildFile; fileRef = A4772A7514169C19006A9887 /* pngpriv.h */; };
 		A4772A8214169C19006A9887 /* pngrutil.c in Sources */ = {isa = PBXBuildFile; fileRef = A4772A7614169C19006A9887 /* pngrutil.c */; };
 		A4772A8314169C19006A9887 /* pngstruct.h in Headers */ = {isa = PBXBuildFile; fileRef = A4772A7714169C19006A9887 /* pngstruct.h */; };
 		A4EDFDC714169DCD00ED0DC0 /* png_image_decoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFDC514169DCD00ED0DC0 /* png_image_decoder.cpp */; };
 		A4EDFDC814169DCD00ED0DC0 /* png_image_decoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EDFDC614169DCD00ED0DC0 /* png_image_decoder.h */; };
+		A4EDFEC91416B14B00ED0DC0 /* pngread.c in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFEC81416B14B00ED0DC0 /* pngread.c */; };
+		A4EDFECF1416B1C300ED0DC0 /* pngset.c in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFECE1416B1C300ED0DC0 /* pngset.c */; };
+		A4EDFED51416B20700ED0DC0 /* pngmem.c in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFED41416B20700ED0DC0 /* pngmem.c */; };
+		A4EDFEDB1416B24900ED0DC0 /* pngtrans.c in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFEDA1416B24900ED0DC0 /* pngtrans.c */; };
+		A4EDFEE21416B28300ED0DC0 /* pngrio.c in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFEE01416B28300ED0DC0 /* pngrio.c */; };
+		A4EDFEF21416B32C00ED0DC0 /* pngwio.c in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFEEE1416B32C00ED0DC0 /* pngwio.c */; };
+		A4EDFEF31416B32C00ED0DC0 /* pngwrite.c in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFEEF1416B32C00ED0DC0 /* pngwrite.c */; };
+		A4EDFEF41416B32C00ED0DC0 /* pngwtran.c in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFEF01416B32C00ED0DC0 /* pngwtran.c */; };
+		A4EDFEF51416B32C00ED0DC0 /* pngwutil.c in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFEF11416B32C00ED0DC0 /* pngwutil.c */; };
+		A4EDFF011416B3EE00ED0DC0 /* pngget.c in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFF001416B3EE00ED0DC0 /* pngget.c */; };
+		A4EDFF071416B45400ED0DC0 /* pngrtran.c in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFF061416B45400ED0DC0 /* pngrtran.c */; };
+		A4EDFF111416B4E100ED0DC0 /* pngpread.c in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFF101416B4E100ED0DC0 /* pngpread.c */; };
 		AA747D9F0F9514B9006C5449 /* GHL_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* GHL_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
 /* End PBXBuildFile section */
@@ -182,15 +193,26 @@
 		A4772A7114169C19006A9887 /* pngdebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pngdebug.h; sourceTree = "<group>"; };
 		A4772A7214169C19006A9887 /* pngerror.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngerror.c; sourceTree = "<group>"; };
 		A4772A7314169C19006A9887 /* pnginfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pnginfo.h; sourceTree = "<group>"; };
-		A4772A7414169C19006A9887 /* pngpread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngpread.c; sourceTree = "<group>"; };
 		A4772A7514169C19006A9887 /* pngpriv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pngpriv.h; sourceTree = "<group>"; };
 		A4772A7614169C19006A9887 /* pngrutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngrutil.c; sourceTree = "<group>"; };
 		A4772A7714169C19006A9887 /* pngstruct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pngstruct.h; sourceTree = "<group>"; };
 		A4EDFDC514169DCD00ED0DC0 /* png_image_decoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = png_image_decoder.cpp; sourceTree = "<group>"; };
 		A4EDFDC614169DCD00ED0DC0 /* png_image_decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = png_image_decoder.h; sourceTree = "<group>"; };
+		A4EDFEC81416B14B00ED0DC0 /* pngread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngread.c; sourceTree = "<group>"; };
+		A4EDFECE1416B1C300ED0DC0 /* pngset.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngset.c; sourceTree = "<group>"; };
+		A4EDFED41416B20700ED0DC0 /* pngmem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngmem.c; sourceTree = "<group>"; };
+		A4EDFEDA1416B24900ED0DC0 /* pngtrans.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngtrans.c; sourceTree = "<group>"; };
+		A4EDFEE01416B28300ED0DC0 /* pngrio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngrio.c; sourceTree = "<group>"; };
+		A4EDFEEE1416B32C00ED0DC0 /* pngwio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngwio.c; sourceTree = "<group>"; };
+		A4EDFEEF1416B32C00ED0DC0 /* pngwrite.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngwrite.c; sourceTree = "<group>"; };
+		A4EDFEF01416B32C00ED0DC0 /* pngwtran.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngwtran.c; sourceTree = "<group>"; };
+		A4EDFEF11416B32C00ED0DC0 /* pngwutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngwutil.c; sourceTree = "<group>"; };
+		A4EDFF001416B3EE00ED0DC0 /* pngget.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngget.c; sourceTree = "<group>"; };
+		A4EDFF061416B45400ED0DC0 /* pngrtran.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngrtran.c; sourceTree = "<group>"; };
+		A4EDFF101416B4E100ED0DC0 /* pngpread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngpread.c; sourceTree = "<group>"; };
 		AA747D9E0F9514B9006C5449 /* GHL_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GHL_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		D2AAC07E0554694100DB518D /* libGHL-Debug-iphoneos.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libGHL-Debug-iphoneos.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2AAC07E0554694100DB518D /* libGHL-Debug-iphonesimulator.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libGHL-Debug-iphonesimulator.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -208,7 +230,7 @@
 		034768DFFF38A50411DB9C8B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D2AAC07E0554694100DB518D /* libGHL-Debug-iphoneos.a */,
+				D2AAC07E0554694100DB518D /* libGHL-Debug-iphonesimulator.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -402,6 +424,18 @@
 		A4772A6B14169C19006A9887 /* libpng */ = {
 			isa = PBXGroup;
 			children = (
+				A4EDFF101416B4E100ED0DC0 /* pngpread.c */,
+				A4EDFF061416B45400ED0DC0 /* pngrtran.c */,
+				A4EDFF001416B3EE00ED0DC0 /* pngget.c */,
+				A4EDFEEE1416B32C00ED0DC0 /* pngwio.c */,
+				A4EDFEEF1416B32C00ED0DC0 /* pngwrite.c */,
+				A4EDFEF01416B32C00ED0DC0 /* pngwtran.c */,
+				A4EDFEF11416B32C00ED0DC0 /* pngwutil.c */,
+				A4EDFEE01416B28300ED0DC0 /* pngrio.c */,
+				A4EDFEDA1416B24900ED0DC0 /* pngtrans.c */,
+				A4EDFED41416B20700ED0DC0 /* pngmem.c */,
+				A4EDFECE1416B1C300ED0DC0 /* pngset.c */,
+				A4EDFEC81416B14B00ED0DC0 /* pngread.c */,
 				A4772A6C14169C19006A9887 /* pnglibconf.h */,
 				A4772A6E14169C19006A9887 /* png.c */,
 				A4772A6F14169C19006A9887 /* png.h */,
@@ -409,7 +443,6 @@
 				A4772A7114169C19006A9887 /* pngdebug.h */,
 				A4772A7214169C19006A9887 /* pngerror.c */,
 				A4772A7314169C19006A9887 /* pnginfo.h */,
-				A4772A7414169C19006A9887 /* pngpread.c */,
 				A4772A7514169C19006A9887 /* pngpriv.h */,
 				A4772A7614169C19006A9887 /* pngrutil.c */,
 				A4772A7714169C19006A9887 /* pngstruct.h */,
@@ -502,7 +535,7 @@
 			);
 			name = GHL;
 			productName = GHL;
-			productReference = D2AAC07E0554694100DB518D /* libGHL-Debug-iphoneos.a */;
+			productReference = D2AAC07E0554694100DB518D /* libGHL-Debug-iphonesimulator.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -566,9 +599,20 @@
 				A4772A6714169B23006A9887 /* inftrees.c in Sources */,
 				A4772A7A14169C19006A9887 /* png.c in Sources */,
 				A4772A7E14169C19006A9887 /* pngerror.c in Sources */,
-				A4772A8014169C19006A9887 /* pngpread.c in Sources */,
 				A4772A8214169C19006A9887 /* pngrutil.c in Sources */,
 				A4EDFDC714169DCD00ED0DC0 /* png_image_decoder.cpp in Sources */,
+				A4EDFEC91416B14B00ED0DC0 /* pngread.c in Sources */,
+				A4EDFECF1416B1C300ED0DC0 /* pngset.c in Sources */,
+				A4EDFED51416B20700ED0DC0 /* pngmem.c in Sources */,
+				A4EDFEDB1416B24900ED0DC0 /* pngtrans.c in Sources */,
+				A4EDFEE21416B28300ED0DC0 /* pngrio.c in Sources */,
+				A4EDFEF21416B32C00ED0DC0 /* pngwio.c in Sources */,
+				A4EDFEF31416B32C00ED0DC0 /* pngwrite.c in Sources */,
+				A4EDFEF41416B32C00ED0DC0 /* pngwtran.c in Sources */,
+				A4EDFEF51416B32C00ED0DC0 /* pngwutil.c in Sources */,
+				A4EDFF011416B3EE00ED0DC0 /* pngget.c in Sources */,
+				A4EDFF071416B45400ED0DC0 /* pngrtran.c in Sources */,
+				A4EDFF111416B4E100ED0DC0 /* pngpread.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

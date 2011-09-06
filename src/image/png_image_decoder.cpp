@@ -31,12 +31,12 @@
 namespace GHL {
 
 	PngDecoder::PngDecoder() : ImageFileDecoder(IMAGE_FILE_FORMAT_PNG)
-{
-}
+	{
+	}
 
-PngDecoder::~PngDecoder()
-{
-}
+	PngDecoder::~PngDecoder()
+	{
+	}
 
 static void error_func(png_structp png_ptr,const char* msg)
 {
@@ -55,9 +55,9 @@ static void error_func(png_structp png_ptr,const char* msg)
 		std::cout << "error : " << text << std::endl;
 	}
 
-static void warning_func(png_structp png,const char* err)
-{
-}
+	static void warning_func(png_structp png,const char* err)
+	{
+	}
 
 // PNG function for file reading
 static void PNGAPI read_data_fcn(png_structp png_ptr, png_bytep data, png_size_t length)
@@ -266,5 +266,9 @@ Image* PngDecoder::Decode(DataStream* file)
 
 	return image;
 }
+	
+	bool PngDecoder::Encode( const Image* image, DataStream* ds) {
+		return false;
+	}
 
 }/*namespace*/

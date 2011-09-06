@@ -24,7 +24,7 @@
 #include "image_config.h"
 
 #ifdef USE_PNG_DECODER
-#include "png_decoder.h"
+#include "png_image_decoder.h"
 #endif
 
 #ifdef USE_JPEG_DECODER
