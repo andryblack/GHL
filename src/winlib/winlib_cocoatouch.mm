@@ -47,12 +47,25 @@ public:
 		NSLog(@"Call GHL::System::Exit on iOS disallow");
 	}
 	
+	///
+	virtual bool GHL_CALL IsFullscreen() const {
+		return true;
+	}
+	///
+	virtual void GHL_CALL SwitchFullscreen(bool fs) {
+		/// do nothing
+	}
+	
 	virtual void GHL_CALL SwapBuffers();	
 	///
 	virtual void GHL_CALL ShowKeyboard();
 		
 	///
 	virtual void GHL_CALL HideKeyboard();
+	
+	virtual GHL::UInt32  GHL_CALL GetKeyMods() const {
+		return 0;
+	}
 };
 
 @interface WinLibViewController : UIViewController
@@ -82,7 +95,6 @@ public:
     GLint m_backingWidth;
     GLint m_backingHeight;
 	SystemCocoaTouch*	m_system;
-	GHL::VFSCocoaImpl*	m_vfs;
 	GHL::ImageDecoderImpl* m_imageDecoder;
 	GHL::SoundOpenAL*	m_sound;
 	NSString*	m_appName;
@@ -127,8 +139,6 @@ public:
 -(id) initWithFrame:(CGRect) rect {
 	if (self = [super initWithFrame:rect]) {
 		m_appName = (NSString*)[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
-		m_vfs = new GHL::VFSCocoaImpl();
-		g_application->SetVFS(m_vfs);
 		m_imageDecoder = 0;
 #ifndef GHL_NO_IMAGE_DECODERS
 		m_imageDecoder = new GHL::ImageDecoderImpl();		
@@ -235,7 +245,7 @@ public:
 		GHL::g_default_renderbuffer = m_colorRenderbuffer;
 		m_render->ResetRenderState();
 		if (g_application->OnFrame(dt)) {
-			
+			[m_context presentRenderbuffer:GL_RENDERBUFFER_OES];
 		}
 		[pool drain];
 	}
@@ -334,7 +344,6 @@ public:
     [m_context release];
     m_context = nil;
 	delete m_imageDecoder;
-	delete m_vfs;
 	delete m_sound;
 
 	delete m_system;
@@ -347,6 +356,7 @@ public:
 	UIWindow* window;
 	WinLibView*	view;
 	WinLibViewController* controller;
+	GHL::VFSCocoaImpl*	m_vfs;
 }
 @end
 
@@ -356,6 +366,9 @@ public:
 	
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	
+	m_vfs = new GHL::VFSCocoaImpl();
+	g_application->SetVFS(m_vfs);
+
 	GHL::Settings settings;
 	settings.width = 1024;
 	settings.height = 768;
