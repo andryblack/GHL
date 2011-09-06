@@ -1,0 +1,680 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A429008A1413948E00429C47 /* ghl_api.h in Headers */ = {isa = PBXBuildFile; fileRef = A429007B1413948E00429C47 /* ghl_api.h */; };
+		A429008B1413948E00429C47 /* ghl_application.h in Headers */ = {isa = PBXBuildFile; fileRef = A429007C1413948E00429C47 /* ghl_application.h */; };
+		A429008C1413948E00429C47 /* ghl_data_stream.h in Headers */ = {isa = PBXBuildFile; fileRef = A429007D1413948E00429C47 /* ghl_data_stream.h */; };
+		A429008D1413948E00429C47 /* ghl_image.h in Headers */ = {isa = PBXBuildFile; fileRef = A429007E1413948E00429C47 /* ghl_image.h */; };
+		A429008E1413948E00429C47 /* ghl_image_decoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A429007F1413948E00429C47 /* ghl_image_decoder.h */; };
+		A429008F1413948E00429C47 /* ghl_keys.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900801413948E00429C47 /* ghl_keys.h */; };
+		A42900901413948E00429C47 /* ghl_render.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900811413948E00429C47 /* ghl_render.h */; };
+		A42900911413948E00429C47 /* ghl_render_target.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900821413948E00429C47 /* ghl_render_target.h */; };
+		A42900921413948E00429C47 /* ghl_settings.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900831413948E00429C47 /* ghl_settings.h */; };
+		A42900931413948E00429C47 /* ghl_shader.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900841413948E00429C47 /* ghl_shader.h */; };
+		A42900941413948E00429C47 /* ghl_sound.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900851413948E00429C47 /* ghl_sound.h */; };
+		A42900951413948E00429C47 /* ghl_system.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900861413948E00429C47 /* ghl_system.h */; };
+		A42900961413948E00429C47 /* ghl_texture.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900871413948E00429C47 /* ghl_texture.h */; };
+		A42900971413948E00429C47 /* ghl_types.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900881413948E00429C47 /* ghl_types.h */; };
+		A42900981413948E00429C47 /* ghl_vfs.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900891413948E00429C47 /* ghl_vfs.h */; };
+		A42900DB1413949B00429C47 /* image_config.h in Headers */ = {isa = PBXBuildFile; fileRef = A429009B1413949B00429C47 /* image_config.h */; };
+		A42900DC1413949B00429C47 /* image_decoders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A429009C1413949B00429C47 /* image_decoders.cpp */; };
+		A42900DD1413949B00429C47 /* image_decoders.h in Headers */ = {isa = PBXBuildFile; fileRef = A429009D1413949B00429C47 /* image_decoders.h */; };
+		A42900DE1413949B00429C47 /* image_file_decoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A429009E1413949B00429C47 /* image_file_decoder.h */; };
+		A42900DF1413949B00429C47 /* image_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A429009F1413949B00429C47 /* image_impl.cpp */; };
+		A42900E01413949B00429C47 /* image_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900A01413949B00429C47 /* image_impl.h */; };
+		A42900E11413949B00429C47 /* tga_image_decoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900A11413949B00429C47 /* tga_image_decoder.cpp */; };
+		A42900E21413949B00429C47 /* tga_image_decoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900A21413949B00429C47 /* tga_image_decoder.h */; };
+		A42900E31413949B00429C47 /* lucida_console_regular_8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900A41413949B00429C47 /* lucida_console_regular_8.cpp */; };
+		A42900E41413949B00429C47 /* lucida_console_regular_8.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900A51413949B00429C47 /* lucida_console_regular_8.h */; };
+		A42900EA1413949B00429C47 /* ghl_opengl.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900AD1413949B00429C47 /* ghl_opengl.h */; };
+		A42900EB1413949B00429C47 /* refcount_opengl.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900AE1413949B00429C47 /* refcount_opengl.h */; };
+		A42900EC1413949B00429C47 /* render_opengl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900AF1413949B00429C47 /* render_opengl.cpp */; };
+		A42900ED1413949B00429C47 /* render_opengl.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900B01413949B00429C47 /* render_opengl.h */; };
+		A42900EE1413949B00429C47 /* rendertarget_opengl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900B11413949B00429C47 /* rendertarget_opengl.cpp */; };
+		A42900EF1413949B00429C47 /* rendertarget_opengl.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900B21413949B00429C47 /* rendertarget_opengl.h */; };
+		A42900F01413949B00429C47 /* shader_glsl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900B31413949B00429C47 /* shader_glsl.cpp */; };
+		A42900F11413949B00429C47 /* shader_glsl.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900B41413949B00429C47 /* shader_glsl.h */; };
+		A42900F21413949B00429C47 /* texture_opengl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900B51413949B00429C47 /* texture_opengl.cpp */; };
+		A42900F31413949B00429C47 /* texture_opengl.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900B61413949B00429C47 /* texture_opengl.h */; };
+		A42900F41413949B00429C47 /* render_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900B71413949B00429C47 /* render_impl.cpp */; };
+		A42900F51413949B00429C47 /* render_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900B81413949B00429C47 /* render_impl.h */; };
+		A42900F61413949B00429C47 /* rendertarget_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900B91413949B00429C47 /* rendertarget_impl.h */; };
+		A42900FA1413949B00429C47 /* ghl_samples_buffer_memory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900BF1413949B00429C47 /* ghl_samples_buffer_memory.cpp */; };
+		A42900FB1413949B00429C47 /* ghl_samples_buffer_memory.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900C01413949B00429C47 /* ghl_samples_buffer_memory.h */; };
+		A42900FC1413949B00429C47 /* ghl_sound_decoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900C11413949B00429C47 /* ghl_sound_decoder.h */; };
+		A42900FD1413949B00429C47 /* ghl_sound_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900C21413949B00429C47 /* ghl_sound_impl.cpp */; };
+		A42900FE1413949B00429C47 /* ghl_sound_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900C31413949B00429C47 /* ghl_sound_impl.h */; };
+		A42900FF1413949B00429C47 /* ghl_openal.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900C51413949B00429C47 /* ghl_openal.h */; };
+		A42901001413949B00429C47 /* ghl_sound_openal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900C61413949B00429C47 /* ghl_sound_openal.cpp */; };
+		A42901011413949B00429C47 /* ghl_sound_openal.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900C71413949B00429C47 /* ghl_sound_openal.h */; };
+		A42901021413949B00429C47 /* sound_decoders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900C81413949B00429C47 /* sound_decoders.cpp */; };
+		A42901031413949B00429C47 /* wav_decoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900C91413949B00429C47 /* wav_decoder.cpp */; };
+		A42901041413949B00429C47 /* wav_decoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900CA1413949B00429C47 /* wav_decoder.h */; };
+		A42901051413949B00429C47 /* ghl_vfs_factory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900CC1413949B00429C47 /* ghl_vfs_factory.cpp */; };
+		A42901061413949B00429C47 /* memory_stream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900CD1413949B00429C47 /* memory_stream.cpp */; };
+		A42901071413949B00429C47 /* memory_stream.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900CE1413949B00429C47 /* memory_stream.h */; };
+		A42901081413949B00429C47 /* vfs_cocoa.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900CF1413949B00429C47 /* vfs_cocoa.h */; };
+		A42901091413949B00429C47 /* vfs_cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = A42900D01413949B00429C47 /* vfs_cocoa.mm */; };
+		A42901101413949B00429C47 /* winlib_cocoatouch.mm in Sources */ = {isa = PBXBuildFile; fileRef = A42900D81413949B00429C47 /* winlib_cocoatouch.mm */; };
+		A4772A4514169A8B006A9887 /* adler32.c in Sources */ = {isa = PBXBuildFile; fileRef = A4772A3214169A8B006A9887 /* adler32.c */; };
+		A4772A4614169A8B006A9887 /* crc32.c in Sources */ = {isa = PBXBuildFile; fileRef = A4772A3314169A8B006A9887 /* crc32.c */; };
+		A4772A4714169A8B006A9887 /* crc32.h in Headers */ = {isa = PBXBuildFile; fileRef = A4772A3414169A8B006A9887 /* crc32.h */; };
+		A4772A4814169A8B006A9887 /* crypt.h in Headers */ = {isa = PBXBuildFile; fileRef = A4772A3514169A8B006A9887 /* crypt.h */; };
+		A4772A4914169A8B006A9887 /* deflate.c in Sources */ = {isa = PBXBuildFile; fileRef = A4772A3614169A8B006A9887 /* deflate.c */; };
+		A4772A4A14169A8B006A9887 /* deflate.h in Headers */ = {isa = PBXBuildFile; fileRef = A4772A3714169A8B006A9887 /* deflate.h */; };
+		A4772A4B14169A8B006A9887 /* inffast.c in Sources */ = {isa = PBXBuildFile; fileRef = A4772A3814169A8B006A9887 /* inffast.c */; };
+		A4772A4C14169A8B006A9887 /* inffast.h in Headers */ = {isa = PBXBuildFile; fileRef = A4772A3914169A8B006A9887 /* inffast.h */; };
+		A4772A4D14169A8B006A9887 /* inflate.c in Sources */ = {isa = PBXBuildFile; fileRef = A4772A3A14169A8B006A9887 /* inflate.c */; };
+		A4772A4E14169A8B006A9887 /* inflate.h in Headers */ = {isa = PBXBuildFile; fileRef = A4772A3B14169A8B006A9887 /* inflate.h */; };
+		A4772A5014169A8B006A9887 /* ioapi.h in Headers */ = {isa = PBXBuildFile; fileRef = A4772A3D14169A8B006A9887 /* ioapi.h */; };
+		A4772A5214169A8B006A9887 /* zconf.h in Headers */ = {isa = PBXBuildFile; fileRef = A4772A3F14169A8B006A9887 /* zconf.h */; };
+		A4772A5314169A8B006A9887 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = A4772A4014169A8B006A9887 /* zip.c */; };
+		A4772A5414169A8B006A9887 /* zip.h in Headers */ = {isa = PBXBuildFile; fileRef = A4772A4114169A8B006A9887 /* zip.h */; };
+		A4772A5514169A8B006A9887 /* zlib.h in Headers */ = {isa = PBXBuildFile; fileRef = A4772A4214169A8B006A9887 /* zlib.h */; };
+		A4772A5614169A8B006A9887 /* zutil.c in Sources */ = {isa = PBXBuildFile; fileRef = A4772A4314169A8B006A9887 /* zutil.c */; };
+		A4772A5714169A8B006A9887 /* zutil.h in Headers */ = {isa = PBXBuildFile; fileRef = A4772A4414169A8B006A9887 /* zutil.h */; };
+		A4772A6614169B23006A9887 /* inffixed.h in Headers */ = {isa = PBXBuildFile; fileRef = A4772A6314169B23006A9887 /* inffixed.h */; };
+		A4772A6714169B23006A9887 /* inftrees.c in Sources */ = {isa = PBXBuildFile; fileRef = A4772A6414169B23006A9887 /* inftrees.c */; };
+		A4772A6814169B23006A9887 /* inftrees.h in Headers */ = {isa = PBXBuildFile; fileRef = A4772A6514169B23006A9887 /* inftrees.h */; };
+		A4772A7914169C19006A9887 /* pnglibconf.h in Headers */ = {isa = PBXBuildFile; fileRef = A4772A6C14169C19006A9887 /* pnglibconf.h */; };
+		A4772A7A14169C19006A9887 /* png.c in Sources */ = {isa = PBXBuildFile; fileRef = A4772A6E14169C19006A9887 /* png.c */; };
+		A4772A7B14169C19006A9887 /* png.h in Headers */ = {isa = PBXBuildFile; fileRef = A4772A6F14169C19006A9887 /* png.h */; };
+		A4772A7C14169C19006A9887 /* pngconf.h in Headers */ = {isa = PBXBuildFile; fileRef = A4772A7014169C19006A9887 /* pngconf.h */; };
+		A4772A7D14169C19006A9887 /* pngdebug.h in Headers */ = {isa = PBXBuildFile; fileRef = A4772A7114169C19006A9887 /* pngdebug.h */; };
+		A4772A7E14169C19006A9887 /* pngerror.c in Sources */ = {isa = PBXBuildFile; fileRef = A4772A7214169C19006A9887 /* pngerror.c */; };
+		A4772A7F14169C19006A9887 /* pnginfo.h in Headers */ = {isa = PBXBuildFile; fileRef = A4772A7314169C19006A9887 /* pnginfo.h */; };
+		A4772A8014169C19006A9887 /* pngpread.c in Sources */ = {isa = PBXBuildFile; fileRef = A4772A7414169C19006A9887 /* pngpread.c */; };
+		A4772A8114169C19006A9887 /* pngpriv.h in Headers */ = {isa = PBXBuildFile; fileRef = A4772A7514169C19006A9887 /* pngpriv.h */; };
+		A4772A8214169C19006A9887 /* pngrutil.c in Sources */ = {isa = PBXBuildFile; fileRef = A4772A7614169C19006A9887 /* pngrutil.c */; };
+		A4772A8314169C19006A9887 /* pngstruct.h in Headers */ = {isa = PBXBuildFile; fileRef = A4772A7714169C19006A9887 /* pngstruct.h */; };
+		A4EDFDC714169DCD00ED0DC0 /* png_image_decoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFDC514169DCD00ED0DC0 /* png_image_decoder.cpp */; };
+		A4EDFDC814169DCD00ED0DC0 /* png_image_decoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EDFDC614169DCD00ED0DC0 /* png_image_decoder.h */; };
+		AA747D9F0F9514B9006C5449 /* GHL_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* GHL_Prefix.pch */; };
+		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A429007B1413948E00429C47 /* ghl_api.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_api.h; sourceTree = "<group>"; };
+		A429007C1413948E00429C47 /* ghl_application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_application.h; sourceTree = "<group>"; };
+		A429007D1413948E00429C47 /* ghl_data_stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_data_stream.h; sourceTree = "<group>"; };
+		A429007E1413948E00429C47 /* ghl_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_image.h; sourceTree = "<group>"; };
+		A429007F1413948E00429C47 /* ghl_image_decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_image_decoder.h; sourceTree = "<group>"; };
+		A42900801413948E00429C47 /* ghl_keys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_keys.h; sourceTree = "<group>"; };
+		A42900811413948E00429C47 /* ghl_render.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_render.h; sourceTree = "<group>"; };
+		A42900821413948E00429C47 /* ghl_render_target.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_render_target.h; sourceTree = "<group>"; };
+		A42900831413948E00429C47 /* ghl_settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_settings.h; sourceTree = "<group>"; };
+		A42900841413948E00429C47 /* ghl_shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_shader.h; sourceTree = "<group>"; };
+		A42900851413948E00429C47 /* ghl_sound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_sound.h; sourceTree = "<group>"; };
+		A42900861413948E00429C47 /* ghl_system.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_system.h; sourceTree = "<group>"; };
+		A42900871413948E00429C47 /* ghl_texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_texture.h; sourceTree = "<group>"; };
+		A42900881413948E00429C47 /* ghl_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_types.h; sourceTree = "<group>"; };
+		A42900891413948E00429C47 /* ghl_vfs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_vfs.h; sourceTree = "<group>"; };
+		A429009B1413949B00429C47 /* image_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = image_config.h; sourceTree = "<group>"; };
+		A429009C1413949B00429C47 /* image_decoders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = image_decoders.cpp; sourceTree = "<group>"; };
+		A429009D1413949B00429C47 /* image_decoders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = image_decoders.h; sourceTree = "<group>"; };
+		A429009E1413949B00429C47 /* image_file_decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = image_file_decoder.h; sourceTree = "<group>"; };
+		A429009F1413949B00429C47 /* image_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = image_impl.cpp; sourceTree = "<group>"; };
+		A42900A01413949B00429C47 /* image_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = image_impl.h; sourceTree = "<group>"; };
+		A42900A11413949B00429C47 /* tga_image_decoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tga_image_decoder.cpp; sourceTree = "<group>"; };
+		A42900A21413949B00429C47 /* tga_image_decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tga_image_decoder.h; sourceTree = "<group>"; };
+		A42900A41413949B00429C47 /* lucida_console_regular_8.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lucida_console_regular_8.cpp; sourceTree = "<group>"; };
+		A42900A51413949B00429C47 /* lucida_console_regular_8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lucida_console_regular_8.h; sourceTree = "<group>"; };
+		A42900AD1413949B00429C47 /* ghl_opengl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_opengl.h; sourceTree = "<group>"; };
+		A42900AE1413949B00429C47 /* refcount_opengl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = refcount_opengl.h; sourceTree = "<group>"; };
+		A42900AF1413949B00429C47 /* render_opengl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = render_opengl.cpp; sourceTree = "<group>"; };
+		A42900B01413949B00429C47 /* render_opengl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = render_opengl.h; sourceTree = "<group>"; };
+		A42900B11413949B00429C47 /* rendertarget_opengl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rendertarget_opengl.cpp; sourceTree = "<group>"; };
+		A42900B21413949B00429C47 /* rendertarget_opengl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rendertarget_opengl.h; sourceTree = "<group>"; };
+		A42900B31413949B00429C47 /* shader_glsl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shader_glsl.cpp; sourceTree = "<group>"; };
+		A42900B41413949B00429C47 /* shader_glsl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shader_glsl.h; sourceTree = "<group>"; };
+		A42900B51413949B00429C47 /* texture_opengl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = texture_opengl.cpp; sourceTree = "<group>"; };
+		A42900B61413949B00429C47 /* texture_opengl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = texture_opengl.h; sourceTree = "<group>"; };
+		A42900B71413949B00429C47 /* render_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = render_impl.cpp; sourceTree = "<group>"; };
+		A42900B81413949B00429C47 /* render_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = render_impl.h; sourceTree = "<group>"; };
+		A42900B91413949B00429C47 /* rendertarget_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rendertarget_impl.h; sourceTree = "<group>"; };
+		A42900BF1413949B00429C47 /* ghl_samples_buffer_memory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ghl_samples_buffer_memory.cpp; sourceTree = "<group>"; };
+		A42900C01413949B00429C47 /* ghl_samples_buffer_memory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_samples_buffer_memory.h; sourceTree = "<group>"; };
+		A42900C11413949B00429C47 /* ghl_sound_decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_sound_decoder.h; sourceTree = "<group>"; };
+		A42900C21413949B00429C47 /* ghl_sound_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ghl_sound_impl.cpp; sourceTree = "<group>"; };
+		A42900C31413949B00429C47 /* ghl_sound_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_sound_impl.h; sourceTree = "<group>"; };
+		A42900C51413949B00429C47 /* ghl_openal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_openal.h; sourceTree = "<group>"; };
+		A42900C61413949B00429C47 /* ghl_sound_openal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ghl_sound_openal.cpp; sourceTree = "<group>"; };
+		A42900C71413949B00429C47 /* ghl_sound_openal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_sound_openal.h; sourceTree = "<group>"; };
+		A42900C81413949B00429C47 /* sound_decoders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sound_decoders.cpp; sourceTree = "<group>"; };
+		A42900C91413949B00429C47 /* wav_decoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = wav_decoder.cpp; sourceTree = "<group>"; };
+		A42900CA1413949B00429C47 /* wav_decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wav_decoder.h; sourceTree = "<group>"; };
+		A42900CC1413949B00429C47 /* ghl_vfs_factory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ghl_vfs_factory.cpp; sourceTree = "<group>"; };
+		A42900CD1413949B00429C47 /* memory_stream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = memory_stream.cpp; sourceTree = "<group>"; };
+		A42900CE1413949B00429C47 /* memory_stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = memory_stream.h; sourceTree = "<group>"; };
+		A42900CF1413949B00429C47 /* vfs_cocoa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vfs_cocoa.h; sourceTree = "<group>"; };
+		A42900D01413949B00429C47 /* vfs_cocoa.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = vfs_cocoa.mm; sourceTree = "<group>"; };
+		A42900D81413949B00429C47 /* winlib_cocoatouch.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = winlib_cocoatouch.mm; sourceTree = "<group>"; };
+		A4772A3214169A8B006A9887 /* adler32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = adler32.c; sourceTree = "<group>"; };
+		A4772A3314169A8B006A9887 /* crc32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = crc32.c; sourceTree = "<group>"; };
+		A4772A3414169A8B006A9887 /* crc32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crc32.h; sourceTree = "<group>"; };
+		A4772A3514169A8B006A9887 /* crypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypt.h; sourceTree = "<group>"; };
+		A4772A3614169A8B006A9887 /* deflate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = deflate.c; sourceTree = "<group>"; };
+		A4772A3714169A8B006A9887 /* deflate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = deflate.h; sourceTree = "<group>"; };
+		A4772A3814169A8B006A9887 /* inffast.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = inffast.c; sourceTree = "<group>"; };
+		A4772A3914169A8B006A9887 /* inffast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = inffast.h; sourceTree = "<group>"; };
+		A4772A3A14169A8B006A9887 /* inflate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = inflate.c; sourceTree = "<group>"; };
+		A4772A3B14169A8B006A9887 /* inflate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = inflate.h; sourceTree = "<group>"; };
+		A4772A3D14169A8B006A9887 /* ioapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ioapi.h; sourceTree = "<group>"; };
+		A4772A3F14169A8B006A9887 /* zconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zconf.h; sourceTree = "<group>"; };
+		A4772A4014169A8B006A9887 /* zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip.c; sourceTree = "<group>"; };
+		A4772A4114169A8B006A9887 /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zip.h; sourceTree = "<group>"; };
+		A4772A4214169A8B006A9887 /* zlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zlib.h; sourceTree = "<group>"; };
+		A4772A4314169A8B006A9887 /* zutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zutil.c; sourceTree = "<group>"; };
+		A4772A4414169A8B006A9887 /* zutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zutil.h; sourceTree = "<group>"; };
+		A4772A6314169B23006A9887 /* inffixed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = inffixed.h; sourceTree = "<group>"; };
+		A4772A6414169B23006A9887 /* inftrees.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = inftrees.c; sourceTree = "<group>"; };
+		A4772A6514169B23006A9887 /* inftrees.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = inftrees.h; sourceTree = "<group>"; };
+		A4772A6C14169C19006A9887 /* pnglibconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pnglibconf.h; sourceTree = "<group>"; };
+		A4772A6E14169C19006A9887 /* png.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = png.c; sourceTree = "<group>"; };
+		A4772A6F14169C19006A9887 /* png.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = png.h; sourceTree = "<group>"; };
+		A4772A7014169C19006A9887 /* pngconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pngconf.h; sourceTree = "<group>"; };
+		A4772A7114169C19006A9887 /* pngdebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pngdebug.h; sourceTree = "<group>"; };
+		A4772A7214169C19006A9887 /* pngerror.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngerror.c; sourceTree = "<group>"; };
+		A4772A7314169C19006A9887 /* pnginfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pnginfo.h; sourceTree = "<group>"; };
+		A4772A7414169C19006A9887 /* pngpread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngpread.c; sourceTree = "<group>"; };
+		A4772A7514169C19006A9887 /* pngpriv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pngpriv.h; sourceTree = "<group>"; };
+		A4772A7614169C19006A9887 /* pngrutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngrutil.c; sourceTree = "<group>"; };
+		A4772A7714169C19006A9887 /* pngstruct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pngstruct.h; sourceTree = "<group>"; };
+		A4EDFDC514169DCD00ED0DC0 /* png_image_decoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = png_image_decoder.cpp; sourceTree = "<group>"; };
+		A4EDFDC614169DCD00ED0DC0 /* png_image_decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = png_image_decoder.h; sourceTree = "<group>"; };
+		AA747D9E0F9514B9006C5449 /* GHL_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GHL_Prefix.pch; sourceTree = SOURCE_ROOT; };
+		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		D2AAC07E0554694100DB518D /* libGHL-Debug-iphoneos.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libGHL-Debug-iphoneos.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D2AAC07C0554694100DB518D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		034768DFFF38A50411DB9C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2AAC07E0554694100DB518D /* libGHL-Debug-iphoneos.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0867D691FE84028FC02AAC07 /* GHL */ = {
+			isa = PBXGroup;
+			children = (
+				A42900991413949B00429C47 /* src */,
+				A429007A1413948E00429C47 /* include */,
+				32C88DFF0371C24200C91783 /* Other Sources */,
+				0867D69AFE84028FC02AAC07 /* Frameworks */,
+				034768DFFF38A50411DB9C8B /* Products */,
+			);
+			name = GHL;
+			sourceTree = "<group>";
+		};
+		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AACBBE490F95108600F1A2B1 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		32C88DFF0371C24200C91783 /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				AA747D9E0F9514B9006C5449 /* GHL_Prefix.pch */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		A429007A1413948E00429C47 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				A429007B1413948E00429C47 /* ghl_api.h */,
+				A429007C1413948E00429C47 /* ghl_application.h */,
+				A429007D1413948E00429C47 /* ghl_data_stream.h */,
+				A429007E1413948E00429C47 /* ghl_image.h */,
+				A429007F1413948E00429C47 /* ghl_image_decoder.h */,
+				A42900801413948E00429C47 /* ghl_keys.h */,
+				A42900811413948E00429C47 /* ghl_render.h */,
+				A42900821413948E00429C47 /* ghl_render_target.h */,
+				A42900831413948E00429C47 /* ghl_settings.h */,
+				A42900841413948E00429C47 /* ghl_shader.h */,
+				A42900851413948E00429C47 /* ghl_sound.h */,
+				A42900861413948E00429C47 /* ghl_system.h */,
+				A42900871413948E00429C47 /* ghl_texture.h */,
+				A42900881413948E00429C47 /* ghl_types.h */,
+				A42900891413948E00429C47 /* ghl_vfs.h */,
+			);
+			name = include;
+			path = ../../include;
+			sourceTree = SOURCE_ROOT;
+		};
+		A42900991413949B00429C47 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				A4772A3114169A8B006A9887 /* zlib */,
+				A429009A1413949B00429C47 /* image */,
+				A42900A31413949B00429C47 /* render */,
+				A42900BA1413949B00429C47 /* sound */,
+				A42900CB1413949B00429C47 /* vfs */,
+				A42900D51413949B00429C47 /* winlib */,
+			);
+			name = src;
+			path = ../../src;
+			sourceTree = SOURCE_ROOT;
+		};
+		A429009A1413949B00429C47 /* image */ = {
+			isa = PBXGroup;
+			children = (
+				A4EDFDC514169DCD00ED0DC0 /* png_image_decoder.cpp */,
+				A4EDFDC614169DCD00ED0DC0 /* png_image_decoder.h */,
+				A4772A6B14169C19006A9887 /* libpng */,
+				A429009B1413949B00429C47 /* image_config.h */,
+				A429009C1413949B00429C47 /* image_decoders.cpp */,
+				A429009D1413949B00429C47 /* image_decoders.h */,
+				A429009E1413949B00429C47 /* image_file_decoder.h */,
+				A429009F1413949B00429C47 /* image_impl.cpp */,
+				A42900A01413949B00429C47 /* image_impl.h */,
+				A42900A11413949B00429C47 /* tga_image_decoder.cpp */,
+				A42900A21413949B00429C47 /* tga_image_decoder.h */,
+			);
+			path = image;
+			sourceTree = "<group>";
+		};
+		A42900A31413949B00429C47 /* render */ = {
+			isa = PBXGroup;
+			children = (
+				A42900A41413949B00429C47 /* lucida_console_regular_8.cpp */,
+				A42900A51413949B00429C47 /* lucida_console_regular_8.h */,
+				A42900A61413949B00429C47 /* opengl */,
+				A42900B71413949B00429C47 /* render_impl.cpp */,
+				A42900B81413949B00429C47 /* render_impl.h */,
+				A42900B91413949B00429C47 /* rendertarget_impl.h */,
+			);
+			path = render;
+			sourceTree = "<group>";
+		};
+		A42900A61413949B00429C47 /* opengl */ = {
+			isa = PBXGroup;
+			children = (
+				A42900AD1413949B00429C47 /* ghl_opengl.h */,
+				A42900AE1413949B00429C47 /* refcount_opengl.h */,
+				A42900AF1413949B00429C47 /* render_opengl.cpp */,
+				A42900B01413949B00429C47 /* render_opengl.h */,
+				A42900B11413949B00429C47 /* rendertarget_opengl.cpp */,
+				A42900B21413949B00429C47 /* rendertarget_opengl.h */,
+				A42900B31413949B00429C47 /* shader_glsl.cpp */,
+				A42900B41413949B00429C47 /* shader_glsl.h */,
+				A42900B51413949B00429C47 /* texture_opengl.cpp */,
+				A42900B61413949B00429C47 /* texture_opengl.h */,
+			);
+			path = opengl;
+			sourceTree = "<group>";
+		};
+		A42900BA1413949B00429C47 /* sound */ = {
+			isa = PBXGroup;
+			children = (
+				A42900BF1413949B00429C47 /* ghl_samples_buffer_memory.cpp */,
+				A42900C01413949B00429C47 /* ghl_samples_buffer_memory.h */,
+				A42900C11413949B00429C47 /* ghl_sound_decoder.h */,
+				A42900C21413949B00429C47 /* ghl_sound_impl.cpp */,
+				A42900C31413949B00429C47 /* ghl_sound_impl.h */,
+				A42900C41413949B00429C47 /* openal */,
+				A42900C81413949B00429C47 /* sound_decoders.cpp */,
+				A42900C91413949B00429C47 /* wav_decoder.cpp */,
+				A42900CA1413949B00429C47 /* wav_decoder.h */,
+			);
+			path = sound;
+			sourceTree = "<group>";
+		};
+		A42900C41413949B00429C47 /* openal */ = {
+			isa = PBXGroup;
+			children = (
+				A42900C51413949B00429C47 /* ghl_openal.h */,
+				A42900C61413949B00429C47 /* ghl_sound_openal.cpp */,
+				A42900C71413949B00429C47 /* ghl_sound_openal.h */,
+			);
+			path = openal;
+			sourceTree = "<group>";
+		};
+		A42900CB1413949B00429C47 /* vfs */ = {
+			isa = PBXGroup;
+			children = (
+				A42900CC1413949B00429C47 /* ghl_vfs_factory.cpp */,
+				A42900CD1413949B00429C47 /* memory_stream.cpp */,
+				A42900CE1413949B00429C47 /* memory_stream.h */,
+				A42900CF1413949B00429C47 /* vfs_cocoa.h */,
+				A42900D01413949B00429C47 /* vfs_cocoa.mm */,
+			);
+			path = vfs;
+			sourceTree = "<group>";
+		};
+		A42900D51413949B00429C47 /* winlib */ = {
+			isa = PBXGroup;
+			children = (
+				A42900D81413949B00429C47 /* winlib_cocoatouch.mm */,
+			);
+			path = winlib;
+			sourceTree = "<group>";
+		};
+		A4772A3114169A8B006A9887 /* zlib */ = {
+			isa = PBXGroup;
+			children = (
+				A4772A6314169B23006A9887 /* inffixed.h */,
+				A4772A6414169B23006A9887 /* inftrees.c */,
+				A4772A6514169B23006A9887 /* inftrees.h */,
+				A4772A3214169A8B006A9887 /* adler32.c */,
+				A4772A3314169A8B006A9887 /* crc32.c */,
+				A4772A3414169A8B006A9887 /* crc32.h */,
+				A4772A3514169A8B006A9887 /* crypt.h */,
+				A4772A3614169A8B006A9887 /* deflate.c */,
+				A4772A3714169A8B006A9887 /* deflate.h */,
+				A4772A3814169A8B006A9887 /* inffast.c */,
+				A4772A3914169A8B006A9887 /* inffast.h */,
+				A4772A3A14169A8B006A9887 /* inflate.c */,
+				A4772A3B14169A8B006A9887 /* inflate.h */,
+				A4772A3D14169A8B006A9887 /* ioapi.h */,
+				A4772A3F14169A8B006A9887 /* zconf.h */,
+				A4772A4014169A8B006A9887 /* zip.c */,
+				A4772A4114169A8B006A9887 /* zip.h */,
+				A4772A4214169A8B006A9887 /* zlib.h */,
+				A4772A4314169A8B006A9887 /* zutil.c */,
+				A4772A4414169A8B006A9887 /* zutil.h */,
+			);
+			path = zlib;
+			sourceTree = "<group>";
+		};
+		A4772A6B14169C19006A9887 /* libpng */ = {
+			isa = PBXGroup;
+			children = (
+				A4772A6C14169C19006A9887 /* pnglibconf.h */,
+				A4772A6E14169C19006A9887 /* png.c */,
+				A4772A6F14169C19006A9887 /* png.h */,
+				A4772A7014169C19006A9887 /* pngconf.h */,
+				A4772A7114169C19006A9887 /* pngdebug.h */,
+				A4772A7214169C19006A9887 /* pngerror.c */,
+				A4772A7314169C19006A9887 /* pnginfo.h */,
+				A4772A7414169C19006A9887 /* pngpread.c */,
+				A4772A7514169C19006A9887 /* pngpriv.h */,
+				A4772A7614169C19006A9887 /* pngrutil.c */,
+				A4772A7714169C19006A9887 /* pngstruct.h */,
+			);
+			path = libpng;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC07A0554694100DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA747D9F0F9514B9006C5449 /* GHL_Prefix.pch in Headers */,
+				A429008A1413948E00429C47 /* ghl_api.h in Headers */,
+				A429008B1413948E00429C47 /* ghl_application.h in Headers */,
+				A429008C1413948E00429C47 /* ghl_data_stream.h in Headers */,
+				A429008D1413948E00429C47 /* ghl_image.h in Headers */,
+				A429008E1413948E00429C47 /* ghl_image_decoder.h in Headers */,
+				A429008F1413948E00429C47 /* ghl_keys.h in Headers */,
+				A42900901413948E00429C47 /* ghl_render.h in Headers */,
+				A42900911413948E00429C47 /* ghl_render_target.h in Headers */,
+				A42900921413948E00429C47 /* ghl_settings.h in Headers */,
+				A42900931413948E00429C47 /* ghl_shader.h in Headers */,
+				A42900941413948E00429C47 /* ghl_sound.h in Headers */,
+				A42900951413948E00429C47 /* ghl_system.h in Headers */,
+				A42900961413948E00429C47 /* ghl_texture.h in Headers */,
+				A42900971413948E00429C47 /* ghl_types.h in Headers */,
+				A42900981413948E00429C47 /* ghl_vfs.h in Headers */,
+				A42900DB1413949B00429C47 /* image_config.h in Headers */,
+				A42900DD1413949B00429C47 /* image_decoders.h in Headers */,
+				A42900DE1413949B00429C47 /* image_file_decoder.h in Headers */,
+				A42900E01413949B00429C47 /* image_impl.h in Headers */,
+				A42900E21413949B00429C47 /* tga_image_decoder.h in Headers */,
+				A42900E41413949B00429C47 /* lucida_console_regular_8.h in Headers */,
+				A42900EA1413949B00429C47 /* ghl_opengl.h in Headers */,
+				A42900EB1413949B00429C47 /* refcount_opengl.h in Headers */,
+				A42900ED1413949B00429C47 /* render_opengl.h in Headers */,
+				A42900EF1413949B00429C47 /* rendertarget_opengl.h in Headers */,
+				A42900F11413949B00429C47 /* shader_glsl.h in Headers */,
+				A42900F31413949B00429C47 /* texture_opengl.h in Headers */,
+				A42900F51413949B00429C47 /* render_impl.h in Headers */,
+				A42900F61413949B00429C47 /* rendertarget_impl.h in Headers */,
+				A42900FB1413949B00429C47 /* ghl_samples_buffer_memory.h in Headers */,
+				A42900FC1413949B00429C47 /* ghl_sound_decoder.h in Headers */,
+				A42900FE1413949B00429C47 /* ghl_sound_impl.h in Headers */,
+				A42900FF1413949B00429C47 /* ghl_openal.h in Headers */,
+				A42901011413949B00429C47 /* ghl_sound_openal.h in Headers */,
+				A42901041413949B00429C47 /* wav_decoder.h in Headers */,
+				A42901071413949B00429C47 /* memory_stream.h in Headers */,
+				A42901081413949B00429C47 /* vfs_cocoa.h in Headers */,
+				A4772A4714169A8B006A9887 /* crc32.h in Headers */,
+				A4772A4814169A8B006A9887 /* crypt.h in Headers */,
+				A4772A4A14169A8B006A9887 /* deflate.h in Headers */,
+				A4772A4C14169A8B006A9887 /* inffast.h in Headers */,
+				A4772A4E14169A8B006A9887 /* inflate.h in Headers */,
+				A4772A5014169A8B006A9887 /* ioapi.h in Headers */,
+				A4772A5214169A8B006A9887 /* zconf.h in Headers */,
+				A4772A5414169A8B006A9887 /* zip.h in Headers */,
+				A4772A5514169A8B006A9887 /* zlib.h in Headers */,
+				A4772A5714169A8B006A9887 /* zutil.h in Headers */,
+				A4772A6614169B23006A9887 /* inffixed.h in Headers */,
+				A4772A6814169B23006A9887 /* inftrees.h in Headers */,
+				A4772A7914169C19006A9887 /* pnglibconf.h in Headers */,
+				A4772A7B14169C19006A9887 /* png.h in Headers */,
+				A4772A7C14169C19006A9887 /* pngconf.h in Headers */,
+				A4772A7D14169C19006A9887 /* pngdebug.h in Headers */,
+				A4772A7F14169C19006A9887 /* pnginfo.h in Headers */,
+				A4772A8114169C19006A9887 /* pngpriv.h in Headers */,
+				A4772A8314169C19006A9887 /* pngstruct.h in Headers */,
+				A4EDFDC814169DCD00ED0DC0 /* png_image_decoder.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D2AAC07D0554694100DB518D /* GHL */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "GHL" */;
+			buildPhases = (
+				D2AAC07A0554694100DB518D /* Headers */,
+				D2AAC07B0554694100DB518D /* Sources */,
+				D2AAC07C0554694100DB518D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GHL;
+			productName = GHL;
+			productReference = D2AAC07E0554694100DB518D /* libGHL-Debug-iphoneos.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0867D690FE84028FC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				ORGANIZATIONNAME = AndryBlack;
+			};
+			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "GHL" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 0867D691FE84028FC02AAC07 /* GHL */;
+			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D2AAC07D0554694100DB518D /* GHL */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2AAC07B0554694100DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A42900DC1413949B00429C47 /* image_decoders.cpp in Sources */,
+				A42900DF1413949B00429C47 /* image_impl.cpp in Sources */,
+				A42900E11413949B00429C47 /* tga_image_decoder.cpp in Sources */,
+				A42900E31413949B00429C47 /* lucida_console_regular_8.cpp in Sources */,
+				A42900EC1413949B00429C47 /* render_opengl.cpp in Sources */,
+				A42900EE1413949B00429C47 /* rendertarget_opengl.cpp in Sources */,
+				A42900F01413949B00429C47 /* shader_glsl.cpp in Sources */,
+				A42900F21413949B00429C47 /* texture_opengl.cpp in Sources */,
+				A42900F41413949B00429C47 /* render_impl.cpp in Sources */,
+				A42900FA1413949B00429C47 /* ghl_samples_buffer_memory.cpp in Sources */,
+				A42900FD1413949B00429C47 /* ghl_sound_impl.cpp in Sources */,
+				A42901001413949B00429C47 /* ghl_sound_openal.cpp in Sources */,
+				A42901021413949B00429C47 /* sound_decoders.cpp in Sources */,
+				A42901031413949B00429C47 /* wav_decoder.cpp in Sources */,
+				A42901051413949B00429C47 /* ghl_vfs_factory.cpp in Sources */,
+				A42901061413949B00429C47 /* memory_stream.cpp in Sources */,
+				A42901091413949B00429C47 /* vfs_cocoa.mm in Sources */,
+				A42901101413949B00429C47 /* winlib_cocoatouch.mm in Sources */,
+				A4772A4514169A8B006A9887 /* adler32.c in Sources */,
+				A4772A4614169A8B006A9887 /* crc32.c in Sources */,
+				A4772A4914169A8B006A9887 /* deflate.c in Sources */,
+				A4772A4B14169A8B006A9887 /* inffast.c in Sources */,
+				A4772A4D14169A8B006A9887 /* inflate.c in Sources */,
+				A4772A5314169A8B006A9887 /* zip.c in Sources */,
+				A4772A5614169A8B006A9887 /* zutil.c in Sources */,
+				A4772A6714169B23006A9887 /* inftrees.c in Sources */,
+				A4772A7A14169C19006A9887 /* png.c in Sources */,
+				A4772A7E14169C19006A9887 /* pngerror.c in Sources */,
+				A4772A8014169C19006A9887 /* pngpread.c in Sources */,
+				A4772A8214169C19006A9887 /* pngrutil.c in Sources */,
+				A4EDFDC714169DCD00ED0DC0 /* png_image_decoder.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB921F08733DC00010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DSTROOT = /tmp/GHL.dst;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = GHL_Prefix.pch;
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = "GHL-$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+			};
+			name = Debug;
+		};
+		1DEB922008733DC00010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				DSTROOT = /tmp/GHL.dst;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = GHL_Prefix.pch;
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = "GHL-$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+			};
+			name = Release;
+		};
+		1DEB922308733DC00010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					GHL_DEBUG,
+					GHL_PLATFORM_IOS,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				OBJROOT = build;
+				OTHER_LDFLAGS = "-ObjC";
+				PREBINDING = NO;
+				SDKROOT = iphoneos4.3;
+				SYMROOT = ../../lib;
+			};
+			name = Debug;
+		};
+		1DEB922408733DC00010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = GHL_PLATFORM_IOS;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				OBJROOT = build;
+				OTHER_LDFLAGS = "-ObjC";
+				PREBINDING = NO;
+				SDKROOT = iphoneos4.3;
+				SYMROOT = ../../lib;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "GHL" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB921F08733DC00010E9CD /* Debug */,
+				1DEB922008733DC00010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "GHL" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB922308733DC00010E9CD /* Debug */,
+				1DEB922408733DC00010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+}

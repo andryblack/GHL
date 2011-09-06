@@ -3,3 +3,6 @@ projects/linux/build
 projects/GHL-build-desktop
 *.user
 *-build-desktop
+projects/ios/GHL.xcodeproj/*.pbxuser
+projects/ios/GHL.xcodeproj/*.mode1v3
+projects/ios/build
