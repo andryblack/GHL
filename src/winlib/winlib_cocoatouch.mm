@@ -28,7 +28,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 static GHL::Application* g_application = 0;
-static UIInterfaceOrientation g_orientation = UIInterfaceOrientationLandscapeRight;
+static UIInterfaceOrientation g_orientation = UIInterfaceOrientationLandscapeLeft;
 
 namespace GHL {
 	extern UInt32 g_default_renderbuffer;
@@ -36,11 +36,61 @@ namespace GHL {
 
 @class WinLibView;
 
+@interface AccelerometerDelegate : NSObject<UIAccelerometerDelegate>
+{
+	UIAccelerometer* accelerometer;
+	float data[3];
+}
+- (id)init;
+- (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration;
+float* get_data;
+@end
+
+@implementation AccelerometerDelegate
+
+- (id)init
+{
+	if (self = [super init]) {
+		accelerometer = [UIAccelerometer sharedAccelerometer];
+		accelerometer.updateInterval = 0.1;
+		accelerometer.delegate = self;
+	}
+	return self;
+}
+
+- (float*)get_data
+{
+	return data;
+}
+
+- (void)dealloc
+{
+	accelerometer.delegate = nil;
+	[super dealloc];
+}
+
+- (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration
+{
+	data[0]=acceleration.x;
+	data[1]=acceleration.y;
+	data[2]=acceleration.y;
+}
+
+
+@end
+
+
+
 class SystemCocoaTouch : public GHL::System {
 private:
 	WinLibView* m_view;
+	AccelerometerDelegate* m_accelerometer;
 public:
 	explicit SystemCocoaTouch(WinLibView* view) : m_view(view) {
+		m_accelerometer = 0;
+	}
+	~SystemCocoaTouch() {
+		[m_accelerometer release]; 
 	}
 	virtual void GHL_CALL Exit() {
 		///
@@ -66,6 +116,30 @@ public:
 	virtual GHL::UInt32  GHL_CALL GetKeyMods() const {
 		return 0;
 	}
+	///
+	virtual bool GHL_CALL SetDeviceState( GHL::DeviceState name, void* data) {
+		if (name==GHL::DEVICE_STATE_ACCELEROMETER_ENABLED) {
+			bool* state = (bool*)data;
+			if (*state && !m_accelerometer) {
+				m_accelerometer = [[AccelerometerDelegate alloc] init];
+			} else if (!*state && m_accelerometer) {
+				[m_accelerometer release];
+				m_accelerometer = nil;
+			}
+			return true;
+		}
+		return false;
+	}
+	///
+	virtual bool GHL_CALL GetDeviceData( GHL::DeviceData name, void* data) {
+		if (name==GHL::DEVICE_DATA_ACCELEROMETER) {
+			if (!m_accelerometer)
+				return false;
+			memcpy(data, [m_accelerometer get_data], sizeof(float)*3);
+			return true;
+		}
+		return false;
+	}
 };
 
 @interface WinLibViewController : UIViewController
@@ -78,10 +152,10 @@ public:
 @implementation WinLibViewController
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation {
-	if (g_orientation==UIInterfaceOrientationLandscapeRight) {
+	/*if (g_orientation==UIInterfaceOrientationLandscapeRight) {
 		if (orientation==UIInterfaceOrientationLandscapeLeft)
 			return YES;
-	}
+	}*/
     return orientation == g_orientation; 
 }
 

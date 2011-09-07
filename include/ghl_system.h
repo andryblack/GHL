@@ -11,8 +11,19 @@
 #define GHL_SYSTEM_H
 
 #include "ghl_api.h"
+#include "ghl_types.h"
 
 namespace GHL {
+	
+	/// device state
+	enum DeviceState {
+		DEVICE_STATE_ACCELEROMETER_ENABLED	///< bool
+	};
+	
+	/// device data
+	enum DeviceData {
+		DEVICE_DATA_ACCELEROMETER	///< 3floats
+	};
 
     struct System {
         ///
@@ -29,6 +40,10 @@ namespace GHL {
         virtual void GHL_CALL HideKeyboard() = 0;
         ///
         virtual UInt32  GHL_CALL GetKeyMods() const = 0;
+		///
+		virtual bool GHL_CALL SetDeviceState( DeviceState name, void* data) = 0;
+		///
+		virtual bool GHL_CALL GetDeviceData( DeviceData name, void* data) = 0;
     };
 }
 
