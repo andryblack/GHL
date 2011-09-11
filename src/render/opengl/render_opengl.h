@@ -91,6 +91,9 @@ namespace GHL
 		/// set view matrix
 		virtual void GHL_CALL SetViewMatrix(const float* m) ;
 		
+		/// setup scisor test
+		virtual void GHL_CALL SetupScisor( bool enable, UInt32 x, UInt32 y, UInt32 w, UInt32 h );
+		
 		/// draw primitives
 		/**
 		 * @par type primitives type

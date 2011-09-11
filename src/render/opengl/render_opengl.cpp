@@ -269,6 +269,18 @@ namespace GHL {
 		glViewport(x,_y,w,h);
 		CHECK_GL_ERROR
 	}
+	
+	/// setup scisor test
+	void GHL_CALL RenderOpenGL::SetupScisor( bool enable, UInt32 x, UInt32 y, UInt32 w, UInt32 h ) {
+		if (!enable) {
+			glDisable(GL_SCISSOR_TEST);
+		} else {
+			glEnable(GL_SCISSOR_TEST);
+			UInt32 _y = GetHeight()-h-y;
+			glScissor(x, _y, w, h);
+		}
+		CHECK_GL_ERROR
+	}
 	 
 	
 		

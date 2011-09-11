@@ -96,6 +96,7 @@ namespace GHL {
         SetupTextureStageColorOp(TEX_OP_DISABLE,TEX_ARG_TEXTURE,TEX_ARG_DIFFUSE,1);
         SetupTextureStageAlphaOp(TEX_OP_DISABLE,TEX_ARG_TEXTURE,TEX_ARG_DIFFUSE,1);
         SetupFaceCull(false);
+		SetupScisor(false);
     }
 	
 	
