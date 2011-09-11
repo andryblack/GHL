@@ -22,6 +22,7 @@
 
 #include "image_decoders.h"
 #include "image_config.h"
+#include "image_impl.h"
 
 #ifdef USE_PNG_DECODER
 #include "png_image_decoder.h"
@@ -88,6 +89,14 @@ Image* GHL_CALL ImageDecoderImpl::Decode(DataStream* ds) const
 	return img;
 }
 	
+	/// create image from data
+	Image* GHL_CALL ImageDecoderImpl::CreateImage( UInt32 w, UInt32 h,ImageFormat fmt, const Byte* data ) const {
+		ImageImpl* impl = new ImageImpl( w, h, fmt);
+		if (data) {
+			memcpy( impl->GetDataW(), data,w*h*impl->GetBpp() );
+		}
+		return impl;
+	}
 	
 	ImageFileFormat GHL_CALL ImageDecoderImpl::GetFileFormat( DataStream* stream ) const {
 		(void)stream;

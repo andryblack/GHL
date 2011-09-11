@@ -24,12 +24,12 @@
 #define GHL_IMAGE_DECODER_H
 
 #include "ghl_api.h"
+#include "ghl_image.h"
 
 namespace GHL 
 {
 	
 	struct DataStream;
-	struct Image;
 	
 	enum ImageFileFormat {
 		IMAGE_FILE_FORMAT_UNKNOWN,
@@ -41,6 +41,8 @@ namespace GHL
 	
 	struct ImageDecoder 
 	{
+		/// create image from data
+		virtual Image* GHL_CALL CreateImage( UInt32 w, UInt32 h,ImageFormat fmt, const Byte* data ) const = 0;
 		/// get image file format
 		virtual ImageFileFormat GHL_CALL GetFileFormat( DataStream* stream ) const = 0;
 		/// decode
