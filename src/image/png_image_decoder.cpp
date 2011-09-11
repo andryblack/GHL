@@ -84,14 +84,14 @@ Image* PngDecoder::Decode(DataStream* file)
 	png_byte buffer[8];
 	// Read the first few bytes of the PNG file
 	if (file->Read(buffer, 8) != 8) {
-		log_error("png: error reading signature");
+		//log_error("png: error reading signature");
 		return 0;
 	}
 
 	// Check if it really is a PNG file
 	if ( png_sig_cmp(buffer, 0, 8)!=0 )
 	{
-		log_error("png: is not a png file");
+		//log_error("png: is not a png file");
 		return 0;
 	}
 
