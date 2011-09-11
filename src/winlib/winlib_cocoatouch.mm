@@ -29,6 +29,7 @@
 
 static GHL::Application* g_application = 0;
 static UIInterfaceOrientation g_orientation = UIInterfaceOrientationLandscapeLeft;
+static bool g_orientationLocked = false;
 
 namespace GHL {
 	extern UInt32 g_default_renderbuffer;
@@ -127,6 +128,8 @@ public:
 				m_accelerometer = nil;
 			}
 			return true;
+		} else if (name==GHL::DEVICE_STATE_ORIENTATION_LOCKED) {
+			g_orientationLocked = *(bool*)data;
 		}
 		return false;
 	}
@@ -152,10 +155,10 @@ public:
 @implementation WinLibViewController
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation {
-	/*if (g_orientation==UIInterfaceOrientationLandscapeRight) {
+	if (g_orientation==UIInterfaceOrientationLandscapeRight && !g_orientationLocked) {
 		if (orientation==UIInterfaceOrientationLandscapeLeft)
 			return YES;
-	}*/
+	}
     return orientation == g_orientation; 
 }
 
