@@ -39,6 +39,8 @@ namespace GHL
 		PRIMITIVE_TYPE_TRIANGLES,		///< triangles
 		PRIMITIVE_TYPE_TRIANGLE_STRIP,	///< tringle strip
 		PRIMITIVE_TYPE_TRIANGLE_FAN,	///< tringle fan
+		PRIMITIVE_TYPE_LINES,			///< lines
+		PRIMITIVE_TYPE_LINE_STRIP		///< line strip
 	};
 
 	/// vertex data

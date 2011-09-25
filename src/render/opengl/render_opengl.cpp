@@ -596,6 +596,12 @@ namespace GHL {
 		} else if (type==PRIMITIVE_TYPE_TRIANGLE_FAN) {
 			element = GL_TRIANGLE_FAN;
 			indexes_amount = prim_amount + 2;
+		} else if (type==PRIMITIVE_TYPE_LINES) {
+			element = GL_LINES;
+			indexes_amount = prim_amount * 2;
+		} else if (type==PRIMITIVE_TYPE_LINE_STRIP) {
+			element = GL_LINE_STRIP;
+			indexes_amount = prim_amount + 1;
 		}
 		glTexCoordPointer(2, GL_FLOAT, vertex_size, &v->tx);
 		glColorPointer(4, GL_UNSIGNED_BYTE, vertex_size, v->color);
