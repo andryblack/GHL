@@ -661,6 +661,7 @@
 				PREBINDING = NO;
 				SDKROOT = iphoneos4.3;
 				SYMROOT = ../../lib;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -682,6 +683,7 @@
 				PREBINDING = NO;
 				SDKROOT = iphoneos4.3;
 				SYMROOT = ../../lib;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
