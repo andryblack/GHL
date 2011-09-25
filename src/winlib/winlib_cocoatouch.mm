@@ -446,9 +446,11 @@ public:
 	m_vfs = new GHL::VFSCocoaImpl();
 	g_application->SetVFS(m_vfs);
 
+	CGRect rect = [[UIScreen mainScreen] bounds];
+	
 	GHL::Settings settings;
-	settings.width = 1024;
-	settings.height = 768;
+	settings.width = rect.size.width;
+	settings.height = rect.size.height;
 	settings.fullscreen = true;
 	g_application->FillSettings(&settings);
 	
