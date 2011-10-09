@@ -50,7 +50,7 @@ class ImageImpl : public Image
 		virtual void GHL_CALL SetAlpha(const Image* img);
 		virtual Image* GHL_CALL SubImage(UInt32 x,UInt32 y,UInt32 w,UInt32 h) const;
 		void SwapChannelsRB();
-		Byte* GetDataW() const { return m_data;}
+		virtual Byte* GHL_CALL GetDataPtr() { return m_data;}
 		UInt32 GetBpp() const;
 		void FlipV();
 };

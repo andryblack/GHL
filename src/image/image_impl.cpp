@@ -163,10 +163,13 @@ namespace GHL
 		for (UInt32 _y = 0; _y<h;_y++) {
 			const Byte* src = m_data + (_y+y)*m_width*GetBpp();
 			src+=x*GetBpp();
-			Byte* dst = res->GetDataW()+_y*w*GetBpp();
+			Byte* dst = res->GetDataPtr()+_y*w*GetBpp();
 			::memcpy(dst,src,w*GetBpp());
 		}
 		return res;
 	}
 
+}
+GHL_API GHL::Image* GHL_CALL GHL_CreateImage( GHL::UInt32 w, GHL::UInt32 h,GHL::ImageFormat fmt) {
+	return new GHL::ImageImpl( w,h,fmt);
 }

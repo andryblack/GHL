@@ -93,7 +93,7 @@ Image* GHL_CALL ImageDecoderImpl::Decode(DataStream* ds) const
 	Image* GHL_CALL ImageDecoderImpl::CreateImage( UInt32 w, UInt32 h,ImageFormat fmt, const Byte* data ) const {
 		ImageImpl* impl = new ImageImpl( w, h, fmt);
 		if (data) {
-			memcpy( impl->GetDataW(), data,w*h*impl->GetBpp() );
+			memcpy( impl->GetDataPtr(), data,w*h*impl->GetBpp() );
 		}
 		return impl;
 	}
