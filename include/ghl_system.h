@@ -18,7 +18,8 @@ namespace GHL {
 	/// device state
 	enum DeviceState {
 		DEVICE_STATE_ACCELEROMETER_ENABLED,	///< bool
-		DEVICE_STATE_ORIENTATION_LOCKED		///< bool
+		DEVICE_STATE_ORIENTATION_LOCKED,	///< bool
+		DEVICE_STATE_MULTITOUCH_ENABLED		///< bool
 	};
 	
 	/// device data

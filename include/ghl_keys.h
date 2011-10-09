@@ -39,7 +39,8 @@ namespace GHL
         MOUSE_BUTTON_LEFT,
         MOUSE_BUTTON_RIGHT,
         MOUSE_BUTTON_MIDDLE,
-        TOUCH_1 = MOUSE_BUTTON_LEFT
+        TOUCH_1 = MOUSE_BUTTON_LEFT,
+		MUTITOUCH_1 = MOUSE_BUTTON_MIDDLE+1
     };
 
     enum Key

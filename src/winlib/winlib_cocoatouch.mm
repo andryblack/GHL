@@ -118,21 +118,7 @@ public:
 		return 0;
 	}
 	///
-	virtual bool GHL_CALL SetDeviceState( GHL::DeviceState name, void* data) {
-		if (name==GHL::DEVICE_STATE_ACCELEROMETER_ENABLED) {
-			bool* state = (bool*)data;
-			if (*state && !m_accelerometer) {
-				m_accelerometer = [[AccelerometerDelegate alloc] init];
-			} else if (!*state && m_accelerometer) {
-				[m_accelerometer release];
-				m_accelerometer = nil;
-			}
-			return true;
-		} else if (name==GHL::DEVICE_STATE_ORIENTATION_LOCKED) {
-			g_orientationLocked = *(bool*)data;
-		}
-		return false;
-	}
+	virtual bool GHL_CALL SetDeviceState( GHL::DeviceState name, void* data); 
 	///
 	virtual bool GHL_CALL GetDeviceData( GHL::DeviceData name, void* data) {
 		if (name==GHL::DEVICE_DATA_ACCELEROMETER) {
@@ -163,7 +149,7 @@ public:
 }
 
 @end
-
+static const size_t max_touches = 10;
 @interface WinLibView : UIView<UITextFieldDelegate> {
 	EAGLContext*	m_context;
 	// The OpenGL ES names for the framebuffer and renderbuffer used to render to this view
@@ -181,6 +167,7 @@ public:
 	::timeval	m_timeval;
 	bool	m_active;
 	UITextField* m_hiddenInput;
+	UITouch* m_touches[max_touches];
 }
 
 - (void)prepareOpenGL;
@@ -260,6 +247,10 @@ public:
 		g_application->SetSound(m_sound);
 #endif
 		
+		for (size_t i=0;i<max_touches;i++) {
+			m_touches[i] = 0;
+		}
+		
 		m_hiddenInput = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
 		m_hiddenInput.delegate = self;
 		m_hiddenInput.keyboardType = UIKeyboardTypeASCIICapable;
@@ -328,18 +319,51 @@ public:
 	}
 }
 
+- (int)touchNum:(UITouch*)touch {
+	for (size_t i=0;i<max_touches;i++) {
+		if (m_touches[i]==touch)
+			return i;
+	}
+	return -1;
+}
+
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-	UITouch* touch = (UITouch*)[touches anyObject];
-	CGPoint pos = [touch locationInView:self];
-	g_application->OnMouseDown(GHL::TOUCH_1,pos.x,pos.y);
+	for (UITouch* touch in touches) {
+		CGPoint pos = [touch locationInView:self];
+		int touch_num = -1;
+		for (size_t i=0;i<max_touches;i++) {
+			if (m_touches[i]==0) {
+				touch_num = i;
+				break;
+			}
+		}
+		if (touch_num<0)
+			continue;
+		m_touches[touch_num]=touch; /// no retain!!
+		GHL::MouseButton btn = GHL::TOUCH_1;
+		if (touch_num>0) {
+			btn = GHL::MouseButton(GHL::MUTITOUCH_1+touch_num-1);
+		}
+		g_application->OnMouseDown(btn,pos.x,pos.y);
+	}
 	//NSLog(@"touchBegan %dx%d",int(pos.x),int(pos.y));
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-	UITouch* touch = (UITouch*)[touches anyObject];
-	CGPoint pos = [touch locationInView:self];
-	g_application->OnMouseUp(GHL::TOUCH_1,pos.x,pos.y);
+	for (UITouch* touch in touches) {
+		CGPoint pos = [touch locationInView:self];
+		int touch_num = [self touchNum:touch];
+		if (touch_num<0) {
+			continue;
+		}
+		m_touches[touch_num]=0;
+		GHL::MouseButton btn = GHL::TOUCH_1;
+		if (touch_num>0) {
+			btn = GHL::MouseButton(GHL::MUTITOUCH_1+touch_num-1);
+		}
+		g_application->OnMouseUp(btn,pos.x,pos.y);
+	}
 	//NSLog(@"touchEnded %dx%d",int(pos.x),int(pos.y));
 }
 
@@ -349,9 +373,18 @@ public:
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-	UITouch* touch = (UITouch*)[touches anyObject];
-	CGPoint pos = [touch locationInView:self];
-	g_application->OnMouseMove(GHL::TOUCH_1,pos.x,pos.y);
+	for (UITouch* touch in touches) {
+		CGPoint pos = [touch locationInView:self];
+		int touch_num = [self touchNum:touch];
+		if (touch_num<0) {
+			continue;
+		}
+		GHL::MouseButton btn = GHL::TOUCH_1;
+		if (touch_num>0) {
+			btn = GHL::MouseButton(GHL::MUTITOUCH_1+touch_num-1);
+		}
+		g_application->OnMouseMove(btn,pos.x,pos.y);
+	}
 	//NSLog(@"touchMoved %dx%d",int(pos.x),int(pos.y));
 }
 
@@ -522,7 +555,26 @@ void GHL_CALL SystemCocoaTouch::HideKeyboard() {
 	[m_view hideKeyboard];
 }
 
-
+bool GHL_CALL SystemCocoaTouch::SetDeviceState( GHL::DeviceState name, void* data) {
+	if (name==GHL::DEVICE_STATE_ACCELEROMETER_ENABLED) {
+		bool* state = (bool*)data;
+		if (*state && !m_accelerometer) {
+			m_accelerometer = [[AccelerometerDelegate alloc] init];
+		} else if (!*state && m_accelerometer) {
+			[m_accelerometer release];
+			m_accelerometer = nil;
+		}
+		return true;
+	} else if (name==GHL::DEVICE_STATE_ORIENTATION_LOCKED) {
+		g_orientationLocked = *(bool*)data;
+		return true;
+	} else if (name==GHL::DEVICE_STATE_MULTITOUCH_ENABLED) {
+		bool* state = (bool*)data;
+		m_view.multipleTouchEnabled = state ? YES : NO;
+		return true;
+	}
+	return false;
+}
 
 
 GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int argc, char** argv) {
