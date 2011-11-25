@@ -1019,8 +1019,7 @@ png_set_rgb_to_gray(png_structp png_ptr, int error_action, double red,
 
 #endif
 
-#if defined(PNG_READ_USER_TRANSFORM_SUPPORTED) || \
-    defined(PNG_WRITE_USER_TRANSFORM_SUPPORTED)
+#if defined(PNG_READ_USER_TRANSFORM_SUPPORTED) 
 void PNGAPI
 png_set_read_user_transform_fn(png_structp png_ptr, png_user_transform_ptr
     read_user_transform_fn)
@@ -1030,10 +1029,8 @@ png_set_read_user_transform_fn(png_structp png_ptr, png_user_transform_ptr
    if (png_ptr == NULL)
       return;
 
-#ifdef PNG_READ_USER_TRANSFORM_SUPPORTED
    png_ptr->transformations |= PNG_USER_TRANSFORM;
    png_ptr->read_user_transform_fn = read_user_transform_fn;
-#endif
 }
 #endif
 

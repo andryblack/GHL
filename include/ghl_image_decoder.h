@@ -50,7 +50,12 @@ namespace GHL
 		/// encode
 		virtual bool GHL_CALL Encode( const Image* image, DataStream* to, ImageFileFormat fmt) const = 0;
 	};
+    
+    
 	
 } /*namespace*/
+
+GHL_API GHL::ImageDecoder* GHL_CALL GHL_CreateImageDecoder();
+GHL_API void GHL_CALL GHL_DestroyImageDecoder(GHL::ImageDecoder* decoder);
 
 #endif /*GHL_IMAGE_DECODER_H*/

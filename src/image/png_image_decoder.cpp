@@ -65,7 +65,7 @@ static void PNGAPI read_data_fcn(png_structp png_ptr, png_bytep data, png_size_t
 	png_size_t check;
 
 	DataStream* file=(DataStream*)png_get_io_ptr(png_ptr);
-	check=(png_size_t) file->Read((Byte*)data,length);
+	check=(png_size_t) file->Read((Byte*)data,UInt32(length));
 
 	if (check != length)
 		png_error(png_ptr, "Read Error");

@@ -55,7 +55,7 @@
 #ifdef BYFOUR
 #  define REV(w) ((((w)>>24)&0xff)+(((w)>>8)&0xff00)+ \
                 (((w)&0xff00)<<8)+(((w)&0xff)<<24))
-   local unsigned long crc32_little OF((unsigned long,
+   local uLong crc32_little OF((uLong,
                         const unsigned char FAR *, unsigned));
    local unsigned long crc32_big OF((unsigned long,
                         const unsigned char FAR *, unsigned));
@@ -218,8 +218,8 @@ const unsigned long FAR * ZEXPORT get_crc_table()
 #define DO8 DO1; DO1; DO1; DO1; DO1; DO1; DO1; DO1
 
 /* ========================================================================= */
-unsigned long ZEXPORT crc32(crc, buf, len)
-    unsigned long crc;
+uLong ZEXPORT crc32(crc, buf, len)
+    uLong crc;
     const unsigned char FAR *buf;
     uInt len;
 {
@@ -261,12 +261,12 @@ unsigned long ZEXPORT crc32(crc, buf, len)
 #define DOLIT32 DOLIT4; DOLIT4; DOLIT4; DOLIT4; DOLIT4; DOLIT4; DOLIT4; DOLIT4
 
 /* ========================================================================= */
-local unsigned long crc32_little(crc, buf, len)
-    unsigned long crc;
+local uLong crc32_little(crc, buf, len)
+    uLong crc;
     const unsigned char FAR *buf;
     unsigned len;
 {
-    register u4 c;
+    register uLong c;
     register const u4 FAR *buf4;
 
     c = (u4)crc;
@@ -301,12 +301,12 @@ local unsigned long crc32_little(crc, buf, len)
 #define DOBIG32 DOBIG4; DOBIG4; DOBIG4; DOBIG4; DOBIG4; DOBIG4; DOBIG4; DOBIG4
 
 /* ========================================================================= */
-local unsigned long crc32_big(crc, buf, len)
-    unsigned long crc;
+local uLong crc32_big(crc, buf, len)
+    uLong crc;
     const unsigned char FAR *buf;
     unsigned len;
 {
-    register u4 c;
+    register uLong c;
     register const u4 FAR *buf4;
 
     c = REV((u4)crc);

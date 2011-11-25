@@ -20,7 +20,7 @@ void * DYNAMIC_GL_GetProcAddress( const char* name ) {
 /// mac platform
 #include <dlfcn.h>
 static void* gl_library = 0;
-void* DYNAMIC_GL_GetProcAddress (const char *name)
+static void* DYNAMIC_GL_GetProcAddress (const char *name)
 {
     return dlsym(gl_library,name);
 }
@@ -72,7 +72,7 @@ namespace GHL {
         }
         return (FUNCPROTO) ( func );
     }
-
+    void InternalDynamicGLLoadSubset();
 #include "dynamic_gl_cpp.inc"
 
     void DynamicGLLoadSubset() {

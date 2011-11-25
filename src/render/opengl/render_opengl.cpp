@@ -33,7 +33,7 @@ namespace GHL {
 		GL_TEXTURE3,
 	};
 	
-	void set_texture_stage(UInt32 stage) {
+	static void set_texture_stage(UInt32 stage) {
         static UInt32 oldStage = 1000;
         if (oldStage!=stage) {
             glActiveTexture(texture_stages[stage]);
