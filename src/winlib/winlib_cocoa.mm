@@ -233,6 +233,25 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 	}
 }
 
+- (void)mouseDown:(NSEvent *)theEvent {
+    NSPoint event_location = [theEvent locationInWindow];
+    NSPoint local_point = [self convertPoint:event_location fromView:nil];
+    CGFloat y = [self bounds].size.height - local_point.y;
+    [m_application getApplication]->OnMouseDown(GHL::MOUSE_BUTTON_LEFT, local_point.x, y);
+}
+- (void)mouseUp:(NSEvent *)theEvent {
+    NSPoint event_location = [theEvent locationInWindow];
+    NSPoint local_point = [self convertPoint:event_location fromView:nil];
+    CGFloat y = [self bounds].size.height - local_point.y;
+    [m_application getApplication]->OnMouseUp(GHL::MOUSE_BUTTON_LEFT, local_point.x, y);
+}
+- (void)mouseMoved:(NSEvent *)theEvent {
+    NSPoint event_location = [theEvent locationInWindow];
+    NSPoint local_point = [self convertPoint:event_location fromView:nil];
+    CGFloat y = [self bounds].size.height - local_point.y;
+    [m_application getApplication]->OnMouseMove(GHL::MOUSE_BUTTON_LEFT, local_point.x, y);
+}
+
 - (BOOL) acceptsFirstResponder
 {
     // We want this view to be able to receive key events
