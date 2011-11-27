@@ -29,7 +29,7 @@
 #endif
 
 #ifdef USE_JPEG_DECODER
-#include "jpeg_decoder.h"
+#include "jpeg_image_decoder.h"
 #endif
 
 #ifdef USE_QT_IMAGE_DECODER
@@ -80,6 +80,7 @@ Image* GHL_CALL ImageDecoderImpl::Decode(DataStream* ds) const
 	{
 		img = m_decoders[i]->Decode(ds);
 		if (img) break;
+        ds->Seek(0, F_SEEK_BEGIN);
 	}
 	if (!img) {
 		if (true) {

@@ -33,6 +33,9 @@
 //#define USE_IPHONE_IMAGE_DECODER
 #define USE_PNG_DECODER
 //#define USE_JPEG_DECODER
+#elif defined( GHL_PLATFORM_MAC )
+#define USE_PNG_DECODER
+#define USE_JPEG_DECODER
 #else
 //#define USE_PNG_DECODER
 //#define USE_JPEG_DECODER
