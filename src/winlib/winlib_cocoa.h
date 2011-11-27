@@ -6,7 +6,7 @@
 //  Copyright 2011 andryblack. All rights reserved.
 //
 
-#include "winlib_application.h"
+#include <ghl_application.h>
 #import <Cocoa/Cocoa.h>
 
 #include <sys/time.h>
@@ -21,7 +21,7 @@ namespace GHL {
 class SystemCocoa;
 
 @interface WinLibAppDelegate : NSObject <NSApplicationDelegate> {
-	WinLib::Application* m_application;
+	GHL::Application* m_application;
 	SystemCocoa*	m_system;
 	GHL::VFSCocoaImpl*	m_vfs;
 	GHL::ImageDecoderImpl* m_imageDecoder;
@@ -29,8 +29,8 @@ class SystemCocoa;
 	NSWindow*	m_window;
 	NSString*	m_appName;
 }
--(void) setApplication:(WinLib::Application*) app;
--(WinLib::Application*) getApplication;
+-(void) setApplication:(GHL::Application*) app;
+-(GHL::Application*) getApplication;
 -(GHL::VFSCocoaImpl*) getVFS;
 -(GHL::ImageDecoderImpl*) getImageDecoder;
 -(GHL::SoundOpenAL*) getSound;

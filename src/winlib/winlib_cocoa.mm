@@ -7,26 +7,60 @@
 //
 
 
-#include "../GHL/render/opengl/render_opengl.h"
+#include "../render/opengl/render_opengl.h"
 
 #import "winlib_cocoa.h"
 
 #import <Cocoa/Cocoa.h>
 
-#include "winlib_application.h"
-#include "winlib_settings.h"
+#include <ghl_application.h>
+#include <ghl_settings.h>
 
-#include "../GHL/ghl_system.h"
-#include "../GHL/vfs/vfs_cocoa.h"
-#include "../GHL/image/image_decoders.h"
-#include "../GHL/sound/openal/ghl_sound_openal.h"
+#include <ghl_system.h>
+#include "../vfs/vfs_cocoa.h"
+#include "../image/image_decoders.h"
+#include "../sound/openal/ghl_sound_openal.h"
 
+static bool g_fullscreen = false;
 
 class SystemCocoa : public GHL::System {
 public:
 	virtual void GHL_CALL Exit() {
 		[[NSApplication sharedApplication] terminate:nil];
 	}
+    ///
+    virtual bool GHL_CALL IsFullscreen() const {
+        return g_fullscreen;
+    }
+    ///
+    virtual void GHL_CALL SwitchFullscreen(bool fs) {
+        /// @todo stub
+    }
+    ///
+    virtual void GHL_CALL SwapBuffers() {
+        /// @todo stub
+    }
+    ///
+    virtual void GHL_CALL ShowKeyboard() {
+        /// do nothing
+    }
+    ///
+    virtual void GHL_CALL HideKeyboard() {
+        /// do nothing
+    }
+    ///
+    virtual GHL::UInt32  GHL_CALL GetKeyMods() const {
+        /// @todo stub
+        return 0;
+    }
+    ///
+    virtual bool GHL_CALL SetDeviceState( GHL::DeviceState name, void* data) {
+        return false;
+    }
+    ///
+    virtual bool GHL_CALL GetDeviceData( GHL::DeviceData name, void* data) {
+        return false;
+    }
 };
 
 
@@ -238,7 +272,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 		
 		[[self openGLContext] makeCurrentContext];
 		m_render->ResetRenderState();
-		WinLib::Application* app = [m_application getApplication];
+		GHL::Application* app = [m_application getApplication];
 		app->OnFrame(dt);
 		[[self openGLContext] flushBuffer];
 	}
@@ -281,18 +315,20 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 }
 
 -(void) initSound {
+#ifndef GHL_NOSOUND
 	m_sound = new GHL::SoundOpenAL();
 	if (!m_sound->SoundInit()) {
 		delete m_sound;
 		m_sound = 0;
 	}
+#endif
 }
 
--(void) setApplication:(WinLib::Application*) app {
+-(void) setApplication:(GHL::Application*) app {
 	m_application = app;
 }
 
--(WinLib::Application*) getApplication {
+-(GHL::Application*) getApplication {
 	return m_application;
 }
 -(SystemCocoa*) getSystem {
@@ -319,8 +355,10 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 	delete m_imageDecoder;
 	delete m_system;
 	if (m_sound) {
+#ifndef GHL_NOSOUND
 		m_sound->SoundDone();
 		delete m_sound;
+#endif
 		m_sound = 0;
 	}
 	[super dealloc];
@@ -330,10 +368,10 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     (void)aNotification;
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	// Insert code here to initialize your application 
-	WinLib::Settings settings;
+	GHL::Settings settings;
 	settings.width = 800;
 	settings.height = 600;
-	settings.fullscreen = false;
+	settings.fullscreen = g_fullscreen;
 	m_application->FillSettings(&settings);
 	
 	
@@ -357,6 +395,9 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 	WinLibOpenGLView* gl = [[[WinLibOpenGLView alloc] initWithFrame:rect pixelFormat:pf] autorelease];
 	[gl setApplication:self];
 	NSInteger style = NSTitledWindowMask | NSClosableWindowMask;
+    
+    g_fullscreen = settings.fullscreen;
+    
 	if (settings.fullscreen) {
 		style = NSBorderlessWindowMask;
 		rect = [[NSScreen mainScreen] frame];
@@ -400,8 +441,10 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 	delete m_imageDecoder;
 	m_imageDecoder = 0;
 	if (m_sound) {
+#ifndef GHL_NOSOUND
 		m_sound->SoundDone();
 		delete m_sound;
+#endif
 		m_sound = 0;
 	}
 	if (m_window)
@@ -415,7 +458,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 
 
 
-WINLIB_API int WINLIB_CALL WinLib_StartApplication( WinLib::Application* app , int /*argc*/, char** /*argv*/) {
+GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/, char** /*argv*/) {
     
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	[NSApplication sharedApplication];

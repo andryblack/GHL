@@ -218,8 +218,8 @@ const unsigned long FAR * ZEXPORT get_crc_table()
 #define DO8 DO1; DO1; DO1; DO1; DO1; DO1; DO1; DO1
 
 /* ========================================================================= */
-uLong ZEXPORT crc32(crc, buf, len)
-    uLong crc;
+uLong ZEXPORT crc32(_crc, buf, len)
+    uLong _crc;
     const unsigned char FAR *buf;
     uInt len;
 {
@@ -230,6 +230,7 @@ uLong ZEXPORT crc32(crc, buf, len)
         make_crc_table();
 #endif /* DYNAMIC_CRC_TABLE */
 
+    u4 crc = (u4)_crc;
 #ifdef BYFOUR
     if (sizeof(void *) == sizeof(ptrdiff_t)) {
         u4 endian;
@@ -257,7 +258,7 @@ uLong ZEXPORT crc32(crc, buf, len)
 /* ========================================================================= */
 #define DOLIT4 c ^= *buf4++; \
         c = crc_table[3][c & 0xff] ^ crc_table[2][(c >> 8) & 0xff] ^ \
-            crc_table[1][(c >> 16) & 0xff] ^ crc_table[0][c >> 24]
+            crc_table[1][(c >> 16) & 0xff] ^ crc_table[0][(c >> 24)&0xff]
 #define DOLIT32 DOLIT4; DOLIT4; DOLIT4; DOLIT4; DOLIT4; DOLIT4; DOLIT4; DOLIT4
 
 /* ========================================================================= */
@@ -266,7 +267,7 @@ local uLong crc32_little(crc, buf, len)
     const unsigned char FAR *buf;
     unsigned len;
 {
-    register uLong c;
+    register u4 c;
     register const u4 FAR *buf4;
 
     c = (u4)crc;
