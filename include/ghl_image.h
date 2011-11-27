@@ -55,6 +55,8 @@ namespace GHL
 		virtual Byte* GHL_CALL GetDataPtr() = 0;
         /// convert image to format
         virtual void GHL_CALL Convert(ImageFormat fmt) = 0;
+        /// swap RB channels
+        virtual void GHL_CALL SwapRB() = 0;
         /// set alpha from another image
         /**
          * @arg img image with format IMAGE_FORMAT_GRAY or IMAGE_FORMAT_RGBA

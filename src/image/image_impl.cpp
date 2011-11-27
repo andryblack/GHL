@@ -86,6 +86,7 @@ namespace GHL
 			delete [] m_data;
 			m_data = data;
 		}
+        m_fmt = fmt;
 	}
 	
 	void ImageImpl::SwapChannelsRB()

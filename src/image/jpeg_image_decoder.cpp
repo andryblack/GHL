@@ -213,8 +213,6 @@ namespace GHL {
         jpeg_destroy_decompress(&cinfo);
         
         delete [] input;
-        if (img)
-            img->SwapChannelsRB();
         return img;
     }
     
