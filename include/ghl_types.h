@@ -37,7 +37,17 @@ namespace GHL
 	typedef unsigned short UInt16;
 	/// int 16
 	typedef short Int16;
-
+    
+#define GHL_CONCAT(x, y) GHL_CONCAT1 (x, y)
+#define GHL_CONCAT1(x, y) x##y
+#define GHL_STATIC_ASSERT(expr) typedef char GHL_CONCAT(ghl_static_assert_failed_at_line_, __LINE__) [(expr) ? 1 : -1]
+    
+    GHL_STATIC_ASSERT(sizeof(Byte) == 1);
+    GHL_STATIC_ASSERT(sizeof(UInt32) == 4);
+    GHL_STATIC_ASSERT(sizeof(Int32) == 4);
+    GHL_STATIC_ASSERT(sizeof(UInt16) == 2);
+    GHL_STATIC_ASSERT(sizeof(Int16) == 2);
+    
 }
 
 #endif /*GHL_TYPES_H*/
