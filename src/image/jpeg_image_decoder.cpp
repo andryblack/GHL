@@ -114,7 +114,7 @@ namespace GHL {
         
         Byte **rowPtr=0;
         Byte* input = new Byte[file_size];
-        file->Read(input, file_size);
+        file->Read(input, UInt32(file_size));
         
         
         // allocate and initialize JPEG decompression object
