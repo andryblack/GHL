@@ -22,6 +22,7 @@
 #include "../sound/openal/ghl_sound_openal.h"
 
 static bool g_fullscreen = false;
+static NSRect g_rect;
 
 class SystemCocoa : public GHL::System {
 public:
@@ -33,13 +34,9 @@ public:
         return g_fullscreen;
     }
     ///
-    virtual void GHL_CALL SwitchFullscreen(bool fs) {
-        /// @todo stub
-    }
+    virtual void GHL_CALL SwitchFullscreen(bool fs);
     ///
-    virtual void GHL_CALL SwapBuffers() {
-        /// @todo stub
-    }
+    virtual void GHL_CALL SwapBuffers();
     ///
     virtual void GHL_CALL ShowKeyboard() {
         /// do nothing
@@ -92,7 +89,9 @@ public:
 {
 	return YES;
 }
-
+- (void)closeWindow {
+    [super close];
+}
 - (void)close {
 	NSLog(@"close");
 	[super close];
@@ -103,14 +102,7 @@ public:
 @end
 
 
-@implementation WinLibFSView
 
-- (void)drawRect:(NSRect)dirtyRect {
-	[[NSColor blackColor] set];
-	[NSBezierPath fillRect: dirtyRect];
-}
-
-@end
 
 
 @implementation WinLibOpenGLView
@@ -267,8 +259,8 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 	NSLog( @"prepareOpenGL" ); 
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	[[self openGLContext] makeCurrentContext];
-	m_render = new GHL::RenderOpenGL(GHL::UInt32([self bounds].size.width),
-									 GHL::UInt32([self bounds].size.height));
+	m_render = new GHL::RenderOpenGL(GHL::UInt32(self.bounds.size.width),
+									 GHL::UInt32(self.bounds.size.height));
 	m_render->RenderInit();
 	[m_application getApplication]->SetRender(m_render);
 	if ([m_application getApplication]->Load()) {
@@ -279,6 +271,13 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 	::gettimeofday(&m_timeval,0);
 	[pool drain];
 	//[pool release];
+}
+
+- (void)reshape {
+    if (m_render) {
+        [[self openGLContext] makeCurrentContext];
+        m_render->Resize( self.bounds.size.width, self.bounds.size.height );
+    }
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
@@ -295,6 +294,10 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 		app->OnFrame(dt);
 		[[self openGLContext] flushBuffer];
 	}
+}
+
+- (void)swapBuffers {
+    //[[self openGLContext] flushBuffer];
 }
 
 - (void)timerFireMethod:(NSTimer*)theTimer {
@@ -366,7 +369,9 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 -(NSString*) getAppName {
 	return m_appName;
 }
-
+-(void)swapBuffers {
+    [m_gl_view swapBuffers];
+}
 -(void)dealloc {
 	if (m_application)
 		m_application->Release();
@@ -381,6 +386,71 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 		m_sound = 0;
 	}
 	[super dealloc];
+}
+
+- (void)switchFullscreen {
+    NSInteger style = NSTitledWindowMask | NSClosableWindowMask;
+    
+    NSRect rect = m_rect;
+    if (g_fullscreen) {
+        rect = [[NSScreen mainScreen] frame];
+        style = NSBorderlessWindowMask;
+    }
+    /*NSDictionary* options = [NSDictionary
+                             dictionaryWithObjectsAndKeys:
+                             [NSNumber numberWithInt:NSNormalWindowLevel],
+                             NSFullScreenModeWindowLevel,
+                             nil];
+    
+	if (g_fullscreen) {
+        [m_gl_view enterFullScreenMode:[NSScreen mainScreen] withOptions:options];
+        [m_gl_view setFrame:m_rect];
+        [m_gl_view update];
+	} else {
+        [m_gl_view exitFullScreenModeWithOptions:options];
+    }*/
+    
+    if (m_window) {
+        [m_window setContentView:nil];
+        [m_window closeWindow];
+    }
+    m_window = [[WinLibWindow alloc] initWithContentRect:rect styleMask:style backing:NO defer:NO];
+    if (g_fullscreen) {
+     [m_window setOpaque:YES];
+     [m_window setHidesOnDeactivate:YES];
+     [m_window setLevel:NSMainMenuWindowLevel+1];
+    } else {
+     [m_window setOpaque:NO];
+     [m_window setHidesOnDeactivate:NO];
+     [m_window setLevel:NSNormalWindowLevel];
+    }
+    
+    [m_window setContentView:m_gl_view];
+    [m_window update];
+    [m_window makeKeyAndOrderFront:nil];
+     
+     
+    /*[[NSApplication sharedApplication] setWindowsNeedUpdate:YES];
+     
+     m_window = [[WinLibWindow alloc] initWithContentRect:rect
+     styleMask:style 
+     backing:NSBackingStoreBuffered defer:YES];
+     
+     
+     if (g_fullscreen) {
+     [m_window setOpaque:YES];
+     [m_window setHidesOnDeactivate:YES];
+     [m_window setLevel:NSMainMenuWindowLevel+1];
+     } else {
+     
+     }
+     [m_window setContentView:m_gl_view];
+     [[NSApplication sharedApplication] setWindowsNeedUpdate:YES];
+     
+     [m_window update];
+     [m_window makeKeyAndOrderFront:nil];
+     */
+    
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
@@ -409,47 +479,25 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 	
 	
 	NSRect rect = NSMakeRect(0,0,settings.width,settings.height);
-	
+	m_rect = rect;
+    g_rect = rect;
+    
 	NSOpenGLPixelFormat* pf = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
 	WinLibOpenGLView* gl = [[[WinLibOpenGLView alloc] initWithFrame:rect pixelFormat:pf] autorelease];
+    [gl retain];
 	[gl setApplication:self];
-	NSInteger style = NSTitledWindowMask | NSClosableWindowMask;
+	
     
     g_fullscreen = settings.fullscreen;
     
-	if (settings.fullscreen) {
-		style = NSBorderlessWindowMask;
-		rect = [[NSScreen mainScreen] frame];
-	}
+    m_gl_view = gl;
 	
-			
-		m_window = [[WinLibWindow alloc] initWithContentRect:rect
-												   styleMask:style 
-													 backing:NSBackingStoreBuffered defer:YES];
-		
-		
-		if (settings.fullscreen) {
-			NSView* fs_view = [[WinLibFSView alloc] initWithFrame:rect];
-			[gl setFrameOrigin:NSMakePoint(
-										   (NSWidth([fs_view bounds]) - NSWidth([gl frame])) / 2,
-										   (NSHeight([fs_view bounds]) - NSHeight([gl frame])) / 2
-										   )];
-			[gl setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin];
-			[m_window setOpaque:YES];
-			[m_window setHidesOnDeactivate:YES];
-			[fs_view addSubview:gl];
-			[[m_window contentView] addSubview:fs_view];
-			[m_window setLevel:NSMainMenuWindowLevel+1];
-		} else {
-			[[m_window contentView] addSubview:gl];
-		}
-		[m_window makeKeyAndOrderFront:nil];
-	
-
+    [self switchFullscreen];
+    
+    [m_window makeKeyAndOrderFront:nil];
 	
 	[pool release];
 }
-
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
     (void)aNotification;
 	if (m_application)
@@ -474,6 +522,22 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 @end
 
 
+void GHL_CALL SystemCocoa::SwitchFullscreen(bool fs) {
+    if (g_fullscreen!=fs) {
+        g_fullscreen = fs;
+        
+        WinLibAppDelegate* delegate = (WinLibAppDelegate*)[NSApplication sharedApplication].delegate;
+        if (delegate) {
+            [delegate switchFullscreen];
+        }
+    }
+}
+void GHL_CALL SystemCocoa::SwapBuffers() {
+    WinLibAppDelegate* delegate = (WinLibAppDelegate*)[NSApplication sharedApplication].delegate;
+    if (delegate) {
+        [delegate swapBuffers];
+    }
+}
 
 
 

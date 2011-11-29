@@ -19,6 +19,8 @@ namespace GHL {
 }
 
 class SystemCocoa;
+@class WinLibOpenGLView;
+@class WinLibWindow;
 
 @interface WinLibAppDelegate : NSObject <NSApplicationDelegate> {
 	GHL::Application* m_application;
@@ -26,8 +28,10 @@ class SystemCocoa;
 	GHL::VFSCocoaImpl*	m_vfs;
 	GHL::ImageDecoderImpl* m_imageDecoder;
 	GHL::SoundOpenAL*	m_sound;
-	NSWindow*	m_window;
+	WinLibWindow*	m_window;
 	NSString*	m_appName;
+    WinLibOpenGLView*   m_gl_view;
+    NSRect      m_rect;
 }
 -(void) setApplication:(GHL::Application*) app;
 -(GHL::Application*) getApplication;
@@ -46,11 +50,7 @@ class SystemCocoa;
 }
 @end
 
-@interface WinLibFSView : NSView
-{
-	
-}
-@end
+
 
 @interface WinLibOpenGLView : NSOpenGLView 
 {
@@ -63,3 +63,5 @@ class SystemCocoa;
 -(void)setApplication:(WinLibAppDelegate*) app;
 
 @end
+
+
