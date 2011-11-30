@@ -292,8 +292,8 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 		[[self openGLContext] makeCurrentContext];
 		m_render->ResetRenderState();
 		GHL::Application* app = [m_application getApplication];
-		app->OnFrame(dt);
-		[[self openGLContext] flushBuffer];
+		if (app->OnFrame(dt))
+            [[self openGLContext] flushBuffer];
 	}
 }
 
