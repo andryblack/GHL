@@ -225,24 +225,27 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 		[m_application getApplication]->OnKeyUp(key);
 	}
 }
-
+- (NSPoint) scale_point:(NSPoint)point {
+    NSPoint res;
+    res.x = point.x * g_rect.size.width / self.bounds.size.width;
+    res.y = g_rect.size.height -  point.y * g_rect.size.height / self.bounds.size.height;
+    return res;
+}
 - (void)mouseDown:(NSEvent *)theEvent {
     NSPoint event_location = [theEvent locationInWindow];
     NSPoint local_point = [self convertPoint:event_location fromView:nil];
-    CGFloat y = [self bounds].size.height - local_point.y;
-    [m_application getApplication]->OnMouseDown(GHL::MOUSE_BUTTON_LEFT, local_point.x, y);
+    [m_application getApplication]->OnMouseDown(GHL::MOUSE_BUTTON_LEFT, local_point.x, local_point.y);
 }
 - (void)mouseUp:(NSEvent *)theEvent {
     NSPoint event_location = [theEvent locationInWindow];
     NSPoint local_point = [self convertPoint:event_location fromView:nil];
-    CGFloat y = [self bounds].size.height - local_point.y;
-    [m_application getApplication]->OnMouseUp(GHL::MOUSE_BUTTON_LEFT, local_point.x, y);
+    [m_application getApplication]->OnMouseUp(GHL::MOUSE_BUTTON_LEFT, local_point.x, local_point.y);
 }
 - (void)mouseMoved:(NSEvent *)theEvent {
     NSPoint event_location = [theEvent locationInWindow];
     NSPoint local_point = [self convertPoint:event_location fromView:nil];
-    CGFloat y = [self bounds].size.height - local_point.y;
-    [m_application getApplication]->OnMouseMove(GHL::MOUSE_BUTTON_LEFT, local_point.x, y);
+    local_point = [self scale_point: local_point ];
+    [m_application getApplication]->OnMouseMove(GHL::MOUSE_BUTTON_LEFT, local_point.x, local_point.y);
 }
 
 - (BOOL) acceptsFirstResponder
@@ -429,7 +432,8 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     [m_window setContentView:m_gl_view];
     [m_window update];
     [m_window makeKeyAndOrderFront:nil];
-     
+    [m_gl_view setBounds:rect];
+    [m_gl_view reshape];
      
     /*[[NSApplication sharedApplication] setWindowsNeedUpdate:YES];
      
