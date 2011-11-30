@@ -213,6 +213,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 	} else {
 		[m_application getApplication]->OnKeyDown(key);
 	}
+    [m_application getApplication]->OnChar( [[event characters] characterAtIndex:0] );
 }
 - (void)keyUp:(NSEvent *)event {
 	unichar c = [[event charactersIgnoringModifiers] characterAtIndex:0];
