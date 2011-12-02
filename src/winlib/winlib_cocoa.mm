@@ -248,6 +248,12 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     local_point = [self scale_point: local_point ];
     [m_application getApplication]->OnMouseMove(GHL::MOUSE_BUTTON_LEFT, local_point.x, local_point.y);
 }
+- (void)mouseDragged:(NSEvent *)theEvent {
+    NSPoint event_location = [theEvent locationInWindow];
+    NSPoint local_point = [self convertPoint:event_location fromView:nil];
+    local_point = [self scale_point: local_point ];
+    [m_application getApplication]->OnMouseMove(GHL::MOUSE_BUTTON_LEFT, local_point.x, local_point.y);
+}
 
 - (BOOL) acceptsFirstResponder
 {
@@ -401,20 +407,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
         rect = [[NSScreen mainScreen] frame];
         style = NSBorderlessWindowMask;
     }
-    /*NSDictionary* options = [NSDictionary
-                             dictionaryWithObjectsAndKeys:
-                             [NSNumber numberWithInt:NSNormalWindowLevel],
-                             NSFullScreenModeWindowLevel,
-                             nil];
-    
-	if (g_fullscreen) {
-        [m_gl_view enterFullScreenMode:[NSScreen mainScreen] withOptions:options];
-        [m_gl_view setFrame:m_rect];
-        [m_gl_view update];
-	} else {
-        [m_gl_view exitFullScreenModeWithOptions:options];
-    }*/
-    
+        
     if (m_window) {
         [m_window setContentView:nil];
         [m_window closeWindow];
@@ -436,27 +429,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     [m_window makeKeyAndOrderFront:nil];
     [m_gl_view reshape];
      
-    /*[[NSApplication sharedApplication] setWindowsNeedUpdate:YES];
-     
-     m_window = [[WinLibWindow alloc] initWithContentRect:rect
-     styleMask:style 
-     backing:NSBackingStoreBuffered defer:YES];
-     
-     
-     if (g_fullscreen) {
-     [m_window setOpaque:YES];
-     [m_window setHidesOnDeactivate:YES];
-     [m_window setLevel:NSMainMenuWindowLevel+1];
-     } else {
-     
-     }
-     [m_window setContentView:m_gl_view];
-     [[NSApplication sharedApplication] setWindowsNeedUpdate:YES];
-     
-     [m_window update];
-     [m_window makeKeyAndOrderFront:nil];
-     */
-    
+        
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
