@@ -431,9 +431,9 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     }
     
     [m_window setContentView:m_gl_view];
+    [m_gl_view setBounds:rect];
     [m_window update];
     [m_window makeKeyAndOrderFront:nil];
-    [m_gl_view setBounds:rect];
     [m_gl_view reshape];
      
     /*[[NSApplication sharedApplication] setWindowsNeedUpdate:YES];
