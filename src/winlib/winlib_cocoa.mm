@@ -293,7 +293,11 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 
 - (void)drawRect:(NSRect)dirtyRect {
     (void)dirtyRect;
-	if (m_loaded) {
+    static bool in_draw = false;
+    if (in_draw) return;
+    if ( m_loaded ) {
+        in_draw = true;
+        
 		::timeval time;
 		::gettimeofday(&time,0);
 		GHL::UInt32 dt = static_cast<GHL::UInt32>((time.tv_sec - m_timeval.tv_sec)*1000000 + time.tv_usec - m_timeval.tv_usec);
@@ -302,9 +306,11 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 		[[self openGLContext] makeCurrentContext];
 		m_render->ResetRenderState();
 		GHL::Application* app = [m_application getApplication];
-		if (app->OnFrame(dt))
-            [[self openGLContext] flushBuffer];
-	}
+		if (app->OnFrame(dt)) {
+        }
+        [[self openGLContext] flushBuffer];
+        in_draw = false;
+   }
 }
 
 - (void)swapBuffers {
@@ -400,6 +406,9 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 }
 
 - (void)switchFullscreen {
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+	
+    
     NSInteger style = NSTitledWindowMask | NSClosableWindowMask;
     
     NSRect rect = m_rect;
@@ -407,12 +416,12 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
         rect = [[NSScreen mainScreen] frame];
         style = NSBorderlessWindowMask;
     }
-        
     if (m_window) {
         [m_window setContentView:nil];
         [m_window closeWindow];
     }
-    m_window = [[WinLibWindow alloc] initWithContentRect:rect styleMask:style backing:NO defer:NO];
+    m_window = [[WinLibWindow alloc] initWithContentRect:rect styleMask:style backing:NSBackingStoreBuffered defer:YES];
+    
     if (g_fullscreen) {
      [m_window setOpaque:YES];
      [m_window setHidesOnDeactivate:YES];
@@ -425,11 +434,10 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     
     [m_window setContentView:m_gl_view];
     [m_gl_view setBounds:rect];
-    [m_window update];
-    [m_window makeKeyAndOrderFront:nil];
     [m_gl_view reshape];
+    [m_window makeKeyAndOrderFront:nil];
      
-        
+    [pool release];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {

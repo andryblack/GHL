@@ -35,8 +35,6 @@ namespace GHL {
         ///
         virtual void GHL_CALL SwitchFullscreen(bool fs) = 0;
         ///
-        virtual void GHL_CALL SwapBuffers() = 0;
-        ///
         virtual void GHL_CALL ShowKeyboard() = 0;
         ///
         virtual void GHL_CALL HideKeyboard() = 0;
