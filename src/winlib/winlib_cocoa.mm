@@ -558,27 +558,37 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
 	app->SetImageDecoder([delegate getImageDecoder]);
 	
 	/// create menu
+    
 	NSMenu * mainMenu = [[[NSMenu alloc] initWithTitle:@"MainMenu"] autorelease];
 	
-	
-	// The titles of the menu items are for identification purposes only
-	//and shouldn't be localized.
-	// The strings in the menu bar come from the submenu titles,
-	// except for the application menu, whose title is ignored at runtime.
-	NSMenuItem *item = [mainMenu addItemWithTitle:@"Apple" action:NULL keyEquivalent:@""];
-	NSMenu *submenu = [[[NSMenu alloc] initWithTitle:@"Apple"] autorelease];
-	//[NSApp performSelector:@selector(setAppleMenu:) withObject:submenu];
-	
-	NSMenuItem * appItem = [submenu addItemWithTitle:[NSString stringWithFormat:@"%@ %@",
-																 NSLocalizedString(@"Quit", nil), [delegate getAppName]]
-														 action:@selector(terminate:)
-												  keyEquivalent:@"q"];
-	[appItem setTarget:NSApp];
+    
+    if ([[NSBundle mainBundle] loadNibFile:@"MainMenu" externalNameTable:nil withZone:nil])
+    {
+        ///
+    } else {
+    
+        // The titles of the menu items are for identification purposes only
+        //and shouldn't be localized.
+        // The strings in the menu bar come from the submenu titles,
+        // except for the application menu, whose title is ignored at runtime.
+        NSMenuItem *item = [mainMenu addItemWithTitle:@"Apple" action:NULL keyEquivalent:@""];
+        NSMenu *submenu = [[[NSMenu alloc] initWithTitle:@"Apple"] autorelease];
+        //[NSApp performSelector:@selector(setAppleMenu:) withObject:submenu];
+        
+        NSMenuItem * appItem = [submenu addItemWithTitle:[NSString stringWithFormat:@"%@ %@",
+                                                                     NSLocalizedString(@"Quit", nil), [delegate getAppName]]
+                                                             action:@selector(terminate:)
+                                                      keyEquivalent:@"q"];
+        [appItem setTarget:NSApp];
 
-								  
-	[mainMenu setSubmenu:submenu forItem:item];
-	[NSApp setMainMenu:mainMenu];
-	
+                                      
+        [mainMenu setSubmenu:submenu forItem:item];
+        
+           
+        [NSApp setMainMenu:mainMenu];
+        //[NSApp setServicesMenu:[[[NSMenu alloc] initWithTitle:@"Services"] autorelease]];
+	}
+    
 	[NSApp setDelegate:delegate];
 	
 	[pool release];
