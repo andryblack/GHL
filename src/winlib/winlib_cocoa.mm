@@ -412,7 +412,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	
     
-    NSInteger style = NSTitledWindowMask | NSClosableWindowMask;
+    NSInteger style = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
     
     NSRect rect = m_rect;
     if (g_fullscreen) {
@@ -567,7 +567,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
 	// except for the application menu, whose title is ignored at runtime.
 	NSMenuItem *item = [mainMenu addItemWithTitle:@"Apple" action:NULL keyEquivalent:@""];
 	NSMenu *submenu = [[[NSMenu alloc] initWithTitle:@"Apple"] autorelease];
-	[NSApp performSelector:@selector(setAppleMenu:) withObject:submenu];
+	//[NSApp performSelector:@selector(setAppleMenu:) withObject:submenu];
 	
 	NSMenuItem * appItem = [submenu addItemWithTitle:[NSString stringWithFormat:@"%@ %@",
 																 NSLocalizedString(@"Quit", nil), [delegate getAppName]]
