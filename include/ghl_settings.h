@@ -15,6 +15,7 @@ namespace GHL {
 		UInt32 width;
 		UInt32 height;
 		bool fullscreen;
+        const char* title;
 	};
 	
 }

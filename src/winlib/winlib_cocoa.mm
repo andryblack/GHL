@@ -22,6 +22,7 @@
 #include "../sound/openal/ghl_sound_openal.h"
 
 static bool g_fullscreen = false;
+static std::string g_title = "GHL";
 static NSRect g_rect;
 
 class SystemCocoa : public GHL::System {
@@ -58,6 +59,8 @@ public:
     virtual bool GHL_CALL GetDeviceData( GHL::DeviceData name, void* data) {
         return false;
     }
+    ///
+    virtual void GHL_CALL SetTitle( const char* title );
 };
 
 
@@ -421,7 +424,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
         [m_window closeWindow];
     }
     m_window = [[WinLibWindow alloc] initWithContentRect:rect styleMask:style backing:NSBackingStoreBuffered defer:YES];
-    
+    [ m_window setTitle:[NSString stringWithUTF8String:g_title.c_str()] ];
     if (g_fullscreen) {
      [m_window setOpaque:YES];
      [m_window setHidesOnDeactivate:YES];
@@ -440,6 +443,12 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     [pool release];
 }
 
+- (void)updateWindowTitle {
+    if (m_window) {
+        [ m_window setTitle:[NSString stringWithUTF8String:g_title.c_str()] ];
+    }
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     (void)aNotification;
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
@@ -448,8 +457,11 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 	settings.width = 800;
 	settings.height = 600;
 	settings.fullscreen = g_fullscreen;
+    settings.title = 0;
+    
 	m_application->FillSettings(&settings);
-	
+	if (settings.title)
+        g_title = settings.title;
 	
 	[self initSound];
 	m_application->SetSound([self getSound]);
@@ -526,7 +538,14 @@ void GHL_CALL SystemCocoa::SwapBuffers() {
     }
 }
 
-
+///
+void GHL_CALL SystemCocoa::SetTitle( const char* title ) {
+    g_title = title;
+    WinLibAppDelegate* delegate = (WinLibAppDelegate*)[NSApplication sharedApplication].delegate;
+    if (delegate) {
+        [delegate updateWindowTitle];
+    }
+}
 
 GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/, char** /*argv*/) {
     

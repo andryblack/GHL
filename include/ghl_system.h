@@ -44,6 +44,8 @@ namespace GHL {
 		virtual bool GHL_CALL SetDeviceState( DeviceState name, void* data) = 0;
 		///
 		virtual bool GHL_CALL GetDeviceData( DeviceData name, void* data) = 0;
+        ///
+        virtual void GHL_CALL SetTitle( const char* title ) = 0;
     };
 }
 
