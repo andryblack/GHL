@@ -78,16 +78,6 @@ public:
     return YES;
 }
 
-- (void)keyDown:(NSEvent *)event {
-	unichar c = [[event charactersIgnoringModifiers] characterAtIndex:0];
-	switch (c) {
-		case 27:
-			[self close];
-			return;
-	}
-	[super keyDown:event];
-}
-
 - (BOOL)isMainWindow
 {
 	return YES;
@@ -322,7 +312,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 
 - (void)timerFireMethod:(NSTimer*)theTimer {
     (void)theTimer;
-	[self drawRect:[self bounds]];
+    [self setNeedsDisplay:YES];
 }
 
 -(void)dealloc {
