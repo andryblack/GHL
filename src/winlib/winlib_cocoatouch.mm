@@ -44,7 +44,6 @@ namespace GHL {
 }
 - (id)init;
 - (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration;
-float* get_data;
 @end
 
 @implementation AccelerometerDelegate
@@ -129,6 +128,10 @@ public:
 		}
 		return false;
 	}
+    ///
+    virtual void GHL_CALL SetTitle( const char* title ) {
+        /// do nothing
+    }
 };
 
 @interface WinLibViewController : UIViewController

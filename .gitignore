@@ -6,3 +6,6 @@ projects/GHL-build-desktop
 projects/ios/GHL.xcodeproj/*.pbxuser
 projects/ios/GHL.xcodeproj/*.mode1v3
 projects/ios/build
+.DS_Store
+projects/ios/GHL.xcodeproj/project.xcworkspace
+projects/ios/GHL.xcodeproj/xcuserdata
