@@ -416,11 +416,11 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     m_window = [[WinLibWindow alloc] initWithContentRect:rect styleMask:style backing:NSBackingStoreBuffered defer:YES];
     [ m_window setTitle:[NSString stringWithUTF8String:g_title.c_str()] ];
     if (g_fullscreen) {
-     [m_window setOpaque:YES];
+     //[m_window setOpaque:YES];
      [m_window setHidesOnDeactivate:YES];
      [m_window setLevel:NSMainMenuWindowLevel+1];
     } else {
-     [m_window setOpaque:NO];
+     //[m_window setOpaque:NO];
      [m_window setHidesOnDeactivate:NO];
      [m_window setLevel:NSNormalWindowLevel];
     }
