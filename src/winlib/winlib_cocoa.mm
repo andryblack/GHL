@@ -413,7 +413,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     static bool exlusive_mode = true;
     
     if (exlusive_mode) {
-        if ( false && [NSApp respondsToSelector:@selector(presentationOptions)] ) {
+        if ( [NSApp respondsToSelector:@selector(presentationOptions)] ) {
             fullScreenOptions = [NSDictionary dictionaryWithObjectsAndKeys:
                                  [NSNumber numberWithInteger:[NSApp presentationOptions]],NSFullScreenModeApplicationPresentationOptions
                                  ,[NSNumber numberWithInt:NSMainMenuWindowLevel+1],
@@ -447,18 +447,25 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
             [ m_window setTitle:[NSString stringWithUTF8String:g_title.c_str()] ];
 
             //[m_window setOpaque:YES];
-            [m_window setHidesOnDeactivate:YES];
             [m_window setLevel:NSMainMenuWindowLevel+1];
             
             [m_gl_view reshape];
             
             [m_window makeKeyAndOrderFront:nil];
         } else {
+            
             m_window = [[WinLibWindow alloc] initWithContentRect:rect styleMask:style backing:NSBackingStoreBuffered defer:YES];
+            
+            [m_window setHidesOnDeactivate:YES];
+            
             [m_window setContentView:m_gl_view];
             
             [m_gl_view enterFullScreenMode:screen withOptions:fullScreenOptions];
+            
+            
         }
+        
+        [[m_gl_view window] setHidesOnDeactivate:YES];
         
     } else {
         if ( exlusive_mode ) {
