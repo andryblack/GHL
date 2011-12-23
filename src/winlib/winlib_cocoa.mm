@@ -7,7 +7,7 @@
 //
 
 
-#include "../render/opengl/render_opengl.h"
+#include "../render/render_impl.h"
 
 #import "winlib_cocoa.h"
 
@@ -207,6 +207,8 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 		[m_application getApplication]->OnKeyDown(key);
 	}
     [m_application getApplication]->OnChar( [[event characters] characterAtIndex:0] );
+    
+   
 }
 - (void)keyUp:(NSEvent *)event {
 	unichar c = [[event charactersIgnoringModifiers] characterAtIndex:0];
@@ -263,15 +265,16 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 	NSLog( @"prepareOpenGL" ); 
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	[[self openGLContext] makeCurrentContext];
-	m_render = new GHL::RenderOpenGL(GHL::UInt32(self.bounds.size.width),
+	m_render = GHL_CreateRenderOpenGL(GHL::UInt32(self.bounds.size.width),
 									 GHL::UInt32(self.bounds.size.height));
-	m_render->RenderInit();
-	[m_application getApplication]->SetRender(m_render);
-	if ([m_application getApplication]->Load()) {
-		m_timer = [NSTimer scheduledTimerWithTimeInterval: 1.0f/200.0f target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
-		[m_timer fire];
-		m_loaded = true;
-	}
+	if (m_render) {
+        [m_application getApplication]->SetRender(m_render);
+        if ([m_application getApplication]->Load()) {
+            m_timer = [NSTimer scheduledTimerWithTimeInterval: 1.0f/200.0f target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
+            [m_timer fire];
+            m_loaded = true;
+        }
+    }
 	::gettimeofday(&m_timeval,0);
 	[pool drain];
 	//[pool release];
@@ -320,8 +323,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 		[m_timer release];
 	}
 	if (m_render) {
-		m_render->RenderDone();
-		delete m_render;
+		GHL_DestroyRenderOpenGL( m_render );
 		m_render = 0;
 	}
 	[super dealloc];
@@ -404,31 +406,78 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     
     NSInteger style = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
     
-    NSRect rect = m_rect;
-    if (g_fullscreen) {
-        rect = [[NSScreen mainScreen] frame];
-        style = NSBorderlessWindowMask;
-    }
-    if (m_window) {
-        [m_window setContentView:nil];
-        [m_window closeWindow];
-    }
-    m_window = [[WinLibWindow alloc] initWithContentRect:rect styleMask:style backing:NSBackingStoreBuffered defer:YES];
-    [ m_window setTitle:[NSString stringWithUTF8String:g_title.c_str()] ];
-    if (g_fullscreen) {
-     //[m_window setOpaque:YES];
-     [m_window setHidesOnDeactivate:YES];
-     [m_window setLevel:NSMainMenuWindowLevel+1];
-    } else {
-     //[m_window setOpaque:NO];
-     [m_window setHidesOnDeactivate:NO];
-     [m_window setLevel:NSNormalWindowLevel];
+    NSScreen* screen = 0;
+    
+    NSDictionary* fullScreenOptions = nil;
+    
+    static bool exlusive_mode = true;
+    
+    if (exlusive_mode) {
+        if ( false && [NSApp respondsToSelector:@selector(presentationOptions)] ) {
+            fullScreenOptions = [NSDictionary dictionaryWithObjectsAndKeys:
+                                 [NSNumber numberWithInteger:[NSApp presentationOptions]],NSFullScreenModeApplicationPresentationOptions
+                                 ,[NSNumber numberWithInt:NSMainMenuWindowLevel+1],
+                                 NSFullScreenModeWindowLevel,nil];
+        } else {
+            fullScreenOptions = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:NSFullScreenModeAllScreens];
+        }
     }
     
-    [m_window setContentView:m_gl_view];
-    [m_gl_view setBounds:rect];
-    [m_gl_view reshape];
-    [m_window makeKeyAndOrderFront:nil];
+    NSRect rect = m_rect;
+    
+    if (m_window) {
+        screen = m_window.screen;
+        [m_window setContentView:nil];
+        [m_window closeWindow];
+        m_window = 0;
+    } else {
+        screen = [NSScreen mainScreen];
+    }
+    
+    if (g_fullscreen) {
+        rect = [screen frame];
+        style = NSBorderlessWindowMask;
+    }
+    if (g_fullscreen) {
+
+        
+        if (!exlusive_mode) {
+
+            m_window = [[WinLibWindow alloc] initWithContentRect:rect styleMask:style backing:NSBackingStoreBuffered defer:YES];
+            [ m_window setTitle:[NSString stringWithUTF8String:g_title.c_str()] ];
+
+            //[m_window setOpaque:YES];
+            [m_window setHidesOnDeactivate:YES];
+            [m_window setLevel:NSMainMenuWindowLevel+1];
+            
+            [m_gl_view reshape];
+            
+            [m_window makeKeyAndOrderFront:nil];
+        } else {
+            m_window = [[WinLibWindow alloc] initWithContentRect:rect styleMask:style backing:NSBackingStoreBuffered defer:YES];
+            [m_window setContentView:m_gl_view];
+            
+            [m_gl_view enterFullScreenMode:screen withOptions:fullScreenOptions];
+        }
+        
+    } else {
+        if ( exlusive_mode ) {
+            [m_gl_view exitFullScreenModeWithOptions:fullScreenOptions];
+        }
+        
+        m_window = [[WinLibWindow alloc] initWithContentRect:rect styleMask:style backing:NSBackingStoreBuffered defer:YES];
+        [ m_window setTitle:[NSString stringWithUTF8String:g_title.c_str()] ];
+
+        //[m_window setOpaque:NO];
+        [m_window setHidesOnDeactivate:NO];
+        [m_window setLevel:NSNormalWindowLevel];
+        [m_window setContentView:m_gl_view];
+
+        [m_gl_view reshape];
+        [m_window makeKeyAndOrderFront:nil];
+    }
+    
+   
      
     [pool release];
 }

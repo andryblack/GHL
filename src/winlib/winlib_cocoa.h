@@ -15,7 +15,7 @@ namespace GHL {
 	class VFSCocoaImpl;
 	class ImageDecoderImpl;
 	class SoundOpenAL;
-	class RenderOpenGL;
+	class RenderImpl;
 }
 
 class SystemCocoa;
@@ -41,7 +41,7 @@ class SystemCocoa;
 -(NSString*) getAppName;
 -(SystemCocoa*) getSystem;
 -(void) initSound;
-
+-(void) switchFullscreen;
 @end
 
 @interface WinLibWindow : NSWindow
@@ -55,7 +55,7 @@ class SystemCocoa;
 @interface WinLibOpenGLView : NSOpenGLView 
 {
 	WinLibAppDelegate* m_application;
-	GHL::RenderOpenGL* m_render;
+	GHL::RenderImpl* m_render;
 	NSTimer*	m_timer;
 	bool	m_loaded;
 	::timeval	m_timeval;
