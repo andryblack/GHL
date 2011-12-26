@@ -309,6 +309,20 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
    }
 }
 
+- (void)renewGState
+{
+	/* Overload this function to ensure the NSOpenGLView doesn't
+     flicker when you resize it.                               */
+	NSWindow *window;
+	[super renewGState];
+	window = [self window];
+    
+	/* Only available in 10.4 and later, so check that it exists */
+	if(window && [window respondsToSelector:@selector(disableScreenUpdatesUntilFlush)])
+		[window disableScreenUpdatesUntilFlush];
+}
+
+
 - (void)swapBuffers {
     //[[self openGLContext] flushBuffer];
 }
