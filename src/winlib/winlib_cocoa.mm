@@ -294,9 +294,8 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 }
 
 - (void)reshape {
-    if (m_render && [self window] ) {
+    if ( m_render ) {
         LOG_VERBOSE( "WinLibOpenGLView::reshape" );
-        [[self openGLContext] makeCurrentContext];
         m_render->Resize( self.bounds.size.width, self.bounds.size.height );
     }
 }
@@ -470,6 +469,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
         
         if (recreateWindow) {
             [m_window setContentView:nil];
+            [m_window setDelegate:nil];
             [m_window closeWindow];
             m_window = nil;
         }
@@ -488,35 +488,42 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
         m_window = [[WinLibWindow alloc] initWithContentRect:rect styleMask:style backing:NSBackingStoreBuffered defer:YES];
         [m_window disableFlushWindow];
         [m_window setContentView:m_gl_view];
-        if (g_need_fullscreen)
-            [m_window setLevel:windowLevel];
+        [m_window setDelegate:self];
     } else {
         [m_window disableFlushWindow];
         [m_window disableScreenUpdatesUntilFlush];
         [m_gl_view setHidden:YES];
         
+        
         [m_window setStyleMask:style];
-        [m_window setLevel:windowLevel];
+        
         if (g_need_fullscreen) {
             [m_window setFrame:rect display:YES];
+            [m_window setHidesOnDeactivate:YES];
+            [m_window setMovable:NO];
         } else {
+            [m_window setMovable:YES];
             [m_window setContentSize:rect.size];
             [m_window setFrameOrigin:m_rect.origin];
+            [m_window setHidesOnDeactivate:NO];
         }
     }
     
+    [m_window setLevel:windowLevel];
+    
     if (g_need_fullscreen) {
-        [m_window setHidesOnDeactivate:YES];
+        //[m_window setHidesOnDeactivate:YES];
         [m_window setOpaque:YES];
         [m_window setHasShadow:NO];
     } else {
-        [m_window setHidesOnDeactivate:NO];
+        //[m_window setHidesOnDeactivate:NO];
         [m_window setHasShadow:YES];
         [m_window setOpaque:NO];
     }
     
     [m_window setTitle:[NSString stringWithUTF8String:g_title.c_str()] ];
     
+    [m_gl_view reshape];
     g_fullscreen = g_need_fullscreen;
     
     [m_gl_view setHidden:NO];
@@ -601,6 +608,29 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 	if (m_window)
 		[m_window release];
 	
+}
+
+/// ---- NSWindowDelegate
+- (void)windowDidBecomeKey:(NSNotification *)notification {
+    if (g_fullscreen) {
+        //[m_window setIsVisible:YES];
+        [m_window setLevel: NSMainMenuWindowLevel+1];
+    } else {
+        
+    }
+    if (m_application) {
+        m_application->OnActivated();
+    }
+}
+
+- (void)windowDidResignKey:(NSNotification *)notification {
+    if (g_fullscreen) {
+        //[m_window setIsVisible:NO];
+        [m_window setLevel:NSNormalWindowLevel];
+    }
+    if (m_application) {
+        m_application->OnDeactivated();
+    }
 }
 
 @end

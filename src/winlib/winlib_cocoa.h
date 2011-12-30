@@ -22,7 +22,7 @@ class SystemCocoa;
 @class WinLibOpenGLView;
 @class WinLibWindow;
 
-@interface WinLibAppDelegate : NSObject <NSApplicationDelegate> {
+@interface WinLibAppDelegate : NSObject <NSApplicationDelegate,NSWindowDelegate> {
 	GHL::Application* m_application;
 	SystemCocoa*	m_system;
 	GHL::VFSCocoaImpl*	m_vfs;
