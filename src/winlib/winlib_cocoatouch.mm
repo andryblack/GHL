@@ -16,6 +16,7 @@
 #include "ghl_application.h"
 #include "ghl_settings.h"
 #include "ghl_system.h"
+#include "../ghl_log_impl.h"
 
 #include "../sound/openal/ghl_sound_openal.h"
 #include "../vfs/vfs_cocoa.h"
@@ -26,6 +27,8 @@
 #import <OpenGLES/EAGL.h>
 #import <OpenGLES/EAGLDrawable.h>
 #import <QuartzCore/QuartzCore.h>
+
+static const char* MODULE = "WINLIB";
 
 static GHL::Application* g_application = 0;
 static UIInterfaceOrientation g_orientation = UIInterfaceOrientationLandscapeLeft;
@@ -94,7 +97,7 @@ public:
 	}
 	virtual void GHL_CALL Exit() {
 		///
-		NSLog(@"Call GHL::System::Exit on iOS disallow");
+		LOG_ERROR("Call GHL::System::Exit on iOS disallow");
 	}
 	
 	///
@@ -278,14 +281,14 @@ static const size_t max_touches = 10;
 	m_render->Resize(m_backingWidth, m_backingHeight);
     if (glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES) != GL_FRAMEBUFFER_COMPLETE_OES)
     {
-        NSLog(@"Failed to make complete framebuffer object %x", glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES));
+        LOG_ERROR("Failed to make complete framebuffer object " << glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES));
     }
 	
 }
 
 - (void)prepareOpenGL {
 	/// @todo create render there
-	NSLog( @"prepareOpenGL" ); 
+	LOG_VERBOSE( "prepareOpenGL" ); 
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	[EAGLContext setCurrentContext:m_context];
 	m_render = new GHL::RenderOpenGL(GHL::UInt32([self bounds].size.width),
@@ -532,7 +535,7 @@ static const size_t max_touches = 10;
 	g_application->OnDeactivated();
 	[view setActive:false];
 	//[view drawRect:[view bounds]];
-	NSLog(@"Deactivated");
+	LOG_INFO("Deactivated");
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -541,7 +544,7 @@ static const size_t max_touches = 10;
 	g_application->OnActivated();
 	[view setActive:true];
 	//if ([view loaded]) [view drawRect:[view bounds]];
-	NSLog(@"Activated");
+	LOG_INFO("Activated");
 }
 @end
 
@@ -581,6 +584,7 @@ bool GHL_CALL SystemCocoaTouch::SetDeviceState( GHL::DeviceState name, void* dat
 
 
 GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int argc, char** argv) {
+    (void)MODULE;
     g_application = app;
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	UIApplicationMain(argc, argv, nil, @"WinLibAppDelegate");

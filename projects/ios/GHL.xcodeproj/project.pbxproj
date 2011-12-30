@@ -62,6 +62,9 @@
 		A42901081413949B00429C47 /* vfs_cocoa.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900CF1413949B00429C47 /* vfs_cocoa.h */; };
 		A42901091413949B00429C47 /* vfs_cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = A42900D01413949B00429C47 /* vfs_cocoa.mm */; };
 		A42901101413949B00429C47 /* winlib_cocoatouch.mm in Sources */ = {isa = PBXBuildFile; fileRef = A42900D81413949B00429C47 /* winlib_cocoatouch.mm */; };
+		A436FC5314AE6D2800D53CE4 /* ghl_log.h in Headers */ = {isa = PBXBuildFile; fileRef = A436FC5214AE6D2800D53CE4 /* ghl_log.h */; };
+		A436FC5714AE6D3800D53CE4 /* ghl_log_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A436FC5514AE6D3800D53CE4 /* ghl_log_impl.cpp */; };
+		A436FC5814AE6D3800D53CE4 /* ghl_log_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A436FC5614AE6D3800D53CE4 /* ghl_log_impl.h */; };
 		A4772A4514169A8B006A9887 /* adler32.c in Sources */ = {isa = PBXBuildFile; fileRef = A4772A3214169A8B006A9887 /* adler32.c */; };
 		A4772A4614169A8B006A9887 /* crc32.c in Sources */ = {isa = PBXBuildFile; fileRef = A4772A3314169A8B006A9887 /* crc32.c */; };
 		A4772A4714169A8B006A9887 /* crc32.h in Headers */ = {isa = PBXBuildFile; fileRef = A4772A3414169A8B006A9887 /* crc32.h */; };
@@ -165,6 +168,9 @@
 		A42900CF1413949B00429C47 /* vfs_cocoa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vfs_cocoa.h; sourceTree = "<group>"; };
 		A42900D01413949B00429C47 /* vfs_cocoa.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = vfs_cocoa.mm; sourceTree = "<group>"; };
 		A42900D81413949B00429C47 /* winlib_cocoatouch.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = winlib_cocoatouch.mm; sourceTree = "<group>"; };
+		A436FC5214AE6D2800D53CE4 /* ghl_log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_log.h; sourceTree = "<group>"; };
+		A436FC5514AE6D3800D53CE4 /* ghl_log_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ghl_log_impl.cpp; sourceTree = "<group>"; };
+		A436FC5614AE6D3800D53CE4 /* ghl_log_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_log_impl.h; sourceTree = "<group>"; };
 		A4772A3214169A8B006A9887 /* adler32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = adler32.c; sourceTree = "<group>"; };
 		A4772A3314169A8B006A9887 /* crc32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = crc32.c; sourceTree = "<group>"; };
 		A4772A3414169A8B006A9887 /* crc32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crc32.h; sourceTree = "<group>"; };
@@ -255,6 +261,7 @@
 		A429007A1413948E00429C47 /* include */ = {
 			isa = PBXGroup;
 			children = (
+				A436FC5214AE6D2800D53CE4 /* ghl_log.h */,
 				A429007B1413948E00429C47 /* ghl_api.h */,
 				A429007C1413948E00429C47 /* ghl_application.h */,
 				A429007D1413948E00429C47 /* ghl_data_stream.h */,
@@ -278,6 +285,8 @@
 		A42900991413949B00429C47 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				A436FC5514AE6D3800D53CE4 /* ghl_log_impl.cpp */,
+				A436FC5614AE6D3800D53CE4 /* ghl_log_impl.h */,
 				A4772A3114169A8B006A9887 /* zlib */,
 				A429009A1413949B00429C47 /* image */,
 				A42900A31413949B00429C47 /* render */,
@@ -503,6 +512,8 @@
 				A4772A8114169C19006A9887 /* pngpriv.h in Headers */,
 				A4772A8314169C19006A9887 /* pngstruct.h in Headers */,
 				A4EDFDC814169DCD00ED0DC0 /* png_image_decoder.h in Headers */,
+				A436FC5314AE6D2800D53CE4 /* ghl_log.h in Headers */,
+				A436FC5814AE6D3800D53CE4 /* ghl_log_impl.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -602,6 +613,7 @@
 				A4EDFF011416B3EE00ED0DC0 /* pngget.c in Sources */,
 				A4EDFF071416B45400ED0DC0 /* pngrtran.c in Sources */,
 				A4EDFF111416B4E100ED0DC0 /* pngpread.c in Sources */,
+				A436FC5714AE6D3800D53CE4 /* ghl_log_impl.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
