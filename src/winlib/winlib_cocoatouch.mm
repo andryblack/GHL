@@ -582,6 +582,12 @@ bool GHL_CALL SystemCocoaTouch::SetDeviceState( GHL::DeviceState name, void* dat
 	return false;
 }
 
+GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {
+   	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+    NSLog( @"%@",[NSString stringWithUTF8String:message] );
+    [pool release];
+}
+
 
 GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int argc, char** argv) {
     (void)MODULE;
