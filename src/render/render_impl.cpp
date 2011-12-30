@@ -26,9 +26,13 @@
 #include <cstdio>
 #include <algorithm>
 #include <cassert>
+#include "../ghl_log_impl.h"
+
 
 namespace GHL {
 	
+    static const char* MODULE = "RENDER";
+    
     RenderImpl::RenderImpl(UInt32 w,UInt32 h) :
 	m_width(w),m_height(h),m_sfont_texture(0)
     {
@@ -102,6 +106,7 @@ namespace GHL {
 	
 	
     bool RenderImpl::RenderInit() {
+        LOG_VERBOSE("RenderImpl::RenderInit");
         m_sfont_texture = CreateTexture(lucida_console_regular_8_width,lucida_console_regular_8_height,TEXTURE_FORMAT_RGBA,false);
         if (m_sfont_texture) {
             m_sfont_texture->SetData(0,0,lucida_console_regular_8_width,lucida_console_regular_8_height,
@@ -217,6 +222,9 @@ namespace GHL {
     }
 	
     void RenderImpl::TextureReleased(const Texture* tex) {
+        if ( m_current_texture == tex ) {
+            LOG_ERROR( "Release current texture" );
+        }
         std::vector<const Texture*>::iterator it = std::find(m_textures.begin(),m_textures.end(),tex);
         assert(it!=m_textures.end() && "release unknown texture");
         if (it!=m_textures.end()) {

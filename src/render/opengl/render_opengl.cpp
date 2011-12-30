@@ -12,6 +12,7 @@
 #include "texture_opengl.h"
 #include "ghl_opengl.h"
 #include <ghl_data_stream.h>
+#include "../../ghl_log_impl.h"
 
 #include "rendertarget_opengl.h"
 #include "shader_glsl.h"
@@ -25,6 +26,7 @@
 
 namespace GHL {
 
+    static const char* MODULE = "RENDER";
 	
 	static const GLenum texture_stages[] = {
 		GL_TEXTURE0,
@@ -113,16 +115,16 @@ namespace GHL {
 #ifdef GHL_DYNAMIC_GL
             DynamicGLFinish();
 #endif
-		std::cout << "[RENDER] Destroy " << std::endl;
+        LOG_VERBOSE("Destructor");
 	}
-	
+
+#define NOT_IMPLEMENTED LOG_ERROR( "render openGL function " << __FUNCTION__ << " not implemented" )
+
 #ifdef GHL_DEBUG
-#define NOT_IMPLEMENTED do { std::cout << "render openGL function " << __FUNCTION__ << " not implemented"<<std::endl;} while (0); 	
-#define CHECK_GL_ERROR do { GLenum err = glGetError(); if (err!=0) { std::cout << "GL error at "<<__FUNCTION__<<" : " << err << std::endl; } } while(0);	
+#define CHECK_GL_ERROR do { GLenum err = glGetError(); if (err!=0) { LOG_ERROR( "GL error at "<<__FUNCTION__<<" : " << err ); } } while(0);	
 	
-#define CHECK_GL_ERROR_F( func )  do { GLenum err = glGetError(); if (err!=0) { std::cout << "GL error " << func << " at  " << __FUNCTION__ << "  : " <<  err << std::endl;} } while(0);	
+#define CHECK_GL_ERROR_F( func )  do { GLenum err = glGetError(); if (err!=0) { LOG_ERROR( "GL error " << func << " at  " << __FUNCTION__ << "  : " <<  err );} } while(0);	
 #else
-#define NOT_IMPLEMENTED
 #define CHECK_GL_ERROR_F( func )
 #define CHECK_GL_ERROR
 #endif
@@ -130,23 +132,39 @@ namespace GHL {
 		return strstr(all,ext)!=0;
 	}
 	bool RenderOpenGL::RenderInit() {
+        LOG_INFO("RenderOpenGL::RenderInit");
 #ifdef GHL_DYNAMIC_GL
 		DynamicGLInit();
 		DynamicGLLoadSubset();
 		if (!DinamicGLFeature_VERSION_1_1_Supported()) {
-			std::cout << "!DinamicGLFeature_VERSION_1_1_Supported" << std::endl;
+			LOG_ERROR( "!DinamicGLFeature_VERSION_1_1_Supported" );
 			return false;
 		}
 #endif		
 		const char* render = (const char*) glGetString(GL_RENDERER);
-		std::cout << "GL_RENDERER : " << render << std::endl;
+		LOG_INFO( "GL_RENDERER : " << render );
 		const char* version = (const char*) glGetString(GL_VERSION);
-		std::cout << "GL_VERSION : " << version << std::endl;
+		LOG_INFO( "GL_VERSION : " << version );
 		const char* vendor =(const char*) glGetString(GL_VENDOR);
-		std::cout << "GL_VENDOR : " << vendor << std::endl;
+		LOG_INFO( "GL_VENDOR : " << vendor );
 		const char* extensions = (const char*) glGetString(GL_EXTENSIONS);
-		std::cout << "GL_EXTENSIONS : " << extensions << std::endl;
-		std::cout << "Render size : " << m_width << "x" << m_height << std::endl;
+        std::string str( extensions );
+        LOG_INFO("GL_EXTENSIONS :");
+        {
+            std::string::size_type ppos = 0;
+            std::string::size_type pos = str.find(' ');
+            while ( pos!=str.npos ) {
+                LOG_INFO( str.substr(ppos,pos-ppos) );
+                std::string::size_type next = pos+1;
+                pos = str.find( ' ', next );
+                ppos = next;
+                if (pos == str.npos ) {
+                    LOG_INFO( str.substr(ppos,str.npos) );
+                    break;
+                }
+            }
+        }
+		LOG_INFO( "Render size : " << m_width << "x" << m_height );
 		
 #ifndef GHL_SHADERS_UNSUPPORTED
 		m_shaders_support_glsl = ExtensionSupported(extensions,"GL_ARB_shader_objects");
@@ -158,48 +176,45 @@ namespace GHL {
             DynamicGLInit();
             DynamicGLLoadSubset();
 		if (!DinamicGLFeature_VERSION_1_1_Supported()) {
-			std::cout << "!DinamicGLFeature_VERSION_1_1_Supported" << std::endl;
+			LOG_WARNING( "!DinamicGLFeature_VERSION_1_1_Supported" );
 			//return false;
 		}
 		if (!DinamicGLFeature_VERSION_1_2_Supported()) {
-			std::cout << "!DinamicGLFeature_VERSION_1_2_Supported" << std::endl;
+			LOG_WARNING( "!DinamicGLFeature_VERSION_1_2_Supported" );
 			//return false;
 		}
 		if (!DinamicGLFeature_VERSION_1_3_Supported()) {
-			std::cout << "!DinamicGLFeature_VERSION_1_3_Supported" << std::endl;
+			LOG_WARNING( "!DinamicGLFeature_VERSION_1_3_Supported" );
 			//return false;
 		}
 		if (!DinamicGLFeature_VERSION_1_4_Supported()) {
-			std::cout << "!DinamicGLFeature_VERSION_1_4_Supported" << std::endl;
+			LOG_WARNING( "!DinamicGLFeature_VERSION_1_4_Supported" );
 			//return false;
 		}
 		if (!DinamicGLFeature_VERSION_1_5_Supported()) {
-			std::cout << "!DinamicGLFeature_VERSION_1_4_Supported" << std::endl;
+			LOG_WARNING( "!DinamicGLFeature_VERSION_1_4_Supported" );
 			//return false;
 		}
             
 		if (!DinamicGLFeature_EXT_framebuffer_object_Supported()) {
-			std::cout << "!DinamicGLFeature_EXT_framebuffer_object_Supported"<< std::endl;
+			LOG_WARNING( "!DinamicGLFeature_EXT_framebuffer_object_Supported" );
 			//return false;
 		}
 		if (!DinamicGLFeature_ARB_depth_texture_Supported()) {
-			std::cout << "!DinamicGLFeature_ARB_depth_texture_Supported"<< std::endl;
+			LOG_WARNING( "!DinamicGLFeature_ARB_depth_texture_Supported" );
 			//return false;
 		}
 		if (m_shaders_support_glsl && !DinamicGLFeature_ARB_shader_objects_Supported()) {
-			std::cout << "!DinamicGLFeature_ARB_shader_objects_Supported"<< std::endl;
+			LOG_INFO( "!DinamicGLFeature_ARB_shader_objects_Supported" );
 			m_shaders_support_glsl = false;
-			//return false;
 		}
 		if (m_shaders_support_glsl && !DinamicGLFeature_ARB_fragment_shader_Supported()) {
-			std::cout << "!DinamicGLFeature_ARB_fragment_shader_Supported"<< std::endl;
+			LOG_INFO( "!DinamicGLFeature_ARB_fragment_shader_Supported" );
 			m_shaders_support_glsl = false;
-			//return false;
 		}
 		if (m_shaders_support_glsl && !DinamicGLFeature_ARB_vertex_shader_Supported()) {
-			std::cout << "!DinamicGLFeature_ARB_vertex_shader_Supported"<< std::endl;
+			LOG_INFO( "!DinamicGLFeature_ARB_vertex_shader_Supported" );
 			m_shaders_support_glsl = false;
-			//return false;
 		}
 		
 		
@@ -209,7 +224,7 @@ namespace GHL {
 #if 0
 		m_shaders_support_glsl = false;
 #endif
-		std::cout << "[RENDER] GLSL shaders " << (m_shaders_support_glsl?"supported":"not supported") << std::endl;
+		LOG_INFO( "GLSL shaders " << (m_shaders_support_glsl?"supported":"not supported") );
 #endif
         
 		glViewport(0, 0, m_width, m_height);
@@ -338,8 +353,8 @@ namespace GHL {
 			{
 #ifdef GHL_DEBUG
 				if (!CheckTexture(tex)) {
+                    LOG_FATAL( "bind unknown texture" );
 					assert(false && "bind unknown texture");
-					std::cout << "bind unknown texture" << std::endl;
 					return;
 				}
 #endif
@@ -394,7 +409,7 @@ namespace GHL {
 				glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB,src1);
 				glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB,op1);
 			} else if (op==TEX_OP_INT_DIFFUSE_ALPHA) {
-				NOT_IMPLEMENTED
+				NOT_IMPLEMENTED;
 			} else if (op==TEX_OP_INT_TEXTURE_ALPHA) {
 				glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_INTERPOLATE);
 				glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB,src0);
@@ -450,11 +465,11 @@ namespace GHL {
 				if (op==TEX_OP_ADD) 
 					mode = GL_ADD;
 				else if (op==TEX_OP_INT_DIFFUSE_ALPHA) {
-					NOT_IMPLEMENTED
+					NOT_IMPLEMENTED;
 				} else if (op==TEX_OP_INT_TEXTURE_ALPHA) {
-					NOT_IMPLEMENTED
+					NOT_IMPLEMENTED;
 				} else if (op==TEX_OP_INT_CURRENT_ALPHA) {
-					NOT_IMPLEMENTED
+					NOT_IMPLEMENTED;
 				}
 				glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, mode);
 			}
@@ -509,7 +524,7 @@ namespace GHL {
 	
 	/// create index buffer
 	IndexBuffer* GHL_CALL RenderOpenGL::CreateIndexBuffer(UInt32 size) {
-		NOT_IMPLEMENTED
+		NOT_IMPLEMENTED;
 		/// @todo
 		GHL_UNUSED(size);
 		return 0;
@@ -523,12 +538,12 @@ namespace GHL {
 			return;
 		}
 		///@todo
-		NOT_IMPLEMENTED
+		NOT_IMPLEMENTED;
 	}
 	
 	/// create vertex buffer
 	VertexBuffer* GHL_CALL RenderOpenGL::CreateVertexBuffer(VertexType type,UInt32 size) {
-		NOT_IMPLEMENTED
+		NOT_IMPLEMENTED;
 		/// @todo
 		GHL_UNUSED(type);
 		GHL_UNUSED(size);
@@ -541,7 +556,7 @@ namespace GHL {
 			CHECK_GL_ERROR
 			return;
 		}
-		NOT_IMPLEMENTED
+		NOT_IMPLEMENTED;
 	}
 	
 	/// set projection matrix
@@ -571,7 +586,7 @@ namespace GHL {
             GHL_UNUSED(v_amount);
             GHL_UNUSED(i_begin);
             GHL_UNUSED(amount);
-            NOT_IMPLEMENTED
+        NOT_IMPLEMENTED;
 	}
 	
 	/// draw primitives from memory

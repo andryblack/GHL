@@ -22,14 +22,16 @@
 
 #include "png_image_decoder.h"
 #include "image_impl.h"
+#include "../ghl_log_impl.h"
 
 #include "libpng/png.h"
 #include <cstdio>
-#include <iostream>
 #include <cassert>
 
 namespace GHL {
 
+    static const char* MODULE = "IMAGE:PNG";
+    
 	PngDecoder::PngDecoder() : ImageFileDecoder(IMAGE_FILE_FORMAT_PNG)
 	{
 	}
@@ -38,25 +40,16 @@ namespace GHL {
 	{
 	}
 
-static void error_func(png_structp png_ptr,const char* msg)
-{
-	//png_get_io_ptr();
+    static void error_func(png_structp png_ptr,const char* msg)
+    {
+        LOG_ERROR( msg );	 
+    }
 	
-	PngDecoder* png = reinterpret_cast<PngDecoder*>(png_get_error_ptr(png_ptr));
-	if (png) {
-		char buf[256];
-		::snprintf(buf,255,"png: %s",msg);
-		std::cout << buf << std::endl;
-	}
-	assert( false );	 
-}
 	
-	static void log_error( const char* text ) {
-		std::cout << "error : " << text << std::endl;
-	}
 
 	static void warning_func(png_structp png,const char* err)
 	{
+        LOG_WARNING( err );
 	}
 
 // PNG function for file reading
@@ -100,7 +93,7 @@ Image* PngDecoder::Decode(DataStream* file)
         &error_func, &warning_func);
 
 	if (!png_ptr) {
-		log_error("png: error png_create_read_struct");
+		LOG_ERROR("png_create_read_struct");
         return (0);
 	}
 	
@@ -108,7 +101,7 @@ Image* PngDecoder::Decode(DataStream* file)
 	png_infop info_ptr = png_create_info_struct(png_ptr);
 	if (!info_ptr)
 	{
-		log_error("png: Internal PNG create info struct failure");
+		LOG_ERROR(" Internal PNG create info struct failure");
 		png_destroy_read_struct(&png_ptr, NULL, NULL);
 		return 0;
 	}
@@ -119,7 +112,7 @@ Image* PngDecoder::Decode(DataStream* file)
 		png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
 		if (RowPointers)
 			delete [] RowPointers;
-		log_error("png: error");
+		LOG_ERROR(" error");
 		return 0;
 	}
 
@@ -225,7 +218,7 @@ Image* PngDecoder::Decode(DataStream* file)
 	}
 	if (!image)
 	{
-		log_error("png: Internal PNG create image struct failure");
+		LOG_ERROR(" Internal PNG create image struct failure");
 		png_destroy_read_struct(&png_ptr, NULL, NULL);
 		return 0;
 	}
@@ -234,7 +227,7 @@ Image* PngDecoder::Decode(DataStream* file)
 	RowPointers = new png_bytep[Height];
 	if (!RowPointers)
 	{
-		log_error("png: Internal PNG create row pointers failure");
+		LOG_ERROR(" Internal PNG create row pointers failure");
 		png_destroy_read_struct(&png_ptr, NULL, NULL);
 		delete image;
 		return 0;

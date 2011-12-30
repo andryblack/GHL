@@ -10,12 +10,13 @@
 #import <Foundation/Foundation.h>
 
 #include "memory_stream.h"
-
+#include "../ghl_log_impl.h"
 
 
 
 namespace GHL {
 
+    static const char* MODULE = "VFS";
 	
 	class CocoaReadFileStream : public DataStream {
 	private:
@@ -48,6 +49,7 @@ namespace GHL {
 		}
 		/// write data
 		virtual UInt32 GHL_CALL Write(const Byte* /*src*/,UInt32 /*bytes*/) {
+            LOG_ERROR("CocoaReadFileStream::Write unimplemented");
 			return 0;
 		}
 		/// tell
@@ -95,6 +97,7 @@ namespace GHL {
 		}
 		/// read data
 		virtual UInt32 GHL_CALL Read(Byte* /*dest*/,UInt32 /*bytes*/) {
+            LOG_ERROR("CocoaWriteFileStream::Read unimplemented");
 			return 0;
 		}
 		/// write data
@@ -140,6 +143,7 @@ namespace GHL {
 		if (bundle) {
 			NSString* res = [bundle resourcePath];
 			m_data_dir = [res UTF8String];
+            LOG_VERBOSE("data_dir: " << m_data_dir);
 		}
 	}
 
@@ -167,10 +171,12 @@ namespace GHL {
 	}
 	/// remove file
 	bool GHL_CALL VFSCocoaImpl::DoRemoveFile(const char* /*file*/) {
+        LOG_ERROR("VFSCocoaImpl::DoRemoveFile unimplemented");
 		return false;
 	}
 	/// copy file
 	bool GHL_CALL VFSCocoaImpl::DoCopyFile(const char* /*from*/,const char* /*to*/) {
+        LOG_ERROR("VFSCocoaImpl::DoCopyFile unimplemented");
 		return false;
 	}
 	/// open file

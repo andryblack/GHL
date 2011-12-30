@@ -17,13 +17,20 @@
 #include <ghl_settings.h>
 
 #include <ghl_system.h>
+#include <ghl_log.h>
+
 #include "../vfs/vfs_cocoa.h"
 #include "../image/image_decoders.h"
 #include "../sound/openal/ghl_sound_openal.h"
 
+#include "../ghl_log_impl.h"
+
 static bool g_fullscreen = false;
+static bool g_need_fullscreen = false;
 static std::string g_title = "GHL";
 static NSRect g_rect;
+
+static const char* MODULE = "WINLIB";
 
 class SystemCocoa : public GHL::System {
 public:
@@ -83,10 +90,11 @@ public:
 	return YES;
 }
 - (void)closeWindow {
+    LOG_INFO( "WinLibWindow::closeWindow" );
     [super close];
 }
 - (void)close {
-	NSLog(@"close");
+    LOG_INFO( "WinLibWindow::close" );
 	[super close];
 	[[NSApplication sharedApplication] terminate:self];
 }
@@ -106,13 +114,15 @@ public:
 	if (self) {
 		
 	}
-	m_render = 0;
+   m_render = 0;
 	m_loaded = false;
-	return self;
+    LOG_INFO( "WinLibOpenGLView::initWithFrame ok" ); 
+    return self;
 }
 -(void)setApplication:(WinLibAppDelegate*) app {
 	m_application = app;
 }
+
 
 static GHL::Key translate_key(unichar c,unsigned short kk) {
 	GHL::Key key = GHL::KEY_NONE;
@@ -262,14 +272,17 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 
 - (void)prepareOpenGL {
 	/// @todo create render there
-	NSLog( @"prepareOpenGL" ); 
-	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+	LOG_INFO( "WinLibOpenGLView::prepareOpenGL" ); 
+   
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	[[self openGLContext] makeCurrentContext];
 	m_render = GHL_CreateRenderOpenGL(GHL::UInt32(self.bounds.size.width),
 									 GHL::UInt32(self.bounds.size.height));
 	if (m_render) {
+        LOG_VERBOSE( "WinLibOpenGLView::prepareOpenGL render created" );
         [m_application getApplication]->SetRender(m_render);
         if ([m_application getApplication]->Load()) {
+            LOG_VERBOSE( "WinLibOpenGLView::prepareOpenGL application loaded" );
             m_timer = [NSTimer scheduledTimerWithTimeInterval: 1.0f/200.0f target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
             [m_timer fire];
             m_loaded = true;
@@ -281,7 +294,8 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 }
 
 - (void)reshape {
-    if (m_render) {
+    if (m_render && [self window] ) {
+        LOG_VERBOSE( "WinLibOpenGLView::reshape" );
         [[self openGLContext] makeCurrentContext];
         m_render->Resize( self.bounds.size.width, self.bounds.size.height );
     }
@@ -291,7 +305,10 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     (void)dirtyRect;
     static bool in_draw = false;
     if (in_draw) return;
-    if ( m_loaded ) {
+    if (g_need_fullscreen!=g_fullscreen)  {
+        return;
+    }
+    if ( m_loaded  ) {
         in_draw = true;
         
 		::timeval time;
@@ -329,12 +346,20 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 
 - (void)timerFireMethod:(NSTimer*)theTimer {
     (void)theTimer;
-    /*if([self.window respondsToSelector:@selector(disableScreenUpdatesUntilFlush)])
-		[self.window disableScreenUpdatesUntilFlush];*/
-    [self setNeedsDisplay:YES];
+    
+    if ( g_fullscreen != g_need_fullscreen ) {
+        WinLibAppDelegate* delegate = (WinLibAppDelegate*)[NSApplication sharedApplication].delegate;
+        if (delegate) {
+            [delegate switchFullscreen];
+        }
+    }
+    
+    if ([self window] && [self.window isVisible]) 
+        [self setNeedsDisplay:YES];
 }
 
 -(void)dealloc {
+    LOG_INFO( "WinLibOpenGLView::dealloc" );
 	if (m_timer) {
 		[m_timer release];
 	}
@@ -360,6 +385,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 		m_vfs = new GHL::VFSCocoaImpl();
 		m_imageDecoder = new GHL::ImageDecoderImpl();
 		m_sound = 0;
+        LOG_INFO( "WinLibAppDelegate::init" );
     }
     return self;
 }
@@ -401,6 +427,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     [m_gl_view swapBuffers];
 }
 -(void)dealloc {
+    LOG_INFO( "WinLibAppDelegate::dealloc" );
 	if (m_application)
 		m_application->Release();
 	delete m_vfs;
@@ -417,6 +444,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 }
 
 - (void)switchFullscreen {
+    LOG_INFO( "WinLibAppDelegate::switchFullscreen" );
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	
     
@@ -430,9 +458,10 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     
     bool recreateWindow = false; 
     
+    
     if (m_window) {
         screen = m_window.screen;
-        if (g_fullscreen)
+        if (g_need_fullscreen)
             m_rect.origin = [m_window frame].origin;
         
         if (![m_window respondsToSelector:@selector(setStyleMask:)]) {
@@ -448,22 +477,27 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
         screen = [NSScreen mainScreen];
     }
     
-    if (g_fullscreen) {
+    if (g_need_fullscreen) {
         rect = [screen frame];
-        style = NSBorderlessWindowMask | NSUnscaledWindowMask;
+        style = NSBorderlessWindowMask ;
         windowLevel = NSMainMenuWindowLevel+1;
     } else {
         
     }
     if (!m_window) {
         m_window = [[WinLibWindow alloc] initWithContentRect:rect styleMask:style backing:NSBackingStoreBuffered defer:YES];
+        [m_window disableFlushWindow];
         [m_window setContentView:m_gl_view];
-        if (g_fullscreen)
+        if (g_need_fullscreen)
             [m_window setLevel:windowLevel];
     } else {
+        [m_window disableFlushWindow];
+        [m_window disableScreenUpdatesUntilFlush];
+        [m_gl_view setHidden:YES];
+        
         [m_window setStyleMask:style];
         [m_window setLevel:windowLevel];
-        if (g_fullscreen) {
+        if (g_need_fullscreen) {
             [m_window setFrame:rect display:YES];
         } else {
             [m_window setContentSize:rect.size];
@@ -471,17 +505,24 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
         }
     }
     
-    if (g_fullscreen) {
+    if (g_need_fullscreen) {
         [m_window setHidesOnDeactivate:YES];
+        [m_window setOpaque:YES];
+        [m_window setHasShadow:NO];
     } else {
         [m_window setHidesOnDeactivate:NO];
         [m_window setHasShadow:YES];
+        [m_window setOpaque:NO];
     }
     
     [m_window setTitle:[NSString stringWithUTF8String:g_title.c_str()] ];
-    [m_gl_view reshape];
+    
+    g_fullscreen = g_need_fullscreen;
+    
+    [m_gl_view setHidden:NO];
+    [m_window enableFlushWindow];
     [m_window makeKeyAndOrderFront:nil];
-        
+    
     [pool release];
 }
 
@@ -492,6 +533,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+    LOG_INFO( "WinLibAppDelegate::applicationDidFinishLaunching" );
     (void)aNotification;
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	// Insert code here to initialize your application 
@@ -529,7 +571,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 	[gl setApplication:self];
 	
     
-    g_fullscreen = settings.fullscreen;
+    g_fullscreen = g_need_fullscreen = settings.fullscreen;
     
     m_gl_view = gl;
 	
@@ -540,6 +582,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 	[pool release];
 }
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
+    LOG_INFO( "WinLibAppDelegate::applicationWillTerminate" );
     (void)aNotification;
 	if (m_application)
 		m_application->Release();
@@ -564,14 +607,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 
 
 void GHL_CALL SystemCocoa::SwitchFullscreen(bool fs) {
-    if (g_fullscreen!=fs) {
-        g_fullscreen = fs;
-        
-        WinLibAppDelegate* delegate = (WinLibAppDelegate*)[NSApplication sharedApplication].delegate;
-        if (delegate) {
-            [delegate switchFullscreen];
-        }
-    }
+    g_need_fullscreen = fs;
 }
 void GHL_CALL SystemCocoa::SwapBuffers() {
     WinLibAppDelegate* delegate = (WinLibAppDelegate*)[NSApplication sharedApplication].delegate;
@@ -591,6 +627,8 @@ void GHL_CALL SystemCocoa::SetTitle( const char* title ) {
 
 GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/, char** /*argv*/) {
     
+    LOG_INFO( "GHL_StartApplication" );
+    
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	[NSApplication sharedApplication];
 	WinLibAppDelegate* delegate = [[WinLibAppDelegate alloc] init];
@@ -606,9 +644,11 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
     
     if ([[NSBundle mainBundle] loadNibFile:@"MainMenu" externalNameTable:nil withZone:nil])
     {
-        ///
+        LOG_INFO( "GHL_StartApplication: loaded MainMenu from bundle" );
     } else {
     
+        LOG_INFO( "GHL_StartApplication: create menu" );
+        
         // The titles of the menu items are for identification purposes only
         //and shouldn't be localized.
         // The strings in the menu bar come from the submenu titles,
@@ -637,4 +677,10 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
 	[NSApp run];
 	
 	return 0;
+}
+
+GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {
+   	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+    NSLog( @"%@",[NSString stringWithUTF8String:message] );
+    [pool release];
 }

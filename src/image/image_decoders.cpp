@@ -44,9 +44,12 @@
 #include "tga_image_decoder.h"
 #endif
 
-#include <iostream>
+#include "../ghl_log_impl.h"
 
 namespace GHL {
+    
+    
+    static const char* MODULE = "IMAGE";
 
 ImageDecoderImpl::ImageDecoderImpl() {
 #ifdef USE_PNG_DECODER
@@ -84,7 +87,7 @@ Image* GHL_CALL ImageDecoderImpl::Decode(DataStream* ds) const
 	}
 	if (!img) {
 		if (true) {
-			std::cout << "[IMAGE] error decoding"  << std::endl;
+			LOG_WARNING( "error decoding"  );
 		}
 	}
 	return img;

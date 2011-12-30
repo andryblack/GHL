@@ -30,7 +30,7 @@ typedef void* DYNAMIC_GL_PROTO;
 #error "usupported platform"
 #endif
 
-#include <iostream>
+#include "../../../ghl_log_impl.h"
 
 namespace GHL {
 
@@ -64,10 +64,11 @@ namespace GHL {
 #else
         DYNAMIC_GL_PROTO func = DYNAMIC_GL_GetProcAddress(name);
 #endif
+        static const char* MODULE = "DYNAMIC_GL";
         if (!func) {
-			std::cout << "[RENDER][DYNAMIC_GL] not found entry point for " << name << std::endl;
+			LOG_WARNING( "not found entry point for " << name );
 #ifdef DYNAMIC_GL_USE_DLFCN
-            std::cout << const_cast<const char*>(dlerror()) << std::endl;
+            LOG_WARNING( const_cast<const char*>(dlerror()) );
 #endif
         }
         return (FUNCPROTO) ( func );

@@ -14,7 +14,7 @@
 #include "render_opengl.h"
 #include "texture_opengl.h"
 
-#include <iostream>
+#include "../../ghl_log_impl.h"
 
 #ifdef GHL_DYNAMIC_GL
 #endif
@@ -22,6 +22,7 @@
 namespace GHL {
 	
 	UInt32 g_default_renderbuffer = 0;
+    static const char* MODULE = "RENDER";
 	
 #ifdef GHL_DYNAMIC_GL
     static bool extensions_supported() {
@@ -30,6 +31,7 @@ namespace GHL {
         if (!checked) {
             result = DinamicGLFeature_EXT_framebuffer_object_Supported();
             checked = true;
+            LOG_VERBOSE("DinamicGLFeature_EXT_framebuffer_object_Supported result : " << result);
         }
         return result;
     }
@@ -73,8 +75,8 @@ namespace GHL {
 #define _GL_FRAMEBUFFER_COMPLETE GL_FRAMEBUFFER_COMPLETE_EXT
 #endif
 	
-#define CHECK_GL_ERROR do { GLenum err = glGetError(); if (err!=0) { std::cout << "GL error at "<<__FUNCTION__<<" : " << err << std::endl; } } while(0);	
-#define CHECK_GL_ERROR_F( func )  do { GLenum err = glGetError(); if (err!=0) { std::cout << "GL error " << func << " at  " << __FUNCTION__ << "  : " <<  err << std::endl;} } while(0);	
+#define CHECK_GL_ERROR do { GLenum err = glGetError(); if (err!=0) { LOG_ERROR( "GL error at "<<__FUNCTION__<<" : " << err ); } } while(0);	
+#define CHECK_GL_ERROR_F( func )  do { GLenum err = glGetError(); if (err!=0) { LOG_ERROR(  "GL error " << func << " at  " << __FUNCTION__ << "  : " <<  err );} } while(0);	
 
 	RenderTargetOpenGL::RenderTargetOpenGL(RenderOpenGL* parent,UInt32 w,UInt32 h,TextureFormat fmt,bool depth) :
 		m_parent(parent),m_width(w),m_height(h),m_have_depth(depth),m_texture(0)
