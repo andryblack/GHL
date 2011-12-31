@@ -10,10 +10,12 @@
 #include "ghl_sound_impl.h"
 #include <ghl_data_stream.h>
 
-#include <iostream>
+#include "../ghl_log_impl.h"
 
 namespace GHL {
 
+    static const char* MODULE = "SOUND";
+    
 	SamplesBufferImpl::SamplesBufferImpl(SampleType type,UInt32 capacity,UInt32 freq) : m_type(type),m_capacity(capacity),m_freq(freq) {
 	}
 	
@@ -44,7 +46,7 @@ namespace GHL {
 	
 	SamplesBuffer* GHL_CALL SoundImpl::LoadBuffer(DataStream* stream,SampleType resample,UInt32 refreq) {
 		if (resample!=SAMPLE_TYPE_UNKNOWN || refreq!=0) {
-			std::cout << "[SOUND] resampling not implemented" << std::endl;
+			LOG_ERROR( "resampling not implemented" );
 			return 0;
 		}
 		SoundDecoder* decoder = OpenDecoder(stream);

@@ -8,17 +8,19 @@
  */
 
 #include "ghl_sound_openal.h"
-#include <iostream>
+#include "../../ghl_log_impl.h"
 #include <cassert>
 
 namespace GHL {
 
+    static const char* MODULE = "SOUND";
+    
 #define CHECK_ERROR  do { ALenum err = alGetError(); if (err!=AL_NO_ERROR) { \
-		std::cout << "[SOUND] ERROR " << __FUNCTION__ << " :" << alGetString(err) << std::endl; \
+		LOG_ERROR(  __FUNCTION__ << " :" << alGetString(err) ); \
 	} } while(0)
 	
 #define CHECK_ERROR_F(Name)  do { ALenum err = alGetError(); if (err!=AL_NO_ERROR) { \
-		std::cout << "[SOUND] ERROR " << __FUNCTION__ << ":" << #Name << " :" << alGetString(err) << std::endl; \
+		LOG_ERROR( __FUNCTION__ << ":" << #Name << " :" << alGetString(err) ); \
 	} } while(0)
 	 
 	
@@ -27,6 +29,7 @@ namespace GHL {
 		if (type==SAMPLE_TYPE_MONO_16) return AL_FORMAT_MONO16;
 		if (type==SAMPLE_TYPE_STEREO_8) return AL_FORMAT_STEREO8;
 		if (type==SAMPLE_TYPE_STEREO_16) return AL_FORMAT_STEREO16;
+        LOG_ERROR("unexpected format");
 		assert(false && "unexpected format");
 		return AL_FORMAT_MONO8;
 	}
@@ -114,38 +117,38 @@ namespace GHL {
 	}
 	
 	bool SoundOpenAL::SoundInit() {
-		std::cout << "[SOUND] SoundOpenAL::SoundInit" << std::endl;
+		LOG_INFO("SoundOpenAL::SoundInit");
 		m_device = alcOpenDevice(NULL);
 		if (!m_device) {
-			std::cout << "[SOUND] error opening default device" << std::endl;
+			LOG_ERROR( "error opening default device" );
 			return false;
 		}
 		
 		
 		m_context = alcCreateContext(m_device, 0);
 		if (!m_context) {
-			std::cout << "[SOUND] error creating context" << std::endl;
+			LOG_ERROR( "error creating context" );
 			alcCloseDevice(m_device);
 			return false;
 		}
 		const ALCchar* SPEC = alcGetString(m_device, ALC_DEVICE_SPECIFIER);
-		if (SPEC) std::cout << "[SOUND] ALC_DEVICE_SPECIFIER : " << SPEC << std::endl;
+		if (SPEC) LOG_INFO( "ALC_DEVICE_SPECIFIER : " << SPEC );
 		const ALCchar* EXT = alcGetString(m_device, ALC_EXTENSIONS);
-		if (EXT) std::cout << "[SOUND] ALC_EXTENSIONS : " << EXT << std::endl;
+		if (EXT) LOG_INFO( "ALC_EXTENSIONS : " << EXT );
 		const ALchar* VERSION = alGetString( AL_VERSION );
-		if (VERSION) std::cout << "[SOUND] AL_VERSION	: " << VERSION << std::endl;
+		if (VERSION) LOG_INFO("AL_VERSION	: " << VERSION );
 		const ALchar* VENDOR = alGetString( AL_VENDOR);
-		if (VENDOR) std::cout << "[SOUND] AL_VENDOR	: " << VENDOR << std::endl;
+		if (VENDOR) LOG_INFO( "AL_VENDOR	: " << VENDOR);
 		const ALchar* RENDERER = alGetString( AL_RENDERER);
-		if (RENDERER) std::cout << "[SOUND] AL_RENDERER	: " << RENDERER << std::endl;
+		if (RENDERER) LOG_INFO( "AL_RENDERER	: " << RENDERER );
 		const ALchar* EXTENSIONS = alGetString( AL_EXTENSIONS);
-		if (EXTENSIONS) std::cout << "[SOUND] AL_EXTENSIONS: " << EXTENSIONS << std::endl;
+		if (EXTENSIONS) LOG_INFO( "AL_EXTENSIONS: " << EXTENSIONS );
 		alcMakeContextCurrent(m_context);
 		alcProcessContext(m_context);
 		{
 			ALCenum err = alcGetError(m_device);
 			if (err!=ALC_NO_ERROR) {
-				std::cout << "[SOUND] error" << std::endl;
+				LOG_ERROR( " error" );
 			}
 		}
 		CHECK_ERROR;
@@ -153,7 +156,7 @@ namespace GHL {
 	}
 	
 	void SoundOpenAL::SoundDone() {
-		std::cout << "[SOUND] SoundOpenAL::SoundDone" << std::endl;
+		LOG_INFO( "SoundOpenAL::SoundDone" );
 		if (m_context) {
 			alcSuspendContext(m_context);
 			alcMakeContextCurrent(0);
@@ -193,7 +196,7 @@ namespace GHL {
 		SoundChannelOpenAL* ch = static_cast<SoundChannelOpenAL*> (channel);
 		SamplesBufferOpenAL* buf = static_cast<SamplesBufferOpenAL*> (buffer);
 		if (buf->GetFrequency()!=ch->GetFrequency()) {
-			std::cout << "[SOUND] freq not equal " << ch->GetFrequency() << " <- " << buf->GetFrequency() << std::endl;
+			LOG_ERROR( "freq not equal " << ch->GetFrequency() << " <- " << buf->GetFrequency() );
 		}
 		if (ch && buf) {
 			ch->AddBuffer(buf);

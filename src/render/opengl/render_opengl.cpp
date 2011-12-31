@@ -22,7 +22,6 @@
 
 #include <algorithm>
 #include <cassert>
-#include <iostream>
 
 namespace GHL {
 
@@ -636,7 +635,7 @@ namespace GHL {
 		RenderTargetOpenGL* rt = new RenderTargetOpenGL(this,w,h,fmt,depth);
 		CHECK_GL_ERROR
 		if (!rt->check()) {
-			std::cout << "rendertarget check failed" << std::endl;
+			LOG_ERROR( "rendertarget check failed" );
 			delete rt;
 			rt = 0;
 		}
