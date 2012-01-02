@@ -499,26 +499,24 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
         
         if (g_need_fullscreen) {
             [m_window setFrame:rect display:YES];
-            [m_window setHidesOnDeactivate:YES];
-            [m_window setMovable:NO];
         } else {
-            [m_window setMovable:YES];
             [m_window setContentSize:rect.size];
             [m_window setFrameOrigin:m_rect.origin];
-            [m_window setHidesOnDeactivate:NO];
         }
     }
     
     [m_window setLevel:windowLevel];
     
     if (g_need_fullscreen) {
-        //[m_window setHidesOnDeactivate:YES];
         [m_window setOpaque:YES];
         [m_window setHasShadow:NO];
+        [m_window setHidesOnDeactivate:YES];
+        [m_window setMovable:NO];
     } else {
-        //[m_window setHidesOnDeactivate:NO];
         [m_window setHasShadow:YES];
         [m_window setOpaque:NO];
+        [m_window setHidesOnDeactivate:NO];
+        [m_window setMovable:YES];
     }
     
     [m_window setTitle:[NSString stringWithUTF8String:g_title.c_str()] ];
@@ -567,8 +565,10 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 		0
 	};
 	
-	
-	NSRect rect = NSMakeRect(0,0,settings.width,settings.height);
+	NSScreen* screen = [NSScreen mainScreen];
+	NSRect rect = NSMakeRect((screen.frame.size.width-settings.width)/2 ,
+                             (screen.frame.size.height-settings.height)/2,
+                             settings.width,settings.height);
 	m_rect = rect;
     g_rect = rect;
     
