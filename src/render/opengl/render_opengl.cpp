@@ -668,7 +668,7 @@ namespace GHL {
 		GLsizei size;
 		glGetInfoLogARB(handle,512,&size,log);
 		log[size]=0;
-		LOG_INFO( "shader compile result : " << log );
+		LOG_VERBOSE( "shader compile result : " << log );
 		if (res!=GL_TRUE)
 		{
 			return false;
@@ -744,7 +744,7 @@ namespace GHL {
 		GLsizei size;
 		glGetInfoLogARB(handle,512,&size,log);
 		log[size]=0;
-		LOG_INFO( "Shader link result : " << log );
+		LOG_VERBOSE( "Shader link result : " << log );
 		if (res!=GL_TRUE) {
 			glDeleteObjectARB(handle);
 			return 0;
