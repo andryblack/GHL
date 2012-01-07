@@ -9,3 +9,7 @@ projects/ios/build
 .DS_Store
 projects/ios/GHL.xcodeproj/project.xcworkspace
 projects/ios/GHL.xcodeproj/xcuserdata
+bin
+projects/win/*.ncb
+projects/win/*.suo
+projects/win/build

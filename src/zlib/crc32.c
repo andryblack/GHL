@@ -223,6 +223,7 @@ uLong ZEXPORT crc32(_crc, buf, len)
     const unsigned char FAR *buf;
     uInt len;
 {
+	u4 crc;
     if (buf == Z_NULL) return 0UL;
 
 #ifdef DYNAMIC_CRC_TABLE
@@ -230,7 +231,7 @@ uLong ZEXPORT crc32(_crc, buf, len)
         make_crc_table();
 #endif /* DYNAMIC_CRC_TABLE */
 
-    u4 crc = (u4)_crc;
+    crc = (u4)_crc;
 #ifdef BYFOUR
     if (sizeof(void *) == sizeof(ptrdiff_t)) {
         u4 endian;

@@ -1,16 +1,19 @@
-#include "winlib_application.h"
-#include "winlib_settings.h"
+#include <ghl_application.h>
+#include <ghl_settings.h>
 
-#include "../GHL/vfs/vfs_win32.h"
-#include "../GHL/render/opengl/render_opengl.h"
-#include "../GHL/image/image_decoders.h"
-#include "../GHL/sound/dsound/ghl_sound_dsound.h"
+#include "../vfs/vfs_win32.h"
+#include "../render/opengl/render_opengl.h"
+#include "../image/image_decoders.h"
+#include "../sound/dsound/ghl_sound_dsound.h"
+#include "../ghl_log_impl.h"
+
 #include <windows.h>
 #include <mmsystem.h>
-#include <iostream>
 #include <cstdio>
 
 #include <ghl_system.h>
+
+static const char* MODULE="WinLib";
 
 static GHL::Key convert_key( DWORD code ) {
 	switch (code) {
@@ -65,7 +68,7 @@ static GHL::Key convert_key( DWORD code ) {
 
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
-	WinLib::Application* appl = reinterpret_cast<WinLib::Application*>(GetWindowLongPtr(hwnd,GWLP_USERDATA));
+	GHL::Application* appl = reinterpret_cast<GHL::Application*>(GetWindowLongPtr(hwnd,GWLP_USERDATA));
 	switch(msg)
 	{
 
@@ -135,9 +138,40 @@ public:
 	void GHL_CALL Exit() {
 		PostMessage(m_hwnd,WM_QUIT,0,0);
 	}
+	///
+	virtual bool GHL_CALL IsFullscreen() const {
+		return false;
+	}
+        ///
+	virtual void GHL_CALL SwitchFullscreen(bool fs) {
+		/// @todo
+	}
+        ///
+	virtual void GHL_CALL ShowKeyboard() {
+	}
+        ///
+	virtual void GHL_CALL HideKeyboard() {
+	}
+        ///
+	virtual GHL::UInt32  GHL_CALL GetKeyMods() const {
+		/// @todo
+		return 0;
+	}
+		///
+	virtual bool GHL_CALL SetDeviceState( GHL::DeviceState name, void* data) {
+		return false;
+	}
+		///
+	virtual bool GHL_CALL GetDeviceData( GHL::DeviceData name, void* data) {
+		return false;
+	}
+        ///
+	virtual void GHL_CALL SetTitle( const char* title ) {
+		/// @todo
+	}
 };
-static const TCHAR* WINDOW_CLASS_NAME = TEXT("WINLIB_WINDOW");
-WINLIB_API int WINLIB_CALL WinLib_StartApplication( WinLib::Application* app,int argc, char** argv)
+static const TCHAR* WINDOW_CLASS_NAME = TEXT("GHL_WINLIB_WINDOW");
+GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char** argv)
 {
 	(void)argc;
 	(void)argv;
@@ -149,15 +183,15 @@ WINLIB_API int WINLIB_CALL WinLib_StartApplication( WinLib::Application* app,int
 	GetLocalTime(&tm);
 	char buf[256];
 	sprintf(buf,"Date: %02d.%02d.%d, %02d:%02d:%02d",tm.wDay, tm.wMonth, tm.wYear, tm.wHour, tm.wMinute, tm.wSecond);
-	std::cout << buf << std::endl;
+	LOG_INFO( buf );
 
 	os_ver.dwOSVersionInfoSize=sizeof(os_ver);
 	GetVersionEx(&os_ver);
 	sprintf(buf,"OS: Windows %ld.%ld.%ld",os_ver.dwMajorVersion,os_ver.dwMinorVersion,os_ver.dwBuildNumber);
-	std::cout << buf << std::endl;
+	LOG_INFO( buf );
 	GlobalMemoryStatus(&mem_st);
 	sprintf(buf,"Memory: %ldK total, %ldK free",mem_st.dwTotalPhys/1024L,mem_st.dwAvailPhys/1024L);
-	std::cout << buf << std::endl;
+	LOG_INFO( buf );
 
 
 	
@@ -181,11 +215,11 @@ WINLIB_API int WINLIB_CALL WinLib_StartApplication( WinLib::Application* app,int
 		winclass.lpszClassName	= WINDOW_CLASS_NAME;
 		winclass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 		if (!RegisterClass(&winclass)) {
-			std::cout << "Can't register window class" << std::endl;
+			LOG_ERROR( "Can't register window class" );
 			return 1;
 		}
 	}
-	WinLib::Settings settings;
+	GHL::Settings settings;
 	settings.width = 800;
 	settings.height = 600;
 	settings.fullscreen = false;
@@ -222,13 +256,13 @@ WINLIB_API int WINLIB_CALL WinLib_StartApplication( WinLib::Application* app,int
 				NULL, NULL, hInstance, NULL);*/
 	if (!hwnd)
 	{
-		std::cout << "Can't create window" << std::endl;
+		LOG_ERROR( "Can't create window" );
 		return 1;
 	}
 
 	GHL::SoundDSound sound;
 	if (!sound.SoundInit(hwnd)) {
-		std::cout << "Can't init sound" << std::endl;
+		LOG_ERROR( "Can't init sound" );
 		return 1;
 	}
 	app->SetSound(&sound);
@@ -344,7 +378,7 @@ WINLIB_API int WINLIB_CALL WinLib_StartApplication( WinLib::Application* app,int
 				}
 				render.RenderDone();
 				sound.SoundDone();
-				std::cout << "Done" << std::endl;
+				LOG_INFO( "Done" );
 				break;
 			} else
 				DispatchMessage(&msg);
@@ -365,3 +399,8 @@ WINLIB_API int WINLIB_CALL WinLib_StartApplication( WinLib::Application* app,int
 	
 	return 0;
 }
+
+GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {
+	/// @todo
+}
+ 

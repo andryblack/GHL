@@ -179,6 +179,7 @@
  * compiler-specific macros to the values required to change the calling
  * conventions of the various functions.
  */
+#ifndef PNG_USER_PRIVATEBUILD
 #if ( defined(_Windows) || defined(_WINDOWS) || defined(WIN32) ||\
       defined(_WIN32) || defined(__WIN32__) || defined(__CYGWIN__) ) &&\
     ( defined(_X86_) || defined(_X64_) || defined(_M_IX86) ||\
@@ -246,6 +247,7 @@
      */
 #  endif /* other system, !OS/2 */
 #endif /* !Windows/x86 */
+#endif /*PNG_USER_PRIVATEBUILD*.
 
 /* Now do all the defaulting . */
 #ifndef PNGCAPI

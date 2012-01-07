@@ -668,7 +668,7 @@ namespace GHL {
 		GLsizei size;
 		glGetInfoLogARB(handle,512,&size,log);
 		log[size]=0;
-		std::cout << "[REDER] shader compile result : " << log << std::endl;
+		LOG_VERBOSE( "shader compile result : " << log );
 		if (res!=GL_TRUE)
 		{
 			return false;
@@ -744,7 +744,7 @@ namespace GHL {
 		GLsizei size;
 		glGetInfoLogARB(handle,512,&size,log);
 		log[size]=0;
-		std::cout << "[RENDER] Shader link result : " << log << std::endl;
+		LOG_VERBOSE( "Shader link result : " << log );
 		if (res!=GL_TRUE) {
 			glDeleteObjectARB(handle);
 			return 0;
@@ -777,7 +777,7 @@ namespace GHL {
 				std::vector<ShaderProgramGLSL*>::iterator it = std::find(m_shaders_glsl.begin(),m_shaders_glsl.end(),sp);
 				assert(it!=m_shaders_glsl.end() && "bind unknown shader");
 				if (it==m_shaders_glsl.end()) {
-					std::cout << "bind unknown shader" << std::endl;
+					LOG_ERROR( "bind unknown shader" );
 					return;
 				}
 			}

@@ -122,7 +122,7 @@ namespace GHL {
 		HANDLE f = 0;
         DWORD dwDesiredAccess,dwCreationDisposition,dwShareMode,dwFlagsAndAttributes ;
         dwDesiredAccess = dwShareMode = dwFlagsAndAttributes = 0;
-        TCHAR tfilename[512];
+        WCHAR tfilename[512];
         MultiByteToWideChar(CP_UTF8, 0, file, -1, tfilename, 512);
         if (ot==FILE_READ)
         {

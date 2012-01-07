@@ -1,0 +1,11 @@
+LIBRARY ghl.dll
+EXPORTS
+	GHL_StartApplication
+	GHL_Log
+	GHL_CreateImage
+	GHL_CreateImageDecoder
+	GHL_CreateVFS
+	GHL_CreateRenderOpenGL
+	GHL_DestroyImageDecoder
+	GHL_DestroyRenderOpenGL
+	GHL_DestroyVFS
