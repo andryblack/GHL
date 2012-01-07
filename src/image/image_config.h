@@ -36,6 +36,9 @@
 #elif defined( GHL_PLATFORM_MAC )
 #define USE_PNG_DECODER
 #define USE_JPEG_DECODER
+#elif defined( GHL_PLATFORM_WIN )
+#define USE_PNG_DECODER
+#define USE_JPEG_DECODER
 #else
 //#define USE_PNG_DECODER
 //#define USE_JPEG_DECODER

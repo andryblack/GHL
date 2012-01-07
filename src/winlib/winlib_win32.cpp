@@ -72,6 +72,24 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	switch(msg)
 	{
 
+		case WM_MOUSEMOVE: {
+			if ( wparam & MK_LBUTTON ) {
+				if (appl) appl->OnMouseMove(GHL::MOUSE_BUTTON_LEFT,LOWORD(lparam),HIWORD(lparam));
+			}
+		} break;
+
+		case WM_LBUTTONDOWN: {
+			{
+				if (appl) appl->OnMouseDown(GHL::MOUSE_BUTTON_LEFT,LOWORD(lparam),HIWORD(lparam));
+			}
+		} break;
+
+		case WM_LBUTTONUP: {
+			{
+				if (appl) appl->OnMouseUp(GHL::MOUSE_BUTTON_LEFT,LOWORD(lparam),HIWORD(lparam));
+			}
+		} break;
+
 		case WM_KEYDOWN: {
 			GHL::Key key = convert_key(wparam);
 			if (key!=GHL::KEY_NONE) {
@@ -402,5 +420,9 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 
 GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {
 	/// @todo
+	WCHAR buf[512];
+	MultiByteToWideChar(CP_UTF8, 0, message, -1, buf, 512);
+	OutputDebugStringW( buf );
+	OutputDebugStringW( L"\n" );
 }
  

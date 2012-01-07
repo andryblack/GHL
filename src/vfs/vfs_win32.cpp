@@ -4,10 +4,14 @@
 #include <shlobj.h> 
 #include <iostream>
 #include <cstdio>
+#include "../ghl_log_impl.h"
+
 #ifdef _MSC_VER
 #define snprintf _snprintf
 #endif
 namespace GHL {
+
+	static const char* MODULE = "VFS";
 
 	class FileStream : public DataStream {
 	private:
@@ -86,23 +90,61 @@ namespace GHL {
 		virtual void GHL_CALL Release() {
 			delete this;
 		}
+
+
 	};
 
 	VFSWin32Impl::VFSWin32Impl() {
+		if (m_data_dir.empty()) {
+				
+				WCHAR uBuf[MAX_PATH];
+				GetModuleFileNameW(GetModuleHandle(0),uBuf,MAX_PATH);
+				char buf[MAX_PATH];
+				WideCharToMultiByte(CP_UTF8,0,uBuf,-1,buf,MAX_PATH,0,0);
+				m_data_dir = std::string(&buf[0]);
+				size_t pos = m_data_dir.rfind('\\');
+				if (pos!=m_data_dir.npos)
+					m_data_dir.resize(pos+1);
+				pos = 0;
+				while ( (pos=m_data_dir.find('\\',pos))!=m_data_dir.npos) {
+					m_data_dir[pos]='/';
+					pos++;
+				}
+
+				LOG_INFO( "Data dir : " << m_data_dir );
+		}
 	}
 
 	VFSWin32Impl::~VFSWin32Impl() {
 	}
 
+	static bool get_fs_path( const char* file , WCHAR* buf ) {
+		MultiByteToWideChar(CP_UTF8, 0, file, -1, buf, MAX_PATH);
+		size_t i=0;
+		for (i=0;i<MAX_PATH;++i) {
+			if (!buf[i]) break;
+			if (buf[i]==L'/') buf[i]=L'\\';
+		}
+        
+		return true;
+	}
+
 	/// get dir
 	const char* GHL_CALL VFSWin32Impl::GetDir(DirType dt) const {
+		if ( dt == DIR_TYPE_DATA) {
+			return m_data_dir.c_str();
+		}
 		return ".";
 	}
+
 	/// attach package
 	void GHL_CALL VFSWin32Impl::AttachPack(DataStream* ds) {
 	}
 	/// file is exists
 	bool GHL_CALL VFSWin32Impl::IsFileExists(const char* file) const {
+		WCHAR tfilename[MAX_PATH];
+        if (!get_fs_path(file,tfilename)) return false;
+		
 		return true;
 	}
 	/// remove file
@@ -114,17 +156,16 @@ namespace GHL {
 		return false;
 	}
 	/// open file
-	DataStream* GHL_CALL VFSWin32Impl::OpenFile(const char* _file,FileOperation ot) {
-		if (!_file) return 0;
-		if (_file[0]==0) return 0;
-		char file[MAX_PATH];
-		::strncpy(file,_file,MAX_PATH);
+	DataStream* GHL_CALL VFSWin32Impl::OpenFile(const char* file,FileOperation ot) {
+		if (!file) return 0;
+		if (file[0]==0) return 0;
 		HANDLE f = 0;
         DWORD dwDesiredAccess,dwCreationDisposition,dwShareMode,dwFlagsAndAttributes ;
         dwDesiredAccess = dwShareMode = dwFlagsAndAttributes = 0;
-        WCHAR tfilename[512];
-        MultiByteToWideChar(CP_UTF8, 0, file, -1, tfilename, 512);
-        if (ot==FILE_READ)
+        WCHAR tfilename[MAX_PATH];
+        if (!get_fs_path(file,tfilename)) return 0;
+
+		if (ot==FILE_READ)
         {
             dwDesiredAccess = GENERIC_READ;
             dwCreationDisposition = OPEN_EXISTING;
@@ -137,9 +178,7 @@ namespace GHL {
         }
         f = CreateFileW(tfilename,dwDesiredAccess, dwShareMode, NULL, dwCreationDisposition, dwFlagsAndAttributes, NULL); 
 		if (f==INVALID_HANDLE_VALUE) {
-			char buf[MAX_PATH]; 
-			::snprintf(buf,MAX_PATH,"vfs: error opening file %s",file);
-			std::cout << buf << std::endl;
+			LOG_ERROR( "opening file : " << file );
 			return 0;
 		}
 		return new FileStream(f); 

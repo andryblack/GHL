@@ -1,4 +1,3 @@
-LIBRARY ghl.dll
 EXPORTS
 	GHL_StartApplication
 	GHL_Log
