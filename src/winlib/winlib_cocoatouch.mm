@@ -271,6 +271,7 @@ static const size_t max_touches = 10;
 
 - (void)layoutSubviews
 {
+    LOG_VERBOSE( "layoutSubviews" ); 
 	[EAGLContext setCurrentContext:m_context];
 	// Allocate color buffer backing based on the current layer size
     glBindRenderbufferOES(GL_RENDERBUFFER_OES, m_colorRenderbuffer);
@@ -287,7 +288,6 @@ static const size_t max_touches = 10;
 }
 
 - (void)prepareOpenGL {
-	/// @todo create render there
 	LOG_VERBOSE( "prepareOpenGL" ); 
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	[EAGLContext setCurrentContext:m_context];
@@ -304,7 +304,6 @@ static const size_t max_touches = 10;
 	}
 	::gettimeofday(&m_timeval,0);
 	[pool drain];
-	//[pool release];
 }
 
 - (void)drawRect:(CGRect)dirtyRect {
@@ -319,8 +318,9 @@ static const size_t max_touches = 10;
 		GHL::g_default_renderbuffer = m_colorRenderbuffer;
 		m_render->ResetRenderState();
 		if (g_application->OnFrame(dt)) {
-			[m_context presentRenderbuffer:GL_RENDERBUFFER_OES];
+			
 		}
+        [m_context presentRenderbuffer:GL_RENDERBUFFER_OES];
 		[pool drain];
 	}
 }
@@ -352,8 +352,8 @@ static const size_t max_touches = 10;
 			btn = GHL::MouseButton(GHL::MUTITOUCH_1+touch_num-1);
 		}
 		g_application->OnMouseDown(btn,pos.x,pos.y);
+        //LOG_DEBUG("touchBegan " << touch_num << " : " << pos.x << pos.y );
 	}
-	//NSLog(@"touchBegan %dx%d",int(pos.x),int(pos.y));
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -369,12 +369,11 @@ static const size_t max_touches = 10;
 			btn = GHL::MouseButton(GHL::MUTITOUCH_1+touch_num-1);
 		}
 		g_application->OnMouseUp(btn,pos.x,pos.y);
+        //LOG_DEBUG("touchesEnded " << touch_num << " : " << pos.x << pos.y );
 	}
-	//NSLog(@"touchEnded %dx%d",int(pos.x),int(pos.y));
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
-	/// @todo handle all touches
 	[self touchesEnded:touches withEvent:event];
 }
 
@@ -390,15 +389,15 @@ static const size_t max_touches = 10;
 			btn = GHL::MouseButton(GHL::MUTITOUCH_1+touch_num-1);
 		}
 		g_application->OnMouseMove(btn,pos.x,pos.y);
+        //LOG_DEBUG("touchesMoved " << touch_num << " : " << pos.x << pos.y );
 	}
-	//NSLog(@"touchMoved %dx%d",int(pos.x),int(pos.y));
 }
 
 
 - (void)timerFireMethod:(NSTimer*)theTimer {
     (void)theTimer;
 	if (m_active) {
-		[self drawRect:[self bounds]];
+        [self setNeedsDisplay];
 	}
 }
 
@@ -416,7 +415,6 @@ static const size_t max_touches = 10;
 		wchar_t wc = [string characterAtIndex:0];
 		g_application->OnChar(wc);
 	} else {
-		//NSLog(@"backspace");
 		g_application->OnKeyDown(GHL::KEY_BACKSPACE);
 		g_application->OnKeyUp(GHL::KEY_BACKSPACE);
 	}
@@ -481,7 +479,8 @@ static const size_t max_touches = 10;
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
 	
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-	
+	LOG_INFO("applicationDidFinishLaunching");
+    
 	m_vfs = new GHL::VFSCocoaImpl();
 	g_application->SetVFS(m_vfs);
 
@@ -515,9 +514,10 @@ static const size_t max_touches = 10;
 	
 	NSString *reqSysVer = @"4.0";
 	NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
-	if ([currSysVer compare:reqSysVer options:NSNumericSearch] != NSOrderedAscending)
+	if ([currSysVer compare:reqSysVer options:NSNumericSearch] != NSOrderedAscending) {
+        LOG_INFO("setRootViewController");
 		[window setRootViewController:controller];
-	else
+	} else
 	{
 		while(window.subviews.count > 0)
 			[[window.subviews objectAtIndex:0] removeFromSuperview];
@@ -550,7 +550,7 @@ static const size_t max_touches = 10;
 
 
 void GHL_CALL SystemCocoaTouch::SwapBuffers() {
-	[[m_view getContext] presentRenderbuffer:GL_RENDERBUFFER_OES];	
+	//[[m_view getContext] presentRenderbuffer:GL_RENDERBUFFER_OES];	
 }
 
 void GHL_CALL SystemCocoaTouch::ShowKeyboard() {
