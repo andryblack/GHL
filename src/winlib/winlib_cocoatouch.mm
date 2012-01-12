@@ -151,7 +151,7 @@ public:
 		if (orientation==UIInterfaceOrientationLandscapeLeft)
 			return YES;
 	}
-    return orientation == g_orientation; 
+    return orientation == g_orientation ? YES : NO; 
 }
 
 @end
@@ -264,6 +264,8 @@ static const size_t max_touches = 10;
 		m_hiddenInput.text = @"*";
 		[self addSubview:m_hiddenInput];
 		
+        [self setAutoresizesSubviews:YES];
+        
 		[self prepareOpenGL];
 	}
 	return self;
@@ -397,7 +399,7 @@ static const size_t max_touches = 10;
 - (void)timerFireMethod:(NSTimer*)theTimer {
     (void)theTimer;
 	if (m_active) {
-        [self setNeedsDisplay];
+        [self drawRect:[self bounds]];
 	}
 }
 
@@ -491,11 +493,14 @@ static const size_t max_touches = 10;
 	settings.height = rect.size.height;
 	settings.fullscreen = true;
 	g_application->FillSettings(&settings);
-	
+	LOG_INFO("application require " << settings.width << "x" << settings.height);
+    
 	if (settings.width > settings.height) {
 		g_orientation = UIInterfaceOrientationLandscapeRight;
-	} else {
+        LOG_VERBOSE("UIInterfaceOrientationLandscapeRight");
+    } else {
 		g_orientation = UIInterfaceOrientationPortrait;
+        LOG_VERBOSE("UIInterfaceOrientationPortrait");
 	}
 	
 	
@@ -508,6 +513,7 @@ static const size_t max_touches = 10;
 	controller = [[WinLibViewController alloc] init];
 	
 	window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    [window setAutoresizesSubviews:YES];
 	
 	view = [[WinLibView alloc] initWithFrame:CGRectMake(0, 0, settings.width, settings.height)];
 	controller.view = view;
