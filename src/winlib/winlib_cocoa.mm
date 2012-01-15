@@ -112,11 +112,12 @@ public:
 {
 	self = [super initWithFrame:frameRect pixelFormat:format];
 	if (self) {
-		
-	}
-   m_render = 0;
-	m_loaded = false;
-    LOG_INFO( "WinLibOpenGLView::initWithFrame ok" ); 
+        m_render = 0;
+        m_loaded = false;
+        LOG_INFO( "WinLibOpenGLView::initWithFrame ok" ); 
+ 	} else {
+        LOG_ERROR("WinLibOpenGLView::initWithFrame failed");
+    }
     return self;
 }
 -(void)setApplication:(WinLibAppDelegate*) app {
@@ -275,7 +276,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 	LOG_INFO( "WinLibOpenGLView::prepareOpenGL" ); 
    
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-	[[self openGLContext] makeCurrentContext];
+	
 	m_render = GHL_CreateRenderOpenGL(GHL::UInt32(self.bounds.size.width),
 									 GHL::UInt32(self.bounds.size.height));
 	if (m_render) {
@@ -284,9 +285,13 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
         if ([m_application getApplication]->Load()) {
             LOG_VERBOSE( "WinLibOpenGLView::prepareOpenGL application loaded" );
             m_timer = [NSTimer scheduledTimerWithTimeInterval: 1.0f/200.0f target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
-            [m_timer fire];
             m_loaded = true;
         }
+    
+        
+        GLint val = 1;
+        [[NSOpenGLContext currentContext] setValues:&val forParameter: NSOpenGLCPSwapInterval];
+        
     }
 	::gettimeofday(&m_timeval,0);
 	[pool drain];
@@ -349,6 +354,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     if ( g_fullscreen != g_need_fullscreen ) {
         WinLibAppDelegate* delegate = (WinLibAppDelegate*)[NSApplication sharedApplication].delegate;
         if (delegate) {
+            //[self.openGLContext clearDrawable];
             [delegate switchFullscreen];
         }
     }
@@ -356,6 +362,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     if ([self window] && [self.window isVisible]) 
         [self setNeedsDisplay:YES];
 }
+
 
 -(void)dealloc {
     LOG_INFO( "WinLibOpenGLView::dealloc" );
@@ -468,6 +475,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
         }
         
         if (recreateWindow) {
+            LOG_DEBUG( "WinLibAppDelegate::switchFullscreen recreateWindow" );
             [m_window setContentView:nil];
             [m_window setDelegate:nil];
             [m_window closeWindow];
@@ -485,6 +493,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
         
     }
     if (!m_window) {
+        LOG_DEBUG( "WinLibAppDelegate::switchFullscreen create new window" );
         m_window = [[WinLibWindow alloc] initWithContentRect:rect styleMask:style backing:NSBackingStoreBuffered defer:YES];
         [m_window disableFlushWindow];
         [m_window setContentView:m_gl_view];
@@ -522,11 +531,14 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     [m_window setTitle:[NSString stringWithUTF8String:g_title.c_str()] ];
     
     [m_gl_view reshape];
+    
     g_fullscreen = g_need_fullscreen;
     
     [m_gl_view setHidden:NO];
     [m_window enableFlushWindow];
     [m_window makeKeyAndOrderFront:nil];
+   
+    
     
     [pool release];
 }
@@ -562,7 +574,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 		NSOpenGLPFAAlphaSize, 8,
 		NSOpenGLPFAStencilSize, 8,
 		NSOpenGLPFADepthSize, 24,
-		0
+        0
 	};
 	
 	NSScreen* screen = [NSScreen mainScreen];
@@ -573,7 +585,15 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     g_rect = rect;
     
 	NSOpenGLPixelFormat* pf = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
-	WinLibOpenGLView* gl = [[[WinLibOpenGLView alloc] initWithFrame:rect pixelFormat:pf] autorelease];
+    if (!pf) {
+        LOG_ERROR("Create pixel format failed");
+        return;
+    }
+	WinLibOpenGLView* gl = [[WinLibOpenGLView alloc] initWithFrame:rect pixelFormat:pf];
+    if (!gl) {
+        LOG_ERROR("creating WinLibOpenGLView failed");
+        return;
+    }
     [gl retain];
 	[gl setApplication:self];
 	
