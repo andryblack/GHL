@@ -252,7 +252,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     NSPoint event_location = [theEvent locationInWindow];
     NSPoint local_point = [self convertPoint:event_location fromView:nil];
     local_point = [self scale_point: local_point ];
-    [m_application getApplication]->OnMouseMove(GHL::MOUSE_BUTTON_LEFT, local_point.x, local_point.y);
+    [m_application getApplication]->OnMouseMove(GHL::MOUSE_BUTTON_NONE, local_point.x, local_point.y);
 }
 - (void)mouseDragged:(NSEvent *)theEvent {
     NSPoint event_location = [theEvent locationInWindow];
@@ -528,6 +528,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
         [m_window setMovable:YES];
     }
     
+    [m_window setAcceptsMouseMovedEvents:YES];
     [m_window setTitle:[NSString stringWithUTF8String:g_title.c_str()] ];
     
     [m_gl_view reshape];
