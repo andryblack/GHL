@@ -252,6 +252,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     NSPoint event_location = [theEvent locationInWindow];
     NSPoint local_point = [self convertPoint:event_location fromView:nil];
     local_point = [self scale_point: local_point ];
+    //LOG_DEBUG("mouseMoved: " << local_point.x << "x" << local_point.y);
     [m_application getApplication]->OnMouseMove(GHL::MOUSE_BUTTON_NONE, local_point.x, local_point.y);
 }
 - (void)mouseDragged:(NSEvent *)theEvent {
@@ -272,7 +273,6 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 }
 
 - (void)prepareOpenGL {
-	/// @todo create render there
 	LOG_INFO( "WinLibOpenGLView::prepareOpenGL" ); 
    
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
@@ -354,13 +354,13 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     if ( g_fullscreen != g_need_fullscreen ) {
         WinLibAppDelegate* delegate = (WinLibAppDelegate*)[NSApplication sharedApplication].delegate;
         if (delegate) {
-            //[self.openGLContext clearDrawable];
             [delegate switchFullscreen];
         }
     }
     
-    if ([self window] && [self.window isVisible]) 
+    if ([self window] && [self.window isVisible]) {
         [self setNeedsDisplay:YES];
+    }
 }
 
 
@@ -538,7 +538,9 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     [m_gl_view setHidden:NO];
     [m_window enableFlushWindow];
     [m_window makeKeyAndOrderFront:nil];
-   
+    [m_window makeKeyWindow];
+    [m_window makeFirstResponder:m_gl_view];
+
     
     
     [pool release];
