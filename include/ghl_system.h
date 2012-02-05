@@ -20,12 +20,13 @@ namespace GHL {
 		DEVICE_STATE_ACCELEROMETER_ENABLED,	///< bool
 		DEVICE_STATE_ORIENTATION_LOCKED,	///< bool
 		DEVICE_STATE_MULTITOUCH_ENABLED		///< bool
-	};
+ 	};
 	
 	/// device data
 	enum DeviceData {
-		DEVICE_DATA_ACCELEROMETER	///< 3floats
-	};
+        DEVICE_DATA_ACCELEROMETER,	///< 3floats
+        DEVICE_DATA_MAIN_WINDOW     ///< various, depend platform
+    };
 
     struct System {
         ///

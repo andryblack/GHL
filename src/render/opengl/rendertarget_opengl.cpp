@@ -157,7 +157,9 @@ namespace GHL {
 	}
 	
 	void RenderTargetOpenGL::EndScene(RenderImpl* /*render*/) {
-		//glFlush();
+#ifdef GHL_OPENGLES
+        glFlush();
+#endif
 		unbind();
 	}
 	

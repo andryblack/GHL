@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		A41D523014DEB75E008B50E8 /* ghl_ref_counter.h in Headers */ = {isa = PBXBuildFile; fileRef = A41D522F14DEB75E008B50E8 /* ghl_ref_counter.h */; };
 		A41D523314DEB90B008B50E8 /* ghl_ref_counter_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A41D523214DEB90B008B50E8 /* ghl_ref_counter_impl.h */; };
+		A41D524814DF0468008B50E8 /* sound_iphone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A41D524014DF0468008B50E8 /* sound_iphone.cpp */; };
+		A41D524914DF0468008B50E8 /* sound_iphone.h in Headers */ = {isa = PBXBuildFile; fileRef = A41D524114DF0468008B50E8 /* sound_iphone.h */; };
+		A41D524A14DF0468008B50E8 /* SoundEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A41D524214DF0468008B50E8 /* SoundEngine.cpp */; };
+		A41D524B14DF0468008B50E8 /* SoundEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = A41D524314DF0468008B50E8 /* SoundEngine.h */; };
 		A429008A1413948E00429C47 /* ghl_api.h in Headers */ = {isa = PBXBuildFile; fileRef = A429007B1413948E00429C47 /* ghl_api.h */; };
 		A429008B1413948E00429C47 /* ghl_application.h in Headers */ = {isa = PBXBuildFile; fileRef = A429007C1413948E00429C47 /* ghl_application.h */; };
 		A429008C1413948E00429C47 /* ghl_data_stream.h in Headers */ = {isa = PBXBuildFile; fileRef = A429007D1413948E00429C47 /* ghl_data_stream.h */; };
@@ -47,17 +51,6 @@
 		A42900F41413949B00429C47 /* render_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900B71413949B00429C47 /* render_impl.cpp */; };
 		A42900F51413949B00429C47 /* render_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900B81413949B00429C47 /* render_impl.h */; };
 		A42900F61413949B00429C47 /* rendertarget_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900B91413949B00429C47 /* rendertarget_impl.h */; };
-		A42900FA1413949B00429C47 /* ghl_samples_buffer_memory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900BF1413949B00429C47 /* ghl_samples_buffer_memory.cpp */; };
-		A42900FB1413949B00429C47 /* ghl_samples_buffer_memory.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900C01413949B00429C47 /* ghl_samples_buffer_memory.h */; };
-		A42900FC1413949B00429C47 /* ghl_sound_decoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900C11413949B00429C47 /* ghl_sound_decoder.h */; };
-		A42900FD1413949B00429C47 /* ghl_sound_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900C21413949B00429C47 /* ghl_sound_impl.cpp */; };
-		A42900FE1413949B00429C47 /* ghl_sound_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900C31413949B00429C47 /* ghl_sound_impl.h */; };
-		A42900FF1413949B00429C47 /* ghl_openal.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900C51413949B00429C47 /* ghl_openal.h */; };
-		A42901001413949B00429C47 /* ghl_sound_openal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900C61413949B00429C47 /* ghl_sound_openal.cpp */; };
-		A42901011413949B00429C47 /* ghl_sound_openal.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900C71413949B00429C47 /* ghl_sound_openal.h */; };
-		A42901021413949B00429C47 /* sound_decoders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900C81413949B00429C47 /* sound_decoders.cpp */; };
-		A42901031413949B00429C47 /* wav_decoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900C91413949B00429C47 /* wav_decoder.cpp */; };
-		A42901041413949B00429C47 /* wav_decoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900CA1413949B00429C47 /* wav_decoder.h */; };
 		A42901051413949B00429C47 /* ghl_vfs_factory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900CC1413949B00429C47 /* ghl_vfs_factory.cpp */; };
 		A42901061413949B00429C47 /* memory_stream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900CD1413949B00429C47 /* memory_stream.cpp */; };
 		A42901071413949B00429C47 /* memory_stream.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900CE1413949B00429C47 /* memory_stream.h */; };
@@ -117,6 +110,10 @@
 /* Begin PBXFileReference section */
 		A41D522F14DEB75E008B50E8 /* ghl_ref_counter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_ref_counter.h; sourceTree = "<group>"; };
 		A41D523214DEB90B008B50E8 /* ghl_ref_counter_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_ref_counter_impl.h; sourceTree = "<group>"; };
+		A41D524014DF0468008B50E8 /* sound_iphone.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sound_iphone.cpp; sourceTree = "<group>"; };
+		A41D524114DF0468008B50E8 /* sound_iphone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sound_iphone.h; sourceTree = "<group>"; };
+		A41D524214DF0468008B50E8 /* SoundEngine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundEngine.cpp; sourceTree = "<group>"; };
+		A41D524314DF0468008B50E8 /* SoundEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundEngine.h; sourceTree = "<group>"; };
 		A429007B1413948E00429C47 /* ghl_api.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_api.h; sourceTree = "<group>"; };
 		A429007C1413948E00429C47 /* ghl_application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_application.h; sourceTree = "<group>"; };
 		A429007D1413948E00429C47 /* ghl_data_stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_data_stream.h; sourceTree = "<group>"; };
@@ -155,17 +152,6 @@
 		A42900B71413949B00429C47 /* render_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = render_impl.cpp; sourceTree = "<group>"; };
 		A42900B81413949B00429C47 /* render_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = render_impl.h; sourceTree = "<group>"; };
 		A42900B91413949B00429C47 /* rendertarget_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rendertarget_impl.h; sourceTree = "<group>"; };
-		A42900BF1413949B00429C47 /* ghl_samples_buffer_memory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ghl_samples_buffer_memory.cpp; sourceTree = "<group>"; };
-		A42900C01413949B00429C47 /* ghl_samples_buffer_memory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_samples_buffer_memory.h; sourceTree = "<group>"; };
-		A42900C11413949B00429C47 /* ghl_sound_decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_sound_decoder.h; sourceTree = "<group>"; };
-		A42900C21413949B00429C47 /* ghl_sound_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ghl_sound_impl.cpp; sourceTree = "<group>"; };
-		A42900C31413949B00429C47 /* ghl_sound_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_sound_impl.h; sourceTree = "<group>"; };
-		A42900C51413949B00429C47 /* ghl_openal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_openal.h; sourceTree = "<group>"; };
-		A42900C61413949B00429C47 /* ghl_sound_openal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ghl_sound_openal.cpp; sourceTree = "<group>"; };
-		A42900C71413949B00429C47 /* ghl_sound_openal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_sound_openal.h; sourceTree = "<group>"; };
-		A42900C81413949B00429C47 /* sound_decoders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sound_decoders.cpp; sourceTree = "<group>"; };
-		A42900C91413949B00429C47 /* wav_decoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = wav_decoder.cpp; sourceTree = "<group>"; };
-		A42900CA1413949B00429C47 /* wav_decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wav_decoder.h; sourceTree = "<group>"; };
 		A42900CC1413949B00429C47 /* ghl_vfs_factory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ghl_vfs_factory.cpp; sourceTree = "<group>"; };
 		A42900CD1413949B00429C47 /* memory_stream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = memory_stream.cpp; sourceTree = "<group>"; };
 		A42900CE1413949B00429C47 /* memory_stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = memory_stream.h; sourceTree = "<group>"; };
@@ -220,7 +206,7 @@
 		A4EDFF061416B45400ED0DC0 /* pngrtran.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngrtran.c; sourceTree = "<group>"; };
 		A4EDFF101416B4E100ED0DC0 /* pngpread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngpread.c; sourceTree = "<group>"; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		D2AAC07E0554694100DB518D /* libGHL-Debug-iphonesimulator.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libGHL-Debug-iphonesimulator.a"; path = "libGHL-Debug-iphoneos.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2AAC07E0554694100DB518D /* libGHL-Debug-iphoneos.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libGHL-Debug-iphoneos.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -238,7 +224,7 @@
 		034768DFFF38A50411DB9C8B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D2AAC07E0554694100DB518D /* libGHL-Debug-iphonesimulator.a */,
+				D2AAC07E0554694100DB518D /* libGHL-Debug-iphoneos.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -260,6 +246,17 @@
 				AACBBE490F95108600F1A2B1 /* Foundation.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A41D523B14DF0468008B50E8 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				A41D524014DF0468008B50E8 /* sound_iphone.cpp */,
+				A41D524114DF0468008B50E8 /* sound_iphone.h */,
+				A41D524214DF0468008B50E8 /* SoundEngine.cpp */,
+				A41D524314DF0468008B50E8 /* SoundEngine.h */,
+			);
+			path = iOS;
 			sourceTree = "<group>";
 		};
 		A429007A1413948E00429C47 /* include */ = {
@@ -355,27 +352,9 @@
 		A42900BA1413949B00429C47 /* sound */ = {
 			isa = PBXGroup;
 			children = (
-				A42900BF1413949B00429C47 /* ghl_samples_buffer_memory.cpp */,
-				A42900C01413949B00429C47 /* ghl_samples_buffer_memory.h */,
-				A42900C11413949B00429C47 /* ghl_sound_decoder.h */,
-				A42900C21413949B00429C47 /* ghl_sound_impl.cpp */,
-				A42900C31413949B00429C47 /* ghl_sound_impl.h */,
-				A42900C41413949B00429C47 /* openal */,
-				A42900C81413949B00429C47 /* sound_decoders.cpp */,
-				A42900C91413949B00429C47 /* wav_decoder.cpp */,
-				A42900CA1413949B00429C47 /* wav_decoder.h */,
+				A41D523B14DF0468008B50E8 /* iOS */,
 			);
 			path = sound;
-			sourceTree = "<group>";
-		};
-		A42900C41413949B00429C47 /* openal */ = {
-			isa = PBXGroup;
-			children = (
-				A42900C51413949B00429C47 /* ghl_openal.h */,
-				A42900C61413949B00429C47 /* ghl_sound_openal.cpp */,
-				A42900C71413949B00429C47 /* ghl_sound_openal.h */,
-			);
-			path = openal;
 			sourceTree = "<group>";
 		};
 		A42900CB1413949B00429C47 /* vfs */ = {
@@ -490,12 +469,6 @@
 				A42900F31413949B00429C47 /* texture_opengl.h in Headers */,
 				A42900F51413949B00429C47 /* render_impl.h in Headers */,
 				A42900F61413949B00429C47 /* rendertarget_impl.h in Headers */,
-				A42900FB1413949B00429C47 /* ghl_samples_buffer_memory.h in Headers */,
-				A42900FC1413949B00429C47 /* ghl_sound_decoder.h in Headers */,
-				A42900FE1413949B00429C47 /* ghl_sound_impl.h in Headers */,
-				A42900FF1413949B00429C47 /* ghl_openal.h in Headers */,
-				A42901011413949B00429C47 /* ghl_sound_openal.h in Headers */,
-				A42901041413949B00429C47 /* wav_decoder.h in Headers */,
 				A42901071413949B00429C47 /* memory_stream.h in Headers */,
 				A42901081413949B00429C47 /* vfs_cocoa.h in Headers */,
 				A4772A4714169A8B006A9887 /* crc32.h in Headers */,
@@ -522,6 +495,8 @@
 				A436FC5814AE6D3800D53CE4 /* ghl_log_impl.h in Headers */,
 				A41D523014DEB75E008B50E8 /* ghl_ref_counter.h in Headers */,
 				A41D523314DEB90B008B50E8 /* ghl_ref_counter_impl.h in Headers */,
+				A41D524914DF0468008B50E8 /* sound_iphone.h in Headers */,
+				A41D524B14DF0468008B50E8 /* SoundEngine.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -542,7 +517,7 @@
 			);
 			name = GHL;
 			productName = GHL;
-			productReference = D2AAC07E0554694100DB518D /* libGHL-Debug-iphonesimulator.a */;
+			productReference = D2AAC07E0554694100DB518D /* libGHL-Debug-iphoneos.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -588,11 +563,6 @@
 				A42900F01413949B00429C47 /* shader_glsl.cpp in Sources */,
 				A42900F21413949B00429C47 /* texture_opengl.cpp in Sources */,
 				A42900F41413949B00429C47 /* render_impl.cpp in Sources */,
-				A42900FA1413949B00429C47 /* ghl_samples_buffer_memory.cpp in Sources */,
-				A42900FD1413949B00429C47 /* ghl_sound_impl.cpp in Sources */,
-				A42901001413949B00429C47 /* ghl_sound_openal.cpp in Sources */,
-				A42901021413949B00429C47 /* sound_decoders.cpp in Sources */,
-				A42901031413949B00429C47 /* wav_decoder.cpp in Sources */,
 				A42901051413949B00429C47 /* ghl_vfs_factory.cpp in Sources */,
 				A42901061413949B00429C47 /* memory_stream.cpp in Sources */,
 				A42901091413949B00429C47 /* vfs_cocoa.mm in Sources */,
@@ -622,6 +592,8 @@
 				A4EDFF071416B45400ED0DC0 /* pngrtran.c in Sources */,
 				A4EDFF111416B4E100ED0DC0 /* pngpread.c in Sources */,
 				A436FC5714AE6D3800D53CE4 /* ghl_log_impl.cpp in Sources */,
+				A41D524814DF0468008B50E8 /* sound_iphone.cpp in Sources */,
+				A41D524A14DF0468008B50E8 /* SoundEngine.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -632,7 +604,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/GHL.dst;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -649,7 +620,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				DSTROOT = /tmp/GHL.dst;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
@@ -662,7 +632,11 @@
 		1DEB922308733DC00010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = (
+					armv6,
+					armv7,
+					"$(ARCHS_STANDARD_32_BIT)",
+				);
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
@@ -686,7 +660,11 @@
 		1DEB922408733DC00010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = (
+					armv6,
+					armv7,
+					"$(ARCHS_STANDARD_32_BIT)",
+				);
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;

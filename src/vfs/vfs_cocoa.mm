@@ -138,6 +138,10 @@ namespace GHL {
 			m_data_dir = [res UTF8String];
             LOG_VERBOSE("data_dir: " << m_data_dir);
 		}
+        NSArray* doc_dirs = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString* doc_dir = [doc_dirs objectAtIndex:0];
+        m_user_documents = [doc_dir UTF8String];
+        LOG_VERBOSE("user_dir: " << m_data_dir);
 	}
 
 	VFSCocoaImpl::~VFSCocoaImpl() {
@@ -148,7 +152,7 @@ namespace GHL {
 		if (dt == DIR_TYPE_DATA) {
 			return m_data_dir.c_str();
 		}
-		return 0;
+		return m_user_documents.c_str();
 	}
 	/// attach package
 	void GHL_CALL VFSCocoaImpl::AttachPack(DataStream* /*ds*/) {

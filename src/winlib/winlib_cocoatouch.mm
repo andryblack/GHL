@@ -18,7 +18,7 @@
 #include "ghl_system.h"
 #include "../ghl_log_impl.h"
 
-#include "../sound/openal/ghl_sound_openal.h"
+#include "../sound/iOS/sound_iphone.h"
 #include "../vfs/vfs_cocoa.h"
 #include "../image/image_decoders.h"
 
@@ -31,6 +31,9 @@
 static const char* MODULE = "WINLIB";
 
 static GHL::Application* g_application = 0;
+class SystemCocoaTouch;
+SystemCocoaTouch*	g_system = 0;
+
 static UIInterfaceOrientation g_orientation = UIInterfaceOrientationLandscapeLeft;
 static bool g_orientationLocked = false;
 
@@ -38,6 +41,7 @@ namespace GHL {
 	extern UInt32 g_default_renderbuffer;
 }
 
+@class WinLibView;
 @class WinLibView;
 
 @interface AccelerometerDelegate : NSObject<UIAccelerometerDelegate>
@@ -87,9 +91,10 @@ namespace GHL {
 class SystemCocoaTouch : public GHL::System {
 private:
 	WinLibView* m_view;
+    UIWindow*   m_window;
 	AccelerometerDelegate* m_accelerometer;
 public:
-	explicit SystemCocoaTouch(WinLibView* view) : m_view(view) {
+	explicit SystemCocoaTouch(UIWindow* wnd,WinLibView* view) : m_view(view),m_window(wnd) {
 		m_accelerometer = 0;
 	}
 	~SystemCocoaTouch() {
@@ -128,7 +133,11 @@ public:
 				return false;
 			memcpy(data, [m_accelerometer get_data], sizeof(float)*3);
 			return true;
-		}
+		} else if (name==GHL::DEVICE_DATA_MAIN_WINDOW) {
+            if (!m_window) return false;
+            memcpy(data, &m_window, sizeof(m_window));
+            return true;
+        }
 		return false;
 	}
     ///
@@ -163,9 +172,8 @@ static const size_t max_touches = 10;
 	// The pixel dimensions of the CAEAGLLayer
     GLint m_backingWidth;
     GLint m_backingHeight;
-	SystemCocoaTouch*	m_system;
 	GHL::ImageDecoderImpl* m_imageDecoder;
-	GHL::SoundOpenAL*	m_sound;
+	GHL::SoundIPhone*	m_sound;
 	NSString*	m_appName;
 	GHL::RenderOpenGL* m_render;
 	NSTimer*	m_timer;
@@ -208,6 +216,9 @@ static const size_t max_touches = 10;
 
 -(id) initWithFrame:(CGRect) rect {
 	if (self = [super initWithFrame:rect]) {
+        
+        m_loaded = false;
+        
 		m_appName = (NSString*)[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
 		m_imageDecoder = 0;
 #ifndef GHL_NO_IMAGE_DECODERS
@@ -231,8 +242,6 @@ static const size_t max_touches = 10;
             return nil;
         }
 		
-		m_system = new SystemCocoaTouch(self);
-		g_application->SetSystem(m_system);
 		
         // Create default framebuffer object. The backing will be allocated for the current layer in -resizeFromLayer
         glGenFramebuffersOES(1, &m_defaultFramebuffer);
@@ -245,7 +254,7 @@ static const size_t max_touches = 10;
 		
 		m_sound = 0;
 #ifndef GHL_NO_SOUND
-		m_sound = new GHL::SoundOpenAL();
+		m_sound = new GHL::SoundIPhone();
 		if (!m_sound->SoundInit()) {
 			delete m_sound;
 			m_sound = 0;
@@ -264,7 +273,7 @@ static const size_t max_touches = 10;
 		m_hiddenInput.text = @"*";
 		[self addSubview:m_hiddenInput];
 		
-        [self setAutoresizesSubviews:YES];
+        [self setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
         
 		[self prepareOpenGL];
 	}
@@ -298,18 +307,23 @@ static const size_t max_touches = 10;
 	m_render->RenderInit();
 	g_application->SetRender(m_render);
 	GHL::g_default_renderbuffer = m_colorRenderbuffer;
-	if (g_application->Load()) {
-		m_timer = [NSTimer scheduledTimerWithTimeInterval: 1.0f/200.0f target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
-		[m_timer fire];
-		m_loaded = true;
-		m_active = true;
-	}
-	::gettimeofday(&m_timeval,0);
+    ::gettimeofday(&m_timeval,0);
+    
+    m_timer = [NSTimer scheduledTimerWithTimeInterval: 1.0f/200.0f target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
+    
+    m_active = true;
+    
 	[pool drain];
 }
 
 - (void)drawRect:(CGRect)dirtyRect {
     (void)dirtyRect;
+    if (!m_loaded) {
+        [EAGLContext setCurrentContext:m_context];
+        if (g_application->Load()) {
+            m_loaded = true;
+        }
+    }
 	if (m_loaded ) {
 		NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 		::timeval time;
@@ -462,7 +476,6 @@ static const size_t max_touches = 10;
 	delete m_imageDecoder;
 	delete m_sound;
 
-	delete m_system;
 	[super dealloc];
 }
 
@@ -518,6 +531,10 @@ static const size_t max_touches = 10;
 	view = [[WinLibView alloc] initWithFrame:CGRectMake(0, 0, settings.width, settings.height)];
 	controller.view = view;
 	
+    g_system = new SystemCocoaTouch(window, view);
+    g_application->SetSystem(g_system);
+
+    
 	NSString *reqSysVer = @"4.0";
 	NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
 	if ([currSysVer compare:reqSysVer options:NSNumericSearch] != NSOrderedAscending) {
@@ -529,7 +546,11 @@ static const size_t max_touches = 10;
 			[[window.subviews objectAtIndex:0] removeFromSuperview];
 		[window addSubview:controller.view];
 	}
+    
 	[window setOpaque:YES];
+    [view setNeedsDisplay];
+    [view layoutSubviews];
+    [view drawRect:view.bounds];
 	[window makeKeyAndVisible];
 	
 	[pool drain];
