@@ -11,12 +11,13 @@
 #define RENDERTARGET_IMPL_H
 
 #include <ghl_render_target.h>
+#include "../ghl_ref_counter_impl.h"
 
 namespace GHL {
 
 	class RenderImpl;
 	
-	class RenderTargetImpl : public RenderTarget {
+	class RenderTargetImpl : public RefCounterImpl<RenderTarget> {
 	public:
 		virtual ~RenderTargetImpl() {}
 		virtual void BeginScene( RenderImpl* render ) = 0;

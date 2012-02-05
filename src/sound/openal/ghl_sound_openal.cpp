@@ -58,9 +58,6 @@ namespace GHL {
 		CHECK_ERROR;
 	}
 	
-	void GHL_CALL SoundChannelOpenAL::Release() {
-		delete this; 
-	}
 	
 	bool GHL_CALL SoundChannelOpenAL::IsPlaying() const {
 		ALenum state = AL_UNDETERMINED;

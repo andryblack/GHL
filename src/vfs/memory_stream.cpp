@@ -85,11 +85,6 @@ namespace GHL
 		return false;
 	}
 	
-	void GHL_CALL MemoryStream::Release() 
-	{
-		delete this;
-	}
-
 
 
 	

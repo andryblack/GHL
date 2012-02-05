@@ -27,11 +27,10 @@ namespace GHL {
 		ALuint name() const { return m_name;}
 	};
 	
-	class SoundChannelOpenAL : public SoundChannel {
+	class SoundChannelOpenAL : public RefCounterImpl<SoundChannel> {
 	public:
 		SoundChannelOpenAL(ALuint source,SampleType type,UInt32 freq);
 		~SoundChannelOpenAL();
-		virtual void GHL_CALL Release() ;
 		virtual SampleType GHL_CALL GetSampleType() const { return m_type;}
 		virtual UInt32 GHL_CALL GetFrequency() const { return m_freq;}
 		virtual bool GHL_CALL IsPlaying() const;

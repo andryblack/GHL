@@ -12,6 +12,7 @@
 
 #include "ghl_api.h"
 #include "ghl_types.h"
+#include "ghl_ref_counter.h"
 
 namespace GHL {
 	
@@ -25,15 +26,13 @@ namespace GHL {
 		SAMPLE_TYPE_STEREO_16
 	};
 	
-	struct SamplesBuffer {
-		virtual void GHL_CALL Release() = 0;
+	struct SamplesBuffer : RefCounter {
 		virtual SampleType GHL_CALL GetSampleType() const = 0;
 		virtual UInt32 GHL_CALL GetCapacity() const = 0;
 		virtual UInt32 GHL_CALL GetFrequency() const = 0;
 	};
 	
-	struct SoundChannel {
-		virtual void GHL_CALL Release() = 0;
+	struct SoundChannel : RefCounter {
 		virtual SampleType GHL_CALL GetSampleType() const = 0;
 		virtual UInt32 GHL_CALL GetFrequency() const = 0;
 		virtual bool GHL_CALL IsPlaying() const = 0;

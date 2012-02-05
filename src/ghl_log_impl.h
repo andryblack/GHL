@@ -21,8 +21,8 @@
  */
 
 
-#ifndef fishes_ghl_log_impl_h
-#define fishes_ghl_log_impl_h
+#ifndef GHL_LOG_IMPL_H
+#define GHL_LOG_IMPL_H
 
 #include <ghl_log.h>
 #include <sstream>
@@ -63,4 +63,4 @@ namespace GHL {
 }
 
 
-#endif
+#endif /*GHL_LOG_IMPL_H*/

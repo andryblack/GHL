@@ -24,11 +24,12 @@
 #define MEMORY_STREAM_H
 
 #include "ghl_data_stream.h"
+#include "../ghl_ref_counter_impl.h"
 
 namespace GHL
 {
 
-    class MemoryStream : public DataStream
+    class MemoryStream : public RefCounterImpl<DataStream>
     {
         protected:
             Byte*	m_data;
@@ -45,8 +46,7 @@ namespace GHL
             virtual UInt32 GHL_CALL Tell() const;
             virtual	bool GHL_CALL Seek(Int32 offset,FileSeekType st) ;
             virtual bool GHL_CALL Eof() const;
-            virtual void GHL_CALL Release() ;
-
+     
     };
 
 

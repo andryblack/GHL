@@ -5,13 +5,13 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-
+#include "../ghl_ref_counter_impl.h"
 #ifdef _MSC_VER
 #define snprintf _snprintf
 #endif
 namespace GHL {
 
-    class PosixFileStream : public DataStream {
+    class PosixFileStream : public RefCounterImpl<DataStream> {
     private:
         FILE* m_file;
             bool m_eof;
@@ -55,10 +55,6 @@ namespace GHL {
         /// End of file
         virtual bool GHL_CALL Eof() const {
                 return feof(m_file);
-        }
-        /// release stream
-        virtual void GHL_CALL Release() {
-            delete this;
         }
     };
 

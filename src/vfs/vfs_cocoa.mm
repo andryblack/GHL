@@ -11,6 +11,7 @@
 
 #include "memory_stream.h"
 #include "../ghl_log_impl.h"
+#include "../ghl_ref_counter_impl.h"
 
 
 
@@ -18,7 +19,7 @@ namespace GHL {
 
     static const char* MODULE = "VFS";
 	
-	class CocoaReadFileStream : public DataStream {
+	class CocoaReadFileStream : public RefCounterImpl<DataStream> {
 	private:
 		NSFileHandle* m_file;
 		UInt32 m_size;
@@ -74,13 +75,9 @@ namespace GHL {
 		virtual bool GHL_CALL Eof() const {
 			return [m_file offsetInFile] == m_size;
 		}
-		/// release stream
-		virtual void GHL_CALL Release() {
-			delete this;
-		}
 	};
 	
-	class CocoaWriteFileStream : public DataStream {
+	class CocoaWriteFileStream : public RefCounterImpl<DataStream> {
 	private:
 		NSFileHandle* m_file;
 		size_t m_size;
@@ -129,10 +126,6 @@ namespace GHL {
 		/// End of file
 		virtual bool GHL_CALL Eof() const {
 			return false;
-		}
-		/// release stream
-		virtual void GHL_CALL Release() {
-			delete this;
 		}
 	};
 	

@@ -22,9 +22,6 @@ namespace GHL {
 	SamplesBufferImpl::~SamplesBufferImpl() {
 	}
 	
-	void GHL_CALL SamplesBufferImpl::Release() {
-		delete this;
-	}
 	
 	
 	

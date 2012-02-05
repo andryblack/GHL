@@ -25,6 +25,7 @@
 
 #include "ghl_types.h"
 #include "ghl_api.h"
+#include "ghl_ref_counter.h"
 
 namespace GHL
 {
@@ -45,7 +46,7 @@ namespace GHL
 	};
 
 	/// data stream interfacce
-	struct DataStream
+	struct DataStream : RefCounter
 	{
 		/// read data
 		virtual UInt32 GHL_CALL Read(Byte* dest,UInt32 bytes) = 0;
@@ -57,10 +58,6 @@ namespace GHL
 		virtual	bool GHL_CALL Seek(Int32 offset,FileSeekType st) = 0;
 		/// End of file
 		virtual bool GHL_CALL Eof() const = 0;
-		/// release stream
-		virtual void GHL_CALL Release() = 0;
-
-
 	};
 
 } /* namespace */

@@ -24,38 +24,38 @@
 #define IMAGE_IMPL_H
 
 #include "ghl_image.h"
+#include "../ghl_ref_counter_impl.h"
 #include <cstring>
 
 
 namespace GHL {
 
-class ImageImpl : public Image
-{
-	private:
-		UInt32 m_width;
-		UInt32 m_height;
-		ImageFormat m_fmt;
-		Byte*  m_data;
-		ImageImpl(const ImageImpl&);
-		ImageImpl& operator = (const ImageImpl&);
-	public:
-		ImageImpl(UInt32 w,UInt32 h,ImageFormat fmt);
-		virtual ~ImageImpl();
-		virtual UInt32 GHL_CALL GetWidth() const { return m_width;}
-		virtual UInt32 GHL_CALL GetHeight() const { return m_height;}
-		virtual const Byte* GHL_CALL GetData() const { return m_data;}
-		virtual ImageFormat GHL_CALL GetFormat() const { return m_fmt;}
-		virtual void GHL_CALL Convert(ImageFormat fmt);
-		virtual void GHL_CALL Release() { delete this;}
-		virtual void GHL_CALL SetAlpha(const Image* img);
-		virtual Image* GHL_CALL SubImage(UInt32 x,UInt32 y,UInt32 w,UInt32 h) const;
-		void SwapChannelsRB();
-        /// swap RB channels
-        virtual void GHL_CALL SwapRB() { SwapChannelsRB() ; }
-		virtual Byte* GHL_CALL GetDataPtr() { return m_data;}
-		UInt32 GetBpp() const;
-		void FlipV();
-};
+    class ImageImpl : public RefCounterImpl<Image>
+    {
+        private:
+            UInt32 m_width;
+            UInt32 m_height;
+            ImageFormat m_fmt;
+            Byte*  m_data;
+            ImageImpl(const ImageImpl&);
+            ImageImpl& operator = (const ImageImpl&);
+        public:
+            ImageImpl(UInt32 w,UInt32 h,ImageFormat fmt);
+            virtual ~ImageImpl();
+            virtual UInt32 GHL_CALL GetWidth() const { return m_width;}
+            virtual UInt32 GHL_CALL GetHeight() const { return m_height;}
+            virtual const Byte* GHL_CALL GetData() const { return m_data;}
+            virtual ImageFormat GHL_CALL GetFormat() const { return m_fmt;}
+            virtual void GHL_CALL Convert(ImageFormat fmt);
+            virtual void GHL_CALL SetAlpha(const Image* img);
+            virtual Image* GHL_CALL SubImage(UInt32 x,UInt32 y,UInt32 w,UInt32 h) const;
+            void SwapChannelsRB();
+            /// swap RB channels
+            virtual void GHL_CALL SwapRB() { SwapChannelsRB() ; }
+            virtual Byte* GHL_CALL GetDataPtr() { return m_data;}
+            UInt32 GetBpp() const;
+            void FlipV();
+    };
 
 }/*namespace*/
 

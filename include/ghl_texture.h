@@ -25,6 +25,7 @@
 
 #include "ghl_types.h"
 #include "ghl_api.h"
+#include "ghl_ref_counter.h"
 
 namespace GHL 
 {
@@ -55,10 +56,8 @@ namespace GHL
 	};
 	
 	/// texture
-	struct Texture
+	struct Texture : RefCounter
 	{
-		/// release texture
-		virtual void GHL_CALL Release() = 0;
 		/// get texture width
 		virtual UInt32 GHL_CALL GetWidth() const = 0;
 		/// get texture height

@@ -12,12 +12,13 @@
 
 #include "ghl_texture.h"
 #include "ghl_opengl.h"
+#include "../../ghl_ref_counter_impl.h"
 
 namespace GHL {
 
     class RenderOpenGL;
 
-	class TextureOpenGL : public Texture {
+	class TextureOpenGL : public RefCounterImpl<Texture> {
 	private:
             RenderOpenGL* m_parent;
 		GLuint	m_name;
@@ -34,11 +35,11 @@ namespace GHL {
 		void calc_filtration_mag();
 		void check_mips();
 	public:
-                TextureOpenGL(RenderOpenGL* parent,TextureFormat fmt,UInt32 w,UInt32 h);
+        TextureOpenGL(RenderOpenGL* parent,TextureFormat fmt,UInt32 w,UInt32 h);
+        ~TextureOpenGL();
+        
 		void bind() const;
 		GLuint name() const { return m_name;}
-		/// release texture
-		virtual void GHL_CALL Release();
 		/// get texture width
 		virtual UInt32 GHL_CALL GetWidth() const { return m_width;}
 		/// get texture height

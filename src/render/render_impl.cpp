@@ -39,6 +39,7 @@ namespace GHL {
         m_scene_target = 0;
 		m_current_texture = 0;
 		m_scene_started = false;
+        (void)MODULE;
     }
 	
     RenderImpl::~RenderImpl()
@@ -57,6 +58,7 @@ namespace GHL {
         m_scene_target = static_cast<RenderTargetImpl*>(target);
         SetViewport(0,0,GetWidth(),GetHeight());
 		if (m_scene_target) {
+            m_scene_target->AddRef();
 			m_scene_target->BeginScene(this);
 		}
 		ResetRenderState();
@@ -68,6 +70,7 @@ namespace GHL {
 		assert(m_scene_started);
 		if (m_scene_target) {
 			m_scene_target->EndScene(this);
+            m_scene_target->Release();
 		}
         m_scene_target = 0;
 		m_scene_started = false;

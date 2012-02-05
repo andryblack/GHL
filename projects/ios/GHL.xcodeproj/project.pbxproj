@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A41D523014DEB75E008B50E8 /* ghl_ref_counter.h in Headers */ = {isa = PBXBuildFile; fileRef = A41D522F14DEB75E008B50E8 /* ghl_ref_counter.h */; };
+		A41D523314DEB90B008B50E8 /* ghl_ref_counter_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A41D523214DEB90B008B50E8 /* ghl_ref_counter_impl.h */; };
 		A429008A1413948E00429C47 /* ghl_api.h in Headers */ = {isa = PBXBuildFile; fileRef = A429007B1413948E00429C47 /* ghl_api.h */; };
 		A429008B1413948E00429C47 /* ghl_application.h in Headers */ = {isa = PBXBuildFile; fileRef = A429007C1413948E00429C47 /* ghl_application.h */; };
 		A429008C1413948E00429C47 /* ghl_data_stream.h in Headers */ = {isa = PBXBuildFile; fileRef = A429007D1413948E00429C47 /* ghl_data_stream.h */; };
@@ -113,6 +115,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A41D522F14DEB75E008B50E8 /* ghl_ref_counter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_ref_counter.h; sourceTree = "<group>"; };
+		A41D523214DEB90B008B50E8 /* ghl_ref_counter_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_ref_counter_impl.h; sourceTree = "<group>"; };
 		A429007B1413948E00429C47 /* ghl_api.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_api.h; sourceTree = "<group>"; };
 		A429007C1413948E00429C47 /* ghl_application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_application.h; sourceTree = "<group>"; };
 		A429007D1413948E00429C47 /* ghl_data_stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_data_stream.h; sourceTree = "<group>"; };
@@ -277,6 +281,7 @@
 				A42900871413948E00429C47 /* ghl_texture.h */,
 				A42900881413948E00429C47 /* ghl_types.h */,
 				A42900891413948E00429C47 /* ghl_vfs.h */,
+				A41D522F14DEB75E008B50E8 /* ghl_ref_counter.h */,
 			);
 			name = include;
 			path = ../../include;
@@ -287,6 +292,7 @@
 			children = (
 				A436FC5514AE6D3800D53CE4 /* ghl_log_impl.cpp */,
 				A436FC5614AE6D3800D53CE4 /* ghl_log_impl.h */,
+				A41D523214DEB90B008B50E8 /* ghl_ref_counter_impl.h */,
 				A4772A3114169A8B006A9887 /* zlib */,
 				A429009A1413949B00429C47 /* image */,
 				A42900A31413949B00429C47 /* render */,
@@ -514,6 +520,8 @@
 				A4EDFDC814169DCD00ED0DC0 /* png_image_decoder.h in Headers */,
 				A436FC5314AE6D2800D53CE4 /* ghl_log.h in Headers */,
 				A436FC5814AE6D3800D53CE4 /* ghl_log_impl.h in Headers */,
+				A41D523014DEB75E008B50E8 /* ghl_ref_counter.h in Headers */,
+				A41D523314DEB90B008B50E8 /* ghl_ref_counter_impl.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

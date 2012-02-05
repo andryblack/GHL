@@ -12,11 +12,12 @@
 
 #include "ghl_api.h"
 #include "ghl_types.h"
+#include "ghl_ref_counter.h"
 
 namespace GHL {
 
 	/// render target interface
-	struct RenderTarget 
+	struct RenderTarget : RefCounter
 	{
 		/// width
 		virtual UInt32 GHL_CALL GetWidth() const = 0;
@@ -28,9 +29,7 @@ namespace GHL {
 		virtual Texture* GHL_CALL GetTexture() const = 0;
 		/// read pixels
 		virtual void GHL_CALL GetPixels(UInt32 x,UInt32 y,UInt32 w,UInt32 h,Byte* data) = 0;
-		/// release
-		virtual void GHL_CALL Release() = 0;
-	};
+    };
 	
 }
 

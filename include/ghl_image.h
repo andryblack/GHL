@@ -25,6 +25,7 @@
 
 #include "ghl_types.h"
 #include "ghl_api.h"
+#include "ghl_ref_counter.h"
 
 namespace GHL
 {
@@ -39,10 +40,8 @@ namespace GHL
     };
 
     /// image object interface
-    struct Image
+    struct Image : RefCounter
     {
-        /// release image
-        virtual void GHL_CALL Release() = 0;
         /// get image width
         virtual UInt32 GHL_CALL GetWidth() const = 0;
         /// get image height

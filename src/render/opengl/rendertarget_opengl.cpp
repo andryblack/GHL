@@ -127,6 +127,7 @@ namespace GHL {
 			m_texture->Release();
 		m_texture = 0;
 		_glDeleteFramebuffers(1,&m_framebuffer);
+        m_parent->ReleaseRendertarget(this);
 	}
 		
 	void RenderTargetOpenGL::bind() const {
@@ -144,11 +145,7 @@ namespace GHL {
 	Texture* GHL_CALL RenderTargetOpenGL::GetTexture() const {
 		return m_texture;
 	}
-		/// release
-	void GHL_CALL RenderTargetOpenGL::Release()  {
-		m_parent->ReleaseRendertarget(this);
-	}
-	
+		
 	void RenderTargetOpenGL::BeginScene(RenderImpl* /*render*/)  {
 		bind();
 		glViewport(0, 0, m_width, m_height);

@@ -333,7 +333,6 @@ namespace GHL {
 #ifdef GHL_DEBUG
 		TextureReleased(tex);
 #endif
-		delete tex;
 	}
 	
 	void RenderOpenGL::RestoreTexture() {
@@ -341,10 +340,17 @@ namespace GHL {
 	}
 
 	/// set current texture
-	void GHL_CALL RenderOpenGL::SetTexture(const Texture* texture, UInt32 stage) {
+	void GHL_CALL RenderOpenGL::SetTexture( const Texture* texture, UInt32 stage) {
 		if (stage>=2) return;
-		if (stage==0)
+		if (stage==0) {
+            if (m_current_texture) {
+                const_cast<Texture*>(m_current_texture)->Release();
+            }
 			m_current_texture = texture;
+            if (m_current_texture) {
+                const_cast<Texture*>(m_current_texture)->AddRef();
+            }
+        }
 		set_texture_stage(stage);
 		//glClientActiveTexture(texture_stages[stage]);
 		if (texture) {
@@ -643,8 +649,10 @@ namespace GHL {
 	}
 		
 	void RenderOpenGL::ReleaseRendertarget(RenderTargetOpenGL* rt) {
-		delete rt;
 		CHECK_GL_ERROR
+#ifdef GHL_DEBUG
+        RenderTargetReleased(rt);
+#endif
 	}
 	
 #ifndef GHL_SHADERS_UNSUPPORTED	

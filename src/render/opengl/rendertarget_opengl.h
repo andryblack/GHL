@@ -47,8 +47,6 @@ namespace GHL {
 		virtual Texture* GHL_CALL GetTexture() const;
 		/// 
 		virtual void GHL_CALL GetPixels(UInt32 x,UInt32 y,UInt32 w,UInt32 h,Byte* data);
-		/// release
-		virtual void GHL_CALL Release() ;
 		
 		virtual void BeginScene( RenderImpl* render ) ;
 		virtual void EndScene( RenderImpl* render ) ;

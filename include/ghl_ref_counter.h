@@ -20,46 +20,20 @@
  blackicebox (at) gmail (dot) com
  */
 
-#ifndef GHL_SHADER_H
-#define GHL_SHADER_H
 
-#include "ghl_types.h"
-#include "ghl_api.h"
-#include "ghl_data_stream.h"
-#include "ghl_ref_counter.h"
+#ifndef GHL_REF_COUNTER_H
+#define GHL_REF_COUNTER_H
 
-namespace GHL 
-{
-	
-	/// Shader
-	struct Shader
-	{
-		/// release shader
-		virtual void GHL_CALL Release() = 0;
-	};
-	
-	/// Vertex shader
-	struct VertexShader : Shader
-	{
-	};
-	
-	/// Vertex shader
-	struct FragmentShader : Shader
-	{
-	};
-	
-	/// Uniform
-	struct ShaderUniform {
-		virtual void GHL_CALL SetValueFloat(float v) = 0;
-		virtual void GHL_CALL SetValueInt(Int32 v) = 0;
-	};
-	
-	struct ShaderProgram : RefCounter
-	{
-		/// get uniform
-		virtual ShaderUniform* GHL_CALL GetUniform(const char* name) = 0;
-	};
-	
+namespace GHL {
+    
+    /** Reference counter interface
+     */
+    struct RefCounter {
+        /// add reference
+        virtual void GHL_CALL AddRef() = 0;
+        /// release reference
+        virtual void GHL_CALL Release() = 0;
+    };
+
 }
-
-#endif /*GHL_SHADER_H*/
+#endif /*GHL_REF_COUNTER_H*/

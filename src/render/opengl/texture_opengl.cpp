@@ -60,6 +60,11 @@ namespace GHL {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexImage2D(GL_TEXTURE_2D, 0, convert_int_format(m_fmt), w, h, 0, convert_format(m_fmt), convert_storage(m_fmt), 0);
 	}
+    
+    TextureOpenGL::~TextureOpenGL() {
+        m_parent->ReleaseTexture(this);
+        glDeleteTextures(1, &m_name);
+    }
 	
 	void TextureOpenGL::bind() const {
 		glBindTexture(GL_TEXTURE_2D, m_name);
@@ -95,13 +100,7 @@ namespace GHL {
 		}
 	}
 	
-	/// release texture
-	void GHL_CALL TextureOpenGL::Release() {
-
-		glDeleteTextures(1, &m_name);
-		m_parent->ReleaseTexture(this);
-	}
-	/// set minification texture filtration
+    /// set minification texture filtration
 	void GHL_CALL TextureOpenGL::SetMinFilter(TextureFilter min) {
 		m_min_filter = min;
 		calc_filtration_min();

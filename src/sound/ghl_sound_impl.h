@@ -12,14 +12,14 @@
 
 #include <ghl_sound.h>
 #include "ghl_sound_decoder.h"
+#include "../ghl_ref_counter_impl.h"
 
 namespace GHL {
 	
-	class SamplesBufferImpl : public SamplesBuffer {
+	class SamplesBufferImpl : public RefCounterImpl<SamplesBuffer> {
 	public:
 		SamplesBufferImpl(SampleType type,UInt32 capacity,UInt32 freq);
 		virtual ~SamplesBufferImpl();
-		virtual void GHL_CALL Release();
 		virtual SampleType GHL_CALL GetSampleType() const { return m_type;}
 		virtual UInt32 GHL_CALL GetCapacity() const { return m_capacity;}
 		virtual UInt32 GHL_CALL GetFrequency() const { return m_freq;}
