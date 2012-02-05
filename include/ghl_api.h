@@ -31,6 +31,8 @@
 #endif
 #elif defined( WIN32 )
 #define GHL_PLATFORM_WIN
+#elif defined( ANDROID )
+#define GHL_PLATFORM_ANDROID
 #elif defined( __linux__ )
 #define GHL_PLATFORM_LINUX
 #else 
