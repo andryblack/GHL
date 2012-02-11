@@ -1413,7 +1413,8 @@ OSStatus  SoundEngine_Teardown()
 		sBackgroundTrackMgr = NULL;	
 	}
 	
-	sleep(1000);
+	sleep(1);
+    
 	if (sOpenALObject)
 	{
 		delete sOpenALObject;
