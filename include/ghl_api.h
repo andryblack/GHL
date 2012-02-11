@@ -27,7 +27,9 @@
 
 #if defined( __APPLE__ )
 #ifndef GHL_PLATFORM_IOS
+#ifndef GHL_PLATFORM_MAC
 #define GHL_PLATFORM_MAC
+#endif
 #endif
 #elif defined( WIN32 )
 #define GHL_PLATFORM_WIN
