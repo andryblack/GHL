@@ -14,7 +14,7 @@
 namespace GHL {
 	class VFSCocoaImpl;
 	class ImageDecoderImpl;
-	class SoundOpenAL;
+	class SoundIPhone;
 	class RenderImpl;
 }
 
@@ -27,7 +27,7 @@ class SystemCocoa;
 	SystemCocoa*	m_system;
 	GHL::VFSCocoaImpl*	m_vfs;
 	GHL::ImageDecoderImpl* m_imageDecoder;
-	GHL::SoundOpenAL*	m_sound;
+	GHL::SoundIPhone*	m_sound;
 	WinLibWindow*	m_window;
 	NSString*	m_appName;
     WinLibOpenGLView*   m_gl_view;
@@ -37,7 +37,7 @@ class SystemCocoa;
 -(GHL::Application*) getApplication;
 -(GHL::VFSCocoaImpl*) getVFS;
 -(GHL::ImageDecoderImpl*) getImageDecoder;
--(GHL::SoundOpenAL*) getSound;
+-(GHL::SoundIPhone*) getSound;
 -(NSString*) getAppName;
 -(SystemCocoa*) getSystem;
 -(void) initSound;

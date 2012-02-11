@@ -21,7 +21,7 @@
 
 #include "../vfs/vfs_cocoa.h"
 #include "../image/image_decoders.h"
-#include "../sound/openal/ghl_sound_openal.h"
+#include "../sound/iOS/sound_iphone.h"
 
 #include "../ghl_log_impl.h"
 
@@ -398,7 +398,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 
 -(void) initSound {
 #ifndef GHL_NOSOUND
-	m_sound = new GHL::SoundOpenAL();
+	m_sound = new GHL::SoundIPhone();
 	if (!m_sound->SoundInit()) {
 		delete m_sound;
 		m_sound = 0;
@@ -423,7 +423,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 -(GHL::ImageDecoderImpl*) getImageDecoder {
 	return m_imageDecoder;
 }
--(GHL::SoundOpenAL*) getSound {
+-(GHL::SoundIPhone*) getSound {
 	return m_sound;
 }
 -(NSString*) getAppName {
