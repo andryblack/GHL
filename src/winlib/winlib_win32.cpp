@@ -379,11 +379,8 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 	timeBeginPeriod(1);
 	DWORD ms = timeGetTime();
 	while (!done) {
-	/*
-	if (m_input)
-		m_input->Update();
-		*/
-		sound.Process();
+	
+		sound.SoundUpdate();
 
 		MSG		msg;
 		while (PeekMessage(&msg,hwnd,0,0,PM_REMOVE) && !done)

@@ -13,7 +13,7 @@ namespace GHL {
 
 	static const char* MODULE = "VFS";
 
-	class FileStream : public DataStream {
+	class FileStream : public RefCounterImpl<DataStream> {
 	private:
 		HANDLE m_file;
         bool m_eof; 
@@ -86,11 +86,7 @@ namespace GHL {
 		virtual bool GHL_CALL Eof() const {
 		        return m_eof; 
 		}
-		/// release stream
-		virtual void GHL_CALL Release() {
-			delete this;
-		}
-
+	
 
 	};
 

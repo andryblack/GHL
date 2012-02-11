@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;GHL_EXPORTS;GHL_BUILD_AS_DLL;GHL_DLL_SOURCE;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;GHL_EXPORTS;GHL_DEBUG;GHL_BUILD_AS_DLL;GHL_DLL_SOURCE;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -186,6 +186,10 @@
 			</File>
 			<File
 				RelativePath="..\..\src\ghl_log_impl.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\ghl_ref_counter_impl.h"
 				>
 			</File>
 			<Filter
@@ -711,10 +715,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\render\opengl\refcount_opengl.h"
-						>
-					</File>
-					<File
 						RelativePath="..\..\src\render\opengl\render_opengl.cpp"
 						>
 					</File>
@@ -767,38 +767,6 @@
 			<Filter
 				Name="sound"
 				>
-				<File
-					RelativePath="..\..\src\sound\ghl_samples_buffer_memory.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\sound\ghl_samples_buffer_memory.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\sound\ghl_sound_decoder.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\sound\ghl_sound_impl.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\sound\ghl_sound_impl.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\sound\sound_decoders.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\sound\wav_decoder.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\sound\wav_decoder.h"
-					>
-				</File>
 				<Filter
 					Name="sdound"
 					>
@@ -846,6 +814,10 @@
 			</File>
 			<File
 				RelativePath="..\..\include\ghl_log.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\ghl_ref_counter.h"
 				>
 			</File>
 			<File
