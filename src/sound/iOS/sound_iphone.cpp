@@ -35,6 +35,7 @@ namespace GHL {
 	
 	
 	SoundIPhone::SoundIPhone()  {
+        m_music_ds = 0;
 		m_music_played = false;
 	}
 	SoundIPhone::~SoundIPhone() {

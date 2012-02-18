@@ -52,11 +52,8 @@ namespace GHL {
 		RenderImpl(UInt32 w,UInt32 h);
 		virtual ~RenderImpl();
 	
-		void Resize(UInt32 w,UInt32 h) {
-			m_width = w;
-			m_height = h;
-		}
-	
+		void Resize(UInt32 w,UInt32 h);
+        
 		virtual void GHL_CALL Release();
 	
 		/// Begin graphics scene (frame)

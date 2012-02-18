@@ -242,6 +242,10 @@ static const size_t max_touches = 10;
             return nil;
         }
 		
+        if([self respondsToSelector:@selector(setContentScaleFactor:)]){
+            self.contentScaleFactor = 1.0;
+            LOG_VERBOSE("contentScaleFactor:"<<self.contentScaleFactor);
+        }
 		
         // Create default framebuffer object. The backing will be allocated for the current layer in -resizeFromLayer
         glGenFramebuffersOES(1, &m_defaultFramebuffer);
@@ -283,6 +287,12 @@ static const size_t max_touches = 10;
 - (void)layoutSubviews
 {
     LOG_VERBOSE( "layoutSubviews" ); 
+    
+    if([self respondsToSelector:@selector(setContentScaleFactor:)]){
+        self.contentScaleFactor = 1.0;
+        LOG_VERBOSE("contentScaleFactor:"<<self.contentScaleFactor);
+    }
+    
 	[EAGLContext setCurrentContext:m_context];
 	// Allocate color buffer backing based on the current layer size
     glBindRenderbufferOES(GL_RENDERBUFFER_OES, m_colorRenderbuffer);
