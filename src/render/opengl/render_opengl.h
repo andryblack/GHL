@@ -27,6 +27,9 @@ namespace GHL
 	private:
 #ifndef GHL_SHADERS_UNSUPPORTED
 		bool	m_shaders_support_glsl;
+		std::vector<VertexShaderGLSL*> m_v_shaders_glsl;
+		std::vector<FragmentShaderGLSL*> m_f_shaders_glsl;
+		std::vector<ShaderProgramGLSL*> m_shaders_glsl;
 #endif
 		bool	ExtensionSupported(const char* all,const char* ext) const;
 	public:
