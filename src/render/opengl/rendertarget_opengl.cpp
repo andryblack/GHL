@@ -162,8 +162,10 @@ namespace GHL {
 	}
 	
 	void GHL_CALL RenderTargetOpenGL::GetPixels(UInt32 x,UInt32 y,UInt32 w,UInt32 h,Byte* data) {
+		glFlush();
 		bind();
 		glReadPixels(x,y, w, h, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		CHECK_GL_ERROR_F("glReadPixels");
 		unbind();
 		/*const size_t line_size = w*4;
 		Byte line[line_size];

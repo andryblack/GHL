@@ -353,7 +353,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     
     if ( g_fullscreen != g_need_fullscreen ) {
         WinLibAppDelegate* delegate = (WinLibAppDelegate*)[NSApplication sharedApplication].delegate;
-        if (delegate) {
+       if (delegate) {
             [delegate switchFullscreen];
         }
     }
@@ -453,6 +453,9 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     LOG_INFO( "WinLibAppDelegate::switchFullscreen" );
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	
+	if (m_application) {
+        m_application->OnDeactivated();
+    }
     
     NSInteger style = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
     
@@ -541,7 +544,9 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     [m_window makeKeyWindow];
     [m_window makeFirstResponder:m_gl_view];
 
-    
+    if (m_application) {
+        m_application->OnActivated();
+    }
     
     [pool release];
 }
@@ -641,6 +646,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     } else {
         
     }
+	LOG_VERBOSE("Activated");
     if (m_application) {
         m_application->OnActivated();
     }
@@ -651,6 +657,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
         //[m_window setIsVisible:NO];
         [m_window setLevel:NSNormalWindowLevel];
     }
+	LOG_VERBOSE("Deactivated");
     if (m_application) {
         m_application->OnDeactivated();
     }
