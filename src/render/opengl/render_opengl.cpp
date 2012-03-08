@@ -645,6 +645,9 @@ namespace GHL {
 			delete rt;
 			rt = 0;
 		}
+#ifdef GHL_DEBUG	
+		RenderTargetCreated( rt );
+#endif
 		return rt;
 	}
 		
