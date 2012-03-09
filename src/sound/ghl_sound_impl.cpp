@@ -46,7 +46,7 @@ namespace GHL {
 			LOG_ERROR( "resampling not implemented" );
 			return 0;
 		}
-		SoundDecoder* decoder = OpenDecoder(stream);
+		/*SoundDecoder* decoder = OpenDecoder(stream);
 		if (decoder) {
 			{
 				Byte* data = new Byte[SampleSize(decoder->get_type())*decoder->get_samples()];
@@ -56,7 +56,7 @@ namespace GHL {
 				delete [] data;
 				return buffer;
 			}
-		}
+		}*/
 		return 0;
 	}
 }

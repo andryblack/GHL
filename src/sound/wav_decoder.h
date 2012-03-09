@@ -28,7 +28,7 @@
 namespace GHL
 {
 
-	class WavDecoder : public SoundDecoder
+	class WavDecoder : public SoundDecoderBase
 	{
 		private:
 
@@ -59,14 +59,18 @@ namespace GHL
 
 			WaveFmtDescr	m_format;
 			UInt32	m_unreaded;
+            explicit WavDecoder(DataStream* ds);
+            bool Init();
 		public: 
-			WavDecoder();
 			~WavDecoder();
 			
-			bool Init(DataStream* ds);
-			virtual UInt32 Decode(Byte* buf,UInt32 samples);
-			virtual void Reset();
-	};
+            static WavDecoder* Open( DataStream* ds );
+			
+            /// read samples
+            virtual UInt32 GHL_CALL ReadSamples(UInt32 samples, Byte* buffer);
+            /// restart reading
+            virtual void GHL_CALL Reset();
+    };
 	
 }
 

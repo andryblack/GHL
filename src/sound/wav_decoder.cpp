@@ -33,8 +33,8 @@ namespace GHL
 	 * file format description was found at http://www.sonicspot.com/guide/wavefiles.html
 	 */
 
-	WavDecoder::WavDecoder()
-	{
+	WavDecoder::WavDecoder(DataStream* ds) : SoundDecoderBase( ds )
+ 	{
 	}
 	
 	WavDecoder::~WavDecoder()
@@ -44,12 +44,10 @@ namespace GHL
 	bool CheckWavStream(DataStream* ds);
 	
 	
-	bool WavDecoder::Init(DataStream* ds)
+	bool WavDecoder::Init()
 	{
-		if (!CheckWavStream(ds)) return false;
-		/// readed shunk header
-		m_ds = ds;
-
+        DataStream* ds = m_ds;
+        
 		::memset(&m_format,0,sizeof(m_format));
 
 		//std::cout << "WAV: init" << std::endl;
@@ -108,7 +106,8 @@ namespace GHL
 		return m_samples!=0 && m_type!=SAMPLE_TYPE_UNKNOWN && m_freq!=0;
 	}
 	
-	UInt32 WavDecoder::Decode(Byte* buf,UInt32 samples)
+    
+	UInt32 GHL_CALL WavDecoder::ReadSamples(UInt32 samples, Byte* buf)
 	{
 		if (!m_ds) return 0;
 		UInt32 readed = 0;
@@ -150,36 +149,32 @@ namespace GHL
 		}
 		return readed;
 	}
-	void WavDecoder::Reset()
+	void GHL_CALL WavDecoder::Reset()
 	{
 		m_ds->Seek(4+4+4,F_SEEK_BEGIN);
 		m_unreaded = 0;
 	}
 
-	
-	SoundDecoder* CreateWavDecoder(DataStream* ds) {
-		WavDecoder* dec = new WavDecoder();
-		if (!dec->Init(ds)) {
+    WavDecoder* WavDecoder::Open(DataStream *ds) {
+        if (!ds) return 0;
+        ds->Seek(0,F_SEEK_BEGIN);
+		Byte aChunkType[4];	
+		UInt32 aChunkSize;
+        if (ds->Read(aChunkType,4)!=4) return 0;
+		if (::strncmp(reinterpret_cast<const char*>(aChunkType), "RIFF",4) != 0)
+			return 0;
+		if (ds->Read(reinterpret_cast<Byte*>(&aChunkSize),4)!=4) return 0;
+		if (ds->Read(aChunkType,4)!=4) return 0;
+		if (::strncmp(reinterpret_cast<const char*>(aChunkType), "WAVE",4) != 0)
+			return 0;
+		WavDecoder* dec = new WavDecoder(ds);
+		if (!dec->Init()) {
 			delete dec;
 			return 0;
 		}
 		return dec;
-	}
-	bool CheckWavStream(DataStream* ds)
-	{
-		if (!ds) return false;
-		ds->Seek(0,F_SEEK_BEGIN);
-		Byte aChunkType[4];	
-		UInt32 aChunkSize;
-		if (ds->Read(aChunkType,4)!=4) return false;
-		if (::strncmp(reinterpret_cast<const char*>(aChunkType), "RIFF",4) != 0)
-			return false;
-		if (ds->Read(reinterpret_cast<Byte*>(&aChunkSize),4)!=4) return false;
-		if (ds->Read(aChunkType,4)!=4) return false;
-		if (::strncmp(reinterpret_cast<const char*>(aChunkType), "WAVE",4) != 0)
-			return false;
-		/// ok it is a WAVE file
-		return true;
-	}
+    }
+	
+	
 
 }

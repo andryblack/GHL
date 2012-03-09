@@ -20,35 +20,38 @@
     blackicebox (at) gmail (dot) com
 */
 
-#ifndef GHL_SOUND_DECODER_H
-#define GHL_SOUND_DECODER_H
+#ifndef VORBIS_DECODER_H
+#define VORBIS_DECODER_H
 
-#include <ghl_types.h>
-#include <ghl_sound.h>
-#include "../ghl_ref_counter_impl.h"
+#include "ghl_sound_decoder.h"
+
+#include "libvorbis/include/vorbis/codec.h"
+#define OV_EXCLUDE_STATIC_CALLBACKS
+#include "libvorbis/include/vorbis/vorbisfile.h"
 
 namespace GHL
 {
-
-	struct DataStream;
-
-	class SoundDecoderBase : public RefCounterImpl<SoundDecoder>
+	class VorbisDecoder : public SoundDecoderBase
 	{
-		protected:
-			DataStream* m_ds;
-			SampleType	m_type;
-			UInt32		m_freq;
-			UInt32		m_samples;
-		public:
-            explicit SoundDecoderBase(DataStream* ds);
-            virtual ~SoundDecoderBase();
-            /// sample type
-            virtual SampleType GHL_CALL GetSampleType() const { return m_type; }
-            /// samples rate
-            virtual UInt32 GHL_CALL GetFrequency() const { return m_freq; } 
-            /// samples amount
-            virtual UInt32 GHL_CALL GetSamplesAmount() const { return m_samples; }
-    };
+		private:
+			OggVorbis_File m_file;
+			int	m_current_section;
+            explicit VorbisDecoder(DataStream* ds);
+            bool Init();
+            GHL::UInt32 m_bytes_per_sample;
+        public: 
+			~VorbisDecoder();
+			
+            static VorbisDecoder* Open( DataStream* ds );
+            
+            /// read samples
+            virtual UInt32 GHL_CALL ReadSamples(UInt32 samples, Byte* buffer);
+            /// restart reading
+            virtual void GHL_CALL Reset();
+	};
+	
+	
+	
 }
 
-#endif /*GHL_SOUND_DECODER_H*/
+#endif /*VORBIS_DECODER_H*/

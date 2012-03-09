@@ -25,6 +25,19 @@ namespace GHL {
 		SAMPLE_TYPE_STEREO_8,
 		SAMPLE_TYPE_STEREO_16
 	};
+    
+    struct SoundDecoder : RefCounter {
+        /// sample type
+        virtual SampleType GHL_CALL GetSampleType() const = 0;
+        /// samples rate
+        virtual UInt32 GHL_CALL GetFrequency() const = 0;
+        /// samples amount
+        virtual UInt32 GHL_CALL GetSamplesAmount() const = 0;
+        /// read samples
+        virtual UInt32 GHL_CALL ReadSamples(UInt32 samples, Byte* buffer) = 0;
+        /// restart reading
+        virtual void GHL_CALL Reset() = 0;
+    };
 	
 	struct SamplesBuffer : RefCounter {
 		virtual SampleType GHL_CALL GetSampleType() const = 0;
@@ -60,6 +73,8 @@ namespace GHL {
 	};
 	
 }
+
+GHL_API GHL::SoundDecoder* GHL_CALL GHL_CreateSoundDecoder( GHL::DataStream* file );
 
 
 #endif /*GHL_SOUND_H*/

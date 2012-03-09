@@ -20,33 +20,43 @@
  blackicebox (at) gmail (dot) com
  */
 
-#include "ghl_sound_impl.h"
 #include <ghl_api.h>
+#include <ghl_data_stream.h>
+#include "ghl_sound_decoder.h"
 
 #define GHL_USE_WAV_DECODER
+#define GHL_USE_VORBIS_DECODER
 
+#ifdef GHL_USE_WAV_DECODER
+#include "wav_decoder.h"
+#endif
+#ifdef GHL_USE_VORBIS_DECODER
+#include "vorbis_decoder.h"
+#endif
 
 namespace GHL
 {
-#ifdef GHL_USE_VORBIS_DECODER
-	extern SoundDecoder* CreateVorbisDecoder(DataStream* ds);
-	extern bool CheckVorbisStream(DataStream* ds);
-#endif
-#ifdef GHL_USE_WAV_DECODER
-	extern SoundDecoder* CreateWavDecoder(DataStream* ds);
-	extern bool CheckWavStream(DataStream* ds);
-#endif
-
-	SoundDecoder* SoundImpl::OpenDecoder(DataStream* ds) {
-#ifdef GHL_USE_WAV_DECODER
-		if (CheckWavStream(ds))
-			return CreateWavDecoder(ds);
-#endif
-#ifdef GHL_USE_VORBIS_DECODER
-		if (CheckVorbisStream(ds))
-			return CreateVorbisDecoder(ds);
-#endif
-		return 0;
-	}
+    
+    SoundDecoderBase::SoundDecoderBase(DataStream* ds) : m_ds(ds),m_type(SAMPLE_TYPE_UNKNOWN),m_freq(0),m_samples(0) {
+        m_ds->AddRef();
+    }
+    SoundDecoderBase::~SoundDecoderBase() {
+        if (m_ds) {
+            m_ds->Release();
+        }
+    }
 	
+}
+
+GHL_API GHL::SoundDecoder* GHL_CALL GHL_CreateSoundDecoder( GHL::DataStream* file ) {
+    GHL::SoundDecoder* result = 0;
+#ifdef GHL_USE_WAV_DECODER
+    result = GHL::WavDecoder::Open( file );
+    if (result) return result;
+#endif
+#ifdef GHL_USE_VORBIS_DECODER
+    result = GHL::VorbisDecoder::Open( file );
+    if (result) return result;
+#endif
+    return result;
 }

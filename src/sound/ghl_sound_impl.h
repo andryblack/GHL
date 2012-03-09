@@ -31,7 +31,6 @@ namespace GHL {
 	
 	class SoundImpl : public Sound {
 	protected:
-		SoundDecoder* OpenDecoder(DataStream* stream);
 	public:
 		SoundImpl();
 		virtual ~SoundImpl();
