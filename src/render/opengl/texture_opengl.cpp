@@ -87,7 +87,7 @@ namespace GHL {
 	void TextureOpenGL::calc_filtration_mag() {
 		glActiveTexture(GL_TEXTURE0);
 		bind();
-		GLenum filter = min_filters[0][m_min_filter];
+		GLenum filter = min_filters[0][m_mag_filter];
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
 		m_parent->RestoreTexture();
 	}
