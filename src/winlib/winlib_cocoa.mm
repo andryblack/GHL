@@ -59,9 +59,7 @@ public:
         return 0;
     }
     ///
-    virtual bool GHL_CALL SetDeviceState( GHL::DeviceState name, void* data) {
-        return false;
-    }
+    virtual bool GHL_CALL SetDeviceState( GHL::DeviceState name, void* data);
     ///
     virtual bool GHL_CALL GetDeviceData( GHL::DeviceData name, void* data) {
         return false;
@@ -114,14 +112,33 @@ public:
 	if (self) {
         m_render = 0;
         m_loaded = false;
+        m_null_cursor = nil;
+        m_cursor_visible = YES;
         LOG_INFO( "WinLibOpenGLView::initWithFrame ok" ); 
  	} else {
         LOG_ERROR("WinLibOpenGLView::initWithFrame failed");
     }
     return self;
 }
+
 -(void)setApplication:(WinLibAppDelegate*) app {
 	m_application = app;
+}
+
+-(void)setCursorVisible:(BOOL) visible
+{
+    m_cursor_visible = visible;
+    [self.window invalidateCursorRectsForView:self];
+}
+
+-(void)resetCursorRects
+{
+    if ( !m_null_cursor && !m_cursor_visible ) {
+        NSImage* img = [[NSImage alloc] initWithSize:NSMakeSize(8, 8)];
+        m_null_cursor = [[NSCursor alloc] initWithImage:img hotSpot:NSMakePoint(0, 0)];
+        [img release];
+    }
+    [self addCursorRect:self.visibleRect cursor:(m_cursor_visible ? [NSCursor arrowCursor]:m_null_cursor)];
 }
 
 
@@ -373,6 +390,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 		GHL_DestroyRenderOpenGL( m_render );
 		m_render = 0;
 	}
+    [m_null_cursor release];
 	[super dealloc];
 }
 
@@ -387,6 +405,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     if (self) {
         // Initialization code here.
 		m_system = new SystemCocoa();
+        m_gl_view = nil;
 		m_appName = (NSString*)[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
 		m_vfs = new GHL::VFSCocoaImpl();
 		m_imageDecoder = new GHL::ImageDecoderImpl();
@@ -431,6 +450,10 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 }
 -(void)swapBuffers {
     [m_gl_view swapBuffers];
+}
+-(void) setCursorVisible:(BOOL) visible
+{
+    [m_gl_view setCursorVisible:visible];
 }
 -(void)dealloc {
     LOG_INFO( "WinLibAppDelegate::dealloc" );
@@ -683,6 +706,19 @@ void GHL_CALL SystemCocoa::SetTitle( const char* title ) {
     if (delegate) {
         [delegate updateWindowTitle];
     }
+}
+
+bool GHL_CALL SystemCocoa::SetDeviceState(GHL::DeviceState name, void *data) {
+    WinLibAppDelegate* delegate = (WinLibAppDelegate*)[NSApplication sharedApplication].delegate;
+  
+    if ( name == GHL::DEVICE_STATE_SYSTEM_CURSOR_ENABLED && data ) {
+        BOOL enabled = *(bool*)data;
+        if (delegate) {
+            [delegate setCursorVisible:enabled];
+        }
+      return true;
+    }
+    return false;
 }
 
 GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/, char** /*argv*/) {

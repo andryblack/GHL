@@ -42,6 +42,7 @@ class SystemCocoa;
 -(SystemCocoa*) getSystem;
 -(void) initSound;
 -(void) switchFullscreen;
+-(void) setCursorVisible:(BOOL) visible;
 @end
 
 @interface WinLibWindow : NSWindow
@@ -59,9 +60,11 @@ class SystemCocoa;
 	NSTimer*	m_timer;
 	bool	m_loaded;
 	::timeval	m_timeval;
+    NSCursor*   m_null_cursor;
+    BOOL        m_cursor_visible;
 }
 -(void)setApplication:(WinLibAppDelegate*) app;
-
+-(void)setCursorVisible:(BOOL) visible;
 @end
 
 
