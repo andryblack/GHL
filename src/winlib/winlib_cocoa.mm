@@ -21,7 +21,8 @@
 
 #include "../vfs/vfs_cocoa.h"
 #include "../image/image_decoders.h"
-#include "../sound/iOS/sound_iphone.h"
+//#include "../sound/iOS/sound_iphone.h"
+#define GHL_NOSOUND
 
 #include "../ghl_log_impl.h"
 
@@ -596,7 +597,9 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
         g_title = settings.title;
 	
 	[self initSound];
+#ifndef GHL_NOSOUND
 	m_application->SetSound([self getSound]);
+#endif
 
 	NSOpenGLPixelFormatAttribute attrs[] =
 	{
@@ -621,6 +624,8 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
         return;
     }
 	WinLibOpenGLView* gl = [[WinLibOpenGLView alloc] initWithFrame:rect pixelFormat:pf];
+    [pf release];
+    pf = nil;
     if (!gl) {
         LOG_ERROR("creating WinLibOpenGLView failed");
         return;

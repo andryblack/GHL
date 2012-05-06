@@ -9,10 +9,6 @@
 /* Begin PBXBuildFile section */
 		A41D523014DEB75E008B50E8 /* ghl_ref_counter.h in Headers */ = {isa = PBXBuildFile; fileRef = A41D522F14DEB75E008B50E8 /* ghl_ref_counter.h */; };
 		A41D523314DEB90B008B50E8 /* ghl_ref_counter_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A41D523214DEB90B008B50E8 /* ghl_ref_counter_impl.h */; };
-		A41D524814DF0468008B50E8 /* sound_iphone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A41D524014DF0468008B50E8 /* sound_iphone.cpp */; };
-		A41D524914DF0468008B50E8 /* sound_iphone.h in Headers */ = {isa = PBXBuildFile; fileRef = A41D524114DF0468008B50E8 /* sound_iphone.h */; };
-		A41D524A14DF0468008B50E8 /* SoundEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A41D524214DF0468008B50E8 /* SoundEngine.cpp */; };
-		A41D524B14DF0468008B50E8 /* SoundEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = A41D524314DF0468008B50E8 /* SoundEngine.h */; };
 		A429008A1413948E00429C47 /* ghl_api.h in Headers */ = {isa = PBXBuildFile; fileRef = A429007B1413948E00429C47 /* ghl_api.h */; };
 		A429008B1413948E00429C47 /* ghl_application.h in Headers */ = {isa = PBXBuildFile; fileRef = A429007C1413948E00429C47 /* ghl_application.h */; };
 		A429008C1413948E00429C47 /* ghl_data_stream.h in Headers */ = {isa = PBXBuildFile; fileRef = A429007D1413948E00429C47 /* ghl_data_stream.h */; };
@@ -141,8 +137,6 @@
 		A47F7F5114E6D175006B37E2 /* jmorecfg.h in Headers */ = {isa = PBXBuildFile; fileRef = A47F7F1B14E6D175006B37E2 /* jmorecfg.h */; };
 		A47F7F5214E6D175006B37E2 /* jpegint.h in Headers */ = {isa = PBXBuildFile; fileRef = A47F7F1C14E6D175006B37E2 /* jpegint.h */; };
 		A47F7F5314E6D175006B37E2 /* jpeglib.h in Headers */ = {isa = PBXBuildFile; fileRef = A47F7F1D14E6D175006B37E2 /* jpeglib.h */; };
-		A47F7F5414E6D175006B37E2 /* jquant1.c in Sources */ = {isa = PBXBuildFile; fileRef = A47F7F1E14E6D175006B37E2 /* jquant1.c */; };
-		A47F7F5514E6D175006B37E2 /* jquant2.c in Sources */ = {isa = PBXBuildFile; fileRef = A47F7F1F14E6D175006B37E2 /* jquant2.c */; };
 		A47F7F5614E6D175006B37E2 /* jutils.c in Sources */ = {isa = PBXBuildFile; fileRef = A47F7F2014E6D175006B37E2 /* jutils.c */; };
 		A47F7F5714E6D175006B37E2 /* jversion.h in Headers */ = {isa = PBXBuildFile; fileRef = A47F7F2114E6D175006B37E2 /* jversion.h */; };
 		A47F7F5814E6D175006B37E2 /* transupp.c in Sources */ = {isa = PBXBuildFile; fileRef = A47F7F2214E6D175006B37E2 /* transupp.c */; };
@@ -153,6 +147,8 @@
 		A47F7F6D14E6D253006B37E2 /* jdct.h in Headers */ = {isa = PBXBuildFile; fileRef = A47F7F6A14E6D253006B37E2 /* jdct.h */; };
 		A47F7F6E14E6D253006B37E2 /* jmemnobs.c in Sources */ = {isa = PBXBuildFile; fileRef = A47F7F6B14E6D253006B37E2 /* jmemnobs.c */; };
 		A47F7F6F14E6D253006B37E2 /* jmemsys.h in Headers */ = {isa = PBXBuildFile; fileRef = A47F7F6C14E6D253006B37E2 /* jmemsys.h */; };
+		A48293081541F81C00A9A4B8 /* jquant1.c in Sources */ = {isa = PBXBuildFile; fileRef = A47F7F1E14E6D175006B37E2 /* jquant1.c */; };
+		A482930F1541FB3C00A9A4B8 /* jquant2.c in Sources */ = {isa = PBXBuildFile; fileRef = A47F7F1F14E6D175006B37E2 /* jquant2.c */; };
 		A4EDFDC714169DCD00ED0DC0 /* png_image_decoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFDC514169DCD00ED0DC0 /* png_image_decoder.cpp */; };
 		A4EDFDC814169DCD00ED0DC0 /* png_image_decoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EDFDC614169DCD00ED0DC0 /* png_image_decoder.h */; };
 		A4EDFEC91416B14B00ED0DC0 /* pngread.c in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFEC81416B14B00ED0DC0 /* pngread.c */; };
@@ -173,10 +169,6 @@
 /* Begin PBXFileReference section */
 		A41D522F14DEB75E008B50E8 /* ghl_ref_counter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_ref_counter.h; sourceTree = "<group>"; };
 		A41D523214DEB90B008B50E8 /* ghl_ref_counter_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_ref_counter_impl.h; sourceTree = "<group>"; };
-		A41D524014DF0468008B50E8 /* sound_iphone.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sound_iphone.cpp; sourceTree = "<group>"; };
-		A41D524114DF0468008B50E8 /* sound_iphone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sound_iphone.h; sourceTree = "<group>"; };
-		A41D524214DF0468008B50E8 /* SoundEngine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundEngine.cpp; sourceTree = "<group>"; };
-		A41D524314DF0468008B50E8 /* SoundEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundEngine.h; sourceTree = "<group>"; };
 		A429007B1413948E00429C47 /* ghl_api.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_api.h; sourceTree = "<group>"; };
 		A429007C1413948E00429C47 /* ghl_application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_application.h; sourceTree = "<group>"; };
 		A429007D1413948E00429C47 /* ghl_data_stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_data_stream.h; sourceTree = "<group>"; };
@@ -376,17 +368,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		A41D523B14DF0468008B50E8 /* iOS */ = {
-			isa = PBXGroup;
-			children = (
-				A41D524014DF0468008B50E8 /* sound_iphone.cpp */,
-				A41D524114DF0468008B50E8 /* sound_iphone.h */,
-				A41D524214DF0468008B50E8 /* SoundEngine.cpp */,
-				A41D524314DF0468008B50E8 /* SoundEngine.h */,
-			);
-			path = iOS;
-			sourceTree = "<group>";
-		};
 		A429007A1413948E00429C47 /* include */ = {
 			isa = PBXGroup;
 			children = (
@@ -484,7 +465,6 @@
 		A42900BA1413949B00429C47 /* sound */ = {
 			isa = PBXGroup;
 			children = (
-				A41D523B14DF0468008B50E8 /* iOS */,
 			);
 			path = sound;
 			sourceTree = "<group>";
@@ -704,8 +684,6 @@
 				A436FC5814AE6D3800D53CE4 /* ghl_log_impl.h in Headers */,
 				A41D523014DEB75E008B50E8 /* ghl_ref_counter.h in Headers */,
 				A41D523314DEB90B008B50E8 /* ghl_ref_counter_impl.h in Headers */,
-				A41D524914DF0468008B50E8 /* sound_iphone.h in Headers */,
-				A41D524B14DF0468008B50E8 /* SoundEngine.h in Headers */,
 				A47F7EBE14E6CE99006B37E2 /* winlib_cocoa.h in Headers */,
 				A47F7EEB14E6D127006B37E2 /* jpeg_image_decoder.h in Headers */,
 				A47F7F3114E6D175006B37E2 /* jconfig.h in Headers */,
@@ -814,8 +792,6 @@
 				A4EDFF071416B45400ED0DC0 /* pngrtran.c in Sources */,
 				A4EDFF111416B4E100ED0DC0 /* pngpread.c in Sources */,
 				A436FC5714AE6D3800D53CE4 /* ghl_log_impl.cpp in Sources */,
-				A41D524814DF0468008B50E8 /* sound_iphone.cpp in Sources */,
-				A41D524A14DF0468008B50E8 /* SoundEngine.cpp in Sources */,
 				A47F7EBF14E6CE99006B37E2 /* winlib_cocoa.mm in Sources */,
 				A47F7EEA14E6D127006B37E2 /* jpeg_image_decoder.cpp in Sources */,
 				A47F7F2414E6D175006B37E2 /* jaricom.c in Sources */,
@@ -860,12 +836,12 @@
 				A47F7F4D14E6D175006B37E2 /* jidctfst.c in Sources */,
 				A47F7F4E14E6D175006B37E2 /* jidctint.c in Sources */,
 				A47F7F5014E6D175006B37E2 /* jmemmgr.c in Sources */,
-				A47F7F5414E6D175006B37E2 /* jquant1.c in Sources */,
-				A47F7F5514E6D175006B37E2 /* jquant2.c in Sources */,
 				A47F7F5614E6D175006B37E2 /* jutils.c in Sources */,
 				A47F7F5814E6D175006B37E2 /* transupp.c in Sources */,
 				A47F7F6014E6D1BB006B37E2 /* dynamic_gl.cpp in Sources */,
 				A47F7F6E14E6D253006B37E2 /* jmemnobs.c in Sources */,
+				A48293081541F81C00A9A4B8 /* jquant1.c in Sources */,
+				A482930F1541FB3C00A9A4B8 /* jquant2.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -904,11 +880,7 @@
 		1DEB922308733DC00010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					armv6,
-					armv7,
-					"$(ARCHS_STANDARD_32_BIT)",
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
@@ -921,22 +893,17 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				OBJROOT = build;
-				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = macosx;
 				SYMROOT = ../../lib;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
 		1DEB922408733DC00010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					armv6,
-					armv7,
-					"$(ARCHS_STANDARD_32_BIT)",
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
@@ -945,11 +912,10 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				OBJROOT = build;
-				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = macosx;
 				SYMROOT = ../../lib;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
