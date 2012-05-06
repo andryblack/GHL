@@ -600,13 +600,15 @@ namespace GHL {
             GHL_UNUSED(v_amount);
             UInt32 vertex_size = 0;
 		const Vertex* v =  reinterpret_cast<const Vertex*> (vertices);
-		const Vertex2Tex* v2 = 0;
+		//const Vertex2Tex* v2 = 0;
 		
 		if (v_type == VERTEX_TYPE_SIMPLE) {
 			vertex_size = sizeof(Vertex);
 		} else if (v_type == VERTEX_TYPE_2_TEX ) {
 			vertex_size = sizeof(Vertex2Tex);
-			v2 = reinterpret_cast<const Vertex2Tex*> (vertices);
+			//v2 = reinterpret_cast<const Vertex2Tex*> (vertices);
+            NOT_IMPLEMENTED;
+            return;
 		}
 		GLenum element = GL_TRIANGLES;
 		UInt32 indexes_amount = prim_amount * 3;

@@ -127,16 +127,6 @@ Image* PngDecoder::Decode(DataStream* file)
 	int BitDepth;
 	int ColorType;
 
-	{
-		// Use temporary variables to avoid passing casted pointers
-		png_uint_32 w,h;
-		// Extract info
-		png_get_IHDR(png_ptr, info_ptr,
-			&w, &h,
-			&BitDepth, &ColorType, NULL, NULL, NULL);
-		Width=w;
-		Height=h;
-	}
 	// Convert palette color to true color
 	if (ColorType==PNG_COLOR_TYPE_PALETTE)
 		png_set_palette_to_rgb(png_ptr);

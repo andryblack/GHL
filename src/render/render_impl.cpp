@@ -217,8 +217,6 @@ namespace GHL {
             }
             if (chars) {
                 DrawPrimitivesFromMemory(PRIMITIVE_TYPE_TRIANGLES,VERTEX_TYPE_SIMPLE,vtxbuf,chars*4,indxbuf,chars*2);
-                chars = 0;
-                v = vtxbuf;
             }
 			SetTexture(oldTexture);
         }
