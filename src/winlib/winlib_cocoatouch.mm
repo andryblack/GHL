@@ -233,6 +233,13 @@ static const size_t max_touches = 10;
 		
 		m_system = new SystemCocoaTouch(self);
 		g_application->SetSystem(m_system);
+
+        if([self respondsToSelector:@selector(setContentScaleFactor:)]){
+            self.contentScaleFactor = 1.0;
+            LOG_VERBOSE("contentScaleFactor:"<<self.contentScaleFactor);
+        }
+		
+		g_application->Initialize();
 		
         // Create default framebuffer object. The backing will be allocated for the current layer in -resizeFromLayer
         glGenFramebuffersOES(1, &m_defaultFramebuffer);
@@ -266,6 +273,11 @@ static const size_t max_touches = 10;
 		
         [self setAutoresizesSubviews:YES];
         
+		if([self respondsToSelector:@selector(setContentScaleFactor:)]){
+			self.contentScaleFactor = 1.0;
+			LOG_VERBOSE("contentScaleFactor:"<<self.contentScaleFactor);
+		}
+		
 		[self prepareOpenGL];
 	}
 	return self;
@@ -274,6 +286,11 @@ static const size_t max_touches = 10;
 - (void)layoutSubviews
 {
     LOG_VERBOSE( "layoutSubviews" ); 
+	if([self respondsToSelector:@selector(setContentScaleFactor:)]){
+		self.contentScaleFactor = 1.0;
+		LOG_VERBOSE("contentScaleFactor:"<<self.contentScaleFactor);
+	}
+
 	[EAGLContext setCurrentContext:m_context];
 	// Allocate color buffer backing based on the current layer size
     glBindRenderbufferOES(GL_RENDERBUFFER_OES, m_colorRenderbuffer);
@@ -530,6 +547,8 @@ static const size_t max_touches = 10;
 		[window addSubview:controller.view];
 	}
 	[window setOpaque:YES];
+	
+	
 	[window makeKeyAndVisible];
 	
 	[pool drain];

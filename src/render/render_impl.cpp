@@ -76,6 +76,12 @@ namespace GHL {
 		m_scene_started = false;
     }
 	
+    
+    void RenderImpl::Resize(UInt32 w,UInt32 h) {
+        m_width = w;
+        m_height = h;
+        LOG_INFO( "Render size : " << m_width << "x" << m_height );
+    }
 	
 	
     UInt32 GHL_CALL RenderImpl::GetWidth() const {

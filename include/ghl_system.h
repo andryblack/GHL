@@ -25,7 +25,8 @@ namespace GHL {
 	
 	/// device data
 	enum DeviceData {
-		DEVICE_DATA_ACCELEROMETER	///< 3floats
+		DEVICE_DATA_ACCELEROMETER,	///< 3floats
+		DEVICE_DATA_VIEW_CONTROLLER	///< UIViewController*
 	};
 
     struct System {
