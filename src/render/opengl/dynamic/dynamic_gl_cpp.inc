@@ -1,5 +1,6 @@
 /*VERSION_1_1*/
 #ifdef USE_DYNAMIC_GL_VERSION_1_1
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearIndex)(GLfloat c) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearColor)(GLclampf red , GLclampf green , GLclampf blue , GLclampf alpha) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Clear)(GLbitfield mask) = 0; }
@@ -676,7 +677,9 @@ static void InitDinamicGLFeature_VERSION_1_1() {
 		DynamicGL_InterleavedArrays = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum format , GLsizei stride , const GLvoid *pointer)>("glInterleavedArrays"); 
 		DinamicGLFeature_VERSION_1_1_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_VERSION_1_1_Supported() {
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_VERSION_1_1_loaded) {
 			InitDinamicGLFeature_VERSION_1_1();
 		}
@@ -1016,29 +1019,36 @@ bool DinamicGLFeature_VERSION_1_1_Supported() {
 		if (DynamicGL_DrawArrays==0) return false; 
 		if (DynamicGL_DrawElements==0) return false; 
 		if (DynamicGL_InterleavedArrays==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_VERSION_1_1*/
 
 /*ARB_copy_buffer*/
 #ifdef USE_DYNAMIC_GL_ARB_copy_buffer
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CopyBufferSubData)(GLenum readTarget , GLenum writeTarget , GLintptr readOffset , GLintptr writeOffset , GLsizeiptr size) = 0; }
 static bool DinamicGLFeature_ARB_copy_buffer_loaded = false; 
 static void InitDinamicGLFeature_ARB_copy_buffer() {
 		DynamicGL_CopyBufferSubData = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum readTarget , GLenum writeTarget , GLintptr readOffset , GLintptr writeOffset , GLsizeiptr size)>("glCopyBufferSubData"); 
 		DinamicGLFeature_ARB_copy_buffer_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_copy_buffer_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_copy_buffer")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_copy_buffer_loaded) {
 			InitDinamicGLFeature_ARB_copy_buffer();
 		}
 		if (DynamicGL_CopyBufferSubData==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_copy_buffer*/
 
 /*SGIS_sharpen_texture*/
 #ifdef USE_DYNAMIC_GL_SGIS_sharpen_texture
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SharpenTexFuncSGIS)(GLenum target , GLsizei n , const GLfloat *points) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetSharpenTexFuncSGIS)(GLenum target , GLfloat *points) = 0; }
 static bool DinamicGLFeature_SGIS_sharpen_texture_loaded = false; 
@@ -1047,63 +1057,61 @@ static void InitDinamicGLFeature_SGIS_sharpen_texture() {
 		DynamicGL_GetSharpenTexFuncSGIS = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLfloat *points)>("glGetSharpenTexFuncSGIS"); 
 		DinamicGLFeature_SGIS_sharpen_texture_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_SGIS_sharpen_texture_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIS_sharpen_texture")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_SGIS_sharpen_texture_loaded) {
 			InitDinamicGLFeature_SGIS_sharpen_texture();
 		}
 		if (DynamicGL_SharpenTexFuncSGIS==0) return false; 
 		if (DynamicGL_GetSharpenTexFuncSGIS==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIS_sharpen_texture*/
 
 /*ARB_internalformat_query*/
 #ifdef USE_DYNAMIC_GL_ARB_internalformat_query
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetInternalformativ)(GLenum target , GLenum internalformat , GLenum pname , GLsizei bufSize , GLint *params) = 0; }
 static bool DinamicGLFeature_ARB_internalformat_query_loaded = false; 
 static void InitDinamicGLFeature_ARB_internalformat_query() {
 		DynamicGL_GetInternalformativ = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum internalformat , GLenum pname , GLsizei bufSize , GLint *params)>("glGetInternalformativ"); 
 		DinamicGLFeature_ARB_internalformat_query_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_internalformat_query_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_internalformat_query")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_internalformat_query_loaded) {
 			InitDinamicGLFeature_ARB_internalformat_query();
 		}
 		if (DynamicGL_GetInternalformativ==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_internalformat_query*/
 
 /*SGIX_blend_alpha_minmax*/
 #ifdef USE_DYNAMIC_GL_SGIX_blend_alpha_minmax
-static bool DinamicGLFeature_SGIX_blend_alpha_minmax_loaded = false; 
-static void InitDinamicGLFeature_SGIX_blend_alpha_minmax() {
-		DinamicGLFeature_SGIX_blend_alpha_minmax_loaded = true; 
-}
 bool DinamicGLFeature_SGIX_blend_alpha_minmax_Supported() {
-		if (!DinamicGLFeature_SGIX_blend_alpha_minmax_loaded) {
-			InitDinamicGLFeature_SGIX_blend_alpha_minmax();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_blend_alpha_minmax")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_blend_alpha_minmax*/
 
 /*ATI_meminfo*/
 #ifdef USE_DYNAMIC_GL_ATI_meminfo
-static bool DinamicGLFeature_ATI_meminfo_loaded = false; 
-static void InitDinamicGLFeature_ATI_meminfo() {
-		DinamicGLFeature_ATI_meminfo_loaded = true; 
-}
 bool DinamicGLFeature_ATI_meminfo_Supported() {
-		if (!DinamicGLFeature_ATI_meminfo_loaded) {
-			InitDinamicGLFeature_ATI_meminfo();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ATI_meminfo")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ATI_meminfo*/
 
 /*NV_present_video*/
 #ifdef USE_DYNAMIC_GL_NV_present_video
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PresentFrameKeyedNV)(GLuint video_slot , GLuint64EXT minPresentTime , GLuint beginPresentTimeId , GLuint presentDurationId , GLenum type , GLenum target0 , GLuint fill0 , GLuint key0 , GLenum target1 , GLuint fill1 , GLuint key1) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PresentFrameDualFillNV)(GLuint video_slot , GLuint64EXT minPresentTime , GLuint beginPresentTimeId , GLuint presentDurationId , GLenum type , GLenum target0 , GLuint fill0 , GLenum target1 , GLuint fill1 , GLenum target2 , GLuint fill2 , GLenum target3 , GLuint fill3) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVideoivNV)(GLuint video_slot , GLenum pname , GLint *params) = 0; }
@@ -1120,7 +1128,10 @@ static void InitDinamicGLFeature_NV_present_video() {
 		DynamicGL_GetVideoui64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint video_slot , GLenum pname , GLuint64EXT *params)>("glGetVideoui64vNV"); 
 		DinamicGLFeature_NV_present_video_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_present_video_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_present_video")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_present_video_loaded) {
 			InitDinamicGLFeature_NV_present_video();
 		}
@@ -1130,26 +1141,22 @@ bool DinamicGLFeature_NV_present_video_Supported() {
 		if (DynamicGL_GetVideouivNV==0) return false; 
 		if (DynamicGL_GetVideoi64vNV==0) return false; 
 		if (DynamicGL_GetVideoui64vNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_present_video*/
 
 /*SGIX_convolution_accuracy*/
 #ifdef USE_DYNAMIC_GL_SGIX_convolution_accuracy
-static bool DinamicGLFeature_SGIX_convolution_accuracy_loaded = false; 
-static void InitDinamicGLFeature_SGIX_convolution_accuracy() {
-		DinamicGLFeature_SGIX_convolution_accuracy_loaded = true; 
-}
 bool DinamicGLFeature_SGIX_convolution_accuracy_Supported() {
-		if (!DinamicGLFeature_SGIX_convolution_accuracy_loaded) {
-			InitDinamicGLFeature_SGIX_convolution_accuracy();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_convolution_accuracy")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_convolution_accuracy*/
 
 /*EXT_bindable_uniform*/
 #ifdef USE_DYNAMIC_GL_EXT_bindable_uniform
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformBufferEXT)(GLuint program , GLint location , GLuint buffer) = 0; }
 extern "C" { GLint (DYNAMIC_GL_APIENTRYP DynamicGL_GetUniformBufferSizeEXT)(GLuint program , GLint location) = 0; }
 extern "C" { GLintptr (DYNAMIC_GL_APIENTRYP DynamicGL_GetUniformOffsetEXT)(GLuint program , GLint location) = 0; }
@@ -1160,33 +1167,32 @@ static void InitDinamicGLFeature_EXT_bindable_uniform() {
 		DynamicGL_GetUniformOffsetEXT = DynamicGL_LoadFunction<GLintptr (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location)>("glGetUniformOffsetEXT"); 
 		DinamicGLFeature_EXT_bindable_uniform_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_bindable_uniform_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_bindable_uniform")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_bindable_uniform_loaded) {
 			InitDinamicGLFeature_EXT_bindable_uniform();
 		}
 		if (DynamicGL_UniformBufferEXT==0) return false; 
 		if (DynamicGL_GetUniformBufferSizeEXT==0) return false; 
 		if (DynamicGL_GetUniformOffsetEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_bindable_uniform*/
 
 /*SGIS_generate_mipmap*/
 #ifdef USE_DYNAMIC_GL_SGIS_generate_mipmap
-static bool DinamicGLFeature_SGIS_generate_mipmap_loaded = false; 
-static void InitDinamicGLFeature_SGIS_generate_mipmap() {
-		DinamicGLFeature_SGIS_generate_mipmap_loaded = true; 
-}
 bool DinamicGLFeature_SGIS_generate_mipmap_Supported() {
-		if (!DinamicGLFeature_SGIS_generate_mipmap_loaded) {
-			InitDinamicGLFeature_SGIS_generate_mipmap();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIS_generate_mipmap")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIS_generate_mipmap*/
 
 /*INTEL_parallel_arrays*/
 #ifdef USE_DYNAMIC_GL_INTEL_parallel_arrays
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexPointervINTEL)(GLint size , GLenum type , const GLvoid* *pointer) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_NormalPointervINTEL)(GLenum type , const GLvoid* *pointer) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorPointervINTEL)(GLint size , GLenum type , const GLvoid* *pointer) = 0; }
@@ -1199,7 +1205,10 @@ static void InitDinamicGLFeature_INTEL_parallel_arrays() {
 		DynamicGL_TexCoordPointervINTEL = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint size , GLenum type , const GLvoid* *pointer)>("glTexCoordPointervINTEL"); 
 		DinamicGLFeature_INTEL_parallel_arrays_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_INTEL_parallel_arrays_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_INTEL_parallel_arrays")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_INTEL_parallel_arrays_loaded) {
 			InitDinamicGLFeature_INTEL_parallel_arrays();
 		}
@@ -1207,12 +1216,14 @@ bool DinamicGLFeature_INTEL_parallel_arrays_Supported() {
 		if (DynamicGL_NormalPointervINTEL==0) return false; 
 		if (DynamicGL_ColorPointervINTEL==0) return false; 
 		if (DynamicGL_TexCoordPointervINTEL==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_INTEL_parallel_arrays*/
 
 /*ARB_multitexture*/
 #ifdef USE_DYNAMIC_GL_ARB_multitexture
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ActiveTextureARB)(GLenum texture) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClientActiveTextureARB)(GLenum texture) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1dARB)(GLenum target , GLdouble s) = 0; }
@@ -1285,7 +1296,10 @@ static void InitDinamicGLFeature_ARB_multitexture() {
 		DynamicGL_MultiTexCoord4svARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLshort *v)>("glMultiTexCoord4svARB"); 
 		DinamicGLFeature_ARB_multitexture_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_multitexture_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_multitexture")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_multitexture_loaded) {
 			InitDinamicGLFeature_ARB_multitexture();
 		}
@@ -1323,29 +1337,36 @@ bool DinamicGLFeature_ARB_multitexture_Supported() {
 		if (DynamicGL_MultiTexCoord4ivARB==0) return false; 
 		if (DynamicGL_MultiTexCoord4sARB==0) return false; 
 		if (DynamicGL_MultiTexCoord4svARB==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_multitexture*/
 
 /*EXT_draw_range_elements*/
 #ifdef USE_DYNAMIC_GL_EXT_draw_range_elements
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawRangeElementsEXT)(GLenum mode , GLuint start , GLuint end , GLsizei count , GLenum type , const GLvoid *indices) = 0; }
 static bool DinamicGLFeature_EXT_draw_range_elements_loaded = false; 
 static void InitDinamicGLFeature_EXT_draw_range_elements() {
 		DynamicGL_DrawRangeElementsEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLuint start , GLuint end , GLsizei count , GLenum type , const GLvoid *indices)>("glDrawRangeElementsEXT"); 
 		DinamicGLFeature_EXT_draw_range_elements_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_draw_range_elements_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_draw_range_elements")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_draw_range_elements_loaded) {
 			InitDinamicGLFeature_EXT_draw_range_elements();
 		}
 		if (DynamicGL_DrawRangeElementsEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_draw_range_elements*/
 
 /*ARB_shading_language_include*/
 #ifdef USE_DYNAMIC_GL_ARB_shading_language_include
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_NamedStringARB)(GLenum type , GLint namelen , const GLchar *name , GLint stringlen , const GLchar *string) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteNamedStringARB)(GLint namelen , const GLchar *name) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CompileShaderIncludeARB)(GLuint shader , GLsizei count , const GLchar* *path , const GLint *length) = 0; }
@@ -1362,7 +1383,10 @@ static void InitDinamicGLFeature_ARB_shading_language_include() {
 		DynamicGL_GetNamedStringivARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint namelen , const GLchar *name , GLenum pname , GLint *params)>("glGetNamedStringivARB"); 
 		DinamicGLFeature_ARB_shading_language_include_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_shading_language_include_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_shading_language_include")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_shading_language_include_loaded) {
 			InitDinamicGLFeature_ARB_shading_language_include();
 		}
@@ -1372,12 +1396,22 @@ bool DinamicGLFeature_ARB_shading_language_include_Supported() {
 		if (DynamicGL_IsNamedStringARB==0) return false; 
 		if (DynamicGL_GetNamedStringARB==0) return false; 
 		if (DynamicGL_GetNamedStringivARB==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_shading_language_include*/
 
+/*AMD_seamless_cubemap_per_texture*/
+#ifdef USE_DYNAMIC_GL_AMD_seamless_cubemap_per_texture
+bool DinamicGLFeature_AMD_seamless_cubemap_per_texture_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_AMD_seamless_cubemap_per_texture")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_AMD_seamless_cubemap_per_texture*/
+
 /*NV_evaluators*/
 #ifdef USE_DYNAMIC_GL_NV_evaluators
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MapControlPointsNV)(GLenum target , GLuint index , GLenum type , GLsizei ustride , GLsizei vstride , GLint uorder , GLint vorder , GLboolean packed , const GLvoid *points) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MapParameterivNV)(GLenum target , GLenum pname , const GLint *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MapParameterfvNV)(GLenum target , GLenum pname , const GLfloat *params) = 0; }
@@ -1400,7 +1434,10 @@ static void InitDinamicGLFeature_NV_evaluators() {
 		DynamicGL_EvalMapsNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum mode)>("glEvalMapsNV"); 
 		DinamicGLFeature_NV_evaluators_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_evaluators_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_evaluators")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_evaluators_loaded) {
 			InitDinamicGLFeature_NV_evaluators();
 		}
@@ -1413,57 +1450,52 @@ bool DinamicGLFeature_NV_evaluators_Supported() {
 		if (DynamicGL_GetMapAttribParameterivNV==0) return false; 
 		if (DynamicGL_GetMapAttribParameterfvNV==0) return false; 
 		if (DynamicGL_EvalMapsNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_evaluators*/
 
 /*AMD_sample_positions*/
 #ifdef USE_DYNAMIC_GL_AMD_sample_positions
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SetMultisamplefvAMD)(GLenum pname , GLuint index , const GLfloat *val) = 0; }
 static bool DinamicGLFeature_AMD_sample_positions_loaded = false; 
 static void InitDinamicGLFeature_AMD_sample_positions() {
 		DynamicGL_SetMultisamplefvAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , GLuint index , const GLfloat *val)>("glSetMultisamplefvAMD"); 
 		DinamicGLFeature_AMD_sample_positions_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_AMD_sample_positions_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_AMD_sample_positions")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_AMD_sample_positions_loaded) {
 			InitDinamicGLFeature_AMD_sample_positions();
 		}
 		if (DynamicGL_SetMultisamplefvAMD==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_AMD_sample_positions*/
 
 /*OML_interlace*/
 #ifdef USE_DYNAMIC_GL_OML_interlace
-static bool DinamicGLFeature_OML_interlace_loaded = false; 
-static void InitDinamicGLFeature_OML_interlace() {
-		DinamicGLFeature_OML_interlace_loaded = true; 
-}
 bool DinamicGLFeature_OML_interlace_Supported() {
-		if (!DinamicGLFeature_OML_interlace_loaded) {
-			InitDinamicGLFeature_OML_interlace();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_OML_interlace")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OML_interlace*/
 
 /*ARB_texture_border_clamp*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_border_clamp
-static bool DinamicGLFeature_ARB_texture_border_clamp_loaded = false; 
-static void InitDinamicGLFeature_ARB_texture_border_clamp() {
-		DinamicGLFeature_ARB_texture_border_clamp_loaded = true; 
-}
 bool DinamicGLFeature_ARB_texture_border_clamp_Supported() {
-		if (!DinamicGLFeature_ARB_texture_border_clamp_loaded) {
-			InitDinamicGLFeature_ARB_texture_border_clamp();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_texture_border_clamp")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_texture_border_clamp*/
 
 /*APPLE_texture_range*/
 #ifdef USE_DYNAMIC_GL_APPLE_texture_range
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureRangeAPPLE)(GLenum target , GLsizei length , const GLvoid *pointer) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexParameterPointervAPPLE)(GLenum target , GLenum pname , GLvoid* *params) = 0; }
 static bool DinamicGLFeature_APPLE_texture_range_loaded = false; 
@@ -1472,46 +1504,47 @@ static void InitDinamicGLFeature_APPLE_texture_range() {
 		DynamicGL_GetTexParameterPointervAPPLE = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum pname , GLvoid* *params)>("glGetTexParameterPointervAPPLE"); 
 		DinamicGLFeature_APPLE_texture_range_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_APPLE_texture_range_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_APPLE_texture_range")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_APPLE_texture_range_loaded) {
 			InitDinamicGLFeature_APPLE_texture_range();
 		}
 		if (DynamicGL_TextureRangeAPPLE==0) return false; 
 		if (DynamicGL_GetTexParameterPointervAPPLE==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_APPLE_texture_range*/
 
 /*ARB_shadow_ambient*/
 #ifdef USE_DYNAMIC_GL_ARB_shadow_ambient
-static bool DinamicGLFeature_ARB_shadow_ambient_loaded = false; 
-static void InitDinamicGLFeature_ARB_shadow_ambient() {
-		DinamicGLFeature_ARB_shadow_ambient_loaded = true; 
-}
 bool DinamicGLFeature_ARB_shadow_ambient_Supported() {
-		if (!DinamicGLFeature_ARB_shadow_ambient_loaded) {
-			InitDinamicGLFeature_ARB_shadow_ambient();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_shadow_ambient")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_shadow_ambient*/
 
+/*AMD_shader_stencil_export*/
+#ifdef USE_DYNAMIC_GL_AMD_shader_stencil_export
+bool DinamicGLFeature_AMD_shader_stencil_export_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_AMD_shader_stencil_export")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_AMD_shader_stencil_export*/
+
 /*EXT_texture_compression_s3tc*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_compression_s3tc
-static bool DinamicGLFeature_EXT_texture_compression_s3tc_loaded = false; 
-static void InitDinamicGLFeature_EXT_texture_compression_s3tc() {
-		DinamicGLFeature_EXT_texture_compression_s3tc_loaded = true; 
-}
 bool DinamicGLFeature_EXT_texture_compression_s3tc_Supported() {
-		if (!DinamicGLFeature_EXT_texture_compression_s3tc_loaded) {
-			InitDinamicGLFeature_EXT_texture_compression_s3tc();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_compression_s3tc")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_compression_s3tc*/
 
 /*EXT_secondary_color*/
 #ifdef USE_DYNAMIC_GL_EXT_secondary_color
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3bEXT)(GLbyte red , GLbyte green , GLbyte blue) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3bvEXT)(const GLbyte *v) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3dEXT)(GLdouble red , GLdouble green , GLdouble blue) = 0; }
@@ -1550,7 +1583,10 @@ static void InitDinamicGLFeature_EXT_secondary_color() {
 		DynamicGL_SecondaryColorPointerEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer)>("glSecondaryColorPointerEXT"); 
 		DinamicGLFeature_EXT_secondary_color_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_secondary_color_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_secondary_color")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_secondary_color_loaded) {
 			InitDinamicGLFeature_EXT_secondary_color();
 		}
@@ -1571,71 +1607,68 @@ bool DinamicGLFeature_EXT_secondary_color_Supported() {
 		if (DynamicGL_SecondaryColor3usEXT==0) return false; 
 		if (DynamicGL_SecondaryColor3usvEXT==0) return false; 
 		if (DynamicGL_SecondaryColorPointerEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_secondary_color*/
 
 /*SGIX_pixel_tiles*/
 #ifdef USE_DYNAMIC_GL_SGIX_pixel_tiles
-static bool DinamicGLFeature_SGIX_pixel_tiles_loaded = false; 
-static void InitDinamicGLFeature_SGIX_pixel_tiles() {
-		DinamicGLFeature_SGIX_pixel_tiles_loaded = true; 
-}
 bool DinamicGLFeature_SGIX_pixel_tiles_Supported() {
-		if (!DinamicGLFeature_SGIX_pixel_tiles_loaded) {
-			InitDinamicGLFeature_SGIX_pixel_tiles();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_pixel_tiles")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_pixel_tiles*/
 
 /*SGIX_scalebias_hint*/
 #ifdef USE_DYNAMIC_GL_SGIX_scalebias_hint
-static bool DinamicGLFeature_SGIX_scalebias_hint_loaded = false; 
-static void InitDinamicGLFeature_SGIX_scalebias_hint() {
-		DinamicGLFeature_SGIX_scalebias_hint_loaded = true; 
-}
 bool DinamicGLFeature_SGIX_scalebias_hint_Supported() {
-		if (!DinamicGLFeature_SGIX_scalebias_hint_loaded) {
-			InitDinamicGLFeature_SGIX_scalebias_hint();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_scalebias_hint")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_scalebias_hint*/
 
 /*EXT_texture_buffer_object*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_buffer_object
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexBufferEXT)(GLenum target , GLenum internalformat , GLuint buffer) = 0; }
 static bool DinamicGLFeature_EXT_texture_buffer_object_loaded = false; 
 static void InitDinamicGLFeature_EXT_texture_buffer_object() {
 		DynamicGL_TexBufferEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum internalformat , GLuint buffer)>("glTexBufferEXT"); 
 		DinamicGLFeature_EXT_texture_buffer_object_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_texture_buffer_object_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_buffer_object")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_texture_buffer_object_loaded) {
 			InitDinamicGLFeature_EXT_texture_buffer_object();
 		}
 		if (DynamicGL_TexBufferEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_buffer_object*/
 
+/*ARB_shader_stencil_export*/
+#ifdef USE_DYNAMIC_GL_ARB_shader_stencil_export
+bool DinamicGLFeature_ARB_shader_stencil_export_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_shader_stencil_export")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_shader_stencil_export*/
+
 /*APPLE_row_bytes*/
 #ifdef USE_DYNAMIC_GL_APPLE_row_bytes
-static bool DinamicGLFeature_APPLE_row_bytes_loaded = false; 
-static void InitDinamicGLFeature_APPLE_row_bytes() {
-		DinamicGLFeature_APPLE_row_bytes_loaded = true; 
-}
 bool DinamicGLFeature_APPLE_row_bytes_Supported() {
-		if (!DinamicGLFeature_APPLE_row_bytes_loaded) {
-			InitDinamicGLFeature_APPLE_row_bytes();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_APPLE_row_bytes")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_APPLE_row_bytes*/
 
 /*IBM_multimode_draw_arrays*/
 #ifdef USE_DYNAMIC_GL_IBM_multimode_draw_arrays
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiModeDrawArraysIBM)(const GLenum *mode , const GLint *first , const GLsizei *count , GLsizei primcount , GLint modestride) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiModeDrawElementsIBM)(const GLenum *mode , const GLsizei *count , GLenum type , const GLvoid* const , GLsizei primcount , GLint modestride) = 0; }
 static bool DinamicGLFeature_IBM_multimode_draw_arrays_loaded = false; 
@@ -1644,18 +1677,23 @@ static void InitDinamicGLFeature_IBM_multimode_draw_arrays() {
 		DynamicGL_MultiModeDrawElementsIBM = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLenum *mode , const GLsizei *count , GLenum type , const GLvoid* const , GLsizei primcount , GLint modestride)>("glMultiModeDrawElementsIBM"); 
 		DinamicGLFeature_IBM_multimode_draw_arrays_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_IBM_multimode_draw_arrays_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_IBM_multimode_draw_arrays")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_IBM_multimode_draw_arrays_loaded) {
 			InitDinamicGLFeature_IBM_multimode_draw_arrays();
 		}
 		if (DynamicGL_MultiModeDrawArraysIBM==0) return false; 
 		if (DynamicGL_MultiModeDrawElementsIBM==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_IBM_multimode_draw_arrays*/
 
 /*ARB_draw_elements_base_vertex*/
 #ifdef USE_DYNAMIC_GL_ARB_draw_elements_base_vertex
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElementsBaseVertex)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices , GLint basevertex) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawRangeElementsBaseVertex)(GLenum mode , GLuint start , GLuint end , GLsizei count , GLenum type , const GLvoid *indices , GLint basevertex) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElementsInstancedBaseVertex)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices , GLsizei primcount , GLint basevertex) = 0; }
@@ -1668,7 +1706,10 @@ static void InitDinamicGLFeature_ARB_draw_elements_base_vertex() {
 		DynamicGL_MultiDrawElementsBaseVertex = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , const GLsizei *count , GLenum type , const GLvoid* const , GLsizei primcount , const GLint *basevertex)>("glMultiDrawElementsBaseVertex"); 
 		DinamicGLFeature_ARB_draw_elements_base_vertex_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_draw_elements_base_vertex_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_draw_elements_base_vertex")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_draw_elements_base_vertex_loaded) {
 			InitDinamicGLFeature_ARB_draw_elements_base_vertex();
 		}
@@ -1676,26 +1717,22 @@ bool DinamicGLFeature_ARB_draw_elements_base_vertex_Supported() {
 		if (DynamicGL_DrawRangeElementsBaseVertex==0) return false; 
 		if (DynamicGL_DrawElementsInstancedBaseVertex==0) return false; 
 		if (DynamicGL_MultiDrawElementsBaseVertex==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_draw_elements_base_vertex*/
 
 /*ARB_depth_clamp*/
 #ifdef USE_DYNAMIC_GL_ARB_depth_clamp
-static bool DinamicGLFeature_ARB_depth_clamp_loaded = false; 
-static void InitDinamicGLFeature_ARB_depth_clamp() {
-		DinamicGLFeature_ARB_depth_clamp_loaded = true; 
-}
 bool DinamicGLFeature_ARB_depth_clamp_Supported() {
-		if (!DinamicGLFeature_ARB_depth_clamp_loaded) {
-			InitDinamicGLFeature_ARB_depth_clamp();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_depth_clamp")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_depth_clamp*/
 
 /*EXT_framebuffer_object*/
 #ifdef USE_DYNAMIC_GL_EXT_framebuffer_object
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsRenderbufferEXT)(GLuint renderbuffer) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindRenderbufferEXT)(GLenum target , GLuint renderbuffer) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteRenderbuffersEXT)(GLsizei n , const GLuint *renderbuffers) = 0; }
@@ -1734,7 +1771,10 @@ static void InitDinamicGLFeature_EXT_framebuffer_object() {
 		DynamicGL_GenerateMipmapEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target)>("glGenerateMipmapEXT"); 
 		DinamicGLFeature_EXT_framebuffer_object_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_framebuffer_object_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_framebuffer_object")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_framebuffer_object_loaded) {
 			InitDinamicGLFeature_EXT_framebuffer_object();
 		}
@@ -1755,29 +1795,44 @@ bool DinamicGLFeature_EXT_framebuffer_object_Supported() {
 		if (DynamicGL_FramebufferRenderbufferEXT==0) return false; 
 		if (DynamicGL_GetFramebufferAttachmentParameterivEXT==0) return false; 
 		if (DynamicGL_GenerateMipmapEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_framebuffer_object*/
 
+/*NV_vertex_program2*/
+#ifdef USE_DYNAMIC_GL_NV_vertex_program2
+bool DinamicGLFeature_NV_vertex_program2_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_vertex_program2")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_vertex_program2*/
+
 /*ARB_draw_buffers*/
 #ifdef USE_DYNAMIC_GL_ARB_draw_buffers
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawBuffersARB)(GLsizei n , const GLenum *bufs) = 0; }
 static bool DinamicGLFeature_ARB_draw_buffers_loaded = false; 
 static void InitDinamicGLFeature_ARB_draw_buffers() {
 		DynamicGL_DrawBuffersARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei n , const GLenum *bufs)>("glDrawBuffersARB"); 
 		DinamicGLFeature_ARB_draw_buffers_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_draw_buffers_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_draw_buffers")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_draw_buffers_loaded) {
 			InitDinamicGLFeature_ARB_draw_buffers();
 		}
 		if (DynamicGL_DrawBuffersARB==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_draw_buffers*/
 
 /*EXT_pixel_transform*/
 #ifdef USE_DYNAMIC_GL_EXT_pixel_transform
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PixelTransformParameteriEXT)(GLenum target , GLenum pname , GLint param) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PixelTransformParameterfEXT)(GLenum target , GLenum pname , GLfloat param) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PixelTransformParameterivEXT)(GLenum target , GLenum pname , const GLint *params) = 0; }
@@ -1790,7 +1845,10 @@ static void InitDinamicGLFeature_EXT_pixel_transform() {
 		DynamicGL_PixelTransformParameterfvEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum pname , const GLfloat *params)>("glPixelTransformParameterfvEXT"); 
 		DinamicGLFeature_EXT_pixel_transform_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_pixel_transform_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_pixel_transform")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_pixel_transform_loaded) {
 			InitDinamicGLFeature_EXT_pixel_transform();
 		}
@@ -1798,29 +1856,36 @@ bool DinamicGLFeature_EXT_pixel_transform_Supported() {
 		if (DynamicGL_PixelTransformParameterfEXT==0) return false; 
 		if (DynamicGL_PixelTransformParameterivEXT==0) return false; 
 		if (DynamicGL_PixelTransformParameterfvEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_pixel_transform*/
 
 /*ARB_sample_shading*/
 #ifdef USE_DYNAMIC_GL_ARB_sample_shading
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MinSampleShadingARB)(GLfloat value) = 0; }
 static bool DinamicGLFeature_ARB_sample_shading_loaded = false; 
 static void InitDinamicGLFeature_ARB_sample_shading() {
 		DynamicGL_MinSampleShadingARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLfloat value)>("glMinSampleShadingARB"); 
 		DinamicGLFeature_ARB_sample_shading_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_sample_shading_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_sample_shading")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_sample_shading_loaded) {
 			InitDinamicGLFeature_ARB_sample_shading();
 		}
 		if (DynamicGL_MinSampleShadingARB==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_sample_shading*/
 
 /*APPLE_object_purgeable*/
 #ifdef USE_DYNAMIC_GL_APPLE_object_purgeable
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { GLenum (DYNAMIC_GL_APIENTRYP DynamicGL_ObjectPurgeableAPPLE)(GLenum objectType , GLuint name , GLenum option) = 0; }
 extern "C" { GLenum (DYNAMIC_GL_APIENTRYP DynamicGL_ObjectUnpurgeableAPPLE)(GLenum objectType , GLuint name , GLenum option) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetObjectParameterivAPPLE)(GLenum objectType , GLuint name , GLenum pname , GLint *params) = 0; }
@@ -1831,36 +1896,46 @@ static void InitDinamicGLFeature_APPLE_object_purgeable() {
 		DynamicGL_GetObjectParameterivAPPLE = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum objectType , GLuint name , GLenum pname , GLint *params)>("glGetObjectParameterivAPPLE"); 
 		DinamicGLFeature_APPLE_object_purgeable_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_APPLE_object_purgeable_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_APPLE_object_purgeable")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_APPLE_object_purgeable_loaded) {
 			InitDinamicGLFeature_APPLE_object_purgeable();
 		}
 		if (DynamicGL_ObjectPurgeableAPPLE==0) return false; 
 		if (DynamicGL_ObjectUnpurgeableAPPLE==0) return false; 
 		if (DynamicGL_GetObjectParameterivAPPLE==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_APPLE_object_purgeable*/
 
 /*EXT_index_material*/
 #ifdef USE_DYNAMIC_GL_EXT_index_material
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_IndexMaterialEXT)(GLenum face , GLenum mode) = 0; }
 static bool DinamicGLFeature_EXT_index_material_loaded = false; 
 static void InitDinamicGLFeature_EXT_index_material() {
 		DynamicGL_IndexMaterialEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum face , GLenum mode)>("glIndexMaterialEXT"); 
 		DinamicGLFeature_EXT_index_material_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_index_material_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_index_material")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_index_material_loaded) {
 			InitDinamicGLFeature_EXT_index_material();
 		}
 		if (DynamicGL_IndexMaterialEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_index_material*/
 
 /*SGIS_texture_filter4*/
 #ifdef USE_DYNAMIC_GL_SGIS_texture_filter4
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexFilterFuncSGIS)(GLenum target , GLenum filter , GLfloat *weights) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexFilterFuncSGIS)(GLenum target , GLenum filter , GLsizei n , const GLfloat *weights) = 0; }
 static bool DinamicGLFeature_SGIS_texture_filter4_loaded = false; 
@@ -1869,46 +1944,39 @@ static void InitDinamicGLFeature_SGIS_texture_filter4() {
 		DynamicGL_TexFilterFuncSGIS = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum filter , GLsizei n , const GLfloat *weights)>("glTexFilterFuncSGIS"); 
 		DinamicGLFeature_SGIS_texture_filter4_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_SGIS_texture_filter4_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIS_texture_filter4")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_SGIS_texture_filter4_loaded) {
 			InitDinamicGLFeature_SGIS_texture_filter4();
 		}
 		if (DynamicGL_GetTexFilterFuncSGIS==0) return false; 
 		if (DynamicGL_TexFilterFuncSGIS==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIS_texture_filter4*/
 
 /*EXT_framebuffer_multisample_blit_scaled*/
 #ifdef USE_DYNAMIC_GL_EXT_framebuffer_multisample_blit_scaled
-static bool DinamicGLFeature_EXT_framebuffer_multisample_blit_scaled_loaded = false; 
-static void InitDinamicGLFeature_EXT_framebuffer_multisample_blit_scaled() {
-		DinamicGLFeature_EXT_framebuffer_multisample_blit_scaled_loaded = true; 
-}
 bool DinamicGLFeature_EXT_framebuffer_multisample_blit_scaled_Supported() {
-		if (!DinamicGLFeature_EXT_framebuffer_multisample_blit_scaled_loaded) {
-			InitDinamicGLFeature_EXT_framebuffer_multisample_blit_scaled();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_framebuffer_multisample_blit_scaled")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_framebuffer_multisample_blit_scaled*/
 
 /*ARB_texture_compression_bptc*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_compression_bptc
-static bool DinamicGLFeature_ARB_texture_compression_bptc_loaded = false; 
-static void InitDinamicGLFeature_ARB_texture_compression_bptc() {
-		DinamicGLFeature_ARB_texture_compression_bptc_loaded = true; 
-}
 bool DinamicGLFeature_ARB_texture_compression_bptc_Supported() {
-		if (!DinamicGLFeature_ARB_texture_compression_bptc_loaded) {
-			InitDinamicGLFeature_ARB_texture_compression_bptc();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_texture_compression_bptc")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_texture_compression_bptc*/
 
 /*APPLE_flush_buffer_range*/
 #ifdef USE_DYNAMIC_GL_APPLE_flush_buffer_range
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BufferParameteriAPPLE)(GLenum target , GLenum pname , GLint param) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FlushMappedBufferRangeAPPLE)(GLenum target , GLintptr offset , GLsizeiptr size) = 0; }
 static bool DinamicGLFeature_APPLE_flush_buffer_range_loaded = false; 
@@ -1917,83 +1985,105 @@ static void InitDinamicGLFeature_APPLE_flush_buffer_range() {
 		DynamicGL_FlushMappedBufferRangeAPPLE = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLintptr offset , GLsizeiptr size)>("glFlushMappedBufferRangeAPPLE"); 
 		DinamicGLFeature_APPLE_flush_buffer_range_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_APPLE_flush_buffer_range_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_APPLE_flush_buffer_range")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_APPLE_flush_buffer_range_loaded) {
 			InitDinamicGLFeature_APPLE_flush_buffer_range();
 		}
 		if (DynamicGL_BufferParameteriAPPLE==0) return false; 
 		if (DynamicGL_FlushMappedBufferRangeAPPLE==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_APPLE_flush_buffer_range*/
 
 /*SGIS_texture_color_mask*/
 #ifdef USE_DYNAMIC_GL_SGIS_texture_color_mask
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureColorMaskSGIS)(GLboolean red , GLboolean green , GLboolean blue , GLboolean alpha) = 0; }
 static bool DinamicGLFeature_SGIS_texture_color_mask_loaded = false; 
 static void InitDinamicGLFeature_SGIS_texture_color_mask() {
 		DynamicGL_TextureColorMaskSGIS = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLboolean red , GLboolean green , GLboolean blue , GLboolean alpha)>("glTextureColorMaskSGIS"); 
 		DinamicGLFeature_SGIS_texture_color_mask_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_SGIS_texture_color_mask_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIS_texture_color_mask")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_SGIS_texture_color_mask_loaded) {
 			InitDinamicGLFeature_SGIS_texture_color_mask();
 		}
 		if (DynamicGL_TextureColorMaskSGIS==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIS_texture_color_mask*/
 
 /*EXT_provoking_vertex*/
 #ifdef USE_DYNAMIC_GL_EXT_provoking_vertex
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProvokingVertexEXT)(GLenum mode) = 0; }
 static bool DinamicGLFeature_EXT_provoking_vertex_loaded = false; 
 static void InitDinamicGLFeature_EXT_provoking_vertex() {
 		DynamicGL_ProvokingVertexEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode)>("glProvokingVertexEXT"); 
 		DinamicGLFeature_EXT_provoking_vertex_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_provoking_vertex_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_provoking_vertex")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_provoking_vertex_loaded) {
 			InitDinamicGLFeature_EXT_provoking_vertex();
 		}
 		if (DynamicGL_ProvokingVertexEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_provoking_vertex*/
 
+/*ARB_explicit_attrib_location*/
+#ifdef USE_DYNAMIC_GL_ARB_explicit_attrib_location
+bool DinamicGLFeature_ARB_explicit_attrib_location_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_explicit_attrib_location")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_explicit_attrib_location*/
+
 /*ARB_fragment_shader*/
 #ifdef USE_DYNAMIC_GL_ARB_fragment_shader
-static bool DinamicGLFeature_ARB_fragment_shader_loaded = false; 
-static void InitDinamicGLFeature_ARB_fragment_shader() {
-		DinamicGLFeature_ARB_fragment_shader_loaded = true; 
-}
 bool DinamicGLFeature_ARB_fragment_shader_Supported() {
-		if (!DinamicGLFeature_ARB_fragment_shader_loaded) {
-			InitDinamicGLFeature_ARB_fragment_shader();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_fragment_shader")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_fragment_shader*/
 
 /*GREMEDY_frame_terminator*/
 #ifdef USE_DYNAMIC_GL_GREMEDY_frame_terminator
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FrameTerminatorGREMEDY)() = 0; }
 static bool DinamicGLFeature_GREMEDY_frame_terminator_loaded = false; 
 static void InitDinamicGLFeature_GREMEDY_frame_terminator() {
 		DynamicGL_FrameTerminatorGREMEDY = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)()>("glFrameTerminatorGREMEDY"); 
 		DinamicGLFeature_GREMEDY_frame_terminator_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_GREMEDY_frame_terminator_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_GREMEDY_frame_terminator")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_GREMEDY_frame_terminator_loaded) {
 			InitDinamicGLFeature_GREMEDY_frame_terminator();
 		}
 		if (DynamicGL_FrameTerminatorGREMEDY==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_GREMEDY_frame_terminator*/
 
 /*ARB_robustness*/
 #ifdef USE_DYNAMIC_GL_ARB_robustness
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { GLenum (DYNAMIC_GL_APIENTRYP DynamicGL_GetGraphicsResetStatusARB)() = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnMapdvARB)(GLenum target , GLenum query , GLsizei bufSize , GLdouble *v) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnMapfvARB)(GLenum target , GLenum query , GLsizei bufSize , GLfloat *v) = 0; }
@@ -2038,7 +2128,10 @@ static void InitDinamicGLFeature_ARB_robustness() {
 		DynamicGL_GetnUniformdvARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei bufSize , GLdouble *params)>("glGetnUniformdvARB"); 
 		DinamicGLFeature_ARB_robustness_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_robustness_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_robustness")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_robustness_loaded) {
 			InitDinamicGLFeature_ARB_robustness();
 		}
@@ -2062,40 +2155,30 @@ bool DinamicGLFeature_ARB_robustness_Supported() {
 		if (DynamicGL_GetnUniformivARB==0) return false; 
 		if (DynamicGL_GetnUniformuivARB==0) return false; 
 		if (DynamicGL_GetnUniformdvARB==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_robustness*/
 
 /*ARB_shading_language_100*/
 #ifdef USE_DYNAMIC_GL_ARB_shading_language_100
-static bool DinamicGLFeature_ARB_shading_language_100_loaded = false; 
-static void InitDinamicGLFeature_ARB_shading_language_100() {
-		DinamicGLFeature_ARB_shading_language_100_loaded = true; 
-}
 bool DinamicGLFeature_ARB_shading_language_100_Supported() {
-		if (!DinamicGLFeature_ARB_shading_language_100_loaded) {
-			InitDinamicGLFeature_ARB_shading_language_100();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_shading_language_100")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_shading_language_100*/
 
 /*ARB_fragment_program*/
 #ifdef USE_DYNAMIC_GL_ARB_fragment_program
-static bool DinamicGLFeature_ARB_fragment_program_loaded = false; 
-static void InitDinamicGLFeature_ARB_fragment_program() {
-		DinamicGLFeature_ARB_fragment_program_loaded = true; 
-}
 bool DinamicGLFeature_ARB_fragment_program_Supported() {
-		if (!DinamicGLFeature_ARB_fragment_program_loaded) {
-			InitDinamicGLFeature_ARB_fragment_program();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_fragment_program")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_fragment_program*/
 
 /*ARB_shader_objects*/
 #ifdef USE_DYNAMIC_GL_ARB_shader_objects
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteObjectARB)(GLhandleARB obj) = 0; }
 extern "C" { GLhandleARB (DYNAMIC_GL_APIENTRYP DynamicGL_GetHandleARB)(GLenum pname) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DetachObjectARB)(GLhandleARB containerObj , GLhandleARB attachedObj) = 0; }
@@ -2178,7 +2261,10 @@ static void InitDinamicGLFeature_ARB_shader_objects() {
 		DynamicGL_GetShaderSourceARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLhandleARB obj , GLsizei maxLength , GLsizei *length , GLcharARB *source)>("glGetShaderSourceARB"); 
 		DinamicGLFeature_ARB_shader_objects_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_shader_objects_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_shader_objects")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_shader_objects_loaded) {
 			InitDinamicGLFeature_ARB_shader_objects();
 		}
@@ -2221,43 +2307,44 @@ bool DinamicGLFeature_ARB_shader_objects_Supported() {
 		if (DynamicGL_GetUniformfvARB==0) return false; 
 		if (DynamicGL_GetUniformivARB==0) return false; 
 		if (DynamicGL_GetShaderSourceARB==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_shader_objects*/
 
 /*SGIX_reference_plane*/
 #ifdef USE_DYNAMIC_GL_SGIX_reference_plane
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ReferencePlaneSGIX)(const GLdouble *equation) = 0; }
 static bool DinamicGLFeature_SGIX_reference_plane_loaded = false; 
 static void InitDinamicGLFeature_SGIX_reference_plane() {
 		DynamicGL_ReferencePlaneSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLdouble *equation)>("glReferencePlaneSGIX"); 
 		DinamicGLFeature_SGIX_reference_plane_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_SGIX_reference_plane_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_reference_plane")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_SGIX_reference_plane_loaded) {
 			InitDinamicGLFeature_SGIX_reference_plane();
 		}
 		if (DynamicGL_ReferencePlaneSGIX==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_reference_plane*/
 
 /*ARB_gpu_shader5*/
 #ifdef USE_DYNAMIC_GL_ARB_gpu_shader5
-static bool DinamicGLFeature_ARB_gpu_shader5_loaded = false; 
-static void InitDinamicGLFeature_ARB_gpu_shader5() {
-		DinamicGLFeature_ARB_gpu_shader5_loaded = true; 
-}
 bool DinamicGLFeature_ARB_gpu_shader5_Supported() {
-		if (!DinamicGLFeature_ARB_gpu_shader5_loaded) {
-			InitDinamicGLFeature_ARB_gpu_shader5();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_gpu_shader5")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_gpu_shader5*/
 
 /*HP_image_transform*/
 #ifdef USE_DYNAMIC_GL_HP_image_transform
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ImageTransformParameteriHP)(GLenum target , GLenum pname , GLint param) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ImageTransformParameterfHP)(GLenum target , GLenum pname , GLfloat param) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ImageTransformParameterivHP)(GLenum target , GLenum pname , const GLint *params) = 0; }
@@ -2274,7 +2361,10 @@ static void InitDinamicGLFeature_HP_image_transform() {
 		DynamicGL_GetImageTransformParameterfvHP = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum pname , GLfloat *params)>("glGetImageTransformParameterfvHP"); 
 		DinamicGLFeature_HP_image_transform_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_HP_image_transform_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_HP_image_transform")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_HP_image_transform_loaded) {
 			InitDinamicGLFeature_HP_image_transform();
 		}
@@ -2284,12 +2374,14 @@ bool DinamicGLFeature_HP_image_transform_Supported() {
 		if (DynamicGL_ImageTransformParameterfvHP==0) return false; 
 		if (DynamicGL_GetImageTransformParameterivHP==0) return false; 
 		if (DynamicGL_GetImageTransformParameterfvHP==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_HP_image_transform*/
 
 /*EXT_direct_state_access*/
 #ifdef USE_DYNAMIC_GL_EXT_direct_state_access
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClientAttribDefaultEXT)(GLbitfield mask) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PushClientAttribDefaultEXT)(GLbitfield mask) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MatrixLoadfEXT)(GLenum mode , const GLfloat *m) = 0; }
@@ -2702,7 +2794,10 @@ static void InitDinamicGLFeature_EXT_direct_state_access() {
 		DynamicGL_ProgramUniformMatrix4x3dvEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glProgramUniformMatrix4x3dvEXT"); 
 		DinamicGLFeature_EXT_direct_state_access_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_direct_state_access_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_direct_state_access")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_direct_state_access_loaded) {
 			InitDinamicGLFeature_EXT_direct_state_access();
 		}
@@ -2910,113 +3005,122 @@ bool DinamicGLFeature_EXT_direct_state_access_Supported() {
 		if (DynamicGL_ProgramUniformMatrix3x4dvEXT==0) return false; 
 		if (DynamicGL_ProgramUniformMatrix4x2dvEXT==0) return false; 
 		if (DynamicGL_ProgramUniformMatrix4x3dvEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_direct_state_access*/
 
 /*ARB_texture_swizzle*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_swizzle
-static bool DinamicGLFeature_ARB_texture_swizzle_loaded = false; 
-static void InitDinamicGLFeature_ARB_texture_swizzle() {
-		DinamicGLFeature_ARB_texture_swizzle_loaded = true; 
-}
 bool DinamicGLFeature_ARB_texture_swizzle_Supported() {
-		if (!DinamicGLFeature_ARB_texture_swizzle_loaded) {
-			InitDinamicGLFeature_ARB_texture_swizzle();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_texture_swizzle")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_texture_swizzle*/
 
+/*EXT_vertex_array_bgra*/
+#ifdef USE_DYNAMIC_GL_EXT_vertex_array_bgra
+bool DinamicGLFeature_EXT_vertex_array_bgra_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_vertex_array_bgra")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_EXT_vertex_array_bgra*/
+
 /*ARB_multisample*/
 #ifdef USE_DYNAMIC_GL_ARB_multisample
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleCoverageARB)(GLfloat value , GLboolean invert) = 0; }
 static bool DinamicGLFeature_ARB_multisample_loaded = false; 
 static void InitDinamicGLFeature_ARB_multisample() {
 		DynamicGL_SampleCoverageARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLfloat value , GLboolean invert)>("glSampleCoverageARB"); 
 		DinamicGLFeature_ARB_multisample_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_multisample_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_multisample")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_multisample_loaded) {
 			InitDinamicGLFeature_ARB_multisample();
 		}
 		if (DynamicGL_SampleCoverageARB==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_multisample*/
 
 /*SGIX_fog_scale*/
 #ifdef USE_DYNAMIC_GL_SGIX_fog_scale
-static bool DinamicGLFeature_SGIX_fog_scale_loaded = false; 
-static void InitDinamicGLFeature_SGIX_fog_scale() {
-		DinamicGLFeature_SGIX_fog_scale_loaded = true; 
-}
 bool DinamicGLFeature_SGIX_fog_scale_Supported() {
-		if (!DinamicGLFeature_SGIX_fog_scale_loaded) {
-			InitDinamicGLFeature_SGIX_fog_scale();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_fog_scale")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_fog_scale*/
 
 /*ATI_texture_mirror_once*/
 #ifdef USE_DYNAMIC_GL_ATI_texture_mirror_once
-static bool DinamicGLFeature_ATI_texture_mirror_once_loaded = false; 
-static void InitDinamicGLFeature_ATI_texture_mirror_once() {
-		DinamicGLFeature_ATI_texture_mirror_once_loaded = true; 
-}
 bool DinamicGLFeature_ATI_texture_mirror_once_Supported() {
-		if (!DinamicGLFeature_ATI_texture_mirror_once_loaded) {
-			InitDinamicGLFeature_ATI_texture_mirror_once();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ATI_texture_mirror_once")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ATI_texture_mirror_once*/
 
 /*APPLE_rgb_422*/
 #ifdef USE_DYNAMIC_GL_APPLE_rgb_422
-static bool DinamicGLFeature_APPLE_rgb_422_loaded = false; 
-static void InitDinamicGLFeature_APPLE_rgb_422() {
-		DinamicGLFeature_APPLE_rgb_422_loaded = true; 
-}
 bool DinamicGLFeature_APPLE_rgb_422_Supported() {
-		if (!DinamicGLFeature_APPLE_rgb_422_loaded) {
-			InitDinamicGLFeature_APPLE_rgb_422();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_APPLE_rgb_422")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_APPLE_rgb_422*/
 
 /*EXT_shared_texture_palette*/
 #ifdef USE_DYNAMIC_GL_EXT_shared_texture_palette
-static bool DinamicGLFeature_EXT_shared_texture_palette_loaded = false; 
-static void InitDinamicGLFeature_EXT_shared_texture_palette() {
-		DinamicGLFeature_EXT_shared_texture_palette_loaded = true; 
-}
 bool DinamicGLFeature_EXT_shared_texture_palette_Supported() {
-		if (!DinamicGLFeature_EXT_shared_texture_palette_loaded) {
-			InitDinamicGLFeature_EXT_shared_texture_palette();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_shared_texture_palette")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_shared_texture_palette*/
 
 /*ARB_texture_rg*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_rg
-static bool DinamicGLFeature_ARB_texture_rg_loaded = false; 
-static void InitDinamicGLFeature_ARB_texture_rg() {
-		DinamicGLFeature_ARB_texture_rg_loaded = true; 
-}
 bool DinamicGLFeature_ARB_texture_rg_Supported() {
-		if (!DinamicGLFeature_ARB_texture_rg_loaded) {
-			InitDinamicGLFeature_ARB_texture_rg();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_texture_rg")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_texture_rg*/
 
+/*EXT_stencil_clear_tag*/
+#ifdef USE_DYNAMIC_GL_EXT_stencil_clear_tag
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilClearTagEXT)(GLsizei stencilTagBits , GLuint stencilClearTag) = 0; }
+static bool DinamicGLFeature_EXT_stencil_clear_tag_loaded = false; 
+static void InitDinamicGLFeature_EXT_stencil_clear_tag() {
+		DynamicGL_StencilClearTagEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei stencilTagBits , GLuint stencilClearTag)>("glStencilClearTagEXT"); 
+		DinamicGLFeature_EXT_stencil_clear_tag_loaded = true; 
+}
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+bool DinamicGLFeature_EXT_stencil_clear_tag_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_stencil_clear_tag")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
+		if (!DinamicGLFeature_EXT_stencil_clear_tag_loaded) {
+			InitDinamicGLFeature_EXT_stencil_clear_tag();
+		}
+		if (DynamicGL_StencilClearTagEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_EXT_stencil_clear_tag*/
+
+/*SGIS_texture_select*/
+#ifdef USE_DYNAMIC_GL_SGIS_texture_select
+bool DinamicGLFeature_SGIS_texture_select_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIS_texture_select")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_SGIS_texture_select*/
+
 /*ARB_draw_buffers_blend*/
 #ifdef USE_DYNAMIC_GL_ARB_draw_buffers_blend
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationiARB)(GLuint buf , GLenum mode) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationSeparateiARB)(GLuint buf , GLenum modeRGB , GLenum modeAlpha) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFunciARB)(GLuint buf , GLenum src , GLenum dst) = 0; }
@@ -3029,7 +3133,10 @@ static void InitDinamicGLFeature_ARB_draw_buffers_blend() {
 		DynamicGL_BlendFuncSeparateiARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint buf , GLenum srcRGB , GLenum dstRGB , GLenum srcAlpha , GLenum dstAlpha)>("glBlendFuncSeparateiARB"); 
 		DinamicGLFeature_ARB_draw_buffers_blend_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_draw_buffers_blend_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_draw_buffers_blend")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_draw_buffers_blend_loaded) {
 			InitDinamicGLFeature_ARB_draw_buffers_blend();
 		}
@@ -3037,43 +3144,14 @@ bool DinamicGLFeature_ARB_draw_buffers_blend_Supported() {
 		if (DynamicGL_BlendEquationSeparateiARB==0) return false; 
 		if (DynamicGL_BlendFunciARB==0) return false; 
 		if (DynamicGL_BlendFuncSeparateiARB==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_draw_buffers_blend*/
 
-/*EXT_stencil_clear_tag*/
-#ifdef USE_DYNAMIC_GL_EXT_stencil_clear_tag
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilClearTagEXT)(GLsizei stencilTagBits , GLuint stencilClearTag) = 0; }
-static bool DinamicGLFeature_EXT_stencil_clear_tag_loaded = false; 
-static void InitDinamicGLFeature_EXT_stencil_clear_tag() {
-		DynamicGL_StencilClearTagEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei stencilTagBits , GLuint stencilClearTag)>("glStencilClearTagEXT"); 
-		DinamicGLFeature_EXT_stencil_clear_tag_loaded = true; 
-}
-bool DinamicGLFeature_EXT_stencil_clear_tag_Supported() {
-		if (!DinamicGLFeature_EXT_stencil_clear_tag_loaded) {
-			InitDinamicGLFeature_EXT_stencil_clear_tag();
-		}
-		if (DynamicGL_StencilClearTagEXT==0) return false; 
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_EXT_stencil_clear_tag*/
-
-/*SGIS_texture_select*/
-#ifdef USE_DYNAMIC_GL_SGIS_texture_select
-static bool DinamicGLFeature_SGIS_texture_select_loaded = false; 
-static void InitDinamicGLFeature_SGIS_texture_select() {
-		DinamicGLFeature_SGIS_texture_select_loaded = true; 
-}
-bool DinamicGLFeature_SGIS_texture_select_Supported() {
-		if (!DinamicGLFeature_SGIS_texture_select_loaded) {
-			InitDinamicGLFeature_SGIS_texture_select();
-		}
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_SGIS_texture_select*/
-
 /*NV_geometry_program4*/
 #ifdef USE_DYNAMIC_GL_NV_geometry_program4
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramVertexLimitNV)(GLenum target , GLint limit) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FramebufferTextureEXT)(GLenum target , GLenum attachment , GLuint texture , GLint level) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FramebufferTextureLayerEXT)(GLenum target , GLenum attachment , GLuint texture , GLint level , GLint layer) = 0; }
@@ -3086,7 +3164,10 @@ static void InitDinamicGLFeature_NV_geometry_program4() {
 		DynamicGL_FramebufferTextureFaceEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum attachment , GLuint texture , GLint level , GLenum face)>("glFramebufferTextureFaceEXT"); 
 		DinamicGLFeature_NV_geometry_program4_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_geometry_program4_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_geometry_program4")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_geometry_program4_loaded) {
 			InitDinamicGLFeature_NV_geometry_program4();
 		}
@@ -3094,54 +3175,46 @@ bool DinamicGLFeature_NV_geometry_program4_Supported() {
 		if (DynamicGL_FramebufferTextureEXT==0) return false; 
 		if (DynamicGL_FramebufferTextureLayerEXT==0) return false; 
 		if (DynamicGL_FramebufferTextureFaceEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_geometry_program4*/
 
 /*ARB_framebuffer_sRGB*/
 #ifdef USE_DYNAMIC_GL_ARB_framebuffer_sRGB
-static bool DinamicGLFeature_ARB_framebuffer_sRGB_loaded = false; 
-static void InitDinamicGLFeature_ARB_framebuffer_sRGB() {
-		DinamicGLFeature_ARB_framebuffer_sRGB_loaded = true; 
-}
 bool DinamicGLFeature_ARB_framebuffer_sRGB_Supported() {
-		if (!DinamicGLFeature_ARB_framebuffer_sRGB_loaded) {
-			InitDinamicGLFeature_ARB_framebuffer_sRGB();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_framebuffer_sRGB")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_framebuffer_sRGB*/
 
 /*IBM_rasterpos_clip*/
 #ifdef USE_DYNAMIC_GL_IBM_rasterpos_clip
-static bool DinamicGLFeature_IBM_rasterpos_clip_loaded = false; 
-static void InitDinamicGLFeature_IBM_rasterpos_clip() {
-		DinamicGLFeature_IBM_rasterpos_clip_loaded = true; 
-}
 bool DinamicGLFeature_IBM_rasterpos_clip_Supported() {
-		if (!DinamicGLFeature_IBM_rasterpos_clip_loaded) {
-			InitDinamicGLFeature_IBM_rasterpos_clip();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_IBM_rasterpos_clip")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_IBM_rasterpos_clip*/
 
+/*NV_fragment_program_option*/
+#ifdef USE_DYNAMIC_GL_NV_fragment_program_option
+bool DinamicGLFeature_NV_fragment_program_option_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_fragment_program_option")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_fragment_program_option*/
+
 /*MESA_ycbcr_texture*/
 #ifdef USE_DYNAMIC_GL_MESA_ycbcr_texture
-static bool DinamicGLFeature_MESA_ycbcr_texture_loaded = false; 
-static void InitDinamicGLFeature_MESA_ycbcr_texture() {
-		DinamicGLFeature_MESA_ycbcr_texture_loaded = true; 
-}
 bool DinamicGLFeature_MESA_ycbcr_texture_Supported() {
-		if (!DinamicGLFeature_MESA_ycbcr_texture_loaded) {
-			InitDinamicGLFeature_MESA_ycbcr_texture();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_MESA_ycbcr_texture")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_MESA_ycbcr_texture*/
 
 /*ATI_vertex_streams*/
 #ifdef USE_DYNAMIC_GL_ATI_vertex_streams
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexStream1sATI)(GLenum stream , GLshort x) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexStream1svATI)(GLenum stream , const GLshort *coords) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexStream1iATI)(GLenum stream , GLint x) = 0; }
@@ -3236,7 +3309,10 @@ static void InitDinamicGLFeature_ATI_vertex_streams() {
 		DynamicGL_VertexBlendEnvfATI = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , GLfloat param)>("glVertexBlendEnvfATI"); 
 		DinamicGLFeature_ATI_vertex_streams_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ATI_vertex_streams_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ATI_vertex_streams")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ATI_vertex_streams_loaded) {
 			InitDinamicGLFeature_ATI_vertex_streams();
 		}
@@ -3285,127 +3361,116 @@ bool DinamicGLFeature_ATI_vertex_streams_Supported() {
 		if (DynamicGL_ClientActiveVertexStreamATI==0) return false; 
 		if (DynamicGL_VertexBlendEnviATI==0) return false; 
 		if (DynamicGL_VertexBlendEnvfATI==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ATI_vertex_streams*/
 
 /*AMD_depth_clamp_separate*/
 #ifdef USE_DYNAMIC_GL_AMD_depth_clamp_separate
-static bool DinamicGLFeature_AMD_depth_clamp_separate_loaded = false; 
-static void InitDinamicGLFeature_AMD_depth_clamp_separate() {
-		DinamicGLFeature_AMD_depth_clamp_separate_loaded = true; 
-}
 bool DinamicGLFeature_AMD_depth_clamp_separate_Supported() {
-		if (!DinamicGLFeature_AMD_depth_clamp_separate_loaded) {
-			InitDinamicGLFeature_AMD_depth_clamp_separate();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_AMD_depth_clamp_separate")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_AMD_depth_clamp_separate*/
 
 /*3DFX_texture_compression_FXT1*/
 #ifdef USE_DYNAMIC_GL_3DFX_texture_compression_FXT1
-static bool DinamicGLFeature_3DFX_texture_compression_FXT1_loaded = false; 
-static void InitDinamicGLFeature_3DFX_texture_compression_FXT1() {
-		DinamicGLFeature_3DFX_texture_compression_FXT1_loaded = true; 
-}
 bool DinamicGLFeature_3DFX_texture_compression_FXT1_Supported() {
-		if (!DinamicGLFeature_3DFX_texture_compression_FXT1_loaded) {
-			InitDinamicGLFeature_3DFX_texture_compression_FXT1();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_3DFX_texture_compression_FXT1")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_3DFX_texture_compression_FXT1*/
 
 /*SGIX_shadow_ambient*/
 #ifdef USE_DYNAMIC_GL_SGIX_shadow_ambient
-static bool DinamicGLFeature_SGIX_shadow_ambient_loaded = false; 
-static void InitDinamicGLFeature_SGIX_shadow_ambient() {
-		DinamicGLFeature_SGIX_shadow_ambient_loaded = true; 
-}
 bool DinamicGLFeature_SGIX_shadow_ambient_Supported() {
-		if (!DinamicGLFeature_SGIX_shadow_ambient_loaded) {
-			InitDinamicGLFeature_SGIX_shadow_ambient();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_shadow_ambient")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_shadow_ambient*/
 
 /*EXT_blend_color*/
 #ifdef USE_DYNAMIC_GL_EXT_blend_color
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendColorEXT)(GLfloat red , GLfloat green , GLfloat blue , GLfloat alpha) = 0; }
 static bool DinamicGLFeature_EXT_blend_color_loaded = false; 
 static void InitDinamicGLFeature_EXT_blend_color() {
 		DynamicGL_BlendColorEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLfloat red , GLfloat green , GLfloat blue , GLfloat alpha)>("glBlendColorEXT"); 
 		DinamicGLFeature_EXT_blend_color_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_blend_color_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_blend_color")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_blend_color_loaded) {
 			InitDinamicGLFeature_EXT_blend_color();
 		}
 		if (DynamicGL_BlendColorEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_blend_color*/
 
 /*ARB_shadow*/
 #ifdef USE_DYNAMIC_GL_ARB_shadow
-static bool DinamicGLFeature_ARB_shadow_loaded = false; 
-static void InitDinamicGLFeature_ARB_shadow() {
-		DinamicGLFeature_ARB_shadow_loaded = true; 
-}
 bool DinamicGLFeature_ARB_shadow_Supported() {
-		if (!DinamicGLFeature_ARB_shadow_loaded) {
-			InitDinamicGLFeature_ARB_shadow();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_shadow")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_shadow*/
 
 /*EXT_stencil_wrap*/
 #ifdef USE_DYNAMIC_GL_EXT_stencil_wrap
-static bool DinamicGLFeature_EXT_stencil_wrap_loaded = false; 
-static void InitDinamicGLFeature_EXT_stencil_wrap() {
-		DinamicGLFeature_EXT_stencil_wrap_loaded = true; 
-}
 bool DinamicGLFeature_EXT_stencil_wrap_Supported() {
-		if (!DinamicGLFeature_EXT_stencil_wrap_loaded) {
-			InitDinamicGLFeature_EXT_stencil_wrap();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_stencil_wrap")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_stencil_wrap*/
 
+/*AMD_transform_feedback3_lines_triangles*/
+#ifdef USE_DYNAMIC_GL_AMD_transform_feedback3_lines_triangles
+bool DinamicGLFeature_AMD_transform_feedback3_lines_triangles_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_AMD_transform_feedback3_lines_triangles")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_AMD_transform_feedback3_lines_triangles*/
+
+/*EXT_texture_env_add*/
+#ifdef USE_DYNAMIC_GL_EXT_texture_env_add
+bool DinamicGLFeature_EXT_texture_env_add_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_env_add")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_EXT_texture_env_add*/
+
+/*NV_geometry_shader4*/
+#ifdef USE_DYNAMIC_GL_NV_geometry_shader4
+bool DinamicGLFeature_NV_geometry_shader4_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_geometry_shader4")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_geometry_shader4*/
+
 /*NV_vertex_array_range2*/
 #ifdef USE_DYNAMIC_GL_NV_vertex_array_range2
-static bool DinamicGLFeature_NV_vertex_array_range2_loaded = false; 
-static void InitDinamicGLFeature_NV_vertex_array_range2() {
-		DinamicGLFeature_NV_vertex_array_range2_loaded = true; 
-}
 bool DinamicGLFeature_NV_vertex_array_range2_Supported() {
-		if (!DinamicGLFeature_NV_vertex_array_range2_loaded) {
-			InitDinamicGLFeature_NV_vertex_array_range2();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_vertex_array_range2")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_vertex_array_range2*/
 
 /*EXT_bgra*/
 #ifdef USE_DYNAMIC_GL_EXT_bgra
-static bool DinamicGLFeature_EXT_bgra_loaded = false; 
-static void InitDinamicGLFeature_EXT_bgra() {
-		DinamicGLFeature_EXT_bgra_loaded = true; 
-}
 bool DinamicGLFeature_EXT_bgra_Supported() {
-		if (!DinamicGLFeature_EXT_bgra_loaded) {
-			InitDinamicGLFeature_EXT_bgra();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_bgra")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_bgra*/
 
 /*ARB_framebuffer_object*/
 #ifdef USE_DYNAMIC_GL_ARB_framebuffer_object
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsRenderbuffer)(GLuint renderbuffer) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindRenderbuffer)(GLenum target , GLuint renderbuffer) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteRenderbuffers)(GLsizei n , const GLuint *renderbuffers) = 0; }
@@ -3450,7 +3515,10 @@ static void InitDinamicGLFeature_ARB_framebuffer_object() {
 		DynamicGL_FramebufferTextureLayer = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum attachment , GLuint texture , GLint level , GLint layer)>("glFramebufferTextureLayer"); 
 		DinamicGLFeature_ARB_framebuffer_object_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_framebuffer_object_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_framebuffer_object")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_framebuffer_object_loaded) {
 			InitDinamicGLFeature_ARB_framebuffer_object();
 		}
@@ -3474,12 +3542,14 @@ bool DinamicGLFeature_ARB_framebuffer_object_Supported() {
 		if (DynamicGL_BlitFramebuffer==0) return false; 
 		if (DynamicGL_RenderbufferStorageMultisample==0) return false; 
 		if (DynamicGL_FramebufferTextureLayer==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_framebuffer_object*/
 
 /*SGIX_async*/
 #ifdef USE_DYNAMIC_GL_SGIX_async
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_AsyncMarkerSGIX)(GLuint marker) = 0; }
 extern "C" { GLint (DYNAMIC_GL_APIENTRYP DynamicGL_FinishAsyncSGIX)(GLuint *markerp) = 0; }
 extern "C" { GLint (DYNAMIC_GL_APIENTRYP DynamicGL_PollAsyncSGIX)(GLuint *markerp) = 0; }
@@ -3496,7 +3566,10 @@ static void InitDinamicGLFeature_SGIX_async() {
 		DynamicGL_IsAsyncMarkerSGIX = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLuint marker)>("glIsAsyncMarkerSGIX"); 
 		DinamicGLFeature_SGIX_async_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_SGIX_async_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_async")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_SGIX_async_loaded) {
 			InitDinamicGLFeature_SGIX_async();
 		}
@@ -3506,26 +3579,38 @@ bool DinamicGLFeature_SGIX_async_Supported() {
 		if (DynamicGL_GenAsyncMarkersSGIX==0) return false; 
 		if (DynamicGL_DeleteAsyncMarkersSGIX==0) return false; 
 		if (DynamicGL_IsAsyncMarkerSGIX==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_async*/
 
+/*IBM_cull_vertex*/
+#ifdef USE_DYNAMIC_GL_IBM_cull_vertex
+bool DinamicGLFeature_IBM_cull_vertex_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_IBM_cull_vertex")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_IBM_cull_vertex*/
+
 /*ARB_texture_cube_map_array*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_cube_map_array
-static bool DinamicGLFeature_ARB_texture_cube_map_array_loaded = false; 
-static void InitDinamicGLFeature_ARB_texture_cube_map_array() {
-		DinamicGLFeature_ARB_texture_cube_map_array_loaded = true; 
-}
 bool DinamicGLFeature_ARB_texture_cube_map_array_Supported() {
-		if (!DinamicGLFeature_ARB_texture_cube_map_array_loaded) {
-			InitDinamicGLFeature_ARB_texture_cube_map_array();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_texture_cube_map_array")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_texture_cube_map_array*/
 
+/*SGIX_texture_select*/
+#ifdef USE_DYNAMIC_GL_SGIX_texture_select
+bool DinamicGLFeature_SGIX_texture_select_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_texture_select")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_SGIX_texture_select*/
+
 /*NV_path_rendering*/
 #ifdef USE_DYNAMIC_GL_NV_path_rendering
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { GLuint (DYNAMIC_GL_APIENTRYP DynamicGL_GenPathsNV)(GLsizei range) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeletePathsNV)(GLuint path , GLsizei range) = 0; }
 extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsPathNV)(GLuint path) = 0; }
@@ -3628,7 +3713,10 @@ static void InitDinamicGLFeature_NV_path_rendering() {
 		DynamicGL_PointAlongPathNV = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLuint path , GLsizei startSegment , GLsizei numSegments , GLfloat distance , GLfloat *x , GLfloat *y , GLfloat *tangentX , GLfloat *tangentY)>("glPointAlongPathNV"); 
 		DinamicGLFeature_NV_path_rendering_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_path_rendering_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_path_rendering")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_path_rendering_loaded) {
 			InitDinamicGLFeature_NV_path_rendering();
 		}
@@ -3681,26 +3769,30 @@ bool DinamicGLFeature_NV_path_rendering_Supported() {
 		if (DynamicGL_IsPointInStrokePathNV==0) return false; 
 		if (DynamicGL_GetPathLengthNV==0) return false; 
 		if (DynamicGL_PointAlongPathNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_path_rendering*/
 
 /*SGI_texture_color_table*/
 #ifdef USE_DYNAMIC_GL_SGI_texture_color_table
-static bool DinamicGLFeature_SGI_texture_color_table_loaded = false; 
-static void InitDinamicGLFeature_SGI_texture_color_table() {
-		DinamicGLFeature_SGI_texture_color_table_loaded = true; 
-}
 bool DinamicGLFeature_SGI_texture_color_table_Supported() {
-		if (!DinamicGLFeature_SGI_texture_color_table_loaded) {
-			InitDinamicGLFeature_SGI_texture_color_table();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGI_texture_color_table")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGI_texture_color_table*/
 
+/*NV_parameter_buffer_object2*/
+#ifdef USE_DYNAMIC_GL_NV_parameter_buffer_object2
+bool DinamicGLFeature_NV_parameter_buffer_object2_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_parameter_buffer_object2")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_parameter_buffer_object2*/
+
 /*EXT_subtexture*/
 #ifdef USE_DYNAMIC_GL_EXT_subtexture
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexSubImage1DEXT)(GLenum target , GLint level , GLint xoffset , GLsizei width , GLenum format , GLenum type , const GLvoid *pixels) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexSubImage2DEXT)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLsizei width , GLsizei height , GLenum format , GLenum type , const GLvoid *pixels) = 0; }
 static bool DinamicGLFeature_EXT_subtexture_loaded = false; 
@@ -3709,69 +3801,53 @@ static void InitDinamicGLFeature_EXT_subtexture() {
 		DynamicGL_TexSubImage2DEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLsizei width , GLsizei height , GLenum format , GLenum type , const GLvoid *pixels)>("glTexSubImage2DEXT"); 
 		DinamicGLFeature_EXT_subtexture_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_subtexture_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_subtexture")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_subtexture_loaded) {
 			InitDinamicGLFeature_EXT_subtexture();
 		}
 		if (DynamicGL_TexSubImage1DEXT==0) return false; 
 		if (DynamicGL_TexSubImage2DEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_subtexture*/
 
 /*SGIX_subsample*/
 #ifdef USE_DYNAMIC_GL_SGIX_subsample
-static bool DinamicGLFeature_SGIX_subsample_loaded = false; 
-static void InitDinamicGLFeature_SGIX_subsample() {
-		DinamicGLFeature_SGIX_subsample_loaded = true; 
-}
 bool DinamicGLFeature_SGIX_subsample_Supported() {
-		if (!DinamicGLFeature_SGIX_subsample_loaded) {
-			InitDinamicGLFeature_SGIX_subsample();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_subsample")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_subsample*/
 
 /*GREMEDY_string_marker*/
 #ifdef USE_DYNAMIC_GL_GREMEDY_string_marker
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_StringMarkerGREMEDY)(GLsizei len , const GLvoid *string) = 0; }
 static bool DinamicGLFeature_GREMEDY_string_marker_loaded = false; 
 static void InitDinamicGLFeature_GREMEDY_string_marker() {
 		DynamicGL_StringMarkerGREMEDY = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei len , const GLvoid *string)>("glStringMarkerGREMEDY"); 
 		DinamicGLFeature_GREMEDY_string_marker_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_GREMEDY_string_marker_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_GREMEDY_string_marker")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_GREMEDY_string_marker_loaded) {
 			InitDinamicGLFeature_GREMEDY_string_marker();
 		}
 		if (DynamicGL_StringMarkerGREMEDY==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_GREMEDY_string_marker*/
 
-/*ARB_draw_instanced*/
-#ifdef USE_DYNAMIC_GL_ARB_draw_instanced
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawArraysInstancedARB)(GLenum mode , GLint first , GLsizei count , GLsizei primcount) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElementsInstancedARB)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices , GLsizei primcount) = 0; }
-static bool DinamicGLFeature_ARB_draw_instanced_loaded = false; 
-static void InitDinamicGLFeature_ARB_draw_instanced() {
-		DynamicGL_DrawArraysInstancedARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLint first , GLsizei count , GLsizei primcount)>("glDrawArraysInstancedARB"); 
-		DynamicGL_DrawElementsInstancedARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices , GLsizei primcount)>("glDrawElementsInstancedARB"); 
-		DinamicGLFeature_ARB_draw_instanced_loaded = true; 
-}
-bool DinamicGLFeature_ARB_draw_instanced_Supported() {
-		if (!DinamicGLFeature_ARB_draw_instanced_loaded) {
-			InitDinamicGLFeature_ARB_draw_instanced();
-		}
-		if (DynamicGL_DrawArraysInstancedARB==0) return false; 
-		if (DynamicGL_DrawElementsInstancedARB==0) return false; 
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_ARB_draw_instanced*/
-
 /*ARB_occlusion_query*/
 #ifdef USE_DYNAMIC_GL_ARB_occlusion_query
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenQueriesARB)(GLsizei n , GLuint *ids) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteQueriesARB)(GLsizei n , const GLuint *ids) = 0; }
 extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsQueryARB)(GLuint id) = 0; }
@@ -3792,7 +3868,10 @@ static void InitDinamicGLFeature_ARB_occlusion_query() {
 		DynamicGL_GetQueryObjectuivARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint id , GLenum pname , GLuint *params)>("glGetQueryObjectuivARB"); 
 		DinamicGLFeature_ARB_occlusion_query_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_occlusion_query_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_occlusion_query")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_occlusion_query_loaded) {
 			InitDinamicGLFeature_ARB_occlusion_query();
 		}
@@ -3804,12 +3883,39 @@ bool DinamicGLFeature_ARB_occlusion_query_Supported() {
 		if (DynamicGL_GetQueryivARB==0) return false; 
 		if (DynamicGL_GetQueryObjectivARB==0) return false; 
 		if (DynamicGL_GetQueryObjectuivARB==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_occlusion_query*/
 
+/*ARB_draw_instanced*/
+#ifdef USE_DYNAMIC_GL_ARB_draw_instanced
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawArraysInstancedARB)(GLenum mode , GLint first , GLsizei count , GLsizei primcount) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElementsInstancedARB)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices , GLsizei primcount) = 0; }
+static bool DinamicGLFeature_ARB_draw_instanced_loaded = false; 
+static void InitDinamicGLFeature_ARB_draw_instanced() {
+		DynamicGL_DrawArraysInstancedARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLint first , GLsizei count , GLsizei primcount)>("glDrawArraysInstancedARB"); 
+		DynamicGL_DrawElementsInstancedARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices , GLsizei primcount)>("glDrawElementsInstancedARB"); 
+		DinamicGLFeature_ARB_draw_instanced_loaded = true; 
+}
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+bool DinamicGLFeature_ARB_draw_instanced_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_draw_instanced")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
+		if (!DinamicGLFeature_ARB_draw_instanced_loaded) {
+			InitDinamicGLFeature_ARB_draw_instanced();
+		}
+		if (DynamicGL_DrawArraysInstancedARB==0) return false; 
+		if (DynamicGL_DrawElementsInstancedARB==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_draw_instanced*/
+
 /*ATI_fragment_shader*/
 #ifdef USE_DYNAMIC_GL_ATI_fragment_shader
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { GLuint (DYNAMIC_GL_APIENTRYP DynamicGL_GenFragmentShadersATI)(GLuint range) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindFragmentShaderATI)(GLuint id) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteFragmentShaderATI)(GLuint id) = 0; }
@@ -3842,7 +3948,10 @@ static void InitDinamicGLFeature_ATI_fragment_shader() {
 		DynamicGL_SetFragmentShaderConstantATI = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint dst , const GLfloat *value)>("glSetFragmentShaderConstantATI"); 
 		DinamicGLFeature_ATI_fragment_shader_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ATI_fragment_shader_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ATI_fragment_shader")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ATI_fragment_shader_loaded) {
 			InitDinamicGLFeature_ATI_fragment_shader();
 		}
@@ -3860,12 +3969,14 @@ bool DinamicGLFeature_ATI_fragment_shader_Supported() {
 		if (DynamicGL_AlphaFragmentOp2ATI==0) return false; 
 		if (DynamicGL_AlphaFragmentOp3ATI==0) return false; 
 		if (DynamicGL_SetFragmentShaderConstantATI==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ATI_fragment_shader*/
 
 /*NV_depth_buffer_float*/
 #ifdef USE_DYNAMIC_GL_NV_depth_buffer_float
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthRangedNV)(GLdouble zNear , GLdouble zFar) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearDepthdNV)(GLdouble depth) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthBoundsdNV)(GLdouble zmin , GLdouble zmax) = 0; }
@@ -3876,19 +3987,24 @@ static void InitDinamicGLFeature_NV_depth_buffer_float() {
 		DynamicGL_DepthBoundsdNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLdouble zmin , GLdouble zmax)>("glDepthBoundsdNV"); 
 		DinamicGLFeature_NV_depth_buffer_float_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_depth_buffer_float_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_depth_buffer_float")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_depth_buffer_float_loaded) {
 			InitDinamicGLFeature_NV_depth_buffer_float();
 		}
 		if (DynamicGL_DepthRangedNV==0) return false; 
 		if (DynamicGL_ClearDepthdNV==0) return false; 
 		if (DynamicGL_DepthBoundsdNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_depth_buffer_float*/
 
 /*NV_pixel_data_range*/
 #ifdef USE_DYNAMIC_GL_NV_pixel_data_range
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PixelDataRangeNV)(GLenum target , GLsizei length , GLvoid *pointer) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FlushPixelDataRangeNV)(GLenum target) = 0; }
 static bool DinamicGLFeature_NV_pixel_data_range_loaded = false; 
@@ -3897,77 +4013,77 @@ static void InitDinamicGLFeature_NV_pixel_data_range() {
 		DynamicGL_FlushPixelDataRangeNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target)>("glFlushPixelDataRangeNV"); 
 		DinamicGLFeature_NV_pixel_data_range_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_pixel_data_range_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_pixel_data_range")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_pixel_data_range_loaded) {
 			InitDinamicGLFeature_NV_pixel_data_range();
 		}
 		if (DynamicGL_PixelDataRangeNV==0) return false; 
 		if (DynamicGL_FlushPixelDataRangeNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_pixel_data_range*/
 
 /*SGI_color_matrix*/
 #ifdef USE_DYNAMIC_GL_SGI_color_matrix
-static bool DinamicGLFeature_SGI_color_matrix_loaded = false; 
-static void InitDinamicGLFeature_SGI_color_matrix() {
-		DinamicGLFeature_SGI_color_matrix_loaded = true; 
-}
 bool DinamicGLFeature_SGI_color_matrix_Supported() {
-		if (!DinamicGLFeature_SGI_color_matrix_loaded) {
-			InitDinamicGLFeature_SGI_color_matrix();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGI_color_matrix")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGI_color_matrix*/
 
+/*AMD_texture_texture4*/
+#ifdef USE_DYNAMIC_GL_AMD_texture_texture4
+bool DinamicGLFeature_AMD_texture_texture4_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_AMD_texture_texture4")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_AMD_texture_texture4*/
+
 /*EXT_x11_sync_object*/
 #ifdef USE_DYNAMIC_GL_EXT_x11_sync_object
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { GLsync (DYNAMIC_GL_APIENTRYP DynamicGL_ImportSyncEXT)(GLenum external_sync_type , GLintptr external_sync , GLbitfield flags) = 0; }
 static bool DinamicGLFeature_EXT_x11_sync_object_loaded = false; 
 static void InitDinamicGLFeature_EXT_x11_sync_object() {
 		DynamicGL_ImportSyncEXT = DynamicGL_LoadFunction<GLsync (DYNAMIC_GL_APIENTRYP)(GLenum external_sync_type , GLintptr external_sync , GLbitfield flags)>("glImportSyncEXT"); 
 		DinamicGLFeature_EXT_x11_sync_object_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_x11_sync_object_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_x11_sync_object")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_x11_sync_object_loaded) {
 			InitDinamicGLFeature_EXT_x11_sync_object();
 		}
 		if (DynamicGL_ImportSyncEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_x11_sync_object*/
 
 /*EXT_texture_sRGB*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_sRGB
-static bool DinamicGLFeature_EXT_texture_sRGB_loaded = false; 
-static void InitDinamicGLFeature_EXT_texture_sRGB() {
-		DinamicGLFeature_EXT_texture_sRGB_loaded = true; 
-}
 bool DinamicGLFeature_EXT_texture_sRGB_Supported() {
-		if (!DinamicGLFeature_EXT_texture_sRGB_loaded) {
-			InitDinamicGLFeature_EXT_texture_sRGB();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_sRGB")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_sRGB*/
 
 /*NV_depth_clamp*/
 #ifdef USE_DYNAMIC_GL_NV_depth_clamp
-static bool DinamicGLFeature_NV_depth_clamp_loaded = false; 
-static void InitDinamicGLFeature_NV_depth_clamp() {
-		DinamicGLFeature_NV_depth_clamp_loaded = true; 
-}
 bool DinamicGLFeature_NV_depth_clamp_Supported() {
-		if (!DinamicGLFeature_NV_depth_clamp_loaded) {
-			InitDinamicGLFeature_NV_depth_clamp();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_depth_clamp")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_depth_clamp*/
 
 /*ARB_ES2_compatibility*/
 #ifdef USE_DYNAMIC_GL_ARB_ES2_compatibility
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ReleaseShaderCompiler)() = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ShaderBinary)(GLsizei count , const GLuint *shaders , GLenum binaryformat , const GLvoid *binary , GLsizei length) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetShaderPrecisionFormat)(GLenum shadertype , GLenum precisiontype , GLint *range , GLint *precision) = 0; }
@@ -3982,7 +4098,10 @@ static void InitDinamicGLFeature_ARB_ES2_compatibility() {
 		DynamicGL_ClearDepthf = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLfloat d)>("glClearDepthf"); 
 		DinamicGLFeature_ARB_ES2_compatibility_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_ES2_compatibility_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_ES2_compatibility")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_ES2_compatibility_loaded) {
 			InitDinamicGLFeature_ARB_ES2_compatibility();
 		}
@@ -3991,26 +4110,30 @@ bool DinamicGLFeature_ARB_ES2_compatibility_Supported() {
 		if (DynamicGL_GetShaderPrecisionFormat==0) return false; 
 		if (DynamicGL_DepthRangef==0) return false; 
 		if (DynamicGL_ClearDepthf==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_ES2_compatibility*/
 
+/*AMD_conservative_depth*/
+#ifdef USE_DYNAMIC_GL_AMD_conservative_depth
+bool DinamicGLFeature_AMD_conservative_depth_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_AMD_conservative_depth")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_AMD_conservative_depth*/
+
 /*APPLE_aux_depth_stencil*/
 #ifdef USE_DYNAMIC_GL_APPLE_aux_depth_stencil
-static bool DinamicGLFeature_APPLE_aux_depth_stencil_loaded = false; 
-static void InitDinamicGLFeature_APPLE_aux_depth_stencil() {
-		DinamicGLFeature_APPLE_aux_depth_stencil_loaded = true; 
-}
 bool DinamicGLFeature_APPLE_aux_depth_stencil_Supported() {
-		if (!DinamicGLFeature_APPLE_aux_depth_stencil_loaded) {
-			InitDinamicGLFeature_APPLE_aux_depth_stencil();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_APPLE_aux_depth_stencil")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_APPLE_aux_depth_stencil*/
 
 /*AMD_performance_monitor*/
 #ifdef USE_DYNAMIC_GL_AMD_performance_monitor
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPerfMonitorGroupsAMD)(GLint *numGroups , GLsizei groupsSize , GLuint *groups) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPerfMonitorCountersAMD)(GLuint group , GLint *numCounters , GLint *maxActiveCounters , GLsizei counterSize , GLuint *counters) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPerfMonitorGroupStringAMD)(GLuint group , GLsizei bufSize , GLsizei *length , GLchar *groupString) = 0; }
@@ -4037,7 +4160,10 @@ static void InitDinamicGLFeature_AMD_performance_monitor() {
 		DynamicGL_GetPerfMonitorCounterDataAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint monitor , GLenum pname , GLsizei dataSize , GLuint *data , GLint *bytesWritten)>("glGetPerfMonitorCounterDataAMD"); 
 		DinamicGLFeature_AMD_performance_monitor_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_AMD_performance_monitor_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_AMD_performance_monitor")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_AMD_performance_monitor_loaded) {
 			InitDinamicGLFeature_AMD_performance_monitor();
 		}
@@ -4052,26 +4178,22 @@ bool DinamicGLFeature_AMD_performance_monitor_Supported() {
 		if (DynamicGL_BeginPerfMonitorAMD==0) return false; 
 		if (DynamicGL_EndPerfMonitorAMD==0) return false; 
 		if (DynamicGL_GetPerfMonitorCounterDataAMD==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_AMD_performance_monitor*/
 
 /*ARB_half_float_vertex*/
 #ifdef USE_DYNAMIC_GL_ARB_half_float_vertex
-static bool DinamicGLFeature_ARB_half_float_vertex_loaded = false; 
-static void InitDinamicGLFeature_ARB_half_float_vertex() {
-		DinamicGLFeature_ARB_half_float_vertex_loaded = true; 
-}
 bool DinamicGLFeature_ARB_half_float_vertex_Supported() {
-		if (!DinamicGLFeature_ARB_half_float_vertex_loaded) {
-			InitDinamicGLFeature_ARB_half_float_vertex();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_half_float_vertex")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_half_float_vertex*/
 
 /*NV_vertex_program*/
 #ifdef USE_DYNAMIC_GL_NV_vertex_program
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_AreProgramsResidentNV)(GLsizei n , const GLuint *programs , GLboolean *residences) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindProgramNV)(GLenum target , GLuint id) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteProgramsNV)(GLsizei n , const GLuint *programs) = 0; }
@@ -4204,7 +4326,10 @@ static void InitDinamicGLFeature_NV_vertex_program() {
 		DynamicGL_VertexAttribs4ubvNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLsizei count , const GLubyte *v)>("glVertexAttribs4ubvNV"); 
 		DinamicGLFeature_NV_vertex_program_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_vertex_program_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_vertex_program")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_vertex_program_loaded) {
 			InitDinamicGLFeature_NV_vertex_program();
 		}
@@ -4272,12 +4397,22 @@ bool DinamicGLFeature_NV_vertex_program_Supported() {
 		if (DynamicGL_VertexAttribs4fvNV==0) return false; 
 		if (DynamicGL_VertexAttribs4svNV==0) return false; 
 		if (DynamicGL_VertexAttribs4ubvNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_vertex_program*/
 
+/*ARB_texture_env_add*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_env_add
+bool DinamicGLFeature_ARB_texture_env_add_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_texture_env_add")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_texture_env_add*/
+
 /*MESA_window_pos*/
 #ifdef USE_DYNAMIC_GL_MESA_window_pos
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2dMESA)(GLdouble x , GLdouble y) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2dvMESA)(const GLdouble *v) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2fMESA)(GLfloat x , GLfloat y) = 0; }
@@ -4330,7 +4465,10 @@ static void InitDinamicGLFeature_MESA_window_pos() {
 		DynamicGL_WindowPos4svMESA = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLshort *v)>("glWindowPos4svMESA"); 
 		DinamicGLFeature_MESA_window_pos_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_MESA_window_pos_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_MESA_window_pos")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_MESA_window_pos_loaded) {
 			InitDinamicGLFeature_MESA_window_pos();
 		}
@@ -4358,85 +4496,76 @@ bool DinamicGLFeature_MESA_window_pos_Supported() {
 		if (DynamicGL_WindowPos4ivMESA==0) return false; 
 		if (DynamicGL_WindowPos4sMESA==0) return false; 
 		if (DynamicGL_WindowPos4svMESA==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_MESA_window_pos*/
 
 /*EXT_texture*/
 #ifdef USE_DYNAMIC_GL_EXT_texture
-static bool DinamicGLFeature_EXT_texture_loaded = false; 
-static void InitDinamicGLFeature_EXT_texture() {
-		DinamicGLFeature_EXT_texture_loaded = true; 
-}
 bool DinamicGLFeature_EXT_texture_Supported() {
-		if (!DinamicGLFeature_EXT_texture_loaded) {
-			InitDinamicGLFeature_EXT_texture();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture*/
 
+/*EXT_texture_env_combine*/
+#ifdef USE_DYNAMIC_GL_EXT_texture_env_combine
+bool DinamicGLFeature_EXT_texture_env_combine_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_env_combine")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_EXT_texture_env_combine*/
+
 /*SGIX_tag_sample_buffer*/
 #ifdef USE_DYNAMIC_GL_SGIX_tag_sample_buffer
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TagSampleBufferSGIX)() = 0; }
 static bool DinamicGLFeature_SGIX_tag_sample_buffer_loaded = false; 
 static void InitDinamicGLFeature_SGIX_tag_sample_buffer() {
 		DynamicGL_TagSampleBufferSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)()>("glTagSampleBufferSGIX"); 
 		DinamicGLFeature_SGIX_tag_sample_buffer_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_SGIX_tag_sample_buffer_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_tag_sample_buffer")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_SGIX_tag_sample_buffer_loaded) {
 			InitDinamicGLFeature_SGIX_tag_sample_buffer();
 		}
 		if (DynamicGL_TagSampleBufferSGIX==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_tag_sample_buffer*/
 
-/*EXT_texture_env_combine*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_env_combine
-static bool DinamicGLFeature_EXT_texture_env_combine_loaded = false; 
-static void InitDinamicGLFeature_EXT_texture_env_combine() {
-		DinamicGLFeature_EXT_texture_env_combine_loaded = true; 
-}
-bool DinamicGLFeature_EXT_texture_env_combine_Supported() {
-		if (!DinamicGLFeature_EXT_texture_env_combine_loaded) {
-			InitDinamicGLFeature_EXT_texture_env_combine();
-		}
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_EXT_texture_env_combine*/
-
 /*ARB_texture_rgb10_a2ui*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_rgb10_a2ui
-static bool DinamicGLFeature_ARB_texture_rgb10_a2ui_loaded = false; 
-static void InitDinamicGLFeature_ARB_texture_rgb10_a2ui() {
-		DinamicGLFeature_ARB_texture_rgb10_a2ui_loaded = true; 
-}
 bool DinamicGLFeature_ARB_texture_rgb10_a2ui_Supported() {
-		if (!DinamicGLFeature_ARB_texture_rgb10_a2ui_loaded) {
-			InitDinamicGLFeature_ARB_texture_rgb10_a2ui();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_texture_rgb10_a2ui")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_texture_rgb10_a2ui*/
 
 /*SGIX_vertex_preclip*/
 #ifdef USE_DYNAMIC_GL_SGIX_vertex_preclip
-static bool DinamicGLFeature_SGIX_vertex_preclip_loaded = false; 
-static void InitDinamicGLFeature_SGIX_vertex_preclip() {
-		DinamicGLFeature_SGIX_vertex_preclip_loaded = true; 
-}
 bool DinamicGLFeature_SGIX_vertex_preclip_Supported() {
-		if (!DinamicGLFeature_SGIX_vertex_preclip_loaded) {
-			InitDinamicGLFeature_SGIX_vertex_preclip();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_vertex_preclip")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_vertex_preclip*/
 
+/*ARB_fragment_program_shadow*/
+#ifdef USE_DYNAMIC_GL_ARB_fragment_program_shadow
+bool DinamicGLFeature_ARB_fragment_program_shadow_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_fragment_program_shadow")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_fragment_program_shadow*/
+
 /*ARB_geometry_shader4*/
 #ifdef USE_DYNAMIC_GL_ARB_geometry_shader4
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramParameteriARB)(GLuint program , GLenum pname , GLint value) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FramebufferTextureARB)(GLenum target , GLenum attachment , GLuint texture , GLint level) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FramebufferTextureLayerARB)(GLenum target , GLenum attachment , GLuint texture , GLint level , GLint layer) = 0; }
@@ -4449,7 +4578,10 @@ static void InitDinamicGLFeature_ARB_geometry_shader4() {
 		DynamicGL_FramebufferTextureFaceARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum attachment , GLuint texture , GLint level , GLenum face)>("glFramebufferTextureFaceARB"); 
 		DinamicGLFeature_ARB_geometry_shader4_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_geometry_shader4_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_geometry_shader4")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_geometry_shader4_loaded) {
 			InitDinamicGLFeature_ARB_geometry_shader4();
 		}
@@ -4457,12 +4589,14 @@ bool DinamicGLFeature_ARB_geometry_shader4_Supported() {
 		if (DynamicGL_FramebufferTextureARB==0) return false; 
 		if (DynamicGL_FramebufferTextureLayerARB==0) return false; 
 		if (DynamicGL_FramebufferTextureFaceARB==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_geometry_shader4*/
 
 /*EXT_multi_draw_arrays*/
 #ifdef USE_DYNAMIC_GL_EXT_multi_draw_arrays
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawArraysEXT)(GLenum mode , const GLint *first , const GLsizei *count , GLsizei primcount) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawElementsEXT)(GLenum mode , const GLsizei *count , GLenum type , const GLvoid* *indices , GLsizei primcount) = 0; }
 static bool DinamicGLFeature_EXT_multi_draw_arrays_loaded = false; 
@@ -4471,35 +4605,45 @@ static void InitDinamicGLFeature_EXT_multi_draw_arrays() {
 		DynamicGL_MultiDrawElementsEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , const GLsizei *count , GLenum type , const GLvoid* *indices , GLsizei primcount)>("glMultiDrawElementsEXT"); 
 		DinamicGLFeature_EXT_multi_draw_arrays_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_multi_draw_arrays_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_multi_draw_arrays")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_multi_draw_arrays_loaded) {
 			InitDinamicGLFeature_EXT_multi_draw_arrays();
 		}
 		if (DynamicGL_MultiDrawArraysEXT==0) return false; 
 		if (DynamicGL_MultiDrawElementsEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_multi_draw_arrays*/
 
 /*EXT_texture_perturb_normal*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_perturb_normal
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureNormalEXT)(GLenum mode) = 0; }
 static bool DinamicGLFeature_EXT_texture_perturb_normal_loaded = false; 
 static void InitDinamicGLFeature_EXT_texture_perturb_normal() {
 		DynamicGL_TextureNormalEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode)>("glTextureNormalEXT"); 
 		DinamicGLFeature_EXT_texture_perturb_normal_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_texture_perturb_normal_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_perturb_normal")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_texture_perturb_normal_loaded) {
 			InitDinamicGLFeature_EXT_texture_perturb_normal();
 		}
 		if (DynamicGL_TextureNormalEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_perturb_normal*/
 
 /*EXT_separate_shader_objects*/
 #ifdef USE_DYNAMIC_GL_EXT_separate_shader_objects
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_UseShaderProgramEXT)(GLenum type , GLuint program) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ActiveProgramEXT)(GLuint program) = 0; }
 extern "C" { GLuint (DYNAMIC_GL_APIENTRYP DynamicGL_CreateShaderProgramEXT)(GLenum type , const GLchar *string) = 0; }
@@ -4510,19 +4654,24 @@ static void InitDinamicGLFeature_EXT_separate_shader_objects() {
 		DynamicGL_CreateShaderProgramEXT = DynamicGL_LoadFunction<GLuint (DYNAMIC_GL_APIENTRYP)(GLenum type , const GLchar *string)>("glCreateShaderProgramEXT"); 
 		DinamicGLFeature_EXT_separate_shader_objects_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_separate_shader_objects_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_separate_shader_objects")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_separate_shader_objects_loaded) {
 			InitDinamicGLFeature_EXT_separate_shader_objects();
 		}
 		if (DynamicGL_UseShaderProgramEXT==0) return false; 
 		if (DynamicGL_ActiveProgramEXT==0) return false; 
 		if (DynamicGL_CreateShaderProgramEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_separate_shader_objects*/
 
 /*SGIX_sprite*/
 #ifdef USE_DYNAMIC_GL_SGIX_sprite
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SpriteParameterfSGIX)(GLenum pname , GLfloat param) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SpriteParameterfvSGIX)(GLenum pname , const GLfloat *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SpriteParameteriSGIX)(GLenum pname , GLint param) = 0; }
@@ -4535,7 +4684,10 @@ static void InitDinamicGLFeature_SGIX_sprite() {
 		DynamicGL_SpriteParameterivSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , const GLint *params)>("glSpriteParameterivSGIX"); 
 		DinamicGLFeature_SGIX_sprite_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_SGIX_sprite_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_sprite")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_SGIX_sprite_loaded) {
 			InitDinamicGLFeature_SGIX_sprite();
 		}
@@ -4543,26 +4695,30 @@ bool DinamicGLFeature_SGIX_sprite_Supported() {
 		if (DynamicGL_SpriteParameterfvSGIX==0) return false; 
 		if (DynamicGL_SpriteParameteriSGIX==0) return false; 
 		if (DynamicGL_SpriteParameterivSGIX==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_sprite*/
 
 /*EXT_texture_snorm*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_snorm
-static bool DinamicGLFeature_EXT_texture_snorm_loaded = false; 
-static void InitDinamicGLFeature_EXT_texture_snorm() {
-		DinamicGLFeature_EXT_texture_snorm_loaded = true; 
-}
 bool DinamicGLFeature_EXT_texture_snorm_Supported() {
-		if (!DinamicGLFeature_EXT_texture_snorm_loaded) {
-			InitDinamicGLFeature_EXT_texture_snorm();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_snorm")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_snorm*/
 
+/*NV_vertex_program2_option*/
+#ifdef USE_DYNAMIC_GL_NV_vertex_program2_option
+bool DinamicGLFeature_NV_vertex_program2_option_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_vertex_program2_option")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_vertex_program2_option*/
+
 /*ARB_debug_output*/
 #ifdef USE_DYNAMIC_GL_ARB_debug_output
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DebugMessageControlARB)(GLenum source , GLenum type , GLenum severity , GLsizei count , const GLuint *ids , GLboolean enabled) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DebugMessageInsertARB)(GLenum source , GLenum type , GLuint id , GLenum severity , GLsizei length , const GLchar *buf) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DebugMessageCallbackARB)(GLDEBUGPROCARB callback , const GLvoid *userParam) = 0; }
@@ -4575,7 +4731,10 @@ static void InitDinamicGLFeature_ARB_debug_output() {
 		DynamicGL_GetDebugMessageLogARB = DynamicGL_LoadFunction<GLuint (DYNAMIC_GL_APIENTRYP)(GLuint count , GLsizei bufsize , GLenum *sources , GLenum *types , GLuint *ids , GLenum *severities , GLsizei *lengths , GLchar *messageLog)>("glGetDebugMessageLogARB"); 
 		DinamicGLFeature_ARB_debug_output_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_debug_output_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_debug_output")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_debug_output_loaded) {
 			InitDinamicGLFeature_ARB_debug_output();
 		}
@@ -4583,12 +4742,14 @@ bool DinamicGLFeature_ARB_debug_output_Supported() {
 		if (DynamicGL_DebugMessageInsertARB==0) return false; 
 		if (DynamicGL_DebugMessageCallbackARB==0) return false; 
 		if (DynamicGL_GetDebugMessageLogARB==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_debug_output*/
 
 /*EXT_draw_buffers2*/
 #ifdef USE_DYNAMIC_GL_EXT_draw_buffers2
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorMaskIndexedEXT)(GLuint index , GLboolean r , GLboolean g , GLboolean b , GLboolean a) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetBooleanIndexedvEXT)(GLenum target , GLuint index , GLboolean *data) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetIntegerIndexedvEXT)(GLenum target , GLuint index , GLint *data) = 0; }
@@ -4605,7 +4766,10 @@ static void InitDinamicGLFeature_EXT_draw_buffers2() {
 		DynamicGL_IsEnabledIndexedEXT = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint index)>("glIsEnabledIndexedEXT"); 
 		DinamicGLFeature_EXT_draw_buffers2_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_draw_buffers2_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_draw_buffers2")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_draw_buffers2_loaded) {
 			InitDinamicGLFeature_EXT_draw_buffers2();
 		}
@@ -4615,54 +4779,38 @@ bool DinamicGLFeature_EXT_draw_buffers2_Supported() {
 		if (DynamicGL_EnableIndexedEXT==0) return false; 
 		if (DynamicGL_DisableIndexedEXT==0) return false; 
 		if (DynamicGL_IsEnabledIndexedEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_draw_buffers2*/
 
-/*ARB_texture_rectangle*/
-#ifdef USE_DYNAMIC_GL_ARB_texture_rectangle
-static bool DinamicGLFeature_ARB_texture_rectangle_loaded = false; 
-static void InitDinamicGLFeature_ARB_texture_rectangle() {
-		DinamicGLFeature_ARB_texture_rectangle_loaded = true; 
-}
-bool DinamicGLFeature_ARB_texture_rectangle_Supported() {
-		if (!DinamicGLFeature_ARB_texture_rectangle_loaded) {
-			InitDinamicGLFeature_ARB_texture_rectangle();
-		}
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_ARB_texture_rectangle*/
-
 /*EXT_packed_pixels*/
 #ifdef USE_DYNAMIC_GL_EXT_packed_pixels
-static bool DinamicGLFeature_EXT_packed_pixels_loaded = false; 
-static void InitDinamicGLFeature_EXT_packed_pixels() {
-		DinamicGLFeature_EXT_packed_pixels_loaded = true; 
-}
 bool DinamicGLFeature_EXT_packed_pixels_Supported() {
-		if (!DinamicGLFeature_EXT_packed_pixels_loaded) {
-			InitDinamicGLFeature_EXT_packed_pixels();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_packed_pixels")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_packed_pixels*/
 
+/*ARB_texture_rectangle*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_rectangle
+bool DinamicGLFeature_ARB_texture_rectangle_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_texture_rectangle")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_texture_rectangle*/
+
 /*EXT_texture_env_dot3*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_env_dot3
-static bool DinamicGLFeature_EXT_texture_env_dot3_loaded = false; 
-static void InitDinamicGLFeature_EXT_texture_env_dot3() {
-		DinamicGLFeature_EXT_texture_env_dot3_loaded = true; 
-}
 bool DinamicGLFeature_EXT_texture_env_dot3_Supported() {
-		if (!DinamicGLFeature_EXT_texture_env_dot3_loaded) {
-			InitDinamicGLFeature_EXT_texture_env_dot3();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_env_dot3")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_env_dot3*/
 
 /*NV_video_capture*/
 #ifdef USE_DYNAMIC_GL_NV_video_capture
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BeginVideoCaptureNV)(GLuint video_capture_slot) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindVideoCaptureStreamBufferNV)(GLuint video_capture_slot , GLuint stream , GLenum frame_region , GLintptrARB offset) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindVideoCaptureStreamTextureNV)(GLuint video_capture_slot , GLuint stream , GLenum frame_region , GLenum target , GLuint texture) = 0; }
@@ -4691,7 +4839,10 @@ static void InitDinamicGLFeature_NV_video_capture() {
 		DynamicGL_VideoCaptureStreamParameterdvNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint video_capture_slot , GLuint stream , GLenum pname , const GLdouble *params)>("glVideoCaptureStreamParameterdvNV"); 
 		DinamicGLFeature_NV_video_capture_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_video_capture_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_video_capture")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_video_capture_loaded) {
 			InitDinamicGLFeature_NV_video_capture();
 		}
@@ -4707,57 +4858,52 @@ bool DinamicGLFeature_NV_video_capture_Supported() {
 		if (DynamicGL_VideoCaptureStreamParameterivNV==0) return false; 
 		if (DynamicGL_VideoCaptureStreamParameterfvNV==0) return false; 
 		if (DynamicGL_VideoCaptureStreamParameterdvNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_video_capture*/
 
 /*WIN_phong_shading*/
 #ifdef USE_DYNAMIC_GL_WIN_phong_shading
-static bool DinamicGLFeature_WIN_phong_shading_loaded = false; 
-static void InitDinamicGLFeature_WIN_phong_shading() {
-		DinamicGLFeature_WIN_phong_shading_loaded = true; 
-}
 bool DinamicGLFeature_WIN_phong_shading_Supported() {
-		if (!DinamicGLFeature_WIN_phong_shading_loaded) {
-			InitDinamicGLFeature_WIN_phong_shading();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_WIN_phong_shading")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_WIN_phong_shading*/
 
 /*ARB_map_buffer_range*/
 #ifdef USE_DYNAMIC_GL_ARB_map_buffer_range
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FlushMappedBufferRange)(GLenum target , GLintptr offset , GLsizeiptr length) = 0; }
 static bool DinamicGLFeature_ARB_map_buffer_range_loaded = false; 
 static void InitDinamicGLFeature_ARB_map_buffer_range() {
 		DynamicGL_FlushMappedBufferRange = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLintptr offset , GLsizeiptr length)>("glFlushMappedBufferRange"); 
 		DinamicGLFeature_ARB_map_buffer_range_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_map_buffer_range_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_map_buffer_range")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_map_buffer_range_loaded) {
 			InitDinamicGLFeature_ARB_map_buffer_range();
 		}
 		if (DynamicGL_FlushMappedBufferRange==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_map_buffer_range*/
 
 /*EXT_abgr*/
 #ifdef USE_DYNAMIC_GL_EXT_abgr
-static bool DinamicGLFeature_EXT_abgr_loaded = false; 
-static void InitDinamicGLFeature_EXT_abgr() {
-		DinamicGLFeature_EXT_abgr_loaded = true; 
-}
 bool DinamicGLFeature_EXT_abgr_Supported() {
-		if (!DinamicGLFeature_EXT_abgr_loaded) {
-			InitDinamicGLFeature_EXT_abgr();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_abgr")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_abgr*/
 
 /*EXT_vertex_shader*/
 #ifdef USE_DYNAMIC_GL_EXT_vertex_shader
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BeginVertexShaderEXT)() = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_EndVertexShaderEXT)() = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindVertexShaderEXT)(GLuint id) = 0; }
@@ -4846,7 +4992,10 @@ static void InitDinamicGLFeature_EXT_vertex_shader() {
 		DynamicGL_GetLocalConstantFloatvEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint id , GLenum value , GLfloat *data)>("glGetLocalConstantFloatvEXT"); 
 		DinamicGLFeature_EXT_vertex_shader_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_vertex_shader_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_vertex_shader")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_vertex_shader_loaded) {
 			InitDinamicGLFeature_EXT_vertex_shader();
 		}
@@ -4892,26 +5041,30 @@ bool DinamicGLFeature_EXT_vertex_shader_Supported() {
 		if (DynamicGL_GetLocalConstantBooleanvEXT==0) return false; 
 		if (DynamicGL_GetLocalConstantIntegervEXT==0) return false; 
 		if (DynamicGL_GetLocalConstantFloatvEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_vertex_shader*/
 
+/*AMD_vertex_shader_viewport_index*/
+#ifdef USE_DYNAMIC_GL_AMD_vertex_shader_viewport_index
+bool DinamicGLFeature_AMD_vertex_shader_viewport_index_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_AMD_vertex_shader_viewport_index")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_AMD_vertex_shader_viewport_index*/
+
 /*NV_packed_depth_stencil*/
 #ifdef USE_DYNAMIC_GL_NV_packed_depth_stencil
-static bool DinamicGLFeature_NV_packed_depth_stencil_loaded = false; 
-static void InitDinamicGLFeature_NV_packed_depth_stencil() {
-		DinamicGLFeature_NV_packed_depth_stencil_loaded = true; 
-}
 bool DinamicGLFeature_NV_packed_depth_stencil_Supported() {
-		if (!DinamicGLFeature_NV_packed_depth_stencil_loaded) {
-			InitDinamicGLFeature_NV_packed_depth_stencil();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_packed_depth_stencil")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_packed_depth_stencil*/
 
 /*SGI_color_table*/
 #ifdef USE_DYNAMIC_GL_SGI_color_table
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorTableSGI)(GLenum target , GLenum internalformat , GLsizei width , GLenum format , GLenum type , const GLvoid *table) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorTableParameterfvSGI)(GLenum target , GLenum pname , const GLfloat *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorTableParameterivSGI)(GLenum target , GLenum pname , const GLint *params) = 0; }
@@ -4930,7 +5083,10 @@ static void InitDinamicGLFeature_SGI_color_table() {
 		DynamicGL_GetColorTableParameterivSGI = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum pname , GLint *params)>("glGetColorTableParameterivSGI"); 
 		DinamicGLFeature_SGI_color_table_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_SGI_color_table_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGI_color_table")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_SGI_color_table_loaded) {
 			InitDinamicGLFeature_SGI_color_table();
 		}
@@ -4941,26 +5097,22 @@ bool DinamicGLFeature_SGI_color_table_Supported() {
 		if (DynamicGL_GetColorTableSGI==0) return false; 
 		if (DynamicGL_GetColorTableParameterfvSGI==0) return false; 
 		if (DynamicGL_GetColorTableParameterivSGI==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGI_color_table*/
 
 /*EXT_texture_array*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_array
-static bool DinamicGLFeature_EXT_texture_array_loaded = false; 
-static void InitDinamicGLFeature_EXT_texture_array() {
-		DinamicGLFeature_EXT_texture_array_loaded = true; 
-}
 bool DinamicGLFeature_EXT_texture_array_Supported() {
-		if (!DinamicGLFeature_EXT_texture_array_loaded) {
-			InitDinamicGLFeature_EXT_texture_array();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_array")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_array*/
 
 /*EXT_texture_object*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_object
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_AreTexturesResidentEXT)(GLsizei n , const GLuint *textures , GLboolean *residences) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindTextureEXT)(GLenum target , GLuint texture) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteTexturesEXT)(GLsizei n , const GLuint *textures) = 0; }
@@ -4977,7 +5129,10 @@ static void InitDinamicGLFeature_EXT_texture_object() {
 		DynamicGL_PrioritizeTexturesEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei n , const GLuint *textures , const GLclampf *priorities)>("glPrioritizeTexturesEXT"); 
 		DinamicGLFeature_EXT_texture_object_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_texture_object_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_object")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_texture_object_loaded) {
 			InitDinamicGLFeature_EXT_texture_object();
 		}
@@ -4987,43 +5142,44 @@ bool DinamicGLFeature_EXT_texture_object_Supported() {
 		if (DynamicGL_GenTexturesEXT==0) return false; 
 		if (DynamicGL_IsTextureEXT==0) return false; 
 		if (DynamicGL_PrioritizeTexturesEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_object*/
 
 /*ATI_texture_env_combine3*/
 #ifdef USE_DYNAMIC_GL_ATI_texture_env_combine3
-static bool DinamicGLFeature_ATI_texture_env_combine3_loaded = false; 
-static void InitDinamicGLFeature_ATI_texture_env_combine3() {
-		DinamicGLFeature_ATI_texture_env_combine3_loaded = true; 
-}
 bool DinamicGLFeature_ATI_texture_env_combine3_Supported() {
-		if (!DinamicGLFeature_ATI_texture_env_combine3_loaded) {
-			InitDinamicGLFeature_ATI_texture_env_combine3();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ATI_texture_env_combine3")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ATI_texture_env_combine3*/
 
 /*EXT_geometry_shader4*/
 #ifdef USE_DYNAMIC_GL_EXT_geometry_shader4
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramParameteriEXT)(GLuint program , GLenum pname , GLint value) = 0; }
 static bool DinamicGLFeature_EXT_geometry_shader4_loaded = false; 
 static void InitDinamicGLFeature_EXT_geometry_shader4() {
 		DynamicGL_ProgramParameteriEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLenum pname , GLint value)>("glProgramParameteriEXT"); 
 		DinamicGLFeature_EXT_geometry_shader4_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_geometry_shader4_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_geometry_shader4")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_geometry_shader4_loaded) {
 			InitDinamicGLFeature_EXT_geometry_shader4();
 		}
 		if (DynamicGL_ProgramParameteriEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_geometry_shader4*/
 
 /*ARB_transpose_matrix*/
 #ifdef USE_DYNAMIC_GL_ARB_transpose_matrix
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadTransposeMatrixfARB)(const GLfloat *m) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadTransposeMatrixdARB)(const GLdouble *m) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultTransposeMatrixfARB)(const GLfloat *m) = 0; }
@@ -5036,7 +5192,10 @@ static void InitDinamicGLFeature_ARB_transpose_matrix() {
 		DynamicGL_MultTransposeMatrixdARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLdouble *m)>("glMultTransposeMatrixdARB"); 
 		DinamicGLFeature_ARB_transpose_matrix_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_transpose_matrix_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_transpose_matrix")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_transpose_matrix_loaded) {
 			InitDinamicGLFeature_ARB_transpose_matrix();
 		}
@@ -5044,12 +5203,14 @@ bool DinamicGLFeature_ARB_transpose_matrix_Supported() {
 		if (DynamicGL_LoadTransposeMatrixdARB==0) return false; 
 		if (DynamicGL_MultTransposeMatrixfARB==0) return false; 
 		if (DynamicGL_MultTransposeMatrixdARB==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_transpose_matrix*/
 
 /*ARB_transform_feedback_instanced*/
 #ifdef USE_DYNAMIC_GL_ARB_transform_feedback_instanced
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTransformFeedbackInstanced)(GLenum mode , GLuint id , GLsizei primcount) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTransformFeedbackStreamInstanced)(GLenum mode , GLuint id , GLuint stream , GLsizei primcount) = 0; }
 static bool DinamicGLFeature_ARB_transform_feedback_instanced_loaded = false; 
@@ -5058,18 +5219,23 @@ static void InitDinamicGLFeature_ARB_transform_feedback_instanced() {
 		DynamicGL_DrawTransformFeedbackStreamInstanced = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLuint id , GLuint stream , GLsizei primcount)>("glDrawTransformFeedbackStreamInstanced"); 
 		DinamicGLFeature_ARB_transform_feedback_instanced_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_transform_feedback_instanced_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_transform_feedback_instanced")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_transform_feedback_instanced_loaded) {
 			InitDinamicGLFeature_ARB_transform_feedback_instanced();
 		}
 		if (DynamicGL_DrawTransformFeedbackInstanced==0) return false; 
 		if (DynamicGL_DrawTransformFeedbackStreamInstanced==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_transform_feedback_instanced*/
 
 /*NV_parameter_buffer_object*/
 #ifdef USE_DYNAMIC_GL_NV_parameter_buffer_object
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramBufferParametersfvNV)(GLenum target , GLuint buffer , GLuint index , GLsizei count , const GLfloat *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramBufferParametersIivNV)(GLenum target , GLuint buffer , GLuint index , GLsizei count , const GLint *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramBufferParametersIuivNV)(GLenum target , GLuint buffer , GLuint index , GLsizei count , const GLuint *params) = 0; }
@@ -5080,33 +5246,32 @@ static void InitDinamicGLFeature_NV_parameter_buffer_object() {
 		DynamicGL_ProgramBufferParametersIuivNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint buffer , GLuint index , GLsizei count , const GLuint *params)>("glProgramBufferParametersIuivNV"); 
 		DinamicGLFeature_NV_parameter_buffer_object_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_parameter_buffer_object_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_parameter_buffer_object")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_parameter_buffer_object_loaded) {
 			InitDinamicGLFeature_NV_parameter_buffer_object();
 		}
 		if (DynamicGL_ProgramBufferParametersfvNV==0) return false; 
 		if (DynamicGL_ProgramBufferParametersIivNV==0) return false; 
 		if (DynamicGL_ProgramBufferParametersIuivNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_parameter_buffer_object*/
 
 /*EXT_packed_depth_stencil*/
 #ifdef USE_DYNAMIC_GL_EXT_packed_depth_stencil
-static bool DinamicGLFeature_EXT_packed_depth_stencil_loaded = false; 
-static void InitDinamicGLFeature_EXT_packed_depth_stencil() {
-		DinamicGLFeature_EXT_packed_depth_stencil_loaded = true; 
-}
 bool DinamicGLFeature_EXT_packed_depth_stencil_Supported() {
-		if (!DinamicGLFeature_EXT_packed_depth_stencil_loaded) {
-			InitDinamicGLFeature_EXT_packed_depth_stencil();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_packed_depth_stencil")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_packed_depth_stencil*/
 
 /*VERSION_3_1*/
 #ifdef USE_DYNAMIC_GL_VERSION_3_1
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawArraysInstanced)(GLenum mode , GLint first , GLsizei count , GLsizei primcount) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElementsInstanced)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices , GLsizei primcount) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexBuffer)(GLenum target , GLenum internalformat , GLuint buffer) = 0; }
@@ -5119,7 +5284,9 @@ static void InitDinamicGLFeature_VERSION_3_1() {
 		DynamicGL_PrimitiveRestartIndex = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index)>("glPrimitiveRestartIndex"); 
 		DinamicGLFeature_VERSION_3_1_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_VERSION_3_1_Supported() {
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_VERSION_3_1_loaded) {
 			InitDinamicGLFeature_VERSION_3_1();
 		}
@@ -5127,26 +5294,22 @@ bool DinamicGLFeature_VERSION_3_1_Supported() {
 		if (DynamicGL_DrawElementsInstanced==0) return false; 
 		if (DynamicGL_TexBuffer==0) return false; 
 		if (DynamicGL_PrimitiveRestartIndex==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_VERSION_3_1*/
 
 /*PGI_vertex_hints*/
 #ifdef USE_DYNAMIC_GL_PGI_vertex_hints
-static bool DinamicGLFeature_PGI_vertex_hints_loaded = false; 
-static void InitDinamicGLFeature_PGI_vertex_hints() {
-		DinamicGLFeature_PGI_vertex_hints_loaded = true; 
-}
 bool DinamicGLFeature_PGI_vertex_hints_Supported() {
-		if (!DinamicGLFeature_PGI_vertex_hints_loaded) {
-			InitDinamicGLFeature_PGI_vertex_hints();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_PGI_vertex_hints")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_PGI_vertex_hints*/
 
 /*EXT_vertex_weighting*/
 #ifdef USE_DYNAMIC_GL_EXT_vertex_weighting
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexWeightfEXT)(GLfloat weight) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexWeightfvEXT)(const GLfloat *weight) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexWeightPointerEXT)(GLsizei size , GLenum type , GLsizei stride , const GLvoid *pointer) = 0; }
@@ -5157,33 +5320,24 @@ static void InitDinamicGLFeature_EXT_vertex_weighting() {
 		DynamicGL_VertexWeightPointerEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei size , GLenum type , GLsizei stride , const GLvoid *pointer)>("glVertexWeightPointerEXT"); 
 		DinamicGLFeature_EXT_vertex_weighting_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_vertex_weighting_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_vertex_weighting")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_vertex_weighting_loaded) {
 			InitDinamicGLFeature_EXT_vertex_weighting();
 		}
 		if (DynamicGL_VertexWeightfEXT==0) return false; 
 		if (DynamicGL_VertexWeightfvEXT==0) return false; 
 		if (DynamicGL_VertexWeightPointerEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_vertex_weighting*/
 
-/*ARB_texture_env_dot3*/
-#ifdef USE_DYNAMIC_GL_ARB_texture_env_dot3
-static bool DinamicGLFeature_ARB_texture_env_dot3_loaded = false; 
-static void InitDinamicGLFeature_ARB_texture_env_dot3() {
-		DinamicGLFeature_ARB_texture_env_dot3_loaded = true; 
-}
-bool DinamicGLFeature_ARB_texture_env_dot3_Supported() {
-		if (!DinamicGLFeature_ARB_texture_env_dot3_loaded) {
-			InitDinamicGLFeature_ARB_texture_env_dot3();
-		}
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_ARB_texture_env_dot3*/
-
 /*EXT_histogram*/
 #ifdef USE_DYNAMIC_GL_EXT_histogram
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetHistogramEXT)(GLenum target , GLboolean reset , GLenum format , GLenum type , GLvoid *values) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetHistogramParameterfvEXT)(GLenum target , GLenum pname , GLfloat *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetHistogramParameterivEXT)(GLenum target , GLenum pname , GLint *params) = 0; }
@@ -5208,7 +5362,10 @@ static void InitDinamicGLFeature_EXT_histogram() {
 		DynamicGL_ResetMinmaxEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target)>("glResetMinmaxEXT"); 
 		DinamicGLFeature_EXT_histogram_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_histogram_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_histogram")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_histogram_loaded) {
 			InitDinamicGLFeature_EXT_histogram();
 		}
@@ -5222,12 +5379,44 @@ bool DinamicGLFeature_EXT_histogram_Supported() {
 		if (DynamicGL_MinmaxEXT==0) return false; 
 		if (DynamicGL_ResetHistogramEXT==0) return false; 
 		if (DynamicGL_ResetMinmaxEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_histogram*/
 
+/*ARB_texture_env_dot3*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_env_dot3
+bool DinamicGLFeature_ARB_texture_env_dot3_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_texture_env_dot3")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_texture_env_dot3*/
+
+/*SGIX_pixel_texture*/
+#ifdef USE_DYNAMIC_GL_SGIX_pixel_texture
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PixelTexGenSGIX)(GLenum mode) = 0; }
+static bool DinamicGLFeature_SGIX_pixel_texture_loaded = false; 
+static void InitDinamicGLFeature_SGIX_pixel_texture() {
+		DynamicGL_PixelTexGenSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode)>("glPixelTexGenSGIX"); 
+		DinamicGLFeature_SGIX_pixel_texture_loaded = true; 
+}
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+bool DinamicGLFeature_SGIX_pixel_texture_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_pixel_texture")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
+		if (!DinamicGLFeature_SGIX_pixel_texture_loaded) {
+			InitDinamicGLFeature_SGIX_pixel_texture();
+		}
+		if (DynamicGL_PixelTexGenSGIX==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_SGIX_pixel_texture*/
+
 /*ARB_vertex_type_2_10_10_10_rev*/
 #ifdef USE_DYNAMIC_GL_ARB_vertex_type_2_10_10_10_rev
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexP2ui)(GLenum type , GLuint value) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexP2uiv)(GLenum type , const GLuint *value) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexP3ui)(GLenum type , GLuint value) = 0; }
@@ -5308,7 +5497,10 @@ static void InitDinamicGLFeature_ARB_vertex_type_2_10_10_10_rev() {
 		DynamicGL_VertexAttribP4uiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLenum type , GLboolean normalized , const GLuint *value)>("glVertexAttribP4uiv"); 
 		DinamicGLFeature_ARB_vertex_type_2_10_10_10_rev_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_vertex_type_2_10_10_10_rev_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_vertex_type_2_10_10_10_rev")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_vertex_type_2_10_10_10_rev_loaded) {
 			InitDinamicGLFeature_ARB_vertex_type_2_10_10_10_rev();
 		}
@@ -5350,43 +5542,30 @@ bool DinamicGLFeature_ARB_vertex_type_2_10_10_10_rev_Supported() {
 		if (DynamicGL_VertexAttribP3uiv==0) return false; 
 		if (DynamicGL_VertexAttribP4ui==0) return false; 
 		if (DynamicGL_VertexAttribP4uiv==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_vertex_type_2_10_10_10_rev*/
 
-/*SGIX_pixel_texture*/
-#ifdef USE_DYNAMIC_GL_SGIX_pixel_texture
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PixelTexGenSGIX)(GLenum mode) = 0; }
-static bool DinamicGLFeature_SGIX_pixel_texture_loaded = false; 
-static void InitDinamicGLFeature_SGIX_pixel_texture() {
-		DynamicGL_PixelTexGenSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode)>("glPixelTexGenSGIX"); 
-		DinamicGLFeature_SGIX_pixel_texture_loaded = true; 
-}
-bool DinamicGLFeature_SGIX_pixel_texture_Supported() {
-		if (!DinamicGLFeature_SGIX_pixel_texture_loaded) {
-			InitDinamicGLFeature_SGIX_pixel_texture();
-		}
-		if (DynamicGL_PixelTexGenSGIX==0) return false; 
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_SGIX_pixel_texture*/
-
 /*NV_fog_distance*/
 #ifdef USE_DYNAMIC_GL_NV_fog_distance
-static bool DinamicGLFeature_NV_fog_distance_loaded = false; 
-static void InitDinamicGLFeature_NV_fog_distance() {
-		DinamicGLFeature_NV_fog_distance_loaded = true; 
-}
 bool DinamicGLFeature_NV_fog_distance_Supported() {
-		if (!DinamicGLFeature_NV_fog_distance_loaded) {
-			InitDinamicGLFeature_NV_fog_distance();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_fog_distance")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_fog_distance*/
 
+/*EXT_index_texture*/
+#ifdef USE_DYNAMIC_GL_EXT_index_texture
+bool DinamicGLFeature_EXT_index_texture_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_index_texture")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_EXT_index_texture*/
+
 /*APPLE_fence*/
 #ifdef USE_DYNAMIC_GL_APPLE_fence
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenFencesAPPLE)(GLsizei n , GLuint *fences) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteFencesAPPLE)(GLsizei n , const GLuint *fences) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SetFenceAPPLE)(GLuint fence) = 0; }
@@ -5407,7 +5586,10 @@ static void InitDinamicGLFeature_APPLE_fence() {
 		DynamicGL_FinishObjectAPPLE = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum object , GLint name)>("glFinishObjectAPPLE"); 
 		DinamicGLFeature_APPLE_fence_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_APPLE_fence_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_APPLE_fence")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_APPLE_fence_loaded) {
 			InitDinamicGLFeature_APPLE_fence();
 		}
@@ -5419,29 +5601,36 @@ bool DinamicGLFeature_APPLE_fence_Supported() {
 		if (DynamicGL_FinishFenceAPPLE==0) return false; 
 		if (DynamicGL_TestObjectAPPLE==0) return false; 
 		if (DynamicGL_FinishObjectAPPLE==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_APPLE_fence*/
 
 /*EXT_blend_func_separate*/
 #ifdef USE_DYNAMIC_GL_EXT_blend_func_separate
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFuncSeparateEXT)(GLenum sfactorRGB , GLenum dfactorRGB , GLenum sfactorAlpha , GLenum dfactorAlpha) = 0; }
 static bool DinamicGLFeature_EXT_blend_func_separate_loaded = false; 
 static void InitDinamicGLFeature_EXT_blend_func_separate() {
 		DynamicGL_BlendFuncSeparateEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum sfactorRGB , GLenum dfactorRGB , GLenum sfactorAlpha , GLenum dfactorAlpha)>("glBlendFuncSeparateEXT"); 
 		DinamicGLFeature_EXT_blend_func_separate_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_blend_func_separate_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_blend_func_separate")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_blend_func_separate_loaded) {
 			InitDinamicGLFeature_EXT_blend_func_separate();
 		}
 		if (DynamicGL_BlendFuncSeparateEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_blend_func_separate*/
 
 /*ARB_sampler_objects*/
 #ifdef USE_DYNAMIC_GL_ARB_sampler_objects
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenSamplers)(GLsizei count , GLuint *samplers) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteSamplers)(GLsizei count , const GLuint *samplers) = 0; }
 extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsSampler)(GLuint sampler) = 0; }
@@ -5474,7 +5663,10 @@ static void InitDinamicGLFeature_ARB_sampler_objects() {
 		DynamicGL_GetSamplerParameterIuiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint sampler , GLenum pname , GLuint *params)>("glGetSamplerParameterIuiv"); 
 		DinamicGLFeature_ARB_sampler_objects_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_sampler_objects_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_sampler_objects")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_sampler_objects_loaded) {
 			InitDinamicGLFeature_ARB_sampler_objects();
 		}
@@ -5492,12 +5684,14 @@ bool DinamicGLFeature_ARB_sampler_objects_Supported() {
 		if (DynamicGL_GetSamplerParameterIiv==0) return false; 
 		if (DynamicGL_GetSamplerParameterfv==0) return false; 
 		if (DynamicGL_GetSamplerParameterIuiv==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_sampler_objects*/
 
 /*ARB_vertex_attrib_64bit*/
 #ifdef USE_DYNAMIC_GL_ARB_vertex_attrib_64bit
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL1d)(GLuint index , GLdouble x) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL2d)(GLuint index , GLdouble x , GLdouble y) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL3d)(GLuint index , GLdouble x , GLdouble y , GLdouble z) = 0; }
@@ -5522,7 +5716,10 @@ static void InitDinamicGLFeature_ARB_vertex_attrib_64bit() {
 		DynamicGL_GetVertexAttribLdv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLenum pname , GLdouble *params)>("glGetVertexAttribLdv"); 
 		DinamicGLFeature_ARB_vertex_attrib_64bit_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_vertex_attrib_64bit_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_vertex_attrib_64bit")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_vertex_attrib_64bit_loaded) {
 			InitDinamicGLFeature_ARB_vertex_attrib_64bit();
 		}
@@ -5536,26 +5733,30 @@ bool DinamicGLFeature_ARB_vertex_attrib_64bit_Supported() {
 		if (DynamicGL_VertexAttribL4dv==0) return false; 
 		if (DynamicGL_VertexAttribLPointer==0) return false; 
 		if (DynamicGL_GetVertexAttribLdv==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_vertex_attrib_64bit*/
 
+/*NV_texture_compression_vtc*/
+#ifdef USE_DYNAMIC_GL_NV_texture_compression_vtc
+bool DinamicGLFeature_NV_texture_compression_vtc_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_texture_compression_vtc")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_texture_compression_vtc*/
+
 /*SGIS_texture_border_clamp*/
 #ifdef USE_DYNAMIC_GL_SGIS_texture_border_clamp
-static bool DinamicGLFeature_SGIS_texture_border_clamp_loaded = false; 
-static void InitDinamicGLFeature_SGIS_texture_border_clamp() {
-		DinamicGLFeature_SGIS_texture_border_clamp_loaded = true; 
-}
 bool DinamicGLFeature_SGIS_texture_border_clamp_Supported() {
-		if (!DinamicGLFeature_SGIS_texture_border_clamp_loaded) {
-			InitDinamicGLFeature_SGIS_texture_border_clamp();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIS_texture_border_clamp")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIS_texture_border_clamp*/
 
 /*EXT_gpu_program_parameters*/
 #ifdef USE_DYNAMIC_GL_EXT_gpu_program_parameters
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramEnvParameters4fvEXT)(GLenum target , GLuint index , GLsizei count , const GLfloat *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramLocalParameters4fvEXT)(GLenum target , GLuint index , GLsizei count , const GLfloat *params) = 0; }
 static bool DinamicGLFeature_EXT_gpu_program_parameters_loaded = false; 
@@ -5564,32 +5765,31 @@ static void InitDinamicGLFeature_EXT_gpu_program_parameters() {
 		DynamicGL_ProgramLocalParameters4fvEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint index , GLsizei count , const GLfloat *params)>("glProgramLocalParameters4fvEXT"); 
 		DinamicGLFeature_EXT_gpu_program_parameters_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_gpu_program_parameters_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_gpu_program_parameters")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_gpu_program_parameters_loaded) {
 			InitDinamicGLFeature_EXT_gpu_program_parameters();
 		}
 		if (DynamicGL_ProgramEnvParameters4fvEXT==0) return false; 
 		if (DynamicGL_ProgramLocalParameters4fvEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_gpu_program_parameters*/
 
 /*SGIX_texture_add_env*/
 #ifdef USE_DYNAMIC_GL_SGIX_texture_add_env
-static bool DinamicGLFeature_SGIX_texture_add_env_loaded = false; 
-static void InitDinamicGLFeature_SGIX_texture_add_env() {
-		DinamicGLFeature_SGIX_texture_add_env_loaded = true; 
-}
 bool DinamicGLFeature_SGIX_texture_add_env_Supported() {
-		if (!DinamicGLFeature_SGIX_texture_add_env_loaded) {
-			InitDinamicGLFeature_SGIX_texture_add_env();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_texture_add_env")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_texture_add_env*/
 
 /*EXT_paletted_texture*/
 #ifdef USE_DYNAMIC_GL_EXT_paletted_texture
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorTableEXT)(GLenum target , GLenum internalFormat , GLsizei width , GLenum format , GLenum type , const GLvoid *table) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetColorTableEXT)(GLenum target , GLenum format , GLenum type , GLvoid *data) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetColorTableParameterivEXT)(GLenum target , GLenum pname , GLint *params) = 0; }
@@ -5602,7 +5802,10 @@ static void InitDinamicGLFeature_EXT_paletted_texture() {
 		DynamicGL_GetColorTableParameterfvEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum pname , GLfloat *params)>("glGetColorTableParameterfvEXT"); 
 		DinamicGLFeature_EXT_paletted_texture_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_paletted_texture_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_paletted_texture")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_paletted_texture_loaded) {
 			InitDinamicGLFeature_EXT_paletted_texture();
 		}
@@ -5610,12 +5813,14 @@ bool DinamicGLFeature_EXT_paletted_texture_Supported() {
 		if (DynamicGL_GetColorTableEXT==0) return false; 
 		if (DynamicGL_GetColorTableParameterivEXT==0) return false; 
 		if (DynamicGL_GetColorTableParameterfvEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_paletted_texture*/
 
 /*ARB_gpu_shader_fp64*/
 #ifdef USE_DYNAMIC_GL_ARB_gpu_shader_fp64
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform1d)(GLint location , GLdouble x) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform2d)(GLint location , GLdouble x , GLdouble y) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform3d)(GLint location , GLdouble x , GLdouble y , GLdouble z) = 0; }
@@ -5656,7 +5861,10 @@ static void InitDinamicGLFeature_ARB_gpu_shader_fp64() {
 		DynamicGL_GetUniformdv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLdouble *params)>("glGetUniformdv"); 
 		DinamicGLFeature_ARB_gpu_shader_fp64_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_gpu_shader_fp64_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_gpu_shader_fp64")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_gpu_shader_fp64_loaded) {
 			InitDinamicGLFeature_ARB_gpu_shader_fp64();
 		}
@@ -5678,12 +5886,14 @@ bool DinamicGLFeature_ARB_gpu_shader_fp64_Supported() {
 		if (DynamicGL_UniformMatrix4x2dv==0) return false; 
 		if (DynamicGL_UniformMatrix4x3dv==0) return false; 
 		if (DynamicGL_GetUniformdv==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_gpu_shader_fp64*/
 
 /*EXT_light_texture*/
 #ifdef USE_DYNAMIC_GL_EXT_light_texture
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ApplyTextureEXT)(GLenum mode) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureLightEXT)(GLenum pname) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureMaterialEXT)(GLenum face , GLenum mode) = 0; }
@@ -5694,33 +5904,40 @@ static void InitDinamicGLFeature_EXT_light_texture() {
 		DynamicGL_TextureMaterialEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum face , GLenum mode)>("glTextureMaterialEXT"); 
 		DinamicGLFeature_EXT_light_texture_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_light_texture_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_light_texture")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_light_texture_loaded) {
 			InitDinamicGLFeature_EXT_light_texture();
 		}
 		if (DynamicGL_ApplyTextureEXT==0) return false; 
 		if (DynamicGL_TextureLightEXT==0) return false; 
 		if (DynamicGL_TextureMaterialEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_light_texture*/
 
 /*ARB_map_buffer_alignment*/
 #ifdef USE_DYNAMIC_GL_ARB_map_buffer_alignment
-static bool DinamicGLFeature_ARB_map_buffer_alignment_loaded = false; 
-static void InitDinamicGLFeature_ARB_map_buffer_alignment() {
-		DinamicGLFeature_ARB_map_buffer_alignment_loaded = true; 
-}
 bool DinamicGLFeature_ARB_map_buffer_alignment_Supported() {
-		if (!DinamicGLFeature_ARB_map_buffer_alignment_loaded) {
-			InitDinamicGLFeature_ARB_map_buffer_alignment();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_map_buffer_alignment")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_map_buffer_alignment*/
 
+/*ARB_shading_language_420pack*/
+#ifdef USE_DYNAMIC_GL_ARB_shading_language_420pack
+bool DinamicGLFeature_ARB_shading_language_420pack_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_shading_language_420pack")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_shading_language_420pack*/
+
 /*EXT_multisample*/
 #ifdef USE_DYNAMIC_GL_EXT_multisample
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleMaskEXT)(GLclampf value , GLboolean invert) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SamplePatternEXT)(GLenum pattern) = 0; }
 static bool DinamicGLFeature_EXT_multisample_loaded = false; 
@@ -5729,32 +5946,31 @@ static void InitDinamicGLFeature_EXT_multisample() {
 		DynamicGL_SamplePatternEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pattern)>("glSamplePatternEXT"); 
 		DinamicGLFeature_EXT_multisample_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_multisample_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_multisample")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_multisample_loaded) {
 			InitDinamicGLFeature_EXT_multisample();
 		}
 		if (DynamicGL_SampleMaskEXT==0) return false; 
 		if (DynamicGL_SamplePatternEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_multisample*/
 
 /*SGIX_resample*/
 #ifdef USE_DYNAMIC_GL_SGIX_resample
-static bool DinamicGLFeature_SGIX_resample_loaded = false; 
-static void InitDinamicGLFeature_SGIX_resample() {
-		DinamicGLFeature_SGIX_resample_loaded = true; 
-}
 bool DinamicGLFeature_SGIX_resample_Supported() {
-		if (!DinamicGLFeature_SGIX_resample_loaded) {
-			InitDinamicGLFeature_SGIX_resample();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_resample")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_resample*/
 
 /*ARB_vertex_program*/
 #ifdef USE_DYNAMIC_GL_ARB_vertex_program
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttrib1dARB)(GLuint index , GLdouble x) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttrib1dvARB)(GLuint index , const GLdouble *v) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttrib1fARB)(GLuint index , GLfloat x) = 0; }
@@ -5883,7 +6099,10 @@ static void InitDinamicGLFeature_ARB_vertex_program() {
 		DynamicGL_IsProgramARB = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLuint program)>("glIsProgramARB"); 
 		DinamicGLFeature_ARB_vertex_program_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_vertex_program_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_vertex_program")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_vertex_program_loaded) {
 			InitDinamicGLFeature_ARB_vertex_program();
 		}
@@ -5949,12 +6168,14 @@ bool DinamicGLFeature_ARB_vertex_program_Supported() {
 		if (DynamicGL_GetVertexAttribivARB==0) return false; 
 		if (DynamicGL_GetVertexAttribPointervARB==0) return false; 
 		if (DynamicGL_IsProgramARB==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_vertex_program*/
 
 /*ARB_tessellation_shader*/
 #ifdef USE_DYNAMIC_GL_ARB_tessellation_shader
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PatchParameteri)(GLenum pname , GLint value) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PatchParameterfv)(GLenum pname , const GLfloat *values) = 0; }
 static bool DinamicGLFeature_ARB_tessellation_shader_loaded = false; 
@@ -5963,18 +6184,23 @@ static void InitDinamicGLFeature_ARB_tessellation_shader() {
 		DynamicGL_PatchParameterfv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , const GLfloat *values)>("glPatchParameterfv"); 
 		DinamicGLFeature_ARB_tessellation_shader_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_tessellation_shader_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_tessellation_shader")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_tessellation_shader_loaded) {
 			InitDinamicGLFeature_ARB_tessellation_shader();
 		}
 		if (DynamicGL_PatchParameteri==0) return false; 
 		if (DynamicGL_PatchParameterfv==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_tessellation_shader*/
 
 /*EXT_point_parameters*/
 #ifdef USE_DYNAMIC_GL_EXT_point_parameters
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterfEXT)(GLenum pname , GLfloat param) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterfvEXT)(GLenum pname , const GLfloat *params) = 0; }
 static bool DinamicGLFeature_EXT_point_parameters_loaded = false; 
@@ -5983,49 +6209,61 @@ static void InitDinamicGLFeature_EXT_point_parameters() {
 		DynamicGL_PointParameterfvEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , const GLfloat *params)>("glPointParameterfvEXT"); 
 		DinamicGLFeature_EXT_point_parameters_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_point_parameters_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_point_parameters")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_point_parameters_loaded) {
 			InitDinamicGLFeature_EXT_point_parameters();
 		}
 		if (DynamicGL_PointParameterfEXT==0) return false; 
 		if (DynamicGL_PointParameterfvEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_point_parameters*/
 
 /*ATI_map_object_buffer*/
 #ifdef USE_DYNAMIC_GL_ATI_map_object_buffer
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_UnmapObjectBufferATI)(GLuint buffer) = 0; }
 static bool DinamicGLFeature_ATI_map_object_buffer_loaded = false; 
 static void InitDinamicGLFeature_ATI_map_object_buffer() {
 		DynamicGL_UnmapObjectBufferATI = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint buffer)>("glUnmapObjectBufferATI"); 
 		DinamicGLFeature_ATI_map_object_buffer_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ATI_map_object_buffer_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ATI_map_object_buffer")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ATI_map_object_buffer_loaded) {
 			InitDinamicGLFeature_ATI_map_object_buffer();
 		}
 		if (DynamicGL_UnmapObjectBufferATI==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ATI_map_object_buffer*/
 
 /*MESAX_texture_stack*/
 #ifdef USE_DYNAMIC_GL_MESAX_texture_stack
-static bool DinamicGLFeature_MESAX_texture_stack_loaded = false; 
-static void InitDinamicGLFeature_MESAX_texture_stack() {
-		DinamicGLFeature_MESAX_texture_stack_loaded = true; 
-}
 bool DinamicGLFeature_MESAX_texture_stack_Supported() {
-		if (!DinamicGLFeature_MESAX_texture_stack_loaded) {
-			InitDinamicGLFeature_MESAX_texture_stack();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_MESAX_texture_stack")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_MESAX_texture_stack*/
 
+/*ARB_shading_language_packing*/
+#ifdef USE_DYNAMIC_GL_ARB_shading_language_packing
+bool DinamicGLFeature_ARB_shading_language_packing_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_shading_language_packing")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_shading_language_packing*/
+
 /*SGIS_pixel_texture*/
 #ifdef USE_DYNAMIC_GL_SGIS_pixel_texture
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PixelTexGenParameteriSGIS)(GLenum pname , GLint param) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PixelTexGenParameterivSGIS)(GLenum pname , const GLint *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PixelTexGenParameterfSGIS)(GLenum pname , GLfloat param) = 0; }
@@ -6042,7 +6280,10 @@ static void InitDinamicGLFeature_SGIS_pixel_texture() {
 		DynamicGL_GetPixelTexGenParameterfvSGIS = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , GLfloat *params)>("glGetPixelTexGenParameterfvSGIS"); 
 		DinamicGLFeature_SGIS_pixel_texture_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_SGIS_pixel_texture_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIS_pixel_texture")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_SGIS_pixel_texture_loaded) {
 			InitDinamicGLFeature_SGIS_pixel_texture();
 		}
@@ -6052,12 +6293,14 @@ bool DinamicGLFeature_SGIS_pixel_texture_Supported() {
 		if (DynamicGL_PixelTexGenParameterfvSGIS==0) return false; 
 		if (DynamicGL_GetPixelTexGenParameterivSGIS==0) return false; 
 		if (DynamicGL_GetPixelTexGenParameterfvSGIS==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIS_pixel_texture*/
 
 /*NV_vertex_attrib_integer_64bit*/
 #ifdef USE_DYNAMIC_GL_NV_vertex_attrib_integer_64bit
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL1i64NV)(GLuint index , GLint64EXT x) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL2i64NV)(GLuint index , GLint64EXT x , GLint64EXT y) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL3i64NV)(GLuint index , GLint64EXT x , GLint64EXT y , GLint64EXT z) = 0; }
@@ -6100,7 +6343,10 @@ static void InitDinamicGLFeature_NV_vertex_attrib_integer_64bit() {
 		DynamicGL_VertexAttribLFormatNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLint size , GLenum type , GLsizei stride)>("glVertexAttribLFormatNV"); 
 		DinamicGLFeature_NV_vertex_attrib_integer_64bit_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_vertex_attrib_integer_64bit_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_vertex_attrib_integer_64bit")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_vertex_attrib_integer_64bit_loaded) {
 			InitDinamicGLFeature_NV_vertex_attrib_integer_64bit();
 		}
@@ -6123,29 +6369,44 @@ bool DinamicGLFeature_NV_vertex_attrib_integer_64bit_Supported() {
 		if (DynamicGL_GetVertexAttribLi64vNV==0) return false; 
 		if (DynamicGL_GetVertexAttribLui64vNV==0) return false; 
 		if (DynamicGL_VertexAttribLFormatNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_vertex_attrib_integer_64bit*/
 
+/*ARB_texture_non_power_of_two*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_non_power_of_two
+bool DinamicGLFeature_ARB_texture_non_power_of_two_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_texture_non_power_of_two")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_texture_non_power_of_two*/
+
 /*ARB_provoking_vertex*/
 #ifdef USE_DYNAMIC_GL_ARB_provoking_vertex
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProvokingVertex)(GLenum mode) = 0; }
 static bool DinamicGLFeature_ARB_provoking_vertex_loaded = false; 
 static void InitDinamicGLFeature_ARB_provoking_vertex() {
 		DynamicGL_ProvokingVertex = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode)>("glProvokingVertex"); 
 		DinamicGLFeature_ARB_provoking_vertex_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_provoking_vertex_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_provoking_vertex")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_provoking_vertex_loaded) {
 			InitDinamicGLFeature_ARB_provoking_vertex();
 		}
 		if (DynamicGL_ProvokingVertex==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_provoking_vertex*/
 
 /*SGIS_texture4D*/
 #ifdef USE_DYNAMIC_GL_SGIS_texture4D
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexImage4DSGIS)(GLenum target , GLint level , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth , GLsizei size4d , GLint border , GLenum format , GLenum type , const GLvoid *pixels) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexSubImage4DSGIS)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLint zoffset , GLint woffset , GLsizei width , GLsizei height , GLsizei depth , GLsizei size4d , GLenum format , GLenum type , const GLvoid *pixels) = 0; }
 static bool DinamicGLFeature_SGIS_texture4D_loaded = false; 
@@ -6154,35 +6415,45 @@ static void InitDinamicGLFeature_SGIS_texture4D() {
 		DynamicGL_TexSubImage4DSGIS = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLint zoffset , GLint woffset , GLsizei width , GLsizei height , GLsizei depth , GLsizei size4d , GLenum format , GLenum type , const GLvoid *pixels)>("glTexSubImage4DSGIS"); 
 		DinamicGLFeature_SGIS_texture4D_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_SGIS_texture4D_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIS_texture4D")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_SGIS_texture4D_loaded) {
 			InitDinamicGLFeature_SGIS_texture4D();
 		}
 		if (DynamicGL_TexImage4DSGIS==0) return false; 
 		if (DynamicGL_TexSubImage4DSGIS==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIS_texture4D*/
 
 /*PGI_misc_hints*/
 #ifdef USE_DYNAMIC_GL_PGI_misc_hints
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_HintPGI)(GLenum target , GLint mode) = 0; }
 static bool DinamicGLFeature_PGI_misc_hints_loaded = false; 
 static void InitDinamicGLFeature_PGI_misc_hints() {
 		DynamicGL_HintPGI = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint mode)>("glHintPGI"); 
 		DinamicGLFeature_PGI_misc_hints_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_PGI_misc_hints_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_PGI_misc_hints")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_PGI_misc_hints_loaded) {
 			InitDinamicGLFeature_PGI_misc_hints();
 		}
 		if (DynamicGL_HintPGI==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_PGI_misc_hints*/
 
 /*SGIS_multisample*/
 #ifdef USE_DYNAMIC_GL_SGIS_multisample
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleMaskSGIS)(GLclampf value , GLboolean invert) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SamplePatternSGIS)(GLenum pattern) = 0; }
 static bool DinamicGLFeature_SGIS_multisample_loaded = false; 
@@ -6191,18 +6462,23 @@ static void InitDinamicGLFeature_SGIS_multisample() {
 		DynamicGL_SamplePatternSGIS = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pattern)>("glSamplePatternSGIS"); 
 		DinamicGLFeature_SGIS_multisample_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_SGIS_multisample_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIS_multisample")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_SGIS_multisample_loaded) {
 			InitDinamicGLFeature_SGIS_multisample();
 		}
 		if (DynamicGL_SampleMaskSGIS==0) return false; 
 		if (DynamicGL_SamplePatternSGIS==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIS_multisample*/
 
 /*NV_vdpau_interop*/
 #ifdef USE_DYNAMIC_GL_NV_vdpau_interop
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VDPAUInitNV)(const GLvoid *vdpDevice , const GLvoid *getProcAddress) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VDPAUFiniNV)() = 0; }
 extern "C" { GLvdpauSurfaceNV (DYNAMIC_GL_APIENTRYP DynamicGL_VDPAURegisterVideoSurfaceNV)(GLvoid *vdpSurface , GLenum target , GLsizei numTextureNames , const GLuint *textureNames) = 0; }
@@ -6227,7 +6503,10 @@ static void InitDinamicGLFeature_NV_vdpau_interop() {
 		DynamicGL_VDPAUUnmapSurfacesNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei numSurface , const GLvdpauSurfaceNV *surfaces)>("glVDPAUUnmapSurfacesNV"); 
 		DinamicGLFeature_NV_vdpau_interop_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_vdpau_interop_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_vdpau_interop")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_vdpau_interop_loaded) {
 			InitDinamicGLFeature_NV_vdpau_interop();
 		}
@@ -6241,26 +6520,93 @@ bool DinamicGLFeature_NV_vdpau_interop_Supported() {
 		if (DynamicGL_VDPAUSurfaceAccessNV==0) return false; 
 		if (DynamicGL_VDPAUMapSurfacesNV==0) return false; 
 		if (DynamicGL_VDPAUUnmapSurfacesNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_vdpau_interop*/
 
 /*EXT_texture_sRGB_decode*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_sRGB_decode
-static bool DinamicGLFeature_EXT_texture_sRGB_decode_loaded = false; 
-static void InitDinamicGLFeature_EXT_texture_sRGB_decode() {
-		DinamicGLFeature_EXT_texture_sRGB_decode_loaded = true; 
-}
 bool DinamicGLFeature_EXT_texture_sRGB_decode_Supported() {
-		if (!DinamicGLFeature_EXT_texture_sRGB_decode_loaded) {
-			InitDinamicGLFeature_EXT_texture_sRGB_decode();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_sRGB_decode")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_sRGB_decode*/
 
+/*NV_transform_feedback2*/
+#ifdef USE_DYNAMIC_GL_NV_transform_feedback2
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindTransformFeedbackNV)(GLenum target , GLuint id) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteTransformFeedbacksNV)(GLsizei n , const GLuint *ids) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenTransformFeedbacksNV)(GLsizei n , GLuint *ids) = 0; }
+extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsTransformFeedbackNV)(GLuint id) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PauseTransformFeedbackNV)() = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ResumeTransformFeedbackNV)() = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTransformFeedbackNV)(GLenum mode , GLuint id) = 0; }
+static bool DinamicGLFeature_NV_transform_feedback2_loaded = false; 
+static void InitDinamicGLFeature_NV_transform_feedback2() {
+		DynamicGL_BindTransformFeedbackNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint id)>("glBindTransformFeedbackNV"); 
+		DynamicGL_DeleteTransformFeedbacksNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei n , const GLuint *ids)>("glDeleteTransformFeedbacksNV"); 
+		DynamicGL_GenTransformFeedbacksNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei n , GLuint *ids)>("glGenTransformFeedbacksNV"); 
+		DynamicGL_IsTransformFeedbackNV = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLuint id)>("glIsTransformFeedbackNV"); 
+		DynamicGL_PauseTransformFeedbackNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)()>("glPauseTransformFeedbackNV"); 
+		DynamicGL_ResumeTransformFeedbackNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)()>("glResumeTransformFeedbackNV"); 
+		DynamicGL_DrawTransformFeedbackNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLuint id)>("glDrawTransformFeedbackNV"); 
+		DinamicGLFeature_NV_transform_feedback2_loaded = true; 
+}
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+bool DinamicGLFeature_NV_transform_feedback2_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_transform_feedback2")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
+		if (!DinamicGLFeature_NV_transform_feedback2_loaded) {
+			InitDinamicGLFeature_NV_transform_feedback2();
+		}
+		if (DynamicGL_BindTransformFeedbackNV==0) return false; 
+		if (DynamicGL_DeleteTransformFeedbacksNV==0) return false; 
+		if (DynamicGL_GenTransformFeedbacksNV==0) return false; 
+		if (DynamicGL_IsTransformFeedbackNV==0) return false; 
+		if (DynamicGL_PauseTransformFeedbackNV==0) return false; 
+		if (DynamicGL_ResumeTransformFeedbackNV==0) return false; 
+		if (DynamicGL_DrawTransformFeedbackNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_transform_feedback2*/
+
+/*SGIX_polynomial_ffd*/
+#ifdef USE_DYNAMIC_GL_SGIX_polynomial_ffd
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeformationMap3dSGIX)(GLenum target , GLdouble u1 , GLdouble u2 , GLint ustride , GLint uorder , GLdouble v1 , GLdouble v2 , GLint vstride , GLint vorder , GLdouble w1 , GLdouble w2 , GLint wstride , GLint worder , const GLdouble *points) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeformationMap3fSGIX)(GLenum target , GLfloat u1 , GLfloat u2 , GLint ustride , GLint uorder , GLfloat v1 , GLfloat v2 , GLint vstride , GLint vorder , GLfloat w1 , GLfloat w2 , GLint wstride , GLint worder , const GLfloat *points) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeformSGIX)(GLbitfield mask) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadIdentityDeformationMapSGIX)(GLbitfield mask) = 0; }
+static bool DinamicGLFeature_SGIX_polynomial_ffd_loaded = false; 
+static void InitDinamicGLFeature_SGIX_polynomial_ffd() {
+		DynamicGL_DeformationMap3dSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLdouble u1 , GLdouble u2 , GLint ustride , GLint uorder , GLdouble v1 , GLdouble v2 , GLint vstride , GLint vorder , GLdouble w1 , GLdouble w2 , GLint wstride , GLint worder , const GLdouble *points)>("glDeformationMap3dSGIX"); 
+		DynamicGL_DeformationMap3fSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLfloat u1 , GLfloat u2 , GLint ustride , GLint uorder , GLfloat v1 , GLfloat v2 , GLint vstride , GLint vorder , GLfloat w1 , GLfloat w2 , GLint wstride , GLint worder , const GLfloat *points)>("glDeformationMap3fSGIX"); 
+		DynamicGL_DeformSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLbitfield mask)>("glDeformSGIX"); 
+		DynamicGL_LoadIdentityDeformationMapSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLbitfield mask)>("glLoadIdentityDeformationMapSGIX"); 
+		DinamicGLFeature_SGIX_polynomial_ffd_loaded = true; 
+}
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+bool DinamicGLFeature_SGIX_polynomial_ffd_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_polynomial_ffd")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
+		if (!DinamicGLFeature_SGIX_polynomial_ffd_loaded) {
+			InitDinamicGLFeature_SGIX_polynomial_ffd();
+		}
+		if (DynamicGL_DeformationMap3dSGIX==0) return false; 
+		if (DynamicGL_DeformationMap3fSGIX==0) return false; 
+		if (DynamicGL_DeformSGIX==0) return false; 
+		if (DynamicGL_LoadIdentityDeformationMapSGIX==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_SGIX_polynomial_ffd*/
+
 /*ARB_window_pos*/
 #ifdef USE_DYNAMIC_GL_ARB_window_pos
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2dARB)(GLdouble x , GLdouble y) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2dvARB)(const GLdouble *v) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2fARB)(GLfloat x , GLfloat y) = 0; }
@@ -6297,7 +6643,10 @@ static void InitDinamicGLFeature_ARB_window_pos() {
 		DynamicGL_WindowPos3svARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLshort *v)>("glWindowPos3svARB"); 
 		DinamicGLFeature_ARB_window_pos_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_window_pos_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_window_pos")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_window_pos_loaded) {
 			InitDinamicGLFeature_ARB_window_pos();
 		}
@@ -6317,73 +6666,14 @@ bool DinamicGLFeature_ARB_window_pos_Supported() {
 		if (DynamicGL_WindowPos3ivARB==0) return false; 
 		if (DynamicGL_WindowPos3sARB==0) return false; 
 		if (DynamicGL_WindowPos3svARB==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_window_pos*/
 
-/*NV_transform_feedback2*/
-#ifdef USE_DYNAMIC_GL_NV_transform_feedback2
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindTransformFeedbackNV)(GLenum target , GLuint id) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteTransformFeedbacksNV)(GLsizei n , const GLuint *ids) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenTransformFeedbacksNV)(GLsizei n , GLuint *ids) = 0; }
-extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsTransformFeedbackNV)(GLuint id) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PauseTransformFeedbackNV)() = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ResumeTransformFeedbackNV)() = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTransformFeedbackNV)(GLenum mode , GLuint id) = 0; }
-static bool DinamicGLFeature_NV_transform_feedback2_loaded = false; 
-static void InitDinamicGLFeature_NV_transform_feedback2() {
-		DynamicGL_BindTransformFeedbackNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint id)>("glBindTransformFeedbackNV"); 
-		DynamicGL_DeleteTransformFeedbacksNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei n , const GLuint *ids)>("glDeleteTransformFeedbacksNV"); 
-		DynamicGL_GenTransformFeedbacksNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei n , GLuint *ids)>("glGenTransformFeedbacksNV"); 
-		DynamicGL_IsTransformFeedbackNV = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLuint id)>("glIsTransformFeedbackNV"); 
-		DynamicGL_PauseTransformFeedbackNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)()>("glPauseTransformFeedbackNV"); 
-		DynamicGL_ResumeTransformFeedbackNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)()>("glResumeTransformFeedbackNV"); 
-		DynamicGL_DrawTransformFeedbackNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLuint id)>("glDrawTransformFeedbackNV"); 
-		DinamicGLFeature_NV_transform_feedback2_loaded = true; 
-}
-bool DinamicGLFeature_NV_transform_feedback2_Supported() {
-		if (!DinamicGLFeature_NV_transform_feedback2_loaded) {
-			InitDinamicGLFeature_NV_transform_feedback2();
-		}
-		if (DynamicGL_BindTransformFeedbackNV==0) return false; 
-		if (DynamicGL_DeleteTransformFeedbacksNV==0) return false; 
-		if (DynamicGL_GenTransformFeedbacksNV==0) return false; 
-		if (DynamicGL_IsTransformFeedbackNV==0) return false; 
-		if (DynamicGL_PauseTransformFeedbackNV==0) return false; 
-		if (DynamicGL_ResumeTransformFeedbackNV==0) return false; 
-		if (DynamicGL_DrawTransformFeedbackNV==0) return false; 
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_NV_transform_feedback2*/
-
-/*SGIX_polynomial_ffd*/
-#ifdef USE_DYNAMIC_GL_SGIX_polynomial_ffd
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeformationMap3dSGIX)(GLenum target , GLdouble u1 , GLdouble u2 , GLint ustride , GLint uorder , GLdouble v1 , GLdouble v2 , GLint vstride , GLint vorder , GLdouble w1 , GLdouble w2 , GLint wstride , GLint worder , const GLdouble *points) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeformationMap3fSGIX)(GLenum target , GLfloat u1 , GLfloat u2 , GLint ustride , GLint uorder , GLfloat v1 , GLfloat v2 , GLint vstride , GLint vorder , GLfloat w1 , GLfloat w2 , GLint wstride , GLint worder , const GLfloat *points) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeformSGIX)(GLbitfield mask) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadIdentityDeformationMapSGIX)(GLbitfield mask) = 0; }
-static bool DinamicGLFeature_SGIX_polynomial_ffd_loaded = false; 
-static void InitDinamicGLFeature_SGIX_polynomial_ffd() {
-		DynamicGL_DeformationMap3dSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLdouble u1 , GLdouble u2 , GLint ustride , GLint uorder , GLdouble v1 , GLdouble v2 , GLint vstride , GLint vorder , GLdouble w1 , GLdouble w2 , GLint wstride , GLint worder , const GLdouble *points)>("glDeformationMap3dSGIX"); 
-		DynamicGL_DeformationMap3fSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLfloat u1 , GLfloat u2 , GLint ustride , GLint uorder , GLfloat v1 , GLfloat v2 , GLint vstride , GLint vorder , GLfloat w1 , GLfloat w2 , GLint wstride , GLint worder , const GLfloat *points)>("glDeformationMap3fSGIX"); 
-		DynamicGL_DeformSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLbitfield mask)>("glDeformSGIX"); 
-		DynamicGL_LoadIdentityDeformationMapSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLbitfield mask)>("glLoadIdentityDeformationMapSGIX"); 
-		DinamicGLFeature_SGIX_polynomial_ffd_loaded = true; 
-}
-bool DinamicGLFeature_SGIX_polynomial_ffd_Supported() {
-		if (!DinamicGLFeature_SGIX_polynomial_ffd_loaded) {
-			InitDinamicGLFeature_SGIX_polynomial_ffd();
-		}
-		if (DynamicGL_DeformationMap3dSGIX==0) return false; 
-		if (DynamicGL_DeformationMap3fSGIX==0) return false; 
-		if (DynamicGL_DeformSGIX==0) return false; 
-		if (DynamicGL_LoadIdentityDeformationMapSGIX==0) return false; 
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_SGIX_polynomial_ffd*/
-
 /*EXT_timer_query*/
 #ifdef USE_DYNAMIC_GL_EXT_timer_query
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetQueryObjecti64vEXT)(GLuint id , GLenum pname , GLint64EXT *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetQueryObjectui64vEXT)(GLuint id , GLenum pname , GLuint64EXT *params) = 0; }
 static bool DinamicGLFeature_EXT_timer_query_loaded = false; 
@@ -6392,66 +6682,75 @@ static void InitDinamicGLFeature_EXT_timer_query() {
 		DynamicGL_GetQueryObjectui64vEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint id , GLenum pname , GLuint64EXT *params)>("glGetQueryObjectui64vEXT"); 
 		DinamicGLFeature_EXT_timer_query_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_timer_query_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_timer_query")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_timer_query_loaded) {
 			InitDinamicGLFeature_EXT_timer_query();
 		}
 		if (DynamicGL_GetQueryObjecti64vEXT==0) return false; 
 		if (DynamicGL_GetQueryObjectui64vEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_timer_query*/
 
 /*SGIX_ir_instrument1*/
 #ifdef USE_DYNAMIC_GL_SGIX_ir_instrument1
-static bool DinamicGLFeature_SGIX_ir_instrument1_loaded = false; 
-static void InitDinamicGLFeature_SGIX_ir_instrument1() {
-		DinamicGLFeature_SGIX_ir_instrument1_loaded = true; 
-}
 bool DinamicGLFeature_SGIX_ir_instrument1_Supported() {
-		if (!DinamicGLFeature_SGIX_ir_instrument1_loaded) {
-			InitDinamicGLFeature_SGIX_ir_instrument1();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_ir_instrument1")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_ir_instrument1*/
 
-/*NV_texture_barrier*/
-#ifdef USE_DYNAMIC_GL_NV_texture_barrier
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureBarrierNV)() = 0; }
-static bool DinamicGLFeature_NV_texture_barrier_loaded = false; 
-static void InitDinamicGLFeature_NV_texture_barrier() {
-		DynamicGL_TextureBarrierNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)()>("glTextureBarrierNV"); 
-		DinamicGLFeature_NV_texture_barrier_loaded = true; 
-}
-bool DinamicGLFeature_NV_texture_barrier_Supported() {
-		if (!DinamicGLFeature_NV_texture_barrier_loaded) {
-			InitDinamicGLFeature_NV_texture_barrier();
-		}
-		if (DynamicGL_TextureBarrierNV==0) return false; 
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_NV_texture_barrier*/
-
 /*SGIX_igloo_interface*/
 #ifdef USE_DYNAMIC_GL_SGIX_igloo_interface
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_IglooInterfaceSGIX)(GLenum pname , const GLvoid *params) = 0; }
 static bool DinamicGLFeature_SGIX_igloo_interface_loaded = false; 
 static void InitDinamicGLFeature_SGIX_igloo_interface() {
 		DynamicGL_IglooInterfaceSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , const GLvoid *params)>("glIglooInterfaceSGIX"); 
 		DinamicGLFeature_SGIX_igloo_interface_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_SGIX_igloo_interface_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_igloo_interface")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_SGIX_igloo_interface_loaded) {
 			InitDinamicGLFeature_SGIX_igloo_interface();
 		}
 		if (DynamicGL_IglooInterfaceSGIX==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_igloo_interface*/
 
+/*NV_texture_barrier*/
+#ifdef USE_DYNAMIC_GL_NV_texture_barrier
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureBarrierNV)() = 0; }
+static bool DinamicGLFeature_NV_texture_barrier_loaded = false; 
+static void InitDinamicGLFeature_NV_texture_barrier() {
+		DynamicGL_TextureBarrierNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)()>("glTextureBarrierNV"); 
+		DinamicGLFeature_NV_texture_barrier_loaded = true; 
+}
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+bool DinamicGLFeature_NV_texture_barrier_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_texture_barrier")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
+		if (!DinamicGLFeature_NV_texture_barrier_loaded) {
+			InitDinamicGLFeature_NV_texture_barrier();
+		}
+		if (DynamicGL_TextureBarrierNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_texture_barrier*/
+
 /*ARB_texture_multisample*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_multisample
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexImage2DMultisample)(GLenum target , GLsizei samples , GLint internalformat , GLsizei width , GLsizei height , GLboolean fixedsamplelocations) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexImage3DMultisample)(GLenum target , GLsizei samples , GLint internalformat , GLsizei width , GLsizei height , GLsizei depth , GLboolean fixedsamplelocations) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetMultisamplefv)(GLenum pname , GLuint index , GLfloat *val) = 0; }
@@ -6464,7 +6763,10 @@ static void InitDinamicGLFeature_ARB_texture_multisample() {
 		DynamicGL_SampleMaski = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLbitfield mask)>("glSampleMaski"); 
 		DinamicGLFeature_ARB_texture_multisample_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_texture_multisample_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_texture_multisample")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_texture_multisample_loaded) {
 			InitDinamicGLFeature_ARB_texture_multisample();
 		}
@@ -6472,26 +6774,30 @@ bool DinamicGLFeature_ARB_texture_multisample_Supported() {
 		if (DynamicGL_TexImage3DMultisample==0) return false; 
 		if (DynamicGL_GetMultisamplefv==0) return false; 
 		if (DynamicGL_SampleMaski==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_texture_multisample*/
 
 /*AMD_blend_minmax_factor*/
 #ifdef USE_DYNAMIC_GL_AMD_blend_minmax_factor
-static bool DinamicGLFeature_AMD_blend_minmax_factor_loaded = false; 
-static void InitDinamicGLFeature_AMD_blend_minmax_factor() {
-		DinamicGLFeature_AMD_blend_minmax_factor_loaded = true; 
-}
 bool DinamicGLFeature_AMD_blend_minmax_factor_Supported() {
-		if (!DinamicGLFeature_AMD_blend_minmax_factor_loaded) {
-			InitDinamicGLFeature_AMD_blend_minmax_factor();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_AMD_blend_minmax_factor")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_AMD_blend_minmax_factor*/
 
+/*EXT_blend_logic_op*/
+#ifdef USE_DYNAMIC_GL_EXT_blend_logic_op
+bool DinamicGLFeature_EXT_blend_logic_op_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_blend_logic_op")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_EXT_blend_logic_op*/
+
 /*NV_fence*/
 #ifdef USE_DYNAMIC_GL_NV_fence
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteFencesNV)(GLsizei n , const GLuint *fences) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenFencesNV)(GLsizei n , GLuint *fences) = 0; }
 extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsFenceNV)(GLuint fence) = 0; }
@@ -6510,7 +6816,10 @@ static void InitDinamicGLFeature_NV_fence() {
 		DynamicGL_SetFenceNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint fence , GLenum condition)>("glSetFenceNV"); 
 		DinamicGLFeature_NV_fence_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_fence_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_fence")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_fence_loaded) {
 			InitDinamicGLFeature_NV_fence();
 		}
@@ -6521,12 +6830,14 @@ bool DinamicGLFeature_NV_fence_Supported() {
 		if (DynamicGL_GetFenceivNV==0) return false; 
 		if (DynamicGL_FinishFenceNV==0) return false; 
 		if (DynamicGL_SetFenceNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_fence*/
 
 /*NV_register_combiners*/
 #ifdef USE_DYNAMIC_GL_NV_register_combiners
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CombinerParameterfvNV)(GLenum pname , const GLfloat *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CombinerParameterfNV)(GLenum pname , GLfloat param) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CombinerParameterivNV)(GLenum pname , const GLint *params) = 0; }
@@ -6557,7 +6868,10 @@ static void InitDinamicGLFeature_NV_register_combiners() {
 		DynamicGL_GetFinalCombinerInputParameterivNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum variable , GLenum pname , GLint *params)>("glGetFinalCombinerInputParameterivNV"); 
 		DinamicGLFeature_NV_register_combiners_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_register_combiners_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_register_combiners")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_register_combiners_loaded) {
 			InitDinamicGLFeature_NV_register_combiners();
 		}
@@ -6574,12 +6888,22 @@ bool DinamicGLFeature_NV_register_combiners_Supported() {
 		if (DynamicGL_GetCombinerOutputParameterivNV==0) return false; 
 		if (DynamicGL_GetFinalCombinerInputParameterfvNV==0) return false; 
 		if (DynamicGL_GetFinalCombinerInputParameterivNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_register_combiners*/
 
+/*ARB_conservative_depth*/
+#ifdef USE_DYNAMIC_GL_ARB_conservative_depth
+bool DinamicGLFeature_ARB_conservative_depth_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_conservative_depth")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_conservative_depth*/
+
 /*VERSION_3_0*/
 #ifdef USE_DYNAMIC_GL_VERSION_3_0
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorMaski)(GLuint index , GLboolean r , GLboolean g , GLboolean b , GLboolean a) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetBooleani_v)(GLenum target , GLuint index , GLboolean *data) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetIntegeri_v)(GLenum target , GLuint index , GLint *data) = 0; }
@@ -6698,7 +7022,9 @@ static void InitDinamicGLFeature_VERSION_3_0() {
 		DynamicGL_ClearBufferfi = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum buffer , GLint drawbuffer , GLfloat depth , GLint stencil)>("glClearBufferfi"); 
 		DinamicGLFeature_VERSION_3_0_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_VERSION_3_0_Supported() {
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_VERSION_3_0_loaded) {
 			InitDinamicGLFeature_VERSION_3_0();
 		}
@@ -6759,12 +7085,22 @@ bool DinamicGLFeature_VERSION_3_0_Supported() {
 		if (DynamicGL_ClearBufferuiv==0) return false; 
 		if (DynamicGL_ClearBufferfv==0) return false; 
 		if (DynamicGL_ClearBufferfi==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_VERSION_3_0*/
 
+/*AMD_vertex_shader_layer*/
+#ifdef USE_DYNAMIC_GL_AMD_vertex_shader_layer
+bool DinamicGLFeature_AMD_vertex_shader_layer_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_AMD_vertex_shader_layer")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_AMD_vertex_shader_layer*/
+
 /*NV_point_sprite*/
 #ifdef USE_DYNAMIC_GL_NV_point_sprite
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameteriNV)(GLenum pname , GLint param) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterivNV)(GLenum pname , const GLint *params) = 0; }
 static bool DinamicGLFeature_NV_point_sprite_loaded = false; 
@@ -6773,18 +7109,23 @@ static void InitDinamicGLFeature_NV_point_sprite() {
 		DynamicGL_PointParameterivNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , const GLint *params)>("glPointParameterivNV"); 
 		DinamicGLFeature_NV_point_sprite_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_point_sprite_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_point_sprite")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_point_sprite_loaded) {
 			InitDinamicGLFeature_NV_point_sprite();
 		}
 		if (DynamicGL_PointParameteriNV==0) return false; 
 		if (DynamicGL_PointParameterivNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_point_sprite*/
 
 /*ARB_uniform_buffer_object*/
 #ifdef USE_DYNAMIC_GL_ARB_uniform_buffer_object
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetUniformIndices)(GLuint program , GLsizei uniformCount , const GLchar* const , GLuint *uniformIndices) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetActiveUniformsiv)(GLuint program , GLsizei uniformCount , const GLuint *uniformIndices , GLenum pname , GLint *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetActiveUniformName)(GLuint program , GLuint uniformIndex , GLsizei bufSize , GLsizei *length , GLchar *uniformName) = 0; }
@@ -6803,7 +7144,10 @@ static void InitDinamicGLFeature_ARB_uniform_buffer_object() {
 		DynamicGL_UniformBlockBinding = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLuint uniformBlockIndex , GLuint uniformBlockBinding)>("glUniformBlockBinding"); 
 		DinamicGLFeature_ARB_uniform_buffer_object_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_uniform_buffer_object_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_uniform_buffer_object")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_uniform_buffer_object_loaded) {
 			InitDinamicGLFeature_ARB_uniform_buffer_object();
 		}
@@ -6814,43 +7158,52 @@ bool DinamicGLFeature_ARB_uniform_buffer_object_Supported() {
 		if (DynamicGL_GetActiveUniformBlockiv==0) return false; 
 		if (DynamicGL_GetActiveUniformBlockName==0) return false; 
 		if (DynamicGL_UniformBlockBinding==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_uniform_buffer_object*/
 
+/*NV_fragment_program4*/
+#ifdef USE_DYNAMIC_GL_NV_fragment_program4
+bool DinamicGLFeature_NV_fragment_program4_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_fragment_program4")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_fragment_program4*/
+
 /*EXT_texture_compression_latc*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_compression_latc
-static bool DinamicGLFeature_EXT_texture_compression_latc_loaded = false; 
-static void InitDinamicGLFeature_EXT_texture_compression_latc() {
-		DinamicGLFeature_EXT_texture_compression_latc_loaded = true; 
-}
 bool DinamicGLFeature_EXT_texture_compression_latc_Supported() {
-		if (!DinamicGLFeature_EXT_texture_compression_latc_loaded) {
-			InitDinamicGLFeature_EXT_texture_compression_latc();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_compression_latc")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_compression_latc*/
 
 /*ARB_instanced_arrays*/
 #ifdef USE_DYNAMIC_GL_ARB_instanced_arrays
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribDivisorARB)(GLuint index , GLuint divisor) = 0; }
 static bool DinamicGLFeature_ARB_instanced_arrays_loaded = false; 
 static void InitDinamicGLFeature_ARB_instanced_arrays() {
 		DynamicGL_VertexAttribDivisorARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLuint divisor)>("glVertexAttribDivisorARB"); 
 		DinamicGLFeature_ARB_instanced_arrays_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_instanced_arrays_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_instanced_arrays")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_instanced_arrays_loaded) {
 			InitDinamicGLFeature_ARB_instanced_arrays();
 		}
 		if (DynamicGL_VertexAttribDivisorARB==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_instanced_arrays*/
 
 /*EXT_transform_feedback*/
 #ifdef USE_DYNAMIC_GL_EXT_transform_feedback
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BeginTransformFeedbackEXT)(GLenum primitiveMode) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_EndTransformFeedbackEXT)() = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindBufferRangeEXT)(GLenum target , GLuint index , GLuint buffer , GLintptr offset , GLsizeiptr size) = 0; }
@@ -6869,7 +7222,10 @@ static void InitDinamicGLFeature_EXT_transform_feedback() {
 		DynamicGL_GetTransformFeedbackVaryingEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLuint index , GLsizei bufSize , GLsizei *length , GLsizei *size , GLenum *type , GLchar *name)>("glGetTransformFeedbackVaryingEXT"); 
 		DinamicGLFeature_EXT_transform_feedback_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_transform_feedback_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_transform_feedback")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_transform_feedback_loaded) {
 			InitDinamicGLFeature_EXT_transform_feedback();
 		}
@@ -6880,141 +7236,108 @@ bool DinamicGLFeature_EXT_transform_feedback_Supported() {
 		if (DynamicGL_BindBufferBaseEXT==0) return false; 
 		if (DynamicGL_TransformFeedbackVaryingsEXT==0) return false; 
 		if (DynamicGL_GetTransformFeedbackVaryingEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_transform_feedback*/
 
 /*INGR_color_clamp*/
 #ifdef USE_DYNAMIC_GL_INGR_color_clamp
-static bool DinamicGLFeature_INGR_color_clamp_loaded = false; 
-static void InitDinamicGLFeature_INGR_color_clamp() {
-		DinamicGLFeature_INGR_color_clamp_loaded = true; 
-}
 bool DinamicGLFeature_INGR_color_clamp_Supported() {
-		if (!DinamicGLFeature_INGR_color_clamp_loaded) {
-			InitDinamicGLFeature_INGR_color_clamp();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_INGR_color_clamp")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_INGR_color_clamp*/
 
 /*ARB_depth_buffer_float*/
 #ifdef USE_DYNAMIC_GL_ARB_depth_buffer_float
-static bool DinamicGLFeature_ARB_depth_buffer_float_loaded = false; 
-static void InitDinamicGLFeature_ARB_depth_buffer_float() {
-		DinamicGLFeature_ARB_depth_buffer_float_loaded = true; 
-}
 bool DinamicGLFeature_ARB_depth_buffer_float_Supported() {
-		if (!DinamicGLFeature_ARB_depth_buffer_float_loaded) {
-			InitDinamicGLFeature_ARB_depth_buffer_float();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_depth_buffer_float")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_depth_buffer_float*/
 
 /*NV_texture_shader3*/
 #ifdef USE_DYNAMIC_GL_NV_texture_shader3
-static bool DinamicGLFeature_NV_texture_shader3_loaded = false; 
-static void InitDinamicGLFeature_NV_texture_shader3() {
-		DinamicGLFeature_NV_texture_shader3_loaded = true; 
-}
 bool DinamicGLFeature_NV_texture_shader3_Supported() {
-		if (!DinamicGLFeature_NV_texture_shader3_loaded) {
-			InitDinamicGLFeature_NV_texture_shader3();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_texture_shader3")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_texture_shader3*/
 
 /*ARB_imaging_DEPRECATED*/
 #ifdef USE_DYNAMIC_GL_ARB_imaging_DEPRECATED
-static bool DinamicGLFeature_ARB_imaging_DEPRECATED_loaded = false; 
-static void InitDinamicGLFeature_ARB_imaging_DEPRECATED() {
-		DinamicGLFeature_ARB_imaging_DEPRECATED_loaded = true; 
-}
 bool DinamicGLFeature_ARB_imaging_DEPRECATED_Supported() {
-		if (!DinamicGLFeature_ARB_imaging_DEPRECATED_loaded) {
-			InitDinamicGLFeature_ARB_imaging_DEPRECATED();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_imaging_DEPRECATED")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_imaging_DEPRECATED*/
 
 /*ARB_texture_compression_rgtc*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_compression_rgtc
-static bool DinamicGLFeature_ARB_texture_compression_rgtc_loaded = false; 
-static void InitDinamicGLFeature_ARB_texture_compression_rgtc() {
-		DinamicGLFeature_ARB_texture_compression_rgtc_loaded = true; 
-}
 bool DinamicGLFeature_ARB_texture_compression_rgtc_Supported() {
-		if (!DinamicGLFeature_ARB_texture_compression_rgtc_loaded) {
-			InitDinamicGLFeature_ARB_texture_compression_rgtc();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_texture_compression_rgtc")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_texture_compression_rgtc*/
 
 /*EXT_framebuffer_blit*/
 #ifdef USE_DYNAMIC_GL_EXT_framebuffer_blit
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlitFramebufferEXT)(GLint srcX0 , GLint srcY0 , GLint srcX1 , GLint srcY1 , GLint dstX0 , GLint dstY0 , GLint dstX1 , GLint dstY1 , GLbitfield mask , GLenum filter) = 0; }
 static bool DinamicGLFeature_EXT_framebuffer_blit_loaded = false; 
 static void InitDinamicGLFeature_EXT_framebuffer_blit() {
 		DynamicGL_BlitFramebufferEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint srcX0 , GLint srcY0 , GLint srcX1 , GLint srcY1 , GLint dstX0 , GLint dstY0 , GLint dstX1 , GLint dstY1 , GLbitfield mask , GLenum filter)>("glBlitFramebufferEXT"); 
 		DinamicGLFeature_EXT_framebuffer_blit_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_framebuffer_blit_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_framebuffer_blit")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_framebuffer_blit_loaded) {
 			InitDinamicGLFeature_EXT_framebuffer_blit();
 		}
 		if (DynamicGL_BlitFramebufferEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_framebuffer_blit*/
 
 /*OML_resample*/
 #ifdef USE_DYNAMIC_GL_OML_resample
-static bool DinamicGLFeature_OML_resample_loaded = false; 
-static void InitDinamicGLFeature_OML_resample() {
-		DinamicGLFeature_OML_resample_loaded = true; 
-}
 bool DinamicGLFeature_OML_resample_Supported() {
-		if (!DinamicGLFeature_OML_resample_loaded) {
-			InitDinamicGLFeature_OML_resample();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_OML_resample")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OML_resample*/
 
 /*EXT_cmyka*/
 #ifdef USE_DYNAMIC_GL_EXT_cmyka
-static bool DinamicGLFeature_EXT_cmyka_loaded = false; 
-static void InitDinamicGLFeature_EXT_cmyka() {
-		DinamicGLFeature_EXT_cmyka_loaded = true; 
-}
 bool DinamicGLFeature_EXT_cmyka_Supported() {
-		if (!DinamicGLFeature_EXT_cmyka_loaded) {
-			InitDinamicGLFeature_EXT_cmyka();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_cmyka")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_cmyka*/
 
+/*INTEL_texture_scissor*/
+#ifdef USE_DYNAMIC_GL_INTEL_texture_scissor
+bool DinamicGLFeature_INTEL_texture_scissor_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_INTEL_texture_scissor")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_INTEL_texture_scissor*/
+
 /*SUN_convolution_border_modes*/
 #ifdef USE_DYNAMIC_GL_SUN_convolution_border_modes
-static bool DinamicGLFeature_SUN_convolution_border_modes_loaded = false; 
-static void InitDinamicGLFeature_SUN_convolution_border_modes() {
-		DinamicGLFeature_SUN_convolution_border_modes_loaded = true; 
-}
 bool DinamicGLFeature_SUN_convolution_border_modes_Supported() {
-		if (!DinamicGLFeature_SUN_convolution_border_modes_loaded) {
-			InitDinamicGLFeature_SUN_convolution_border_modes();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SUN_convolution_border_modes")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SUN_convolution_border_modes*/
 
 /*EXT_draw_instanced*/
 #ifdef USE_DYNAMIC_GL_EXT_draw_instanced
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawArraysInstancedEXT)(GLenum mode , GLint start , GLsizei count , GLsizei primcount) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElementsInstancedEXT)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices , GLsizei primcount) = 0; }
 static bool DinamicGLFeature_EXT_draw_instanced_loaded = false; 
@@ -7023,18 +7346,23 @@ static void InitDinamicGLFeature_EXT_draw_instanced() {
 		DynamicGL_DrawElementsInstancedEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices , GLsizei primcount)>("glDrawElementsInstancedEXT"); 
 		DinamicGLFeature_EXT_draw_instanced_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_draw_instanced_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_draw_instanced")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_draw_instanced_loaded) {
 			InitDinamicGLFeature_EXT_draw_instanced();
 		}
 		if (DynamicGL_DrawArraysInstancedEXT==0) return false; 
 		if (DynamicGL_DrawElementsInstancedEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_draw_instanced*/
 
 /*SGIS_detail_texture*/
 #ifdef USE_DYNAMIC_GL_SGIS_detail_texture
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DetailTexFuncSGIS)(GLenum target , GLsizei n , const GLfloat *points) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetDetailTexFuncSGIS)(GLenum target , GLfloat *points) = 0; }
 static bool DinamicGLFeature_SGIS_detail_texture_loaded = false; 
@@ -7043,49 +7371,53 @@ static void InitDinamicGLFeature_SGIS_detail_texture() {
 		DynamicGL_GetDetailTexFuncSGIS = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLfloat *points)>("glGetDetailTexFuncSGIS"); 
 		DinamicGLFeature_SGIS_detail_texture_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_SGIS_detail_texture_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIS_detail_texture")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_SGIS_detail_texture_loaded) {
 			InitDinamicGLFeature_SGIS_detail_texture();
 		}
 		if (DynamicGL_DetailTexFuncSGIS==0) return false; 
 		if (DynamicGL_GetDetailTexFuncSGIS==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIS_detail_texture*/
 
 /*AMD_pinned_memory*/
 #ifdef USE_DYNAMIC_GL_AMD_pinned_memory
-static bool DinamicGLFeature_AMD_pinned_memory_loaded = false; 
-static void InitDinamicGLFeature_AMD_pinned_memory() {
-		DinamicGLFeature_AMD_pinned_memory_loaded = true; 
-}
 bool DinamicGLFeature_AMD_pinned_memory_Supported() {
-		if (!DinamicGLFeature_AMD_pinned_memory_loaded) {
-			InitDinamicGLFeature_AMD_pinned_memory();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_AMD_pinned_memory")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_AMD_pinned_memory*/
 
 /*MESA_resize_buffers*/
 #ifdef USE_DYNAMIC_GL_MESA_resize_buffers
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ResizeBuffersMESA)() = 0; }
 static bool DinamicGLFeature_MESA_resize_buffers_loaded = false; 
 static void InitDinamicGLFeature_MESA_resize_buffers() {
 		DynamicGL_ResizeBuffersMESA = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)()>("glResizeBuffersMESA"); 
 		DinamicGLFeature_MESA_resize_buffers_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_MESA_resize_buffers_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_MESA_resize_buffers")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_MESA_resize_buffers_loaded) {
 			InitDinamicGLFeature_MESA_resize_buffers();
 		}
 		if (DynamicGL_ResizeBuffersMESA==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_MESA_resize_buffers*/
 
 /*SUN_global_alpha*/
 #ifdef USE_DYNAMIC_GL_SUN_global_alpha
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GlobalAlphaFactorbSUN)(GLbyte factor) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GlobalAlphaFactorsSUN)(GLshort factor) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GlobalAlphaFactoriSUN)(GLint factor) = 0; }
@@ -7106,7 +7438,10 @@ static void InitDinamicGLFeature_SUN_global_alpha() {
 		DynamicGL_GlobalAlphaFactoruiSUN = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint factor)>("glGlobalAlphaFactoruiSUN"); 
 		DinamicGLFeature_SUN_global_alpha_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_SUN_global_alpha_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SUN_global_alpha")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_SUN_global_alpha_loaded) {
 			InitDinamicGLFeature_SUN_global_alpha();
 		}
@@ -7118,26 +7453,38 @@ bool DinamicGLFeature_SUN_global_alpha_Supported() {
 		if (DynamicGL_GlobalAlphaFactorubSUN==0) return false; 
 		if (DynamicGL_GlobalAlphaFactorusSUN==0) return false; 
 		if (DynamicGL_GlobalAlphaFactoruiSUN==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SUN_global_alpha*/
 
 /*ARB_depth_texture*/
 #ifdef USE_DYNAMIC_GL_ARB_depth_texture
-static bool DinamicGLFeature_ARB_depth_texture_loaded = false; 
-static void InitDinamicGLFeature_ARB_depth_texture() {
-		DinamicGLFeature_ARB_depth_texture_loaded = true; 
-}
 bool DinamicGLFeature_ARB_depth_texture_Supported() {
-		if (!DinamicGLFeature_ARB_depth_texture_loaded) {
-			InitDinamicGLFeature_ARB_depth_texture();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_depth_texture")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_depth_texture*/
 
+/*SGIX_ycrcb_subsample*/
+#ifdef USE_DYNAMIC_GL_SGIX_ycrcb_subsample
+bool DinamicGLFeature_SGIX_ycrcb_subsample_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_ycrcb_subsample")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_SGIX_ycrcb_subsample*/
+
+/*ARB_vertex_array_bgra*/
+#ifdef USE_DYNAMIC_GL_ARB_vertex_array_bgra
+bool DinamicGLFeature_ARB_vertex_array_bgra_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_vertex_array_bgra")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_vertex_array_bgra*/
+
 /*AMD_debug_output*/
 #ifdef USE_DYNAMIC_GL_AMD_debug_output
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DebugMessageEnableAMD)(GLenum category , GLenum severity , GLsizei count , const GLuint *ids , GLboolean enabled) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DebugMessageInsertAMD)(GLenum category , GLenum severity , GLuint id , GLsizei length , const GLchar *buf) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DebugMessageCallbackAMD)(GLDEBUGPROCAMD callback , GLvoid *userParam) = 0; }
@@ -7150,7 +7497,10 @@ static void InitDinamicGLFeature_AMD_debug_output() {
 		DynamicGL_GetDebugMessageLogAMD = DynamicGL_LoadFunction<GLuint (DYNAMIC_GL_APIENTRYP)(GLuint count , GLsizei bufsize , GLenum *categories , GLuint *severities , GLuint *ids , GLsizei *lengths , GLchar *message)>("glGetDebugMessageLogAMD"); 
 		DinamicGLFeature_AMD_debug_output_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_AMD_debug_output_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_AMD_debug_output")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_AMD_debug_output_loaded) {
 			InitDinamicGLFeature_AMD_debug_output();
 		}
@@ -7158,26 +7508,30 @@ bool DinamicGLFeature_AMD_debug_output_Supported() {
 		if (DynamicGL_DebugMessageInsertAMD==0) return false; 
 		if (DynamicGL_DebugMessageCallbackAMD==0) return false; 
 		if (DynamicGL_GetDebugMessageLogAMD==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_AMD_debug_output*/
 
+/*ARB_texture_buffer_object_rgb32*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_buffer_object_rgb32
+bool DinamicGLFeature_ARB_texture_buffer_object_rgb32_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_texture_buffer_object_rgb32")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_texture_buffer_object_rgb32*/
+
 /*HP_convolution_border_modes*/
 #ifdef USE_DYNAMIC_GL_HP_convolution_border_modes
-static bool DinamicGLFeature_HP_convolution_border_modes_loaded = false; 
-static void InitDinamicGLFeature_HP_convolution_border_modes() {
-		DinamicGLFeature_HP_convolution_border_modes_loaded = true; 
-}
 bool DinamicGLFeature_HP_convolution_border_modes_Supported() {
-		if (!DinamicGLFeature_HP_convolution_border_modes_loaded) {
-			InitDinamicGLFeature_HP_convolution_border_modes();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_HP_convolution_border_modes")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_HP_convolution_border_modes*/
 
 /*APPLE_vertex_program_evaluators*/
 #ifdef USE_DYNAMIC_GL_APPLE_vertex_program_evaluators
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_EnableVertexAttribAPPLE)(GLuint index , GLenum pname) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DisableVertexAttribAPPLE)(GLuint index , GLenum pname) = 0; }
 extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsVertexAttribEnabledAPPLE)(GLuint index , GLenum pname) = 0; }
@@ -7196,7 +7550,10 @@ static void InitDinamicGLFeature_APPLE_vertex_program_evaluators() {
 		DynamicGL_MapVertexAttrib2fAPPLE = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLuint size , GLfloat u1 , GLfloat u2 , GLint ustride , GLint uorder , GLfloat v1 , GLfloat v2 , GLint vstride , GLint vorder , const GLfloat *points)>("glMapVertexAttrib2fAPPLE"); 
 		DinamicGLFeature_APPLE_vertex_program_evaluators_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_APPLE_vertex_program_evaluators_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_APPLE_vertex_program_evaluators")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_APPLE_vertex_program_evaluators_loaded) {
 			InitDinamicGLFeature_APPLE_vertex_program_evaluators();
 		}
@@ -7207,12 +7564,14 @@ bool DinamicGLFeature_APPLE_vertex_program_evaluators_Supported() {
 		if (DynamicGL_MapVertexAttrib1fAPPLE==0) return false; 
 		if (DynamicGL_MapVertexAttrib2dAPPLE==0) return false; 
 		if (DynamicGL_MapVertexAttrib2fAPPLE==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_APPLE_vertex_program_evaluators*/
 
 /*NV_fragment_program*/
 #ifdef USE_DYNAMIC_GL_NV_fragment_program
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramNamedParameter4fNV)(GLuint id , GLsizei len , const GLubyte *name , GLfloat x , GLfloat y , GLfloat z , GLfloat w) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramNamedParameter4dNV)(GLuint id , GLsizei len , const GLubyte *name , GLdouble x , GLdouble y , GLdouble z , GLdouble w) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramNamedParameter4fvNV)(GLuint id , GLsizei len , const GLubyte *name , const GLfloat *v) = 0; }
@@ -7229,7 +7588,10 @@ static void InitDinamicGLFeature_NV_fragment_program() {
 		DynamicGL_GetProgramNamedParameterdvNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint id , GLsizei len , const GLubyte *name , GLdouble *params)>("glGetProgramNamedParameterdvNV"); 
 		DinamicGLFeature_NV_fragment_program_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_fragment_program_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_fragment_program")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_fragment_program_loaded) {
 			InitDinamicGLFeature_NV_fragment_program();
 		}
@@ -7239,105 +7601,103 @@ bool DinamicGLFeature_NV_fragment_program_Supported() {
 		if (DynamicGL_ProgramNamedParameter4dvNV==0) return false; 
 		if (DynamicGL_GetProgramNamedParameterfvNV==0) return false; 
 		if (DynamicGL_GetProgramNamedParameterdvNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_fragment_program*/
 
 /*VERSION_1_5_DEPRECATED*/
 #ifdef USE_DYNAMIC_GL_VERSION_1_5_DEPRECATED
-static bool DinamicGLFeature_VERSION_1_5_DEPRECATED_loaded = false; 
-static void InitDinamicGLFeature_VERSION_1_5_DEPRECATED() {
-		DinamicGLFeature_VERSION_1_5_DEPRECATED_loaded = true; 
-}
 bool DinamicGLFeature_VERSION_1_5_DEPRECATED_Supported() {
-		if (!DinamicGLFeature_VERSION_1_5_DEPRECATED_loaded) {
-			InitDinamicGLFeature_VERSION_1_5_DEPRECATED();
-		}
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_VERSION_1_5_DEPRECATED*/
 
+/*NV_shader_buffer_store*/
+#ifdef USE_DYNAMIC_GL_NV_shader_buffer_store
+bool DinamicGLFeature_NV_shader_buffer_store_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_shader_buffer_store")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_shader_buffer_store*/
+
 /*NV_copy_image*/
 #ifdef USE_DYNAMIC_GL_NV_copy_image
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CopyImageSubDataNV)(GLuint srcName , GLenum srcTarget , GLint srcLevel , GLint srcX , GLint srcY , GLint srcZ , GLuint dstName , GLenum dstTarget , GLint dstLevel , GLint dstX , GLint dstY , GLint dstZ , GLsizei width , GLsizei height , GLsizei depth) = 0; }
 static bool DinamicGLFeature_NV_copy_image_loaded = false; 
 static void InitDinamicGLFeature_NV_copy_image() {
 		DynamicGL_CopyImageSubDataNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint srcName , GLenum srcTarget , GLint srcLevel , GLint srcX , GLint srcY , GLint srcZ , GLuint dstName , GLenum dstTarget , GLint dstLevel , GLint dstX , GLint dstY , GLint dstZ , GLsizei width , GLsizei height , GLsizei depth)>("glCopyImageSubDataNV"); 
 		DinamicGLFeature_NV_copy_image_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_copy_image_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_copy_image")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_copy_image_loaded) {
 			InitDinamicGLFeature_NV_copy_image();
 		}
 		if (DynamicGL_CopyImageSubDataNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_copy_image*/
 
-/*NV_shader_buffer_store*/
-#ifdef USE_DYNAMIC_GL_NV_shader_buffer_store
-static bool DinamicGLFeature_NV_shader_buffer_store_loaded = false; 
-static void InitDinamicGLFeature_NV_shader_buffer_store() {
-		DinamicGLFeature_NV_shader_buffer_store_loaded = true; 
-}
-bool DinamicGLFeature_NV_shader_buffer_store_Supported() {
-		if (!DinamicGLFeature_NV_shader_buffer_store_loaded) {
-			InitDinamicGLFeature_NV_shader_buffer_store();
-		}
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_NV_shader_buffer_store*/
-
 /*NV_texture_env_combine4*/
 #ifdef USE_DYNAMIC_GL_NV_texture_env_combine4
-static bool DinamicGLFeature_NV_texture_env_combine4_loaded = false; 
-static void InitDinamicGLFeature_NV_texture_env_combine4() {
-		DinamicGLFeature_NV_texture_env_combine4_loaded = true; 
-}
 bool DinamicGLFeature_NV_texture_env_combine4_Supported() {
-		if (!DinamicGLFeature_NV_texture_env_combine4_loaded) {
-			InitDinamicGLFeature_NV_texture_env_combine4();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_texture_env_combine4")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_texture_env_combine4*/
 
 /*ARB_texture_buffer_object*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_buffer_object
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexBufferARB)(GLenum target , GLenum internalformat , GLuint buffer) = 0; }
 static bool DinamicGLFeature_ARB_texture_buffer_object_loaded = false; 
 static void InitDinamicGLFeature_ARB_texture_buffer_object() {
 		DynamicGL_TexBufferARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum internalformat , GLuint buffer)>("glTexBufferARB"); 
 		DinamicGLFeature_ARB_texture_buffer_object_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_texture_buffer_object_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_texture_buffer_object")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_texture_buffer_object_loaded) {
 			InitDinamicGLFeature_ARB_texture_buffer_object();
 		}
 		if (DynamicGL_TexBufferARB==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_texture_buffer_object*/
 
 /*SGIX_flush_raster*/
 #ifdef USE_DYNAMIC_GL_SGIX_flush_raster
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FlushRasterSGIX)() = 0; }
 static bool DinamicGLFeature_SGIX_flush_raster_loaded = false; 
 static void InitDinamicGLFeature_SGIX_flush_raster() {
 		DynamicGL_FlushRasterSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)()>("glFlushRasterSGIX"); 
 		DinamicGLFeature_SGIX_flush_raster_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_SGIX_flush_raster_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_flush_raster")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_SGIX_flush_raster_loaded) {
 			InitDinamicGLFeature_SGIX_flush_raster();
 		}
 		if (DynamicGL_FlushRasterSGIX==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_flush_raster*/
 
 /*SGIS_fog_function*/
 #ifdef USE_DYNAMIC_GL_SGIS_fog_function
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FogFuncSGIS)(GLsizei n , const GLfloat *points) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetFogFuncSGIS)(GLfloat *points) = 0; }
 static bool DinamicGLFeature_SGIS_fog_function_loaded = false; 
@@ -7346,18 +7706,23 @@ static void InitDinamicGLFeature_SGIS_fog_function() {
 		DynamicGL_GetFogFuncSGIS = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLfloat *points)>("glGetFogFuncSGIS"); 
 		DinamicGLFeature_SGIS_fog_function_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_SGIS_fog_function_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIS_fog_function")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_SGIS_fog_function_loaded) {
 			InitDinamicGLFeature_SGIS_fog_function();
 		}
 		if (DynamicGL_FogFuncSGIS==0) return false; 
 		if (DynamicGL_GetFogFuncSGIS==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIS_fog_function*/
 
 /*VERSION_2_0*/
 #ifdef USE_DYNAMIC_GL_VERSION_2_0
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationSeparate)(GLenum modeRGB , GLenum modeAlpha) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawBuffers)(GLsizei n , const GLenum *bufs) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilOpSeparate)(GLenum face , GLenum sfail , GLenum dpfail , GLenum dppass) = 0; }
@@ -7548,7 +7913,9 @@ static void InitDinamicGLFeature_VERSION_2_0() {
 		DynamicGL_VertexAttribPointer = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLint size , GLenum type , GLboolean normalized , GLsizei stride , const GLvoid *pointer)>("glVertexAttribPointer"); 
 		DinamicGLFeature_VERSION_2_0_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_VERSION_2_0_Supported() {
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_VERSION_2_0_loaded) {
 			InitDinamicGLFeature_VERSION_2_0();
 		}
@@ -7645,12 +8012,14 @@ bool DinamicGLFeature_VERSION_2_0_Supported() {
 		if (DynamicGL_VertexAttrib4uiv==0) return false; 
 		if (DynamicGL_VertexAttrib4usv==0) return false; 
 		if (DynamicGL_VertexAttribPointer==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_VERSION_2_0*/
 
 /*EXT_compiled_vertex_array*/
 #ifdef USE_DYNAMIC_GL_EXT_compiled_vertex_array
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LockArraysEXT)(GLint first , GLsizei count) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_UnlockArraysEXT)() = 0; }
 static bool DinamicGLFeature_EXT_compiled_vertex_array_loaded = false; 
@@ -7659,60 +8028,47 @@ static void InitDinamicGLFeature_EXT_compiled_vertex_array() {
 		DynamicGL_UnlockArraysEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)()>("glUnlockArraysEXT"); 
 		DinamicGLFeature_EXT_compiled_vertex_array_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_compiled_vertex_array_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_compiled_vertex_array")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_compiled_vertex_array_loaded) {
 			InitDinamicGLFeature_EXT_compiled_vertex_array();
 		}
 		if (DynamicGL_LockArraysEXT==0) return false; 
 		if (DynamicGL_UnlockArraysEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_compiled_vertex_array*/
 
-/*IBM_texture_mirrored_repeat*/
-#ifdef USE_DYNAMIC_GL_IBM_texture_mirrored_repeat
-static bool DinamicGLFeature_IBM_texture_mirrored_repeat_loaded = false; 
-static void InitDinamicGLFeature_IBM_texture_mirrored_repeat() {
-		DinamicGLFeature_IBM_texture_mirrored_repeat_loaded = true; 
-}
-bool DinamicGLFeature_IBM_texture_mirrored_repeat_Supported() {
-		if (!DinamicGLFeature_IBM_texture_mirrored_repeat_loaded) {
-			InitDinamicGLFeature_IBM_texture_mirrored_repeat();
-		}
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_IBM_texture_mirrored_repeat*/
-
 /*OML_subsample*/
 #ifdef USE_DYNAMIC_GL_OML_subsample
-static bool DinamicGLFeature_OML_subsample_loaded = false; 
-static void InitDinamicGLFeature_OML_subsample() {
-		DinamicGLFeature_OML_subsample_loaded = true; 
-}
 bool DinamicGLFeature_OML_subsample_Supported() {
-		if (!DinamicGLFeature_OML_subsample_loaded) {
-			InitDinamicGLFeature_OML_subsample();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_OML_subsample")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OML_subsample*/
 
+/*IBM_texture_mirrored_repeat*/
+#ifdef USE_DYNAMIC_GL_IBM_texture_mirrored_repeat
+bool DinamicGLFeature_IBM_texture_mirrored_repeat_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_IBM_texture_mirrored_repeat")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_IBM_texture_mirrored_repeat*/
+
 /*NV_texgen_reflection*/
 #ifdef USE_DYNAMIC_GL_NV_texgen_reflection
-static bool DinamicGLFeature_NV_texgen_reflection_loaded = false; 
-static void InitDinamicGLFeature_NV_texgen_reflection() {
-		DinamicGLFeature_NV_texgen_reflection_loaded = true; 
-}
 bool DinamicGLFeature_NV_texgen_reflection_Supported() {
-		if (!DinamicGLFeature_NV_texgen_reflection_loaded) {
-			InitDinamicGLFeature_NV_texgen_reflection();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_texgen_reflection")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_texgen_reflection*/
 
 /*AMD_name_gen_delete*/
 #ifdef USE_DYNAMIC_GL_AMD_name_gen_delete
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenNamesAMD)(GLenum identifier , GLuint num , GLuint *names) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteNamesAMD)(GLenum identifier , GLuint num , const GLuint *names) = 0; }
 extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsNameAMD)(GLenum identifier , GLuint name) = 0; }
@@ -7723,51 +8079,24 @@ static void InitDinamicGLFeature_AMD_name_gen_delete() {
 		DynamicGL_IsNameAMD = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLenum identifier , GLuint name)>("glIsNameAMD"); 
 		DinamicGLFeature_AMD_name_gen_delete_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_AMD_name_gen_delete_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_AMD_name_gen_delete")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_AMD_name_gen_delete_loaded) {
 			InitDinamicGLFeature_AMD_name_gen_delete();
 		}
 		if (DynamicGL_GenNamesAMD==0) return false; 
 		if (DynamicGL_DeleteNamesAMD==0) return false; 
 		if (DynamicGL_IsNameAMD==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_AMD_name_gen_delete*/
 
-/*SGIX_list_priority*/
-#ifdef USE_DYNAMIC_GL_SGIX_list_priority
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetListParameterfvSGIX)(GLuint list , GLenum pname , GLfloat *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetListParameterivSGIX)(GLuint list , GLenum pname , GLint *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ListParameterfSGIX)(GLuint list , GLenum pname , GLfloat param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ListParameterfvSGIX)(GLuint list , GLenum pname , const GLfloat *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ListParameteriSGIX)(GLuint list , GLenum pname , GLint param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ListParameterivSGIX)(GLuint list , GLenum pname , const GLint *params) = 0; }
-static bool DinamicGLFeature_SGIX_list_priority_loaded = false; 
-static void InitDinamicGLFeature_SGIX_list_priority() {
-		DynamicGL_GetListParameterfvSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint list , GLenum pname , GLfloat *params)>("glGetListParameterfvSGIX"); 
-		DynamicGL_GetListParameterivSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint list , GLenum pname , GLint *params)>("glGetListParameterivSGIX"); 
-		DynamicGL_ListParameterfSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint list , GLenum pname , GLfloat param)>("glListParameterfSGIX"); 
-		DynamicGL_ListParameterfvSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint list , GLenum pname , const GLfloat *params)>("glListParameterfvSGIX"); 
-		DynamicGL_ListParameteriSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint list , GLenum pname , GLint param)>("glListParameteriSGIX"); 
-		DynamicGL_ListParameterivSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint list , GLenum pname , const GLint *params)>("glListParameterivSGIX"); 
-		DinamicGLFeature_SGIX_list_priority_loaded = true; 
-}
-bool DinamicGLFeature_SGIX_list_priority_Supported() {
-		if (!DinamicGLFeature_SGIX_list_priority_loaded) {
-			InitDinamicGLFeature_SGIX_list_priority();
-		}
-		if (DynamicGL_GetListParameterfvSGIX==0) return false; 
-		if (DynamicGL_GetListParameterivSGIX==0) return false; 
-		if (DynamicGL_ListParameterfSGIX==0) return false; 
-		if (DynamicGL_ListParameterfvSGIX==0) return false; 
-		if (DynamicGL_ListParameteriSGIX==0) return false; 
-		if (DynamicGL_ListParameterivSGIX==0) return false; 
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_SGIX_list_priority*/
-
 /*NV_occlusion_query*/
 #ifdef USE_DYNAMIC_GL_NV_occlusion_query
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenOcclusionQueriesNV)(GLsizei n , GLuint *ids) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteOcclusionQueriesNV)(GLsizei n , const GLuint *ids) = 0; }
 extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsOcclusionQueryNV)(GLuint id) = 0; }
@@ -7786,7 +8115,10 @@ static void InitDinamicGLFeature_NV_occlusion_query() {
 		DynamicGL_GetOcclusionQueryuivNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint id , GLenum pname , GLuint *params)>("glGetOcclusionQueryuivNV"); 
 		DinamicGLFeature_NV_occlusion_query_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_occlusion_query_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_occlusion_query")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_occlusion_query_loaded) {
 			InitDinamicGLFeature_NV_occlusion_query();
 		}
@@ -7797,26 +8129,59 @@ bool DinamicGLFeature_NV_occlusion_query_Supported() {
 		if (DynamicGL_EndOcclusionQueryNV==0) return false; 
 		if (DynamicGL_GetOcclusionQueryivNV==0) return false; 
 		if (DynamicGL_GetOcclusionQueryuivNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_occlusion_query*/
 
+/*SGIX_list_priority*/
+#ifdef USE_DYNAMIC_GL_SGIX_list_priority
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetListParameterfvSGIX)(GLuint list , GLenum pname , GLfloat *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetListParameterivSGIX)(GLuint list , GLenum pname , GLint *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ListParameterfSGIX)(GLuint list , GLenum pname , GLfloat param) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ListParameterfvSGIX)(GLuint list , GLenum pname , const GLfloat *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ListParameteriSGIX)(GLuint list , GLenum pname , GLint param) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ListParameterivSGIX)(GLuint list , GLenum pname , const GLint *params) = 0; }
+static bool DinamicGLFeature_SGIX_list_priority_loaded = false; 
+static void InitDinamicGLFeature_SGIX_list_priority() {
+		DynamicGL_GetListParameterfvSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint list , GLenum pname , GLfloat *params)>("glGetListParameterfvSGIX"); 
+		DynamicGL_GetListParameterivSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint list , GLenum pname , GLint *params)>("glGetListParameterivSGIX"); 
+		DynamicGL_ListParameterfSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint list , GLenum pname , GLfloat param)>("glListParameterfSGIX"); 
+		DynamicGL_ListParameterfvSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint list , GLenum pname , const GLfloat *params)>("glListParameterfvSGIX"); 
+		DynamicGL_ListParameteriSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint list , GLenum pname , GLint param)>("glListParameteriSGIX"); 
+		DynamicGL_ListParameterivSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint list , GLenum pname , const GLint *params)>("glListParameterivSGIX"); 
+		DinamicGLFeature_SGIX_list_priority_loaded = true; 
+}
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+bool DinamicGLFeature_SGIX_list_priority_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_list_priority")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
+		if (!DinamicGLFeature_SGIX_list_priority_loaded) {
+			InitDinamicGLFeature_SGIX_list_priority();
+		}
+		if (DynamicGL_GetListParameterfvSGIX==0) return false; 
+		if (DynamicGL_GetListParameterivSGIX==0) return false; 
+		if (DynamicGL_ListParameterfSGIX==0) return false; 
+		if (DynamicGL_ListParameterfvSGIX==0) return false; 
+		if (DynamicGL_ListParameteriSGIX==0) return false; 
+		if (DynamicGL_ListParameterivSGIX==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_SGIX_list_priority*/
+
 /*EXT_texture_shared_exponent*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_shared_exponent
-static bool DinamicGLFeature_EXT_texture_shared_exponent_loaded = false; 
-static void InitDinamicGLFeature_EXT_texture_shared_exponent() {
-		DinamicGLFeature_EXT_texture_shared_exponent_loaded = true; 
-}
 bool DinamicGLFeature_EXT_texture_shared_exponent_Supported() {
-		if (!DinamicGLFeature_EXT_texture_shared_exponent_loaded) {
-			InitDinamicGLFeature_EXT_texture_shared_exponent();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_shared_exponent")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_shared_exponent*/
 
 /*VERSION_1_3*/
 #ifdef USE_DYNAMIC_GL_VERSION_1_3
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ActiveTexture)(GLenum texture) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleCoverage)(GLfloat value , GLboolean invert) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CompressedTexImage3D)(GLenum target , GLint level , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth , GLint border , GLsizei imageSize , const GLvoid *data) = 0; }
@@ -7839,7 +8204,9 @@ static void InitDinamicGLFeature_VERSION_1_3() {
 		DynamicGL_GetCompressedTexImage = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint level , GLvoid *img)>("glGetCompressedTexImage"); 
 		DinamicGLFeature_VERSION_1_3_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_VERSION_1_3_Supported() {
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_VERSION_1_3_loaded) {
 			InitDinamicGLFeature_VERSION_1_3();
 		}
@@ -7852,29 +8219,44 @@ bool DinamicGLFeature_VERSION_1_3_Supported() {
 		if (DynamicGL_CompressedTexSubImage2D==0) return false; 
 		if (DynamicGL_CompressedTexSubImage1D==0) return false; 
 		if (DynamicGL_GetCompressedTexImage==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_VERSION_1_3*/
 
 /*ARB_color_buffer_float*/
 #ifdef USE_DYNAMIC_GL_ARB_color_buffer_float
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClampColorARB)(GLenum target , GLenum clamp) = 0; }
 static bool DinamicGLFeature_ARB_color_buffer_float_loaded = false; 
 static void InitDinamicGLFeature_ARB_color_buffer_float() {
 		DynamicGL_ClampColorARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum clamp)>("glClampColorARB"); 
 		DinamicGLFeature_ARB_color_buffer_float_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_color_buffer_float_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_color_buffer_float")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_color_buffer_float_loaded) {
 			InitDinamicGLFeature_ARB_color_buffer_float();
 		}
 		if (DynamicGL_ClampColorARB==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_color_buffer_float*/
 
+/*ARB_shader_texture_lod*/
+#ifdef USE_DYNAMIC_GL_ARB_shader_texture_lod
+bool DinamicGLFeature_ARB_shader_texture_lod_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_shader_texture_lod")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_shader_texture_lod*/
+
 /*NV_half_float*/
 #ifdef USE_DYNAMIC_GL_NV_half_float
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Vertex2hNV)(GLhalfNV x , GLhalfNV y) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Vertex2hvNV)(const GLhalfNV *v) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Vertex3hNV)(GLhalfNV x , GLhalfNV y , GLhalfNV z) = 0; }
@@ -7971,7 +8353,10 @@ static void InitDinamicGLFeature_NV_half_float() {
 		DynamicGL_VertexAttribs4hvNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLsizei n , const GLhalfNV *v)>("glVertexAttribs4hvNV"); 
 		DinamicGLFeature_NV_half_float_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_half_float_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_half_float")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_half_float_loaded) {
 			InitDinamicGLFeature_NV_half_float();
 		}
@@ -8021,26 +8406,22 @@ bool DinamicGLFeature_NV_half_float_Supported() {
 		if (DynamicGL_VertexAttribs2hvNV==0) return false; 
 		if (DynamicGL_VertexAttribs3hvNV==0) return false; 
 		if (DynamicGL_VertexAttribs4hvNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_half_float*/
 
 /*APPLE_float_pixels*/
 #ifdef USE_DYNAMIC_GL_APPLE_float_pixels
-static bool DinamicGLFeature_APPLE_float_pixels_loaded = false; 
-static void InitDinamicGLFeature_APPLE_float_pixels() {
-		DinamicGLFeature_APPLE_float_pixels_loaded = true; 
-}
 bool DinamicGLFeature_APPLE_float_pixels_Supported() {
-		if (!DinamicGLFeature_APPLE_float_pixels_loaded) {
-			InitDinamicGLFeature_APPLE_float_pixels();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_APPLE_float_pixels")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_APPLE_float_pixels*/
 
 /*EXT_gpu_shader4*/
 #ifdef USE_DYNAMIC_GL_EXT_gpu_shader4
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetUniformuivEXT)(GLuint program , GLint location , GLuint *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindFragDataLocationEXT)(GLuint program , GLuint color , const GLchar *name) = 0; }
 extern "C" { GLint (DYNAMIC_GL_APIENTRYP DynamicGL_GetFragDataLocationEXT)(GLuint program , const GLchar *name) = 0; }
@@ -8067,7 +8448,10 @@ static void InitDinamicGLFeature_EXT_gpu_shader4() {
 		DynamicGL_Uniform4uivEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLsizei count , const GLuint *value)>("glUniform4uivEXT"); 
 		DinamicGLFeature_EXT_gpu_shader4_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_gpu_shader4_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_gpu_shader4")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_gpu_shader4_loaded) {
 			InitDinamicGLFeature_EXT_gpu_shader4();
 		}
@@ -8082,12 +8466,14 @@ bool DinamicGLFeature_EXT_gpu_shader4_Supported() {
 		if (DynamicGL_Uniform2uivEXT==0) return false; 
 		if (DynamicGL_Uniform3uivEXT==0) return false; 
 		if (DynamicGL_Uniform4uivEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_gpu_shader4*/
 
 /*NV_gpu_shader5*/
 #ifdef USE_DYNAMIC_GL_NV_gpu_shader5
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform1i64NV)(GLint location , GLint64EXT x) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform2i64NV)(GLint location , GLint64EXT x , GLint64EXT y) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform3i64NV)(GLint location , GLint64EXT x , GLint64EXT y , GLint64EXT z) = 0; }
@@ -8158,7 +8544,10 @@ static void InitDinamicGLFeature_NV_gpu_shader5() {
 		DynamicGL_ProgramUniform4ui64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLuint64EXT *value)>("glProgramUniform4ui64vNV"); 
 		DinamicGLFeature_NV_gpu_shader5_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_gpu_shader5_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_gpu_shader5")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_gpu_shader5_loaded) {
 			InitDinamicGLFeature_NV_gpu_shader5();
 		}
@@ -8195,54 +8584,30 @@ bool DinamicGLFeature_NV_gpu_shader5_Supported() {
 		if (DynamicGL_ProgramUniform2ui64vNV==0) return false; 
 		if (DynamicGL_ProgramUniform3ui64vNV==0) return false; 
 		if (DynamicGL_ProgramUniform4ui64vNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_gpu_shader5*/
 
 /*NV_light_max_exponent*/
 #ifdef USE_DYNAMIC_GL_NV_light_max_exponent
-static bool DinamicGLFeature_NV_light_max_exponent_loaded = false; 
-static void InitDinamicGLFeature_NV_light_max_exponent() {
-		DinamicGLFeature_NV_light_max_exponent_loaded = true; 
-}
 bool DinamicGLFeature_NV_light_max_exponent_Supported() {
-		if (!DinamicGLFeature_NV_light_max_exponent_loaded) {
-			InitDinamicGLFeature_NV_light_max_exponent();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_light_max_exponent")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_light_max_exponent*/
 
 /*EXT_texture_swizzle*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_swizzle
-static bool DinamicGLFeature_EXT_texture_swizzle_loaded = false; 
-static void InitDinamicGLFeature_EXT_texture_swizzle() {
-		DinamicGLFeature_EXT_texture_swizzle_loaded = true; 
-}
 bool DinamicGLFeature_EXT_texture_swizzle_Supported() {
-		if (!DinamicGLFeature_EXT_texture_swizzle_loaded) {
-			InitDinamicGLFeature_EXT_texture_swizzle();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_swizzle")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_swizzle*/
 
-/*INGR_interlace_read*/
-#ifdef USE_DYNAMIC_GL_INGR_interlace_read
-static bool DinamicGLFeature_INGR_interlace_read_loaded = false; 
-static void InitDinamicGLFeature_INGR_interlace_read() {
-		DinamicGLFeature_INGR_interlace_read_loaded = true; 
-}
-bool DinamicGLFeature_INGR_interlace_read_Supported() {
-		if (!DinamicGLFeature_INGR_interlace_read_loaded) {
-			InitDinamicGLFeature_INGR_interlace_read();
-		}
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_INGR_interlace_read*/
-
 /*ATI_pn_triangles*/
 #ifdef USE_DYNAMIC_GL_ATI_pn_triangles
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PNTrianglesiATI)(GLenum pname , GLint param) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PNTrianglesfATI)(GLenum pname , GLfloat param) = 0; }
 static bool DinamicGLFeature_ATI_pn_triangles_loaded = false; 
@@ -8251,18 +8616,31 @@ static void InitDinamicGLFeature_ATI_pn_triangles() {
 		DynamicGL_PNTrianglesfATI = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , GLfloat param)>("glPNTrianglesfATI"); 
 		DinamicGLFeature_ATI_pn_triangles_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ATI_pn_triangles_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ATI_pn_triangles")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ATI_pn_triangles_loaded) {
 			InitDinamicGLFeature_ATI_pn_triangles();
 		}
 		if (DynamicGL_PNTrianglesiATI==0) return false; 
 		if (DynamicGL_PNTrianglesfATI==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ATI_pn_triangles*/
 
+/*INGR_interlace_read*/
+#ifdef USE_DYNAMIC_GL_INGR_interlace_read
+bool DinamicGLFeature_INGR_interlace_read_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_INGR_interlace_read")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_INGR_interlace_read*/
+
 /*AMD_draw_buffers_blend*/
 #ifdef USE_DYNAMIC_GL_AMD_draw_buffers_blend
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFuncIndexedAMD)(GLuint buf , GLenum src , GLenum dst) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFuncSeparateIndexedAMD)(GLuint buf , GLenum srcRGB , GLenum dstRGB , GLenum srcAlpha , GLenum dstAlpha) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationIndexedAMD)(GLuint buf , GLenum mode) = 0; }
@@ -8275,7 +8653,10 @@ static void InitDinamicGLFeature_AMD_draw_buffers_blend() {
 		DynamicGL_BlendEquationSeparateIndexedAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint buf , GLenum modeRGB , GLenum modeAlpha)>("glBlendEquationSeparateIndexedAMD"); 
 		DinamicGLFeature_AMD_draw_buffers_blend_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_AMD_draw_buffers_blend_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_AMD_draw_buffers_blend")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_AMD_draw_buffers_blend_loaded) {
 			InitDinamicGLFeature_AMD_draw_buffers_blend();
 		}
@@ -8283,85 +8664,83 @@ bool DinamicGLFeature_AMD_draw_buffers_blend_Supported() {
 		if (DynamicGL_BlendFuncSeparateIndexedAMD==0) return false; 
 		if (DynamicGL_BlendEquationIndexedAMD==0) return false; 
 		if (DynamicGL_BlendEquationSeparateIndexedAMD==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_AMD_draw_buffers_blend*/
 
+/*VERSION_4_2*/
+#ifdef USE_DYNAMIC_GL_VERSION_4_2
+bool DinamicGLFeature_VERSION_4_2_Supported() {
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_VERSION_4_2*/
+
 /*APPLE_ycbcr_422*/
 #ifdef USE_DYNAMIC_GL_APPLE_ycbcr_422
-static bool DinamicGLFeature_APPLE_ycbcr_422_loaded = false; 
-static void InitDinamicGLFeature_APPLE_ycbcr_422() {
-		DinamicGLFeature_APPLE_ycbcr_422_loaded = true; 
-}
 bool DinamicGLFeature_APPLE_ycbcr_422_Supported() {
-		if (!DinamicGLFeature_APPLE_ycbcr_422_loaded) {
-			InitDinamicGLFeature_APPLE_ycbcr_422();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_APPLE_ycbcr_422")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_APPLE_ycbcr_422*/
 
 /*3DFX_tbuffer*/
 #ifdef USE_DYNAMIC_GL_3DFX_tbuffer
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TbufferMask3DFX)(GLuint mask) = 0; }
 static bool DinamicGLFeature_3DFX_tbuffer_loaded = false; 
 static void InitDinamicGLFeature_3DFX_tbuffer() {
 		DynamicGL_TbufferMask3DFX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint mask)>("glTbufferMask3DFX"); 
 		DinamicGLFeature_3DFX_tbuffer_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_3DFX_tbuffer_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_3DFX_tbuffer")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_3DFX_tbuffer_loaded) {
 			InitDinamicGLFeature_3DFX_tbuffer();
 		}
 		if (DynamicGL_TbufferMask3DFX==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_3DFX_tbuffer*/
 
 /*NV_texture_expand_normal*/
 #ifdef USE_DYNAMIC_GL_NV_texture_expand_normal
-static bool DinamicGLFeature_NV_texture_expand_normal_loaded = false; 
-static void InitDinamicGLFeature_NV_texture_expand_normal() {
-		DinamicGLFeature_NV_texture_expand_normal_loaded = true; 
-}
 bool DinamicGLFeature_NV_texture_expand_normal_Supported() {
-		if (!DinamicGLFeature_NV_texture_expand_normal_loaded) {
-			InitDinamicGLFeature_NV_texture_expand_normal();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_texture_expand_normal")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_texture_expand_normal*/
 
 /*ARB_texture_float*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_float
-static bool DinamicGLFeature_ARB_texture_float_loaded = false; 
-static void InitDinamicGLFeature_ARB_texture_float() {
-		DinamicGLFeature_ARB_texture_float_loaded = true; 
-}
 bool DinamicGLFeature_ARB_texture_float_Supported() {
-		if (!DinamicGLFeature_ARB_texture_float_loaded) {
-			InitDinamicGLFeature_ARB_texture_float();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_texture_float")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_texture_float*/
 
+/*ARB_shader_precision*/
+#ifdef USE_DYNAMIC_GL_ARB_shader_precision
+bool DinamicGLFeature_ARB_shader_precision_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_shader_precision")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_shader_precision*/
+
 /*REND_screen_coordinates*/
 #ifdef USE_DYNAMIC_GL_REND_screen_coordinates
-static bool DinamicGLFeature_REND_screen_coordinates_loaded = false; 
-static void InitDinamicGLFeature_REND_screen_coordinates() {
-		DinamicGLFeature_REND_screen_coordinates_loaded = true; 
-}
 bool DinamicGLFeature_REND_screen_coordinates_Supported() {
-		if (!DinamicGLFeature_REND_screen_coordinates_loaded) {
-			InitDinamicGLFeature_REND_screen_coordinates();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_REND_screen_coordinates")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_REND_screen_coordinates*/
 
 /*NV_vertex_buffer_unified_memory*/
 #ifdef USE_DYNAMIC_GL_NV_vertex_buffer_unified_memory
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BufferAddressRangeNV)(GLenum pname , GLuint index , GLuint64EXT address , GLsizeiptr length) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexFormatNV)(GLint size , GLenum type , GLsizei stride) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_NormalFormatNV)(GLenum type , GLsizei stride) = 0; }
@@ -8390,7 +8769,10 @@ static void InitDinamicGLFeature_NV_vertex_buffer_unified_memory() {
 		DynamicGL_GetIntegerui64i_vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum value , GLuint index , GLuint64EXT *result)>("glGetIntegerui64i_vNV"); 
 		DinamicGLFeature_NV_vertex_buffer_unified_memory_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_vertex_buffer_unified_memory_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_vertex_buffer_unified_memory")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_vertex_buffer_unified_memory_loaded) {
 			InitDinamicGLFeature_NV_vertex_buffer_unified_memory();
 		}
@@ -8406,88 +8788,82 @@ bool DinamicGLFeature_NV_vertex_buffer_unified_memory_Supported() {
 		if (DynamicGL_VertexAttribFormatNV==0) return false; 
 		if (DynamicGL_VertexAttribIFormatNV==0) return false; 
 		if (DynamicGL_GetIntegerui64i_vNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_vertex_buffer_unified_memory*/
 
 /*EXT_framebuffer_sRGB*/
 #ifdef USE_DYNAMIC_GL_EXT_framebuffer_sRGB
-static bool DinamicGLFeature_EXT_framebuffer_sRGB_loaded = false; 
-static void InitDinamicGLFeature_EXT_framebuffer_sRGB() {
-		DinamicGLFeature_EXT_framebuffer_sRGB_loaded = true; 
-}
 bool DinamicGLFeature_EXT_framebuffer_sRGB_Supported() {
-		if (!DinamicGLFeature_EXT_framebuffer_sRGB_loaded) {
-			InitDinamicGLFeature_EXT_framebuffer_sRGB();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_framebuffer_sRGB")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_framebuffer_sRGB*/
 
 /*AMD_stencil_operation_extended*/
 #ifdef USE_DYNAMIC_GL_AMD_stencil_operation_extended
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilOpValueAMD)(GLenum face , GLuint value) = 0; }
 static bool DinamicGLFeature_AMD_stencil_operation_extended_loaded = false; 
 static void InitDinamicGLFeature_AMD_stencil_operation_extended() {
 		DynamicGL_StencilOpValueAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum face , GLuint value)>("glStencilOpValueAMD"); 
 		DinamicGLFeature_AMD_stencil_operation_extended_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_AMD_stencil_operation_extended_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_AMD_stencil_operation_extended")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_AMD_stencil_operation_extended_loaded) {
 			InitDinamicGLFeature_AMD_stencil_operation_extended();
 		}
 		if (DynamicGL_StencilOpValueAMD==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_AMD_stencil_operation_extended*/
 
 /*SGIX_texture_multi_buffer*/
 #ifdef USE_DYNAMIC_GL_SGIX_texture_multi_buffer
-static bool DinamicGLFeature_SGIX_texture_multi_buffer_loaded = false; 
-static void InitDinamicGLFeature_SGIX_texture_multi_buffer() {
-		DinamicGLFeature_SGIX_texture_multi_buffer_loaded = true; 
-}
 bool DinamicGLFeature_SGIX_texture_multi_buffer_Supported() {
-		if (!DinamicGLFeature_SGIX_texture_multi_buffer_loaded) {
-			InitDinamicGLFeature_SGIX_texture_multi_buffer();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_texture_multi_buffer")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_texture_multi_buffer*/
 
 /*ARB_imaging*/
 #ifdef USE_DYNAMIC_GL_ARB_imaging
-static bool DinamicGLFeature_ARB_imaging_loaded = false; 
-static void InitDinamicGLFeature_ARB_imaging() {
-		DinamicGLFeature_ARB_imaging_loaded = true; 
-}
 bool DinamicGLFeature_ARB_imaging_Supported() {
-		if (!DinamicGLFeature_ARB_imaging_loaded) {
-			InitDinamicGLFeature_ARB_imaging();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_imaging")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_imaging*/
 
 /*EXT_index_func*/
 #ifdef USE_DYNAMIC_GL_EXT_index_func
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_IndexFuncEXT)(GLenum func , GLclampf ref) = 0; }
 static bool DinamicGLFeature_EXT_index_func_loaded = false; 
 static void InitDinamicGLFeature_EXT_index_func() {
 		DynamicGL_IndexFuncEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum func , GLclampf ref)>("glIndexFuncEXT"); 
 		DinamicGLFeature_EXT_index_func_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_index_func_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_index_func")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_index_func_loaded) {
 			InitDinamicGLFeature_EXT_index_func();
 		}
 		if (DynamicGL_IndexFuncEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_index_func*/
 
 /*NV_gpu_program5*/
 #ifdef USE_DYNAMIC_GL_NV_gpu_program5
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramSubroutineParametersuivNV)(GLenum target , GLsizei count , const GLuint *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetProgramSubroutineParameteruivNV)(GLenum target , GLuint index , GLuint *param) = 0; }
 static bool DinamicGLFeature_NV_gpu_program5_loaded = false; 
@@ -8496,108 +8872,107 @@ static void InitDinamicGLFeature_NV_gpu_program5() {
 		DynamicGL_GetProgramSubroutineParameteruivNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint index , GLuint *param)>("glGetProgramSubroutineParameteruivNV"); 
 		DinamicGLFeature_NV_gpu_program5_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_gpu_program5_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_gpu_program5")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_gpu_program5_loaded) {
 			InitDinamicGLFeature_NV_gpu_program5();
 		}
 		if (DynamicGL_ProgramSubroutineParametersuivNV==0) return false; 
 		if (DynamicGL_GetProgramSubroutineParameteruivNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_gpu_program5*/
 
 /*NV_multisample_filter_hint*/
 #ifdef USE_DYNAMIC_GL_NV_multisample_filter_hint
-static bool DinamicGLFeature_NV_multisample_filter_hint_loaded = false; 
-static void InitDinamicGLFeature_NV_multisample_filter_hint() {
-		DinamicGLFeature_NV_multisample_filter_hint_loaded = true; 
-}
 bool DinamicGLFeature_NV_multisample_filter_hint_Supported() {
-		if (!DinamicGLFeature_NV_multisample_filter_hint_loaded) {
-			InitDinamicGLFeature_NV_multisample_filter_hint();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_multisample_filter_hint")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_multisample_filter_hint*/
 
+/*NV_vertex_program1_1*/
+#ifdef USE_DYNAMIC_GL_NV_vertex_program1_1
+bool DinamicGLFeature_NV_vertex_program1_1_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_vertex_program1_1")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_vertex_program1_1*/
+
 /*SGIX_framezoom*/
 #ifdef USE_DYNAMIC_GL_SGIX_framezoom
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FrameZoomSGIX)(GLint factor) = 0; }
 static bool DinamicGLFeature_SGIX_framezoom_loaded = false; 
 static void InitDinamicGLFeature_SGIX_framezoom() {
 		DynamicGL_FrameZoomSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint factor)>("glFrameZoomSGIX"); 
 		DinamicGLFeature_SGIX_framezoom_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_SGIX_framezoom_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_framezoom")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_SGIX_framezoom_loaded) {
 			InitDinamicGLFeature_SGIX_framezoom();
 		}
 		if (DynamicGL_FrameZoomSGIX==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_framezoom*/
 
 /*SUNX_constant_data*/
 #ifdef USE_DYNAMIC_GL_SUNX_constant_data
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FinishTextureSUNX)() = 0; }
 static bool DinamicGLFeature_SUNX_constant_data_loaded = false; 
 static void InitDinamicGLFeature_SUNX_constant_data() {
 		DynamicGL_FinishTextureSUNX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)()>("glFinishTextureSUNX"); 
 		DinamicGLFeature_SUNX_constant_data_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_SUNX_constant_data_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SUNX_constant_data")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_SUNX_constant_data_loaded) {
 			InitDinamicGLFeature_SUNX_constant_data();
 		}
 		if (DynamicGL_FinishTextureSUNX==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SUNX_constant_data*/
 
 /*HP_occlusion_test*/
 #ifdef USE_DYNAMIC_GL_HP_occlusion_test
-static bool DinamicGLFeature_HP_occlusion_test_loaded = false; 
-static void InitDinamicGLFeature_HP_occlusion_test() {
-		DinamicGLFeature_HP_occlusion_test_loaded = true; 
-}
 bool DinamicGLFeature_HP_occlusion_test_Supported() {
-		if (!DinamicGLFeature_HP_occlusion_test_loaded) {
-			InitDinamicGLFeature_HP_occlusion_test();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_HP_occlusion_test")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_HP_occlusion_test*/
 
 /*SGIX_interlace*/
 #ifdef USE_DYNAMIC_GL_SGIX_interlace
-static bool DinamicGLFeature_SGIX_interlace_loaded = false; 
-static void InitDinamicGLFeature_SGIX_interlace() {
-		DinamicGLFeature_SGIX_interlace_loaded = true; 
-}
 bool DinamicGLFeature_SGIX_interlace_Supported() {
-		if (!DinamicGLFeature_SGIX_interlace_loaded) {
-			InitDinamicGLFeature_SGIX_interlace();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_interlace")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_interlace*/
 
 /*ATI_pixel_format_float*/
 #ifdef USE_DYNAMIC_GL_ATI_pixel_format_float
-static bool DinamicGLFeature_ATI_pixel_format_float_loaded = false; 
-static void InitDinamicGLFeature_ATI_pixel_format_float() {
-		DinamicGLFeature_ATI_pixel_format_float_loaded = true; 
-}
 bool DinamicGLFeature_ATI_pixel_format_float_Supported() {
-		if (!DinamicGLFeature_ATI_pixel_format_float_loaded) {
-			InitDinamicGLFeature_ATI_pixel_format_float();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ATI_pixel_format_float")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ATI_pixel_format_float*/
 
 /*NV_gpu_program4*/
 #ifdef USE_DYNAMIC_GL_NV_gpu_program4
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramLocalParameterI4iNV)(GLenum target , GLuint index , GLint x , GLint y , GLint z , GLint w) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramLocalParameterI4ivNV)(GLenum target , GLuint index , const GLint *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramLocalParametersI4ivNV)(GLenum target , GLuint index , GLsizei count , const GLint *params) = 0; }
@@ -8634,7 +9009,10 @@ static void InitDinamicGLFeature_NV_gpu_program4() {
 		DynamicGL_GetProgramEnvParameterIuivNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint index , GLuint *params)>("glGetProgramEnvParameterIuivNV"); 
 		DinamicGLFeature_NV_gpu_program4_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_gpu_program4_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_gpu_program4")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_gpu_program4_loaded) {
 			InitDinamicGLFeature_NV_gpu_program4();
 		}
@@ -8654,26 +9032,22 @@ bool DinamicGLFeature_NV_gpu_program4_Supported() {
 		if (DynamicGL_GetProgramLocalParameterIuivNV==0) return false; 
 		if (DynamicGL_GetProgramEnvParameterIivNV==0) return false; 
 		if (DynamicGL_GetProgramEnvParameterIuivNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_gpu_program4*/
 
 /*ARB_point_sprite*/
 #ifdef USE_DYNAMIC_GL_ARB_point_sprite
-static bool DinamicGLFeature_ARB_point_sprite_loaded = false; 
-static void InitDinamicGLFeature_ARB_point_sprite() {
-		DinamicGLFeature_ARB_point_sprite_loaded = true; 
-}
 bool DinamicGLFeature_ARB_point_sprite_Supported() {
-		if (!DinamicGLFeature_ARB_point_sprite_loaded) {
-			InitDinamicGLFeature_ARB_point_sprite();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_point_sprite")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_point_sprite*/
 
 /*ARB_transform_feedback3*/
 #ifdef USE_DYNAMIC_GL_ARB_transform_feedback3
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTransformFeedbackStream)(GLenum mode , GLuint id , GLuint stream) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BeginQueryIndexed)(GLenum target , GLuint index , GLuint id) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_EndQueryIndexed)(GLenum target , GLuint index) = 0; }
@@ -8686,7 +9060,10 @@ static void InitDinamicGLFeature_ARB_transform_feedback3() {
 		DynamicGL_GetQueryIndexediv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint index , GLenum pname , GLint *params)>("glGetQueryIndexediv"); 
 		DinamicGLFeature_ARB_transform_feedback3_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_transform_feedback3_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_transform_feedback3")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_transform_feedback3_loaded) {
 			InitDinamicGLFeature_ARB_transform_feedback3();
 		}
@@ -8694,12 +9071,14 @@ bool DinamicGLFeature_ARB_transform_feedback3_Supported() {
 		if (DynamicGL_BeginQueryIndexed==0) return false; 
 		if (DynamicGL_EndQueryIndexed==0) return false; 
 		if (DynamicGL_GetQueryIndexediv==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_transform_feedback3*/
 
 /*AMD_multi_draw_indirect*/
 #ifdef USE_DYNAMIC_GL_AMD_multi_draw_indirect
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawArraysIndirectAMD)(GLenum mode , const GLvoid *indirect , GLsizei primcount , GLsizei stride) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawElementsIndirectAMD)(GLenum mode , GLenum type , const GLvoid *indirect , GLsizei primcount , GLsizei stride) = 0; }
 static bool DinamicGLFeature_AMD_multi_draw_indirect_loaded = false; 
@@ -8708,52 +9087,67 @@ static void InitDinamicGLFeature_AMD_multi_draw_indirect() {
 		DynamicGL_MultiDrawElementsIndirectAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLenum type , const GLvoid *indirect , GLsizei primcount , GLsizei stride)>("glMultiDrawElementsIndirectAMD"); 
 		DinamicGLFeature_AMD_multi_draw_indirect_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_AMD_multi_draw_indirect_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_AMD_multi_draw_indirect")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_AMD_multi_draw_indirect_loaded) {
 			InitDinamicGLFeature_AMD_multi_draw_indirect();
 		}
 		if (DynamicGL_MultiDrawArraysIndirectAMD==0) return false; 
 		if (DynamicGL_MultiDrawElementsIndirectAMD==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_AMD_multi_draw_indirect*/
 
 /*SUN_mesh_array*/
 #ifdef USE_DYNAMIC_GL_SUN_mesh_array
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawMeshArraysSUN)(GLenum mode , GLint first , GLsizei count , GLsizei width) = 0; }
 static bool DinamicGLFeature_SUN_mesh_array_loaded = false; 
 static void InitDinamicGLFeature_SUN_mesh_array() {
 		DynamicGL_DrawMeshArraysSUN = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLint first , GLsizei count , GLsizei width)>("glDrawMeshArraysSUN"); 
 		DinamicGLFeature_SUN_mesh_array_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_SUN_mesh_array_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SUN_mesh_array")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_SUN_mesh_array_loaded) {
 			InitDinamicGLFeature_SUN_mesh_array();
 		}
 		if (DynamicGL_DrawMeshArraysSUN==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SUN_mesh_array*/
 
 /*NV_framebuffer_multisample_coverage*/
 #ifdef USE_DYNAMIC_GL_NV_framebuffer_multisample_coverage
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_RenderbufferStorageMultisampleCoverageNV)(GLenum target , GLsizei coverageSamples , GLsizei colorSamples , GLenum internalformat , GLsizei width , GLsizei height) = 0; }
 static bool DinamicGLFeature_NV_framebuffer_multisample_coverage_loaded = false; 
 static void InitDinamicGLFeature_NV_framebuffer_multisample_coverage() {
 		DynamicGL_RenderbufferStorageMultisampleCoverageNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLsizei coverageSamples , GLsizei colorSamples , GLenum internalformat , GLsizei width , GLsizei height)>("glRenderbufferStorageMultisampleCoverageNV"); 
 		DinamicGLFeature_NV_framebuffer_multisample_coverage_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_framebuffer_multisample_coverage_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_framebuffer_multisample_coverage")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_framebuffer_multisample_coverage_loaded) {
 			InitDinamicGLFeature_NV_framebuffer_multisample_coverage();
 		}
 		if (DynamicGL_RenderbufferStorageMultisampleCoverageNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_framebuffer_multisample_coverage*/
 
 /*ARB_timer_query*/
 #ifdef USE_DYNAMIC_GL_ARB_timer_query
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_QueryCounter)(GLuint id , GLenum target) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetQueryObjecti64v)(GLuint id , GLenum pname , GLint64 *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetQueryObjectui64v)(GLuint id , GLenum pname , GLuint64 *params) = 0; }
@@ -8764,106 +9158,86 @@ static void InitDinamicGLFeature_ARB_timer_query() {
 		DynamicGL_GetQueryObjectui64v = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint id , GLenum pname , GLuint64 *params)>("glGetQueryObjectui64v"); 
 		DinamicGLFeature_ARB_timer_query_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_timer_query_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_timer_query")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_timer_query_loaded) {
 			InitDinamicGLFeature_ARB_timer_query();
 		}
 		if (DynamicGL_QueryCounter==0) return false; 
 		if (DynamicGL_GetQueryObjecti64v==0) return false; 
 		if (DynamicGL_GetQueryObjectui64v==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_timer_query*/
 
 /*NV_texgen_emboss*/
 #ifdef USE_DYNAMIC_GL_NV_texgen_emboss
-static bool DinamicGLFeature_NV_texgen_emboss_loaded = false; 
-static void InitDinamicGLFeature_NV_texgen_emboss() {
-		DinamicGLFeature_NV_texgen_emboss_loaded = true; 
-}
 bool DinamicGLFeature_NV_texgen_emboss_Supported() {
-		if (!DinamicGLFeature_NV_texgen_emboss_loaded) {
-			InitDinamicGLFeature_NV_texgen_emboss();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_texgen_emboss")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_texgen_emboss*/
 
 /*EXT_separate_specular_color*/
 #ifdef USE_DYNAMIC_GL_EXT_separate_specular_color
-static bool DinamicGLFeature_EXT_separate_specular_color_loaded = false; 
-static void InitDinamicGLFeature_EXT_separate_specular_color() {
-		DinamicGLFeature_EXT_separate_specular_color_loaded = true; 
-}
 bool DinamicGLFeature_EXT_separate_specular_color_Supported() {
-		if (!DinamicGLFeature_EXT_separate_specular_color_loaded) {
-			InitDinamicGLFeature_EXT_separate_specular_color();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_separate_specular_color")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_separate_specular_color*/
 
 /*ARB_framebuffer_object_DEPRECATED*/
 #ifdef USE_DYNAMIC_GL_ARB_framebuffer_object_DEPRECATED
-static bool DinamicGLFeature_ARB_framebuffer_object_DEPRECATED_loaded = false; 
-static void InitDinamicGLFeature_ARB_framebuffer_object_DEPRECATED() {
-		DinamicGLFeature_ARB_framebuffer_object_DEPRECATED_loaded = true; 
-}
 bool DinamicGLFeature_ARB_framebuffer_object_DEPRECATED_Supported() {
-		if (!DinamicGLFeature_ARB_framebuffer_object_DEPRECATED_loaded) {
-			InitDinamicGLFeature_ARB_framebuffer_object_DEPRECATED();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_framebuffer_object_DEPRECATED")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_framebuffer_object_DEPRECATED*/
 
 /*ARB_shader_atomic_counters*/
 #ifdef USE_DYNAMIC_GL_ARB_shader_atomic_counters
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetActiveAtomicCounterBufferiv)(GLuint program , GLuint bufferIndex , GLenum pname , GLint *params) = 0; }
 static bool DinamicGLFeature_ARB_shader_atomic_counters_loaded = false; 
 static void InitDinamicGLFeature_ARB_shader_atomic_counters() {
 		DynamicGL_GetActiveAtomicCounterBufferiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLuint bufferIndex , GLenum pname , GLint *params)>("glGetActiveAtomicCounterBufferiv"); 
 		DinamicGLFeature_ARB_shader_atomic_counters_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_shader_atomic_counters_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_shader_atomic_counters")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_shader_atomic_counters_loaded) {
 			InitDinamicGLFeature_ARB_shader_atomic_counters();
 		}
 		if (DynamicGL_GetActiveAtomicCounterBufferiv==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_shader_atomic_counters*/
 
 /*EXT_blend_subtract*/
 #ifdef USE_DYNAMIC_GL_EXT_blend_subtract
-static bool DinamicGLFeature_EXT_blend_subtract_loaded = false; 
-static void InitDinamicGLFeature_EXT_blend_subtract() {
-		DinamicGLFeature_EXT_blend_subtract_loaded = true; 
-}
 bool DinamicGLFeature_EXT_blend_subtract_Supported() {
-		if (!DinamicGLFeature_EXT_blend_subtract_loaded) {
-			InitDinamicGLFeature_EXT_blend_subtract();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_blend_subtract")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_blend_subtract*/
 
 /*SGIX_texture_scale_bias*/
 #ifdef USE_DYNAMIC_GL_SGIX_texture_scale_bias
-static bool DinamicGLFeature_SGIX_texture_scale_bias_loaded = false; 
-static void InitDinamicGLFeature_SGIX_texture_scale_bias() {
-		DinamicGLFeature_SGIX_texture_scale_bias_loaded = true; 
-}
 bool DinamicGLFeature_SGIX_texture_scale_bias_Supported() {
-		if (!DinamicGLFeature_SGIX_texture_scale_bias_loaded) {
-			InitDinamicGLFeature_SGIX_texture_scale_bias();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_texture_scale_bias")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_texture_scale_bias*/
 
 /*APPLE_vertex_array_object*/
 #ifdef USE_DYNAMIC_GL_APPLE_vertex_array_object
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindVertexArrayAPPLE)(GLuint array) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteVertexArraysAPPLE)(GLsizei n , const GLuint *arrays) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenVertexArraysAPPLE)(GLsizei n , GLuint *arrays) = 0; }
@@ -8876,7 +9250,10 @@ static void InitDinamicGLFeature_APPLE_vertex_array_object() {
 		DynamicGL_IsVertexArrayAPPLE = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLuint array)>("glIsVertexArrayAPPLE"); 
 		DinamicGLFeature_APPLE_vertex_array_object_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_APPLE_vertex_array_object_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_APPLE_vertex_array_object")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_APPLE_vertex_array_object_loaded) {
 			InitDinamicGLFeature_APPLE_vertex_array_object();
 		}
@@ -8884,12 +9261,30 @@ bool DinamicGLFeature_APPLE_vertex_array_object_Supported() {
 		if (DynamicGL_DeleteVertexArraysAPPLE==0) return false; 
 		if (DynamicGL_GenVertexArraysAPPLE==0) return false; 
 		if (DynamicGL_IsVertexArrayAPPLE==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_APPLE_vertex_array_object*/
 
+/*ARB_texture_env_crossbar*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_env_crossbar
+bool DinamicGLFeature_ARB_texture_env_crossbar_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_texture_env_crossbar")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_texture_env_crossbar*/
+
+/*ARB_compatibility*/
+#ifdef USE_DYNAMIC_GL_ARB_compatibility
+bool DinamicGLFeature_ARB_compatibility_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_compatibility")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_compatibility*/
+
 /*EXT_copy_texture*/
 #ifdef USE_DYNAMIC_GL_EXT_copy_texture
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CopyTexImage1DEXT)(GLenum target , GLint level , GLenum internalformat , GLint x , GLint y , GLsizei width , GLint border) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CopyTexImage2DEXT)(GLenum target , GLint level , GLenum internalformat , GLint x , GLint y , GLsizei width , GLsizei height , GLint border) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CopyTexSubImage1DEXT)(GLenum target , GLint level , GLint xoffset , GLint x , GLint y , GLsizei width) = 0; }
@@ -8904,7 +9299,10 @@ static void InitDinamicGLFeature_EXT_copy_texture() {
 		DynamicGL_CopyTexSubImage3DEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLint zoffset , GLint x , GLint y , GLsizei width , GLsizei height)>("glCopyTexSubImage3DEXT"); 
 		DinamicGLFeature_EXT_copy_texture_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_copy_texture_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_copy_texture")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_copy_texture_loaded) {
 			InitDinamicGLFeature_EXT_copy_texture();
 		}
@@ -8913,26 +9311,30 @@ bool DinamicGLFeature_EXT_copy_texture_Supported() {
 		if (DynamicGL_CopyTexSubImage1DEXT==0) return false; 
 		if (DynamicGL_CopyTexSubImage2DEXT==0) return false; 
 		if (DynamicGL_CopyTexSubImage3DEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_copy_texture*/
 
 /*EXT_texture_cube_map*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_cube_map
-static bool DinamicGLFeature_EXT_texture_cube_map_loaded = false; 
-static void InitDinamicGLFeature_EXT_texture_cube_map() {
-		DinamicGLFeature_EXT_texture_cube_map_loaded = true; 
-}
 bool DinamicGLFeature_EXT_texture_cube_map_Supported() {
-		if (!DinamicGLFeature_EXT_texture_cube_map_loaded) {
-			InitDinamicGLFeature_EXT_texture_cube_map();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_cube_map")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_cube_map*/
 
+/*3DFX_multisample*/
+#ifdef USE_DYNAMIC_GL_3DFX_multisample
+bool DinamicGLFeature_3DFX_multisample_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_3DFX_multisample")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_3DFX_multisample*/
+
 /*EXT_coordinate_frame*/
 #ifdef USE_DYNAMIC_GL_EXT_coordinate_frame
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Tangent3bEXT)(GLbyte tx , GLbyte ty , GLbyte tz) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Tangent3bvEXT)(const GLbyte *v) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Tangent3dEXT)(GLdouble tx , GLdouble ty , GLdouble tz) = 0; }
@@ -8981,7 +9383,10 @@ static void InitDinamicGLFeature_EXT_coordinate_frame() {
 		DynamicGL_BinormalPointerEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , GLsizei stride , const GLvoid *pointer)>("glBinormalPointerEXT"); 
 		DinamicGLFeature_EXT_coordinate_frame_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_coordinate_frame_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_coordinate_frame")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_coordinate_frame_loaded) {
 			InitDinamicGLFeature_EXT_coordinate_frame();
 		}
@@ -9007,113 +9412,76 @@ bool DinamicGLFeature_EXT_coordinate_frame_Supported() {
 		if (DynamicGL_Binormal3svEXT==0) return false; 
 		if (DynamicGL_TangentPointerEXT==0) return false; 
 		if (DynamicGL_BinormalPointerEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_coordinate_frame*/
 
-/*3DFX_multisample*/
-#ifdef USE_DYNAMIC_GL_3DFX_multisample
-static bool DinamicGLFeature_3DFX_multisample_loaded = false; 
-static void InitDinamicGLFeature_3DFX_multisample() {
-		DinamicGLFeature_3DFX_multisample_loaded = true; 
-}
-bool DinamicGLFeature_3DFX_multisample_Supported() {
-		if (!DinamicGLFeature_3DFX_multisample_loaded) {
-			InitDinamicGLFeature_3DFX_multisample();
-		}
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_3DFX_multisample*/
-
 /*SGIX_ycrcb*/
 #ifdef USE_DYNAMIC_GL_SGIX_ycrcb
-static bool DinamicGLFeature_SGIX_ycrcb_loaded = false; 
-static void InitDinamicGLFeature_SGIX_ycrcb() {
-		DinamicGLFeature_SGIX_ycrcb_loaded = true; 
-}
 bool DinamicGLFeature_SGIX_ycrcb_Supported() {
-		if (!DinamicGLFeature_SGIX_ycrcb_loaded) {
-			InitDinamicGLFeature_SGIX_ycrcb();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_ycrcb")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_ycrcb*/
 
 /*SGIX_async_histogram*/
 #ifdef USE_DYNAMIC_GL_SGIX_async_histogram
-static bool DinamicGLFeature_SGIX_async_histogram_loaded = false; 
-static void InitDinamicGLFeature_SGIX_async_histogram() {
-		DinamicGLFeature_SGIX_async_histogram_loaded = true; 
-}
 bool DinamicGLFeature_SGIX_async_histogram_Supported() {
-		if (!DinamicGLFeature_SGIX_async_histogram_loaded) {
-			InitDinamicGLFeature_SGIX_async_histogram();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_async_histogram")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_async_histogram*/
 
 /*ARB_compressed_texture_pixel_storage*/
 #ifdef USE_DYNAMIC_GL_ARB_compressed_texture_pixel_storage
-static bool DinamicGLFeature_ARB_compressed_texture_pixel_storage_loaded = false; 
-static void InitDinamicGLFeature_ARB_compressed_texture_pixel_storage() {
-		DinamicGLFeature_ARB_compressed_texture_pixel_storage_loaded = true; 
-}
 bool DinamicGLFeature_ARB_compressed_texture_pixel_storage_Supported() {
-		if (!DinamicGLFeature_ARB_compressed_texture_pixel_storage_loaded) {
-			InitDinamicGLFeature_ARB_compressed_texture_pixel_storage();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_compressed_texture_pixel_storage")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_compressed_texture_pixel_storage*/
 
 /*SGIX_depth_texture*/
 #ifdef USE_DYNAMIC_GL_SGIX_depth_texture
-static bool DinamicGLFeature_SGIX_depth_texture_loaded = false; 
-static void InitDinamicGLFeature_SGIX_depth_texture() {
-		DinamicGLFeature_SGIX_depth_texture_loaded = true; 
-}
 bool DinamicGLFeature_SGIX_depth_texture_Supported() {
-		if (!DinamicGLFeature_SGIX_depth_texture_loaded) {
-			InitDinamicGLFeature_SGIX_depth_texture();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_depth_texture")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_depth_texture*/
 
 /*EXT_stencil_two_side*/
 #ifdef USE_DYNAMIC_GL_EXT_stencil_two_side
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ActiveStencilFaceEXT)(GLenum face) = 0; }
 static bool DinamicGLFeature_EXT_stencil_two_side_loaded = false; 
 static void InitDinamicGLFeature_EXT_stencil_two_side() {
 		DynamicGL_ActiveStencilFaceEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum face)>("glActiveStencilFaceEXT"); 
 		DinamicGLFeature_EXT_stencil_two_side_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_stencil_two_side_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_stencil_two_side")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_stencil_two_side_loaded) {
 			InitDinamicGLFeature_EXT_stencil_two_side();
 		}
 		if (DynamicGL_ActiveStencilFaceEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_stencil_two_side*/
 
 /*MESA_pack_invert*/
 #ifdef USE_DYNAMIC_GL_MESA_pack_invert
-static bool DinamicGLFeature_MESA_pack_invert_loaded = false; 
-static void InitDinamicGLFeature_MESA_pack_invert() {
-		DinamicGLFeature_MESA_pack_invert_loaded = true; 
-}
 bool DinamicGLFeature_MESA_pack_invert_Supported() {
-		if (!DinamicGLFeature_MESA_pack_invert_loaded) {
-			InitDinamicGLFeature_MESA_pack_invert();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_MESA_pack_invert")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_MESA_pack_invert*/
 
 /*ARB_get_program_binary*/
 #ifdef USE_DYNAMIC_GL_ARB_get_program_binary
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetProgramBinary)(GLuint program , GLsizei bufSize , GLsizei *length , GLenum *binaryFormat , GLvoid *binary) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramBinary)(GLuint program , GLenum binaryFormat , const GLvoid *binary , GLsizei length) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramParameteri)(GLuint program , GLenum pname , GLint value) = 0; }
@@ -9124,64 +9492,70 @@ static void InitDinamicGLFeature_ARB_get_program_binary() {
 		DynamicGL_ProgramParameteri = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLenum pname , GLint value)>("glProgramParameteri"); 
 		DinamicGLFeature_ARB_get_program_binary_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_get_program_binary_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_get_program_binary")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_get_program_binary_loaded) {
 			InitDinamicGLFeature_ARB_get_program_binary();
 		}
 		if (DynamicGL_GetProgramBinary==0) return false; 
 		if (DynamicGL_ProgramBinary==0) return false; 
 		if (DynamicGL_ProgramParameteri==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_get_program_binary*/
 
+/*ARB_fragment_coord_conventions*/
+#ifdef USE_DYNAMIC_GL_ARB_fragment_coord_conventions
+bool DinamicGLFeature_ARB_fragment_coord_conventions_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_fragment_coord_conventions")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_fragment_coord_conventions*/
+
 /*EXT_framebuffer_multisample*/
 #ifdef USE_DYNAMIC_GL_EXT_framebuffer_multisample
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_RenderbufferStorageMultisampleEXT)(GLenum target , GLsizei samples , GLenum internalformat , GLsizei width , GLsizei height) = 0; }
 static bool DinamicGLFeature_EXT_framebuffer_multisample_loaded = false; 
 static void InitDinamicGLFeature_EXT_framebuffer_multisample() {
 		DynamicGL_RenderbufferStorageMultisampleEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLsizei samples , GLenum internalformat , GLsizei width , GLsizei height)>("glRenderbufferStorageMultisampleEXT"); 
 		DinamicGLFeature_EXT_framebuffer_multisample_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_framebuffer_multisample_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_framebuffer_multisample")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_framebuffer_multisample_loaded) {
 			InitDinamicGLFeature_EXT_framebuffer_multisample();
 		}
 		if (DynamicGL_RenderbufferStorageMultisampleEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_framebuffer_multisample*/
 
 /*ARB_seamless_cube_map*/
 #ifdef USE_DYNAMIC_GL_ARB_seamless_cube_map
-static bool DinamicGLFeature_ARB_seamless_cube_map_loaded = false; 
-static void InitDinamicGLFeature_ARB_seamless_cube_map() {
-		DinamicGLFeature_ARB_seamless_cube_map_loaded = true; 
-}
 bool DinamicGLFeature_ARB_seamless_cube_map_Supported() {
-		if (!DinamicGLFeature_ARB_seamless_cube_map_loaded) {
-			InitDinamicGLFeature_ARB_seamless_cube_map();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_seamless_cube_map")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_seamless_cube_map*/
 
 /*SGIX_texture_lod_bias*/
 #ifdef USE_DYNAMIC_GL_SGIX_texture_lod_bias
-static bool DinamicGLFeature_SGIX_texture_lod_bias_loaded = false; 
-static void InitDinamicGLFeature_SGIX_texture_lod_bias() {
-		DinamicGLFeature_SGIX_texture_lod_bias_loaded = true; 
-}
 bool DinamicGLFeature_SGIX_texture_lod_bias_Supported() {
-		if (!DinamicGLFeature_SGIX_texture_lod_bias_loaded) {
-			InitDinamicGLFeature_SGIX_texture_lod_bias();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_texture_lod_bias")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_texture_lod_bias*/
 
 /*AMD_vertex_shader_tesselator*/
 #ifdef USE_DYNAMIC_GL_AMD_vertex_shader_tesselator
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TessellationFactorAMD)(GLfloat factor) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TessellationModeAMD)(GLenum mode) = 0; }
 static bool DinamicGLFeature_AMD_vertex_shader_tesselator_loaded = false; 
@@ -9190,32 +9564,31 @@ static void InitDinamicGLFeature_AMD_vertex_shader_tesselator() {
 		DynamicGL_TessellationModeAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode)>("glTessellationModeAMD"); 
 		DinamicGLFeature_AMD_vertex_shader_tesselator_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_AMD_vertex_shader_tesselator_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_AMD_vertex_shader_tesselator")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_AMD_vertex_shader_tesselator_loaded) {
 			InitDinamicGLFeature_AMD_vertex_shader_tesselator();
 		}
 		if (DynamicGL_TessellationFactorAMD==0) return false; 
 		if (DynamicGL_TessellationModeAMD==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_AMD_vertex_shader_tesselator*/
 
 /*EXT_texture_filter_anisotropic*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_filter_anisotropic
-static bool DinamicGLFeature_EXT_texture_filter_anisotropic_loaded = false; 
-static void InitDinamicGLFeature_EXT_texture_filter_anisotropic() {
-		DinamicGLFeature_EXT_texture_filter_anisotropic_loaded = true; 
-}
 bool DinamicGLFeature_EXT_texture_filter_anisotropic_Supported() {
-		if (!DinamicGLFeature_EXT_texture_filter_anisotropic_loaded) {
-			InitDinamicGLFeature_EXT_texture_filter_anisotropic();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_filter_anisotropic")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_filter_anisotropic*/
 
 /*VERSION_1_3_DEPRECATED*/
 #ifdef USE_DYNAMIC_GL_VERSION_1_3_DEPRECATED
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClientActiveTexture)(GLenum texture) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1d)(GLenum target , GLdouble s) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1dv)(GLenum target , const GLdouble *v) = 0; }
@@ -9294,7 +9667,9 @@ static void InitDinamicGLFeature_VERSION_1_3_DEPRECATED() {
 		DynamicGL_MultTransposeMatrixd = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLdouble *m)>("glMultTransposeMatrixd"); 
 		DinamicGLFeature_VERSION_1_3_DEPRECATED_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_VERSION_1_3_DEPRECATED_Supported() {
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_VERSION_1_3_DEPRECATED_loaded) {
 			InitDinamicGLFeature_VERSION_1_3_DEPRECATED();
 		}
@@ -9335,12 +9710,14 @@ bool DinamicGLFeature_VERSION_1_3_DEPRECATED_Supported() {
 		if (DynamicGL_LoadTransposeMatrixd==0) return false; 
 		if (DynamicGL_MultTransposeMatrixf==0) return false; 
 		if (DynamicGL_MultTransposeMatrixd==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_VERSION_1_3_DEPRECATED*/
 
 /*VERSION_1_4_DEPRECATED*/
 #ifdef USE_DYNAMIC_GL_VERSION_1_4_DEPRECATED
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoordf)(GLfloat coord) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoordfv)(const GLfloat *coord) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoordd)(GLdouble coord) = 0; }
@@ -9421,7 +9798,9 @@ static void InitDinamicGLFeature_VERSION_1_4_DEPRECATED() {
 		DynamicGL_WindowPos3sv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLshort *v)>("glWindowPos3sv"); 
 		DinamicGLFeature_VERSION_1_4_DEPRECATED_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_VERSION_1_4_DEPRECATED_Supported() {
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_VERSION_1_4_DEPRECATED_loaded) {
 			InitDinamicGLFeature_VERSION_1_4_DEPRECATED();
 		}
@@ -9463,12 +9842,14 @@ bool DinamicGLFeature_VERSION_1_4_DEPRECATED_Supported() {
 		if (DynamicGL_WindowPos3iv==0) return false; 
 		if (DynamicGL_WindowPos3s==0) return false; 
 		if (DynamicGL_WindowPos3sv==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_VERSION_1_4_DEPRECATED*/
 
 /*ARB_matrix_palette*/
 #ifdef USE_DYNAMIC_GL_ARB_matrix_palette
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CurrentPaletteMatrixARB)(GLint index) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MatrixIndexubvARB)(GLint size , const GLubyte *indices) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MatrixIndexusvARB)(GLint size , const GLushort *indices) = 0; }
@@ -9483,7 +9864,10 @@ static void InitDinamicGLFeature_ARB_matrix_palette() {
 		DynamicGL_MatrixIndexPointerARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer)>("glMatrixIndexPointerARB"); 
 		DinamicGLFeature_ARB_matrix_palette_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_matrix_palette_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_matrix_palette")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_matrix_palette_loaded) {
 			InitDinamicGLFeature_ARB_matrix_palette();
 		}
@@ -9492,40 +9876,38 @@ bool DinamicGLFeature_ARB_matrix_palette_Supported() {
 		if (DynamicGL_MatrixIndexusvARB==0) return false; 
 		if (DynamicGL_MatrixIndexuivARB==0) return false; 
 		if (DynamicGL_MatrixIndexPointerARB==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_matrix_palette*/
 
 /*NV_texture_shader2*/
 #ifdef USE_DYNAMIC_GL_NV_texture_shader2
-static bool DinamicGLFeature_NV_texture_shader2_loaded = false; 
-static void InitDinamicGLFeature_NV_texture_shader2() {
-		DinamicGLFeature_NV_texture_shader2_loaded = true; 
-}
 bool DinamicGLFeature_NV_texture_shader2_Supported() {
-		if (!DinamicGLFeature_NV_texture_shader2_loaded) {
-			InitDinamicGLFeature_NV_texture_shader2();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_texture_shader2")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_texture_shader2*/
 
+/*ARB_shader_bit_encoding*/
+#ifdef USE_DYNAMIC_GL_ARB_shader_bit_encoding
+bool DinamicGLFeature_ARB_shader_bit_encoding_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_shader_bit_encoding")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_shader_bit_encoding*/
+
 /*ARB_texture_env_combine*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_env_combine
-static bool DinamicGLFeature_ARB_texture_env_combine_loaded = false; 
-static void InitDinamicGLFeature_ARB_texture_env_combine() {
-		DinamicGLFeature_ARB_texture_env_combine_loaded = true; 
-}
 bool DinamicGLFeature_ARB_texture_env_combine_Supported() {
-		if (!DinamicGLFeature_ARB_texture_env_combine_loaded) {
-			InitDinamicGLFeature_ARB_texture_env_combine();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_texture_env_combine")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_texture_env_combine*/
 
 /*ATI_element_array*/
 #ifdef USE_DYNAMIC_GL_ATI_element_array
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ElementPointerATI)(GLenum type , const GLvoid *pointer) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElementArrayATI)(GLenum mode , GLsizei count) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawRangeElementArrayATI)(GLenum mode , GLuint start , GLuint end , GLsizei count) = 0; }
@@ -9536,36 +9918,46 @@ static void InitDinamicGLFeature_ATI_element_array() {
 		DynamicGL_DrawRangeElementArrayATI = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLuint start , GLuint end , GLsizei count)>("glDrawRangeElementArrayATI"); 
 		DinamicGLFeature_ATI_element_array_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ATI_element_array_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ATI_element_array")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ATI_element_array_loaded) {
 			InitDinamicGLFeature_ATI_element_array();
 		}
 		if (DynamicGL_ElementPointerATI==0) return false; 
 		if (DynamicGL_DrawElementArrayATI==0) return false; 
 		if (DynamicGL_DrawRangeElementArrayATI==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ATI_element_array*/
 
 /*EXT_blend_equation_separate*/
 #ifdef USE_DYNAMIC_GL_EXT_blend_equation_separate
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationSeparateEXT)(GLenum modeRGB , GLenum modeAlpha) = 0; }
 static bool DinamicGLFeature_EXT_blend_equation_separate_loaded = false; 
 static void InitDinamicGLFeature_EXT_blend_equation_separate() {
 		DynamicGL_BlendEquationSeparateEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum modeRGB , GLenum modeAlpha)>("glBlendEquationSeparateEXT"); 
 		DinamicGLFeature_EXT_blend_equation_separate_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_blend_equation_separate_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_blend_equation_separate")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_blend_equation_separate_loaded) {
 			InitDinamicGLFeature_EXT_blend_equation_separate();
 		}
 		if (DynamicGL_BlendEquationSeparateEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_blend_equation_separate*/
 
 /*VERSION_1_5*/
 #ifdef USE_DYNAMIC_GL_VERSION_1_5
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenQueries)(GLsizei n , GLuint *ids) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteQueries)(GLsizei n , const GLuint *ids) = 0; }
 extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsQuery)(GLuint id) = 0; }
@@ -9606,7 +9998,9 @@ static void InitDinamicGLFeature_VERSION_1_5() {
 		DynamicGL_GetBufferPointerv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum pname , GLvoid* *params)>("glGetBufferPointerv"); 
 		DinamicGLFeature_VERSION_1_5_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_VERSION_1_5_Supported() {
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_VERSION_1_5_loaded) {
 			InitDinamicGLFeature_VERSION_1_5();
 		}
@@ -9628,12 +10022,14 @@ bool DinamicGLFeature_VERSION_1_5_Supported() {
 		if (DynamicGL_UnmapBuffer==0) return false; 
 		if (DynamicGL_GetBufferParameteriv==0) return false; 
 		if (DynamicGL_GetBufferPointerv==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_VERSION_1_5*/
 
 /*NV_vertex_program4*/
 #ifdef USE_DYNAMIC_GL_NV_vertex_program4
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribI1iEXT)(GLuint index , GLint x) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribI2iEXT)(GLuint index , GLint x , GLint y) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribI3iEXT)(GLuint index , GLint x , GLint y , GLint z) = 0; }
@@ -9684,7 +10080,10 @@ static void InitDinamicGLFeature_NV_vertex_program4() {
 		DynamicGL_GetVertexAttribIuivEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLenum pname , GLuint *params)>("glGetVertexAttribIuivEXT"); 
 		DinamicGLFeature_NV_vertex_program4_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_vertex_program4_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_vertex_program4")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_vertex_program4_loaded) {
 			InitDinamicGLFeature_NV_vertex_program4();
 		}
@@ -9711,12 +10110,29 @@ bool DinamicGLFeature_NV_vertex_program4_Supported() {
 		if (DynamicGL_VertexAttribIPointerEXT==0) return false; 
 		if (DynamicGL_GetVertexAttribIivEXT==0) return false; 
 		if (DynamicGL_GetVertexAttribIuivEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_vertex_program4*/
 
+/*VERSION_4_1*/
+#ifdef USE_DYNAMIC_GL_VERSION_4_1
+bool DinamicGLFeature_VERSION_4_1_Supported() {
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_VERSION_4_1*/
+
+/*EXT_misc_attribute*/
+#ifdef USE_DYNAMIC_GL_EXT_misc_attribute
+bool DinamicGLFeature_EXT_misc_attribute_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_misc_attribute")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_EXT_misc_attribute*/
+
 /*ARB_vertex_shader*/
 #ifdef USE_DYNAMIC_GL_ARB_vertex_shader
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindAttribLocationARB)(GLhandleARB programObj , GLuint index , const GLcharARB *name) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetActiveAttribARB)(GLhandleARB programObj , GLuint index , GLsizei maxLength , GLsizei *length , GLint *size , GLenum *type , GLcharARB *name) = 0; }
 extern "C" { GLint (DYNAMIC_GL_APIENTRYP DynamicGL_GetAttribLocationARB)(GLhandleARB programObj , const GLcharARB *name) = 0; }
@@ -9727,36 +10143,46 @@ static void InitDinamicGLFeature_ARB_vertex_shader() {
 		DynamicGL_GetAttribLocationARB = DynamicGL_LoadFunction<GLint (DYNAMIC_GL_APIENTRYP)(GLhandleARB programObj , const GLcharARB *name)>("glGetAttribLocationARB"); 
 		DinamicGLFeature_ARB_vertex_shader_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_vertex_shader_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_vertex_shader")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_vertex_shader_loaded) {
 			InitDinamicGLFeature_ARB_vertex_shader();
 		}
 		if (DynamicGL_BindAttribLocationARB==0) return false; 
 		if (DynamicGL_GetActiveAttribARB==0) return false; 
 		if (DynamicGL_GetAttribLocationARB==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_vertex_shader*/
 
 /*EXT_polygon_offset*/
 #ifdef USE_DYNAMIC_GL_EXT_polygon_offset
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PolygonOffsetEXT)(GLfloat factor , GLfloat bias) = 0; }
 static bool DinamicGLFeature_EXT_polygon_offset_loaded = false; 
 static void InitDinamicGLFeature_EXT_polygon_offset() {
 		DynamicGL_PolygonOffsetEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLfloat factor , GLfloat bias)>("glPolygonOffsetEXT"); 
 		DinamicGLFeature_EXT_polygon_offset_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_polygon_offset_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_polygon_offset")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_polygon_offset_loaded) {
 			InitDinamicGLFeature_EXT_polygon_offset();
 		}
 		if (DynamicGL_PolygonOffsetEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_polygon_offset*/
 
 /*ARB_vertex_blend*/
 #ifdef USE_DYNAMIC_GL_ARB_vertex_blend
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WeightbvARB)(GLint size , const GLbyte *weights) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WeightsvARB)(GLint size , const GLshort *weights) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WeightivARB)(GLint size , const GLint *weights) = 0; }
@@ -9781,7 +10207,10 @@ static void InitDinamicGLFeature_ARB_vertex_blend() {
 		DynamicGL_VertexBlendARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint count)>("glVertexBlendARB"); 
 		DinamicGLFeature_ARB_vertex_blend_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_vertex_blend_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_vertex_blend")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_vertex_blend_loaded) {
 			InitDinamicGLFeature_ARB_vertex_blend();
 		}
@@ -9795,26 +10224,22 @@ bool DinamicGLFeature_ARB_vertex_blend_Supported() {
 		if (DynamicGL_WeightuivARB==0) return false; 
 		if (DynamicGL_WeightPointerARB==0) return false; 
 		if (DynamicGL_VertexBlendARB==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_vertex_blend*/
 
 /*WIN_specular_fog*/
 #ifdef USE_DYNAMIC_GL_WIN_specular_fog
-static bool DinamicGLFeature_WIN_specular_fog_loaded = false; 
-static void InitDinamicGLFeature_WIN_specular_fog() {
-		DinamicGLFeature_WIN_specular_fog_loaded = true; 
-}
 bool DinamicGLFeature_WIN_specular_fog_Supported() {
-		if (!DinamicGLFeature_WIN_specular_fog_loaded) {
-			InitDinamicGLFeature_WIN_specular_fog();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_WIN_specular_fog")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_WIN_specular_fog*/
 
 /*VERSION_1_2_DEPRECATED*/
 #ifdef USE_DYNAMIC_GL_VERSION_1_2_DEPRECATED
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorTable)(GLenum target , GLenum internalformat , GLsizei width , GLenum format , GLenum type , const GLvoid *table) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorTableParameterfv)(GLenum target , GLenum pname , const GLfloat *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorTableParameteriv)(GLenum target , GLenum pname , const GLint *params) = 0; }
@@ -9883,7 +10308,9 @@ static void InitDinamicGLFeature_VERSION_1_2_DEPRECATED() {
 		DynamicGL_ResetMinmax = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target)>("glResetMinmax"); 
 		DinamicGLFeature_VERSION_1_2_DEPRECATED_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_VERSION_1_2_DEPRECATED_Supported() {
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_VERSION_1_2_DEPRECATED_loaded) {
 			InitDinamicGLFeature_VERSION_1_2_DEPRECATED();
 		}
@@ -9919,57 +10346,52 @@ bool DinamicGLFeature_VERSION_1_2_DEPRECATED_Supported() {
 		if (DynamicGL_Minmax==0) return false; 
 		if (DynamicGL_ResetHistogram==0) return false; 
 		if (DynamicGL_ResetMinmax==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_VERSION_1_2_DEPRECATED*/
 
 /*NV_multisample_coverage*/
 #ifdef USE_DYNAMIC_GL_NV_multisample_coverage
-static bool DinamicGLFeature_NV_multisample_coverage_loaded = false; 
-static void InitDinamicGLFeature_NV_multisample_coverage() {
-		DinamicGLFeature_NV_multisample_coverage_loaded = true; 
-}
 bool DinamicGLFeature_NV_multisample_coverage_Supported() {
-		if (!DinamicGLFeature_NV_multisample_coverage_loaded) {
-			InitDinamicGLFeature_NV_multisample_coverage();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_multisample_coverage")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_multisample_coverage*/
 
 /*SGIX_impact_pixel_texture*/
 #ifdef USE_DYNAMIC_GL_SGIX_impact_pixel_texture
-static bool DinamicGLFeature_SGIX_impact_pixel_texture_loaded = false; 
-static void InitDinamicGLFeature_SGIX_impact_pixel_texture() {
-		DinamicGLFeature_SGIX_impact_pixel_texture_loaded = true; 
-}
 bool DinamicGLFeature_SGIX_impact_pixel_texture_Supported() {
-		if (!DinamicGLFeature_SGIX_impact_pixel_texture_loaded) {
-			InitDinamicGLFeature_SGIX_impact_pixel_texture();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_impact_pixel_texture")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_impact_pixel_texture*/
 
 /*EXT_depth_bounds_test*/
 #ifdef USE_DYNAMIC_GL_EXT_depth_bounds_test
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthBoundsEXT)(GLclampd zmin , GLclampd zmax) = 0; }
 static bool DinamicGLFeature_EXT_depth_bounds_test_loaded = false; 
 static void InitDinamicGLFeature_EXT_depth_bounds_test() {
 		DynamicGL_DepthBoundsEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLclampd zmin , GLclampd zmax)>("glDepthBoundsEXT"); 
 		DinamicGLFeature_EXT_depth_bounds_test_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_depth_bounds_test_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_depth_bounds_test")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_depth_bounds_test_loaded) {
 			InitDinamicGLFeature_EXT_depth_bounds_test();
 		}
 		if (DynamicGL_DepthBoundsEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_depth_bounds_test*/
 
 /*ARB_shader_image_load_store*/
 #ifdef USE_DYNAMIC_GL_ARB_shader_image_load_store
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindImageTexture)(GLuint unit , GLuint texture , GLint level , GLboolean layered , GLint layer , GLenum access , GLenum format) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MemoryBarrier)(GLbitfield barriers) = 0; }
 static bool DinamicGLFeature_ARB_shader_image_load_store_loaded = false; 
@@ -9978,46 +10400,39 @@ static void InitDinamicGLFeature_ARB_shader_image_load_store() {
 		DynamicGL_MemoryBarrier = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLbitfield barriers)>("glMemoryBarrier"); 
 		DinamicGLFeature_ARB_shader_image_load_store_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_shader_image_load_store_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_shader_image_load_store")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_shader_image_load_store_loaded) {
 			InitDinamicGLFeature_ARB_shader_image_load_store();
 		}
 		if (DynamicGL_BindImageTexture==0) return false; 
 		if (DynamicGL_MemoryBarrier==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_shader_image_load_store*/
 
 /*EXT_texture_mirror_clamp*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_mirror_clamp
-static bool DinamicGLFeature_EXT_texture_mirror_clamp_loaded = false; 
-static void InitDinamicGLFeature_EXT_texture_mirror_clamp() {
-		DinamicGLFeature_EXT_texture_mirror_clamp_loaded = true; 
-}
 bool DinamicGLFeature_EXT_texture_mirror_clamp_Supported() {
-		if (!DinamicGLFeature_EXT_texture_mirror_clamp_loaded) {
-			InitDinamicGLFeature_EXT_texture_mirror_clamp();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_mirror_clamp")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_mirror_clamp*/
 
 /*SGIS_texture_lod*/
 #ifdef USE_DYNAMIC_GL_SGIS_texture_lod
-static bool DinamicGLFeature_SGIS_texture_lod_loaded = false; 
-static void InitDinamicGLFeature_SGIS_texture_lod() {
-		DinamicGLFeature_SGIS_texture_lod_loaded = true; 
-}
 bool DinamicGLFeature_SGIS_texture_lod_Supported() {
-		if (!DinamicGLFeature_SGIS_texture_lod_loaded) {
-			InitDinamicGLFeature_SGIS_texture_lod();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIS_texture_lod")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIS_texture_lod*/
 
 /*VERSION_1_2*/
 #ifdef USE_DYNAMIC_GL_VERSION_1_2
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendColor)(GLfloat red , GLfloat green , GLfloat blue , GLfloat alpha) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquation)(GLenum mode) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawRangeElements)(GLenum mode , GLuint start , GLuint end , GLsizei count , GLenum type , const GLvoid *indices) = 0; }
@@ -10034,7 +10449,9 @@ static void InitDinamicGLFeature_VERSION_1_2() {
 		DynamicGL_CopyTexSubImage3D = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLint zoffset , GLint x , GLint y , GLsizei width , GLsizei height)>("glCopyTexSubImage3D"); 
 		DinamicGLFeature_VERSION_1_2_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_VERSION_1_2_Supported() {
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_VERSION_1_2_loaded) {
 			InitDinamicGLFeature_VERSION_1_2();
 		}
@@ -10044,40 +10461,30 @@ bool DinamicGLFeature_VERSION_1_2_Supported() {
 		if (DynamicGL_TexImage3D==0) return false; 
 		if (DynamicGL_TexSubImage3D==0) return false; 
 		if (DynamicGL_CopyTexSubImage3D==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_VERSION_1_2*/
 
-/*SGIS_texture_edge_clamp*/
-#ifdef USE_DYNAMIC_GL_SGIS_texture_edge_clamp
-static bool DinamicGLFeature_SGIS_texture_edge_clamp_loaded = false; 
-static void InitDinamicGLFeature_SGIS_texture_edge_clamp() {
-		DinamicGLFeature_SGIS_texture_edge_clamp_loaded = true; 
-}
-bool DinamicGLFeature_SGIS_texture_edge_clamp_Supported() {
-		if (!DinamicGLFeature_SGIS_texture_edge_clamp_loaded) {
-			InitDinamicGLFeature_SGIS_texture_edge_clamp();
-		}
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_SGIS_texture_edge_clamp*/
-
 /*SUN_slice_accum*/
 #ifdef USE_DYNAMIC_GL_SUN_slice_accum
-static bool DinamicGLFeature_SUN_slice_accum_loaded = false; 
-static void InitDinamicGLFeature_SUN_slice_accum() {
-		DinamicGLFeature_SUN_slice_accum_loaded = true; 
-}
 bool DinamicGLFeature_SUN_slice_accum_Supported() {
-		if (!DinamicGLFeature_SUN_slice_accum_loaded) {
-			InitDinamicGLFeature_SUN_slice_accum();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SUN_slice_accum")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SUN_slice_accum*/
 
+/*SGIS_texture_edge_clamp*/
+#ifdef USE_DYNAMIC_GL_SGIS_texture_edge_clamp
+bool DinamicGLFeature_SGIS_texture_edge_clamp_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIS_texture_edge_clamp")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_SGIS_texture_edge_clamp*/
+
 /*APPLE_element_array*/
 #ifdef USE_DYNAMIC_GL_APPLE_element_array
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ElementPointerAPPLE)(GLenum type , const GLvoid *pointer) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElementArrayAPPLE)(GLenum mode , GLint first , GLsizei count) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawRangeElementArrayAPPLE)(GLenum mode , GLuint start , GLuint end , GLint first , GLsizei count) = 0; }
@@ -10092,7 +10499,10 @@ static void InitDinamicGLFeature_APPLE_element_array() {
 		DynamicGL_MultiDrawRangeElementArrayAPPLE = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLuint start , GLuint end , const GLint *first , const GLsizei *count , GLsizei primcount)>("glMultiDrawRangeElementArrayAPPLE"); 
 		DinamicGLFeature_APPLE_element_array_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_APPLE_element_array_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_APPLE_element_array")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_APPLE_element_array_loaded) {
 			InitDinamicGLFeature_APPLE_element_array();
 		}
@@ -10101,12 +10511,14 @@ bool DinamicGLFeature_APPLE_element_array_Supported() {
 		if (DynamicGL_DrawRangeElementArrayAPPLE==0) return false; 
 		if (DynamicGL_MultiDrawElementArrayAPPLE==0) return false; 
 		if (DynamicGL_MultiDrawRangeElementArrayAPPLE==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_APPLE_element_array*/
 
 /*ARB_sync*/
 #ifdef USE_DYNAMIC_GL_ARB_sync
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { GLsync (DYNAMIC_GL_APIENTRYP DynamicGL_FenceSync)(GLenum condition , GLbitfield flags) = 0; }
 extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsSync)(GLsync sync) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteSync)(GLsync sync) = 0; }
@@ -10125,7 +10537,10 @@ static void InitDinamicGLFeature_ARB_sync() {
 		DynamicGL_GetSynciv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsync sync , GLenum pname , GLsizei bufSize , GLsizei *length , GLint *values)>("glGetSynciv"); 
 		DinamicGLFeature_ARB_sync_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_sync_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_sync")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_sync_loaded) {
 			InitDinamicGLFeature_ARB_sync();
 		}
@@ -10136,26 +10551,22 @@ bool DinamicGLFeature_ARB_sync_Supported() {
 		if (DynamicGL_WaitSync==0) return false; 
 		if (DynamicGL_GetInteger64v==0) return false; 
 		if (DynamicGL_GetSynciv==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_sync*/
 
 /*NV_tessellation_program5*/
 #ifdef USE_DYNAMIC_GL_NV_tessellation_program5
-static bool DinamicGLFeature_NV_tessellation_program5_loaded = false; 
-static void InitDinamicGLFeature_NV_tessellation_program5() {
-		DinamicGLFeature_NV_tessellation_program5_loaded = true; 
-}
 bool DinamicGLFeature_NV_tessellation_program5_Supported() {
-		if (!DinamicGLFeature_NV_tessellation_program5_loaded) {
-			InitDinamicGLFeature_NV_tessellation_program5();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_tessellation_program5")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_tessellation_program5*/
 
 /*ARB_separate_shader_objects*/
 #ifdef USE_DYNAMIC_GL_ARB_separate_shader_objects
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_UseProgramStages)(GLuint pipeline , GLbitfield stages , GLuint program) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ActiveShaderProgram)(GLuint pipeline , GLuint program) = 0; }
 extern "C" { GLuint (DYNAMIC_GL_APIENTRYP DynamicGL_CreateShaderProgramv)(GLenum type , GLsizei count , const GLchar* const) = 0; }
@@ -10280,7 +10691,10 @@ static void InitDinamicGLFeature_ARB_separate_shader_objects() {
 		DynamicGL_GetProgramPipelineInfoLog = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint pipeline , GLsizei bufSize , GLsizei *length , GLchar *infoLog)>("glGetProgramPipelineInfoLog"); 
 		DinamicGLFeature_ARB_separate_shader_objects_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_separate_shader_objects_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_separate_shader_objects")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_separate_shader_objects_loaded) {
 			InitDinamicGLFeature_ARB_separate_shader_objects();
 		}
@@ -10344,71 +10758,60 @@ bool DinamicGLFeature_ARB_separate_shader_objects_Supported() {
 		if (DynamicGL_ProgramUniformMatrix4x3dv==0) return false; 
 		if (DynamicGL_ValidateProgramPipeline==0) return false; 
 		if (DynamicGL_GetProgramPipelineInfoLog==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_separate_shader_objects*/
 
 /*ATI_texture_float*/
 #ifdef USE_DYNAMIC_GL_ATI_texture_float
-static bool DinamicGLFeature_ATI_texture_float_loaded = false; 
-static void InitDinamicGLFeature_ATI_texture_float() {
-		DinamicGLFeature_ATI_texture_float_loaded = true; 
-}
 bool DinamicGLFeature_ATI_texture_float_Supported() {
-		if (!DinamicGLFeature_ATI_texture_float_loaded) {
-			InitDinamicGLFeature_ATI_texture_float();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ATI_texture_float")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ATI_texture_float*/
 
 /*EXT_blend_minmax*/
 #ifdef USE_DYNAMIC_GL_EXT_blend_minmax
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationEXT)(GLenum mode) = 0; }
 static bool DinamicGLFeature_EXT_blend_minmax_loaded = false; 
 static void InitDinamicGLFeature_EXT_blend_minmax() {
 		DynamicGL_BlendEquationEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode)>("glBlendEquationEXT"); 
 		DinamicGLFeature_EXT_blend_minmax_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_blend_minmax_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_blend_minmax")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_blend_minmax_loaded) {
 			InitDinamicGLFeature_EXT_blend_minmax();
 		}
 		if (DynamicGL_BlendEquationEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_blend_minmax*/
 
 /*NV_float_buffer*/
 #ifdef USE_DYNAMIC_GL_NV_float_buffer
-static bool DinamicGLFeature_NV_float_buffer_loaded = false; 
-static void InitDinamicGLFeature_NV_float_buffer() {
-		DinamicGLFeature_NV_float_buffer_loaded = true; 
-}
 bool DinamicGLFeature_NV_float_buffer_Supported() {
-		if (!DinamicGLFeature_NV_float_buffer_loaded) {
-			InitDinamicGLFeature_NV_float_buffer();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_float_buffer")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_float_buffer*/
 
 /*SGIX_calligraphic_fragment*/
 #ifdef USE_DYNAMIC_GL_SGIX_calligraphic_fragment
-static bool DinamicGLFeature_SGIX_calligraphic_fragment_loaded = false; 
-static void InitDinamicGLFeature_SGIX_calligraphic_fragment() {
-		DinamicGLFeature_SGIX_calligraphic_fragment_loaded = true; 
-}
 bool DinamicGLFeature_SGIX_calligraphic_fragment_Supported() {
-		if (!DinamicGLFeature_SGIX_calligraphic_fragment_loaded) {
-			InitDinamicGLFeature_SGIX_calligraphic_fragment();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_calligraphic_fragment")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_calligraphic_fragment*/
 
 /*ARB_texture_storage*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_storage
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexStorage1D)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexStorage2D)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexStorage3D)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth) = 0; }
@@ -10425,7 +10828,10 @@ static void InitDinamicGLFeature_ARB_texture_storage() {
 		DynamicGL_TextureStorage3DEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth)>("glTextureStorage3DEXT"); 
 		DinamicGLFeature_ARB_texture_storage_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_texture_storage_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_texture_storage")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_texture_storage_loaded) {
 			InitDinamicGLFeature_ARB_texture_storage();
 		}
@@ -10435,12 +10841,14 @@ bool DinamicGLFeature_ARB_texture_storage_Supported() {
 		if (DynamicGL_TextureStorage1DEXT==0) return false; 
 		if (DynamicGL_TextureStorage2DEXT==0) return false; 
 		if (DynamicGL_TextureStorage3DEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_texture_storage*/
 
 /*NV_bindless_texture*/
 #ifdef USE_DYNAMIC_GL_NV_bindless_texture
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { GLuint64 (DYNAMIC_GL_APIENTRYP DynamicGL_GetTextureHandleNV)(GLuint texture) = 0; }
 extern "C" { GLuint64 (DYNAMIC_GL_APIENTRYP DynamicGL_GetTextureSamplerHandleNV)(GLuint texture , GLuint sampler) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MakeTextureHandleResidentNV)(GLuint64 handle) = 0; }
@@ -10471,7 +10879,10 @@ static void InitDinamicGLFeature_NV_bindless_texture() {
 		DynamicGL_IsImageHandleResidentNV = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLuint64 handle)>("glIsImageHandleResidentNV"); 
 		DinamicGLFeature_NV_bindless_texture_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_bindless_texture_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_bindless_texture")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_bindless_texture_loaded) {
 			InitDinamicGLFeature_NV_bindless_texture();
 		}
@@ -10488,12 +10899,14 @@ bool DinamicGLFeature_NV_bindless_texture_Supported() {
 		if (DynamicGL_ProgramUniformHandleui64vNV==0) return false; 
 		if (DynamicGL_IsTextureHandleResidentNV==0) return false; 
 		if (DynamicGL_IsImageHandleResidentNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_bindless_texture*/
 
 /*SGIX_instruments*/
 #ifdef USE_DYNAMIC_GL_SGIX_instruments
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { GLint (DYNAMIC_GL_APIENTRYP DynamicGL_GetInstrumentsSGIX)() = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_InstrumentsBufferSGIX)(GLsizei size , GLint *buffer) = 0; }
 extern "C" { GLint (DYNAMIC_GL_APIENTRYP DynamicGL_PollInstrumentsSGIX)(GLint *marker_p) = 0; }
@@ -10510,7 +10923,10 @@ static void InitDinamicGLFeature_SGIX_instruments() {
 		DynamicGL_StopInstrumentsSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint marker)>("glStopInstrumentsSGIX"); 
 		DinamicGLFeature_SGIX_instruments_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_SGIX_instruments_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_instruments")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_SGIX_instruments_loaded) {
 			InitDinamicGLFeature_SGIX_instruments();
 		}
@@ -10520,12 +10936,14 @@ bool DinamicGLFeature_SGIX_instruments_Supported() {
 		if (DynamicGL_ReadInstrumentsSGIX==0) return false; 
 		if (DynamicGL_StartInstrumentsSGIX==0) return false; 
 		if (DynamicGL_StopInstrumentsSGIX==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_instruments*/
 
 /*SGIX_fragment_lighting*/
 #ifdef USE_DYNAMIC_GL_SGIX_fragment_lighting
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FragmentColorMaterialSGIX)(GLenum face , GLenum mode) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FragmentLightfSGIX)(GLenum light , GLenum pname , GLfloat param) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FragmentLightfvSGIX)(GLenum light , GLenum pname , const GLfloat *params) = 0; }
@@ -10566,7 +10984,10 @@ static void InitDinamicGLFeature_SGIX_fragment_lighting() {
 		DynamicGL_LightEnviSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , GLint param)>("glLightEnviSGIX"); 
 		DinamicGLFeature_SGIX_fragment_lighting_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_SGIX_fragment_lighting_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_fragment_lighting")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_SGIX_fragment_lighting_loaded) {
 			InitDinamicGLFeature_SGIX_fragment_lighting();
 		}
@@ -10588,68 +11009,54 @@ bool DinamicGLFeature_SGIX_fragment_lighting_Supported() {
 		if (DynamicGL_GetFragmentMaterialfvSGIX==0) return false; 
 		if (DynamicGL_GetFragmentMaterialivSGIX==0) return false; 
 		if (DynamicGL_LightEnviSGIX==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_fragment_lighting*/
 
-/*SGIX_ycrcba*/
-#ifdef USE_DYNAMIC_GL_SGIX_ycrcba
-static bool DinamicGLFeature_SGIX_ycrcba_loaded = false; 
-static void InitDinamicGLFeature_SGIX_ycrcba() {
-		DinamicGLFeature_SGIX_ycrcba_loaded = true; 
-}
-bool DinamicGLFeature_SGIX_ycrcba_Supported() {
-		if (!DinamicGLFeature_SGIX_ycrcba_loaded) {
-			InitDinamicGLFeature_SGIX_ycrcba();
-		}
+/*EXT_pixel_transform_color_table*/
+#ifdef USE_DYNAMIC_GL_EXT_pixel_transform_color_table
+bool DinamicGLFeature_EXT_pixel_transform_color_table_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_pixel_transform_color_table")) return false;
 		return true;
 }
-#endif /*USE_DYNAMIC_GL_SGIX_ycrcba*/
+#endif /*USE_DYNAMIC_GL_EXT_pixel_transform_color_table*/
 
 /*SGIX_texture_coordinate_clamp*/
 #ifdef USE_DYNAMIC_GL_SGIX_texture_coordinate_clamp
-static bool DinamicGLFeature_SGIX_texture_coordinate_clamp_loaded = false; 
-static void InitDinamicGLFeature_SGIX_texture_coordinate_clamp() {
-		DinamicGLFeature_SGIX_texture_coordinate_clamp_loaded = true; 
-}
 bool DinamicGLFeature_SGIX_texture_coordinate_clamp_Supported() {
-		if (!DinamicGLFeature_SGIX_texture_coordinate_clamp_loaded) {
-			InitDinamicGLFeature_SGIX_texture_coordinate_clamp();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_texture_coordinate_clamp")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_texture_coordinate_clamp*/
 
+/*SGIX_ycrcba*/
+#ifdef USE_DYNAMIC_GL_SGIX_ycrcba
+bool DinamicGLFeature_SGIX_ycrcba_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_ycrcba")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_SGIX_ycrcba*/
+
 /*S3_s3tc*/
 #ifdef USE_DYNAMIC_GL_S3_s3tc
-static bool DinamicGLFeature_S3_s3tc_loaded = false; 
-static void InitDinamicGLFeature_S3_s3tc() {
-		DinamicGLFeature_S3_s3tc_loaded = true; 
-}
 bool DinamicGLFeature_S3_s3tc_Supported() {
-		if (!DinamicGLFeature_S3_s3tc_loaded) {
-			InitDinamicGLFeature_S3_s3tc();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_S3_s3tc")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_S3_s3tc*/
 
 /*EXT_422_pixels*/
 #ifdef USE_DYNAMIC_GL_EXT_422_pixels
-static bool DinamicGLFeature_EXT_422_pixels_loaded = false; 
-static void InitDinamicGLFeature_EXT_422_pixels() {
-		DinamicGLFeature_EXT_422_pixels_loaded = true; 
-}
 bool DinamicGLFeature_EXT_422_pixels_Supported() {
-		if (!DinamicGLFeature_EXT_422_pixels_loaded) {
-			InitDinamicGLFeature_EXT_422_pixels();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_422_pixels")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_422_pixels*/
 
 /*ARB_shader_subroutine*/
 #ifdef USE_DYNAMIC_GL_ARB_shader_subroutine
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { GLint (DYNAMIC_GL_APIENTRYP DynamicGL_GetSubroutineUniformLocation)(GLuint program , GLenum shadertype , const GLchar *name) = 0; }
 extern "C" { GLuint (DYNAMIC_GL_APIENTRYP DynamicGL_GetSubroutineIndex)(GLuint program , GLenum shadertype , const GLchar *name) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetActiveSubroutineUniformiv)(GLuint program , GLenum shadertype , GLuint index , GLenum pname , GLint *values) = 0; }
@@ -10670,7 +11077,10 @@ static void InitDinamicGLFeature_ARB_shader_subroutine() {
 		DynamicGL_GetProgramStageiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLenum shadertype , GLenum pname , GLint *values)>("glGetProgramStageiv"); 
 		DinamicGLFeature_ARB_shader_subroutine_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_shader_subroutine_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_shader_subroutine")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_shader_subroutine_loaded) {
 			InitDinamicGLFeature_ARB_shader_subroutine();
 		}
@@ -10682,12 +11092,14 @@ bool DinamicGLFeature_ARB_shader_subroutine_Supported() {
 		if (DynamicGL_UniformSubroutinesuiv==0) return false; 
 		if (DynamicGL_GetUniformSubroutineuiv==0) return false; 
 		if (DynamicGL_GetProgramStageiv==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_shader_subroutine*/
 
 /*NV_transform_feedback*/
 #ifdef USE_DYNAMIC_GL_NV_transform_feedback
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BeginTransformFeedbackNV)(GLenum primitiveMode) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_EndTransformFeedbackNV)() = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TransformFeedbackAttribsNV)(GLuint count , const GLint *attribs , GLenum bufferMode) = 0; }
@@ -10716,7 +11128,10 @@ static void InitDinamicGLFeature_NV_transform_feedback() {
 		DynamicGL_TransformFeedbackStreamAttribsNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei count , const GLint *attribs , GLsizei nbuffers , const GLint *bufstreams , GLenum bufferMode)>("glTransformFeedbackStreamAttribsNV"); 
 		DinamicGLFeature_NV_transform_feedback_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_transform_feedback_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_transform_feedback")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_transform_feedback_loaded) {
 			InitDinamicGLFeature_NV_transform_feedback();
 		}
@@ -10732,12 +11147,14 @@ bool DinamicGLFeature_NV_transform_feedback_Supported() {
 		if (DynamicGL_GetActiveVaryingNV==0) return false; 
 		if (DynamicGL_GetTransformFeedbackVaryingNV==0) return false; 
 		if (DynamicGL_TransformFeedbackStreamAttribsNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_transform_feedback*/
 
 /*SUN_triangle_list*/
 #ifdef USE_DYNAMIC_GL_SUN_triangle_list
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ReplacementCodeuiSUN)(GLuint code) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ReplacementCodeusSUN)(GLushort code) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ReplacementCodeubSUN)(GLubyte code) = 0; }
@@ -10756,7 +11173,10 @@ static void InitDinamicGLFeature_SUN_triangle_list() {
 		DynamicGL_ReplacementCodePointerSUN = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , GLsizei stride , const GLvoid* *pointer)>("glReplacementCodePointerSUN"); 
 		DinamicGLFeature_SUN_triangle_list_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_SUN_triangle_list_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SUN_triangle_list")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_SUN_triangle_list_loaded) {
 			InitDinamicGLFeature_SUN_triangle_list();
 		}
@@ -10767,26 +11187,14 @@ bool DinamicGLFeature_SUN_triangle_list_Supported() {
 		if (DynamicGL_ReplacementCodeusvSUN==0) return false; 
 		if (DynamicGL_ReplacementCodeubvSUN==0) return false; 
 		if (DynamicGL_ReplacementCodePointerSUN==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SUN_triangle_list*/
 
-/*SGIX_clipmap*/
-#ifdef USE_DYNAMIC_GL_SGIX_clipmap
-static bool DinamicGLFeature_SGIX_clipmap_loaded = false; 
-static void InitDinamicGLFeature_SGIX_clipmap() {
-		DinamicGLFeature_SGIX_clipmap_loaded = true; 
-}
-bool DinamicGLFeature_SGIX_clipmap_Supported() {
-		if (!DinamicGLFeature_SGIX_clipmap_loaded) {
-			InitDinamicGLFeature_SGIX_clipmap();
-		}
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_SGIX_clipmap*/
-
 /*NV_register_combiners2*/
 #ifdef USE_DYNAMIC_GL_NV_register_combiners2
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CombinerStageParameterfvNV)(GLenum stage , GLenum pname , const GLfloat *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetCombinerStageParameterfvNV)(GLenum stage , GLenum pname , GLfloat *params) = 0; }
 static bool DinamicGLFeature_NV_register_combiners2_loaded = false; 
@@ -10795,46 +11203,54 @@ static void InitDinamicGLFeature_NV_register_combiners2() {
 		DynamicGL_GetCombinerStageParameterfvNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum stage , GLenum pname , GLfloat *params)>("glGetCombinerStageParameterfvNV"); 
 		DinamicGLFeature_NV_register_combiners2_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_register_combiners2_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_register_combiners2")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_register_combiners2_loaded) {
 			InitDinamicGLFeature_NV_register_combiners2();
 		}
 		if (DynamicGL_CombinerStageParameterfvNV==0) return false; 
 		if (DynamicGL_GetCombinerStageParameterfvNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_register_combiners2*/
 
+/*SGIX_clipmap*/
+#ifdef USE_DYNAMIC_GL_SGIX_clipmap
+bool DinamicGLFeature_SGIX_clipmap_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_clipmap")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_SGIX_clipmap*/
+
 /*VERSION_2_1_DEPRECATED*/
 #ifdef USE_DYNAMIC_GL_VERSION_2_1_DEPRECATED
-static bool DinamicGLFeature_VERSION_2_1_DEPRECATED_loaded = false; 
-static void InitDinamicGLFeature_VERSION_2_1_DEPRECATED() {
-		DinamicGLFeature_VERSION_2_1_DEPRECATED_loaded = true; 
-}
 bool DinamicGLFeature_VERSION_2_1_DEPRECATED_Supported() {
-		if (!DinamicGLFeature_VERSION_2_1_DEPRECATED_loaded) {
-			InitDinamicGLFeature_VERSION_2_1_DEPRECATED();
-		}
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_VERSION_2_1_DEPRECATED*/
 
 /*EXT_clip_volume_hint*/
 #ifdef USE_DYNAMIC_GL_EXT_clip_volume_hint
-static bool DinamicGLFeature_EXT_clip_volume_hint_loaded = false; 
-static void InitDinamicGLFeature_EXT_clip_volume_hint() {
-		DinamicGLFeature_EXT_clip_volume_hint_loaded = true; 
-}
 bool DinamicGLFeature_EXT_clip_volume_hint_Supported() {
-		if (!DinamicGLFeature_EXT_clip_volume_hint_loaded) {
-			InitDinamicGLFeature_EXT_clip_volume_hint();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_clip_volume_hint")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_clip_volume_hint*/
 
+/*NV_shader_atomic_float*/
+#ifdef USE_DYNAMIC_GL_NV_shader_atomic_float
+bool DinamicGLFeature_NV_shader_atomic_float_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_shader_atomic_float")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_shader_atomic_float*/
+
 /*SGIS_point_parameters*/
 #ifdef USE_DYNAMIC_GL_SGIS_point_parameters
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterfSGIS)(GLenum pname , GLfloat param) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterfvSGIS)(GLenum pname , const GLfloat *params) = 0; }
 static bool DinamicGLFeature_SGIS_point_parameters_loaded = false; 
@@ -10843,32 +11259,31 @@ static void InitDinamicGLFeature_SGIS_point_parameters() {
 		DynamicGL_PointParameterfvSGIS = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , const GLfloat *params)>("glPointParameterfvSGIS"); 
 		DinamicGLFeature_SGIS_point_parameters_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_SGIS_point_parameters_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIS_point_parameters")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_SGIS_point_parameters_loaded) {
 			InitDinamicGLFeature_SGIS_point_parameters();
 		}
 		if (DynamicGL_PointParameterfSGIS==0) return false; 
 		if (DynamicGL_PointParameterfvSGIS==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIS_point_parameters*/
 
 /*APPLE_transform_hint*/
 #ifdef USE_DYNAMIC_GL_APPLE_transform_hint
-static bool DinamicGLFeature_APPLE_transform_hint_loaded = false; 
-static void InitDinamicGLFeature_APPLE_transform_hint() {
-		DinamicGLFeature_APPLE_transform_hint_loaded = true; 
-}
 bool DinamicGLFeature_APPLE_transform_hint_Supported() {
-		if (!DinamicGLFeature_APPLE_transform_hint_loaded) {
-			InitDinamicGLFeature_APPLE_transform_hint();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_APPLE_transform_hint")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_APPLE_transform_hint*/
 
 /*ARB_viewport_array*/
 #ifdef USE_DYNAMIC_GL_ARB_viewport_array
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ViewportArrayv)(GLuint first , GLsizei count , const GLfloat *v) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ViewportIndexedf)(GLuint index , GLfloat x , GLfloat y , GLfloat w , GLfloat h) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ViewportIndexedfv)(GLuint index , const GLfloat *v) = 0; }
@@ -10893,7 +11308,10 @@ static void InitDinamicGLFeature_ARB_viewport_array() {
 		DynamicGL_GetDoublei_v = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint index , GLdouble *data)>("glGetDoublei_v"); 
 		DinamicGLFeature_ARB_viewport_array_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_viewport_array_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_viewport_array")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_viewport_array_loaded) {
 			InitDinamicGLFeature_ARB_viewport_array();
 		}
@@ -10907,82 +11325,54 @@ bool DinamicGLFeature_ARB_viewport_array_Supported() {
 		if (DynamicGL_DepthRangeIndexed==0) return false; 
 		if (DynamicGL_GetFloati_v==0) return false; 
 		if (DynamicGL_GetDoublei_v==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_viewport_array*/
 
 /*NV_fragment_program2*/
 #ifdef USE_DYNAMIC_GL_NV_fragment_program2
-static bool DinamicGLFeature_NV_fragment_program2_loaded = false; 
-static void InitDinamicGLFeature_NV_fragment_program2() {
-		DinamicGLFeature_NV_fragment_program2_loaded = true; 
-}
 bool DinamicGLFeature_NV_fragment_program2_Supported() {
-		if (!DinamicGLFeature_NV_fragment_program2_loaded) {
-			InitDinamicGLFeature_NV_fragment_program2();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_fragment_program2")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_fragment_program2*/
 
 /*NV_texture_rectangle*/
 #ifdef USE_DYNAMIC_GL_NV_texture_rectangle
-static bool DinamicGLFeature_NV_texture_rectangle_loaded = false; 
-static void InitDinamicGLFeature_NV_texture_rectangle() {
-		DinamicGLFeature_NV_texture_rectangle_loaded = true; 
-}
 bool DinamicGLFeature_NV_texture_rectangle_Supported() {
-		if (!DinamicGLFeature_NV_texture_rectangle_loaded) {
-			InitDinamicGLFeature_NV_texture_rectangle();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_texture_rectangle")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_texture_rectangle*/
 
 /*SGI_depth_pass_instrument*/
 #ifdef USE_DYNAMIC_GL_SGI_depth_pass_instrument
-static bool DinamicGLFeature_SGI_depth_pass_instrument_loaded = false; 
-static void InitDinamicGLFeature_SGI_depth_pass_instrument() {
-		DinamicGLFeature_SGI_depth_pass_instrument_loaded = true; 
-}
 bool DinamicGLFeature_SGI_depth_pass_instrument_Supported() {
-		if (!DinamicGLFeature_SGI_depth_pass_instrument_loaded) {
-			InitDinamicGLFeature_SGI_depth_pass_instrument();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGI_depth_pass_instrument")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGI_depth_pass_instrument*/
 
-/*EXT_rescale_normal*/
-#ifdef USE_DYNAMIC_GL_EXT_rescale_normal
-static bool DinamicGLFeature_EXT_rescale_normal_loaded = false; 
-static void InitDinamicGLFeature_EXT_rescale_normal() {
-		DinamicGLFeature_EXT_rescale_normal_loaded = true; 
-}
-bool DinamicGLFeature_EXT_rescale_normal_Supported() {
-		if (!DinamicGLFeature_EXT_rescale_normal_loaded) {
-			InitDinamicGLFeature_EXT_rescale_normal();
-		}
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_EXT_rescale_normal*/
-
 /*ARB_pixel_buffer_object*/
 #ifdef USE_DYNAMIC_GL_ARB_pixel_buffer_object
-static bool DinamicGLFeature_ARB_pixel_buffer_object_loaded = false; 
-static void InitDinamicGLFeature_ARB_pixel_buffer_object() {
-		DinamicGLFeature_ARB_pixel_buffer_object_loaded = true; 
-}
 bool DinamicGLFeature_ARB_pixel_buffer_object_Supported() {
-		if (!DinamicGLFeature_ARB_pixel_buffer_object_loaded) {
-			InitDinamicGLFeature_ARB_pixel_buffer_object();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_pixel_buffer_object")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_pixel_buffer_object*/
 
+/*EXT_rescale_normal*/
+#ifdef USE_DYNAMIC_GL_EXT_rescale_normal
+bool DinamicGLFeature_EXT_rescale_normal_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_rescale_normal")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_EXT_rescale_normal*/
+
 /*EXT_texture3D*/
 #ifdef USE_DYNAMIC_GL_EXT_texture3D
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexImage3DEXT)(GLenum target , GLint level , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth , GLint border , GLenum format , GLenum type , const GLvoid *pixels) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexSubImage3DEXT)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLint zoffset , GLsizei width , GLsizei height , GLsizei depth , GLenum format , GLenum type , const GLvoid *pixels) = 0; }
 static bool DinamicGLFeature_EXT_texture3D_loaded = false; 
@@ -10991,32 +11381,31 @@ static void InitDinamicGLFeature_EXT_texture3D() {
 		DynamicGL_TexSubImage3DEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLint zoffset , GLsizei width , GLsizei height , GLsizei depth , GLenum format , GLenum type , const GLvoid *pixels)>("glTexSubImage3DEXT"); 
 		DinamicGLFeature_EXT_texture3D_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_texture3D_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture3D")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_texture3D_loaded) {
 			InitDinamicGLFeature_EXT_texture3D();
 		}
 		if (DynamicGL_TexImage3DEXT==0) return false; 
 		if (DynamicGL_TexSubImage3DEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture3D*/
 
 /*EXT_texture_lod_bias*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_lod_bias
-static bool DinamicGLFeature_EXT_texture_lod_bias_loaded = false; 
-static void InitDinamicGLFeature_EXT_texture_lod_bias() {
-		DinamicGLFeature_EXT_texture_lod_bias_loaded = true; 
-}
 bool DinamicGLFeature_EXT_texture_lod_bias_Supported() {
-		if (!DinamicGLFeature_EXT_texture_lod_bias_loaded) {
-			InitDinamicGLFeature_EXT_texture_lod_bias();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_lod_bias")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_lod_bias*/
 
 /*NV_explicit_multisample*/
 #ifdef USE_DYNAMIC_GL_NV_explicit_multisample
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetMultisamplefvNV)(GLenum pname , GLuint index , GLfloat *val) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleMaskIndexedNV)(GLuint index , GLbitfield mask) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexRenderbufferNV)(GLenum target , GLuint renderbuffer) = 0; }
@@ -11027,19 +11416,24 @@ static void InitDinamicGLFeature_NV_explicit_multisample() {
 		DynamicGL_TexRenderbufferNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint renderbuffer)>("glTexRenderbufferNV"); 
 		DinamicGLFeature_NV_explicit_multisample_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_explicit_multisample_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_explicit_multisample")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_explicit_multisample_loaded) {
 			InitDinamicGLFeature_NV_explicit_multisample();
 		}
 		if (DynamicGL_GetMultisamplefvNV==0) return false; 
 		if (DynamicGL_SampleMaskIndexedNV==0) return false; 
 		if (DynamicGL_TexRenderbufferNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_explicit_multisample*/
 
 /*ATI_separate_stencil*/
 #ifdef USE_DYNAMIC_GL_ATI_separate_stencil
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilOpSeparateATI)(GLenum face , GLenum sfail , GLenum dpfail , GLenum dppass) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilFuncSeparateATI)(GLenum frontfunc , GLenum backfunc , GLint ref , GLuint mask) = 0; }
 static bool DinamicGLFeature_ATI_separate_stencil_loaded = false; 
@@ -11048,18 +11442,23 @@ static void InitDinamicGLFeature_ATI_separate_stencil() {
 		DynamicGL_StencilFuncSeparateATI = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum frontfunc , GLenum backfunc , GLint ref , GLuint mask)>("glStencilFuncSeparateATI"); 
 		DinamicGLFeature_ATI_separate_stencil_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ATI_separate_stencil_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ATI_separate_stencil")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ATI_separate_stencil_loaded) {
 			InitDinamicGLFeature_ATI_separate_stencil();
 		}
 		if (DynamicGL_StencilOpSeparateATI==0) return false; 
 		if (DynamicGL_StencilFuncSeparateATI==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ATI_separate_stencil*/
 
 /*APPLE_vertex_array_range*/
 #ifdef USE_DYNAMIC_GL_APPLE_vertex_array_range
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexArrayRangeAPPLE)(GLsizei length , GLvoid *pointer) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FlushVertexArrayRangeAPPLE)(GLsizei length , GLvoid *pointer) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexArrayParameteriAPPLE)(GLenum pname , GLint param) = 0; }
@@ -11070,19 +11469,24 @@ static void InitDinamicGLFeature_APPLE_vertex_array_range() {
 		DynamicGL_VertexArrayParameteriAPPLE = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , GLint param)>("glVertexArrayParameteriAPPLE"); 
 		DinamicGLFeature_APPLE_vertex_array_range_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_APPLE_vertex_array_range_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_APPLE_vertex_array_range")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_APPLE_vertex_array_range_loaded) {
 			InitDinamicGLFeature_APPLE_vertex_array_range();
 		}
 		if (DynamicGL_VertexArrayRangeAPPLE==0) return false; 
 		if (DynamicGL_FlushVertexArrayRangeAPPLE==0) return false; 
 		if (DynamicGL_VertexArrayParameteriAPPLE==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_APPLE_vertex_array_range*/
 
 /*EXT_vertex_attrib_64bit*/
 #ifdef USE_DYNAMIC_GL_EXT_vertex_attrib_64bit
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL1dEXT)(GLuint index , GLdouble x) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL2dEXT)(GLuint index , GLdouble x , GLdouble y) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL3dEXT)(GLuint index , GLdouble x , GLdouble y , GLdouble z) = 0; }
@@ -11109,7 +11513,10 @@ static void InitDinamicGLFeature_EXT_vertex_attrib_64bit() {
 		DynamicGL_VertexArrayVertexAttribLOffsetEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint vaobj , GLuint buffer , GLuint index , GLint size , GLenum type , GLsizei stride , GLintptr offset)>("glVertexArrayVertexAttribLOffsetEXT"); 
 		DinamicGLFeature_EXT_vertex_attrib_64bit_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_vertex_attrib_64bit_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_vertex_attrib_64bit")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_vertex_attrib_64bit_loaded) {
 			InitDinamicGLFeature_EXT_vertex_attrib_64bit();
 		}
@@ -11124,12 +11531,14 @@ bool DinamicGLFeature_EXT_vertex_attrib_64bit_Supported() {
 		if (DynamicGL_VertexAttribLPointerEXT==0) return false; 
 		if (DynamicGL_GetVertexAttribLdvEXT==0) return false; 
 		if (DynamicGL_VertexArrayVertexAttribLOffsetEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_vertex_attrib_64bit*/
 
 /*NV_conditional_render*/
 #ifdef USE_DYNAMIC_GL_NV_conditional_render
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BeginConditionalRenderNV)(GLuint id , GLenum mode) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_EndConditionalRenderNV)() = 0; }
 static bool DinamicGLFeature_NV_conditional_render_loaded = false; 
@@ -11138,32 +11547,31 @@ static void InitDinamicGLFeature_NV_conditional_render() {
 		DynamicGL_EndConditionalRenderNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)()>("glEndConditionalRenderNV"); 
 		DinamicGLFeature_NV_conditional_render_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_conditional_render_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_conditional_render")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_conditional_render_loaded) {
 			InitDinamicGLFeature_NV_conditional_render();
 		}
 		if (DynamicGL_BeginConditionalRenderNV==0) return false; 
 		if (DynamicGL_EndConditionalRenderNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_conditional_render*/
 
 /*SGIS_point_line_texgen*/
 #ifdef USE_DYNAMIC_GL_SGIS_point_line_texgen
-static bool DinamicGLFeature_SGIS_point_line_texgen_loaded = false; 
-static void InitDinamicGLFeature_SGIS_point_line_texgen() {
-		DinamicGLFeature_SGIS_point_line_texgen_loaded = true; 
-}
 bool DinamicGLFeature_SGIS_point_line_texgen_Supported() {
-		if (!DinamicGLFeature_SGIS_point_line_texgen_loaded) {
-			InitDinamicGLFeature_SGIS_point_line_texgen();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIS_point_line_texgen")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIS_point_line_texgen*/
 
 /*ARB_blend_func_extended*/
 #ifdef USE_DYNAMIC_GL_ARB_blend_func_extended
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindFragDataLocationIndexed)(GLuint program , GLuint colorNumber , GLuint index , const GLchar *name) = 0; }
 extern "C" { GLint (DYNAMIC_GL_APIENTRYP DynamicGL_GetFragDataIndex)(GLuint program , const GLchar *name) = 0; }
 static bool DinamicGLFeature_ARB_blend_func_extended_loaded = false; 
@@ -11172,18 +11580,23 @@ static void InitDinamicGLFeature_ARB_blend_func_extended() {
 		DynamicGL_GetFragDataIndex = DynamicGL_LoadFunction<GLint (DYNAMIC_GL_APIENTRYP)(GLuint program , const GLchar *name)>("glGetFragDataIndex"); 
 		DinamicGLFeature_ARB_blend_func_extended_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_blend_func_extended_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_blend_func_extended")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_blend_func_extended_loaded) {
 			InitDinamicGLFeature_ARB_blend_func_extended();
 		}
 		if (DynamicGL_BindFragDataLocationIndexed==0) return false; 
 		if (DynamicGL_GetFragDataIndex==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_blend_func_extended*/
 
 /*NV_shader_buffer_load*/
 #ifdef USE_DYNAMIC_GL_NV_shader_buffer_load
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MakeBufferResidentNV)(GLenum target , GLenum access) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MakeBufferNonResidentNV)(GLenum target) = 0; }
 extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsBufferResidentNV)(GLenum target) = 0; }
@@ -11216,7 +11629,10 @@ static void InitDinamicGLFeature_NV_shader_buffer_load() {
 		DynamicGL_ProgramUniformui64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLuint64EXT *value)>("glProgramUniformui64vNV"); 
 		DinamicGLFeature_NV_shader_buffer_load_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_shader_buffer_load_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_shader_buffer_load")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_shader_buffer_load_loaded) {
 			InitDinamicGLFeature_NV_shader_buffer_load();
 		}
@@ -11234,12 +11650,14 @@ bool DinamicGLFeature_NV_shader_buffer_load_Supported() {
 		if (DynamicGL_GetUniformui64vNV==0) return false; 
 		if (DynamicGL_ProgramUniformui64NV==0) return false; 
 		if (DynamicGL_ProgramUniformui64vNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_shader_buffer_load*/
 
 /*EXT_fog_coord*/
 #ifdef USE_DYNAMIC_GL_EXT_fog_coord
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoordfEXT)(GLfloat coord) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoordfvEXT)(const GLfloat *coord) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoorddEXT)(GLdouble coord) = 0; }
@@ -11254,7 +11672,10 @@ static void InitDinamicGLFeature_EXT_fog_coord() {
 		DynamicGL_FogCoordPointerEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , GLsizei stride , const GLvoid *pointer)>("glFogCoordPointerEXT"); 
 		DinamicGLFeature_EXT_fog_coord_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_fog_coord_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_fog_coord")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_fog_coord_loaded) {
 			InitDinamicGLFeature_EXT_fog_coord();
 		}
@@ -11263,12 +11684,14 @@ bool DinamicGLFeature_EXT_fog_coord_Supported() {
 		if (DynamicGL_FogCoorddEXT==0) return false; 
 		if (DynamicGL_FogCoorddvEXT==0) return false; 
 		if (DynamicGL_FogCoordPointerEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_fog_coord*/
 
 /*ARB_vertex_buffer_object*/
 #ifdef USE_DYNAMIC_GL_ARB_vertex_buffer_object
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindBufferARB)(GLenum target , GLuint buffer) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteBuffersARB)(GLsizei n , const GLuint *buffers) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenBuffersARB)(GLsizei n , GLuint *buffers) = 0; }
@@ -11293,7 +11716,10 @@ static void InitDinamicGLFeature_ARB_vertex_buffer_object() {
 		DynamicGL_GetBufferPointervARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum pname , GLvoid* *params)>("glGetBufferPointervARB"); 
 		DinamicGLFeature_ARB_vertex_buffer_object_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_vertex_buffer_object_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_vertex_buffer_object")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_vertex_buffer_object_loaded) {
 			InitDinamicGLFeature_ARB_vertex_buffer_object();
 		}
@@ -11307,12 +11733,14 @@ bool DinamicGLFeature_ARB_vertex_buffer_object_Supported() {
 		if (DynamicGL_UnmapBufferARB==0) return false; 
 		if (DynamicGL_GetBufferParameterivARB==0) return false; 
 		if (DynamicGL_GetBufferPointervARB==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_vertex_buffer_object*/
 
 /*VERSION_1_4*/
 #ifdef USE_DYNAMIC_GL_VERSION_1_4
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFuncSeparate)(GLenum sfactorRGB , GLenum dfactorRGB , GLenum sfactorAlpha , GLenum dfactorAlpha) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawArrays)(GLenum mode , const GLint *first , const GLsizei *count , GLsizei primcount) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawElements)(GLenum mode , const GLsizei *count , GLenum type , const GLvoid* const , GLsizei primcount) = 0; }
@@ -11331,7 +11759,9 @@ static void InitDinamicGLFeature_VERSION_1_4() {
 		DynamicGL_PointParameteriv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , const GLint *params)>("glPointParameteriv"); 
 		DinamicGLFeature_VERSION_1_4_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_VERSION_1_4_Supported() {
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_VERSION_1_4_loaded) {
 			InitDinamicGLFeature_VERSION_1_4();
 		}
@@ -11342,26 +11772,22 @@ bool DinamicGLFeature_VERSION_1_4_Supported() {
 		if (DynamicGL_PointParameterfv==0) return false; 
 		if (DynamicGL_PointParameteri==0) return false; 
 		if (DynamicGL_PointParameteriv==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_VERSION_1_4*/
 
 /*APPLE_specular_vector*/
 #ifdef USE_DYNAMIC_GL_APPLE_specular_vector
-static bool DinamicGLFeature_APPLE_specular_vector_loaded = false; 
-static void InitDinamicGLFeature_APPLE_specular_vector() {
-		DinamicGLFeature_APPLE_specular_vector_loaded = true; 
-}
 bool DinamicGLFeature_APPLE_specular_vector_Supported() {
-		if (!DinamicGLFeature_APPLE_specular_vector_loaded) {
-			InitDinamicGLFeature_APPLE_specular_vector();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_APPLE_specular_vector")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_APPLE_specular_vector*/
 
 /*EXT_shader_image_load_store*/
 #ifdef USE_DYNAMIC_GL_EXT_shader_image_load_store
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindImageTextureEXT)(GLuint index , GLuint texture , GLint level , GLboolean layered , GLint layer , GLenum access , GLint format) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MemoryBarrierEXT)(GLbitfield barriers) = 0; }
 static bool DinamicGLFeature_EXT_shader_image_load_store_loaded = false; 
@@ -11370,63 +11796,61 @@ static void InitDinamicGLFeature_EXT_shader_image_load_store() {
 		DynamicGL_MemoryBarrierEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLbitfield barriers)>("glMemoryBarrierEXT"); 
 		DinamicGLFeature_EXT_shader_image_load_store_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_shader_image_load_store_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_shader_image_load_store")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_shader_image_load_store_loaded) {
 			InitDinamicGLFeature_EXT_shader_image_load_store();
 		}
 		if (DynamicGL_BindImageTextureEXT==0) return false; 
 		if (DynamicGL_MemoryBarrierEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_shader_image_load_store*/
 
 /*NV_copy_depth_to_color*/
 #ifdef USE_DYNAMIC_GL_NV_copy_depth_to_color
-static bool DinamicGLFeature_NV_copy_depth_to_color_loaded = false; 
-static void InitDinamicGLFeature_NV_copy_depth_to_color() {
-		DinamicGLFeature_NV_copy_depth_to_color_loaded = true; 
-}
 bool DinamicGLFeature_NV_copy_depth_to_color_Supported() {
-		if (!DinamicGLFeature_NV_copy_depth_to_color_loaded) {
-			InitDinamicGLFeature_NV_copy_depth_to_color();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_copy_depth_to_color")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_copy_depth_to_color*/
 
 /*ARB_cl_event*/
 #ifdef USE_DYNAMIC_GL_ARB_cl_event
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { GLsync (DYNAMIC_GL_APIENTRYP DynamicGL_CreateSyncFromCLeventARB)(GLstruct _cl_context , GLstruct _cl_event , GLbitfield flags) = 0; }
 static bool DinamicGLFeature_ARB_cl_event_loaded = false; 
 static void InitDinamicGLFeature_ARB_cl_event() {
 		DynamicGL_CreateSyncFromCLeventARB = DynamicGL_LoadFunction<GLsync (DYNAMIC_GL_APIENTRYP)(GLstruct _cl_context , GLstruct _cl_event , GLbitfield flags)>("glCreateSyncFromCLeventARB"); 
 		DinamicGLFeature_ARB_cl_event_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_cl_event_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_cl_event")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_cl_event_loaded) {
 			InitDinamicGLFeature_ARB_cl_event();
 		}
 		if (DynamicGL_CreateSyncFromCLeventARB==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_cl_event*/
 
 /*ARB_texture_cube_map*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_cube_map
-static bool DinamicGLFeature_ARB_texture_cube_map_loaded = false; 
-static void InitDinamicGLFeature_ARB_texture_cube_map() {
-		DinamicGLFeature_ARB_texture_cube_map_loaded = true; 
-}
 bool DinamicGLFeature_ARB_texture_cube_map_Supported() {
-		if (!DinamicGLFeature_ARB_texture_cube_map_loaded) {
-			InitDinamicGLFeature_ARB_texture_cube_map();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_texture_cube_map")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_texture_cube_map*/
 
 /*NV_vertex_array_range*/
 #ifdef USE_DYNAMIC_GL_NV_vertex_array_range
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FlushVertexArrayRangeNV)() = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexArrayRangeNV)(GLsizei length , const GLvoid *pointer) = 0; }
 static bool DinamicGLFeature_NV_vertex_array_range_loaded = false; 
@@ -11435,32 +11859,30 @@ static void InitDinamicGLFeature_NV_vertex_array_range() {
 		DynamicGL_VertexArrayRangeNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei length , const GLvoid *pointer)>("glVertexArrayRangeNV"); 
 		DinamicGLFeature_NV_vertex_array_range_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_vertex_array_range_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_vertex_array_range")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_vertex_array_range_loaded) {
 			InitDinamicGLFeature_NV_vertex_array_range();
 		}
 		if (DynamicGL_FlushVertexArrayRangeNV==0) return false; 
 		if (DynamicGL_VertexArrayRangeNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_vertex_array_range*/
 
 /*VERSION_2_0_DEPRECATED*/
 #ifdef USE_DYNAMIC_GL_VERSION_2_0_DEPRECATED
-static bool DinamicGLFeature_VERSION_2_0_DEPRECATED_loaded = false; 
-static void InitDinamicGLFeature_VERSION_2_0_DEPRECATED() {
-		DinamicGLFeature_VERSION_2_0_DEPRECATED_loaded = true; 
-}
 bool DinamicGLFeature_VERSION_2_0_DEPRECATED_Supported() {
-		if (!DinamicGLFeature_VERSION_2_0_DEPRECATED_loaded) {
-			InitDinamicGLFeature_VERSION_2_0_DEPRECATED();
-		}
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_VERSION_2_0_DEPRECATED*/
 
 /*EXT_cull_vertex*/
 #ifdef USE_DYNAMIC_GL_EXT_cull_vertex
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CullParameterdvEXT)(GLenum pname , GLdouble *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CullParameterfvEXT)(GLenum pname , GLfloat *params) = 0; }
 static bool DinamicGLFeature_EXT_cull_vertex_loaded = false; 
@@ -11469,63 +11891,69 @@ static void InitDinamicGLFeature_EXT_cull_vertex() {
 		DynamicGL_CullParameterfvEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , GLfloat *params)>("glCullParameterfvEXT"); 
 		DinamicGLFeature_EXT_cull_vertex_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_cull_vertex_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_cull_vertex")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_cull_vertex_loaded) {
 			InitDinamicGLFeature_EXT_cull_vertex();
 		}
 		if (DynamicGL_CullParameterdvEXT==0) return false; 
 		if (DynamicGL_CullParameterfvEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_cull_vertex*/
 
 /*FfdMaskSGIX*/
 #ifdef USE_DYNAMIC_GL_FfdMaskSGIX
-static bool DinamicGLFeature_FfdMaskSGIX_loaded = false; 
-static void InitDinamicGLFeature_FfdMaskSGIX() {
-		DinamicGLFeature_FfdMaskSGIX_loaded = true; 
-}
 bool DinamicGLFeature_FfdMaskSGIX_Supported() {
-		if (!DinamicGLFeature_FfdMaskSGIX_loaded) {
-			InitDinamicGLFeature_FfdMaskSGIX();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_FfdMaskSGIX")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_FfdMaskSGIX*/
 
 /*OES_read_format*/
 #ifdef USE_DYNAMIC_GL_OES_read_format
-static bool DinamicGLFeature_OES_read_format_loaded = false; 
-static void InitDinamicGLFeature_OES_read_format() {
-		DinamicGLFeature_OES_read_format_loaded = true; 
-}
 bool DinamicGLFeature_OES_read_format_Supported() {
-		if (!DinamicGLFeature_OES_read_format_loaded) {
-			InitDinamicGLFeature_OES_read_format();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_read_format")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_read_format*/
 
+/*INGR_palette_buffer*/
+#ifdef USE_DYNAMIC_GL_INGR_palette_buffer
+bool DinamicGLFeature_INGR_palette_buffer_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_INGR_palette_buffer")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_INGR_palette_buffer*/
+
 /*INGR_blend_func_separate*/
 #ifdef USE_DYNAMIC_GL_INGR_blend_func_separate
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFuncSeparateINGR)(GLenum sfactorRGB , GLenum dfactorRGB , GLenum sfactorAlpha , GLenum dfactorAlpha) = 0; }
 static bool DinamicGLFeature_INGR_blend_func_separate_loaded = false; 
 static void InitDinamicGLFeature_INGR_blend_func_separate() {
 		DynamicGL_BlendFuncSeparateINGR = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum sfactorRGB , GLenum dfactorRGB , GLenum sfactorAlpha , GLenum dfactorAlpha)>("glBlendFuncSeparateINGR"); 
 		DinamicGLFeature_INGR_blend_func_separate_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_INGR_blend_func_separate_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_INGR_blend_func_separate")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_INGR_blend_func_separate_loaded) {
 			InitDinamicGLFeature_INGR_blend_func_separate();
 		}
 		if (DynamicGL_BlendFuncSeparateINGR==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_INGR_blend_func_separate*/
 
 /*ARB_draw_indirect*/
 #ifdef USE_DYNAMIC_GL_ARB_draw_indirect
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawArraysIndirect)(GLenum mode , const GLvoid *indirect) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElementsIndirect)(GLenum mode , GLenum type , const GLvoid *indirect) = 0; }
 static bool DinamicGLFeature_ARB_draw_indirect_loaded = false; 
@@ -11534,58 +11962,39 @@ static void InitDinamicGLFeature_ARB_draw_indirect() {
 		DynamicGL_DrawElementsIndirect = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLenum type , const GLvoid *indirect)>("glDrawElementsIndirect"); 
 		DinamicGLFeature_ARB_draw_indirect_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_draw_indirect_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_draw_indirect")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_draw_indirect_loaded) {
 			InitDinamicGLFeature_ARB_draw_indirect();
 		}
 		if (DynamicGL_DrawArraysIndirect==0) return false; 
 		if (DynamicGL_DrawElementsIndirect==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_draw_indirect*/
 
 /*APPLE_client_storage*/
 #ifdef USE_DYNAMIC_GL_APPLE_client_storage
-static bool DinamicGLFeature_APPLE_client_storage_loaded = false; 
-static void InitDinamicGLFeature_APPLE_client_storage() {
-		DinamicGLFeature_APPLE_client_storage_loaded = true; 
-}
 bool DinamicGLFeature_APPLE_client_storage_Supported() {
-		if (!DinamicGLFeature_APPLE_client_storage_loaded) {
-			InitDinamicGLFeature_APPLE_client_storage();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_APPLE_client_storage")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_APPLE_client_storage*/
 
-/*ATI_envmap_bumpmap*/
-#ifdef USE_DYNAMIC_GL_ATI_envmap_bumpmap
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexBumpParameterivATI)(GLenum pname , const GLint *param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexBumpParameterfvATI)(GLenum pname , const GLfloat *param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexBumpParameterivATI)(GLenum pname , GLint *param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexBumpParameterfvATI)(GLenum pname , GLfloat *param) = 0; }
-static bool DinamicGLFeature_ATI_envmap_bumpmap_loaded = false; 
-static void InitDinamicGLFeature_ATI_envmap_bumpmap() {
-		DynamicGL_TexBumpParameterivATI = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , const GLint *param)>("glTexBumpParameterivATI"); 
-		DynamicGL_TexBumpParameterfvATI = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , const GLfloat *param)>("glTexBumpParameterfvATI"); 
-		DynamicGL_GetTexBumpParameterivATI = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , GLint *param)>("glGetTexBumpParameterivATI"); 
-		DynamicGL_GetTexBumpParameterfvATI = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , GLfloat *param)>("glGetTexBumpParameterfvATI"); 
-		DinamicGLFeature_ATI_envmap_bumpmap_loaded = true; 
-}
-bool DinamicGLFeature_ATI_envmap_bumpmap_Supported() {
-		if (!DinamicGLFeature_ATI_envmap_bumpmap_loaded) {
-			InitDinamicGLFeature_ATI_envmap_bumpmap();
-		}
-		if (DynamicGL_TexBumpParameterivATI==0) return false; 
-		if (DynamicGL_TexBumpParameterfvATI==0) return false; 
-		if (DynamicGL_GetTexBumpParameterivATI==0) return false; 
-		if (DynamicGL_GetTexBumpParameterfvATI==0) return false; 
+/*ARB_texture_query_lod*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_query_lod
+bool DinamicGLFeature_ARB_texture_query_lod_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_texture_query_lod")) return false;
 		return true;
 }
-#endif /*USE_DYNAMIC_GL_ATI_envmap_bumpmap*/
+#endif /*USE_DYNAMIC_GL_ARB_texture_query_lod*/
 
 /*ATI_vertex_array_object*/
 #ifdef USE_DYNAMIC_GL_ATI_vertex_array_object
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { GLuint (DYNAMIC_GL_APIENTRYP DynamicGL_NewObjectBufferATI)(GLsizei size , const GLvoid *pointer , GLenum usage) = 0; }
 extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsObjectBufferATI)(GLuint buffer) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_UpdateObjectBufferATI)(GLuint buffer , GLuint offset , GLsizei size , const GLvoid *pointer , GLenum preserve) = 0; }
@@ -11614,7 +12023,10 @@ static void InitDinamicGLFeature_ATI_vertex_array_object() {
 		DynamicGL_GetVariantArrayObjectivATI = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint id , GLenum pname , GLint *params)>("glGetVariantArrayObjectivATI"); 
 		DinamicGLFeature_ATI_vertex_array_object_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ATI_vertex_array_object_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ATI_vertex_array_object")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ATI_vertex_array_object_loaded) {
 			InitDinamicGLFeature_ATI_vertex_array_object();
 		}
@@ -11630,40 +12042,61 @@ bool DinamicGLFeature_ATI_vertex_array_object_Supported() {
 		if (DynamicGL_VariantArrayObjectATI==0) return false; 
 		if (DynamicGL_GetVariantArrayObjectfvATI==0) return false; 
 		if (DynamicGL_GetVariantArrayObjectivATI==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ATI_vertex_array_object*/
 
-/*SGIX_async_pixel*/
-#ifdef USE_DYNAMIC_GL_SGIX_async_pixel
-static bool DinamicGLFeature_SGIX_async_pixel_loaded = false; 
-static void InitDinamicGLFeature_SGIX_async_pixel() {
-		DinamicGLFeature_SGIX_async_pixel_loaded = true; 
+/*ATI_envmap_bumpmap*/
+#ifdef USE_DYNAMIC_GL_ATI_envmap_bumpmap
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexBumpParameterivATI)(GLenum pname , const GLint *param) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexBumpParameterfvATI)(GLenum pname , const GLfloat *param) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexBumpParameterivATI)(GLenum pname , GLint *param) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexBumpParameterfvATI)(GLenum pname , GLfloat *param) = 0; }
+static bool DinamicGLFeature_ATI_envmap_bumpmap_loaded = false; 
+static void InitDinamicGLFeature_ATI_envmap_bumpmap() {
+		DynamicGL_TexBumpParameterivATI = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , const GLint *param)>("glTexBumpParameterivATI"); 
+		DynamicGL_TexBumpParameterfvATI = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , const GLfloat *param)>("glTexBumpParameterfvATI"); 
+		DynamicGL_GetTexBumpParameterivATI = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , GLint *param)>("glGetTexBumpParameterivATI"); 
+		DynamicGL_GetTexBumpParameterfvATI = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , GLfloat *param)>("glGetTexBumpParameterfvATI"); 
+		DinamicGLFeature_ATI_envmap_bumpmap_loaded = true; 
 }
-bool DinamicGLFeature_SGIX_async_pixel_Supported() {
-		if (!DinamicGLFeature_SGIX_async_pixel_loaded) {
-			InitDinamicGLFeature_SGIX_async_pixel();
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+bool DinamicGLFeature_ATI_envmap_bumpmap_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ATI_envmap_bumpmap")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
+		if (!DinamicGLFeature_ATI_envmap_bumpmap_loaded) {
+			InitDinamicGLFeature_ATI_envmap_bumpmap();
 		}
+		if (DynamicGL_TexBumpParameterivATI==0) return false; 
+		if (DynamicGL_TexBumpParameterfvATI==0) return false; 
+		if (DynamicGL_GetTexBumpParameterivATI==0) return false; 
+		if (DynamicGL_GetTexBumpParameterfvATI==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
-#endif /*USE_DYNAMIC_GL_SGIX_async_pixel*/
+#endif /*USE_DYNAMIC_GL_ATI_envmap_bumpmap*/
 
 /*ATI_text_fragment_shader*/
 #ifdef USE_DYNAMIC_GL_ATI_text_fragment_shader
-static bool DinamicGLFeature_ATI_text_fragment_shader_loaded = false; 
-static void InitDinamicGLFeature_ATI_text_fragment_shader() {
-		DinamicGLFeature_ATI_text_fragment_shader_loaded = true; 
-}
 bool DinamicGLFeature_ATI_text_fragment_shader_Supported() {
-		if (!DinamicGLFeature_ATI_text_fragment_shader_loaded) {
-			InitDinamicGLFeature_ATI_text_fragment_shader();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ATI_text_fragment_shader")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ATI_text_fragment_shader*/
 
+/*SGIX_async_pixel*/
+#ifdef USE_DYNAMIC_GL_SGIX_async_pixel
+bool DinamicGLFeature_SGIX_async_pixel_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_async_pixel")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_SGIX_async_pixel*/
+
 /*ARB_point_parameters*/
 #ifdef USE_DYNAMIC_GL_ARB_point_parameters
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterfARB)(GLenum pname , GLfloat param) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterfvARB)(GLenum pname , const GLfloat *params) = 0; }
 static bool DinamicGLFeature_ARB_point_parameters_loaded = false; 
@@ -11672,32 +12105,39 @@ static void InitDinamicGLFeature_ARB_point_parameters() {
 		DynamicGL_PointParameterfvARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , const GLfloat *params)>("glPointParameterfvARB"); 
 		DinamicGLFeature_ARB_point_parameters_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_point_parameters_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_point_parameters")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_point_parameters_loaded) {
 			InitDinamicGLFeature_ARB_point_parameters();
 		}
 		if (DynamicGL_PointParameterfARB==0) return false; 
 		if (DynamicGL_PointParameterfvARB==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_point_parameters*/
 
 /*EXT_pixel_buffer_object*/
 #ifdef USE_DYNAMIC_GL_EXT_pixel_buffer_object
-static bool DinamicGLFeature_EXT_pixel_buffer_object_loaded = false; 
-static void InitDinamicGLFeature_EXT_pixel_buffer_object() {
-		DinamicGLFeature_EXT_pixel_buffer_object_loaded = true; 
-}
 bool DinamicGLFeature_EXT_pixel_buffer_object_Supported() {
-		if (!DinamicGLFeature_EXT_pixel_buffer_object_loaded) {
-			InitDinamicGLFeature_EXT_pixel_buffer_object();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_pixel_buffer_object")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_pixel_buffer_object*/
 
+/*EXT_shadow_funcs*/
+#ifdef USE_DYNAMIC_GL_EXT_shadow_funcs
+bool DinamicGLFeature_EXT_shadow_funcs_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_shadow_funcs")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_EXT_shadow_funcs*/
+
 /*EXT_vertex_array*/
 #ifdef USE_DYNAMIC_GL_EXT_vertex_array
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ArrayElementEXT)(GLint i) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorPointerEXT)(GLint size , GLenum type , GLsizei stride , GLsizei count , const GLvoid *pointer) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawArraysEXT)(GLenum mode , GLint first , GLsizei count) = 0; }
@@ -11720,7 +12160,10 @@ static void InitDinamicGLFeature_EXT_vertex_array() {
 		DynamicGL_VertexPointerEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint size , GLenum type , GLsizei stride , GLsizei count , const GLvoid *pointer)>("glVertexPointerEXT"); 
 		DinamicGLFeature_EXT_vertex_array_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_vertex_array_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_vertex_array")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_vertex_array_loaded) {
 			InitDinamicGLFeature_EXT_vertex_array();
 		}
@@ -11733,26 +12176,22 @@ bool DinamicGLFeature_EXT_vertex_array_Supported() {
 		if (DynamicGL_NormalPointerEXT==0) return false; 
 		if (DynamicGL_TexCoordPointerEXT==0) return false; 
 		if (DynamicGL_VertexPointerEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_vertex_array*/
 
 /*EXT_index_array_formats*/
 #ifdef USE_DYNAMIC_GL_EXT_index_array_formats
-static bool DinamicGLFeature_EXT_index_array_formats_loaded = false; 
-static void InitDinamicGLFeature_EXT_index_array_formats() {
-		DinamicGLFeature_EXT_index_array_formats_loaded = true; 
-}
 bool DinamicGLFeature_EXT_index_array_formats_Supported() {
-		if (!DinamicGLFeature_EXT_index_array_formats_loaded) {
-			InitDinamicGLFeature_EXT_index_array_formats();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_index_array_formats")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_index_array_formats*/
 
 /*ARB_vertex_array_object*/
 #ifdef USE_DYNAMIC_GL_ARB_vertex_array_object
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindVertexArray)(GLuint array) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteVertexArrays)(GLsizei n , const GLuint *arrays) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenVertexArrays)(GLsizei n , GLuint *arrays) = 0; }
@@ -11765,7 +12204,10 @@ static void InitDinamicGLFeature_ARB_vertex_array_object() {
 		DynamicGL_IsVertexArray = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLuint array)>("glIsVertexArray"); 
 		DinamicGLFeature_ARB_vertex_array_object_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_vertex_array_object_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_vertex_array_object")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_vertex_array_object_loaded) {
 			InitDinamicGLFeature_ARB_vertex_array_object();
 		}
@@ -11773,12 +12215,14 @@ bool DinamicGLFeature_ARB_vertex_array_object_Supported() {
 		if (DynamicGL_DeleteVertexArrays==0) return false; 
 		if (DynamicGL_GenVertexArrays==0) return false; 
 		if (DynamicGL_IsVertexArray==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_vertex_array_object*/
 
 /*NV_texture_multisample*/
 #ifdef USE_DYNAMIC_GL_NV_texture_multisample
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexImage2DMultisampleCoverageNV)(GLenum target , GLsizei coverageSamples , GLsizei colorSamples , GLint internalFormat , GLsizei width , GLsizei height , GLboolean fixedSampleLocations) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexImage3DMultisampleCoverageNV)(GLenum target , GLsizei coverageSamples , GLsizei colorSamples , GLint internalFormat , GLsizei width , GLsizei height , GLsizei depth , GLboolean fixedSampleLocations) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureImage2DMultisampleNV)(GLuint texture , GLenum target , GLsizei samples , GLint internalFormat , GLsizei width , GLsizei height , GLboolean fixedSampleLocations) = 0; }
@@ -11795,7 +12239,10 @@ static void InitDinamicGLFeature_NV_texture_multisample() {
 		DynamicGL_TextureImage3DMultisampleCoverageNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint texture , GLenum target , GLsizei coverageSamples , GLsizei colorSamples , GLint internalFormat , GLsizei width , GLsizei height , GLsizei depth , GLboolean fixedSampleLocations)>("glTextureImage3DMultisampleCoverageNV"); 
 		DinamicGLFeature_NV_texture_multisample_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_texture_multisample_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_texture_multisample")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_texture_multisample_loaded) {
 			InitDinamicGLFeature_NV_texture_multisample();
 		}
@@ -11805,26 +12252,52 @@ bool DinamicGLFeature_NV_texture_multisample_Supported() {
 		if (DynamicGL_TextureImage3DMultisampleNV==0) return false; 
 		if (DynamicGL_TextureImage2DMultisampleCoverageNV==0) return false; 
 		if (DynamicGL_TextureImage3DMultisampleCoverageNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_texture_multisample*/
 
 /*ARB_occlusion_query2*/
 #ifdef USE_DYNAMIC_GL_ARB_occlusion_query2
-static bool DinamicGLFeature_ARB_occlusion_query2_loaded = false; 
-static void InitDinamicGLFeature_ARB_occlusion_query2() {
-		DinamicGLFeature_ARB_occlusion_query2_loaded = true; 
-}
 bool DinamicGLFeature_ARB_occlusion_query2_Supported() {
-		if (!DinamicGLFeature_ARB_occlusion_query2_loaded) {
-			InitDinamicGLFeature_ARB_occlusion_query2();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_occlusion_query2")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_occlusion_query2*/
 
+/*EXT_texture_compression_rgtc*/
+#ifdef USE_DYNAMIC_GL_EXT_texture_compression_rgtc
+bool DinamicGLFeature_EXT_texture_compression_rgtc_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_compression_rgtc")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_EXT_texture_compression_rgtc*/
+
+/*ATI_draw_buffers*/
+#ifdef USE_DYNAMIC_GL_ATI_draw_buffers
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawBuffersATI)(GLsizei n , const GLenum *bufs) = 0; }
+static bool DinamicGLFeature_ATI_draw_buffers_loaded = false; 
+static void InitDinamicGLFeature_ATI_draw_buffers() {
+		DynamicGL_DrawBuffersATI = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei n , const GLenum *bufs)>("glDrawBuffersATI"); 
+		DinamicGLFeature_ATI_draw_buffers_loaded = true; 
+}
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+bool DinamicGLFeature_ATI_draw_buffers_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ATI_draw_buffers")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
+		if (!DinamicGLFeature_ATI_draw_buffers_loaded) {
+			InitDinamicGLFeature_ATI_draw_buffers();
+		}
+		if (DynamicGL_DrawBuffersATI==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ATI_draw_buffers*/
+
 /*IBM_vertex_array_lists*/
 #ifdef USE_DYNAMIC_GL_IBM_vertex_array_lists
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorPointerListIBM)(GLint size , GLenum type , GLint stride , const GLvoid* *pointer , GLint ptrstride) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColorPointerListIBM)(GLint size , GLenum type , GLint stride , const GLvoid* *pointer , GLint ptrstride) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_EdgeFlagPointerListIBM)(GLint stride , const GLboolean* *pointer , GLint ptrstride) = 0; }
@@ -11845,7 +12318,10 @@ static void InitDinamicGLFeature_IBM_vertex_array_lists() {
 		DynamicGL_VertexPointerListIBM = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint size , GLenum type , GLint stride , const GLvoid* *pointer , GLint ptrstride)>("glVertexPointerListIBM"); 
 		DinamicGLFeature_IBM_vertex_array_lists_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_IBM_vertex_array_lists_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_IBM_vertex_array_lists")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_IBM_vertex_array_lists_loaded) {
 			InitDinamicGLFeature_IBM_vertex_array_lists();
 		}
@@ -11857,43 +12333,14 @@ bool DinamicGLFeature_IBM_vertex_array_lists_Supported() {
 		if (DynamicGL_NormalPointerListIBM==0) return false; 
 		if (DynamicGL_TexCoordPointerListIBM==0) return false; 
 		if (DynamicGL_VertexPointerListIBM==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_IBM_vertex_array_lists*/
 
-/*EXT_texture_compression_rgtc*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_compression_rgtc
-static bool DinamicGLFeature_EXT_texture_compression_rgtc_loaded = false; 
-static void InitDinamicGLFeature_EXT_texture_compression_rgtc() {
-		DinamicGLFeature_EXT_texture_compression_rgtc_loaded = true; 
-}
-bool DinamicGLFeature_EXT_texture_compression_rgtc_Supported() {
-		if (!DinamicGLFeature_EXT_texture_compression_rgtc_loaded) {
-			InitDinamicGLFeature_EXT_texture_compression_rgtc();
-		}
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_EXT_texture_compression_rgtc*/
-
-/*ATI_draw_buffers*/
-#ifdef USE_DYNAMIC_GL_ATI_draw_buffers
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawBuffersATI)(GLsizei n , const GLenum *bufs) = 0; }
-static bool DinamicGLFeature_ATI_draw_buffers_loaded = false; 
-static void InitDinamicGLFeature_ATI_draw_buffers() {
-		DynamicGL_DrawBuffersATI = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei n , const GLenum *bufs)>("glDrawBuffersATI"); 
-		DinamicGLFeature_ATI_draw_buffers_loaded = true; 
-}
-bool DinamicGLFeature_ATI_draw_buffers_Supported() {
-		if (!DinamicGLFeature_ATI_draw_buffers_loaded) {
-			InitDinamicGLFeature_ATI_draw_buffers();
-		}
-		if (DynamicGL_DrawBuffersATI==0) return false; 
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_ATI_draw_buffers*/
-
 /*ARB_texture_compression*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_compression
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CompressedTexImage3DARB)(GLenum target , GLint level , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth , GLint border , GLsizei imageSize , const GLvoid *data) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CompressedTexImage2DARB)(GLenum target , GLint level , GLenum internalformat , GLsizei width , GLsizei height , GLint border , GLsizei imageSize , const GLvoid *data) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CompressedTexImage1DARB)(GLenum target , GLint level , GLenum internalformat , GLsizei width , GLint border , GLsizei imageSize , const GLvoid *data) = 0; }
@@ -11912,7 +12359,10 @@ static void InitDinamicGLFeature_ARB_texture_compression() {
 		DynamicGL_GetCompressedTexImageARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint level , GLvoid *img)>("glGetCompressedTexImageARB"); 
 		DinamicGLFeature_ARB_texture_compression_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_texture_compression_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_texture_compression")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_texture_compression_loaded) {
 			InitDinamicGLFeature_ARB_texture_compression();
 		}
@@ -11923,12 +12373,14 @@ bool DinamicGLFeature_ARB_texture_compression_Supported() {
 		if (DynamicGL_CompressedTexSubImage2DARB==0) return false; 
 		if (DynamicGL_CompressedTexSubImage1DARB==0) return false; 
 		if (DynamicGL_GetCompressedTexImageARB==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_texture_compression*/
 
 /*VERSION_2_1*/
 #ifdef USE_DYNAMIC_GL_VERSION_2_1
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformMatrix2x3fv)(GLint location , GLsizei count , GLboolean transpose , const GLfloat *value) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformMatrix3x2fv)(GLint location , GLsizei count , GLboolean transpose , const GLfloat *value) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformMatrix2x4fv)(GLint location , GLsizei count , GLboolean transpose , const GLfloat *value) = 0; }
@@ -11945,7 +12397,9 @@ static void InitDinamicGLFeature_VERSION_2_1() {
 		DynamicGL_UniformMatrix4x3fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLsizei count , GLboolean transpose , const GLfloat *value)>("glUniformMatrix4x3fv"); 
 		DinamicGLFeature_VERSION_2_1_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_VERSION_2_1_Supported() {
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_VERSION_2_1_loaded) {
 			InitDinamicGLFeature_VERSION_2_1();
 		}
@@ -11955,12 +12409,14 @@ bool DinamicGLFeature_VERSION_2_1_Supported() {
 		if (DynamicGL_UniformMatrix4x2fv==0) return false; 
 		if (DynamicGL_UniformMatrix3x4fv==0) return false; 
 		if (DynamicGL_UniformMatrix4x3fv==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_VERSION_2_1*/
 
 /*EXT_color_subtable*/
 #ifdef USE_DYNAMIC_GL_EXT_color_subtable
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorSubTableEXT)(GLenum target , GLsizei start , GLsizei count , GLenum format , GLenum type , const GLvoid *data) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CopyColorSubTableEXT)(GLenum target , GLsizei start , GLint x , GLint y , GLsizei width) = 0; }
 static bool DinamicGLFeature_EXT_color_subtable_loaded = false; 
@@ -11969,32 +12425,30 @@ static void InitDinamicGLFeature_EXT_color_subtable() {
 		DynamicGL_CopyColorSubTableEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLsizei start , GLint x , GLint y , GLsizei width)>("glCopyColorSubTableEXT"); 
 		DinamicGLFeature_EXT_color_subtable_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_color_subtable_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_color_subtable")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_color_subtable_loaded) {
 			InitDinamicGLFeature_EXT_color_subtable();
 		}
 		if (DynamicGL_ColorSubTableEXT==0) return false; 
 		if (DynamicGL_CopyColorSubTableEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_color_subtable*/
 
 /*VERSION_3_0_DEPRECATED*/
 #ifdef USE_DYNAMIC_GL_VERSION_3_0_DEPRECATED
-static bool DinamicGLFeature_VERSION_3_0_DEPRECATED_loaded = false; 
-static void InitDinamicGLFeature_VERSION_3_0_DEPRECATED() {
-		DinamicGLFeature_VERSION_3_0_DEPRECATED_loaded = true; 
-}
 bool DinamicGLFeature_VERSION_3_0_DEPRECATED_Supported() {
-		if (!DinamicGLFeature_VERSION_3_0_DEPRECATED_loaded) {
-			InitDinamicGLFeature_VERSION_3_0_DEPRECATED();
-		}
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_VERSION_3_0_DEPRECATED*/
 
 /*EXT_convolution*/
 #ifdef USE_DYNAMIC_GL_EXT_convolution
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ConvolutionFilter1DEXT)(GLenum target , GLenum internalformat , GLsizei width , GLenum format , GLenum type , const GLvoid *image) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ConvolutionFilter2DEXT)(GLenum target , GLenum internalformat , GLsizei width , GLsizei height , GLenum format , GLenum type , const GLvoid *image) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ConvolutionParameterfEXT)(GLenum target , GLenum pname , GLfloat params) = 0; }
@@ -12025,7 +12479,10 @@ static void InitDinamicGLFeature_EXT_convolution() {
 		DynamicGL_SeparableFilter2DEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum internalformat , GLsizei width , GLsizei height , GLenum format , GLenum type , const GLvoid *row , const GLvoid *column)>("glSeparableFilter2DEXT"); 
 		DinamicGLFeature_EXT_convolution_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_convolution_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_convolution")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_convolution_loaded) {
 			InitDinamicGLFeature_EXT_convolution();
 		}
@@ -12042,12 +12499,22 @@ bool DinamicGLFeature_EXT_convolution_Supported() {
 		if (DynamicGL_GetConvolutionParameterivEXT==0) return false; 
 		if (DynamicGL_GetSeparableFilterEXT==0) return false; 
 		if (DynamicGL_SeparableFilter2DEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_convolution*/
 
+/*NV_vertex_program3*/
+#ifdef USE_DYNAMIC_GL_NV_vertex_program3
+bool DinamicGLFeature_NV_vertex_program3_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_vertex_program3")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_vertex_program3*/
+
 /*VERSION_4_0*/
 #ifdef USE_DYNAMIC_GL_VERSION_4_0
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MinSampleShading)(GLfloat value) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationi)(GLuint buf , GLenum mode) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationSeparatei)(GLuint buf , GLenum modeRGB , GLenum modeAlpha) = 0; }
@@ -12062,7 +12529,9 @@ static void InitDinamicGLFeature_VERSION_4_0() {
 		DynamicGL_BlendFuncSeparatei = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint buf , GLenum srcRGB , GLenum dstRGB , GLenum srcAlpha , GLenum dstAlpha)>("glBlendFuncSeparatei"); 
 		DinamicGLFeature_VERSION_4_0_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_VERSION_4_0_Supported() {
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_VERSION_4_0_loaded) {
 			InitDinamicGLFeature_VERSION_4_0();
 		}
@@ -12071,12 +12540,14 @@ bool DinamicGLFeature_VERSION_4_0_Supported() {
 		if (DynamicGL_BlendEquationSeparatei==0) return false; 
 		if (DynamicGL_BlendFunci==0) return false; 
 		if (DynamicGL_BlendFuncSeparatei==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_VERSION_4_0*/
 
 /*EXT_texture_integer*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_integer
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterIivEXT)(GLenum target , GLenum pname , const GLint *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterIuivEXT)(GLenum target , GLenum pname , const GLuint *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexParameterIivEXT)(GLenum target , GLenum pname , GLint *params) = 0; }
@@ -12093,7 +12564,10 @@ static void InitDinamicGLFeature_EXT_texture_integer() {
 		DynamicGL_ClearColorIuiEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint red , GLuint green , GLuint blue , GLuint alpha)>("glClearColorIuiEXT"); 
 		DinamicGLFeature_EXT_texture_integer_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_texture_integer_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_integer")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_texture_integer_loaded) {
 			InitDinamicGLFeature_EXT_texture_integer();
 		}
@@ -12103,26 +12577,22 @@ bool DinamicGLFeature_EXT_texture_integer_Supported() {
 		if (DynamicGL_GetTexParameterIuivEXT==0) return false; 
 		if (DynamicGL_ClearColorIiEXT==0) return false; 
 		if (DynamicGL_ClearColorIuiEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_integer*/
 
 /*SGIX_fog_offset*/
 #ifdef USE_DYNAMIC_GL_SGIX_fog_offset
-static bool DinamicGLFeature_SGIX_fog_offset_loaded = false; 
-static void InitDinamicGLFeature_SGIX_fog_offset() {
-		DinamicGLFeature_SGIX_fog_offset_loaded = true; 
-}
 bool DinamicGLFeature_SGIX_fog_offset_Supported() {
-		if (!DinamicGLFeature_SGIX_fog_offset_loaded) {
-			InitDinamicGLFeature_SGIX_fog_offset();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_fog_offset")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_fog_offset*/
 
 /*ATI_vertex_attrib_array_object*/
 #ifdef USE_DYNAMIC_GL_ATI_vertex_attrib_array_object
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribArrayObjectATI)(GLuint index , GLint size , GLenum type , GLboolean normalized , GLsizei stride , GLuint buffer , GLuint offset) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVertexAttribArrayObjectfvATI)(GLuint index , GLenum pname , GLfloat *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVertexAttribArrayObjectivATI)(GLuint index , GLenum pname , GLint *params) = 0; }
@@ -12133,61 +12603,48 @@ static void InitDinamicGLFeature_ATI_vertex_attrib_array_object() {
 		DynamicGL_GetVertexAttribArrayObjectivATI = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLenum pname , GLint *params)>("glGetVertexAttribArrayObjectivATI"); 
 		DinamicGLFeature_ATI_vertex_attrib_array_object_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ATI_vertex_attrib_array_object_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ATI_vertex_attrib_array_object")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ATI_vertex_attrib_array_object_loaded) {
 			InitDinamicGLFeature_ATI_vertex_attrib_array_object();
 		}
 		if (DynamicGL_VertexAttribArrayObjectATI==0) return false; 
 		if (DynamicGL_GetVertexAttribArrayObjectfvATI==0) return false; 
 		if (DynamicGL_GetVertexAttribArrayObjectivATI==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ATI_vertex_attrib_array_object*/
 
 /*EXT_packed_float*/
 #ifdef USE_DYNAMIC_GL_EXT_packed_float
-static bool DinamicGLFeature_EXT_packed_float_loaded = false; 
-static void InitDinamicGLFeature_EXT_packed_float() {
-		DinamicGLFeature_EXT_packed_float_loaded = true; 
-}
 bool DinamicGLFeature_EXT_packed_float_Supported() {
-		if (!DinamicGLFeature_EXT_packed_float_loaded) {
-			InitDinamicGLFeature_EXT_packed_float();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_packed_float")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_packed_float*/
 
 /*NV_texture_shader*/
 #ifdef USE_DYNAMIC_GL_NV_texture_shader
-static bool DinamicGLFeature_NV_texture_shader_loaded = false; 
-static void InitDinamicGLFeature_NV_texture_shader() {
-		DinamicGLFeature_NV_texture_shader_loaded = true; 
-}
 bool DinamicGLFeature_NV_texture_shader_Supported() {
-		if (!DinamicGLFeature_NV_texture_shader_loaded) {
-			InitDinamicGLFeature_NV_texture_shader();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_texture_shader")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_texture_shader*/
 
-/*SGIX_shadow*/
-#ifdef USE_DYNAMIC_GL_SGIX_shadow
-static bool DinamicGLFeature_SGIX_shadow_loaded = false; 
-static void InitDinamicGLFeature_SGIX_shadow() {
-		DinamicGLFeature_SGIX_shadow_loaded = true; 
-}
-bool DinamicGLFeature_SGIX_shadow_Supported() {
-		if (!DinamicGLFeature_SGIX_shadow_loaded) {
-			InitDinamicGLFeature_SGIX_shadow();
-		}
+/*NV_blend_square*/
+#ifdef USE_DYNAMIC_GL_NV_blend_square
+bool DinamicGLFeature_NV_blend_square_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_blend_square")) return false;
 		return true;
 }
-#endif /*USE_DYNAMIC_GL_SGIX_shadow*/
+#endif /*USE_DYNAMIC_GL_NV_blend_square*/
 
 /*VERSION_3_2*/
 #ifdef USE_DYNAMIC_GL_VERSION_3_2
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetInteger64i_v)(GLenum target , GLuint index , GLint64 *data) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetBufferParameteri64v)(GLenum target , GLenum pname , GLint64 *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FramebufferTexture)(GLenum target , GLenum attachment , GLuint texture , GLint level) = 0; }
@@ -12198,33 +12655,39 @@ static void InitDinamicGLFeature_VERSION_3_2() {
 		DynamicGL_FramebufferTexture = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum attachment , GLuint texture , GLint level)>("glFramebufferTexture"); 
 		DinamicGLFeature_VERSION_3_2_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_VERSION_3_2_Supported() {
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_VERSION_3_2_loaded) {
 			InitDinamicGLFeature_VERSION_3_2();
 		}
 		if (DynamicGL_GetInteger64i_v==0) return false; 
 		if (DynamicGL_GetBufferParameteri64v==0) return false; 
 		if (DynamicGL_FramebufferTexture==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_VERSION_3_2*/
 
 /*ARB_half_float_pixel*/
 #ifdef USE_DYNAMIC_GL_ARB_half_float_pixel
-static bool DinamicGLFeature_ARB_half_float_pixel_loaded = false; 
-static void InitDinamicGLFeature_ARB_half_float_pixel() {
-		DinamicGLFeature_ARB_half_float_pixel_loaded = true; 
-}
 bool DinamicGLFeature_ARB_half_float_pixel_Supported() {
-		if (!DinamicGLFeature_ARB_half_float_pixel_loaded) {
-			InitDinamicGLFeature_ARB_half_float_pixel();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_half_float_pixel")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_half_float_pixel*/
 
+/*SGIX_shadow*/
+#ifdef USE_DYNAMIC_GL_SGIX_shadow
+bool DinamicGLFeature_SGIX_shadow_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_shadow")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_SGIX_shadow*/
+
 /*NV_primitive_restart*/
 #ifdef USE_DYNAMIC_GL_NV_primitive_restart
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PrimitiveRestartNV)() = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PrimitiveRestartIndexNV)(GLuint index) = 0; }
 static bool DinamicGLFeature_NV_primitive_restart_loaded = false; 
@@ -12233,18 +12696,23 @@ static void InitDinamicGLFeature_NV_primitive_restart() {
 		DynamicGL_PrimitiveRestartIndexNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index)>("glPrimitiveRestartIndexNV"); 
 		DinamicGLFeature_NV_primitive_restart_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_primitive_restart_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_primitive_restart")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_primitive_restart_loaded) {
 			InitDinamicGLFeature_NV_primitive_restart();
 		}
 		if (DynamicGL_PrimitiveRestartNV==0) return false; 
 		if (DynamicGL_PrimitiveRestartIndexNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_primitive_restart*/
 
 /*ARB_base_instance*/
 #ifdef USE_DYNAMIC_GL_ARB_base_instance
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawArraysInstancedBaseInstance)(GLenum mode , GLint first , GLsizei count , GLsizei primcount , GLuint baseinstance) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElementsInstancedBaseInstance)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices , GLsizei primcount , GLuint baseinstance) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElementsInstancedBaseVertexBaseInstance)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices , GLsizei primcount , GLint basevertex , GLuint baseinstance) = 0; }
@@ -12255,19 +12723,24 @@ static void InitDinamicGLFeature_ARB_base_instance() {
 		DynamicGL_DrawElementsInstancedBaseVertexBaseInstance = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices , GLsizei primcount , GLint basevertex , GLuint baseinstance)>("glDrawElementsInstancedBaseVertexBaseInstance"); 
 		DinamicGLFeature_ARB_base_instance_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_base_instance_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_base_instance")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_base_instance_loaded) {
 			InitDinamicGLFeature_ARB_base_instance();
 		}
 		if (DynamicGL_DrawArraysInstancedBaseInstance==0) return false; 
 		if (DynamicGL_DrawElementsInstancedBaseInstance==0) return false; 
 		if (DynamicGL_DrawElementsInstancedBaseVertexBaseInstance==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_base_instance*/
 
 /*ARB_transform_feedback2*/
 #ifdef USE_DYNAMIC_GL_ARB_transform_feedback2
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindTransformFeedback)(GLenum target , GLuint id) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteTransformFeedbacks)(GLsizei n , const GLuint *ids) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenTransformFeedbacks)(GLsizei n , GLuint *ids) = 0; }
@@ -12286,7 +12759,10 @@ static void InitDinamicGLFeature_ARB_transform_feedback2() {
 		DynamicGL_DrawTransformFeedback = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLuint id)>("glDrawTransformFeedback"); 
 		DinamicGLFeature_ARB_transform_feedback2_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_ARB_transform_feedback2_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_transform_feedback2")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_ARB_transform_feedback2_loaded) {
 			InitDinamicGLFeature_ARB_transform_feedback2();
 		}
@@ -12297,43 +12773,59 @@ bool DinamicGLFeature_ARB_transform_feedback2_Supported() {
 		if (DynamicGL_PauseTransformFeedback==0) return false; 
 		if (DynamicGL_ResumeTransformFeedback==0) return false; 
 		if (DynamicGL_DrawTransformFeedback==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_transform_feedback2*/
 
 /*VERSION_3_3*/
 #ifdef USE_DYNAMIC_GL_VERSION_3_3
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribDivisor)(GLuint index , GLuint divisor) = 0; }
 static bool DinamicGLFeature_VERSION_3_3_loaded = false; 
 static void InitDinamicGLFeature_VERSION_3_3() {
 		DynamicGL_VertexAttribDivisor = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLuint divisor)>("glVertexAttribDivisor"); 
 		DinamicGLFeature_VERSION_3_3_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_VERSION_3_3_Supported() {
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_VERSION_3_3_loaded) {
 			InitDinamicGLFeature_VERSION_3_3();
 		}
 		if (DynamicGL_VertexAttribDivisor==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_VERSION_3_3*/
 
+/*SGIX_depth_pass_instrument*/
+#ifdef USE_DYNAMIC_GL_SGIX_depth_pass_instrument
+bool DinamicGLFeature_SGIX_depth_pass_instrument_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SGIX_depth_pass_instrument")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_SGIX_depth_pass_instrument*/
+
 /*ARB_texture_gather*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_gather
-static bool DinamicGLFeature_ARB_texture_gather_loaded = false; 
-static void InitDinamicGLFeature_ARB_texture_gather() {
-		DinamicGLFeature_ARB_texture_gather_loaded = true; 
-}
 bool DinamicGLFeature_ARB_texture_gather_Supported() {
-		if (!DinamicGLFeature_ARB_texture_gather_loaded) {
-			InitDinamicGLFeature_ARB_texture_gather();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_texture_gather")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_texture_gather*/
 
+/*ARB_texture_mirrored_repeat*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_mirrored_repeat
+bool DinamicGLFeature_ARB_texture_mirrored_repeat_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARB_texture_mirrored_repeat")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_texture_mirrored_repeat*/
+
 /*SUN_vertex*/
 #ifdef USE_DYNAMIC_GL_SUN_vertex
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Color4ubVertex2fSUN)(GLubyte r , GLubyte g , GLubyte b , GLubyte a , GLfloat x , GLfloat y) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Color4ubVertex2fvSUN)(const GLubyte *c , const GLfloat *v) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Color4ubVertex3fSUN)(GLubyte r , GLubyte g , GLubyte b , GLubyte a , GLfloat x , GLfloat y , GLfloat z) = 0; }
@@ -12418,7 +12910,10 @@ static void InitDinamicGLFeature_SUN_vertex() {
 		DynamicGL_ReplacementCodeuiTexCoord2fColor4fNormal3fVertex3fvSUN = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLuint *rc , const GLfloat *tc , const GLfloat *c , const GLfloat *n , const GLfloat *v)>("glReplacementCodeuiTexCoord2fColor4fNormal3fVertex3fvSUN"); 
 		DinamicGLFeature_SUN_vertex_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_SUN_vertex_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_SUN_vertex")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_SUN_vertex_loaded) {
 			InitDinamicGLFeature_SUN_vertex();
 		}
@@ -12462,39 +12957,21 @@ bool DinamicGLFeature_SUN_vertex_Supported() {
 		if (DynamicGL_ReplacementCodeuiTexCoord2fNormal3fVertex3fvSUN==0) return false; 
 		if (DynamicGL_ReplacementCodeuiTexCoord2fColor4fNormal3fVertex3fSUN==0) return false; 
 		if (DynamicGL_ReplacementCodeuiTexCoord2fColor4fNormal3fVertex3fvSUN==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SUN_vertex*/
 
-/*ARB_texture_mirrored_repeat*/
-#ifdef USE_DYNAMIC_GL_ARB_texture_mirrored_repeat
-static bool DinamicGLFeature_ARB_texture_mirrored_repeat_loaded = false; 
-static void InitDinamicGLFeature_ARB_texture_mirrored_repeat() {
-		DinamicGLFeature_ARB_texture_mirrored_repeat_loaded = true; 
-}
-bool DinamicGLFeature_ARB_texture_mirrored_repeat_Supported() {
-		if (!DinamicGLFeature_ARB_texture_mirrored_repeat_loaded) {
-			InitDinamicGLFeature_ARB_texture_mirrored_repeat();
-		}
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_ARB_texture_mirrored_repeat*/
-
 /*HP_texture_lighting*/
 #ifdef USE_DYNAMIC_GL_HP_texture_lighting
-static bool DinamicGLFeature_HP_texture_lighting_loaded = false; 
-static void InitDinamicGLFeature_HP_texture_lighting() {
-		DinamicGLFeature_HP_texture_lighting_loaded = true; 
-}
 bool DinamicGLFeature_HP_texture_lighting_Supported() {
-		if (!DinamicGLFeature_HP_texture_lighting_loaded) {
-			InitDinamicGLFeature_HP_texture_lighting();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_HP_texture_lighting")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_HP_texture_lighting*/
 
 void InternalDynamicGLLoadSubset() {
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 #ifdef USE_DYNAMIC_GL_VERSION_1_1
 			InitDinamicGLFeature_VERSION_1_1();
 #endif /*USE_DYNAMIC_GL_VERSION_1_1*/
@@ -12507,24 +12984,12 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_ARB_internalformat_query
 			InitDinamicGLFeature_ARB_internalformat_query();
 #endif /*USE_DYNAMIC_GL_ARB_internalformat_query*/
-#ifdef USE_DYNAMIC_GL_SGIX_blend_alpha_minmax
-			InitDinamicGLFeature_SGIX_blend_alpha_minmax();
-#endif /*USE_DYNAMIC_GL_SGIX_blend_alpha_minmax*/
-#ifdef USE_DYNAMIC_GL_ATI_meminfo
-			InitDinamicGLFeature_ATI_meminfo();
-#endif /*USE_DYNAMIC_GL_ATI_meminfo*/
 #ifdef USE_DYNAMIC_GL_NV_present_video
 			InitDinamicGLFeature_NV_present_video();
 #endif /*USE_DYNAMIC_GL_NV_present_video*/
-#ifdef USE_DYNAMIC_GL_SGIX_convolution_accuracy
-			InitDinamicGLFeature_SGIX_convolution_accuracy();
-#endif /*USE_DYNAMIC_GL_SGIX_convolution_accuracy*/
 #ifdef USE_DYNAMIC_GL_EXT_bindable_uniform
 			InitDinamicGLFeature_EXT_bindable_uniform();
 #endif /*USE_DYNAMIC_GL_EXT_bindable_uniform*/
-#ifdef USE_DYNAMIC_GL_SGIS_generate_mipmap
-			InitDinamicGLFeature_SGIS_generate_mipmap();
-#endif /*USE_DYNAMIC_GL_SGIS_generate_mipmap*/
 #ifdef USE_DYNAMIC_GL_INTEL_parallel_arrays
 			InitDinamicGLFeature_INTEL_parallel_arrays();
 #endif /*USE_DYNAMIC_GL_INTEL_parallel_arrays*/
@@ -12543,45 +13008,21 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_AMD_sample_positions
 			InitDinamicGLFeature_AMD_sample_positions();
 #endif /*USE_DYNAMIC_GL_AMD_sample_positions*/
-#ifdef USE_DYNAMIC_GL_OML_interlace
-			InitDinamicGLFeature_OML_interlace();
-#endif /*USE_DYNAMIC_GL_OML_interlace*/
-#ifdef USE_DYNAMIC_GL_ARB_texture_border_clamp
-			InitDinamicGLFeature_ARB_texture_border_clamp();
-#endif /*USE_DYNAMIC_GL_ARB_texture_border_clamp*/
 #ifdef USE_DYNAMIC_GL_APPLE_texture_range
 			InitDinamicGLFeature_APPLE_texture_range();
 #endif /*USE_DYNAMIC_GL_APPLE_texture_range*/
-#ifdef USE_DYNAMIC_GL_ARB_shadow_ambient
-			InitDinamicGLFeature_ARB_shadow_ambient();
-#endif /*USE_DYNAMIC_GL_ARB_shadow_ambient*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_compression_s3tc
-			InitDinamicGLFeature_EXT_texture_compression_s3tc();
-#endif /*USE_DYNAMIC_GL_EXT_texture_compression_s3tc*/
 #ifdef USE_DYNAMIC_GL_EXT_secondary_color
 			InitDinamicGLFeature_EXT_secondary_color();
 #endif /*USE_DYNAMIC_GL_EXT_secondary_color*/
-#ifdef USE_DYNAMIC_GL_SGIX_pixel_tiles
-			InitDinamicGLFeature_SGIX_pixel_tiles();
-#endif /*USE_DYNAMIC_GL_SGIX_pixel_tiles*/
-#ifdef USE_DYNAMIC_GL_SGIX_scalebias_hint
-			InitDinamicGLFeature_SGIX_scalebias_hint();
-#endif /*USE_DYNAMIC_GL_SGIX_scalebias_hint*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_buffer_object
 			InitDinamicGLFeature_EXT_texture_buffer_object();
 #endif /*USE_DYNAMIC_GL_EXT_texture_buffer_object*/
-#ifdef USE_DYNAMIC_GL_APPLE_row_bytes
-			InitDinamicGLFeature_APPLE_row_bytes();
-#endif /*USE_DYNAMIC_GL_APPLE_row_bytes*/
 #ifdef USE_DYNAMIC_GL_IBM_multimode_draw_arrays
 			InitDinamicGLFeature_IBM_multimode_draw_arrays();
 #endif /*USE_DYNAMIC_GL_IBM_multimode_draw_arrays*/
 #ifdef USE_DYNAMIC_GL_ARB_draw_elements_base_vertex
 			InitDinamicGLFeature_ARB_draw_elements_base_vertex();
 #endif /*USE_DYNAMIC_GL_ARB_draw_elements_base_vertex*/
-#ifdef USE_DYNAMIC_GL_ARB_depth_clamp
-			InitDinamicGLFeature_ARB_depth_clamp();
-#endif /*USE_DYNAMIC_GL_ARB_depth_clamp*/
 #ifdef USE_DYNAMIC_GL_EXT_framebuffer_object
 			InitDinamicGLFeature_EXT_framebuffer_object();
 #endif /*USE_DYNAMIC_GL_EXT_framebuffer_object*/
@@ -12603,12 +13044,6 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_SGIS_texture_filter4
 			InitDinamicGLFeature_SGIS_texture_filter4();
 #endif /*USE_DYNAMIC_GL_SGIS_texture_filter4*/
-#ifdef USE_DYNAMIC_GL_EXT_framebuffer_multisample_blit_scaled
-			InitDinamicGLFeature_EXT_framebuffer_multisample_blit_scaled();
-#endif /*USE_DYNAMIC_GL_EXT_framebuffer_multisample_blit_scaled*/
-#ifdef USE_DYNAMIC_GL_ARB_texture_compression_bptc
-			InitDinamicGLFeature_ARB_texture_compression_bptc();
-#endif /*USE_DYNAMIC_GL_ARB_texture_compression_bptc*/
 #ifdef USE_DYNAMIC_GL_APPLE_flush_buffer_range
 			InitDinamicGLFeature_APPLE_flush_buffer_range();
 #endif /*USE_DYNAMIC_GL_APPLE_flush_buffer_range*/
@@ -12618,135 +13053,63 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_EXT_provoking_vertex
 			InitDinamicGLFeature_EXT_provoking_vertex();
 #endif /*USE_DYNAMIC_GL_EXT_provoking_vertex*/
-#ifdef USE_DYNAMIC_GL_ARB_fragment_shader
-			InitDinamicGLFeature_ARB_fragment_shader();
-#endif /*USE_DYNAMIC_GL_ARB_fragment_shader*/
 #ifdef USE_DYNAMIC_GL_GREMEDY_frame_terminator
 			InitDinamicGLFeature_GREMEDY_frame_terminator();
 #endif /*USE_DYNAMIC_GL_GREMEDY_frame_terminator*/
 #ifdef USE_DYNAMIC_GL_ARB_robustness
 			InitDinamicGLFeature_ARB_robustness();
 #endif /*USE_DYNAMIC_GL_ARB_robustness*/
-#ifdef USE_DYNAMIC_GL_ARB_shading_language_100
-			InitDinamicGLFeature_ARB_shading_language_100();
-#endif /*USE_DYNAMIC_GL_ARB_shading_language_100*/
-#ifdef USE_DYNAMIC_GL_ARB_fragment_program
-			InitDinamicGLFeature_ARB_fragment_program();
-#endif /*USE_DYNAMIC_GL_ARB_fragment_program*/
 #ifdef USE_DYNAMIC_GL_ARB_shader_objects
 			InitDinamicGLFeature_ARB_shader_objects();
 #endif /*USE_DYNAMIC_GL_ARB_shader_objects*/
 #ifdef USE_DYNAMIC_GL_SGIX_reference_plane
 			InitDinamicGLFeature_SGIX_reference_plane();
 #endif /*USE_DYNAMIC_GL_SGIX_reference_plane*/
-#ifdef USE_DYNAMIC_GL_ARB_gpu_shader5
-			InitDinamicGLFeature_ARB_gpu_shader5();
-#endif /*USE_DYNAMIC_GL_ARB_gpu_shader5*/
 #ifdef USE_DYNAMIC_GL_HP_image_transform
 			InitDinamicGLFeature_HP_image_transform();
 #endif /*USE_DYNAMIC_GL_HP_image_transform*/
 #ifdef USE_DYNAMIC_GL_EXT_direct_state_access
 			InitDinamicGLFeature_EXT_direct_state_access();
 #endif /*USE_DYNAMIC_GL_EXT_direct_state_access*/
-#ifdef USE_DYNAMIC_GL_ARB_texture_swizzle
-			InitDinamicGLFeature_ARB_texture_swizzle();
-#endif /*USE_DYNAMIC_GL_ARB_texture_swizzle*/
 #ifdef USE_DYNAMIC_GL_ARB_multisample
 			InitDinamicGLFeature_ARB_multisample();
 #endif /*USE_DYNAMIC_GL_ARB_multisample*/
-#ifdef USE_DYNAMIC_GL_SGIX_fog_scale
-			InitDinamicGLFeature_SGIX_fog_scale();
-#endif /*USE_DYNAMIC_GL_SGIX_fog_scale*/
-#ifdef USE_DYNAMIC_GL_ATI_texture_mirror_once
-			InitDinamicGLFeature_ATI_texture_mirror_once();
-#endif /*USE_DYNAMIC_GL_ATI_texture_mirror_once*/
-#ifdef USE_DYNAMIC_GL_APPLE_rgb_422
-			InitDinamicGLFeature_APPLE_rgb_422();
-#endif /*USE_DYNAMIC_GL_APPLE_rgb_422*/
-#ifdef USE_DYNAMIC_GL_EXT_shared_texture_palette
-			InitDinamicGLFeature_EXT_shared_texture_palette();
-#endif /*USE_DYNAMIC_GL_EXT_shared_texture_palette*/
-#ifdef USE_DYNAMIC_GL_ARB_texture_rg
-			InitDinamicGLFeature_ARB_texture_rg();
-#endif /*USE_DYNAMIC_GL_ARB_texture_rg*/
-#ifdef USE_DYNAMIC_GL_ARB_draw_buffers_blend
-			InitDinamicGLFeature_ARB_draw_buffers_blend();
-#endif /*USE_DYNAMIC_GL_ARB_draw_buffers_blend*/
 #ifdef USE_DYNAMIC_GL_EXT_stencil_clear_tag
 			InitDinamicGLFeature_EXT_stencil_clear_tag();
 #endif /*USE_DYNAMIC_GL_EXT_stencil_clear_tag*/
-#ifdef USE_DYNAMIC_GL_SGIS_texture_select
-			InitDinamicGLFeature_SGIS_texture_select();
-#endif /*USE_DYNAMIC_GL_SGIS_texture_select*/
+#ifdef USE_DYNAMIC_GL_ARB_draw_buffers_blend
+			InitDinamicGLFeature_ARB_draw_buffers_blend();
+#endif /*USE_DYNAMIC_GL_ARB_draw_buffers_blend*/
 #ifdef USE_DYNAMIC_GL_NV_geometry_program4
 			InitDinamicGLFeature_NV_geometry_program4();
 #endif /*USE_DYNAMIC_GL_NV_geometry_program4*/
-#ifdef USE_DYNAMIC_GL_ARB_framebuffer_sRGB
-			InitDinamicGLFeature_ARB_framebuffer_sRGB();
-#endif /*USE_DYNAMIC_GL_ARB_framebuffer_sRGB*/
-#ifdef USE_DYNAMIC_GL_IBM_rasterpos_clip
-			InitDinamicGLFeature_IBM_rasterpos_clip();
-#endif /*USE_DYNAMIC_GL_IBM_rasterpos_clip*/
-#ifdef USE_DYNAMIC_GL_MESA_ycbcr_texture
-			InitDinamicGLFeature_MESA_ycbcr_texture();
-#endif /*USE_DYNAMIC_GL_MESA_ycbcr_texture*/
 #ifdef USE_DYNAMIC_GL_ATI_vertex_streams
 			InitDinamicGLFeature_ATI_vertex_streams();
 #endif /*USE_DYNAMIC_GL_ATI_vertex_streams*/
-#ifdef USE_DYNAMIC_GL_AMD_depth_clamp_separate
-			InitDinamicGLFeature_AMD_depth_clamp_separate();
-#endif /*USE_DYNAMIC_GL_AMD_depth_clamp_separate*/
-#ifdef USE_DYNAMIC_GL_3DFX_texture_compression_FXT1
-			InitDinamicGLFeature_3DFX_texture_compression_FXT1();
-#endif /*USE_DYNAMIC_GL_3DFX_texture_compression_FXT1*/
-#ifdef USE_DYNAMIC_GL_SGIX_shadow_ambient
-			InitDinamicGLFeature_SGIX_shadow_ambient();
-#endif /*USE_DYNAMIC_GL_SGIX_shadow_ambient*/
 #ifdef USE_DYNAMIC_GL_EXT_blend_color
 			InitDinamicGLFeature_EXT_blend_color();
 #endif /*USE_DYNAMIC_GL_EXT_blend_color*/
-#ifdef USE_DYNAMIC_GL_ARB_shadow
-			InitDinamicGLFeature_ARB_shadow();
-#endif /*USE_DYNAMIC_GL_ARB_shadow*/
-#ifdef USE_DYNAMIC_GL_EXT_stencil_wrap
-			InitDinamicGLFeature_EXT_stencil_wrap();
-#endif /*USE_DYNAMIC_GL_EXT_stencil_wrap*/
-#ifdef USE_DYNAMIC_GL_NV_vertex_array_range2
-			InitDinamicGLFeature_NV_vertex_array_range2();
-#endif /*USE_DYNAMIC_GL_NV_vertex_array_range2*/
-#ifdef USE_DYNAMIC_GL_EXT_bgra
-			InitDinamicGLFeature_EXT_bgra();
-#endif /*USE_DYNAMIC_GL_EXT_bgra*/
 #ifdef USE_DYNAMIC_GL_ARB_framebuffer_object
 			InitDinamicGLFeature_ARB_framebuffer_object();
 #endif /*USE_DYNAMIC_GL_ARB_framebuffer_object*/
 #ifdef USE_DYNAMIC_GL_SGIX_async
 			InitDinamicGLFeature_SGIX_async();
 #endif /*USE_DYNAMIC_GL_SGIX_async*/
-#ifdef USE_DYNAMIC_GL_ARB_texture_cube_map_array
-			InitDinamicGLFeature_ARB_texture_cube_map_array();
-#endif /*USE_DYNAMIC_GL_ARB_texture_cube_map_array*/
 #ifdef USE_DYNAMIC_GL_NV_path_rendering
 			InitDinamicGLFeature_NV_path_rendering();
 #endif /*USE_DYNAMIC_GL_NV_path_rendering*/
-#ifdef USE_DYNAMIC_GL_SGI_texture_color_table
-			InitDinamicGLFeature_SGI_texture_color_table();
-#endif /*USE_DYNAMIC_GL_SGI_texture_color_table*/
 #ifdef USE_DYNAMIC_GL_EXT_subtexture
 			InitDinamicGLFeature_EXT_subtexture();
 #endif /*USE_DYNAMIC_GL_EXT_subtexture*/
-#ifdef USE_DYNAMIC_GL_SGIX_subsample
-			InitDinamicGLFeature_SGIX_subsample();
-#endif /*USE_DYNAMIC_GL_SGIX_subsample*/
 #ifdef USE_DYNAMIC_GL_GREMEDY_string_marker
 			InitDinamicGLFeature_GREMEDY_string_marker();
 #endif /*USE_DYNAMIC_GL_GREMEDY_string_marker*/
-#ifdef USE_DYNAMIC_GL_ARB_draw_instanced
-			InitDinamicGLFeature_ARB_draw_instanced();
-#endif /*USE_DYNAMIC_GL_ARB_draw_instanced*/
 #ifdef USE_DYNAMIC_GL_ARB_occlusion_query
 			InitDinamicGLFeature_ARB_occlusion_query();
 #endif /*USE_DYNAMIC_GL_ARB_occlusion_query*/
+#ifdef USE_DYNAMIC_GL_ARB_draw_instanced
+			InitDinamicGLFeature_ARB_draw_instanced();
+#endif /*USE_DYNAMIC_GL_ARB_draw_instanced*/
 #ifdef USE_DYNAMIC_GL_ATI_fragment_shader
 			InitDinamicGLFeature_ATI_fragment_shader();
 #endif /*USE_DYNAMIC_GL_ATI_fragment_shader*/
@@ -12756,51 +13119,24 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_NV_pixel_data_range
 			InitDinamicGLFeature_NV_pixel_data_range();
 #endif /*USE_DYNAMIC_GL_NV_pixel_data_range*/
-#ifdef USE_DYNAMIC_GL_SGI_color_matrix
-			InitDinamicGLFeature_SGI_color_matrix();
-#endif /*USE_DYNAMIC_GL_SGI_color_matrix*/
 #ifdef USE_DYNAMIC_GL_EXT_x11_sync_object
 			InitDinamicGLFeature_EXT_x11_sync_object();
 #endif /*USE_DYNAMIC_GL_EXT_x11_sync_object*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_sRGB
-			InitDinamicGLFeature_EXT_texture_sRGB();
-#endif /*USE_DYNAMIC_GL_EXT_texture_sRGB*/
-#ifdef USE_DYNAMIC_GL_NV_depth_clamp
-			InitDinamicGLFeature_NV_depth_clamp();
-#endif /*USE_DYNAMIC_GL_NV_depth_clamp*/
 #ifdef USE_DYNAMIC_GL_ARB_ES2_compatibility
 			InitDinamicGLFeature_ARB_ES2_compatibility();
 #endif /*USE_DYNAMIC_GL_ARB_ES2_compatibility*/
-#ifdef USE_DYNAMIC_GL_APPLE_aux_depth_stencil
-			InitDinamicGLFeature_APPLE_aux_depth_stencil();
-#endif /*USE_DYNAMIC_GL_APPLE_aux_depth_stencil*/
 #ifdef USE_DYNAMIC_GL_AMD_performance_monitor
 			InitDinamicGLFeature_AMD_performance_monitor();
 #endif /*USE_DYNAMIC_GL_AMD_performance_monitor*/
-#ifdef USE_DYNAMIC_GL_ARB_half_float_vertex
-			InitDinamicGLFeature_ARB_half_float_vertex();
-#endif /*USE_DYNAMIC_GL_ARB_half_float_vertex*/
 #ifdef USE_DYNAMIC_GL_NV_vertex_program
 			InitDinamicGLFeature_NV_vertex_program();
 #endif /*USE_DYNAMIC_GL_NV_vertex_program*/
 #ifdef USE_DYNAMIC_GL_MESA_window_pos
 			InitDinamicGLFeature_MESA_window_pos();
 #endif /*USE_DYNAMIC_GL_MESA_window_pos*/
-#ifdef USE_DYNAMIC_GL_EXT_texture
-			InitDinamicGLFeature_EXT_texture();
-#endif /*USE_DYNAMIC_GL_EXT_texture*/
 #ifdef USE_DYNAMIC_GL_SGIX_tag_sample_buffer
 			InitDinamicGLFeature_SGIX_tag_sample_buffer();
 #endif /*USE_DYNAMIC_GL_SGIX_tag_sample_buffer*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_env_combine
-			InitDinamicGLFeature_EXT_texture_env_combine();
-#endif /*USE_DYNAMIC_GL_EXT_texture_env_combine*/
-#ifdef USE_DYNAMIC_GL_ARB_texture_rgb10_a2ui
-			InitDinamicGLFeature_ARB_texture_rgb10_a2ui();
-#endif /*USE_DYNAMIC_GL_ARB_texture_rgb10_a2ui*/
-#ifdef USE_DYNAMIC_GL_SGIX_vertex_preclip
-			InitDinamicGLFeature_SGIX_vertex_preclip();
-#endif /*USE_DYNAMIC_GL_SGIX_vertex_preclip*/
 #ifdef USE_DYNAMIC_GL_ARB_geometry_shader4
 			InitDinamicGLFeature_ARB_geometry_shader4();
 #endif /*USE_DYNAMIC_GL_ARB_geometry_shader4*/
@@ -12816,54 +13152,27 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_SGIX_sprite
 			InitDinamicGLFeature_SGIX_sprite();
 #endif /*USE_DYNAMIC_GL_SGIX_sprite*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_snorm
-			InitDinamicGLFeature_EXT_texture_snorm();
-#endif /*USE_DYNAMIC_GL_EXT_texture_snorm*/
 #ifdef USE_DYNAMIC_GL_ARB_debug_output
 			InitDinamicGLFeature_ARB_debug_output();
 #endif /*USE_DYNAMIC_GL_ARB_debug_output*/
 #ifdef USE_DYNAMIC_GL_EXT_draw_buffers2
 			InitDinamicGLFeature_EXT_draw_buffers2();
 #endif /*USE_DYNAMIC_GL_EXT_draw_buffers2*/
-#ifdef USE_DYNAMIC_GL_ARB_texture_rectangle
-			InitDinamicGLFeature_ARB_texture_rectangle();
-#endif /*USE_DYNAMIC_GL_ARB_texture_rectangle*/
-#ifdef USE_DYNAMIC_GL_EXT_packed_pixels
-			InitDinamicGLFeature_EXT_packed_pixels();
-#endif /*USE_DYNAMIC_GL_EXT_packed_pixels*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_env_dot3
-			InitDinamicGLFeature_EXT_texture_env_dot3();
-#endif /*USE_DYNAMIC_GL_EXT_texture_env_dot3*/
 #ifdef USE_DYNAMIC_GL_NV_video_capture
 			InitDinamicGLFeature_NV_video_capture();
 #endif /*USE_DYNAMIC_GL_NV_video_capture*/
-#ifdef USE_DYNAMIC_GL_WIN_phong_shading
-			InitDinamicGLFeature_WIN_phong_shading();
-#endif /*USE_DYNAMIC_GL_WIN_phong_shading*/
 #ifdef USE_DYNAMIC_GL_ARB_map_buffer_range
 			InitDinamicGLFeature_ARB_map_buffer_range();
 #endif /*USE_DYNAMIC_GL_ARB_map_buffer_range*/
-#ifdef USE_DYNAMIC_GL_EXT_abgr
-			InitDinamicGLFeature_EXT_abgr();
-#endif /*USE_DYNAMIC_GL_EXT_abgr*/
 #ifdef USE_DYNAMIC_GL_EXT_vertex_shader
 			InitDinamicGLFeature_EXT_vertex_shader();
 #endif /*USE_DYNAMIC_GL_EXT_vertex_shader*/
-#ifdef USE_DYNAMIC_GL_NV_packed_depth_stencil
-			InitDinamicGLFeature_NV_packed_depth_stencil();
-#endif /*USE_DYNAMIC_GL_NV_packed_depth_stencil*/
 #ifdef USE_DYNAMIC_GL_SGI_color_table
 			InitDinamicGLFeature_SGI_color_table();
 #endif /*USE_DYNAMIC_GL_SGI_color_table*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_array
-			InitDinamicGLFeature_EXT_texture_array();
-#endif /*USE_DYNAMIC_GL_EXT_texture_array*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_object
 			InitDinamicGLFeature_EXT_texture_object();
 #endif /*USE_DYNAMIC_GL_EXT_texture_object*/
-#ifdef USE_DYNAMIC_GL_ATI_texture_env_combine3
-			InitDinamicGLFeature_ATI_texture_env_combine3();
-#endif /*USE_DYNAMIC_GL_ATI_texture_env_combine3*/
 #ifdef USE_DYNAMIC_GL_EXT_geometry_shader4
 			InitDinamicGLFeature_EXT_geometry_shader4();
 #endif /*USE_DYNAMIC_GL_EXT_geometry_shader4*/
@@ -12876,33 +13185,21 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_NV_parameter_buffer_object
 			InitDinamicGLFeature_NV_parameter_buffer_object();
 #endif /*USE_DYNAMIC_GL_NV_parameter_buffer_object*/
-#ifdef USE_DYNAMIC_GL_EXT_packed_depth_stencil
-			InitDinamicGLFeature_EXT_packed_depth_stencil();
-#endif /*USE_DYNAMIC_GL_EXT_packed_depth_stencil*/
 #ifdef USE_DYNAMIC_GL_VERSION_3_1
 			InitDinamicGLFeature_VERSION_3_1();
 #endif /*USE_DYNAMIC_GL_VERSION_3_1*/
-#ifdef USE_DYNAMIC_GL_PGI_vertex_hints
-			InitDinamicGLFeature_PGI_vertex_hints();
-#endif /*USE_DYNAMIC_GL_PGI_vertex_hints*/
 #ifdef USE_DYNAMIC_GL_EXT_vertex_weighting
 			InitDinamicGLFeature_EXT_vertex_weighting();
 #endif /*USE_DYNAMIC_GL_EXT_vertex_weighting*/
-#ifdef USE_DYNAMIC_GL_ARB_texture_env_dot3
-			InitDinamicGLFeature_ARB_texture_env_dot3();
-#endif /*USE_DYNAMIC_GL_ARB_texture_env_dot3*/
 #ifdef USE_DYNAMIC_GL_EXT_histogram
 			InitDinamicGLFeature_EXT_histogram();
 #endif /*USE_DYNAMIC_GL_EXT_histogram*/
-#ifdef USE_DYNAMIC_GL_ARB_vertex_type_2_10_10_10_rev
-			InitDinamicGLFeature_ARB_vertex_type_2_10_10_10_rev();
-#endif /*USE_DYNAMIC_GL_ARB_vertex_type_2_10_10_10_rev*/
 #ifdef USE_DYNAMIC_GL_SGIX_pixel_texture
 			InitDinamicGLFeature_SGIX_pixel_texture();
 #endif /*USE_DYNAMIC_GL_SGIX_pixel_texture*/
-#ifdef USE_DYNAMIC_GL_NV_fog_distance
-			InitDinamicGLFeature_NV_fog_distance();
-#endif /*USE_DYNAMIC_GL_NV_fog_distance*/
+#ifdef USE_DYNAMIC_GL_ARB_vertex_type_2_10_10_10_rev
+			InitDinamicGLFeature_ARB_vertex_type_2_10_10_10_rev();
+#endif /*USE_DYNAMIC_GL_ARB_vertex_type_2_10_10_10_rev*/
 #ifdef USE_DYNAMIC_GL_APPLE_fence
 			InitDinamicGLFeature_APPLE_fence();
 #endif /*USE_DYNAMIC_GL_APPLE_fence*/
@@ -12915,15 +13212,9 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_ARB_vertex_attrib_64bit
 			InitDinamicGLFeature_ARB_vertex_attrib_64bit();
 #endif /*USE_DYNAMIC_GL_ARB_vertex_attrib_64bit*/
-#ifdef USE_DYNAMIC_GL_SGIS_texture_border_clamp
-			InitDinamicGLFeature_SGIS_texture_border_clamp();
-#endif /*USE_DYNAMIC_GL_SGIS_texture_border_clamp*/
 #ifdef USE_DYNAMIC_GL_EXT_gpu_program_parameters
 			InitDinamicGLFeature_EXT_gpu_program_parameters();
 #endif /*USE_DYNAMIC_GL_EXT_gpu_program_parameters*/
-#ifdef USE_DYNAMIC_GL_SGIX_texture_add_env
-			InitDinamicGLFeature_SGIX_texture_add_env();
-#endif /*USE_DYNAMIC_GL_SGIX_texture_add_env*/
 #ifdef USE_DYNAMIC_GL_EXT_paletted_texture
 			InitDinamicGLFeature_EXT_paletted_texture();
 #endif /*USE_DYNAMIC_GL_EXT_paletted_texture*/
@@ -12933,15 +13224,9 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_EXT_light_texture
 			InitDinamicGLFeature_EXT_light_texture();
 #endif /*USE_DYNAMIC_GL_EXT_light_texture*/
-#ifdef USE_DYNAMIC_GL_ARB_map_buffer_alignment
-			InitDinamicGLFeature_ARB_map_buffer_alignment();
-#endif /*USE_DYNAMIC_GL_ARB_map_buffer_alignment*/
 #ifdef USE_DYNAMIC_GL_EXT_multisample
 			InitDinamicGLFeature_EXT_multisample();
 #endif /*USE_DYNAMIC_GL_EXT_multisample*/
-#ifdef USE_DYNAMIC_GL_SGIX_resample
-			InitDinamicGLFeature_SGIX_resample();
-#endif /*USE_DYNAMIC_GL_SGIX_resample*/
 #ifdef USE_DYNAMIC_GL_ARB_vertex_program
 			InitDinamicGLFeature_ARB_vertex_program();
 #endif /*USE_DYNAMIC_GL_ARB_vertex_program*/
@@ -12954,9 +13239,6 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_ATI_map_object_buffer
 			InitDinamicGLFeature_ATI_map_object_buffer();
 #endif /*USE_DYNAMIC_GL_ATI_map_object_buffer*/
-#ifdef USE_DYNAMIC_GL_MESAX_texture_stack
-			InitDinamicGLFeature_MESAX_texture_stack();
-#endif /*USE_DYNAMIC_GL_MESAX_texture_stack*/
 #ifdef USE_DYNAMIC_GL_SGIS_pixel_texture
 			InitDinamicGLFeature_SGIS_pixel_texture();
 #endif /*USE_DYNAMIC_GL_SGIS_pixel_texture*/
@@ -12978,36 +13260,27 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_NV_vdpau_interop
 			InitDinamicGLFeature_NV_vdpau_interop();
 #endif /*USE_DYNAMIC_GL_NV_vdpau_interop*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_sRGB_decode
-			InitDinamicGLFeature_EXT_texture_sRGB_decode();
-#endif /*USE_DYNAMIC_GL_EXT_texture_sRGB_decode*/
-#ifdef USE_DYNAMIC_GL_ARB_window_pos
-			InitDinamicGLFeature_ARB_window_pos();
-#endif /*USE_DYNAMIC_GL_ARB_window_pos*/
 #ifdef USE_DYNAMIC_GL_NV_transform_feedback2
 			InitDinamicGLFeature_NV_transform_feedback2();
 #endif /*USE_DYNAMIC_GL_NV_transform_feedback2*/
 #ifdef USE_DYNAMIC_GL_SGIX_polynomial_ffd
 			InitDinamicGLFeature_SGIX_polynomial_ffd();
 #endif /*USE_DYNAMIC_GL_SGIX_polynomial_ffd*/
+#ifdef USE_DYNAMIC_GL_ARB_window_pos
+			InitDinamicGLFeature_ARB_window_pos();
+#endif /*USE_DYNAMIC_GL_ARB_window_pos*/
 #ifdef USE_DYNAMIC_GL_EXT_timer_query
 			InitDinamicGLFeature_EXT_timer_query();
 #endif /*USE_DYNAMIC_GL_EXT_timer_query*/
-#ifdef USE_DYNAMIC_GL_SGIX_ir_instrument1
-			InitDinamicGLFeature_SGIX_ir_instrument1();
-#endif /*USE_DYNAMIC_GL_SGIX_ir_instrument1*/
-#ifdef USE_DYNAMIC_GL_NV_texture_barrier
-			InitDinamicGLFeature_NV_texture_barrier();
-#endif /*USE_DYNAMIC_GL_NV_texture_barrier*/
 #ifdef USE_DYNAMIC_GL_SGIX_igloo_interface
 			InitDinamicGLFeature_SGIX_igloo_interface();
 #endif /*USE_DYNAMIC_GL_SGIX_igloo_interface*/
+#ifdef USE_DYNAMIC_GL_NV_texture_barrier
+			InitDinamicGLFeature_NV_texture_barrier();
+#endif /*USE_DYNAMIC_GL_NV_texture_barrier*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_multisample
 			InitDinamicGLFeature_ARB_texture_multisample();
 #endif /*USE_DYNAMIC_GL_ARB_texture_multisample*/
-#ifdef USE_DYNAMIC_GL_AMD_blend_minmax_factor
-			InitDinamicGLFeature_AMD_blend_minmax_factor();
-#endif /*USE_DYNAMIC_GL_AMD_blend_minmax_factor*/
 #ifdef USE_DYNAMIC_GL_NV_fence
 			InitDinamicGLFeature_NV_fence();
 #endif /*USE_DYNAMIC_GL_NV_fence*/
@@ -13023,84 +13296,39 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_ARB_uniform_buffer_object
 			InitDinamicGLFeature_ARB_uniform_buffer_object();
 #endif /*USE_DYNAMIC_GL_ARB_uniform_buffer_object*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_compression_latc
-			InitDinamicGLFeature_EXT_texture_compression_latc();
-#endif /*USE_DYNAMIC_GL_EXT_texture_compression_latc*/
 #ifdef USE_DYNAMIC_GL_ARB_instanced_arrays
 			InitDinamicGLFeature_ARB_instanced_arrays();
 #endif /*USE_DYNAMIC_GL_ARB_instanced_arrays*/
 #ifdef USE_DYNAMIC_GL_EXT_transform_feedback
 			InitDinamicGLFeature_EXT_transform_feedback();
 #endif /*USE_DYNAMIC_GL_EXT_transform_feedback*/
-#ifdef USE_DYNAMIC_GL_INGR_color_clamp
-			InitDinamicGLFeature_INGR_color_clamp();
-#endif /*USE_DYNAMIC_GL_INGR_color_clamp*/
-#ifdef USE_DYNAMIC_GL_ARB_depth_buffer_float
-			InitDinamicGLFeature_ARB_depth_buffer_float();
-#endif /*USE_DYNAMIC_GL_ARB_depth_buffer_float*/
-#ifdef USE_DYNAMIC_GL_NV_texture_shader3
-			InitDinamicGLFeature_NV_texture_shader3();
-#endif /*USE_DYNAMIC_GL_NV_texture_shader3*/
-#ifdef USE_DYNAMIC_GL_ARB_imaging_DEPRECATED
-			InitDinamicGLFeature_ARB_imaging_DEPRECATED();
-#endif /*USE_DYNAMIC_GL_ARB_imaging_DEPRECATED*/
-#ifdef USE_DYNAMIC_GL_ARB_texture_compression_rgtc
-			InitDinamicGLFeature_ARB_texture_compression_rgtc();
-#endif /*USE_DYNAMIC_GL_ARB_texture_compression_rgtc*/
 #ifdef USE_DYNAMIC_GL_EXT_framebuffer_blit
 			InitDinamicGLFeature_EXT_framebuffer_blit();
 #endif /*USE_DYNAMIC_GL_EXT_framebuffer_blit*/
-#ifdef USE_DYNAMIC_GL_OML_resample
-			InitDinamicGLFeature_OML_resample();
-#endif /*USE_DYNAMIC_GL_OML_resample*/
-#ifdef USE_DYNAMIC_GL_EXT_cmyka
-			InitDinamicGLFeature_EXT_cmyka();
-#endif /*USE_DYNAMIC_GL_EXT_cmyka*/
-#ifdef USE_DYNAMIC_GL_SUN_convolution_border_modes
-			InitDinamicGLFeature_SUN_convolution_border_modes();
-#endif /*USE_DYNAMIC_GL_SUN_convolution_border_modes*/
 #ifdef USE_DYNAMIC_GL_EXT_draw_instanced
 			InitDinamicGLFeature_EXT_draw_instanced();
 #endif /*USE_DYNAMIC_GL_EXT_draw_instanced*/
 #ifdef USE_DYNAMIC_GL_SGIS_detail_texture
 			InitDinamicGLFeature_SGIS_detail_texture();
 #endif /*USE_DYNAMIC_GL_SGIS_detail_texture*/
-#ifdef USE_DYNAMIC_GL_AMD_pinned_memory
-			InitDinamicGLFeature_AMD_pinned_memory();
-#endif /*USE_DYNAMIC_GL_AMD_pinned_memory*/
 #ifdef USE_DYNAMIC_GL_MESA_resize_buffers
 			InitDinamicGLFeature_MESA_resize_buffers();
 #endif /*USE_DYNAMIC_GL_MESA_resize_buffers*/
 #ifdef USE_DYNAMIC_GL_SUN_global_alpha
 			InitDinamicGLFeature_SUN_global_alpha();
 #endif /*USE_DYNAMIC_GL_SUN_global_alpha*/
-#ifdef USE_DYNAMIC_GL_ARB_depth_texture
-			InitDinamicGLFeature_ARB_depth_texture();
-#endif /*USE_DYNAMIC_GL_ARB_depth_texture*/
 #ifdef USE_DYNAMIC_GL_AMD_debug_output
 			InitDinamicGLFeature_AMD_debug_output();
 #endif /*USE_DYNAMIC_GL_AMD_debug_output*/
-#ifdef USE_DYNAMIC_GL_HP_convolution_border_modes
-			InitDinamicGLFeature_HP_convolution_border_modes();
-#endif /*USE_DYNAMIC_GL_HP_convolution_border_modes*/
 #ifdef USE_DYNAMIC_GL_APPLE_vertex_program_evaluators
 			InitDinamicGLFeature_APPLE_vertex_program_evaluators();
 #endif /*USE_DYNAMIC_GL_APPLE_vertex_program_evaluators*/
 #ifdef USE_DYNAMIC_GL_NV_fragment_program
 			InitDinamicGLFeature_NV_fragment_program();
 #endif /*USE_DYNAMIC_GL_NV_fragment_program*/
-#ifdef USE_DYNAMIC_GL_VERSION_1_5_DEPRECATED
-			InitDinamicGLFeature_VERSION_1_5_DEPRECATED();
-#endif /*USE_DYNAMIC_GL_VERSION_1_5_DEPRECATED*/
 #ifdef USE_DYNAMIC_GL_NV_copy_image
 			InitDinamicGLFeature_NV_copy_image();
 #endif /*USE_DYNAMIC_GL_NV_copy_image*/
-#ifdef USE_DYNAMIC_GL_NV_shader_buffer_store
-			InitDinamicGLFeature_NV_shader_buffer_store();
-#endif /*USE_DYNAMIC_GL_NV_shader_buffer_store*/
-#ifdef USE_DYNAMIC_GL_NV_texture_env_combine4
-			InitDinamicGLFeature_NV_texture_env_combine4();
-#endif /*USE_DYNAMIC_GL_NV_texture_env_combine4*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_buffer_object
 			InitDinamicGLFeature_ARB_texture_buffer_object();
 #endif /*USE_DYNAMIC_GL_ARB_texture_buffer_object*/
@@ -13116,27 +13344,15 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_EXT_compiled_vertex_array
 			InitDinamicGLFeature_EXT_compiled_vertex_array();
 #endif /*USE_DYNAMIC_GL_EXT_compiled_vertex_array*/
-#ifdef USE_DYNAMIC_GL_IBM_texture_mirrored_repeat
-			InitDinamicGLFeature_IBM_texture_mirrored_repeat();
-#endif /*USE_DYNAMIC_GL_IBM_texture_mirrored_repeat*/
-#ifdef USE_DYNAMIC_GL_OML_subsample
-			InitDinamicGLFeature_OML_subsample();
-#endif /*USE_DYNAMIC_GL_OML_subsample*/
-#ifdef USE_DYNAMIC_GL_NV_texgen_reflection
-			InitDinamicGLFeature_NV_texgen_reflection();
-#endif /*USE_DYNAMIC_GL_NV_texgen_reflection*/
 #ifdef USE_DYNAMIC_GL_AMD_name_gen_delete
 			InitDinamicGLFeature_AMD_name_gen_delete();
 #endif /*USE_DYNAMIC_GL_AMD_name_gen_delete*/
-#ifdef USE_DYNAMIC_GL_SGIX_list_priority
-			InitDinamicGLFeature_SGIX_list_priority();
-#endif /*USE_DYNAMIC_GL_SGIX_list_priority*/
 #ifdef USE_DYNAMIC_GL_NV_occlusion_query
 			InitDinamicGLFeature_NV_occlusion_query();
 #endif /*USE_DYNAMIC_GL_NV_occlusion_query*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_shared_exponent
-			InitDinamicGLFeature_EXT_texture_shared_exponent();
-#endif /*USE_DYNAMIC_GL_EXT_texture_shared_exponent*/
+#ifdef USE_DYNAMIC_GL_SGIX_list_priority
+			InitDinamicGLFeature_SGIX_list_priority();
+#endif /*USE_DYNAMIC_GL_SGIX_list_priority*/
 #ifdef USE_DYNAMIC_GL_VERSION_1_3
 			InitDinamicGLFeature_VERSION_1_3();
 #endif /*USE_DYNAMIC_GL_VERSION_1_3*/
@@ -13146,90 +13362,42 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_NV_half_float
 			InitDinamicGLFeature_NV_half_float();
 #endif /*USE_DYNAMIC_GL_NV_half_float*/
-#ifdef USE_DYNAMIC_GL_APPLE_float_pixels
-			InitDinamicGLFeature_APPLE_float_pixels();
-#endif /*USE_DYNAMIC_GL_APPLE_float_pixels*/
 #ifdef USE_DYNAMIC_GL_EXT_gpu_shader4
 			InitDinamicGLFeature_EXT_gpu_shader4();
 #endif /*USE_DYNAMIC_GL_EXT_gpu_shader4*/
 #ifdef USE_DYNAMIC_GL_NV_gpu_shader5
 			InitDinamicGLFeature_NV_gpu_shader5();
 #endif /*USE_DYNAMIC_GL_NV_gpu_shader5*/
-#ifdef USE_DYNAMIC_GL_NV_light_max_exponent
-			InitDinamicGLFeature_NV_light_max_exponent();
-#endif /*USE_DYNAMIC_GL_NV_light_max_exponent*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_swizzle
-			InitDinamicGLFeature_EXT_texture_swizzle();
-#endif /*USE_DYNAMIC_GL_EXT_texture_swizzle*/
-#ifdef USE_DYNAMIC_GL_INGR_interlace_read
-			InitDinamicGLFeature_INGR_interlace_read();
-#endif /*USE_DYNAMIC_GL_INGR_interlace_read*/
 #ifdef USE_DYNAMIC_GL_ATI_pn_triangles
 			InitDinamicGLFeature_ATI_pn_triangles();
 #endif /*USE_DYNAMIC_GL_ATI_pn_triangles*/
 #ifdef USE_DYNAMIC_GL_AMD_draw_buffers_blend
 			InitDinamicGLFeature_AMD_draw_buffers_blend();
 #endif /*USE_DYNAMIC_GL_AMD_draw_buffers_blend*/
-#ifdef USE_DYNAMIC_GL_APPLE_ycbcr_422
-			InitDinamicGLFeature_APPLE_ycbcr_422();
-#endif /*USE_DYNAMIC_GL_APPLE_ycbcr_422*/
 #ifdef USE_DYNAMIC_GL_3DFX_tbuffer
 			InitDinamicGLFeature_3DFX_tbuffer();
 #endif /*USE_DYNAMIC_GL_3DFX_tbuffer*/
-#ifdef USE_DYNAMIC_GL_NV_texture_expand_normal
-			InitDinamicGLFeature_NV_texture_expand_normal();
-#endif /*USE_DYNAMIC_GL_NV_texture_expand_normal*/
-#ifdef USE_DYNAMIC_GL_ARB_texture_float
-			InitDinamicGLFeature_ARB_texture_float();
-#endif /*USE_DYNAMIC_GL_ARB_texture_float*/
-#ifdef USE_DYNAMIC_GL_REND_screen_coordinates
-			InitDinamicGLFeature_REND_screen_coordinates();
-#endif /*USE_DYNAMIC_GL_REND_screen_coordinates*/
 #ifdef USE_DYNAMIC_GL_NV_vertex_buffer_unified_memory
 			InitDinamicGLFeature_NV_vertex_buffer_unified_memory();
 #endif /*USE_DYNAMIC_GL_NV_vertex_buffer_unified_memory*/
-#ifdef USE_DYNAMIC_GL_EXT_framebuffer_sRGB
-			InitDinamicGLFeature_EXT_framebuffer_sRGB();
-#endif /*USE_DYNAMIC_GL_EXT_framebuffer_sRGB*/
 #ifdef USE_DYNAMIC_GL_AMD_stencil_operation_extended
 			InitDinamicGLFeature_AMD_stencil_operation_extended();
 #endif /*USE_DYNAMIC_GL_AMD_stencil_operation_extended*/
-#ifdef USE_DYNAMIC_GL_SGIX_texture_multi_buffer
-			InitDinamicGLFeature_SGIX_texture_multi_buffer();
-#endif /*USE_DYNAMIC_GL_SGIX_texture_multi_buffer*/
-#ifdef USE_DYNAMIC_GL_ARB_imaging
-			InitDinamicGLFeature_ARB_imaging();
-#endif /*USE_DYNAMIC_GL_ARB_imaging*/
 #ifdef USE_DYNAMIC_GL_EXT_index_func
 			InitDinamicGLFeature_EXT_index_func();
 #endif /*USE_DYNAMIC_GL_EXT_index_func*/
 #ifdef USE_DYNAMIC_GL_NV_gpu_program5
 			InitDinamicGLFeature_NV_gpu_program5();
 #endif /*USE_DYNAMIC_GL_NV_gpu_program5*/
-#ifdef USE_DYNAMIC_GL_NV_multisample_filter_hint
-			InitDinamicGLFeature_NV_multisample_filter_hint();
-#endif /*USE_DYNAMIC_GL_NV_multisample_filter_hint*/
 #ifdef USE_DYNAMIC_GL_SGIX_framezoom
 			InitDinamicGLFeature_SGIX_framezoom();
 #endif /*USE_DYNAMIC_GL_SGIX_framezoom*/
 #ifdef USE_DYNAMIC_GL_SUNX_constant_data
 			InitDinamicGLFeature_SUNX_constant_data();
 #endif /*USE_DYNAMIC_GL_SUNX_constant_data*/
-#ifdef USE_DYNAMIC_GL_HP_occlusion_test
-			InitDinamicGLFeature_HP_occlusion_test();
-#endif /*USE_DYNAMIC_GL_HP_occlusion_test*/
-#ifdef USE_DYNAMIC_GL_SGIX_interlace
-			InitDinamicGLFeature_SGIX_interlace();
-#endif /*USE_DYNAMIC_GL_SGIX_interlace*/
-#ifdef USE_DYNAMIC_GL_ATI_pixel_format_float
-			InitDinamicGLFeature_ATI_pixel_format_float();
-#endif /*USE_DYNAMIC_GL_ATI_pixel_format_float*/
 #ifdef USE_DYNAMIC_GL_NV_gpu_program4
 			InitDinamicGLFeature_NV_gpu_program4();
 #endif /*USE_DYNAMIC_GL_NV_gpu_program4*/
-#ifdef USE_DYNAMIC_GL_ARB_point_sprite
-			InitDinamicGLFeature_ARB_point_sprite();
-#endif /*USE_DYNAMIC_GL_ARB_point_sprite*/
 #ifdef USE_DYNAMIC_GL_ARB_transform_feedback3
 			InitDinamicGLFeature_ARB_transform_feedback3();
 #endif /*USE_DYNAMIC_GL_ARB_transform_feedback3*/
@@ -13245,75 +13413,30 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_ARB_timer_query
 			InitDinamicGLFeature_ARB_timer_query();
 #endif /*USE_DYNAMIC_GL_ARB_timer_query*/
-#ifdef USE_DYNAMIC_GL_NV_texgen_emboss
-			InitDinamicGLFeature_NV_texgen_emboss();
-#endif /*USE_DYNAMIC_GL_NV_texgen_emboss*/
-#ifdef USE_DYNAMIC_GL_EXT_separate_specular_color
-			InitDinamicGLFeature_EXT_separate_specular_color();
-#endif /*USE_DYNAMIC_GL_EXT_separate_specular_color*/
-#ifdef USE_DYNAMIC_GL_ARB_framebuffer_object_DEPRECATED
-			InitDinamicGLFeature_ARB_framebuffer_object_DEPRECATED();
-#endif /*USE_DYNAMIC_GL_ARB_framebuffer_object_DEPRECATED*/
 #ifdef USE_DYNAMIC_GL_ARB_shader_atomic_counters
 			InitDinamicGLFeature_ARB_shader_atomic_counters();
 #endif /*USE_DYNAMIC_GL_ARB_shader_atomic_counters*/
-#ifdef USE_DYNAMIC_GL_EXT_blend_subtract
-			InitDinamicGLFeature_EXT_blend_subtract();
-#endif /*USE_DYNAMIC_GL_EXT_blend_subtract*/
-#ifdef USE_DYNAMIC_GL_SGIX_texture_scale_bias
-			InitDinamicGLFeature_SGIX_texture_scale_bias();
-#endif /*USE_DYNAMIC_GL_SGIX_texture_scale_bias*/
 #ifdef USE_DYNAMIC_GL_APPLE_vertex_array_object
 			InitDinamicGLFeature_APPLE_vertex_array_object();
 #endif /*USE_DYNAMIC_GL_APPLE_vertex_array_object*/
 #ifdef USE_DYNAMIC_GL_EXT_copy_texture
 			InitDinamicGLFeature_EXT_copy_texture();
 #endif /*USE_DYNAMIC_GL_EXT_copy_texture*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_cube_map
-			InitDinamicGLFeature_EXT_texture_cube_map();
-#endif /*USE_DYNAMIC_GL_EXT_texture_cube_map*/
 #ifdef USE_DYNAMIC_GL_EXT_coordinate_frame
 			InitDinamicGLFeature_EXT_coordinate_frame();
 #endif /*USE_DYNAMIC_GL_EXT_coordinate_frame*/
-#ifdef USE_DYNAMIC_GL_3DFX_multisample
-			InitDinamicGLFeature_3DFX_multisample();
-#endif /*USE_DYNAMIC_GL_3DFX_multisample*/
-#ifdef USE_DYNAMIC_GL_SGIX_ycrcb
-			InitDinamicGLFeature_SGIX_ycrcb();
-#endif /*USE_DYNAMIC_GL_SGIX_ycrcb*/
-#ifdef USE_DYNAMIC_GL_SGIX_async_histogram
-			InitDinamicGLFeature_SGIX_async_histogram();
-#endif /*USE_DYNAMIC_GL_SGIX_async_histogram*/
-#ifdef USE_DYNAMIC_GL_ARB_compressed_texture_pixel_storage
-			InitDinamicGLFeature_ARB_compressed_texture_pixel_storage();
-#endif /*USE_DYNAMIC_GL_ARB_compressed_texture_pixel_storage*/
-#ifdef USE_DYNAMIC_GL_SGIX_depth_texture
-			InitDinamicGLFeature_SGIX_depth_texture();
-#endif /*USE_DYNAMIC_GL_SGIX_depth_texture*/
 #ifdef USE_DYNAMIC_GL_EXT_stencil_two_side
 			InitDinamicGLFeature_EXT_stencil_two_side();
 #endif /*USE_DYNAMIC_GL_EXT_stencil_two_side*/
-#ifdef USE_DYNAMIC_GL_MESA_pack_invert
-			InitDinamicGLFeature_MESA_pack_invert();
-#endif /*USE_DYNAMIC_GL_MESA_pack_invert*/
 #ifdef USE_DYNAMIC_GL_ARB_get_program_binary
 			InitDinamicGLFeature_ARB_get_program_binary();
 #endif /*USE_DYNAMIC_GL_ARB_get_program_binary*/
 #ifdef USE_DYNAMIC_GL_EXT_framebuffer_multisample
 			InitDinamicGLFeature_EXT_framebuffer_multisample();
 #endif /*USE_DYNAMIC_GL_EXT_framebuffer_multisample*/
-#ifdef USE_DYNAMIC_GL_ARB_seamless_cube_map
-			InitDinamicGLFeature_ARB_seamless_cube_map();
-#endif /*USE_DYNAMIC_GL_ARB_seamless_cube_map*/
-#ifdef USE_DYNAMIC_GL_SGIX_texture_lod_bias
-			InitDinamicGLFeature_SGIX_texture_lod_bias();
-#endif /*USE_DYNAMIC_GL_SGIX_texture_lod_bias*/
 #ifdef USE_DYNAMIC_GL_AMD_vertex_shader_tesselator
 			InitDinamicGLFeature_AMD_vertex_shader_tesselator();
 #endif /*USE_DYNAMIC_GL_AMD_vertex_shader_tesselator*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_filter_anisotropic
-			InitDinamicGLFeature_EXT_texture_filter_anisotropic();
-#endif /*USE_DYNAMIC_GL_EXT_texture_filter_anisotropic*/
 #ifdef USE_DYNAMIC_GL_VERSION_1_3_DEPRECATED
 			InitDinamicGLFeature_VERSION_1_3_DEPRECATED();
 #endif /*USE_DYNAMIC_GL_VERSION_1_3_DEPRECATED*/
@@ -13323,12 +13446,6 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_ARB_matrix_palette
 			InitDinamicGLFeature_ARB_matrix_palette();
 #endif /*USE_DYNAMIC_GL_ARB_matrix_palette*/
-#ifdef USE_DYNAMIC_GL_NV_texture_shader2
-			InitDinamicGLFeature_NV_texture_shader2();
-#endif /*USE_DYNAMIC_GL_NV_texture_shader2*/
-#ifdef USE_DYNAMIC_GL_ARB_texture_env_combine
-			InitDinamicGLFeature_ARB_texture_env_combine();
-#endif /*USE_DYNAMIC_GL_ARB_texture_env_combine*/
 #ifdef USE_DYNAMIC_GL_ATI_element_array
 			InitDinamicGLFeature_ATI_element_array();
 #endif /*USE_DYNAMIC_GL_ATI_element_array*/
@@ -13350,63 +13467,30 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_ARB_vertex_blend
 			InitDinamicGLFeature_ARB_vertex_blend();
 #endif /*USE_DYNAMIC_GL_ARB_vertex_blend*/
-#ifdef USE_DYNAMIC_GL_WIN_specular_fog
-			InitDinamicGLFeature_WIN_specular_fog();
-#endif /*USE_DYNAMIC_GL_WIN_specular_fog*/
 #ifdef USE_DYNAMIC_GL_VERSION_1_2_DEPRECATED
 			InitDinamicGLFeature_VERSION_1_2_DEPRECATED();
 #endif /*USE_DYNAMIC_GL_VERSION_1_2_DEPRECATED*/
-#ifdef USE_DYNAMIC_GL_NV_multisample_coverage
-			InitDinamicGLFeature_NV_multisample_coverage();
-#endif /*USE_DYNAMIC_GL_NV_multisample_coverage*/
-#ifdef USE_DYNAMIC_GL_SGIX_impact_pixel_texture
-			InitDinamicGLFeature_SGIX_impact_pixel_texture();
-#endif /*USE_DYNAMIC_GL_SGIX_impact_pixel_texture*/
 #ifdef USE_DYNAMIC_GL_EXT_depth_bounds_test
 			InitDinamicGLFeature_EXT_depth_bounds_test();
 #endif /*USE_DYNAMIC_GL_EXT_depth_bounds_test*/
 #ifdef USE_DYNAMIC_GL_ARB_shader_image_load_store
 			InitDinamicGLFeature_ARB_shader_image_load_store();
 #endif /*USE_DYNAMIC_GL_ARB_shader_image_load_store*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_mirror_clamp
-			InitDinamicGLFeature_EXT_texture_mirror_clamp();
-#endif /*USE_DYNAMIC_GL_EXT_texture_mirror_clamp*/
-#ifdef USE_DYNAMIC_GL_SGIS_texture_lod
-			InitDinamicGLFeature_SGIS_texture_lod();
-#endif /*USE_DYNAMIC_GL_SGIS_texture_lod*/
 #ifdef USE_DYNAMIC_GL_VERSION_1_2
 			InitDinamicGLFeature_VERSION_1_2();
 #endif /*USE_DYNAMIC_GL_VERSION_1_2*/
-#ifdef USE_DYNAMIC_GL_SGIS_texture_edge_clamp
-			InitDinamicGLFeature_SGIS_texture_edge_clamp();
-#endif /*USE_DYNAMIC_GL_SGIS_texture_edge_clamp*/
-#ifdef USE_DYNAMIC_GL_SUN_slice_accum
-			InitDinamicGLFeature_SUN_slice_accum();
-#endif /*USE_DYNAMIC_GL_SUN_slice_accum*/
 #ifdef USE_DYNAMIC_GL_APPLE_element_array
 			InitDinamicGLFeature_APPLE_element_array();
 #endif /*USE_DYNAMIC_GL_APPLE_element_array*/
 #ifdef USE_DYNAMIC_GL_ARB_sync
 			InitDinamicGLFeature_ARB_sync();
 #endif /*USE_DYNAMIC_GL_ARB_sync*/
-#ifdef USE_DYNAMIC_GL_NV_tessellation_program5
-			InitDinamicGLFeature_NV_tessellation_program5();
-#endif /*USE_DYNAMIC_GL_NV_tessellation_program5*/
 #ifdef USE_DYNAMIC_GL_ARB_separate_shader_objects
 			InitDinamicGLFeature_ARB_separate_shader_objects();
 #endif /*USE_DYNAMIC_GL_ARB_separate_shader_objects*/
-#ifdef USE_DYNAMIC_GL_ATI_texture_float
-			InitDinamicGLFeature_ATI_texture_float();
-#endif /*USE_DYNAMIC_GL_ATI_texture_float*/
 #ifdef USE_DYNAMIC_GL_EXT_blend_minmax
 			InitDinamicGLFeature_EXT_blend_minmax();
 #endif /*USE_DYNAMIC_GL_EXT_blend_minmax*/
-#ifdef USE_DYNAMIC_GL_NV_float_buffer
-			InitDinamicGLFeature_NV_float_buffer();
-#endif /*USE_DYNAMIC_GL_NV_float_buffer*/
-#ifdef USE_DYNAMIC_GL_SGIX_calligraphic_fragment
-			InitDinamicGLFeature_SGIX_calligraphic_fragment();
-#endif /*USE_DYNAMIC_GL_SGIX_calligraphic_fragment*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_storage
 			InitDinamicGLFeature_ARB_texture_storage();
 #endif /*USE_DYNAMIC_GL_ARB_texture_storage*/
@@ -13419,18 +13503,6 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_SGIX_fragment_lighting
 			InitDinamicGLFeature_SGIX_fragment_lighting();
 #endif /*USE_DYNAMIC_GL_SGIX_fragment_lighting*/
-#ifdef USE_DYNAMIC_GL_SGIX_ycrcba
-			InitDinamicGLFeature_SGIX_ycrcba();
-#endif /*USE_DYNAMIC_GL_SGIX_ycrcba*/
-#ifdef USE_DYNAMIC_GL_SGIX_texture_coordinate_clamp
-			InitDinamicGLFeature_SGIX_texture_coordinate_clamp();
-#endif /*USE_DYNAMIC_GL_SGIX_texture_coordinate_clamp*/
-#ifdef USE_DYNAMIC_GL_S3_s3tc
-			InitDinamicGLFeature_S3_s3tc();
-#endif /*USE_DYNAMIC_GL_S3_s3tc*/
-#ifdef USE_DYNAMIC_GL_EXT_422_pixels
-			InitDinamicGLFeature_EXT_422_pixels();
-#endif /*USE_DYNAMIC_GL_EXT_422_pixels*/
 #ifdef USE_DYNAMIC_GL_ARB_shader_subroutine
 			InitDinamicGLFeature_ARB_shader_subroutine();
 #endif /*USE_DYNAMIC_GL_ARB_shader_subroutine*/
@@ -13440,48 +13512,18 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_SUN_triangle_list
 			InitDinamicGLFeature_SUN_triangle_list();
 #endif /*USE_DYNAMIC_GL_SUN_triangle_list*/
-#ifdef USE_DYNAMIC_GL_SGIX_clipmap
-			InitDinamicGLFeature_SGIX_clipmap();
-#endif /*USE_DYNAMIC_GL_SGIX_clipmap*/
 #ifdef USE_DYNAMIC_GL_NV_register_combiners2
 			InitDinamicGLFeature_NV_register_combiners2();
 #endif /*USE_DYNAMIC_GL_NV_register_combiners2*/
-#ifdef USE_DYNAMIC_GL_VERSION_2_1_DEPRECATED
-			InitDinamicGLFeature_VERSION_2_1_DEPRECATED();
-#endif /*USE_DYNAMIC_GL_VERSION_2_1_DEPRECATED*/
-#ifdef USE_DYNAMIC_GL_EXT_clip_volume_hint
-			InitDinamicGLFeature_EXT_clip_volume_hint();
-#endif /*USE_DYNAMIC_GL_EXT_clip_volume_hint*/
 #ifdef USE_DYNAMIC_GL_SGIS_point_parameters
 			InitDinamicGLFeature_SGIS_point_parameters();
 #endif /*USE_DYNAMIC_GL_SGIS_point_parameters*/
-#ifdef USE_DYNAMIC_GL_APPLE_transform_hint
-			InitDinamicGLFeature_APPLE_transform_hint();
-#endif /*USE_DYNAMIC_GL_APPLE_transform_hint*/
 #ifdef USE_DYNAMIC_GL_ARB_viewport_array
 			InitDinamicGLFeature_ARB_viewport_array();
 #endif /*USE_DYNAMIC_GL_ARB_viewport_array*/
-#ifdef USE_DYNAMIC_GL_NV_fragment_program2
-			InitDinamicGLFeature_NV_fragment_program2();
-#endif /*USE_DYNAMIC_GL_NV_fragment_program2*/
-#ifdef USE_DYNAMIC_GL_NV_texture_rectangle
-			InitDinamicGLFeature_NV_texture_rectangle();
-#endif /*USE_DYNAMIC_GL_NV_texture_rectangle*/
-#ifdef USE_DYNAMIC_GL_SGI_depth_pass_instrument
-			InitDinamicGLFeature_SGI_depth_pass_instrument();
-#endif /*USE_DYNAMIC_GL_SGI_depth_pass_instrument*/
-#ifdef USE_DYNAMIC_GL_EXT_rescale_normal
-			InitDinamicGLFeature_EXT_rescale_normal();
-#endif /*USE_DYNAMIC_GL_EXT_rescale_normal*/
-#ifdef USE_DYNAMIC_GL_ARB_pixel_buffer_object
-			InitDinamicGLFeature_ARB_pixel_buffer_object();
-#endif /*USE_DYNAMIC_GL_ARB_pixel_buffer_object*/
 #ifdef USE_DYNAMIC_GL_EXT_texture3D
 			InitDinamicGLFeature_EXT_texture3D();
 #endif /*USE_DYNAMIC_GL_EXT_texture3D*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_lod_bias
-			InitDinamicGLFeature_EXT_texture_lod_bias();
-#endif /*USE_DYNAMIC_GL_EXT_texture_lod_bias*/
 #ifdef USE_DYNAMIC_GL_NV_explicit_multisample
 			InitDinamicGLFeature_NV_explicit_multisample();
 #endif /*USE_DYNAMIC_GL_NV_explicit_multisample*/
@@ -13497,9 +13539,6 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_NV_conditional_render
 			InitDinamicGLFeature_NV_conditional_render();
 #endif /*USE_DYNAMIC_GL_NV_conditional_render*/
-#ifdef USE_DYNAMIC_GL_SGIS_point_line_texgen
-			InitDinamicGLFeature_SGIS_point_line_texgen();
-#endif /*USE_DYNAMIC_GL_SGIS_point_line_texgen*/
 #ifdef USE_DYNAMIC_GL_ARB_blend_func_extended
 			InitDinamicGLFeature_ARB_blend_func_extended();
 #endif /*USE_DYNAMIC_GL_ARB_blend_func_extended*/
@@ -13515,87 +13554,48 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_VERSION_1_4
 			InitDinamicGLFeature_VERSION_1_4();
 #endif /*USE_DYNAMIC_GL_VERSION_1_4*/
-#ifdef USE_DYNAMIC_GL_APPLE_specular_vector
-			InitDinamicGLFeature_APPLE_specular_vector();
-#endif /*USE_DYNAMIC_GL_APPLE_specular_vector*/
 #ifdef USE_DYNAMIC_GL_EXT_shader_image_load_store
 			InitDinamicGLFeature_EXT_shader_image_load_store();
 #endif /*USE_DYNAMIC_GL_EXT_shader_image_load_store*/
-#ifdef USE_DYNAMIC_GL_NV_copy_depth_to_color
-			InitDinamicGLFeature_NV_copy_depth_to_color();
-#endif /*USE_DYNAMIC_GL_NV_copy_depth_to_color*/
 #ifdef USE_DYNAMIC_GL_ARB_cl_event
 			InitDinamicGLFeature_ARB_cl_event();
 #endif /*USE_DYNAMIC_GL_ARB_cl_event*/
-#ifdef USE_DYNAMIC_GL_ARB_texture_cube_map
-			InitDinamicGLFeature_ARB_texture_cube_map();
-#endif /*USE_DYNAMIC_GL_ARB_texture_cube_map*/
 #ifdef USE_DYNAMIC_GL_NV_vertex_array_range
 			InitDinamicGLFeature_NV_vertex_array_range();
 #endif /*USE_DYNAMIC_GL_NV_vertex_array_range*/
-#ifdef USE_DYNAMIC_GL_VERSION_2_0_DEPRECATED
-			InitDinamicGLFeature_VERSION_2_0_DEPRECATED();
-#endif /*USE_DYNAMIC_GL_VERSION_2_0_DEPRECATED*/
 #ifdef USE_DYNAMIC_GL_EXT_cull_vertex
 			InitDinamicGLFeature_EXT_cull_vertex();
 #endif /*USE_DYNAMIC_GL_EXT_cull_vertex*/
-#ifdef USE_DYNAMIC_GL_FfdMaskSGIX
-			InitDinamicGLFeature_FfdMaskSGIX();
-#endif /*USE_DYNAMIC_GL_FfdMaskSGIX*/
-#ifdef USE_DYNAMIC_GL_OES_read_format
-			InitDinamicGLFeature_OES_read_format();
-#endif /*USE_DYNAMIC_GL_OES_read_format*/
 #ifdef USE_DYNAMIC_GL_INGR_blend_func_separate
 			InitDinamicGLFeature_INGR_blend_func_separate();
 #endif /*USE_DYNAMIC_GL_INGR_blend_func_separate*/
 #ifdef USE_DYNAMIC_GL_ARB_draw_indirect
 			InitDinamicGLFeature_ARB_draw_indirect();
 #endif /*USE_DYNAMIC_GL_ARB_draw_indirect*/
-#ifdef USE_DYNAMIC_GL_APPLE_client_storage
-			InitDinamicGLFeature_APPLE_client_storage();
-#endif /*USE_DYNAMIC_GL_APPLE_client_storage*/
-#ifdef USE_DYNAMIC_GL_ATI_envmap_bumpmap
-			InitDinamicGLFeature_ATI_envmap_bumpmap();
-#endif /*USE_DYNAMIC_GL_ATI_envmap_bumpmap*/
 #ifdef USE_DYNAMIC_GL_ATI_vertex_array_object
 			InitDinamicGLFeature_ATI_vertex_array_object();
 #endif /*USE_DYNAMIC_GL_ATI_vertex_array_object*/
-#ifdef USE_DYNAMIC_GL_SGIX_async_pixel
-			InitDinamicGLFeature_SGIX_async_pixel();
-#endif /*USE_DYNAMIC_GL_SGIX_async_pixel*/
-#ifdef USE_DYNAMIC_GL_ATI_text_fragment_shader
-			InitDinamicGLFeature_ATI_text_fragment_shader();
-#endif /*USE_DYNAMIC_GL_ATI_text_fragment_shader*/
+#ifdef USE_DYNAMIC_GL_ATI_envmap_bumpmap
+			InitDinamicGLFeature_ATI_envmap_bumpmap();
+#endif /*USE_DYNAMIC_GL_ATI_envmap_bumpmap*/
 #ifdef USE_DYNAMIC_GL_ARB_point_parameters
 			InitDinamicGLFeature_ARB_point_parameters();
 #endif /*USE_DYNAMIC_GL_ARB_point_parameters*/
-#ifdef USE_DYNAMIC_GL_EXT_pixel_buffer_object
-			InitDinamicGLFeature_EXT_pixel_buffer_object();
-#endif /*USE_DYNAMIC_GL_EXT_pixel_buffer_object*/
 #ifdef USE_DYNAMIC_GL_EXT_vertex_array
 			InitDinamicGLFeature_EXT_vertex_array();
 #endif /*USE_DYNAMIC_GL_EXT_vertex_array*/
-#ifdef USE_DYNAMIC_GL_EXT_index_array_formats
-			InitDinamicGLFeature_EXT_index_array_formats();
-#endif /*USE_DYNAMIC_GL_EXT_index_array_formats*/
 #ifdef USE_DYNAMIC_GL_ARB_vertex_array_object
 			InitDinamicGLFeature_ARB_vertex_array_object();
 #endif /*USE_DYNAMIC_GL_ARB_vertex_array_object*/
 #ifdef USE_DYNAMIC_GL_NV_texture_multisample
 			InitDinamicGLFeature_NV_texture_multisample();
 #endif /*USE_DYNAMIC_GL_NV_texture_multisample*/
-#ifdef USE_DYNAMIC_GL_ARB_occlusion_query2
-			InitDinamicGLFeature_ARB_occlusion_query2();
-#endif /*USE_DYNAMIC_GL_ARB_occlusion_query2*/
-#ifdef USE_DYNAMIC_GL_IBM_vertex_array_lists
-			InitDinamicGLFeature_IBM_vertex_array_lists();
-#endif /*USE_DYNAMIC_GL_IBM_vertex_array_lists*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_compression_rgtc
-			InitDinamicGLFeature_EXT_texture_compression_rgtc();
-#endif /*USE_DYNAMIC_GL_EXT_texture_compression_rgtc*/
 #ifdef USE_DYNAMIC_GL_ATI_draw_buffers
 			InitDinamicGLFeature_ATI_draw_buffers();
 #endif /*USE_DYNAMIC_GL_ATI_draw_buffers*/
+#ifdef USE_DYNAMIC_GL_IBM_vertex_array_lists
+			InitDinamicGLFeature_IBM_vertex_array_lists();
+#endif /*USE_DYNAMIC_GL_IBM_vertex_array_lists*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_compression
 			InitDinamicGLFeature_ARB_texture_compression();
 #endif /*USE_DYNAMIC_GL_ARB_texture_compression*/
@@ -13605,9 +13605,6 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_EXT_color_subtable
 			InitDinamicGLFeature_EXT_color_subtable();
 #endif /*USE_DYNAMIC_GL_EXT_color_subtable*/
-#ifdef USE_DYNAMIC_GL_VERSION_3_0_DEPRECATED
-			InitDinamicGLFeature_VERSION_3_0_DEPRECATED();
-#endif /*USE_DYNAMIC_GL_VERSION_3_0_DEPRECATED*/
 #ifdef USE_DYNAMIC_GL_EXT_convolution
 			InitDinamicGLFeature_EXT_convolution();
 #endif /*USE_DYNAMIC_GL_EXT_convolution*/
@@ -13617,27 +13614,12 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_EXT_texture_integer
 			InitDinamicGLFeature_EXT_texture_integer();
 #endif /*USE_DYNAMIC_GL_EXT_texture_integer*/
-#ifdef USE_DYNAMIC_GL_SGIX_fog_offset
-			InitDinamicGLFeature_SGIX_fog_offset();
-#endif /*USE_DYNAMIC_GL_SGIX_fog_offset*/
 #ifdef USE_DYNAMIC_GL_ATI_vertex_attrib_array_object
 			InitDinamicGLFeature_ATI_vertex_attrib_array_object();
 #endif /*USE_DYNAMIC_GL_ATI_vertex_attrib_array_object*/
-#ifdef USE_DYNAMIC_GL_EXT_packed_float
-			InitDinamicGLFeature_EXT_packed_float();
-#endif /*USE_DYNAMIC_GL_EXT_packed_float*/
-#ifdef USE_DYNAMIC_GL_NV_texture_shader
-			InitDinamicGLFeature_NV_texture_shader();
-#endif /*USE_DYNAMIC_GL_NV_texture_shader*/
-#ifdef USE_DYNAMIC_GL_SGIX_shadow
-			InitDinamicGLFeature_SGIX_shadow();
-#endif /*USE_DYNAMIC_GL_SGIX_shadow*/
 #ifdef USE_DYNAMIC_GL_VERSION_3_2
 			InitDinamicGLFeature_VERSION_3_2();
 #endif /*USE_DYNAMIC_GL_VERSION_3_2*/
-#ifdef USE_DYNAMIC_GL_ARB_half_float_pixel
-			InitDinamicGLFeature_ARB_half_float_pixel();
-#endif /*USE_DYNAMIC_GL_ARB_half_float_pixel*/
 #ifdef USE_DYNAMIC_GL_NV_primitive_restart
 			InitDinamicGLFeature_NV_primitive_restart();
 #endif /*USE_DYNAMIC_GL_NV_primitive_restart*/
@@ -13650,16 +13632,8 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_VERSION_3_3
 			InitDinamicGLFeature_VERSION_3_3();
 #endif /*USE_DYNAMIC_GL_VERSION_3_3*/
-#ifdef USE_DYNAMIC_GL_ARB_texture_gather
-			InitDinamicGLFeature_ARB_texture_gather();
-#endif /*USE_DYNAMIC_GL_ARB_texture_gather*/
 #ifdef USE_DYNAMIC_GL_SUN_vertex
 			InitDinamicGLFeature_SUN_vertex();
 #endif /*USE_DYNAMIC_GL_SUN_vertex*/
-#ifdef USE_DYNAMIC_GL_ARB_texture_mirrored_repeat
-			InitDinamicGLFeature_ARB_texture_mirrored_repeat();
-#endif /*USE_DYNAMIC_GL_ARB_texture_mirrored_repeat*/
-#ifdef USE_DYNAMIC_GL_HP_texture_lighting
-			InitDinamicGLFeature_HP_texture_lighting();
-#endif /*USE_DYNAMIC_GL_HP_texture_lighting*/
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 }

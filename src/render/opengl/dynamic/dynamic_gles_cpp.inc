@@ -1,5 +1,6 @@
 /*VERSION_1_1*/
 #ifdef USE_DYNAMIC_GL_VERSION_1_1
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_AlphaFunc)(GLenum func , GLclampf ref) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearColor)(GLclampf red , GLclampf green , GLclampf blue , GLclampf alpha) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearDepthf)(GLclampf depth) = 0; }
@@ -288,7 +289,9 @@ static void InitDinamicGLFeature_VERSION_1_1() {
 		DynamicGL_Viewport = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint x , GLint y , GLsizei width , GLsizei height)>("glViewport"); 
 		DinamicGLFeature_VERSION_1_1_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_VERSION_1_1_Supported() {
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_VERSION_1_1_loaded) {
 			InitDinamicGLFeature_VERSION_1_1();
 		}
@@ -434,29 +437,36 @@ bool DinamicGLFeature_VERSION_1_1_Supported() {
 		if (DynamicGL_Translatex==0) return false; 
 		if (DynamicGL_VertexPointer==0) return false; 
 		if (DynamicGL_Viewport==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_VERSION_1_1*/
 
 /*OES_blend_func_separate*/
 #ifdef USE_DYNAMIC_GL_OES_blend_func_separate
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFuncSeparateOES)(GLenum srcRGB , GLenum dstRGB , GLenum srcAlpha , GLenum dstAlpha) = 0; }
 static bool DinamicGLFeature_OES_blend_func_separate_loaded = false; 
 static void InitDinamicGLFeature_OES_blend_func_separate() {
 		DynamicGL_BlendFuncSeparateOES = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum srcRGB , GLenum dstRGB , GLenum srcAlpha , GLenum dstAlpha)>("glBlendFuncSeparateOES"); 
 		DinamicGLFeature_OES_blend_func_separate_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_OES_blend_func_separate_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_blend_func_separate")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_OES_blend_func_separate_loaded) {
 			InitDinamicGLFeature_OES_blend_func_separate();
 		}
 		if (DynamicGL_BlendFuncSeparateOES==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_blend_func_separate*/
 
 /*QCOM_driver_control*/
 #ifdef USE_DYNAMIC_GL_QCOM_driver_control
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetDriverControlsQCOM)(GLint *num , GLsizei size , GLuint *driverControls) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetDriverControlStringQCOM)(GLuint driverControl , GLsizei bufSize , GLsizei *length , GLchar *driverControlString) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_EnableDriverControlQCOM)(GLuint driverControl) = 0; }
@@ -469,7 +479,10 @@ static void InitDinamicGLFeature_QCOM_driver_control() {
 		DynamicGL_DisableDriverControlQCOM = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint driverControl)>("glDisableDriverControlQCOM"); 
 		DinamicGLFeature_QCOM_driver_control_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_QCOM_driver_control_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_QCOM_driver_control")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_QCOM_driver_control_loaded) {
 			InitDinamicGLFeature_QCOM_driver_control();
 		}
@@ -477,12 +490,14 @@ bool DinamicGLFeature_QCOM_driver_control_Supported() {
 		if (DynamicGL_GetDriverControlStringQCOM==0) return false; 
 		if (DynamicGL_EnableDriverControlQCOM==0) return false; 
 		if (DynamicGL_DisableDriverControlQCOM==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_QCOM_driver_control*/
 
 /*EXT_multisampled_render_to_texture*/
 #ifdef USE_DYNAMIC_GL_EXT_multisampled_render_to_texture
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_RenderbufferStorageMultisampleEXT)(GLenum target , GLsizei samples , GLenum internalformat , GLsizei width , GLsizei height) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FramebufferTexture2DMultisampleEXT)(GLenum target , GLenum attachment , GLenum textarget , GLuint texture , GLint level , GLsizei samples) = 0; }
 static bool DinamicGLFeature_EXT_multisampled_render_to_texture_loaded = false; 
@@ -491,18 +506,23 @@ static void InitDinamicGLFeature_EXT_multisampled_render_to_texture() {
 		DynamicGL_FramebufferTexture2DMultisampleEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum attachment , GLenum textarget , GLuint texture , GLint level , GLsizei samples)>("glFramebufferTexture2DMultisampleEXT"); 
 		DinamicGLFeature_EXT_multisampled_render_to_texture_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_multisampled_render_to_texture_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_multisampled_render_to_texture")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_multisampled_render_to_texture_loaded) {
 			InitDinamicGLFeature_EXT_multisampled_render_to_texture();
 		}
 		if (DynamicGL_RenderbufferStorageMultisampleEXT==0) return false; 
 		if (DynamicGL_FramebufferTexture2DMultisampleEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_multisampled_render_to_texture*/
 
 /*EXT_texture_storage*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_storage
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexStorage1DEXT)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexStorage2DEXT)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexStorage3DEXT)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth) = 0; }
@@ -519,7 +539,10 @@ static void InitDinamicGLFeature_EXT_texture_storage() {
 		DynamicGL_TextureStorage3DEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth)>("glTextureStorage3DEXT"); 
 		DinamicGLFeature_EXT_texture_storage_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_texture_storage_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_storage")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_texture_storage_loaded) {
 			InitDinamicGLFeature_EXT_texture_storage();
 		}
@@ -529,40 +552,46 @@ bool DinamicGLFeature_EXT_texture_storage_Supported() {
 		if (DynamicGL_TextureStorage1DEXT==0) return false; 
 		if (DynamicGL_TextureStorage2DEXT==0) return false; 
 		if (DynamicGL_TextureStorage3DEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_storage*/
 
+/*OES_query_matrix*/
+#ifdef USE_DYNAMIC_GL_OES_query_matrix
+bool DinamicGLFeature_OES_query_matrix_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_query_matrix")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_OES_query_matrix*/
+
 /*OES_stencil8*/
 #ifdef USE_DYNAMIC_GL_OES_stencil8
-static bool DinamicGLFeature_OES_stencil8_loaded = false; 
-static void InitDinamicGLFeature_OES_stencil8() {
-		DinamicGLFeature_OES_stencil8_loaded = true; 
-}
 bool DinamicGLFeature_OES_stencil8_Supported() {
-		if (!DinamicGLFeature_OES_stencil8_loaded) {
-			InitDinamicGLFeature_OES_stencil8();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_stencil8")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_stencil8*/
 
+/*APIENTRYP*/
+#ifdef USE_DYNAMIC_GL_APIENTRYP
+bool DinamicGLFeature_APIENTRYP_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_APIENTRYP")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_APIENTRYP*/
+
 /*OES_stencil_wrap*/
 #ifdef USE_DYNAMIC_GL_OES_stencil_wrap
-static bool DinamicGLFeature_OES_stencil_wrap_loaded = false; 
-static void InitDinamicGLFeature_OES_stencil_wrap() {
-		DinamicGLFeature_OES_stencil_wrap_loaded = true; 
-}
 bool DinamicGLFeature_OES_stencil_wrap_Supported() {
-		if (!DinamicGLFeature_OES_stencil_wrap_loaded) {
-			InitDinamicGLFeature_OES_stencil_wrap();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_stencil_wrap")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_stencil_wrap*/
 
 /*APPLE_framebuffer_multisample*/
 #ifdef USE_DYNAMIC_GL_APPLE_framebuffer_multisample
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_RenderbufferStorageMultisampleAPPLE)(GLenum target , GLsizei samples , GLenum internalformat , GLsizei width , GLsizei height) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ResolveMultisampleFramebufferAPPLE)() = 0; }
 static bool DinamicGLFeature_APPLE_framebuffer_multisample_loaded = false; 
@@ -571,46 +600,55 @@ static void InitDinamicGLFeature_APPLE_framebuffer_multisample() {
 		DynamicGL_ResolveMultisampleFramebufferAPPLE = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)()>("glResolveMultisampleFramebufferAPPLE"); 
 		DinamicGLFeature_APPLE_framebuffer_multisample_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_APPLE_framebuffer_multisample_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_APPLE_framebuffer_multisample")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_APPLE_framebuffer_multisample_loaded) {
 			InitDinamicGLFeature_APPLE_framebuffer_multisample();
 		}
 		if (DynamicGL_RenderbufferStorageMultisampleAPPLE==0) return false; 
 		if (DynamicGL_ResolveMultisampleFramebufferAPPLE==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_APPLE_framebuffer_multisample*/
 
+/*OES_extended_matrix_palette*/
+#ifdef USE_DYNAMIC_GL_OES_extended_matrix_palette
+bool DinamicGLFeature_OES_extended_matrix_palette_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_extended_matrix_palette")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_OES_extended_matrix_palette*/
+
 /*APPLE_texture_format_BGRA8888*/
 #ifdef USE_DYNAMIC_GL_APPLE_texture_format_BGRA8888
-static bool DinamicGLFeature_APPLE_texture_format_BGRA8888_loaded = false; 
-static void InitDinamicGLFeature_APPLE_texture_format_BGRA8888() {
-		DinamicGLFeature_APPLE_texture_format_BGRA8888_loaded = true; 
-}
 bool DinamicGLFeature_APPLE_texture_format_BGRA8888_Supported() {
-		if (!DinamicGLFeature_APPLE_texture_format_BGRA8888_loaded) {
-			InitDinamicGLFeature_APPLE_texture_format_BGRA8888();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_APPLE_texture_format_BGRA8888")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_APPLE_texture_format_BGRA8888*/
 
+/*APPLE_texture_2D_limited_npot*/
+#ifdef USE_DYNAMIC_GL_APPLE_texture_2D_limited_npot
+bool DinamicGLFeature_APPLE_texture_2D_limited_npot_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_APPLE_texture_2D_limited_npot")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_APPLE_texture_2D_limited_npot*/
+
 /*QCOM_perfmon_global_mode*/
 #ifdef USE_DYNAMIC_GL_QCOM_perfmon_global_mode
-static bool DinamicGLFeature_QCOM_perfmon_global_mode_loaded = false; 
-static void InitDinamicGLFeature_QCOM_perfmon_global_mode() {
-		DinamicGLFeature_QCOM_perfmon_global_mode_loaded = true; 
-}
 bool DinamicGLFeature_QCOM_perfmon_global_mode_Supported() {
-		if (!DinamicGLFeature_QCOM_perfmon_global_mode_loaded) {
-			InitDinamicGLFeature_QCOM_perfmon_global_mode();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_QCOM_perfmon_global_mode")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_QCOM_perfmon_global_mode*/
 
 /*IMG_user_clip_plane*/
 #ifdef USE_DYNAMIC_GL_IMG_user_clip_plane
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClipPlanefIMG)(GLenum p , const GLfloat *eqn) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClipPlanexIMG)(GLenum p , const GLfixed *eqn) = 0; }
 static bool DinamicGLFeature_IMG_user_clip_plane_loaded = false; 
@@ -619,18 +657,23 @@ static void InitDinamicGLFeature_IMG_user_clip_plane() {
 		DynamicGL_ClipPlanexIMG = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum p , const GLfixed *eqn)>("glClipPlanexIMG"); 
 		DinamicGLFeature_IMG_user_clip_plane_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_IMG_user_clip_plane_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_IMG_user_clip_plane")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_IMG_user_clip_plane_loaded) {
 			InitDinamicGLFeature_IMG_user_clip_plane();
 		}
 		if (DynamicGL_ClipPlanefIMG==0) return false; 
 		if (DynamicGL_ClipPlanexIMG==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_IMG_user_clip_plane*/
 
 /*OES_single_precision*/
 #ifdef USE_DYNAMIC_GL_OES_single_precision
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthRangefOES)(GLclampf zNear , GLclampf zFar) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FrustumfOES)(GLfloat left , GLfloat right , GLfloat bottom , GLfloat top , GLfloat zNear , GLfloat zFar) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_OrthofOES)(GLfloat left , GLfloat right , GLfloat bottom , GLfloat top , GLfloat zNear , GLfloat zFar) = 0; }
@@ -645,7 +688,10 @@ static void InitDinamicGLFeature_OES_single_precision() {
 		DynamicGL_ClearDepthfOES = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLclampf depth)>("glClearDepthfOES"); 
 		DinamicGLFeature_OES_single_precision_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_OES_single_precision_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_single_precision")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_OES_single_precision_loaded) {
 			InitDinamicGLFeature_OES_single_precision();
 		}
@@ -654,54 +700,46 @@ bool DinamicGLFeature_OES_single_precision_Supported() {
 		if (DynamicGL_OrthofOES==0) return false; 
 		if (DynamicGL_ClipPlanefOES==0) return false; 
 		if (DynamicGL_ClearDepthfOES==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_single_precision*/
 
 /*IMG_texture_compression_pvrtc*/
 #ifdef USE_DYNAMIC_GL_IMG_texture_compression_pvrtc
-static bool DinamicGLFeature_IMG_texture_compression_pvrtc_loaded = false; 
-static void InitDinamicGLFeature_IMG_texture_compression_pvrtc() {
-		DinamicGLFeature_IMG_texture_compression_pvrtc_loaded = true; 
-}
 bool DinamicGLFeature_IMG_texture_compression_pvrtc_Supported() {
-		if (!DinamicGLFeature_IMG_texture_compression_pvrtc_loaded) {
-			InitDinamicGLFeature_IMG_texture_compression_pvrtc();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_IMG_texture_compression_pvrtc")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_IMG_texture_compression_pvrtc*/
 
 /*EXT_texture_format_BGRA8888*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_format_BGRA8888
-static bool DinamicGLFeature_EXT_texture_format_BGRA8888_loaded = false; 
-static void InitDinamicGLFeature_EXT_texture_format_BGRA8888() {
-		DinamicGLFeature_EXT_texture_format_BGRA8888_loaded = true; 
-}
 bool DinamicGLFeature_EXT_texture_format_BGRA8888_Supported() {
-		if (!DinamicGLFeature_EXT_texture_format_BGRA8888_loaded) {
-			InitDinamicGLFeature_EXT_texture_format_BGRA8888();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_format_BGRA8888")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_format_BGRA8888*/
 
 /*OES_depth32*/
 #ifdef USE_DYNAMIC_GL_OES_depth32
-static bool DinamicGLFeature_OES_depth32_loaded = false; 
-static void InitDinamicGLFeature_OES_depth32() {
-		DinamicGLFeature_OES_depth32_loaded = true; 
-}
 bool DinamicGLFeature_OES_depth32_Supported() {
-		if (!DinamicGLFeature_OES_depth32_loaded) {
-			InitDinamicGLFeature_OES_depth32();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_depth32")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_depth32*/
 
+/*OES_fbo_render_mipmap*/
+#ifdef USE_DYNAMIC_GL_OES_fbo_render_mipmap
+bool DinamicGLFeature_OES_fbo_render_mipmap_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_fbo_render_mipmap")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_OES_fbo_render_mipmap*/
+
 /*IMG_multisampled_render_to_texture*/
 #ifdef USE_DYNAMIC_GL_IMG_multisampled_render_to_texture
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_RenderbufferStorageMultisampleIMG)(GLenum p1 , GLsizei p2 , GLenum p3 , GLsizei p4 , GLsizei p5) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FramebufferTexture2DMultisampleIMG)(GLenum p1 , GLenum p2 , GLenum p3 , GLuint p4 , GLint p5 , GLsizei p6) = 0; }
 static bool DinamicGLFeature_IMG_multisampled_render_to_texture_loaded = false; 
@@ -710,49 +748,53 @@ static void InitDinamicGLFeature_IMG_multisampled_render_to_texture() {
 		DynamicGL_FramebufferTexture2DMultisampleIMG = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum p1 , GLenum p2 , GLenum p3 , GLuint p4 , GLint p5 , GLsizei p6)>("glFramebufferTexture2DMultisampleIMG"); 
 		DinamicGLFeature_IMG_multisampled_render_to_texture_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_IMG_multisampled_render_to_texture_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_IMG_multisampled_render_to_texture")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_IMG_multisampled_render_to_texture_loaded) {
 			InitDinamicGLFeature_IMG_multisampled_render_to_texture();
 		}
 		if (DynamicGL_RenderbufferStorageMultisampleIMG==0) return false; 
 		if (DynamicGL_FramebufferTexture2DMultisampleIMG==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_IMG_multisampled_render_to_texture*/
 
 /*OES_packed_depth_stencil*/
 #ifdef USE_DYNAMIC_GL_OES_packed_depth_stencil
-static bool DinamicGLFeature_OES_packed_depth_stencil_loaded = false; 
-static void InitDinamicGLFeature_OES_packed_depth_stencil() {
-		DinamicGLFeature_OES_packed_depth_stencil_loaded = true; 
-}
 bool DinamicGLFeature_OES_packed_depth_stencil_Supported() {
-		if (!DinamicGLFeature_OES_packed_depth_stencil_loaded) {
-			InitDinamicGLFeature_OES_packed_depth_stencil();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_packed_depth_stencil")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_packed_depth_stencil*/
 
 /*EXT_discard_framebuffer*/
 #ifdef USE_DYNAMIC_GL_EXT_discard_framebuffer
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DiscardFramebufferEXT)(GLenum target , GLsizei numAttachments , const GLenum *attachments) = 0; }
 static bool DinamicGLFeature_EXT_discard_framebuffer_loaded = false; 
 static void InitDinamicGLFeature_EXT_discard_framebuffer() {
 		DynamicGL_DiscardFramebufferEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLsizei numAttachments , const GLenum *attachments)>("glDiscardFramebufferEXT"); 
 		DinamicGLFeature_EXT_discard_framebuffer_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_discard_framebuffer_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_discard_framebuffer")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_discard_framebuffer_loaded) {
 			InitDinamicGLFeature_EXT_discard_framebuffer();
 		}
 		if (DynamicGL_DiscardFramebufferEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_discard_framebuffer*/
 
 /*OES_EGL_image*/
 #ifdef USE_DYNAMIC_GL_OES_EGL_image
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_EGLImageTargetTexture2DOES)(GLenum target , GLeglImageOES image) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_EGLImageTargetRenderbufferStorageOES)(GLenum target , GLeglImageOES image) = 0; }
 static bool DinamicGLFeature_OES_EGL_image_loaded = false; 
@@ -761,18 +803,23 @@ static void InitDinamicGLFeature_OES_EGL_image() {
 		DynamicGL_EGLImageTargetRenderbufferStorageOES = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLeglImageOES image)>("glEGLImageTargetRenderbufferStorageOES"); 
 		DinamicGLFeature_OES_EGL_image_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_OES_EGL_image_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_EGL_image")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_OES_EGL_image_loaded) {
 			InitDinamicGLFeature_OES_EGL_image();
 		}
 		if (DynamicGL_EGLImageTargetTexture2DOES==0) return false; 
 		if (DynamicGL_EGLImageTargetRenderbufferStorageOES==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_EGL_image*/
 
 /*NV_fence*/
 #ifdef USE_DYNAMIC_GL_NV_fence
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteFencesNV)(GLsizei n , const GLuint *fences) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenFencesNV)(GLsizei n , GLuint *fences) = 0; }
 extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsFenceNV)(GLuint fence) = 0; }
@@ -791,7 +838,10 @@ static void InitDinamicGLFeature_NV_fence() {
 		DynamicGL_SetFenceNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint fence , GLenum condition)>("glSetFenceNV"); 
 		DinamicGLFeature_NV_fence_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_fence_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_NV_fence")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_fence_loaded) {
 			InitDinamicGLFeature_NV_fence();
 		}
@@ -802,99 +852,76 @@ bool DinamicGLFeature_NV_fence_Supported() {
 		if (DynamicGL_GetFenceivNV==0) return false; 
 		if (DynamicGL_FinishFenceNV==0) return false; 
 		if (DynamicGL_SetFenceNV==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_fence*/
 
 /*EXT_texture_lod_bias*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_lod_bias
-static bool DinamicGLFeature_EXT_texture_lod_bias_loaded = false; 
-static void InitDinamicGLFeature_EXT_texture_lod_bias() {
-		DinamicGLFeature_EXT_texture_lod_bias_loaded = true; 
-}
 bool DinamicGLFeature_EXT_texture_lod_bias_Supported() {
-		if (!DinamicGLFeature_EXT_texture_lod_bias_loaded) {
-			InitDinamicGLFeature_EXT_texture_lod_bias();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_lod_bias")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_lod_bias*/
 
 /*EXT_texture_filter_anisotropic*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_filter_anisotropic
-static bool DinamicGLFeature_EXT_texture_filter_anisotropic_loaded = false; 
-static void InitDinamicGLFeature_EXT_texture_filter_anisotropic() {
-		DinamicGLFeature_EXT_texture_filter_anisotropic_loaded = true; 
-}
 bool DinamicGLFeature_EXT_texture_filter_anisotropic_Supported() {
-		if (!DinamicGLFeature_EXT_texture_filter_anisotropic_loaded) {
-			InitDinamicGLFeature_EXT_texture_filter_anisotropic();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_filter_anisotropic")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_filter_anisotropic*/
 
 /*EXT_texture_compression_dxt1*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_compression_dxt1
-static bool DinamicGLFeature_EXT_texture_compression_dxt1_loaded = false; 
-static void InitDinamicGLFeature_EXT_texture_compression_dxt1() {
-		DinamicGLFeature_EXT_texture_compression_dxt1_loaded = true; 
-}
 bool DinamicGLFeature_EXT_texture_compression_dxt1_Supported() {
-		if (!DinamicGLFeature_EXT_texture_compression_dxt1_loaded) {
-			InitDinamicGLFeature_EXT_texture_compression_dxt1();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_compression_dxt1")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_compression_dxt1*/
 
 /*EXT_sRGB*/
 #ifdef USE_DYNAMIC_GL_EXT_sRGB
-static bool DinamicGLFeature_EXT_sRGB_loaded = false; 
-static void InitDinamicGLFeature_EXT_sRGB() {
-		DinamicGLFeature_EXT_sRGB_loaded = true; 
-}
 bool DinamicGLFeature_EXT_sRGB_Supported() {
-		if (!DinamicGLFeature_EXT_sRGB_loaded) {
-			InitDinamicGLFeature_EXT_sRGB();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_sRGB")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_sRGB*/
 
 /*OES_blend_equation_separate*/
 #ifdef USE_DYNAMIC_GL_OES_blend_equation_separate
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationSeparateOES)(GLenum modeRGB , GLenum modeAlpha) = 0; }
 static bool DinamicGLFeature_OES_blend_equation_separate_loaded = false; 
 static void InitDinamicGLFeature_OES_blend_equation_separate() {
 		DynamicGL_BlendEquationSeparateOES = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum modeRGB , GLenum modeAlpha)>("glBlendEquationSeparateOES"); 
 		DinamicGLFeature_OES_blend_equation_separate_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_OES_blend_equation_separate_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_blend_equation_separate")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_OES_blend_equation_separate_loaded) {
 			InitDinamicGLFeature_OES_blend_equation_separate();
 		}
 		if (DynamicGL_BlendEquationSeparateOES==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_blend_equation_separate*/
 
 /*OES_texture_mirrored_repeat*/
 #ifdef USE_DYNAMIC_GL_OES_texture_mirrored_repeat
-static bool DinamicGLFeature_OES_texture_mirrored_repeat_loaded = false; 
-static void InitDinamicGLFeature_OES_texture_mirrored_repeat() {
-		DinamicGLFeature_OES_texture_mirrored_repeat_loaded = true; 
-}
 bool DinamicGLFeature_OES_texture_mirrored_repeat_Supported() {
-		if (!DinamicGLFeature_OES_texture_mirrored_repeat_loaded) {
-			InitDinamicGLFeature_OES_texture_mirrored_repeat();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_texture_mirrored_repeat")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_texture_mirrored_repeat*/
 
 /*EXT_robustness*/
 #ifdef USE_DYNAMIC_GL_EXT_robustness
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { GLenum (DYNAMIC_GL_APIENTRYP DynamicGL_GetGraphicsResetStatusEXT)() = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ReadnPixelsEXT)(GLint x , GLint y , GLsizei width , GLsizei height , GLenum format , GLenum type , GLsizei bufSize , GLvoid *data) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnUniformfvEXT)(GLuint program , GLint location , GLsizei bufSize , GLfloat *params) = 0; }
@@ -907,7 +934,10 @@ static void InitDinamicGLFeature_EXT_robustness() {
 		DynamicGL_GetnUniformivEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei bufSize , GLint *params)>("glGetnUniformivEXT"); 
 		DinamicGLFeature_EXT_robustness_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_robustness_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_robustness")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_robustness_loaded) {
 			InitDinamicGLFeature_EXT_robustness();
 		}
@@ -915,12 +945,14 @@ bool DinamicGLFeature_EXT_robustness_Supported() {
 		if (DynamicGL_ReadnPixelsEXT==0) return false; 
 		if (DynamicGL_GetnUniformfvEXT==0) return false; 
 		if (DynamicGL_GetnUniformivEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_robustness*/
 
 /*OES_draw_texture*/
 #ifdef USE_DYNAMIC_GL_OES_draw_texture
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexsOES)(GLshort x , GLshort y , GLshort z , GLshort width , GLshort height) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexiOES)(GLint x , GLint y , GLint z , GLint width , GLint height) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexxOES)(GLfixed x , GLfixed y , GLfixed z , GLfixed width , GLfixed height) = 0; }
@@ -941,7 +973,10 @@ static void InitDinamicGLFeature_OES_draw_texture() {
 		DynamicGL_DrawTexfvOES = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLfloat *coords)>("glDrawTexfvOES"); 
 		DinamicGLFeature_OES_draw_texture_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_OES_draw_texture_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_draw_texture")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_OES_draw_texture_loaded) {
 			InitDinamicGLFeature_OES_draw_texture();
 		}
@@ -953,12 +988,14 @@ bool DinamicGLFeature_OES_draw_texture_Supported() {
 		if (DynamicGL_DrawTexxvOES==0) return false; 
 		if (DynamicGL_DrawTexfOES==0) return false; 
 		if (DynamicGL_DrawTexfvOES==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_draw_texture*/
 
 /*OES_framebuffer_object*/
 #ifdef USE_DYNAMIC_GL_OES_framebuffer_object
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsRenderbufferOES)(GLuint renderbuffer) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindRenderbufferOES)(GLenum target , GLuint renderbuffer) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteRenderbuffersOES)(GLsizei n , const GLuint* renderbuffers) = 0; }
@@ -993,7 +1030,10 @@ static void InitDinamicGLFeature_OES_framebuffer_object() {
 		DynamicGL_GenerateMipmapOES = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target)>("glGenerateMipmapOES"); 
 		DinamicGLFeature_OES_framebuffer_object_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_OES_framebuffer_object_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_framebuffer_object")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_OES_framebuffer_object_loaded) {
 			InitDinamicGLFeature_OES_framebuffer_object();
 		}
@@ -1012,40 +1052,38 @@ bool DinamicGLFeature_OES_framebuffer_object_Supported() {
 		if (DynamicGL_FramebufferTexture2DOES==0) return false; 
 		if (DynamicGL_GetFramebufferAttachmentParameterivOES==0) return false; 
 		if (DynamicGL_GenerateMipmapOES==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_framebuffer_object*/
 
 /*OES_matrix_get*/
 #ifdef USE_DYNAMIC_GL_OES_matrix_get
-static bool DinamicGLFeature_OES_matrix_get_loaded = false; 
-static void InitDinamicGLFeature_OES_matrix_get() {
-		DinamicGLFeature_OES_matrix_get_loaded = true; 
-}
 bool DinamicGLFeature_OES_matrix_get_Supported() {
-		if (!DinamicGLFeature_OES_matrix_get_loaded) {
-			InitDinamicGLFeature_OES_matrix_get();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_matrix_get")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_matrix_get*/
 
+/*OES_byte_coordinates*/
+#ifdef USE_DYNAMIC_GL_OES_byte_coordinates
+bool DinamicGLFeature_OES_byte_coordinates_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_byte_coordinates")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_OES_byte_coordinates*/
+
 /*AMD_compressed_3DC_texture*/
 #ifdef USE_DYNAMIC_GL_AMD_compressed_3DC_texture
-static bool DinamicGLFeature_AMD_compressed_3DC_texture_loaded = false; 
-static void InitDinamicGLFeature_AMD_compressed_3DC_texture() {
-		DinamicGLFeature_AMD_compressed_3DC_texture_loaded = true; 
-}
 bool DinamicGLFeature_AMD_compressed_3DC_texture_Supported() {
-		if (!DinamicGLFeature_AMD_compressed_3DC_texture_loaded) {
-			InitDinamicGLFeature_AMD_compressed_3DC_texture();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_AMD_compressed_3DC_texture")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_AMD_compressed_3DC_texture*/
 
 /*QCOM_extended_get2*/
 #ifdef USE_DYNAMIC_GL_QCOM_extended_get2
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetShadersQCOM)(GLuint *shaders , GLint maxShaders , GLint *numShaders) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetProgramsQCOM)(GLuint *programs , GLint maxPrograms , GLint *numPrograms) = 0; }
 extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_ExtIsProgramBinaryQCOM)(GLuint program) = 0; }
@@ -1058,7 +1096,10 @@ static void InitDinamicGLFeature_QCOM_extended_get2() {
 		DynamicGL_ExtGetProgramBinarySourceQCOM = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLenum shadertype , GLchar *source , GLint *length)>("glExtGetProgramBinarySourceQCOM"); 
 		DinamicGLFeature_QCOM_extended_get2_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_QCOM_extended_get2_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_QCOM_extended_get2")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_QCOM_extended_get2_loaded) {
 			InitDinamicGLFeature_QCOM_extended_get2();
 		}
@@ -1066,26 +1107,22 @@ bool DinamicGLFeature_QCOM_extended_get2_Supported() {
 		if (DynamicGL_ExtGetProgramsQCOM==0) return false; 
 		if (DynamicGL_ExtIsProgramBinaryQCOM==0) return false; 
 		if (DynamicGL_ExtGetProgramBinarySourceQCOM==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_QCOM_extended_get2*/
 
 /*IMG_read_format*/
 #ifdef USE_DYNAMIC_GL_IMG_read_format
-static bool DinamicGLFeature_IMG_read_format_loaded = false; 
-static void InitDinamicGLFeature_IMG_read_format() {
-		DinamicGLFeature_IMG_read_format_loaded = true; 
-}
 bool DinamicGLFeature_IMG_read_format_Supported() {
-		if (!DinamicGLFeature_IMG_read_format_loaded) {
-			InitDinamicGLFeature_IMG_read_format();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_IMG_read_format")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_IMG_read_format*/
 
 /*OES_matrix_palette*/
 #ifdef USE_DYNAMIC_GL_OES_matrix_palette
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CurrentPaletteMatrixOES)(GLuint matrixpaletteindex) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadPaletteFromModelViewMatrixOES)() = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MatrixIndexPointerOES)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer) = 0; }
@@ -1098,7 +1135,10 @@ static void InitDinamicGLFeature_OES_matrix_palette() {
 		DynamicGL_WeightPointerOES = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer)>("glWeightPointerOES"); 
 		DinamicGLFeature_OES_matrix_palette_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_OES_matrix_palette_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_matrix_palette")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_OES_matrix_palette_loaded) {
 			InitDinamicGLFeature_OES_matrix_palette();
 		}
@@ -1106,26 +1146,22 @@ bool DinamicGLFeature_OES_matrix_palette_Supported() {
 		if (DynamicGL_LoadPaletteFromModelViewMatrixOES==0) return false; 
 		if (DynamicGL_MatrixIndexPointerOES==0) return false; 
 		if (DynamicGL_WeightPointerOES==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_matrix_palette*/
 
 /*OES_stencil4*/
 #ifdef USE_DYNAMIC_GL_OES_stencil4
-static bool DinamicGLFeature_OES_stencil4_loaded = false; 
-static void InitDinamicGLFeature_OES_stencil4() {
-		DinamicGLFeature_OES_stencil4_loaded = true; 
-}
 bool DinamicGLFeature_OES_stencil4_Supported() {
-		if (!DinamicGLFeature_OES_stencil4_loaded) {
-			InitDinamicGLFeature_OES_stencil4();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_stencil4")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_stencil4*/
 
 /*QCOM_extended_get*/
 #ifdef USE_DYNAMIC_GL_QCOM_extended_get
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetTexturesQCOM)(GLuint *textures , GLint maxTextures , GLint *numTextures) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetBuffersQCOM)(GLuint *buffers , GLint maxBuffers , GLint *numBuffers) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetRenderbuffersQCOM)(GLuint *renderbuffers , GLint maxRenderbuffers , GLint *numRenderbuffers) = 0; }
@@ -1146,7 +1182,10 @@ static void InitDinamicGLFeature_QCOM_extended_get() {
 		DynamicGL_ExtGetBufferPointervQCOM = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLvoid *p1)>("glExtGetBufferPointervQCOM"); 
 		DinamicGLFeature_QCOM_extended_get_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_QCOM_extended_get_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_QCOM_extended_get")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_QCOM_extended_get_loaded) {
 			InitDinamicGLFeature_QCOM_extended_get();
 		}
@@ -1158,26 +1197,22 @@ bool DinamicGLFeature_QCOM_extended_get_Supported() {
 		if (DynamicGL_ExtTexObjectStateOverrideiQCOM==0) return false; 
 		if (DynamicGL_ExtGetTexSubImageQCOM==0) return false; 
 		if (DynamicGL_ExtGetBufferPointervQCOM==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_QCOM_extended_get*/
 
 /*OES_EGL_image_external*/
 #ifdef USE_DYNAMIC_GL_OES_EGL_image_external
-static bool DinamicGLFeature_OES_EGL_image_external_loaded = false; 
-static void InitDinamicGLFeature_OES_EGL_image_external() {
-		DinamicGLFeature_OES_EGL_image_external_loaded = true; 
-}
 bool DinamicGLFeature_OES_EGL_image_external_Supported() {
-		if (!DinamicGLFeature_OES_EGL_image_external_loaded) {
-			InitDinamicGLFeature_OES_EGL_image_external();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_EGL_image_external")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_EGL_image_external*/
 
 /*OES_vertex_array_object*/
 #ifdef USE_DYNAMIC_GL_OES_vertex_array_object
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindVertexArrayOES)(GLuint array) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteVertexArraysOES)(GLsizei n , const GLuint *arrays) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenVertexArraysOES)(GLsizei n , GLuint *arrays) = 0; }
@@ -1190,7 +1225,10 @@ static void InitDinamicGLFeature_OES_vertex_array_object() {
 		DynamicGL_IsVertexArrayOES = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLuint array)>("glIsVertexArrayOES"); 
 		DinamicGLFeature_OES_vertex_array_object_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_OES_vertex_array_object_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_vertex_array_object")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_OES_vertex_array_object_loaded) {
 			InitDinamicGLFeature_OES_vertex_array_object();
 		}
@@ -1198,113 +1236,100 @@ bool DinamicGLFeature_OES_vertex_array_object_Supported() {
 		if (DynamicGL_DeleteVertexArraysOES==0) return false; 
 		if (DynamicGL_GenVertexArraysOES==0) return false; 
 		if (DynamicGL_IsVertexArrayOES==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_vertex_array_object*/
 
 /*OES_compressed_ETC1_RGB8_texture*/
 #ifdef USE_DYNAMIC_GL_OES_compressed_ETC1_RGB8_texture
-static bool DinamicGLFeature_OES_compressed_ETC1_RGB8_texture_loaded = false; 
-static void InitDinamicGLFeature_OES_compressed_ETC1_RGB8_texture() {
-		DinamicGLFeature_OES_compressed_ETC1_RGB8_texture_loaded = true; 
-}
 bool DinamicGLFeature_OES_compressed_ETC1_RGB8_texture_Supported() {
-		if (!DinamicGLFeature_OES_compressed_ETC1_RGB8_texture_loaded) {
-			InitDinamicGLFeature_OES_compressed_ETC1_RGB8_texture();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_compressed_ETC1_RGB8_texture")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_compressed_ETC1_RGB8_texture*/
 
 /*OES_depth24*/
 #ifdef USE_DYNAMIC_GL_OES_depth24
-static bool DinamicGLFeature_OES_depth24_loaded = false; 
-static void InitDinamicGLFeature_OES_depth24() {
-		DinamicGLFeature_OES_depth24_loaded = true; 
-}
 bool DinamicGLFeature_OES_depth24_Supported() {
-		if (!DinamicGLFeature_OES_depth24_loaded) {
-			InitDinamicGLFeature_OES_depth24();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_depth24")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_depth24*/
 
 /*IMG_texture_env_enhanced_fixed_function*/
 #ifdef USE_DYNAMIC_GL_IMG_texture_env_enhanced_fixed_function
-static bool DinamicGLFeature_IMG_texture_env_enhanced_fixed_function_loaded = false; 
-static void InitDinamicGLFeature_IMG_texture_env_enhanced_fixed_function() {
-		DinamicGLFeature_IMG_texture_env_enhanced_fixed_function_loaded = true; 
-}
 bool DinamicGLFeature_IMG_texture_env_enhanced_fixed_function_Supported() {
-		if (!DinamicGLFeature_IMG_texture_env_enhanced_fixed_function_loaded) {
-			InitDinamicGLFeature_IMG_texture_env_enhanced_fixed_function();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_IMG_texture_env_enhanced_fixed_function")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_IMG_texture_env_enhanced_fixed_function*/
 
 /*OES_element_index_uint*/
 #ifdef USE_DYNAMIC_GL_OES_element_index_uint
-static bool DinamicGLFeature_OES_element_index_uint_loaded = false; 
-static void InitDinamicGLFeature_OES_element_index_uint() {
-		DinamicGLFeature_OES_element_index_uint_loaded = true; 
-}
 bool DinamicGLFeature_OES_element_index_uint_Supported() {
-		if (!DinamicGLFeature_OES_element_index_uint_loaded) {
-			InitDinamicGLFeature_OES_element_index_uint();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_element_index_uint")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_element_index_uint*/
 
 /*OES_blend_subtract*/
 #ifdef USE_DYNAMIC_GL_OES_blend_subtract
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationOES)(GLenum mode) = 0; }
 static bool DinamicGLFeature_OES_blend_subtract_loaded = false; 
 static void InitDinamicGLFeature_OES_blend_subtract() {
 		DynamicGL_BlendEquationOES = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode)>("glBlendEquationOES"); 
 		DinamicGLFeature_OES_blend_subtract_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_OES_blend_subtract_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_blend_subtract")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_OES_blend_subtract_loaded) {
 			InitDinamicGLFeature_OES_blend_subtract();
 		}
 		if (DynamicGL_BlendEquationOES==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_blend_subtract*/
 
+/*OES_texture_env_crossbar*/
+#ifdef USE_DYNAMIC_GL_OES_texture_env_crossbar
+bool DinamicGLFeature_OES_texture_env_crossbar_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_texture_env_crossbar")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_OES_texture_env_crossbar*/
+
 /*QCOM_writeonly_rendering*/
 #ifdef USE_DYNAMIC_GL_QCOM_writeonly_rendering
-static bool DinamicGLFeature_QCOM_writeonly_rendering_loaded = false; 
-static void InitDinamicGLFeature_QCOM_writeonly_rendering() {
-		DinamicGLFeature_QCOM_writeonly_rendering_loaded = true; 
-}
 bool DinamicGLFeature_QCOM_writeonly_rendering_Supported() {
-		if (!DinamicGLFeature_QCOM_writeonly_rendering_loaded) {
-			InitDinamicGLFeature_QCOM_writeonly_rendering();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_QCOM_writeonly_rendering")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_QCOM_writeonly_rendering*/
 
 /*APPLE_texture_max_level*/
 #ifdef USE_DYNAMIC_GL_APPLE_texture_max_level
-static bool DinamicGLFeature_APPLE_texture_max_level_loaded = false; 
-static void InitDinamicGLFeature_APPLE_texture_max_level() {
-		DinamicGLFeature_APPLE_texture_max_level_loaded = true; 
-}
 bool DinamicGLFeature_APPLE_texture_max_level_Supported() {
-		if (!DinamicGLFeature_APPLE_texture_max_level_loaded) {
-			InitDinamicGLFeature_APPLE_texture_max_level();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_APPLE_texture_max_level")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_APPLE_texture_max_level*/
 
+/*ARM_rgba8*/
+#ifdef USE_DYNAMIC_GL_ARM_rgba8
+bool DinamicGLFeature_ARM_rgba8_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_ARM_rgba8")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARM_rgba8*/
+
 /*QCOM_tiled_rendering*/
 #ifdef USE_DYNAMIC_GL_QCOM_tiled_rendering
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_StartTilingQCOM)(GLuint x , GLuint y , GLuint width , GLuint height , GLbitfield preserveMask) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_EndTilingQCOM)(GLbitfield preserveMask) = 0; }
 static bool DinamicGLFeature_QCOM_tiled_rendering_loaded = false; 
@@ -1313,46 +1338,47 @@ static void InitDinamicGLFeature_QCOM_tiled_rendering() {
 		DynamicGL_EndTilingQCOM = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLbitfield preserveMask)>("glEndTilingQCOM"); 
 		DinamicGLFeature_QCOM_tiled_rendering_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_QCOM_tiled_rendering_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_QCOM_tiled_rendering")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_QCOM_tiled_rendering_loaded) {
 			InitDinamicGLFeature_QCOM_tiled_rendering();
 		}
 		if (DynamicGL_StartTilingQCOM==0) return false; 
 		if (DynamicGL_EndTilingQCOM==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_QCOM_tiled_rendering*/
 
-/*OES_stencil1*/
-#ifdef USE_DYNAMIC_GL_OES_stencil1
-static bool DinamicGLFeature_OES_stencil1_loaded = false; 
-static void InitDinamicGLFeature_OES_stencil1() {
-		DinamicGLFeature_OES_stencil1_loaded = true; 
-}
-bool DinamicGLFeature_OES_stencil1_Supported() {
-		if (!DinamicGLFeature_OES_stencil1_loaded) {
-			InitDinamicGLFeature_OES_stencil1();
-		}
+/*EXT_read_format_bgra*/
+#ifdef USE_DYNAMIC_GL_EXT_read_format_bgra
+bool DinamicGLFeature_EXT_read_format_bgra_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_read_format_bgra")) return false;
 		return true;
 }
-#endif /*USE_DYNAMIC_GL_OES_stencil1*/
+#endif /*USE_DYNAMIC_GL_EXT_read_format_bgra*/
 
 /*OES_rgb8_rgba8*/
 #ifdef USE_DYNAMIC_GL_OES_rgb8_rgba8
-static bool DinamicGLFeature_OES_rgb8_rgba8_loaded = false; 
-static void InitDinamicGLFeature_OES_rgb8_rgba8() {
-		DinamicGLFeature_OES_rgb8_rgba8_loaded = true; 
-}
 bool DinamicGLFeature_OES_rgb8_rgba8_Supported() {
-		if (!DinamicGLFeature_OES_rgb8_rgba8_loaded) {
-			InitDinamicGLFeature_OES_rgb8_rgba8();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_rgb8_rgba8")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_rgb8_rgba8*/
 
+/*OES_stencil1*/
+#ifdef USE_DYNAMIC_GL_OES_stencil1
+bool DinamicGLFeature_OES_stencil1_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_stencil1")) return false;
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_OES_stencil1*/
+
 /*OES_texture_cube_map*/
 #ifdef USE_DYNAMIC_GL_OES_texture_cube_map
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexGenfOES)(GLenum coord , GLenum pname , GLfloat param) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexGenfvOES)(GLenum coord , GLenum pname , const GLfloat *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexGeniOES)(GLenum coord , GLenum pname , GLint param) = 0; }
@@ -1375,7 +1401,10 @@ static void InitDinamicGLFeature_OES_texture_cube_map() {
 		DynamicGL_GetTexGenxvOES = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum coord , GLenum pname , GLfixed *params)>("glGetTexGenxvOES"); 
 		DinamicGLFeature_OES_texture_cube_map_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_OES_texture_cube_map_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_texture_cube_map")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_OES_texture_cube_map_loaded) {
 			InitDinamicGLFeature_OES_texture_cube_map();
 		}
@@ -1388,40 +1417,22 @@ bool DinamicGLFeature_OES_texture_cube_map_Supported() {
 		if (DynamicGL_GetTexGenfvOES==0) return false; 
 		if (DynamicGL_GetTexGenivOES==0) return false; 
 		if (DynamicGL_GetTexGenxvOES==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_texture_cube_map*/
 
 /*AMD_compressed_ATC_texture*/
 #ifdef USE_DYNAMIC_GL_AMD_compressed_ATC_texture
-static bool DinamicGLFeature_AMD_compressed_ATC_texture_loaded = false; 
-static void InitDinamicGLFeature_AMD_compressed_ATC_texture() {
-		DinamicGLFeature_AMD_compressed_ATC_texture_loaded = true; 
-}
 bool DinamicGLFeature_AMD_compressed_ATC_texture_Supported() {
-		if (!DinamicGLFeature_AMD_compressed_ATC_texture_loaded) {
-			InitDinamicGLFeature_AMD_compressed_ATC_texture();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_AMD_compressed_ATC_texture")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_AMD_compressed_ATC_texture*/
 
-/*EXT_read_format_bgra*/
-#ifdef USE_DYNAMIC_GL_EXT_read_format_bgra
-static bool DinamicGLFeature_EXT_read_format_bgra_loaded = false; 
-static void InitDinamicGLFeature_EXT_read_format_bgra() {
-		DinamicGLFeature_EXT_read_format_bgra_loaded = true; 
-}
-bool DinamicGLFeature_EXT_read_format_bgra_Supported() {
-		if (!DinamicGLFeature_EXT_read_format_bgra_loaded) {
-			InitDinamicGLFeature_EXT_read_format_bgra();
-		}
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_EXT_read_format_bgra*/
-
 /*OES_mapbuffer*/
 #ifdef USE_DYNAMIC_GL_OES_mapbuffer
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_UnmapBufferOES)(GLenum target) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetBufferPointervOES)(GLenum target , GLenum pname , GLvoid *p1) = 0; }
 static bool DinamicGLFeature_OES_mapbuffer_loaded = false; 
@@ -1430,32 +1441,31 @@ static void InitDinamicGLFeature_OES_mapbuffer() {
 		DynamicGL_GetBufferPointervOES = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum pname , GLvoid *p1)>("glGetBufferPointervOES"); 
 		DinamicGLFeature_OES_mapbuffer_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_OES_mapbuffer_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_mapbuffer")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_OES_mapbuffer_loaded) {
 			InitDinamicGLFeature_OES_mapbuffer();
 		}
 		if (DynamicGL_UnmapBufferOES==0) return false; 
 		if (DynamicGL_GetBufferPointervOES==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_mapbuffer*/
 
 /*EXT_blend_minmax*/
 #ifdef USE_DYNAMIC_GL_EXT_blend_minmax
-static bool DinamicGLFeature_EXT_blend_minmax_loaded = false; 
-static void InitDinamicGLFeature_EXT_blend_minmax() {
-		DinamicGLFeature_EXT_blend_minmax_loaded = true; 
-}
 bool DinamicGLFeature_EXT_blend_minmax_Supported() {
-		if (!DinamicGLFeature_EXT_blend_minmax_loaded) {
-			InitDinamicGLFeature_EXT_blend_minmax();
-		}
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_blend_minmax")) return false;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_blend_minmax*/
 
 /*EXT_multi_draw_arrays*/
 #ifdef USE_DYNAMIC_GL_EXT_multi_draw_arrays
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawArraysEXT)(GLenum mode , GLint *first , GLsizei *count , GLsizei primcount) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawElementsEXT)(GLenum mode , const GLsizei *count , GLenum type , const GLvoid* *indices , GLsizei primcount) = 0; }
 static bool DinamicGLFeature_EXT_multi_draw_arrays_loaded = false; 
@@ -1464,18 +1474,23 @@ static void InitDinamicGLFeature_EXT_multi_draw_arrays() {
 		DynamicGL_MultiDrawElementsEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , const GLsizei *count , GLenum type , const GLvoid* *indices , GLsizei primcount)>("glMultiDrawElementsEXT"); 
 		DinamicGLFeature_EXT_multi_draw_arrays_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_multi_draw_arrays_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_EXT_multi_draw_arrays")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_multi_draw_arrays_loaded) {
 			InitDinamicGLFeature_EXT_multi_draw_arrays();
 		}
 		if (DynamicGL_MultiDrawArraysEXT==0) return false; 
 		if (DynamicGL_MultiDrawElementsEXT==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_multi_draw_arrays*/
 
 /*OES_fixed_point*/
 #ifdef USE_DYNAMIC_GL_OES_fixed_point
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_AlphaFuncxOES)(GLenum func , GLclampx ref) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearColorxOES)(GLclampx red , GLclampx green , GLclampx blue , GLclampx alpha) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearDepthxOES)(GLclampx depth) = 0; }
@@ -1556,7 +1571,10 @@ static void InitDinamicGLFeature_OES_fixed_point() {
 		DynamicGL_TranslatexOES = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLfixed x , GLfixed y , GLfixed z)>("glTranslatexOES"); 
 		DinamicGLFeature_OES_fixed_point_loaded = true; 
 }
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_OES_fixed_point_Supported() {
+		if(!DynamicGL_CheckExtensionSupported("GL_OES_fixed_point")) return false;
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_OES_fixed_point_loaded) {
 			InitDinamicGLFeature_OES_fixed_point();
 		}
@@ -1598,11 +1616,13 @@ bool DinamicGLFeature_OES_fixed_point_Supported() {
 		if (DynamicGL_TexParameterxOES==0) return false; 
 		if (DynamicGL_TexParameterxvOES==0) return false; 
 		if (DynamicGL_TranslatexOES==0) return false; 
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_fixed_point*/
 
 void InternalDynamicGLLoadSubset() {
+#ifndef DYNAMIC_GL_NO_FUCPOINTERS
 #ifdef USE_DYNAMIC_GL_VERSION_1_1
 			InitDinamicGLFeature_VERSION_1_1();
 #endif /*USE_DYNAMIC_GL_VERSION_1_1*/
@@ -1618,42 +1638,18 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_EXT_texture_storage
 			InitDinamicGLFeature_EXT_texture_storage();
 #endif /*USE_DYNAMIC_GL_EXT_texture_storage*/
-#ifdef USE_DYNAMIC_GL_OES_stencil8
-			InitDinamicGLFeature_OES_stencil8();
-#endif /*USE_DYNAMIC_GL_OES_stencil8*/
-#ifdef USE_DYNAMIC_GL_OES_stencil_wrap
-			InitDinamicGLFeature_OES_stencil_wrap();
-#endif /*USE_DYNAMIC_GL_OES_stencil_wrap*/
 #ifdef USE_DYNAMIC_GL_APPLE_framebuffer_multisample
 			InitDinamicGLFeature_APPLE_framebuffer_multisample();
 #endif /*USE_DYNAMIC_GL_APPLE_framebuffer_multisample*/
-#ifdef USE_DYNAMIC_GL_APPLE_texture_format_BGRA8888
-			InitDinamicGLFeature_APPLE_texture_format_BGRA8888();
-#endif /*USE_DYNAMIC_GL_APPLE_texture_format_BGRA8888*/
-#ifdef USE_DYNAMIC_GL_QCOM_perfmon_global_mode
-			InitDinamicGLFeature_QCOM_perfmon_global_mode();
-#endif /*USE_DYNAMIC_GL_QCOM_perfmon_global_mode*/
 #ifdef USE_DYNAMIC_GL_IMG_user_clip_plane
 			InitDinamicGLFeature_IMG_user_clip_plane();
 #endif /*USE_DYNAMIC_GL_IMG_user_clip_plane*/
 #ifdef USE_DYNAMIC_GL_OES_single_precision
 			InitDinamicGLFeature_OES_single_precision();
 #endif /*USE_DYNAMIC_GL_OES_single_precision*/
-#ifdef USE_DYNAMIC_GL_IMG_texture_compression_pvrtc
-			InitDinamicGLFeature_IMG_texture_compression_pvrtc();
-#endif /*USE_DYNAMIC_GL_IMG_texture_compression_pvrtc*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_format_BGRA8888
-			InitDinamicGLFeature_EXT_texture_format_BGRA8888();
-#endif /*USE_DYNAMIC_GL_EXT_texture_format_BGRA8888*/
-#ifdef USE_DYNAMIC_GL_OES_depth32
-			InitDinamicGLFeature_OES_depth32();
-#endif /*USE_DYNAMIC_GL_OES_depth32*/
 #ifdef USE_DYNAMIC_GL_IMG_multisampled_render_to_texture
 			InitDinamicGLFeature_IMG_multisampled_render_to_texture();
 #endif /*USE_DYNAMIC_GL_IMG_multisampled_render_to_texture*/
-#ifdef USE_DYNAMIC_GL_OES_packed_depth_stencil
-			InitDinamicGLFeature_OES_packed_depth_stencil();
-#endif /*USE_DYNAMIC_GL_OES_packed_depth_stencil*/
 #ifdef USE_DYNAMIC_GL_EXT_discard_framebuffer
 			InitDinamicGLFeature_EXT_discard_framebuffer();
 #endif /*USE_DYNAMIC_GL_EXT_discard_framebuffer*/
@@ -1663,24 +1659,9 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_NV_fence
 			InitDinamicGLFeature_NV_fence();
 #endif /*USE_DYNAMIC_GL_NV_fence*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_lod_bias
-			InitDinamicGLFeature_EXT_texture_lod_bias();
-#endif /*USE_DYNAMIC_GL_EXT_texture_lod_bias*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_filter_anisotropic
-			InitDinamicGLFeature_EXT_texture_filter_anisotropic();
-#endif /*USE_DYNAMIC_GL_EXT_texture_filter_anisotropic*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_compression_dxt1
-			InitDinamicGLFeature_EXT_texture_compression_dxt1();
-#endif /*USE_DYNAMIC_GL_EXT_texture_compression_dxt1*/
-#ifdef USE_DYNAMIC_GL_EXT_sRGB
-			InitDinamicGLFeature_EXT_sRGB();
-#endif /*USE_DYNAMIC_GL_EXT_sRGB*/
 #ifdef USE_DYNAMIC_GL_OES_blend_equation_separate
 			InitDinamicGLFeature_OES_blend_equation_separate();
 #endif /*USE_DYNAMIC_GL_OES_blend_equation_separate*/
-#ifdef USE_DYNAMIC_GL_OES_texture_mirrored_repeat
-			InitDinamicGLFeature_OES_texture_mirrored_repeat();
-#endif /*USE_DYNAMIC_GL_OES_texture_mirrored_repeat*/
 #ifdef USE_DYNAMIC_GL_EXT_robustness
 			InitDinamicGLFeature_EXT_robustness();
 #endif /*USE_DYNAMIC_GL_EXT_robustness*/
@@ -1690,82 +1671,35 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_OES_framebuffer_object
 			InitDinamicGLFeature_OES_framebuffer_object();
 #endif /*USE_DYNAMIC_GL_OES_framebuffer_object*/
-#ifdef USE_DYNAMIC_GL_OES_matrix_get
-			InitDinamicGLFeature_OES_matrix_get();
-#endif /*USE_DYNAMIC_GL_OES_matrix_get*/
-#ifdef USE_DYNAMIC_GL_AMD_compressed_3DC_texture
-			InitDinamicGLFeature_AMD_compressed_3DC_texture();
-#endif /*USE_DYNAMIC_GL_AMD_compressed_3DC_texture*/
 #ifdef USE_DYNAMIC_GL_QCOM_extended_get2
 			InitDinamicGLFeature_QCOM_extended_get2();
 #endif /*USE_DYNAMIC_GL_QCOM_extended_get2*/
-#ifdef USE_DYNAMIC_GL_IMG_read_format
-			InitDinamicGLFeature_IMG_read_format();
-#endif /*USE_DYNAMIC_GL_IMG_read_format*/
 #ifdef USE_DYNAMIC_GL_OES_matrix_palette
 			InitDinamicGLFeature_OES_matrix_palette();
 #endif /*USE_DYNAMIC_GL_OES_matrix_palette*/
-#ifdef USE_DYNAMIC_GL_OES_stencil4
-			InitDinamicGLFeature_OES_stencil4();
-#endif /*USE_DYNAMIC_GL_OES_stencil4*/
 #ifdef USE_DYNAMIC_GL_QCOM_extended_get
 			InitDinamicGLFeature_QCOM_extended_get();
 #endif /*USE_DYNAMIC_GL_QCOM_extended_get*/
-#ifdef USE_DYNAMIC_GL_OES_EGL_image_external
-			InitDinamicGLFeature_OES_EGL_image_external();
-#endif /*USE_DYNAMIC_GL_OES_EGL_image_external*/
 #ifdef USE_DYNAMIC_GL_OES_vertex_array_object
 			InitDinamicGLFeature_OES_vertex_array_object();
 #endif /*USE_DYNAMIC_GL_OES_vertex_array_object*/
-#ifdef USE_DYNAMIC_GL_OES_compressed_ETC1_RGB8_texture
-			InitDinamicGLFeature_OES_compressed_ETC1_RGB8_texture();
-#endif /*USE_DYNAMIC_GL_OES_compressed_ETC1_RGB8_texture*/
-#ifdef USE_DYNAMIC_GL_OES_depth24
-			InitDinamicGLFeature_OES_depth24();
-#endif /*USE_DYNAMIC_GL_OES_depth24*/
-#ifdef USE_DYNAMIC_GL_IMG_texture_env_enhanced_fixed_function
-			InitDinamicGLFeature_IMG_texture_env_enhanced_fixed_function();
-#endif /*USE_DYNAMIC_GL_IMG_texture_env_enhanced_fixed_function*/
-#ifdef USE_DYNAMIC_GL_OES_element_index_uint
-			InitDinamicGLFeature_OES_element_index_uint();
-#endif /*USE_DYNAMIC_GL_OES_element_index_uint*/
 #ifdef USE_DYNAMIC_GL_OES_blend_subtract
 			InitDinamicGLFeature_OES_blend_subtract();
 #endif /*USE_DYNAMIC_GL_OES_blend_subtract*/
-#ifdef USE_DYNAMIC_GL_QCOM_writeonly_rendering
-			InitDinamicGLFeature_QCOM_writeonly_rendering();
-#endif /*USE_DYNAMIC_GL_QCOM_writeonly_rendering*/
-#ifdef USE_DYNAMIC_GL_APPLE_texture_max_level
-			InitDinamicGLFeature_APPLE_texture_max_level();
-#endif /*USE_DYNAMIC_GL_APPLE_texture_max_level*/
 #ifdef USE_DYNAMIC_GL_QCOM_tiled_rendering
 			InitDinamicGLFeature_QCOM_tiled_rendering();
 #endif /*USE_DYNAMIC_GL_QCOM_tiled_rendering*/
-#ifdef USE_DYNAMIC_GL_OES_stencil1
-			InitDinamicGLFeature_OES_stencil1();
-#endif /*USE_DYNAMIC_GL_OES_stencil1*/
-#ifdef USE_DYNAMIC_GL_OES_rgb8_rgba8
-			InitDinamicGLFeature_OES_rgb8_rgba8();
-#endif /*USE_DYNAMIC_GL_OES_rgb8_rgba8*/
 #ifdef USE_DYNAMIC_GL_OES_texture_cube_map
 			InitDinamicGLFeature_OES_texture_cube_map();
 #endif /*USE_DYNAMIC_GL_OES_texture_cube_map*/
-#ifdef USE_DYNAMIC_GL_AMD_compressed_ATC_texture
-			InitDinamicGLFeature_AMD_compressed_ATC_texture();
-#endif /*USE_DYNAMIC_GL_AMD_compressed_ATC_texture*/
-#ifdef USE_DYNAMIC_GL_EXT_read_format_bgra
-			InitDinamicGLFeature_EXT_read_format_bgra();
-#endif /*USE_DYNAMIC_GL_EXT_read_format_bgra*/
 #ifdef USE_DYNAMIC_GL_OES_mapbuffer
 			InitDinamicGLFeature_OES_mapbuffer();
 #endif /*USE_DYNAMIC_GL_OES_mapbuffer*/
-#ifdef USE_DYNAMIC_GL_EXT_blend_minmax
-			InitDinamicGLFeature_EXT_blend_minmax();
-#endif /*USE_DYNAMIC_GL_EXT_blend_minmax*/
 #ifdef USE_DYNAMIC_GL_EXT_multi_draw_arrays
 			InitDinamicGLFeature_EXT_multi_draw_arrays();
 #endif /*USE_DYNAMIC_GL_EXT_multi_draw_arrays*/
 #ifdef USE_DYNAMIC_GL_OES_fixed_point
 			InitDinamicGLFeature_OES_fixed_point();
 #endif /*USE_DYNAMIC_GL_OES_fixed_point*/
+#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 }

@@ -3,6 +3,7 @@
 
 #define USE_DYNAMIC_GL_VERSION_1_1
 
+#define IMG_texture_compression_pvrtc
 
 //#define USE_DYNAMIC_GL_SGIS_texture_edge_clamp
 

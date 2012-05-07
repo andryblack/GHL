@@ -22,6 +22,7 @@ typedef float khronos_float_t;
 typedef int khronos_int32_t;
 typedef long            khronos_intptr_t;
 typedef long            khronos_ssize_t;
+#define DYNAMIC_GL_NO_FUCPOINTERS
 #endif
 
 #define DYNAMIC_GL_API GLAPI

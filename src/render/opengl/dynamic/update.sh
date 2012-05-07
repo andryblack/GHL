@@ -25,8 +25,8 @@ rm -f glext.h
 download $GLES_GL_H_URL "gl.h"
 download $GLES_GLEXT_H_URL "glext.h"
 
-perl parse.pl h > dynamic_gles_h.inc
-perl parse.pl cpp > dynamic_gles_cpp.inc
+perl parse.pl glesh > dynamic_gles_h.inc
+perl parse.pl glescpp > dynamic_gles_cpp.inc
 
 rm -f gl.h
 rm -f glext.h
