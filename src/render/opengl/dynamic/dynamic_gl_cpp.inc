@@ -1020,6 +1020,23 @@ bool DinamicGLFeature_VERSION_1_1_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_VERSION_1_1*/
 
+/*ARB_copy_buffer*/
+#ifdef USE_DYNAMIC_GL_ARB_copy_buffer
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CopyBufferSubData)(GLenum readTarget , GLenum writeTarget , GLintptr readOffset , GLintptr writeOffset , GLsizeiptr size) = 0; }
+static bool DinamicGLFeature_ARB_copy_buffer_loaded = false; 
+static void InitDinamicGLFeature_ARB_copy_buffer() {
+		DynamicGL_CopyBufferSubData = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum readTarget , GLenum writeTarget , GLintptr readOffset , GLintptr writeOffset , GLsizeiptr size)>("glCopyBufferSubData"); 
+		DinamicGLFeature_ARB_copy_buffer_loaded = true; 
+}
+bool DinamicGLFeature_ARB_copy_buffer_Supported() {
+		if (!DinamicGLFeature_ARB_copy_buffer_loaded) {
+			InitDinamicGLFeature_ARB_copy_buffer();
+		}
+		if (DynamicGL_CopyBufferSubData==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_copy_buffer*/
+
 /*SGIS_sharpen_texture*/
 #ifdef USE_DYNAMIC_GL_SGIS_sharpen_texture
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SharpenTexFuncSGIS)(GLenum target , GLsizei n , const GLfloat *points) = 0; }
@@ -1040,6 +1057,23 @@ bool DinamicGLFeature_SGIS_sharpen_texture_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_SGIS_sharpen_texture*/
 
+/*ARB_internalformat_query*/
+#ifdef USE_DYNAMIC_GL_ARB_internalformat_query
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetInternalformativ)(GLenum target , GLenum internalformat , GLenum pname , GLsizei bufSize , GLint *params) = 0; }
+static bool DinamicGLFeature_ARB_internalformat_query_loaded = false; 
+static void InitDinamicGLFeature_ARB_internalformat_query() {
+		DynamicGL_GetInternalformativ = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum internalformat , GLenum pname , GLsizei bufSize , GLint *params)>("glGetInternalformativ"); 
+		DinamicGLFeature_ARB_internalformat_query_loaded = true; 
+}
+bool DinamicGLFeature_ARB_internalformat_query_Supported() {
+		if (!DinamicGLFeature_ARB_internalformat_query_loaded) {
+			InitDinamicGLFeature_ARB_internalformat_query();
+		}
+		if (DynamicGL_GetInternalformativ==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_internalformat_query*/
+
 /*SGIX_blend_alpha_minmax*/
 #ifdef USE_DYNAMIC_GL_SGIX_blend_alpha_minmax
 static bool DinamicGLFeature_SGIX_blend_alpha_minmax_loaded = false; 
@@ -1054,16 +1088,48 @@ bool DinamicGLFeature_SGIX_blend_alpha_minmax_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_SGIX_blend_alpha_minmax*/
 
+/*ATI_meminfo*/
+#ifdef USE_DYNAMIC_GL_ATI_meminfo
+static bool DinamicGLFeature_ATI_meminfo_loaded = false; 
+static void InitDinamicGLFeature_ATI_meminfo() {
+		DinamicGLFeature_ATI_meminfo_loaded = true; 
+}
+bool DinamicGLFeature_ATI_meminfo_Supported() {
+		if (!DinamicGLFeature_ATI_meminfo_loaded) {
+			InitDinamicGLFeature_ATI_meminfo();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ATI_meminfo*/
+
 /*NV_present_video*/
 #ifdef USE_DYNAMIC_GL_NV_present_video
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PresentFrameKeyedNV)(GLuint video_slot , GLuint64EXT minPresentTime , GLuint beginPresentTimeId , GLuint presentDurationId , GLenum type , GLenum target0 , GLuint fill0 , GLuint key0 , GLenum target1 , GLuint fill1 , GLuint key1) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PresentFrameDualFillNV)(GLuint video_slot , GLuint64EXT minPresentTime , GLuint beginPresentTimeId , GLuint presentDurationId , GLenum type , GLenum target0 , GLuint fill0 , GLenum target1 , GLuint fill1 , GLenum target2 , GLuint fill2 , GLenum target3 , GLuint fill3) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVideoivNV)(GLuint video_slot , GLenum pname , GLint *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVideouivNV)(GLuint video_slot , GLenum pname , GLuint *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVideoi64vNV)(GLuint video_slot , GLenum pname , GLint64EXT *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVideoui64vNV)(GLuint video_slot , GLenum pname , GLuint64EXT *params) = 0; }
 static bool DinamicGLFeature_NV_present_video_loaded = false; 
 static void InitDinamicGLFeature_NV_present_video() {
+		DynamicGL_PresentFrameKeyedNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint video_slot , GLuint64EXT minPresentTime , GLuint beginPresentTimeId , GLuint presentDurationId , GLenum type , GLenum target0 , GLuint fill0 , GLuint key0 , GLenum target1 , GLuint fill1 , GLuint key1)>("glPresentFrameKeyedNV"); 
+		DynamicGL_PresentFrameDualFillNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint video_slot , GLuint64EXT minPresentTime , GLuint beginPresentTimeId , GLuint presentDurationId , GLenum type , GLenum target0 , GLuint fill0 , GLenum target1 , GLuint fill1 , GLenum target2 , GLuint fill2 , GLenum target3 , GLuint fill3)>("glPresentFrameDualFillNV"); 
+		DynamicGL_GetVideoivNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint video_slot , GLenum pname , GLint *params)>("glGetVideoivNV"); 
+		DynamicGL_GetVideouivNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint video_slot , GLenum pname , GLuint *params)>("glGetVideouivNV"); 
+		DynamicGL_GetVideoi64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint video_slot , GLenum pname , GLint64EXT *params)>("glGetVideoi64vNV"); 
+		DynamicGL_GetVideoui64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint video_slot , GLenum pname , GLuint64EXT *params)>("glGetVideoui64vNV"); 
 		DinamicGLFeature_NV_present_video_loaded = true; 
 }
 bool DinamicGLFeature_NV_present_video_Supported() {
 		if (!DinamicGLFeature_NV_present_video_loaded) {
 			InitDinamicGLFeature_NV_present_video();
 		}
+		if (DynamicGL_PresentFrameKeyedNV==0) return false; 
+		if (DynamicGL_PresentFrameDualFillNV==0) return false; 
+		if (DynamicGL_GetVideoivNV==0) return false; 
+		if (DynamicGL_GetVideouivNV==0) return false; 
+		if (DynamicGL_GetVideoi64vNV==0) return false; 
+		if (DynamicGL_GetVideoui64vNV==0) return false; 
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_present_video*/
@@ -1278,6 +1344,38 @@ bool DinamicGLFeature_EXT_draw_range_elements_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_EXT_draw_range_elements*/
 
+/*ARB_shading_language_include*/
+#ifdef USE_DYNAMIC_GL_ARB_shading_language_include
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_NamedStringARB)(GLenum type , GLint namelen , const GLchar *name , GLint stringlen , const GLchar *string) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteNamedStringARB)(GLint namelen , const GLchar *name) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CompileShaderIncludeARB)(GLuint shader , GLsizei count , const GLchar* *path , const GLint *length) = 0; }
+extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsNamedStringARB)(GLint namelen , const GLchar *name) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetNamedStringARB)(GLint namelen , const GLchar *name , GLsizei bufSize , GLint *stringlen , GLchar *string) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetNamedStringivARB)(GLint namelen , const GLchar *name , GLenum pname , GLint *params) = 0; }
+static bool DinamicGLFeature_ARB_shading_language_include_loaded = false; 
+static void InitDinamicGLFeature_ARB_shading_language_include() {
+		DynamicGL_NamedStringARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , GLint namelen , const GLchar *name , GLint stringlen , const GLchar *string)>("glNamedStringARB"); 
+		DynamicGL_DeleteNamedStringARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint namelen , const GLchar *name)>("glDeleteNamedStringARB"); 
+		DynamicGL_CompileShaderIncludeARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint shader , GLsizei count , const GLchar* *path , const GLint *length)>("glCompileShaderIncludeARB"); 
+		DynamicGL_IsNamedStringARB = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLint namelen , const GLchar *name)>("glIsNamedStringARB"); 
+		DynamicGL_GetNamedStringARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint namelen , const GLchar *name , GLsizei bufSize , GLint *stringlen , GLchar *string)>("glGetNamedStringARB"); 
+		DynamicGL_GetNamedStringivARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint namelen , const GLchar *name , GLenum pname , GLint *params)>("glGetNamedStringivARB"); 
+		DinamicGLFeature_ARB_shading_language_include_loaded = true; 
+}
+bool DinamicGLFeature_ARB_shading_language_include_Supported() {
+		if (!DinamicGLFeature_ARB_shading_language_include_loaded) {
+			InitDinamicGLFeature_ARB_shading_language_include();
+		}
+		if (DynamicGL_NamedStringARB==0) return false; 
+		if (DynamicGL_DeleteNamedStringARB==0) return false; 
+		if (DynamicGL_CompileShaderIncludeARB==0) return false; 
+		if (DynamicGL_IsNamedStringARB==0) return false; 
+		if (DynamicGL_GetNamedStringARB==0) return false; 
+		if (DynamicGL_GetNamedStringivARB==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_shading_language_include*/
+
 /*NV_evaluators*/
 #ifdef USE_DYNAMIC_GL_NV_evaluators
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MapControlPointsNV)(GLenum target , GLuint index , GLenum type , GLsizei ustride , GLsizei vstride , GLint uorder , GLint vorder , GLboolean packed , const GLvoid *points) = 0; }
@@ -1319,6 +1417,23 @@ bool DinamicGLFeature_NV_evaluators_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_NV_evaluators*/
 
+/*AMD_sample_positions*/
+#ifdef USE_DYNAMIC_GL_AMD_sample_positions
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SetMultisamplefvAMD)(GLenum pname , GLuint index , const GLfloat *val) = 0; }
+static bool DinamicGLFeature_AMD_sample_positions_loaded = false; 
+static void InitDinamicGLFeature_AMD_sample_positions() {
+		DynamicGL_SetMultisamplefvAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , GLuint index , const GLfloat *val)>("glSetMultisamplefvAMD"); 
+		DinamicGLFeature_AMD_sample_positions_loaded = true; 
+}
+bool DinamicGLFeature_AMD_sample_positions_Supported() {
+		if (!DinamicGLFeature_AMD_sample_positions_loaded) {
+			InitDinamicGLFeature_AMD_sample_positions();
+		}
+		if (DynamicGL_SetMultisamplefvAMD==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_AMD_sample_positions*/
+
 /*OML_interlace*/
 #ifdef USE_DYNAMIC_GL_OML_interlace
 static bool DinamicGLFeature_OML_interlace_loaded = false; 
@@ -1346,6 +1461,26 @@ bool DinamicGLFeature_ARB_texture_border_clamp_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_texture_border_clamp*/
+
+/*APPLE_texture_range*/
+#ifdef USE_DYNAMIC_GL_APPLE_texture_range
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureRangeAPPLE)(GLenum target , GLsizei length , const GLvoid *pointer) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexParameterPointervAPPLE)(GLenum target , GLenum pname , GLvoid* *params) = 0; }
+static bool DinamicGLFeature_APPLE_texture_range_loaded = false; 
+static void InitDinamicGLFeature_APPLE_texture_range() {
+		DynamicGL_TextureRangeAPPLE = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLsizei length , const GLvoid *pointer)>("glTextureRangeAPPLE"); 
+		DynamicGL_GetTexParameterPointervAPPLE = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum pname , GLvoid* *params)>("glGetTexParameterPointervAPPLE"); 
+		DinamicGLFeature_APPLE_texture_range_loaded = true; 
+}
+bool DinamicGLFeature_APPLE_texture_range_Supported() {
+		if (!DinamicGLFeature_APPLE_texture_range_loaded) {
+			InitDinamicGLFeature_APPLE_texture_range();
+		}
+		if (DynamicGL_TextureRangeAPPLE==0) return false; 
+		if (DynamicGL_GetTexParameterPointervAPPLE==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_APPLE_texture_range*/
 
 /*ARB_shadow_ambient*/
 #ifdef USE_DYNAMIC_GL_ARB_shadow_ambient
@@ -1485,6 +1620,20 @@ bool DinamicGLFeature_EXT_texture_buffer_object_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_buffer_object*/
 
+/*APPLE_row_bytes*/
+#ifdef USE_DYNAMIC_GL_APPLE_row_bytes
+static bool DinamicGLFeature_APPLE_row_bytes_loaded = false; 
+static void InitDinamicGLFeature_APPLE_row_bytes() {
+		DinamicGLFeature_APPLE_row_bytes_loaded = true; 
+}
+bool DinamicGLFeature_APPLE_row_bytes_Supported() {
+		if (!DinamicGLFeature_APPLE_row_bytes_loaded) {
+			InitDinamicGLFeature_APPLE_row_bytes();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_APPLE_row_bytes*/
+
 /*IBM_multimode_draw_arrays*/
 #ifdef USE_DYNAMIC_GL_IBM_multimode_draw_arrays
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiModeDrawArraysIBM)(const GLenum *mode , const GLint *first , const GLsizei *count , GLsizei primcount , GLint modestride) = 0; }
@@ -1504,6 +1653,46 @@ bool DinamicGLFeature_IBM_multimode_draw_arrays_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_IBM_multimode_draw_arrays*/
+
+/*ARB_draw_elements_base_vertex*/
+#ifdef USE_DYNAMIC_GL_ARB_draw_elements_base_vertex
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElementsBaseVertex)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices , GLint basevertex) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawRangeElementsBaseVertex)(GLenum mode , GLuint start , GLuint end , GLsizei count , GLenum type , const GLvoid *indices , GLint basevertex) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElementsInstancedBaseVertex)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices , GLsizei primcount , GLint basevertex) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawElementsBaseVertex)(GLenum mode , const GLsizei *count , GLenum type , const GLvoid* const , GLsizei primcount , const GLint *basevertex) = 0; }
+static bool DinamicGLFeature_ARB_draw_elements_base_vertex_loaded = false; 
+static void InitDinamicGLFeature_ARB_draw_elements_base_vertex() {
+		DynamicGL_DrawElementsBaseVertex = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices , GLint basevertex)>("glDrawElementsBaseVertex"); 
+		DynamicGL_DrawRangeElementsBaseVertex = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLuint start , GLuint end , GLsizei count , GLenum type , const GLvoid *indices , GLint basevertex)>("glDrawRangeElementsBaseVertex"); 
+		DynamicGL_DrawElementsInstancedBaseVertex = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices , GLsizei primcount , GLint basevertex)>("glDrawElementsInstancedBaseVertex"); 
+		DynamicGL_MultiDrawElementsBaseVertex = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , const GLsizei *count , GLenum type , const GLvoid* const , GLsizei primcount , const GLint *basevertex)>("glMultiDrawElementsBaseVertex"); 
+		DinamicGLFeature_ARB_draw_elements_base_vertex_loaded = true; 
+}
+bool DinamicGLFeature_ARB_draw_elements_base_vertex_Supported() {
+		if (!DinamicGLFeature_ARB_draw_elements_base_vertex_loaded) {
+			InitDinamicGLFeature_ARB_draw_elements_base_vertex();
+		}
+		if (DynamicGL_DrawElementsBaseVertex==0) return false; 
+		if (DynamicGL_DrawRangeElementsBaseVertex==0) return false; 
+		if (DynamicGL_DrawElementsInstancedBaseVertex==0) return false; 
+		if (DynamicGL_MultiDrawElementsBaseVertex==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_draw_elements_base_vertex*/
+
+/*ARB_depth_clamp*/
+#ifdef USE_DYNAMIC_GL_ARB_depth_clamp
+static bool DinamicGLFeature_ARB_depth_clamp_loaded = false; 
+static void InitDinamicGLFeature_ARB_depth_clamp() {
+		DinamicGLFeature_ARB_depth_clamp_loaded = true; 
+}
+bool DinamicGLFeature_ARB_depth_clamp_Supported() {
+		if (!DinamicGLFeature_ARB_depth_clamp_loaded) {
+			InitDinamicGLFeature_ARB_depth_clamp();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_depth_clamp*/
 
 /*EXT_framebuffer_object*/
 #ifdef USE_DYNAMIC_GL_EXT_framebuffer_object
@@ -1613,6 +1802,46 @@ bool DinamicGLFeature_EXT_pixel_transform_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_EXT_pixel_transform*/
 
+/*ARB_sample_shading*/
+#ifdef USE_DYNAMIC_GL_ARB_sample_shading
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MinSampleShadingARB)(GLfloat value) = 0; }
+static bool DinamicGLFeature_ARB_sample_shading_loaded = false; 
+static void InitDinamicGLFeature_ARB_sample_shading() {
+		DynamicGL_MinSampleShadingARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLfloat value)>("glMinSampleShadingARB"); 
+		DinamicGLFeature_ARB_sample_shading_loaded = true; 
+}
+bool DinamicGLFeature_ARB_sample_shading_Supported() {
+		if (!DinamicGLFeature_ARB_sample_shading_loaded) {
+			InitDinamicGLFeature_ARB_sample_shading();
+		}
+		if (DynamicGL_MinSampleShadingARB==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_sample_shading*/
+
+/*APPLE_object_purgeable*/
+#ifdef USE_DYNAMIC_GL_APPLE_object_purgeable
+extern "C" { GLenum (DYNAMIC_GL_APIENTRYP DynamicGL_ObjectPurgeableAPPLE)(GLenum objectType , GLuint name , GLenum option) = 0; }
+extern "C" { GLenum (DYNAMIC_GL_APIENTRYP DynamicGL_ObjectUnpurgeableAPPLE)(GLenum objectType , GLuint name , GLenum option) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetObjectParameterivAPPLE)(GLenum objectType , GLuint name , GLenum pname , GLint *params) = 0; }
+static bool DinamicGLFeature_APPLE_object_purgeable_loaded = false; 
+static void InitDinamicGLFeature_APPLE_object_purgeable() {
+		DynamicGL_ObjectPurgeableAPPLE = DynamicGL_LoadFunction<GLenum (DYNAMIC_GL_APIENTRYP)(GLenum objectType , GLuint name , GLenum option)>("glObjectPurgeableAPPLE"); 
+		DynamicGL_ObjectUnpurgeableAPPLE = DynamicGL_LoadFunction<GLenum (DYNAMIC_GL_APIENTRYP)(GLenum objectType , GLuint name , GLenum option)>("glObjectUnpurgeableAPPLE"); 
+		DynamicGL_GetObjectParameterivAPPLE = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum objectType , GLuint name , GLenum pname , GLint *params)>("glGetObjectParameterivAPPLE"); 
+		DinamicGLFeature_APPLE_object_purgeable_loaded = true; 
+}
+bool DinamicGLFeature_APPLE_object_purgeable_Supported() {
+		if (!DinamicGLFeature_APPLE_object_purgeable_loaded) {
+			InitDinamicGLFeature_APPLE_object_purgeable();
+		}
+		if (DynamicGL_ObjectPurgeableAPPLE==0) return false; 
+		if (DynamicGL_ObjectUnpurgeableAPPLE==0) return false; 
+		if (DynamicGL_GetObjectParameterivAPPLE==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_APPLE_object_purgeable*/
+
 /*EXT_index_material*/
 #ifdef USE_DYNAMIC_GL_EXT_index_material
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_IndexMaterialEXT)(GLenum face , GLenum mode) = 0; }
@@ -1649,6 +1878,34 @@ bool DinamicGLFeature_SGIS_texture_filter4_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIS_texture_filter4*/
+
+/*EXT_framebuffer_multisample_blit_scaled*/
+#ifdef USE_DYNAMIC_GL_EXT_framebuffer_multisample_blit_scaled
+static bool DinamicGLFeature_EXT_framebuffer_multisample_blit_scaled_loaded = false; 
+static void InitDinamicGLFeature_EXT_framebuffer_multisample_blit_scaled() {
+		DinamicGLFeature_EXT_framebuffer_multisample_blit_scaled_loaded = true; 
+}
+bool DinamicGLFeature_EXT_framebuffer_multisample_blit_scaled_Supported() {
+		if (!DinamicGLFeature_EXT_framebuffer_multisample_blit_scaled_loaded) {
+			InitDinamicGLFeature_EXT_framebuffer_multisample_blit_scaled();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_EXT_framebuffer_multisample_blit_scaled*/
+
+/*ARB_texture_compression_bptc*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_compression_bptc
+static bool DinamicGLFeature_ARB_texture_compression_bptc_loaded = false; 
+static void InitDinamicGLFeature_ARB_texture_compression_bptc() {
+		DinamicGLFeature_ARB_texture_compression_bptc_loaded = true; 
+}
+bool DinamicGLFeature_ARB_texture_compression_bptc_Supported() {
+		if (!DinamicGLFeature_ARB_texture_compression_bptc_loaded) {
+			InitDinamicGLFeature_ARB_texture_compression_bptc();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_texture_compression_bptc*/
 
 /*APPLE_flush_buffer_range*/
 #ifdef USE_DYNAMIC_GL_APPLE_flush_buffer_range
@@ -1687,6 +1944,23 @@ bool DinamicGLFeature_SGIS_texture_color_mask_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_SGIS_texture_color_mask*/
 
+/*EXT_provoking_vertex*/
+#ifdef USE_DYNAMIC_GL_EXT_provoking_vertex
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProvokingVertexEXT)(GLenum mode) = 0; }
+static bool DinamicGLFeature_EXT_provoking_vertex_loaded = false; 
+static void InitDinamicGLFeature_EXT_provoking_vertex() {
+		DynamicGL_ProvokingVertexEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode)>("glProvokingVertexEXT"); 
+		DinamicGLFeature_EXT_provoking_vertex_loaded = true; 
+}
+bool DinamicGLFeature_EXT_provoking_vertex_Supported() {
+		if (!DinamicGLFeature_EXT_provoking_vertex_loaded) {
+			InitDinamicGLFeature_EXT_provoking_vertex();
+		}
+		if (DynamicGL_ProvokingVertexEXT==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_EXT_provoking_vertex*/
+
 /*ARB_fragment_shader*/
 #ifdef USE_DYNAMIC_GL_ARB_fragment_shader
 static bool DinamicGLFeature_ARB_fragment_shader_loaded = false; 
@@ -1717,6 +1991,80 @@ bool DinamicGLFeature_GREMEDY_frame_terminator_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_GREMEDY_frame_terminator*/
+
+/*ARB_robustness*/
+#ifdef USE_DYNAMIC_GL_ARB_robustness
+extern "C" { GLenum (DYNAMIC_GL_APIENTRYP DynamicGL_GetGraphicsResetStatusARB)() = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnMapdvARB)(GLenum target , GLenum query , GLsizei bufSize , GLdouble *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnMapfvARB)(GLenum target , GLenum query , GLsizei bufSize , GLfloat *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnMapivARB)(GLenum target , GLenum query , GLsizei bufSize , GLint *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnPixelMapfvARB)(GLenum map , GLsizei bufSize , GLfloat *values) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnPixelMapuivARB)(GLenum map , GLsizei bufSize , GLuint *values) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnPixelMapusvARB)(GLenum map , GLsizei bufSize , GLushort *values) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnPolygonStippleARB)(GLsizei bufSize , GLubyte *pattern) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnColorTableARB)(GLenum target , GLenum format , GLenum type , GLsizei bufSize , GLvoid *table) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnConvolutionFilterARB)(GLenum target , GLenum format , GLenum type , GLsizei bufSize , GLvoid *image) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnSeparableFilterARB)(GLenum target , GLenum format , GLenum type , GLsizei rowBufSize , GLvoid *row , GLsizei columnBufSize , GLvoid *column , GLvoid *span) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnHistogramARB)(GLenum target , GLboolean reset , GLenum format , GLenum type , GLsizei bufSize , GLvoid *values) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnMinmaxARB)(GLenum target , GLboolean reset , GLenum format , GLenum type , GLsizei bufSize , GLvoid *values) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnTexImageARB)(GLenum target , GLint level , GLenum format , GLenum type , GLsizei bufSize , GLvoid *img) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ReadnPixelsARB)(GLint x , GLint y , GLsizei width , GLsizei height , GLenum format , GLenum type , GLsizei bufSize , GLvoid *data) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnCompressedTexImageARB)(GLenum target , GLint lod , GLsizei bufSize , GLvoid *img) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnUniformfvARB)(GLuint program , GLint location , GLsizei bufSize , GLfloat *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnUniformivARB)(GLuint program , GLint location , GLsizei bufSize , GLint *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnUniformuivARB)(GLuint program , GLint location , GLsizei bufSize , GLuint *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnUniformdvARB)(GLuint program , GLint location , GLsizei bufSize , GLdouble *params) = 0; }
+static bool DinamicGLFeature_ARB_robustness_loaded = false; 
+static void InitDinamicGLFeature_ARB_robustness() {
+		DynamicGL_GetGraphicsResetStatusARB = DynamicGL_LoadFunction<GLenum (DYNAMIC_GL_APIENTRYP)()>("glGetGraphicsResetStatusARB"); 
+		DynamicGL_GetnMapdvARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum query , GLsizei bufSize , GLdouble *v)>("glGetnMapdvARB"); 
+		DynamicGL_GetnMapfvARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum query , GLsizei bufSize , GLfloat *v)>("glGetnMapfvARB"); 
+		DynamicGL_GetnMapivARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum query , GLsizei bufSize , GLint *v)>("glGetnMapivARB"); 
+		DynamicGL_GetnPixelMapfvARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum map , GLsizei bufSize , GLfloat *values)>("glGetnPixelMapfvARB"); 
+		DynamicGL_GetnPixelMapuivARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum map , GLsizei bufSize , GLuint *values)>("glGetnPixelMapuivARB"); 
+		DynamicGL_GetnPixelMapusvARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum map , GLsizei bufSize , GLushort *values)>("glGetnPixelMapusvARB"); 
+		DynamicGL_GetnPolygonStippleARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei bufSize , GLubyte *pattern)>("glGetnPolygonStippleARB"); 
+		DynamicGL_GetnColorTableARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum format , GLenum type , GLsizei bufSize , GLvoid *table)>("glGetnColorTableARB"); 
+		DynamicGL_GetnConvolutionFilterARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum format , GLenum type , GLsizei bufSize , GLvoid *image)>("glGetnConvolutionFilterARB"); 
+		DynamicGL_GetnSeparableFilterARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum format , GLenum type , GLsizei rowBufSize , GLvoid *row , GLsizei columnBufSize , GLvoid *column , GLvoid *span)>("glGetnSeparableFilterARB"); 
+		DynamicGL_GetnHistogramARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLboolean reset , GLenum format , GLenum type , GLsizei bufSize , GLvoid *values)>("glGetnHistogramARB"); 
+		DynamicGL_GetnMinmaxARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLboolean reset , GLenum format , GLenum type , GLsizei bufSize , GLvoid *values)>("glGetnMinmaxARB"); 
+		DynamicGL_GetnTexImageARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint level , GLenum format , GLenum type , GLsizei bufSize , GLvoid *img)>("glGetnTexImageARB"); 
+		DynamicGL_ReadnPixelsARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint x , GLint y , GLsizei width , GLsizei height , GLenum format , GLenum type , GLsizei bufSize , GLvoid *data)>("glReadnPixelsARB"); 
+		DynamicGL_GetnCompressedTexImageARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint lod , GLsizei bufSize , GLvoid *img)>("glGetnCompressedTexImageARB"); 
+		DynamicGL_GetnUniformfvARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei bufSize , GLfloat *params)>("glGetnUniformfvARB"); 
+		DynamicGL_GetnUniformivARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei bufSize , GLint *params)>("glGetnUniformivARB"); 
+		DynamicGL_GetnUniformuivARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei bufSize , GLuint *params)>("glGetnUniformuivARB"); 
+		DynamicGL_GetnUniformdvARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei bufSize , GLdouble *params)>("glGetnUniformdvARB"); 
+		DinamicGLFeature_ARB_robustness_loaded = true; 
+}
+bool DinamicGLFeature_ARB_robustness_Supported() {
+		if (!DinamicGLFeature_ARB_robustness_loaded) {
+			InitDinamicGLFeature_ARB_robustness();
+		}
+		if (DynamicGL_GetGraphicsResetStatusARB==0) return false; 
+		if (DynamicGL_GetnMapdvARB==0) return false; 
+		if (DynamicGL_GetnMapfvARB==0) return false; 
+		if (DynamicGL_GetnMapivARB==0) return false; 
+		if (DynamicGL_GetnPixelMapfvARB==0) return false; 
+		if (DynamicGL_GetnPixelMapuivARB==0) return false; 
+		if (DynamicGL_GetnPixelMapusvARB==0) return false; 
+		if (DynamicGL_GetnPolygonStippleARB==0) return false; 
+		if (DynamicGL_GetnColorTableARB==0) return false; 
+		if (DynamicGL_GetnConvolutionFilterARB==0) return false; 
+		if (DynamicGL_GetnSeparableFilterARB==0) return false; 
+		if (DynamicGL_GetnHistogramARB==0) return false; 
+		if (DynamicGL_GetnMinmaxARB==0) return false; 
+		if (DynamicGL_GetnTexImageARB==0) return false; 
+		if (DynamicGL_ReadnPixelsARB==0) return false; 
+		if (DynamicGL_GetnCompressedTexImageARB==0) return false; 
+		if (DynamicGL_GetnUniformfvARB==0) return false; 
+		if (DynamicGL_GetnUniformivARB==0) return false; 
+		if (DynamicGL_GetnUniformuivARB==0) return false; 
+		if (DynamicGL_GetnUniformdvARB==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_robustness*/
 
 /*ARB_shading_language_100*/
 #ifdef USE_DYNAMIC_GL_ARB_shading_language_100
@@ -1893,6 +2241,20 @@ bool DinamicGLFeature_SGIX_reference_plane_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_reference_plane*/
+
+/*ARB_gpu_shader5*/
+#ifdef USE_DYNAMIC_GL_ARB_gpu_shader5
+static bool DinamicGLFeature_ARB_gpu_shader5_loaded = false; 
+static void InitDinamicGLFeature_ARB_gpu_shader5() {
+		DinamicGLFeature_ARB_gpu_shader5_loaded = true; 
+}
+bool DinamicGLFeature_ARB_gpu_shader5_Supported() {
+		if (!DinamicGLFeature_ARB_gpu_shader5_loaded) {
+			InitDinamicGLFeature_ARB_gpu_shader5();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_gpu_shader5*/
 
 /*HP_image_transform*/
 #ifdef USE_DYNAMIC_GL_HP_image_transform
@@ -2087,6 +2449,8 @@ extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4uivEXT)(GLuint 
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_NamedBufferDataEXT)(GLuint buffer , GLsizeiptr size , const GLvoid *data , GLenum usage) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_NamedBufferSubDataEXT)(GLuint buffer , GLintptr offset , GLsizeiptr size , const GLvoid *data) = 0; }
 extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_UnmapNamedBufferEXT)(GLuint buffer) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FlushMappedNamedBufferRangeEXT)(GLuint buffer , GLintptr offset , GLsizeiptr length) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_NamedCopyBufferSubDataEXT)(GLuint readBuffer , GLuint writeBuffer , GLintptr readOffset , GLintptr writeOffset , GLsizeiptr size) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetNamedBufferParameterivEXT)(GLuint buffer , GLenum pname , GLint *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetNamedBufferPointervEXT)(GLuint buffer , GLenum pname , GLvoid* *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetNamedBufferSubDataEXT)(GLuint buffer , GLintptr offset , GLsizeiptr size , GLvoid *data) = 0; }
@@ -2113,6 +2477,23 @@ extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_NamedFramebufferTextureLayerEX
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_NamedFramebufferTextureFaceEXT)(GLuint framebuffer , GLenum attachment , GLuint texture , GLint level , GLenum face) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureRenderbufferEXT)(GLuint texture , GLenum target , GLuint renderbuffer) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexRenderbufferEXT)(GLenum texunit , GLenum target , GLuint renderbuffer) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1dEXT)(GLuint program , GLint location , GLdouble x) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2dEXT)(GLuint program , GLint location , GLdouble x , GLdouble y) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3dEXT)(GLuint program , GLint location , GLdouble x , GLdouble y , GLdouble z) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4dEXT)(GLuint program , GLint location , GLdouble x , GLdouble y , GLdouble z , GLdouble w) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1dvEXT)(GLuint program , GLint location , GLsizei count , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2dvEXT)(GLuint program , GLint location , GLsizei count , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3dvEXT)(GLuint program , GLint location , GLsizei count , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4dvEXT)(GLuint program , GLint location , GLsizei count , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix2dvEXT)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix3dvEXT)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix4dvEXT)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix2x3dvEXT)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix2x4dvEXT)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix3x2dvEXT)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix3x4dvEXT)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix4x2dvEXT)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix4x3dvEXT)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value) = 0; }
 static bool DinamicGLFeature_EXT_direct_state_access_loaded = false; 
 static void InitDinamicGLFeature_EXT_direct_state_access() {
 		DynamicGL_ClientAttribDefaultEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLbitfield mask)>("glClientAttribDefaultEXT"); 
@@ -2274,6 +2655,8 @@ static void InitDinamicGLFeature_EXT_direct_state_access() {
 		DynamicGL_NamedBufferDataEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint buffer , GLsizeiptr size , const GLvoid *data , GLenum usage)>("glNamedBufferDataEXT"); 
 		DynamicGL_NamedBufferSubDataEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint buffer , GLintptr offset , GLsizeiptr size , const GLvoid *data)>("glNamedBufferSubDataEXT"); 
 		DynamicGL_UnmapNamedBufferEXT = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLuint buffer)>("glUnmapNamedBufferEXT"); 
+		DynamicGL_FlushMappedNamedBufferRangeEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint buffer , GLintptr offset , GLsizeiptr length)>("glFlushMappedNamedBufferRangeEXT"); 
+		DynamicGL_NamedCopyBufferSubDataEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint readBuffer , GLuint writeBuffer , GLintptr readOffset , GLintptr writeOffset , GLsizeiptr size)>("glNamedCopyBufferSubDataEXT"); 
 		DynamicGL_GetNamedBufferParameterivEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint buffer , GLenum pname , GLint *params)>("glGetNamedBufferParameterivEXT"); 
 		DynamicGL_GetNamedBufferPointervEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint buffer , GLenum pname , GLvoid* *params)>("glGetNamedBufferPointervEXT"); 
 		DynamicGL_GetNamedBufferSubDataEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint buffer , GLintptr offset , GLsizeiptr size , GLvoid *data)>("glGetNamedBufferSubDataEXT"); 
@@ -2300,6 +2683,23 @@ static void InitDinamicGLFeature_EXT_direct_state_access() {
 		DynamicGL_NamedFramebufferTextureFaceEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint framebuffer , GLenum attachment , GLuint texture , GLint level , GLenum face)>("glNamedFramebufferTextureFaceEXT"); 
 		DynamicGL_TextureRenderbufferEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint texture , GLenum target , GLuint renderbuffer)>("glTextureRenderbufferEXT"); 
 		DynamicGL_MultiTexRenderbufferEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum texunit , GLenum target , GLuint renderbuffer)>("glMultiTexRenderbufferEXT"); 
+		DynamicGL_ProgramUniform1dEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLdouble x)>("glProgramUniform1dEXT"); 
+		DynamicGL_ProgramUniform2dEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLdouble x , GLdouble y)>("glProgramUniform2dEXT"); 
+		DynamicGL_ProgramUniform3dEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLdouble x , GLdouble y , GLdouble z)>("glProgramUniform3dEXT"); 
+		DynamicGL_ProgramUniform4dEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLdouble x , GLdouble y , GLdouble z , GLdouble w)>("glProgramUniform4dEXT"); 
+		DynamicGL_ProgramUniform1dvEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLdouble *value)>("glProgramUniform1dvEXT"); 
+		DynamicGL_ProgramUniform2dvEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLdouble *value)>("glProgramUniform2dvEXT"); 
+		DynamicGL_ProgramUniform3dvEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLdouble *value)>("glProgramUniform3dvEXT"); 
+		DynamicGL_ProgramUniform4dvEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLdouble *value)>("glProgramUniform4dvEXT"); 
+		DynamicGL_ProgramUniformMatrix2dvEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glProgramUniformMatrix2dvEXT"); 
+		DynamicGL_ProgramUniformMatrix3dvEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glProgramUniformMatrix3dvEXT"); 
+		DynamicGL_ProgramUniformMatrix4dvEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glProgramUniformMatrix4dvEXT"); 
+		DynamicGL_ProgramUniformMatrix2x3dvEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glProgramUniformMatrix2x3dvEXT"); 
+		DynamicGL_ProgramUniformMatrix2x4dvEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glProgramUniformMatrix2x4dvEXT"); 
+		DynamicGL_ProgramUniformMatrix3x2dvEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glProgramUniformMatrix3x2dvEXT"); 
+		DynamicGL_ProgramUniformMatrix3x4dvEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glProgramUniformMatrix3x4dvEXT"); 
+		DynamicGL_ProgramUniformMatrix4x2dvEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glProgramUniformMatrix4x2dvEXT"); 
+		DynamicGL_ProgramUniformMatrix4x3dvEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glProgramUniformMatrix4x3dvEXT"); 
 		DinamicGLFeature_EXT_direct_state_access_loaded = true; 
 }
 bool DinamicGLFeature_EXT_direct_state_access_Supported() {
@@ -2465,6 +2865,8 @@ bool DinamicGLFeature_EXT_direct_state_access_Supported() {
 		if (DynamicGL_NamedBufferDataEXT==0) return false; 
 		if (DynamicGL_NamedBufferSubDataEXT==0) return false; 
 		if (DynamicGL_UnmapNamedBufferEXT==0) return false; 
+		if (DynamicGL_FlushMappedNamedBufferRangeEXT==0) return false; 
+		if (DynamicGL_NamedCopyBufferSubDataEXT==0) return false; 
 		if (DynamicGL_GetNamedBufferParameterivEXT==0) return false; 
 		if (DynamicGL_GetNamedBufferPointervEXT==0) return false; 
 		if (DynamicGL_GetNamedBufferSubDataEXT==0) return false; 
@@ -2491,16 +2893,47 @@ bool DinamicGLFeature_EXT_direct_state_access_Supported() {
 		if (DynamicGL_NamedFramebufferTextureFaceEXT==0) return false; 
 		if (DynamicGL_TextureRenderbufferEXT==0) return false; 
 		if (DynamicGL_MultiTexRenderbufferEXT==0) return false; 
+		if (DynamicGL_ProgramUniform1dEXT==0) return false; 
+		if (DynamicGL_ProgramUniform2dEXT==0) return false; 
+		if (DynamicGL_ProgramUniform3dEXT==0) return false; 
+		if (DynamicGL_ProgramUniform4dEXT==0) return false; 
+		if (DynamicGL_ProgramUniform1dvEXT==0) return false; 
+		if (DynamicGL_ProgramUniform2dvEXT==0) return false; 
+		if (DynamicGL_ProgramUniform3dvEXT==0) return false; 
+		if (DynamicGL_ProgramUniform4dvEXT==0) return false; 
+		if (DynamicGL_ProgramUniformMatrix2dvEXT==0) return false; 
+		if (DynamicGL_ProgramUniformMatrix3dvEXT==0) return false; 
+		if (DynamicGL_ProgramUniformMatrix4dvEXT==0) return false; 
+		if (DynamicGL_ProgramUniformMatrix2x3dvEXT==0) return false; 
+		if (DynamicGL_ProgramUniformMatrix2x4dvEXT==0) return false; 
+		if (DynamicGL_ProgramUniformMatrix3x2dvEXT==0) return false; 
+		if (DynamicGL_ProgramUniformMatrix3x4dvEXT==0) return false; 
+		if (DynamicGL_ProgramUniformMatrix4x2dvEXT==0) return false; 
+		if (DynamicGL_ProgramUniformMatrix4x3dvEXT==0) return false; 
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_direct_state_access*/
 
+/*ARB_texture_swizzle*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_swizzle
+static bool DinamicGLFeature_ARB_texture_swizzle_loaded = false; 
+static void InitDinamicGLFeature_ARB_texture_swizzle() {
+		DinamicGLFeature_ARB_texture_swizzle_loaded = true; 
+}
+bool DinamicGLFeature_ARB_texture_swizzle_Supported() {
+		if (!DinamicGLFeature_ARB_texture_swizzle_loaded) {
+			InitDinamicGLFeature_ARB_texture_swizzle();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_texture_swizzle*/
+
 /*ARB_multisample*/
 #ifdef USE_DYNAMIC_GL_ARB_multisample
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleCoverageARB)(GLclampf value , GLboolean invert) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleCoverageARB)(GLfloat value , GLboolean invert) = 0; }
 static bool DinamicGLFeature_ARB_multisample_loaded = false; 
 static void InitDinamicGLFeature_ARB_multisample() {
-		DynamicGL_SampleCoverageARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLclampf value , GLboolean invert)>("glSampleCoverageARB"); 
+		DynamicGL_SampleCoverageARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLfloat value , GLboolean invert)>("glSampleCoverageARB"); 
 		DinamicGLFeature_ARB_multisample_loaded = true; 
 }
 bool DinamicGLFeature_ARB_multisample_Supported() {
@@ -2540,6 +2973,20 @@ bool DinamicGLFeature_ATI_texture_mirror_once_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_ATI_texture_mirror_once*/
 
+/*APPLE_rgb_422*/
+#ifdef USE_DYNAMIC_GL_APPLE_rgb_422
+static bool DinamicGLFeature_APPLE_rgb_422_loaded = false; 
+static void InitDinamicGLFeature_APPLE_rgb_422() {
+		DinamicGLFeature_APPLE_rgb_422_loaded = true; 
+}
+bool DinamicGLFeature_APPLE_rgb_422_Supported() {
+		if (!DinamicGLFeature_APPLE_rgb_422_loaded) {
+			InitDinamicGLFeature_APPLE_rgb_422();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_APPLE_rgb_422*/
+
 /*EXT_shared_texture_palette*/
 #ifdef USE_DYNAMIC_GL_EXT_shared_texture_palette
 static bool DinamicGLFeature_EXT_shared_texture_palette_loaded = false; 
@@ -2567,6 +3014,32 @@ bool DinamicGLFeature_ARB_texture_rg_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_texture_rg*/
+
+/*ARB_draw_buffers_blend*/
+#ifdef USE_DYNAMIC_GL_ARB_draw_buffers_blend
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationiARB)(GLuint buf , GLenum mode) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationSeparateiARB)(GLuint buf , GLenum modeRGB , GLenum modeAlpha) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFunciARB)(GLuint buf , GLenum src , GLenum dst) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFuncSeparateiARB)(GLuint buf , GLenum srcRGB , GLenum dstRGB , GLenum srcAlpha , GLenum dstAlpha) = 0; }
+static bool DinamicGLFeature_ARB_draw_buffers_blend_loaded = false; 
+static void InitDinamicGLFeature_ARB_draw_buffers_blend() {
+		DynamicGL_BlendEquationiARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint buf , GLenum mode)>("glBlendEquationiARB"); 
+		DynamicGL_BlendEquationSeparateiARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint buf , GLenum modeRGB , GLenum modeAlpha)>("glBlendEquationSeparateiARB"); 
+		DynamicGL_BlendFunciARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint buf , GLenum src , GLenum dst)>("glBlendFunciARB"); 
+		DynamicGL_BlendFuncSeparateiARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint buf , GLenum srcRGB , GLenum dstRGB , GLenum srcAlpha , GLenum dstAlpha)>("glBlendFuncSeparateiARB"); 
+		DinamicGLFeature_ARB_draw_buffers_blend_loaded = true; 
+}
+bool DinamicGLFeature_ARB_draw_buffers_blend_Supported() {
+		if (!DinamicGLFeature_ARB_draw_buffers_blend_loaded) {
+			InitDinamicGLFeature_ARB_draw_buffers_blend();
+		}
+		if (DynamicGL_BlendEquationiARB==0) return false; 
+		if (DynamicGL_BlendEquationSeparateiARB==0) return false; 
+		if (DynamicGL_BlendFunciARB==0) return false; 
+		if (DynamicGL_BlendFuncSeparateiARB==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_draw_buffers_blend*/
 
 /*EXT_stencil_clear_tag*/
 #ifdef USE_DYNAMIC_GL_EXT_stencil_clear_tag
@@ -2816,6 +3289,20 @@ bool DinamicGLFeature_ATI_vertex_streams_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_ATI_vertex_streams*/
 
+/*AMD_depth_clamp_separate*/
+#ifdef USE_DYNAMIC_GL_AMD_depth_clamp_separate
+static bool DinamicGLFeature_AMD_depth_clamp_separate_loaded = false; 
+static void InitDinamicGLFeature_AMD_depth_clamp_separate() {
+		DinamicGLFeature_AMD_depth_clamp_separate_loaded = true; 
+}
+bool DinamicGLFeature_AMD_depth_clamp_separate_Supported() {
+		if (!DinamicGLFeature_AMD_depth_clamp_separate_loaded) {
+			InitDinamicGLFeature_AMD_depth_clamp_separate();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_AMD_depth_clamp_separate*/
+
 /*3DFX_texture_compression_FXT1*/
 #ifdef USE_DYNAMIC_GL_3DFX_texture_compression_FXT1
 static bool DinamicGLFeature_3DFX_texture_compression_FXT1_loaded = false; 
@@ -2846,10 +3333,10 @@ bool DinamicGLFeature_SGIX_shadow_ambient_Supported() {
 
 /*EXT_blend_color*/
 #ifdef USE_DYNAMIC_GL_EXT_blend_color
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendColorEXT)(GLclampf red , GLclampf green , GLclampf blue , GLclampf alpha) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendColorEXT)(GLfloat red , GLfloat green , GLfloat blue , GLfloat alpha) = 0; }
 static bool DinamicGLFeature_EXT_blend_color_loaded = false; 
 static void InitDinamicGLFeature_EXT_blend_color() {
-		DynamicGL_BlendColorEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLclampf red , GLclampf green , GLclampf blue , GLclampf alpha)>("glBlendColorEXT"); 
+		DynamicGL_BlendColorEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLfloat red , GLfloat green , GLfloat blue , GLfloat alpha)>("glBlendColorEXT"); 
 		DinamicGLFeature_EXT_blend_color_loaded = true; 
 }
 bool DinamicGLFeature_EXT_blend_color_Supported() {
@@ -3022,6 +3509,181 @@ bool DinamicGLFeature_SGIX_async_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_async*/
+
+/*ARB_texture_cube_map_array*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_cube_map_array
+static bool DinamicGLFeature_ARB_texture_cube_map_array_loaded = false; 
+static void InitDinamicGLFeature_ARB_texture_cube_map_array() {
+		DinamicGLFeature_ARB_texture_cube_map_array_loaded = true; 
+}
+bool DinamicGLFeature_ARB_texture_cube_map_array_Supported() {
+		if (!DinamicGLFeature_ARB_texture_cube_map_array_loaded) {
+			InitDinamicGLFeature_ARB_texture_cube_map_array();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_texture_cube_map_array*/
+
+/*NV_path_rendering*/
+#ifdef USE_DYNAMIC_GL_NV_path_rendering
+extern "C" { GLuint (DYNAMIC_GL_APIENTRYP DynamicGL_GenPathsNV)(GLsizei range) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeletePathsNV)(GLuint path , GLsizei range) = 0; }
+extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsPathNV)(GLuint path) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PathCommandsNV)(GLuint path , GLsizei numCommands , const GLubyte *commands , GLsizei numCoords , GLenum coordType , const GLvoid *coords) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PathCoordsNV)(GLuint path , GLsizei numCoords , GLenum coordType , const GLvoid *coords) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PathSubCommandsNV)(GLuint path , GLsizei commandStart , GLsizei commandsToDelete , GLsizei numCommands , const GLubyte *commands , GLsizei numCoords , GLenum coordType , const GLvoid *coords) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PathSubCoordsNV)(GLuint path , GLsizei coordStart , GLsizei numCoords , GLenum coordType , const GLvoid *coords) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PathStringNV)(GLuint path , GLenum format , GLsizei length , const GLvoid *pathString) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PathGlyphsNV)(GLuint firstPathName , GLenum fontTarget , const GLvoid *fontName , GLbitfield fontStyle , GLsizei numGlyphs , GLenum type , const GLvoid *charcodes , GLenum handleMissingGlyphs , GLuint pathParameterTemplate , GLfloat emScale) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PathGlyphRangeNV)(GLuint firstPathName , GLenum fontTarget , const GLvoid *fontName , GLbitfield fontStyle , GLuint firstGlyph , GLsizei numGlyphs , GLenum handleMissingGlyphs , GLuint pathParameterTemplate , GLfloat emScale) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WeightPathsNV)(GLuint resultPath , GLsizei numPaths , const GLuint *paths , const GLfloat *weights) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CopyPathNV)(GLuint resultPath , GLuint srcPath) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_InterpolatePathsNV)(GLuint resultPath , GLuint pathA , GLuint pathB , GLfloat weight) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TransformPathNV)(GLuint resultPath , GLuint srcPath , GLenum transformType , const GLfloat *transformValues) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PathParameterivNV)(GLuint path , GLenum pname , const GLint *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PathParameteriNV)(GLuint path , GLenum pname , GLint value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PathParameterfvNV)(GLuint path , GLenum pname , const GLfloat *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PathParameterfNV)(GLuint path , GLenum pname , GLfloat value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PathDashArrayNV)(GLuint path , GLsizei dashCount , const GLfloat *dashArray) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PathStencilFuncNV)(GLenum func , GLint ref , GLuint mask) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PathStencilDepthOffsetNV)(GLfloat factor , GLfloat units) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilFillPathNV)(GLuint path , GLenum fillMode , GLuint mask) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilStrokePathNV)(GLuint path , GLint reference , GLuint mask) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilFillPathInstancedNV)(GLsizei numPaths , GLenum pathNameType , const GLvoid *paths , GLuint pathBase , GLenum fillMode , GLuint mask , GLenum transformType , const GLfloat *transformValues) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilStrokePathInstancedNV)(GLsizei numPaths , GLenum pathNameType , const GLvoid *paths , GLuint pathBase , GLint reference , GLuint mask , GLenum transformType , const GLfloat *transformValues) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PathCoverDepthFuncNV)(GLenum func) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PathColorGenNV)(GLenum color , GLenum genMode , GLenum colorFormat , const GLfloat *coeffs) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PathTexGenNV)(GLenum texCoordSet , GLenum genMode , GLint components , const GLfloat *coeffs) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PathFogGenNV)(GLenum genMode) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CoverFillPathNV)(GLuint path , GLenum coverMode) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CoverStrokePathNV)(GLuint path , GLenum coverMode) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CoverFillPathInstancedNV)(GLsizei numPaths , GLenum pathNameType , const GLvoid *paths , GLuint pathBase , GLenum coverMode , GLenum transformType , const GLfloat *transformValues) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CoverStrokePathInstancedNV)(GLsizei numPaths , GLenum pathNameType , const GLvoid *paths , GLuint pathBase , GLenum coverMode , GLenum transformType , const GLfloat *transformValues) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPathParameterivNV)(GLuint path , GLenum pname , GLint *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPathParameterfvNV)(GLuint path , GLenum pname , GLfloat *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPathCommandsNV)(GLuint path , GLubyte *commands) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPathCoordsNV)(GLuint path , GLfloat *coords) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPathDashArrayNV)(GLuint path , GLfloat *dashArray) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPathMetricsNV)(GLbitfield metricQueryMask , GLsizei numPaths , GLenum pathNameType , const GLvoid *paths , GLuint pathBase , GLsizei stride , GLfloat *metrics) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPathMetricRangeNV)(GLbitfield metricQueryMask , GLuint firstPathName , GLsizei numPaths , GLsizei stride , GLfloat *metrics) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPathSpacingNV)(GLenum pathListMode , GLsizei numPaths , GLenum pathNameType , const GLvoid *paths , GLuint pathBase , GLfloat advanceScale , GLfloat kerningScale , GLenum transformType , GLfloat *returnedSpacing) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPathColorGenivNV)(GLenum color , GLenum pname , GLint *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPathColorGenfvNV)(GLenum color , GLenum pname , GLfloat *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPathTexGenivNV)(GLenum texCoordSet , GLenum pname , GLint *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPathTexGenfvNV)(GLenum texCoordSet , GLenum pname , GLfloat *value) = 0; }
+extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsPointInFillPathNV)(GLuint path , GLuint mask , GLfloat x , GLfloat y) = 0; }
+extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsPointInStrokePathNV)(GLuint path , GLfloat x , GLfloat y) = 0; }
+extern "C" { GLfloat (DYNAMIC_GL_APIENTRYP DynamicGL_GetPathLengthNV)(GLuint path , GLsizei startSegment , GLsizei numSegments) = 0; }
+extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_PointAlongPathNV)(GLuint path , GLsizei startSegment , GLsizei numSegments , GLfloat distance , GLfloat *x , GLfloat *y , GLfloat *tangentX , GLfloat *tangentY) = 0; }
+static bool DinamicGLFeature_NV_path_rendering_loaded = false; 
+static void InitDinamicGLFeature_NV_path_rendering() {
+		DynamicGL_GenPathsNV = DynamicGL_LoadFunction<GLuint (DYNAMIC_GL_APIENTRYP)(GLsizei range)>("glGenPathsNV"); 
+		DynamicGL_DeletePathsNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint path , GLsizei range)>("glDeletePathsNV"); 
+		DynamicGL_IsPathNV = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLuint path)>("glIsPathNV"); 
+		DynamicGL_PathCommandsNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint path , GLsizei numCommands , const GLubyte *commands , GLsizei numCoords , GLenum coordType , const GLvoid *coords)>("glPathCommandsNV"); 
+		DynamicGL_PathCoordsNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint path , GLsizei numCoords , GLenum coordType , const GLvoid *coords)>("glPathCoordsNV"); 
+		DynamicGL_PathSubCommandsNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint path , GLsizei commandStart , GLsizei commandsToDelete , GLsizei numCommands , const GLubyte *commands , GLsizei numCoords , GLenum coordType , const GLvoid *coords)>("glPathSubCommandsNV"); 
+		DynamicGL_PathSubCoordsNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint path , GLsizei coordStart , GLsizei numCoords , GLenum coordType , const GLvoid *coords)>("glPathSubCoordsNV"); 
+		DynamicGL_PathStringNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint path , GLenum format , GLsizei length , const GLvoid *pathString)>("glPathStringNV"); 
+		DynamicGL_PathGlyphsNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint firstPathName , GLenum fontTarget , const GLvoid *fontName , GLbitfield fontStyle , GLsizei numGlyphs , GLenum type , const GLvoid *charcodes , GLenum handleMissingGlyphs , GLuint pathParameterTemplate , GLfloat emScale)>("glPathGlyphsNV"); 
+		DynamicGL_PathGlyphRangeNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint firstPathName , GLenum fontTarget , const GLvoid *fontName , GLbitfield fontStyle , GLuint firstGlyph , GLsizei numGlyphs , GLenum handleMissingGlyphs , GLuint pathParameterTemplate , GLfloat emScale)>("glPathGlyphRangeNV"); 
+		DynamicGL_WeightPathsNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint resultPath , GLsizei numPaths , const GLuint *paths , const GLfloat *weights)>("glWeightPathsNV"); 
+		DynamicGL_CopyPathNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint resultPath , GLuint srcPath)>("glCopyPathNV"); 
+		DynamicGL_InterpolatePathsNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint resultPath , GLuint pathA , GLuint pathB , GLfloat weight)>("glInterpolatePathsNV"); 
+		DynamicGL_TransformPathNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint resultPath , GLuint srcPath , GLenum transformType , const GLfloat *transformValues)>("glTransformPathNV"); 
+		DynamicGL_PathParameterivNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint path , GLenum pname , const GLint *value)>("glPathParameterivNV"); 
+		DynamicGL_PathParameteriNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint path , GLenum pname , GLint value)>("glPathParameteriNV"); 
+		DynamicGL_PathParameterfvNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint path , GLenum pname , const GLfloat *value)>("glPathParameterfvNV"); 
+		DynamicGL_PathParameterfNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint path , GLenum pname , GLfloat value)>("glPathParameterfNV"); 
+		DynamicGL_PathDashArrayNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint path , GLsizei dashCount , const GLfloat *dashArray)>("glPathDashArrayNV"); 
+		DynamicGL_PathStencilFuncNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum func , GLint ref , GLuint mask)>("glPathStencilFuncNV"); 
+		DynamicGL_PathStencilDepthOffsetNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLfloat factor , GLfloat units)>("glPathStencilDepthOffsetNV"); 
+		DynamicGL_StencilFillPathNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint path , GLenum fillMode , GLuint mask)>("glStencilFillPathNV"); 
+		DynamicGL_StencilStrokePathNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint path , GLint reference , GLuint mask)>("glStencilStrokePathNV"); 
+		DynamicGL_StencilFillPathInstancedNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei numPaths , GLenum pathNameType , const GLvoid *paths , GLuint pathBase , GLenum fillMode , GLuint mask , GLenum transformType , const GLfloat *transformValues)>("glStencilFillPathInstancedNV"); 
+		DynamicGL_StencilStrokePathInstancedNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei numPaths , GLenum pathNameType , const GLvoid *paths , GLuint pathBase , GLint reference , GLuint mask , GLenum transformType , const GLfloat *transformValues)>("glStencilStrokePathInstancedNV"); 
+		DynamicGL_PathCoverDepthFuncNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum func)>("glPathCoverDepthFuncNV"); 
+		DynamicGL_PathColorGenNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum color , GLenum genMode , GLenum colorFormat , const GLfloat *coeffs)>("glPathColorGenNV"); 
+		DynamicGL_PathTexGenNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum texCoordSet , GLenum genMode , GLint components , const GLfloat *coeffs)>("glPathTexGenNV"); 
+		DynamicGL_PathFogGenNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum genMode)>("glPathFogGenNV"); 
+		DynamicGL_CoverFillPathNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint path , GLenum coverMode)>("glCoverFillPathNV"); 
+		DynamicGL_CoverStrokePathNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint path , GLenum coverMode)>("glCoverStrokePathNV"); 
+		DynamicGL_CoverFillPathInstancedNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei numPaths , GLenum pathNameType , const GLvoid *paths , GLuint pathBase , GLenum coverMode , GLenum transformType , const GLfloat *transformValues)>("glCoverFillPathInstancedNV"); 
+		DynamicGL_CoverStrokePathInstancedNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei numPaths , GLenum pathNameType , const GLvoid *paths , GLuint pathBase , GLenum coverMode , GLenum transformType , const GLfloat *transformValues)>("glCoverStrokePathInstancedNV"); 
+		DynamicGL_GetPathParameterivNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint path , GLenum pname , GLint *value)>("glGetPathParameterivNV"); 
+		DynamicGL_GetPathParameterfvNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint path , GLenum pname , GLfloat *value)>("glGetPathParameterfvNV"); 
+		DynamicGL_GetPathCommandsNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint path , GLubyte *commands)>("glGetPathCommandsNV"); 
+		DynamicGL_GetPathCoordsNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint path , GLfloat *coords)>("glGetPathCoordsNV"); 
+		DynamicGL_GetPathDashArrayNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint path , GLfloat *dashArray)>("glGetPathDashArrayNV"); 
+		DynamicGL_GetPathMetricsNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLbitfield metricQueryMask , GLsizei numPaths , GLenum pathNameType , const GLvoid *paths , GLuint pathBase , GLsizei stride , GLfloat *metrics)>("glGetPathMetricsNV"); 
+		DynamicGL_GetPathMetricRangeNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLbitfield metricQueryMask , GLuint firstPathName , GLsizei numPaths , GLsizei stride , GLfloat *metrics)>("glGetPathMetricRangeNV"); 
+		DynamicGL_GetPathSpacingNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pathListMode , GLsizei numPaths , GLenum pathNameType , const GLvoid *paths , GLuint pathBase , GLfloat advanceScale , GLfloat kerningScale , GLenum transformType , GLfloat *returnedSpacing)>("glGetPathSpacingNV"); 
+		DynamicGL_GetPathColorGenivNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum color , GLenum pname , GLint *value)>("glGetPathColorGenivNV"); 
+		DynamicGL_GetPathColorGenfvNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum color , GLenum pname , GLfloat *value)>("glGetPathColorGenfvNV"); 
+		DynamicGL_GetPathTexGenivNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum texCoordSet , GLenum pname , GLint *value)>("glGetPathTexGenivNV"); 
+		DynamicGL_GetPathTexGenfvNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum texCoordSet , GLenum pname , GLfloat *value)>("glGetPathTexGenfvNV"); 
+		DynamicGL_IsPointInFillPathNV = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLuint path , GLuint mask , GLfloat x , GLfloat y)>("glIsPointInFillPathNV"); 
+		DynamicGL_IsPointInStrokePathNV = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLuint path , GLfloat x , GLfloat y)>("glIsPointInStrokePathNV"); 
+		DynamicGL_GetPathLengthNV = DynamicGL_LoadFunction<GLfloat (DYNAMIC_GL_APIENTRYP)(GLuint path , GLsizei startSegment , GLsizei numSegments)>("glGetPathLengthNV"); 
+		DynamicGL_PointAlongPathNV = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLuint path , GLsizei startSegment , GLsizei numSegments , GLfloat distance , GLfloat *x , GLfloat *y , GLfloat *tangentX , GLfloat *tangentY)>("glPointAlongPathNV"); 
+		DinamicGLFeature_NV_path_rendering_loaded = true; 
+}
+bool DinamicGLFeature_NV_path_rendering_Supported() {
+		if (!DinamicGLFeature_NV_path_rendering_loaded) {
+			InitDinamicGLFeature_NV_path_rendering();
+		}
+		if (DynamicGL_GenPathsNV==0) return false; 
+		if (DynamicGL_DeletePathsNV==0) return false; 
+		if (DynamicGL_IsPathNV==0) return false; 
+		if (DynamicGL_PathCommandsNV==0) return false; 
+		if (DynamicGL_PathCoordsNV==0) return false; 
+		if (DynamicGL_PathSubCommandsNV==0) return false; 
+		if (DynamicGL_PathSubCoordsNV==0) return false; 
+		if (DynamicGL_PathStringNV==0) return false; 
+		if (DynamicGL_PathGlyphsNV==0) return false; 
+		if (DynamicGL_PathGlyphRangeNV==0) return false; 
+		if (DynamicGL_WeightPathsNV==0) return false; 
+		if (DynamicGL_CopyPathNV==0) return false; 
+		if (DynamicGL_InterpolatePathsNV==0) return false; 
+		if (DynamicGL_TransformPathNV==0) return false; 
+		if (DynamicGL_PathParameterivNV==0) return false; 
+		if (DynamicGL_PathParameteriNV==0) return false; 
+		if (DynamicGL_PathParameterfvNV==0) return false; 
+		if (DynamicGL_PathParameterfNV==0) return false; 
+		if (DynamicGL_PathDashArrayNV==0) return false; 
+		if (DynamicGL_PathStencilFuncNV==0) return false; 
+		if (DynamicGL_PathStencilDepthOffsetNV==0) return false; 
+		if (DynamicGL_StencilFillPathNV==0) return false; 
+		if (DynamicGL_StencilStrokePathNV==0) return false; 
+		if (DynamicGL_StencilFillPathInstancedNV==0) return false; 
+		if (DynamicGL_StencilStrokePathInstancedNV==0) return false; 
+		if (DynamicGL_PathCoverDepthFuncNV==0) return false; 
+		if (DynamicGL_PathColorGenNV==0) return false; 
+		if (DynamicGL_PathTexGenNV==0) return false; 
+		if (DynamicGL_PathFogGenNV==0) return false; 
+		if (DynamicGL_CoverFillPathNV==0) return false; 
+		if (DynamicGL_CoverStrokePathNV==0) return false; 
+		if (DynamicGL_CoverFillPathInstancedNV==0) return false; 
+		if (DynamicGL_CoverStrokePathInstancedNV==0) return false; 
+		if (DynamicGL_GetPathParameterivNV==0) return false; 
+		if (DynamicGL_GetPathParameterfvNV==0) return false; 
+		if (DynamicGL_GetPathCommandsNV==0) return false; 
+		if (DynamicGL_GetPathCoordsNV==0) return false; 
+		if (DynamicGL_GetPathDashArrayNV==0) return false; 
+		if (DynamicGL_GetPathMetricsNV==0) return false; 
+		if (DynamicGL_GetPathMetricRangeNV==0) return false; 
+		if (DynamicGL_GetPathSpacingNV==0) return false; 
+		if (DynamicGL_GetPathColorGenivNV==0) return false; 
+		if (DynamicGL_GetPathColorGenfvNV==0) return false; 
+		if (DynamicGL_GetPathTexGenivNV==0) return false; 
+		if (DynamicGL_GetPathTexGenfvNV==0) return false; 
+		if (DynamicGL_IsPointInFillPathNV==0) return false; 
+		if (DynamicGL_IsPointInStrokePathNV==0) return false; 
+		if (DynamicGL_GetPathLengthNV==0) return false; 
+		if (DynamicGL_PointAlongPathNV==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_path_rendering*/
 
 /*SGI_texture_color_table*/
 #ifdef USE_DYNAMIC_GL_SGI_texture_color_table
@@ -3259,6 +3921,23 @@ bool DinamicGLFeature_SGI_color_matrix_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_SGI_color_matrix*/
 
+/*EXT_x11_sync_object*/
+#ifdef USE_DYNAMIC_GL_EXT_x11_sync_object
+extern "C" { GLsync (DYNAMIC_GL_APIENTRYP DynamicGL_ImportSyncEXT)(GLenum external_sync_type , GLintptr external_sync , GLbitfield flags) = 0; }
+static bool DinamicGLFeature_EXT_x11_sync_object_loaded = false; 
+static void InitDinamicGLFeature_EXT_x11_sync_object() {
+		DynamicGL_ImportSyncEXT = DynamicGL_LoadFunction<GLsync (DYNAMIC_GL_APIENTRYP)(GLenum external_sync_type , GLintptr external_sync , GLbitfield flags)>("glImportSyncEXT"); 
+		DinamicGLFeature_EXT_x11_sync_object_loaded = true; 
+}
+bool DinamicGLFeature_EXT_x11_sync_object_Supported() {
+		if (!DinamicGLFeature_EXT_x11_sync_object_loaded) {
+			InitDinamicGLFeature_EXT_x11_sync_object();
+		}
+		if (DynamicGL_ImportSyncEXT==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_EXT_x11_sync_object*/
+
 /*EXT_texture_sRGB*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_sRGB
 static bool DinamicGLFeature_EXT_texture_sRGB_loaded = false; 
@@ -3286,6 +3965,96 @@ bool DinamicGLFeature_NV_depth_clamp_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_depth_clamp*/
+
+/*ARB_ES2_compatibility*/
+#ifdef USE_DYNAMIC_GL_ARB_ES2_compatibility
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ReleaseShaderCompiler)() = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ShaderBinary)(GLsizei count , const GLuint *shaders , GLenum binaryformat , const GLvoid *binary , GLsizei length) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetShaderPrecisionFormat)(GLenum shadertype , GLenum precisiontype , GLint *range , GLint *precision) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthRangef)(GLfloat n , GLfloat f) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearDepthf)(GLfloat d) = 0; }
+static bool DinamicGLFeature_ARB_ES2_compatibility_loaded = false; 
+static void InitDinamicGLFeature_ARB_ES2_compatibility() {
+		DynamicGL_ReleaseShaderCompiler = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)()>("glReleaseShaderCompiler"); 
+		DynamicGL_ShaderBinary = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei count , const GLuint *shaders , GLenum binaryformat , const GLvoid *binary , GLsizei length)>("glShaderBinary"); 
+		DynamicGL_GetShaderPrecisionFormat = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum shadertype , GLenum precisiontype , GLint *range , GLint *precision)>("glGetShaderPrecisionFormat"); 
+		DynamicGL_DepthRangef = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLfloat n , GLfloat f)>("glDepthRangef"); 
+		DynamicGL_ClearDepthf = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLfloat d)>("glClearDepthf"); 
+		DinamicGLFeature_ARB_ES2_compatibility_loaded = true; 
+}
+bool DinamicGLFeature_ARB_ES2_compatibility_Supported() {
+		if (!DinamicGLFeature_ARB_ES2_compatibility_loaded) {
+			InitDinamicGLFeature_ARB_ES2_compatibility();
+		}
+		if (DynamicGL_ReleaseShaderCompiler==0) return false; 
+		if (DynamicGL_ShaderBinary==0) return false; 
+		if (DynamicGL_GetShaderPrecisionFormat==0) return false; 
+		if (DynamicGL_DepthRangef==0) return false; 
+		if (DynamicGL_ClearDepthf==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_ES2_compatibility*/
+
+/*APPLE_aux_depth_stencil*/
+#ifdef USE_DYNAMIC_GL_APPLE_aux_depth_stencil
+static bool DinamicGLFeature_APPLE_aux_depth_stencil_loaded = false; 
+static void InitDinamicGLFeature_APPLE_aux_depth_stencil() {
+		DinamicGLFeature_APPLE_aux_depth_stencil_loaded = true; 
+}
+bool DinamicGLFeature_APPLE_aux_depth_stencil_Supported() {
+		if (!DinamicGLFeature_APPLE_aux_depth_stencil_loaded) {
+			InitDinamicGLFeature_APPLE_aux_depth_stencil();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_APPLE_aux_depth_stencil*/
+
+/*AMD_performance_monitor*/
+#ifdef USE_DYNAMIC_GL_AMD_performance_monitor
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPerfMonitorGroupsAMD)(GLint *numGroups , GLsizei groupsSize , GLuint *groups) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPerfMonitorCountersAMD)(GLuint group , GLint *numCounters , GLint *maxActiveCounters , GLsizei counterSize , GLuint *counters) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPerfMonitorGroupStringAMD)(GLuint group , GLsizei bufSize , GLsizei *length , GLchar *groupString) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPerfMonitorCounterStringAMD)(GLuint group , GLuint counter , GLsizei bufSize , GLsizei *length , GLchar *counterString) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPerfMonitorCounterInfoAMD)(GLuint group , GLuint counter , GLenum pname , GLvoid *data) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenPerfMonitorsAMD)(GLsizei n , GLuint *monitors) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeletePerfMonitorsAMD)(GLsizei n , GLuint *monitors) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SelectPerfMonitorCountersAMD)(GLuint monitor , GLboolean enable , GLuint group , GLint numCounters , GLuint *counterList) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BeginPerfMonitorAMD)(GLuint monitor) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_EndPerfMonitorAMD)(GLuint monitor) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPerfMonitorCounterDataAMD)(GLuint monitor , GLenum pname , GLsizei dataSize , GLuint *data , GLint *bytesWritten) = 0; }
+static bool DinamicGLFeature_AMD_performance_monitor_loaded = false; 
+static void InitDinamicGLFeature_AMD_performance_monitor() {
+		DynamicGL_GetPerfMonitorGroupsAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint *numGroups , GLsizei groupsSize , GLuint *groups)>("glGetPerfMonitorGroupsAMD"); 
+		DynamicGL_GetPerfMonitorCountersAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint group , GLint *numCounters , GLint *maxActiveCounters , GLsizei counterSize , GLuint *counters)>("glGetPerfMonitorCountersAMD"); 
+		DynamicGL_GetPerfMonitorGroupStringAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint group , GLsizei bufSize , GLsizei *length , GLchar *groupString)>("glGetPerfMonitorGroupStringAMD"); 
+		DynamicGL_GetPerfMonitorCounterStringAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint group , GLuint counter , GLsizei bufSize , GLsizei *length , GLchar *counterString)>("glGetPerfMonitorCounterStringAMD"); 
+		DynamicGL_GetPerfMonitorCounterInfoAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint group , GLuint counter , GLenum pname , GLvoid *data)>("glGetPerfMonitorCounterInfoAMD"); 
+		DynamicGL_GenPerfMonitorsAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei n , GLuint *monitors)>("glGenPerfMonitorsAMD"); 
+		DynamicGL_DeletePerfMonitorsAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei n , GLuint *monitors)>("glDeletePerfMonitorsAMD"); 
+		DynamicGL_SelectPerfMonitorCountersAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint monitor , GLboolean enable , GLuint group , GLint numCounters , GLuint *counterList)>("glSelectPerfMonitorCountersAMD"); 
+		DynamicGL_BeginPerfMonitorAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint monitor)>("glBeginPerfMonitorAMD"); 
+		DynamicGL_EndPerfMonitorAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint monitor)>("glEndPerfMonitorAMD"); 
+		DynamicGL_GetPerfMonitorCounterDataAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint monitor , GLenum pname , GLsizei dataSize , GLuint *data , GLint *bytesWritten)>("glGetPerfMonitorCounterDataAMD"); 
+		DinamicGLFeature_AMD_performance_monitor_loaded = true; 
+}
+bool DinamicGLFeature_AMD_performance_monitor_Supported() {
+		if (!DinamicGLFeature_AMD_performance_monitor_loaded) {
+			InitDinamicGLFeature_AMD_performance_monitor();
+		}
+		if (DynamicGL_GetPerfMonitorGroupsAMD==0) return false; 
+		if (DynamicGL_GetPerfMonitorCountersAMD==0) return false; 
+		if (DynamicGL_GetPerfMonitorGroupStringAMD==0) return false; 
+		if (DynamicGL_GetPerfMonitorCounterStringAMD==0) return false; 
+		if (DynamicGL_GetPerfMonitorCounterInfoAMD==0) return false; 
+		if (DynamicGL_GenPerfMonitorsAMD==0) return false; 
+		if (DynamicGL_DeletePerfMonitorsAMD==0) return false; 
+		if (DynamicGL_SelectPerfMonitorCountersAMD==0) return false; 
+		if (DynamicGL_BeginPerfMonitorAMD==0) return false; 
+		if (DynamicGL_EndPerfMonitorAMD==0) return false; 
+		if (DynamicGL_GetPerfMonitorCounterDataAMD==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_AMD_performance_monitor*/
 
 /*ARB_half_float_vertex*/
 #ifdef USE_DYNAMIC_GL_ARB_half_float_vertex
@@ -3323,8 +4092,8 @@ extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramParameter4dNV)(GLenum t
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramParameter4dvNV)(GLenum target , GLuint index , const GLdouble *v) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramParameter4fNV)(GLenum target , GLuint index , GLfloat x , GLfloat y , GLfloat z , GLfloat w) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramParameter4fvNV)(GLenum target , GLuint index , const GLfloat *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramParameters4dvNV)(GLenum target , GLuint index , GLuint count , const GLdouble *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramParameters4fvNV)(GLenum target , GLuint index , GLuint count , const GLfloat *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramParameters4dvNV)(GLenum target , GLuint index , GLsizei count , const GLdouble *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramParameters4fvNV)(GLenum target , GLuint index , GLsizei count , const GLfloat *v) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_RequestResidentProgramsNV)(GLsizei n , const GLuint *programs) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TrackMatrixNV)(GLenum target , GLuint address , GLenum matrix , GLenum transform) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribPointerNV)(GLuint index , GLint fsize , GLenum type , GLsizei stride , const GLvoid *pointer) = 0; }
@@ -3389,8 +4158,8 @@ static void InitDinamicGLFeature_NV_vertex_program() {
 		DynamicGL_ProgramParameter4dvNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint index , const GLdouble *v)>("glProgramParameter4dvNV"); 
 		DynamicGL_ProgramParameter4fNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint index , GLfloat x , GLfloat y , GLfloat z , GLfloat w)>("glProgramParameter4fNV"); 
 		DynamicGL_ProgramParameter4fvNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint index , const GLfloat *v)>("glProgramParameter4fvNV"); 
-		DynamicGL_ProgramParameters4dvNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint index , GLuint count , const GLdouble *v)>("glProgramParameters4dvNV"); 
-		DynamicGL_ProgramParameters4fvNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint index , GLuint count , const GLfloat *v)>("glProgramParameters4fvNV"); 
+		DynamicGL_ProgramParameters4dvNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint index , GLsizei count , const GLdouble *v)>("glProgramParameters4dvNV"); 
+		DynamicGL_ProgramParameters4fvNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint index , GLsizei count , const GLfloat *v)>("glProgramParameters4fvNV"); 
 		DynamicGL_RequestResidentProgramsNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei n , const GLuint *programs)>("glRequestResidentProgramsNV"); 
 		DynamicGL_TrackMatrixNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint address , GLenum matrix , GLenum transform)>("glTrackMatrixNV"); 
 		DynamicGL_VertexAttribPointerNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLint fsize , GLenum type , GLsizei stride , const GLvoid *pointer)>("glVertexAttribPointerNV"); 
@@ -3638,6 +4407,20 @@ bool DinamicGLFeature_EXT_texture_env_combine_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_env_combine*/
 
+/*ARB_texture_rgb10_a2ui*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_rgb10_a2ui
+static bool DinamicGLFeature_ARB_texture_rgb10_a2ui_loaded = false; 
+static void InitDinamicGLFeature_ARB_texture_rgb10_a2ui() {
+		DinamicGLFeature_ARB_texture_rgb10_a2ui_loaded = true; 
+}
+bool DinamicGLFeature_ARB_texture_rgb10_a2ui_Supported() {
+		if (!DinamicGLFeature_ARB_texture_rgb10_a2ui_loaded) {
+			InitDinamicGLFeature_ARB_texture_rgb10_a2ui();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_texture_rgb10_a2ui*/
+
 /*SGIX_vertex_preclip*/
 #ifdef USE_DYNAMIC_GL_SGIX_vertex_preclip
 static bool DinamicGLFeature_SGIX_vertex_preclip_loaded = false; 
@@ -3680,11 +4463,11 @@ bool DinamicGLFeature_ARB_geometry_shader4_Supported() {
 
 /*EXT_multi_draw_arrays*/
 #ifdef USE_DYNAMIC_GL_EXT_multi_draw_arrays
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawArraysEXT)(GLenum mode , GLint *first , GLsizei *count , GLsizei primcount) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawArraysEXT)(GLenum mode , const GLint *first , const GLsizei *count , GLsizei primcount) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawElementsEXT)(GLenum mode , const GLsizei *count , GLenum type , const GLvoid* *indices , GLsizei primcount) = 0; }
 static bool DinamicGLFeature_EXT_multi_draw_arrays_loaded = false; 
 static void InitDinamicGLFeature_EXT_multi_draw_arrays() {
-		DynamicGL_MultiDrawArraysEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLint *first , GLsizei *count , GLsizei primcount)>("glMultiDrawArraysEXT"); 
+		DynamicGL_MultiDrawArraysEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , const GLint *first , const GLsizei *count , GLsizei primcount)>("glMultiDrawArraysEXT"); 
 		DynamicGL_MultiDrawElementsEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , const GLsizei *count , GLenum type , const GLvoid* *indices , GLsizei primcount)>("glMultiDrawElementsEXT"); 
 		DinamicGLFeature_EXT_multi_draw_arrays_loaded = true; 
 }
@@ -3715,6 +4498,29 @@ bool DinamicGLFeature_EXT_texture_perturb_normal_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_perturb_normal*/
 
+/*EXT_separate_shader_objects*/
+#ifdef USE_DYNAMIC_GL_EXT_separate_shader_objects
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_UseShaderProgramEXT)(GLenum type , GLuint program) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ActiveProgramEXT)(GLuint program) = 0; }
+extern "C" { GLuint (DYNAMIC_GL_APIENTRYP DynamicGL_CreateShaderProgramEXT)(GLenum type , const GLchar *string) = 0; }
+static bool DinamicGLFeature_EXT_separate_shader_objects_loaded = false; 
+static void InitDinamicGLFeature_EXT_separate_shader_objects() {
+		DynamicGL_UseShaderProgramEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , GLuint program)>("glUseShaderProgramEXT"); 
+		DynamicGL_ActiveProgramEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program)>("glActiveProgramEXT"); 
+		DynamicGL_CreateShaderProgramEXT = DynamicGL_LoadFunction<GLuint (DYNAMIC_GL_APIENTRYP)(GLenum type , const GLchar *string)>("glCreateShaderProgramEXT"); 
+		DinamicGLFeature_EXT_separate_shader_objects_loaded = true; 
+}
+bool DinamicGLFeature_EXT_separate_shader_objects_Supported() {
+		if (!DinamicGLFeature_EXT_separate_shader_objects_loaded) {
+			InitDinamicGLFeature_EXT_separate_shader_objects();
+		}
+		if (DynamicGL_UseShaderProgramEXT==0) return false; 
+		if (DynamicGL_ActiveProgramEXT==0) return false; 
+		if (DynamicGL_CreateShaderProgramEXT==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_EXT_separate_shader_objects*/
+
 /*SGIX_sprite*/
 #ifdef USE_DYNAMIC_GL_SGIX_sprite
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SpriteParameterfSGIX)(GLenum pname , GLfloat param) = 0; }
@@ -3740,6 +4546,46 @@ bool DinamicGLFeature_SGIX_sprite_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_sprite*/
+
+/*EXT_texture_snorm*/
+#ifdef USE_DYNAMIC_GL_EXT_texture_snorm
+static bool DinamicGLFeature_EXT_texture_snorm_loaded = false; 
+static void InitDinamicGLFeature_EXT_texture_snorm() {
+		DinamicGLFeature_EXT_texture_snorm_loaded = true; 
+}
+bool DinamicGLFeature_EXT_texture_snorm_Supported() {
+		if (!DinamicGLFeature_EXT_texture_snorm_loaded) {
+			InitDinamicGLFeature_EXT_texture_snorm();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_EXT_texture_snorm*/
+
+/*ARB_debug_output*/
+#ifdef USE_DYNAMIC_GL_ARB_debug_output
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DebugMessageControlARB)(GLenum source , GLenum type , GLenum severity , GLsizei count , const GLuint *ids , GLboolean enabled) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DebugMessageInsertARB)(GLenum source , GLenum type , GLuint id , GLenum severity , GLsizei length , const GLchar *buf) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DebugMessageCallbackARB)(GLDEBUGPROCARB callback , const GLvoid *userParam) = 0; }
+extern "C" { GLuint (DYNAMIC_GL_APIENTRYP DynamicGL_GetDebugMessageLogARB)(GLuint count , GLsizei bufsize , GLenum *sources , GLenum *types , GLuint *ids , GLenum *severities , GLsizei *lengths , GLchar *messageLog) = 0; }
+static bool DinamicGLFeature_ARB_debug_output_loaded = false; 
+static void InitDinamicGLFeature_ARB_debug_output() {
+		DynamicGL_DebugMessageControlARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum source , GLenum type , GLenum severity , GLsizei count , const GLuint *ids , GLboolean enabled)>("glDebugMessageControlARB"); 
+		DynamicGL_DebugMessageInsertARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum source , GLenum type , GLuint id , GLenum severity , GLsizei length , const GLchar *buf)>("glDebugMessageInsertARB"); 
+		DynamicGL_DebugMessageCallbackARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLDEBUGPROCARB callback , const GLvoid *userParam)>("glDebugMessageCallbackARB"); 
+		DynamicGL_GetDebugMessageLogARB = DynamicGL_LoadFunction<GLuint (DYNAMIC_GL_APIENTRYP)(GLuint count , GLsizei bufsize , GLenum *sources , GLenum *types , GLuint *ids , GLenum *severities , GLsizei *lengths , GLchar *messageLog)>("glGetDebugMessageLogARB"); 
+		DinamicGLFeature_ARB_debug_output_loaded = true; 
+}
+bool DinamicGLFeature_ARB_debug_output_Supported() {
+		if (!DinamicGLFeature_ARB_debug_output_loaded) {
+			InitDinamicGLFeature_ARB_debug_output();
+		}
+		if (DynamicGL_DebugMessageControlARB==0) return false; 
+		if (DynamicGL_DebugMessageInsertARB==0) return false; 
+		if (DynamicGL_DebugMessageCallbackARB==0) return false; 
+		if (DynamicGL_GetDebugMessageLogARB==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_debug_output*/
 
 /*EXT_draw_buffers2*/
 #ifdef USE_DYNAMIC_GL_EXT_draw_buffers2
@@ -3815,6 +4661,56 @@ bool DinamicGLFeature_EXT_texture_env_dot3_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_env_dot3*/
 
+/*NV_video_capture*/
+#ifdef USE_DYNAMIC_GL_NV_video_capture
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BeginVideoCaptureNV)(GLuint video_capture_slot) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindVideoCaptureStreamBufferNV)(GLuint video_capture_slot , GLuint stream , GLenum frame_region , GLintptrARB offset) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindVideoCaptureStreamTextureNV)(GLuint video_capture_slot , GLuint stream , GLenum frame_region , GLenum target , GLuint texture) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_EndVideoCaptureNV)(GLuint video_capture_slot) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVideoCaptureivNV)(GLuint video_capture_slot , GLenum pname , GLint *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVideoCaptureStreamivNV)(GLuint video_capture_slot , GLuint stream , GLenum pname , GLint *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVideoCaptureStreamfvNV)(GLuint video_capture_slot , GLuint stream , GLenum pname , GLfloat *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVideoCaptureStreamdvNV)(GLuint video_capture_slot , GLuint stream , GLenum pname , GLdouble *params) = 0; }
+extern "C" { GLenum (DYNAMIC_GL_APIENTRYP DynamicGL_VideoCaptureNV)(GLuint video_capture_slot , GLuint *sequence_num , GLuint64EXT *capture_time) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VideoCaptureStreamParameterivNV)(GLuint video_capture_slot , GLuint stream , GLenum pname , const GLint *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VideoCaptureStreamParameterfvNV)(GLuint video_capture_slot , GLuint stream , GLenum pname , const GLfloat *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VideoCaptureStreamParameterdvNV)(GLuint video_capture_slot , GLuint stream , GLenum pname , const GLdouble *params) = 0; }
+static bool DinamicGLFeature_NV_video_capture_loaded = false; 
+static void InitDinamicGLFeature_NV_video_capture() {
+		DynamicGL_BeginVideoCaptureNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint video_capture_slot)>("glBeginVideoCaptureNV"); 
+		DynamicGL_BindVideoCaptureStreamBufferNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint video_capture_slot , GLuint stream , GLenum frame_region , GLintptrARB offset)>("glBindVideoCaptureStreamBufferNV"); 
+		DynamicGL_BindVideoCaptureStreamTextureNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint video_capture_slot , GLuint stream , GLenum frame_region , GLenum target , GLuint texture)>("glBindVideoCaptureStreamTextureNV"); 
+		DynamicGL_EndVideoCaptureNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint video_capture_slot)>("glEndVideoCaptureNV"); 
+		DynamicGL_GetVideoCaptureivNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint video_capture_slot , GLenum pname , GLint *params)>("glGetVideoCaptureivNV"); 
+		DynamicGL_GetVideoCaptureStreamivNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint video_capture_slot , GLuint stream , GLenum pname , GLint *params)>("glGetVideoCaptureStreamivNV"); 
+		DynamicGL_GetVideoCaptureStreamfvNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint video_capture_slot , GLuint stream , GLenum pname , GLfloat *params)>("glGetVideoCaptureStreamfvNV"); 
+		DynamicGL_GetVideoCaptureStreamdvNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint video_capture_slot , GLuint stream , GLenum pname , GLdouble *params)>("glGetVideoCaptureStreamdvNV"); 
+		DynamicGL_VideoCaptureNV = DynamicGL_LoadFunction<GLenum (DYNAMIC_GL_APIENTRYP)(GLuint video_capture_slot , GLuint *sequence_num , GLuint64EXT *capture_time)>("glVideoCaptureNV"); 
+		DynamicGL_VideoCaptureStreamParameterivNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint video_capture_slot , GLuint stream , GLenum pname , const GLint *params)>("glVideoCaptureStreamParameterivNV"); 
+		DynamicGL_VideoCaptureStreamParameterfvNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint video_capture_slot , GLuint stream , GLenum pname , const GLfloat *params)>("glVideoCaptureStreamParameterfvNV"); 
+		DynamicGL_VideoCaptureStreamParameterdvNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint video_capture_slot , GLuint stream , GLenum pname , const GLdouble *params)>("glVideoCaptureStreamParameterdvNV"); 
+		DinamicGLFeature_NV_video_capture_loaded = true; 
+}
+bool DinamicGLFeature_NV_video_capture_Supported() {
+		if (!DinamicGLFeature_NV_video_capture_loaded) {
+			InitDinamicGLFeature_NV_video_capture();
+		}
+		if (DynamicGL_BeginVideoCaptureNV==0) return false; 
+		if (DynamicGL_BindVideoCaptureStreamBufferNV==0) return false; 
+		if (DynamicGL_BindVideoCaptureStreamTextureNV==0) return false; 
+		if (DynamicGL_EndVideoCaptureNV==0) return false; 
+		if (DynamicGL_GetVideoCaptureivNV==0) return false; 
+		if (DynamicGL_GetVideoCaptureStreamivNV==0) return false; 
+		if (DynamicGL_GetVideoCaptureStreamfvNV==0) return false; 
+		if (DynamicGL_GetVideoCaptureStreamdvNV==0) return false; 
+		if (DynamicGL_VideoCaptureNV==0) return false; 
+		if (DynamicGL_VideoCaptureStreamParameterivNV==0) return false; 
+		if (DynamicGL_VideoCaptureStreamParameterfvNV==0) return false; 
+		if (DynamicGL_VideoCaptureStreamParameterdvNV==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_video_capture*/
+
 /*WIN_phong_shading*/
 #ifdef USE_DYNAMIC_GL_WIN_phong_shading
 static bool DinamicGLFeature_WIN_phong_shading_loaded = false; 
@@ -3831,11 +4727,9 @@ bool DinamicGLFeature_WIN_phong_shading_Supported() {
 
 /*ARB_map_buffer_range*/
 #ifdef USE_DYNAMIC_GL_ARB_map_buffer_range
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MapBufferRange)(GLenum target , GLintptr offset , GLsizeiptr length , GLbitfield access) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FlushMappedBufferRange)(GLenum target , GLintptr offset , GLsizeiptr length) = 0; }
 static bool DinamicGLFeature_ARB_map_buffer_range_loaded = false; 
 static void InitDinamicGLFeature_ARB_map_buffer_range() {
-		DynamicGL_MapBufferRange = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLintptr offset , GLsizeiptr length , GLbitfield access)>("glMapBufferRange"); 
 		DynamicGL_FlushMappedBufferRange = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLintptr offset , GLsizeiptr length)>("glFlushMappedBufferRange"); 
 		DinamicGLFeature_ARB_map_buffer_range_loaded = true; 
 }
@@ -3843,7 +4737,6 @@ bool DinamicGLFeature_ARB_map_buffer_range_Supported() {
 		if (!DinamicGLFeature_ARB_map_buffer_range_loaded) {
 			InitDinamicGLFeature_ARB_map_buffer_range();
 		}
-		if (DynamicGL_MapBufferRange==0) return false; 
 		if (DynamicGL_FlushMappedBufferRange==0) return false; 
 		return true;
 }
@@ -4155,6 +5048,26 @@ bool DinamicGLFeature_ARB_transpose_matrix_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_ARB_transpose_matrix*/
 
+/*ARB_transform_feedback_instanced*/
+#ifdef USE_DYNAMIC_GL_ARB_transform_feedback_instanced
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTransformFeedbackInstanced)(GLenum mode , GLuint id , GLsizei primcount) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTransformFeedbackStreamInstanced)(GLenum mode , GLuint id , GLuint stream , GLsizei primcount) = 0; }
+static bool DinamicGLFeature_ARB_transform_feedback_instanced_loaded = false; 
+static void InitDinamicGLFeature_ARB_transform_feedback_instanced() {
+		DynamicGL_DrawTransformFeedbackInstanced = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLuint id , GLsizei primcount)>("glDrawTransformFeedbackInstanced"); 
+		DynamicGL_DrawTransformFeedbackStreamInstanced = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLuint id , GLuint stream , GLsizei primcount)>("glDrawTransformFeedbackStreamInstanced"); 
+		DinamicGLFeature_ARB_transform_feedback_instanced_loaded = true; 
+}
+bool DinamicGLFeature_ARB_transform_feedback_instanced_Supported() {
+		if (!DinamicGLFeature_ARB_transform_feedback_instanced_loaded) {
+			InitDinamicGLFeature_ARB_transform_feedback_instanced();
+		}
+		if (DynamicGL_DrawTransformFeedbackInstanced==0) return false; 
+		if (DynamicGL_DrawTransformFeedbackStreamInstanced==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_transform_feedback_instanced*/
+
 /*NV_parameter_buffer_object*/
 #ifdef USE_DYNAMIC_GL_NV_parameter_buffer_object
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramBufferParametersfvNV)(GLenum target , GLuint buffer , GLuint index , GLsizei count , const GLfloat *params) = 0; }
@@ -4191,6 +5104,32 @@ bool DinamicGLFeature_EXT_packed_depth_stencil_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_packed_depth_stencil*/
+
+/*VERSION_3_1*/
+#ifdef USE_DYNAMIC_GL_VERSION_3_1
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawArraysInstanced)(GLenum mode , GLint first , GLsizei count , GLsizei primcount) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElementsInstanced)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices , GLsizei primcount) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexBuffer)(GLenum target , GLenum internalformat , GLuint buffer) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PrimitiveRestartIndex)(GLuint index) = 0; }
+static bool DinamicGLFeature_VERSION_3_1_loaded = false; 
+static void InitDinamicGLFeature_VERSION_3_1() {
+		DynamicGL_DrawArraysInstanced = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLint first , GLsizei count , GLsizei primcount)>("glDrawArraysInstanced"); 
+		DynamicGL_DrawElementsInstanced = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices , GLsizei primcount)>("glDrawElementsInstanced"); 
+		DynamicGL_TexBuffer = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum internalformat , GLuint buffer)>("glTexBuffer"); 
+		DynamicGL_PrimitiveRestartIndex = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index)>("glPrimitiveRestartIndex"); 
+		DinamicGLFeature_VERSION_3_1_loaded = true; 
+}
+bool DinamicGLFeature_VERSION_3_1_Supported() {
+		if (!DinamicGLFeature_VERSION_3_1_loaded) {
+			InitDinamicGLFeature_VERSION_3_1();
+		}
+		if (DynamicGL_DrawArraysInstanced==0) return false; 
+		if (DynamicGL_DrawElementsInstanced==0) return false; 
+		if (DynamicGL_TexBuffer==0) return false; 
+		if (DynamicGL_PrimitiveRestartIndex==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_VERSION_3_1*/
 
 /*PGI_vertex_hints*/
 #ifdef USE_DYNAMIC_GL_PGI_vertex_hints
@@ -4287,6 +5226,134 @@ bool DinamicGLFeature_EXT_histogram_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_EXT_histogram*/
 
+/*ARB_vertex_type_2_10_10_10_rev*/
+#ifdef USE_DYNAMIC_GL_ARB_vertex_type_2_10_10_10_rev
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexP2ui)(GLenum type , GLuint value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexP2uiv)(GLenum type , const GLuint *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexP3ui)(GLenum type , GLuint value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexP3uiv)(GLenum type , const GLuint *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexP4ui)(GLenum type , GLuint value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexP4uiv)(GLenum type , const GLuint *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexCoordP1ui)(GLenum type , GLuint coords) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexCoordP1uiv)(GLenum type , const GLuint *coords) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexCoordP2ui)(GLenum type , GLuint coords) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexCoordP2uiv)(GLenum type , const GLuint *coords) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexCoordP3ui)(GLenum type , GLuint coords) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexCoordP3uiv)(GLenum type , const GLuint *coords) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexCoordP4ui)(GLenum type , GLuint coords) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexCoordP4uiv)(GLenum type , const GLuint *coords) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoordP1ui)(GLenum texture , GLenum type , GLuint coords) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoordP1uiv)(GLenum texture , GLenum type , const GLuint *coords) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoordP2ui)(GLenum texture , GLenum type , GLuint coords) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoordP2uiv)(GLenum texture , GLenum type , const GLuint *coords) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoordP3ui)(GLenum texture , GLenum type , GLuint coords) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoordP3uiv)(GLenum texture , GLenum type , const GLuint *coords) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoordP4ui)(GLenum texture , GLenum type , GLuint coords) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoordP4uiv)(GLenum texture , GLenum type , const GLuint *coords) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_NormalP3ui)(GLenum type , GLuint coords) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_NormalP3uiv)(GLenum type , const GLuint *coords) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorP3ui)(GLenum type , GLuint color) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorP3uiv)(GLenum type , const GLuint *color) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorP4ui)(GLenum type , GLuint color) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorP4uiv)(GLenum type , const GLuint *color) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColorP3ui)(GLenum type , GLuint color) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColorP3uiv)(GLenum type , const GLuint *color) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribP1ui)(GLuint index , GLenum type , GLboolean normalized , GLuint value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribP1uiv)(GLuint index , GLenum type , GLboolean normalized , const GLuint *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribP2ui)(GLuint index , GLenum type , GLboolean normalized , GLuint value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribP2uiv)(GLuint index , GLenum type , GLboolean normalized , const GLuint *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribP3ui)(GLuint index , GLenum type , GLboolean normalized , GLuint value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribP3uiv)(GLuint index , GLenum type , GLboolean normalized , const GLuint *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribP4ui)(GLuint index , GLenum type , GLboolean normalized , GLuint value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribP4uiv)(GLuint index , GLenum type , GLboolean normalized , const GLuint *value) = 0; }
+static bool DinamicGLFeature_ARB_vertex_type_2_10_10_10_rev_loaded = false; 
+static void InitDinamicGLFeature_ARB_vertex_type_2_10_10_10_rev() {
+		DynamicGL_VertexP2ui = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , GLuint value)>("glVertexP2ui"); 
+		DynamicGL_VertexP2uiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , const GLuint *value)>("glVertexP2uiv"); 
+		DynamicGL_VertexP3ui = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , GLuint value)>("glVertexP3ui"); 
+		DynamicGL_VertexP3uiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , const GLuint *value)>("glVertexP3uiv"); 
+		DynamicGL_VertexP4ui = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , GLuint value)>("glVertexP4ui"); 
+		DynamicGL_VertexP4uiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , const GLuint *value)>("glVertexP4uiv"); 
+		DynamicGL_TexCoordP1ui = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , GLuint coords)>("glTexCoordP1ui"); 
+		DynamicGL_TexCoordP1uiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , const GLuint *coords)>("glTexCoordP1uiv"); 
+		DynamicGL_TexCoordP2ui = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , GLuint coords)>("glTexCoordP2ui"); 
+		DynamicGL_TexCoordP2uiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , const GLuint *coords)>("glTexCoordP2uiv"); 
+		DynamicGL_TexCoordP3ui = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , GLuint coords)>("glTexCoordP3ui"); 
+		DynamicGL_TexCoordP3uiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , const GLuint *coords)>("glTexCoordP3uiv"); 
+		DynamicGL_TexCoordP4ui = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , GLuint coords)>("glTexCoordP4ui"); 
+		DynamicGL_TexCoordP4uiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , const GLuint *coords)>("glTexCoordP4uiv"); 
+		DynamicGL_MultiTexCoordP1ui = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum texture , GLenum type , GLuint coords)>("glMultiTexCoordP1ui"); 
+		DynamicGL_MultiTexCoordP1uiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum texture , GLenum type , const GLuint *coords)>("glMultiTexCoordP1uiv"); 
+		DynamicGL_MultiTexCoordP2ui = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum texture , GLenum type , GLuint coords)>("glMultiTexCoordP2ui"); 
+		DynamicGL_MultiTexCoordP2uiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum texture , GLenum type , const GLuint *coords)>("glMultiTexCoordP2uiv"); 
+		DynamicGL_MultiTexCoordP3ui = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum texture , GLenum type , GLuint coords)>("glMultiTexCoordP3ui"); 
+		DynamicGL_MultiTexCoordP3uiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum texture , GLenum type , const GLuint *coords)>("glMultiTexCoordP3uiv"); 
+		DynamicGL_MultiTexCoordP4ui = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum texture , GLenum type , GLuint coords)>("glMultiTexCoordP4ui"); 
+		DynamicGL_MultiTexCoordP4uiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum texture , GLenum type , const GLuint *coords)>("glMultiTexCoordP4uiv"); 
+		DynamicGL_NormalP3ui = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , GLuint coords)>("glNormalP3ui"); 
+		DynamicGL_NormalP3uiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , const GLuint *coords)>("glNormalP3uiv"); 
+		DynamicGL_ColorP3ui = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , GLuint color)>("glColorP3ui"); 
+		DynamicGL_ColorP3uiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , const GLuint *color)>("glColorP3uiv"); 
+		DynamicGL_ColorP4ui = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , GLuint color)>("glColorP4ui"); 
+		DynamicGL_ColorP4uiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , const GLuint *color)>("glColorP4uiv"); 
+		DynamicGL_SecondaryColorP3ui = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , GLuint color)>("glSecondaryColorP3ui"); 
+		DynamicGL_SecondaryColorP3uiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , const GLuint *color)>("glSecondaryColorP3uiv"); 
+		DynamicGL_VertexAttribP1ui = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLenum type , GLboolean normalized , GLuint value)>("glVertexAttribP1ui"); 
+		DynamicGL_VertexAttribP1uiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLenum type , GLboolean normalized , const GLuint *value)>("glVertexAttribP1uiv"); 
+		DynamicGL_VertexAttribP2ui = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLenum type , GLboolean normalized , GLuint value)>("glVertexAttribP2ui"); 
+		DynamicGL_VertexAttribP2uiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLenum type , GLboolean normalized , const GLuint *value)>("glVertexAttribP2uiv"); 
+		DynamicGL_VertexAttribP3ui = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLenum type , GLboolean normalized , GLuint value)>("glVertexAttribP3ui"); 
+		DynamicGL_VertexAttribP3uiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLenum type , GLboolean normalized , const GLuint *value)>("glVertexAttribP3uiv"); 
+		DynamicGL_VertexAttribP4ui = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLenum type , GLboolean normalized , GLuint value)>("glVertexAttribP4ui"); 
+		DynamicGL_VertexAttribP4uiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLenum type , GLboolean normalized , const GLuint *value)>("glVertexAttribP4uiv"); 
+		DinamicGLFeature_ARB_vertex_type_2_10_10_10_rev_loaded = true; 
+}
+bool DinamicGLFeature_ARB_vertex_type_2_10_10_10_rev_Supported() {
+		if (!DinamicGLFeature_ARB_vertex_type_2_10_10_10_rev_loaded) {
+			InitDinamicGLFeature_ARB_vertex_type_2_10_10_10_rev();
+		}
+		if (DynamicGL_VertexP2ui==0) return false; 
+		if (DynamicGL_VertexP2uiv==0) return false; 
+		if (DynamicGL_VertexP3ui==0) return false; 
+		if (DynamicGL_VertexP3uiv==0) return false; 
+		if (DynamicGL_VertexP4ui==0) return false; 
+		if (DynamicGL_VertexP4uiv==0) return false; 
+		if (DynamicGL_TexCoordP1ui==0) return false; 
+		if (DynamicGL_TexCoordP1uiv==0) return false; 
+		if (DynamicGL_TexCoordP2ui==0) return false; 
+		if (DynamicGL_TexCoordP2uiv==0) return false; 
+		if (DynamicGL_TexCoordP3ui==0) return false; 
+		if (DynamicGL_TexCoordP3uiv==0) return false; 
+		if (DynamicGL_TexCoordP4ui==0) return false; 
+		if (DynamicGL_TexCoordP4uiv==0) return false; 
+		if (DynamicGL_MultiTexCoordP1ui==0) return false; 
+		if (DynamicGL_MultiTexCoordP1uiv==0) return false; 
+		if (DynamicGL_MultiTexCoordP2ui==0) return false; 
+		if (DynamicGL_MultiTexCoordP2uiv==0) return false; 
+		if (DynamicGL_MultiTexCoordP3ui==0) return false; 
+		if (DynamicGL_MultiTexCoordP3uiv==0) return false; 
+		if (DynamicGL_MultiTexCoordP4ui==0) return false; 
+		if (DynamicGL_MultiTexCoordP4uiv==0) return false; 
+		if (DynamicGL_NormalP3ui==0) return false; 
+		if (DynamicGL_NormalP3uiv==0) return false; 
+		if (DynamicGL_ColorP3ui==0) return false; 
+		if (DynamicGL_ColorP3uiv==0) return false; 
+		if (DynamicGL_ColorP4ui==0) return false; 
+		if (DynamicGL_ColorP4uiv==0) return false; 
+		if (DynamicGL_SecondaryColorP3ui==0) return false; 
+		if (DynamicGL_SecondaryColorP3uiv==0) return false; 
+		if (DynamicGL_VertexAttribP1ui==0) return false; 
+		if (DynamicGL_VertexAttribP1uiv==0) return false; 
+		if (DynamicGL_VertexAttribP2ui==0) return false; 
+		if (DynamicGL_VertexAttribP2uiv==0) return false; 
+		if (DynamicGL_VertexAttribP3ui==0) return false; 
+		if (DynamicGL_VertexAttribP3uiv==0) return false; 
+		if (DynamicGL_VertexAttribP4ui==0) return false; 
+		if (DynamicGL_VertexAttribP4uiv==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_vertex_type_2_10_10_10_rev*/
+
 /*SGIX_pixel_texture*/
 #ifdef USE_DYNAMIC_GL_SGIX_pixel_texture
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PixelTexGenSGIX)(GLenum mode) = 0; }
@@ -4373,6 +5440,106 @@ bool DinamicGLFeature_EXT_blend_func_separate_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_EXT_blend_func_separate*/
 
+/*ARB_sampler_objects*/
+#ifdef USE_DYNAMIC_GL_ARB_sampler_objects
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenSamplers)(GLsizei count , GLuint *samplers) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteSamplers)(GLsizei count , const GLuint *samplers) = 0; }
+extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsSampler)(GLuint sampler) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindSampler)(GLuint unit , GLuint sampler) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SamplerParameteri)(GLuint sampler , GLenum pname , GLint param) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SamplerParameteriv)(GLuint sampler , GLenum pname , const GLint *param) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SamplerParameterf)(GLuint sampler , GLenum pname , GLfloat param) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SamplerParameterfv)(GLuint sampler , GLenum pname , const GLfloat *param) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SamplerParameterIiv)(GLuint sampler , GLenum pname , const GLint *param) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SamplerParameterIuiv)(GLuint sampler , GLenum pname , const GLuint *param) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetSamplerParameteriv)(GLuint sampler , GLenum pname , GLint *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetSamplerParameterIiv)(GLuint sampler , GLenum pname , GLint *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetSamplerParameterfv)(GLuint sampler , GLenum pname , GLfloat *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetSamplerParameterIuiv)(GLuint sampler , GLenum pname , GLuint *params) = 0; }
+static bool DinamicGLFeature_ARB_sampler_objects_loaded = false; 
+static void InitDinamicGLFeature_ARB_sampler_objects() {
+		DynamicGL_GenSamplers = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei count , GLuint *samplers)>("glGenSamplers"); 
+		DynamicGL_DeleteSamplers = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei count , const GLuint *samplers)>("glDeleteSamplers"); 
+		DynamicGL_IsSampler = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLuint sampler)>("glIsSampler"); 
+		DynamicGL_BindSampler = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint unit , GLuint sampler)>("glBindSampler"); 
+		DynamicGL_SamplerParameteri = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint sampler , GLenum pname , GLint param)>("glSamplerParameteri"); 
+		DynamicGL_SamplerParameteriv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint sampler , GLenum pname , const GLint *param)>("glSamplerParameteriv"); 
+		DynamicGL_SamplerParameterf = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint sampler , GLenum pname , GLfloat param)>("glSamplerParameterf"); 
+		DynamicGL_SamplerParameterfv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint sampler , GLenum pname , const GLfloat *param)>("glSamplerParameterfv"); 
+		DynamicGL_SamplerParameterIiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint sampler , GLenum pname , const GLint *param)>("glSamplerParameterIiv"); 
+		DynamicGL_SamplerParameterIuiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint sampler , GLenum pname , const GLuint *param)>("glSamplerParameterIuiv"); 
+		DynamicGL_GetSamplerParameteriv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint sampler , GLenum pname , GLint *params)>("glGetSamplerParameteriv"); 
+		DynamicGL_GetSamplerParameterIiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint sampler , GLenum pname , GLint *params)>("glGetSamplerParameterIiv"); 
+		DynamicGL_GetSamplerParameterfv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint sampler , GLenum pname , GLfloat *params)>("glGetSamplerParameterfv"); 
+		DynamicGL_GetSamplerParameterIuiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint sampler , GLenum pname , GLuint *params)>("glGetSamplerParameterIuiv"); 
+		DinamicGLFeature_ARB_sampler_objects_loaded = true; 
+}
+bool DinamicGLFeature_ARB_sampler_objects_Supported() {
+		if (!DinamicGLFeature_ARB_sampler_objects_loaded) {
+			InitDinamicGLFeature_ARB_sampler_objects();
+		}
+		if (DynamicGL_GenSamplers==0) return false; 
+		if (DynamicGL_DeleteSamplers==0) return false; 
+		if (DynamicGL_IsSampler==0) return false; 
+		if (DynamicGL_BindSampler==0) return false; 
+		if (DynamicGL_SamplerParameteri==0) return false; 
+		if (DynamicGL_SamplerParameteriv==0) return false; 
+		if (DynamicGL_SamplerParameterf==0) return false; 
+		if (DynamicGL_SamplerParameterfv==0) return false; 
+		if (DynamicGL_SamplerParameterIiv==0) return false; 
+		if (DynamicGL_SamplerParameterIuiv==0) return false; 
+		if (DynamicGL_GetSamplerParameteriv==0) return false; 
+		if (DynamicGL_GetSamplerParameterIiv==0) return false; 
+		if (DynamicGL_GetSamplerParameterfv==0) return false; 
+		if (DynamicGL_GetSamplerParameterIuiv==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_sampler_objects*/
+
+/*ARB_vertex_attrib_64bit*/
+#ifdef USE_DYNAMIC_GL_ARB_vertex_attrib_64bit
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL1d)(GLuint index , GLdouble x) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL2d)(GLuint index , GLdouble x , GLdouble y) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL3d)(GLuint index , GLdouble x , GLdouble y , GLdouble z) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL4d)(GLuint index , GLdouble x , GLdouble y , GLdouble z , GLdouble w) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL1dv)(GLuint index , const GLdouble *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL2dv)(GLuint index , const GLdouble *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL3dv)(GLuint index , const GLdouble *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL4dv)(GLuint index , const GLdouble *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribLPointer)(GLuint index , GLint size , GLenum type , GLsizei stride , const GLvoid *pointer) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVertexAttribLdv)(GLuint index , GLenum pname , GLdouble *params) = 0; }
+static bool DinamicGLFeature_ARB_vertex_attrib_64bit_loaded = false; 
+static void InitDinamicGLFeature_ARB_vertex_attrib_64bit() {
+		DynamicGL_VertexAttribL1d = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLdouble x)>("glVertexAttribL1d"); 
+		DynamicGL_VertexAttribL2d = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLdouble x , GLdouble y)>("glVertexAttribL2d"); 
+		DynamicGL_VertexAttribL3d = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLdouble x , GLdouble y , GLdouble z)>("glVertexAttribL3d"); 
+		DynamicGL_VertexAttribL4d = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLdouble x , GLdouble y , GLdouble z , GLdouble w)>("glVertexAttribL4d"); 
+		DynamicGL_VertexAttribL1dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , const GLdouble *v)>("glVertexAttribL1dv"); 
+		DynamicGL_VertexAttribL2dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , const GLdouble *v)>("glVertexAttribL2dv"); 
+		DynamicGL_VertexAttribL3dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , const GLdouble *v)>("glVertexAttribL3dv"); 
+		DynamicGL_VertexAttribL4dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , const GLdouble *v)>("glVertexAttribL4dv"); 
+		DynamicGL_VertexAttribLPointer = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLint size , GLenum type , GLsizei stride , const GLvoid *pointer)>("glVertexAttribLPointer"); 
+		DynamicGL_GetVertexAttribLdv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLenum pname , GLdouble *params)>("glGetVertexAttribLdv"); 
+		DinamicGLFeature_ARB_vertex_attrib_64bit_loaded = true; 
+}
+bool DinamicGLFeature_ARB_vertex_attrib_64bit_Supported() {
+		if (!DinamicGLFeature_ARB_vertex_attrib_64bit_loaded) {
+			InitDinamicGLFeature_ARB_vertex_attrib_64bit();
+		}
+		if (DynamicGL_VertexAttribL1d==0) return false; 
+		if (DynamicGL_VertexAttribL2d==0) return false; 
+		if (DynamicGL_VertexAttribL3d==0) return false; 
+		if (DynamicGL_VertexAttribL4d==0) return false; 
+		if (DynamicGL_VertexAttribL1dv==0) return false; 
+		if (DynamicGL_VertexAttribL2dv==0) return false; 
+		if (DynamicGL_VertexAttribL3dv==0) return false; 
+		if (DynamicGL_VertexAttribL4dv==0) return false; 
+		if (DynamicGL_VertexAttribLPointer==0) return false; 
+		if (DynamicGL_GetVertexAttribLdv==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_vertex_attrib_64bit*/
+
 /*SGIS_texture_border_clamp*/
 #ifdef USE_DYNAMIC_GL_SGIS_texture_border_clamp
 static bool DinamicGLFeature_SGIS_texture_border_clamp_loaded = false; 
@@ -4447,6 +5614,74 @@ bool DinamicGLFeature_EXT_paletted_texture_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_EXT_paletted_texture*/
 
+/*ARB_gpu_shader_fp64*/
+#ifdef USE_DYNAMIC_GL_ARB_gpu_shader_fp64
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform1d)(GLint location , GLdouble x) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform2d)(GLint location , GLdouble x , GLdouble y) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform3d)(GLint location , GLdouble x , GLdouble y , GLdouble z) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform4d)(GLint location , GLdouble x , GLdouble y , GLdouble z , GLdouble w) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform1dv)(GLint location , GLsizei count , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform2dv)(GLint location , GLsizei count , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform3dv)(GLint location , GLsizei count , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform4dv)(GLint location , GLsizei count , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformMatrix2dv)(GLint location , GLsizei count , GLboolean transpose , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformMatrix3dv)(GLint location , GLsizei count , GLboolean transpose , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformMatrix4dv)(GLint location , GLsizei count , GLboolean transpose , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformMatrix2x3dv)(GLint location , GLsizei count , GLboolean transpose , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformMatrix2x4dv)(GLint location , GLsizei count , GLboolean transpose , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformMatrix3x2dv)(GLint location , GLsizei count , GLboolean transpose , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformMatrix3x4dv)(GLint location , GLsizei count , GLboolean transpose , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformMatrix4x2dv)(GLint location , GLsizei count , GLboolean transpose , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformMatrix4x3dv)(GLint location , GLsizei count , GLboolean transpose , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetUniformdv)(GLuint program , GLint location , GLdouble *params) = 0; }
+static bool DinamicGLFeature_ARB_gpu_shader_fp64_loaded = false; 
+static void InitDinamicGLFeature_ARB_gpu_shader_fp64() {
+		DynamicGL_Uniform1d = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLdouble x)>("glUniform1d"); 
+		DynamicGL_Uniform2d = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLdouble x , GLdouble y)>("glUniform2d"); 
+		DynamicGL_Uniform3d = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLdouble x , GLdouble y , GLdouble z)>("glUniform3d"); 
+		DynamicGL_Uniform4d = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLdouble x , GLdouble y , GLdouble z , GLdouble w)>("glUniform4d"); 
+		DynamicGL_Uniform1dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLsizei count , const GLdouble *value)>("glUniform1dv"); 
+		DynamicGL_Uniform2dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLsizei count , const GLdouble *value)>("glUniform2dv"); 
+		DynamicGL_Uniform3dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLsizei count , const GLdouble *value)>("glUniform3dv"); 
+		DynamicGL_Uniform4dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLsizei count , const GLdouble *value)>("glUniform4dv"); 
+		DynamicGL_UniformMatrix2dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glUniformMatrix2dv"); 
+		DynamicGL_UniformMatrix3dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glUniformMatrix3dv"); 
+		DynamicGL_UniformMatrix4dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glUniformMatrix4dv"); 
+		DynamicGL_UniformMatrix2x3dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glUniformMatrix2x3dv"); 
+		DynamicGL_UniformMatrix2x4dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glUniformMatrix2x4dv"); 
+		DynamicGL_UniformMatrix3x2dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glUniformMatrix3x2dv"); 
+		DynamicGL_UniformMatrix3x4dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glUniformMatrix3x4dv"); 
+		DynamicGL_UniformMatrix4x2dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glUniformMatrix4x2dv"); 
+		DynamicGL_UniformMatrix4x3dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glUniformMatrix4x3dv"); 
+		DynamicGL_GetUniformdv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLdouble *params)>("glGetUniformdv"); 
+		DinamicGLFeature_ARB_gpu_shader_fp64_loaded = true; 
+}
+bool DinamicGLFeature_ARB_gpu_shader_fp64_Supported() {
+		if (!DinamicGLFeature_ARB_gpu_shader_fp64_loaded) {
+			InitDinamicGLFeature_ARB_gpu_shader_fp64();
+		}
+		if (DynamicGL_Uniform1d==0) return false; 
+		if (DynamicGL_Uniform2d==0) return false; 
+		if (DynamicGL_Uniform3d==0) return false; 
+		if (DynamicGL_Uniform4d==0) return false; 
+		if (DynamicGL_Uniform1dv==0) return false; 
+		if (DynamicGL_Uniform2dv==0) return false; 
+		if (DynamicGL_Uniform3dv==0) return false; 
+		if (DynamicGL_Uniform4dv==0) return false; 
+		if (DynamicGL_UniformMatrix2dv==0) return false; 
+		if (DynamicGL_UniformMatrix3dv==0) return false; 
+		if (DynamicGL_UniformMatrix4dv==0) return false; 
+		if (DynamicGL_UniformMatrix2x3dv==0) return false; 
+		if (DynamicGL_UniformMatrix2x4dv==0) return false; 
+		if (DynamicGL_UniformMatrix3x2dv==0) return false; 
+		if (DynamicGL_UniformMatrix3x4dv==0) return false; 
+		if (DynamicGL_UniformMatrix4x2dv==0) return false; 
+		if (DynamicGL_UniformMatrix4x3dv==0) return false; 
+		if (DynamicGL_GetUniformdv==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_gpu_shader_fp64*/
+
 /*EXT_light_texture*/
 #ifdef USE_DYNAMIC_GL_EXT_light_texture
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ApplyTextureEXT)(GLenum mode) = 0; }
@@ -4469,6 +5704,20 @@ bool DinamicGLFeature_EXT_light_texture_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_light_texture*/
+
+/*ARB_map_buffer_alignment*/
+#ifdef USE_DYNAMIC_GL_ARB_map_buffer_alignment
+static bool DinamicGLFeature_ARB_map_buffer_alignment_loaded = false; 
+static void InitDinamicGLFeature_ARB_map_buffer_alignment() {
+		DinamicGLFeature_ARB_map_buffer_alignment_loaded = true; 
+}
+bool DinamicGLFeature_ARB_map_buffer_alignment_Supported() {
+		if (!DinamicGLFeature_ARB_map_buffer_alignment_loaded) {
+			InitDinamicGLFeature_ARB_map_buffer_alignment();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_map_buffer_alignment*/
 
 /*EXT_multisample*/
 #ifdef USE_DYNAMIC_GL_EXT_multisample
@@ -4704,6 +5953,26 @@ bool DinamicGLFeature_ARB_vertex_program_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_ARB_vertex_program*/
 
+/*ARB_tessellation_shader*/
+#ifdef USE_DYNAMIC_GL_ARB_tessellation_shader
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PatchParameteri)(GLenum pname , GLint value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PatchParameterfv)(GLenum pname , const GLfloat *values) = 0; }
+static bool DinamicGLFeature_ARB_tessellation_shader_loaded = false; 
+static void InitDinamicGLFeature_ARB_tessellation_shader() {
+		DynamicGL_PatchParameteri = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , GLint value)>("glPatchParameteri"); 
+		DynamicGL_PatchParameterfv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , const GLfloat *values)>("glPatchParameterfv"); 
+		DinamicGLFeature_ARB_tessellation_shader_loaded = true; 
+}
+bool DinamicGLFeature_ARB_tessellation_shader_Supported() {
+		if (!DinamicGLFeature_ARB_tessellation_shader_loaded) {
+			InitDinamicGLFeature_ARB_tessellation_shader();
+		}
+		if (DynamicGL_PatchParameteri==0) return false; 
+		if (DynamicGL_PatchParameterfv==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_tessellation_shader*/
+
 /*EXT_point_parameters*/
 #ifdef USE_DYNAMIC_GL_EXT_point_parameters
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterfEXT)(GLenum pname , GLfloat param) = 0; }
@@ -4787,6 +6056,94 @@ bool DinamicGLFeature_SGIS_pixel_texture_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_SGIS_pixel_texture*/
 
+/*NV_vertex_attrib_integer_64bit*/
+#ifdef USE_DYNAMIC_GL_NV_vertex_attrib_integer_64bit
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL1i64NV)(GLuint index , GLint64EXT x) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL2i64NV)(GLuint index , GLint64EXT x , GLint64EXT y) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL3i64NV)(GLuint index , GLint64EXT x , GLint64EXT y , GLint64EXT z) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL4i64NV)(GLuint index , GLint64EXT x , GLint64EXT y , GLint64EXT z , GLint64EXT w) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL1i64vNV)(GLuint index , const GLint64EXT *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL2i64vNV)(GLuint index , const GLint64EXT *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL3i64vNV)(GLuint index , const GLint64EXT *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL4i64vNV)(GLuint index , const GLint64EXT *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL1ui64NV)(GLuint index , GLuint64EXT x) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL2ui64NV)(GLuint index , GLuint64EXT x , GLuint64EXT y) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL3ui64NV)(GLuint index , GLuint64EXT x , GLuint64EXT y , GLuint64EXT z) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL4ui64NV)(GLuint index , GLuint64EXT x , GLuint64EXT y , GLuint64EXT z , GLuint64EXT w) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL1ui64vNV)(GLuint index , const GLuint64EXT *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL2ui64vNV)(GLuint index , const GLuint64EXT *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL3ui64vNV)(GLuint index , const GLuint64EXT *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL4ui64vNV)(GLuint index , const GLuint64EXT *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVertexAttribLi64vNV)(GLuint index , GLenum pname , GLint64EXT *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVertexAttribLui64vNV)(GLuint index , GLenum pname , GLuint64EXT *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribLFormatNV)(GLuint index , GLint size , GLenum type , GLsizei stride) = 0; }
+static bool DinamicGLFeature_NV_vertex_attrib_integer_64bit_loaded = false; 
+static void InitDinamicGLFeature_NV_vertex_attrib_integer_64bit() {
+		DynamicGL_VertexAttribL1i64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLint64EXT x)>("glVertexAttribL1i64NV"); 
+		DynamicGL_VertexAttribL2i64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLint64EXT x , GLint64EXT y)>("glVertexAttribL2i64NV"); 
+		DynamicGL_VertexAttribL3i64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLint64EXT x , GLint64EXT y , GLint64EXT z)>("glVertexAttribL3i64NV"); 
+		DynamicGL_VertexAttribL4i64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLint64EXT x , GLint64EXT y , GLint64EXT z , GLint64EXT w)>("glVertexAttribL4i64NV"); 
+		DynamicGL_VertexAttribL1i64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , const GLint64EXT *v)>("glVertexAttribL1i64vNV"); 
+		DynamicGL_VertexAttribL2i64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , const GLint64EXT *v)>("glVertexAttribL2i64vNV"); 
+		DynamicGL_VertexAttribL3i64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , const GLint64EXT *v)>("glVertexAttribL3i64vNV"); 
+		DynamicGL_VertexAttribL4i64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , const GLint64EXT *v)>("glVertexAttribL4i64vNV"); 
+		DynamicGL_VertexAttribL1ui64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLuint64EXT x)>("glVertexAttribL1ui64NV"); 
+		DynamicGL_VertexAttribL2ui64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLuint64EXT x , GLuint64EXT y)>("glVertexAttribL2ui64NV"); 
+		DynamicGL_VertexAttribL3ui64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLuint64EXT x , GLuint64EXT y , GLuint64EXT z)>("glVertexAttribL3ui64NV"); 
+		DynamicGL_VertexAttribL4ui64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLuint64EXT x , GLuint64EXT y , GLuint64EXT z , GLuint64EXT w)>("glVertexAttribL4ui64NV"); 
+		DynamicGL_VertexAttribL1ui64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , const GLuint64EXT *v)>("glVertexAttribL1ui64vNV"); 
+		DynamicGL_VertexAttribL2ui64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , const GLuint64EXT *v)>("glVertexAttribL2ui64vNV"); 
+		DynamicGL_VertexAttribL3ui64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , const GLuint64EXT *v)>("glVertexAttribL3ui64vNV"); 
+		DynamicGL_VertexAttribL4ui64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , const GLuint64EXT *v)>("glVertexAttribL4ui64vNV"); 
+		DynamicGL_GetVertexAttribLi64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLenum pname , GLint64EXT *params)>("glGetVertexAttribLi64vNV"); 
+		DynamicGL_GetVertexAttribLui64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLenum pname , GLuint64EXT *params)>("glGetVertexAttribLui64vNV"); 
+		DynamicGL_VertexAttribLFormatNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLint size , GLenum type , GLsizei stride)>("glVertexAttribLFormatNV"); 
+		DinamicGLFeature_NV_vertex_attrib_integer_64bit_loaded = true; 
+}
+bool DinamicGLFeature_NV_vertex_attrib_integer_64bit_Supported() {
+		if (!DinamicGLFeature_NV_vertex_attrib_integer_64bit_loaded) {
+			InitDinamicGLFeature_NV_vertex_attrib_integer_64bit();
+		}
+		if (DynamicGL_VertexAttribL1i64NV==0) return false; 
+		if (DynamicGL_VertexAttribL2i64NV==0) return false; 
+		if (DynamicGL_VertexAttribL3i64NV==0) return false; 
+		if (DynamicGL_VertexAttribL4i64NV==0) return false; 
+		if (DynamicGL_VertexAttribL1i64vNV==0) return false; 
+		if (DynamicGL_VertexAttribL2i64vNV==0) return false; 
+		if (DynamicGL_VertexAttribL3i64vNV==0) return false; 
+		if (DynamicGL_VertexAttribL4i64vNV==0) return false; 
+		if (DynamicGL_VertexAttribL1ui64NV==0) return false; 
+		if (DynamicGL_VertexAttribL2ui64NV==0) return false; 
+		if (DynamicGL_VertexAttribL3ui64NV==0) return false; 
+		if (DynamicGL_VertexAttribL4ui64NV==0) return false; 
+		if (DynamicGL_VertexAttribL1ui64vNV==0) return false; 
+		if (DynamicGL_VertexAttribL2ui64vNV==0) return false; 
+		if (DynamicGL_VertexAttribL3ui64vNV==0) return false; 
+		if (DynamicGL_VertexAttribL4ui64vNV==0) return false; 
+		if (DynamicGL_GetVertexAttribLi64vNV==0) return false; 
+		if (DynamicGL_GetVertexAttribLui64vNV==0) return false; 
+		if (DynamicGL_VertexAttribLFormatNV==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_vertex_attrib_integer_64bit*/
+
+/*ARB_provoking_vertex*/
+#ifdef USE_DYNAMIC_GL_ARB_provoking_vertex
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProvokingVertex)(GLenum mode) = 0; }
+static bool DinamicGLFeature_ARB_provoking_vertex_loaded = false; 
+static void InitDinamicGLFeature_ARB_provoking_vertex() {
+		DynamicGL_ProvokingVertex = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode)>("glProvokingVertex"); 
+		DinamicGLFeature_ARB_provoking_vertex_loaded = true; 
+}
+bool DinamicGLFeature_ARB_provoking_vertex_Supported() {
+		if (!DinamicGLFeature_ARB_provoking_vertex_loaded) {
+			InitDinamicGLFeature_ARB_provoking_vertex();
+		}
+		if (DynamicGL_ProvokingVertex==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_provoking_vertex*/
+
 /*SGIS_texture4D*/
 #ifdef USE_DYNAMIC_GL_SGIS_texture4D
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexImage4DSGIS)(GLenum target , GLint level , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth , GLsizei size4d , GLint border , GLenum format , GLenum type , const GLvoid *pixels) = 0; }
@@ -4806,6 +6163,23 @@ bool DinamicGLFeature_SGIS_texture4D_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIS_texture4D*/
+
+/*PGI_misc_hints*/
+#ifdef USE_DYNAMIC_GL_PGI_misc_hints
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_HintPGI)(GLenum target , GLint mode) = 0; }
+static bool DinamicGLFeature_PGI_misc_hints_loaded = false; 
+static void InitDinamicGLFeature_PGI_misc_hints() {
+		DynamicGL_HintPGI = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint mode)>("glHintPGI"); 
+		DinamicGLFeature_PGI_misc_hints_loaded = true; 
+}
+bool DinamicGLFeature_PGI_misc_hints_Supported() {
+		if (!DinamicGLFeature_PGI_misc_hints_loaded) {
+			InitDinamicGLFeature_PGI_misc_hints();
+		}
+		if (DynamicGL_HintPGI==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_PGI_misc_hints*/
 
 /*SGIS_multisample*/
 #ifdef USE_DYNAMIC_GL_SGIS_multisample
@@ -4827,22 +6201,63 @@ bool DinamicGLFeature_SGIS_multisample_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_SGIS_multisample*/
 
-/*PGI_misc_hints*/
-#ifdef USE_DYNAMIC_GL_PGI_misc_hints
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_HintPGI)(GLenum target , GLint mode) = 0; }
-static bool DinamicGLFeature_PGI_misc_hints_loaded = false; 
-static void InitDinamicGLFeature_PGI_misc_hints() {
-		DynamicGL_HintPGI = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint mode)>("glHintPGI"); 
-		DinamicGLFeature_PGI_misc_hints_loaded = true; 
+/*NV_vdpau_interop*/
+#ifdef USE_DYNAMIC_GL_NV_vdpau_interop
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VDPAUInitNV)(const GLvoid *vdpDevice , const GLvoid *getProcAddress) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VDPAUFiniNV)() = 0; }
+extern "C" { GLvdpauSurfaceNV (DYNAMIC_GL_APIENTRYP DynamicGL_VDPAURegisterVideoSurfaceNV)(GLvoid *vdpSurface , GLenum target , GLsizei numTextureNames , const GLuint *textureNames) = 0; }
+extern "C" { GLvdpauSurfaceNV (DYNAMIC_GL_APIENTRYP DynamicGL_VDPAURegisterOutputSurfaceNV)(GLvoid *vdpSurface , GLenum target , GLsizei numTextureNames , const GLuint *textureNames) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VDPAUIsSurfaceNV)(GLvdpauSurfaceNV surface) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VDPAUUnregisterSurfaceNV)(GLvdpauSurfaceNV surface) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VDPAUGetSurfaceivNV)(GLvdpauSurfaceNV surface , GLenum pname , GLsizei bufSize , GLsizei *length , GLint *values) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VDPAUSurfaceAccessNV)(GLvdpauSurfaceNV surface , GLenum access) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VDPAUMapSurfacesNV)(GLsizei numSurfaces , const GLvdpauSurfaceNV *surfaces) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VDPAUUnmapSurfacesNV)(GLsizei numSurface , const GLvdpauSurfaceNV *surfaces) = 0; }
+static bool DinamicGLFeature_NV_vdpau_interop_loaded = false; 
+static void InitDinamicGLFeature_NV_vdpau_interop() {
+		DynamicGL_VDPAUInitNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLvoid *vdpDevice , const GLvoid *getProcAddress)>("glVDPAUInitNV"); 
+		DynamicGL_VDPAUFiniNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)()>("glVDPAUFiniNV"); 
+		DynamicGL_VDPAURegisterVideoSurfaceNV = DynamicGL_LoadFunction<GLvdpauSurfaceNV (DYNAMIC_GL_APIENTRYP)(GLvoid *vdpSurface , GLenum target , GLsizei numTextureNames , const GLuint *textureNames)>("glVDPAURegisterVideoSurfaceNV"); 
+		DynamicGL_VDPAURegisterOutputSurfaceNV = DynamicGL_LoadFunction<GLvdpauSurfaceNV (DYNAMIC_GL_APIENTRYP)(GLvoid *vdpSurface , GLenum target , GLsizei numTextureNames , const GLuint *textureNames)>("glVDPAURegisterOutputSurfaceNV"); 
+		DynamicGL_VDPAUIsSurfaceNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLvdpauSurfaceNV surface)>("glVDPAUIsSurfaceNV"); 
+		DynamicGL_VDPAUUnregisterSurfaceNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLvdpauSurfaceNV surface)>("glVDPAUUnregisterSurfaceNV"); 
+		DynamicGL_VDPAUGetSurfaceivNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLvdpauSurfaceNV surface , GLenum pname , GLsizei bufSize , GLsizei *length , GLint *values)>("glVDPAUGetSurfaceivNV"); 
+		DynamicGL_VDPAUSurfaceAccessNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLvdpauSurfaceNV surface , GLenum access)>("glVDPAUSurfaceAccessNV"); 
+		DynamicGL_VDPAUMapSurfacesNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei numSurfaces , const GLvdpauSurfaceNV *surfaces)>("glVDPAUMapSurfacesNV"); 
+		DynamicGL_VDPAUUnmapSurfacesNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei numSurface , const GLvdpauSurfaceNV *surfaces)>("glVDPAUUnmapSurfacesNV"); 
+		DinamicGLFeature_NV_vdpau_interop_loaded = true; 
 }
-bool DinamicGLFeature_PGI_misc_hints_Supported() {
-		if (!DinamicGLFeature_PGI_misc_hints_loaded) {
-			InitDinamicGLFeature_PGI_misc_hints();
+bool DinamicGLFeature_NV_vdpau_interop_Supported() {
+		if (!DinamicGLFeature_NV_vdpau_interop_loaded) {
+			InitDinamicGLFeature_NV_vdpau_interop();
 		}
-		if (DynamicGL_HintPGI==0) return false; 
+		if (DynamicGL_VDPAUInitNV==0) return false; 
+		if (DynamicGL_VDPAUFiniNV==0) return false; 
+		if (DynamicGL_VDPAURegisterVideoSurfaceNV==0) return false; 
+		if (DynamicGL_VDPAURegisterOutputSurfaceNV==0) return false; 
+		if (DynamicGL_VDPAUIsSurfaceNV==0) return false; 
+		if (DynamicGL_VDPAUUnregisterSurfaceNV==0) return false; 
+		if (DynamicGL_VDPAUGetSurfaceivNV==0) return false; 
+		if (DynamicGL_VDPAUSurfaceAccessNV==0) return false; 
+		if (DynamicGL_VDPAUMapSurfacesNV==0) return false; 
+		if (DynamicGL_VDPAUUnmapSurfacesNV==0) return false; 
 		return true;
 }
-#endif /*USE_DYNAMIC_GL_PGI_misc_hints*/
+#endif /*USE_DYNAMIC_GL_NV_vdpau_interop*/
+
+/*EXT_texture_sRGB_decode*/
+#ifdef USE_DYNAMIC_GL_EXT_texture_sRGB_decode
+static bool DinamicGLFeature_EXT_texture_sRGB_decode_loaded = false; 
+static void InitDinamicGLFeature_EXT_texture_sRGB_decode() {
+		DinamicGLFeature_EXT_texture_sRGB_decode_loaded = true; 
+}
+bool DinamicGLFeature_EXT_texture_sRGB_decode_Supported() {
+		if (!DinamicGLFeature_EXT_texture_sRGB_decode_loaded) {
+			InitDinamicGLFeature_EXT_texture_sRGB_decode();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_EXT_texture_sRGB_decode*/
 
 /*ARB_window_pos*/
 #ifdef USE_DYNAMIC_GL_ARB_window_pos
@@ -4906,6 +6321,41 @@ bool DinamicGLFeature_ARB_window_pos_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_ARB_window_pos*/
 
+/*NV_transform_feedback2*/
+#ifdef USE_DYNAMIC_GL_NV_transform_feedback2
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindTransformFeedbackNV)(GLenum target , GLuint id) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteTransformFeedbacksNV)(GLsizei n , const GLuint *ids) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenTransformFeedbacksNV)(GLsizei n , GLuint *ids) = 0; }
+extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsTransformFeedbackNV)(GLuint id) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PauseTransformFeedbackNV)() = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ResumeTransformFeedbackNV)() = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTransformFeedbackNV)(GLenum mode , GLuint id) = 0; }
+static bool DinamicGLFeature_NV_transform_feedback2_loaded = false; 
+static void InitDinamicGLFeature_NV_transform_feedback2() {
+		DynamicGL_BindTransformFeedbackNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint id)>("glBindTransformFeedbackNV"); 
+		DynamicGL_DeleteTransformFeedbacksNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei n , const GLuint *ids)>("glDeleteTransformFeedbacksNV"); 
+		DynamicGL_GenTransformFeedbacksNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei n , GLuint *ids)>("glGenTransformFeedbacksNV"); 
+		DynamicGL_IsTransformFeedbackNV = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLuint id)>("glIsTransformFeedbackNV"); 
+		DynamicGL_PauseTransformFeedbackNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)()>("glPauseTransformFeedbackNV"); 
+		DynamicGL_ResumeTransformFeedbackNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)()>("glResumeTransformFeedbackNV"); 
+		DynamicGL_DrawTransformFeedbackNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLuint id)>("glDrawTransformFeedbackNV"); 
+		DinamicGLFeature_NV_transform_feedback2_loaded = true; 
+}
+bool DinamicGLFeature_NV_transform_feedback2_Supported() {
+		if (!DinamicGLFeature_NV_transform_feedback2_loaded) {
+			InitDinamicGLFeature_NV_transform_feedback2();
+		}
+		if (DynamicGL_BindTransformFeedbackNV==0) return false; 
+		if (DynamicGL_DeleteTransformFeedbacksNV==0) return false; 
+		if (DynamicGL_GenTransformFeedbacksNV==0) return false; 
+		if (DynamicGL_IsTransformFeedbackNV==0) return false; 
+		if (DynamicGL_PauseTransformFeedbackNV==0) return false; 
+		if (DynamicGL_ResumeTransformFeedbackNV==0) return false; 
+		if (DynamicGL_DrawTransformFeedbackNV==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_transform_feedback2*/
+
 /*SGIX_polynomial_ffd*/
 #ifdef USE_DYNAMIC_GL_SGIX_polynomial_ffd
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeformationMap3dSGIX)(GLenum target , GLdouble u1 , GLdouble u2 , GLint ustride , GLint uorder , GLdouble v1 , GLdouble v2 , GLint vstride , GLint vorder , GLdouble w1 , GLdouble w2 , GLint wstride , GLint worder , const GLdouble *points) = 0; }
@@ -4966,6 +6416,23 @@ bool DinamicGLFeature_SGIX_ir_instrument1_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_SGIX_ir_instrument1*/
 
+/*NV_texture_barrier*/
+#ifdef USE_DYNAMIC_GL_NV_texture_barrier
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureBarrierNV)() = 0; }
+static bool DinamicGLFeature_NV_texture_barrier_loaded = false; 
+static void InitDinamicGLFeature_NV_texture_barrier() {
+		DynamicGL_TextureBarrierNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)()>("glTextureBarrierNV"); 
+		DinamicGLFeature_NV_texture_barrier_loaded = true; 
+}
+bool DinamicGLFeature_NV_texture_barrier_Supported() {
+		if (!DinamicGLFeature_NV_texture_barrier_loaded) {
+			InitDinamicGLFeature_NV_texture_barrier();
+		}
+		if (DynamicGL_TextureBarrierNV==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_texture_barrier*/
+
 /*SGIX_igloo_interface*/
 #ifdef USE_DYNAMIC_GL_SGIX_igloo_interface
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_IglooInterfaceSGIX)(GLenum pname , const GLvoid *params) = 0; }
@@ -4982,6 +6449,46 @@ bool DinamicGLFeature_SGIX_igloo_interface_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SGIX_igloo_interface*/
+
+/*ARB_texture_multisample*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_multisample
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexImage2DMultisample)(GLenum target , GLsizei samples , GLint internalformat , GLsizei width , GLsizei height , GLboolean fixedsamplelocations) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexImage3DMultisample)(GLenum target , GLsizei samples , GLint internalformat , GLsizei width , GLsizei height , GLsizei depth , GLboolean fixedsamplelocations) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetMultisamplefv)(GLenum pname , GLuint index , GLfloat *val) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleMaski)(GLuint index , GLbitfield mask) = 0; }
+static bool DinamicGLFeature_ARB_texture_multisample_loaded = false; 
+static void InitDinamicGLFeature_ARB_texture_multisample() {
+		DynamicGL_TexImage2DMultisample = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLsizei samples , GLint internalformat , GLsizei width , GLsizei height , GLboolean fixedsamplelocations)>("glTexImage2DMultisample"); 
+		DynamicGL_TexImage3DMultisample = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLsizei samples , GLint internalformat , GLsizei width , GLsizei height , GLsizei depth , GLboolean fixedsamplelocations)>("glTexImage3DMultisample"); 
+		DynamicGL_GetMultisamplefv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , GLuint index , GLfloat *val)>("glGetMultisamplefv"); 
+		DynamicGL_SampleMaski = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLbitfield mask)>("glSampleMaski"); 
+		DinamicGLFeature_ARB_texture_multisample_loaded = true; 
+}
+bool DinamicGLFeature_ARB_texture_multisample_Supported() {
+		if (!DinamicGLFeature_ARB_texture_multisample_loaded) {
+			InitDinamicGLFeature_ARB_texture_multisample();
+		}
+		if (DynamicGL_TexImage2DMultisample==0) return false; 
+		if (DynamicGL_TexImage3DMultisample==0) return false; 
+		if (DynamicGL_GetMultisamplefv==0) return false; 
+		if (DynamicGL_SampleMaski==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_texture_multisample*/
+
+/*AMD_blend_minmax_factor*/
+#ifdef USE_DYNAMIC_GL_AMD_blend_minmax_factor
+static bool DinamicGLFeature_AMD_blend_minmax_factor_loaded = false; 
+static void InitDinamicGLFeature_AMD_blend_minmax_factor() {
+		DinamicGLFeature_AMD_blend_minmax_factor_loaded = true; 
+}
+bool DinamicGLFeature_AMD_blend_minmax_factor_Supported() {
+		if (!DinamicGLFeature_AMD_blend_minmax_factor_loaded) {
+			InitDinamicGLFeature_AMD_blend_minmax_factor();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_AMD_blend_minmax_factor*/
 
 /*NV_fence*/
 #ifdef USE_DYNAMIC_GL_NV_fence
@@ -5083,11 +6590,14 @@ extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BeginTransformFeedback)(GLenum
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_EndTransformFeedback)() = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindBufferRange)(GLenum target , GLuint index , GLuint buffer , GLintptr offset , GLsizeiptr size) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindBufferBase)(GLenum target , GLuint index , GLuint buffer) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TransformFeedbackVaryings)(GLuint program , GLsizei count , const GLint *locations , GLenum bufferMode) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTransformFeedbackVarying)(GLuint program , GLuint index , GLint *location) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TransformFeedbackVaryings)(GLuint program , GLsizei count , const GLchar* const , GLenum bufferMode) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTransformFeedbackVarying)(GLuint program , GLuint index , GLsizei bufSize , GLsizei *length , GLsizei *size , GLenum *type , GLchar *name) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClampColor)(GLenum target , GLenum clamp) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BeginConditionalRender)(GLuint id , GLenum mode) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_EndConditionalRender)() = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribIPointer)(GLuint index , GLint size , GLenum type , GLsizei stride , const GLvoid *pointer) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVertexAttribIiv)(GLuint index , GLenum pname , GLint *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVertexAttribIuiv)(GLuint index , GLenum pname , GLuint *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribI1i)(GLuint index , GLint x) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribI2i)(GLuint index , GLint x , GLint y) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribI3i)(GLuint index , GLint x , GLint y , GLint z) = 0; }
@@ -5108,9 +6618,6 @@ extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribI4bv)(GLuint index
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribI4sv)(GLuint index , const GLshort *v) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribI4ubv)(GLuint index , const GLubyte *v) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribI4usv)(GLuint index , const GLushort *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribIPointer)(GLuint index , GLint size , GLenum type , GLsizei stride , const GLvoid *pointer) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVertexAttribIiv)(GLuint index , GLenum pname , GLint *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVertexAttribIuiv)(GLuint index , GLenum pname , GLuint *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetUniformuiv)(GLuint program , GLint location , GLuint *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindFragDataLocation)(GLuint program , GLuint color , const GLchar *name) = 0; }
 extern "C" { GLint (DYNAMIC_GL_APIENTRYP DynamicGL_GetFragDataLocation)(GLuint program , const GLchar *name) = 0; }
@@ -5126,10 +6633,10 @@ extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterIiv)(GLenum target
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterIuiv)(GLenum target , GLenum pname , const GLuint *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexParameterIiv)(GLenum target , GLenum pname , GLint *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexParameterIuiv)(GLenum target , GLenum pname , GLuint *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearBufferiv)(GLenum buffer , const GLint *value) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearBufferuiv)(GLenum buffer , const GLuint *value) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearBufferfv)(GLenum buffer , const GLfloat *value) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearBufferfi)(GLenum buffer , GLfloat depth , GLint stencil) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearBufferiv)(GLenum buffer , GLint drawbuffer , const GLint *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearBufferuiv)(GLenum buffer , GLint drawbuffer , const GLuint *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearBufferfv)(GLenum buffer , GLint drawbuffer , const GLfloat *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearBufferfi)(GLenum buffer , GLint drawbuffer , GLfloat depth , GLint stencil) = 0; }
 static bool DinamicGLFeature_VERSION_3_0_loaded = false; 
 static void InitDinamicGLFeature_VERSION_3_0() {
 		DynamicGL_ColorMaski = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLboolean r , GLboolean g , GLboolean b , GLboolean a)>("glColorMaski"); 
@@ -5142,11 +6649,14 @@ static void InitDinamicGLFeature_VERSION_3_0() {
 		DynamicGL_EndTransformFeedback = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)()>("glEndTransformFeedback"); 
 		DynamicGL_BindBufferRange = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint index , GLuint buffer , GLintptr offset , GLsizeiptr size)>("glBindBufferRange"); 
 		DynamicGL_BindBufferBase = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint index , GLuint buffer)>("glBindBufferBase"); 
-		DynamicGL_TransformFeedbackVaryings = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLsizei count , const GLint *locations , GLenum bufferMode)>("glTransformFeedbackVaryings"); 
-		DynamicGL_GetTransformFeedbackVarying = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLuint index , GLint *location)>("glGetTransformFeedbackVarying"); 
+		DynamicGL_TransformFeedbackVaryings = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLsizei count , const GLchar* const , GLenum bufferMode)>("glTransformFeedbackVaryings"); 
+		DynamicGL_GetTransformFeedbackVarying = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLuint index , GLsizei bufSize , GLsizei *length , GLsizei *size , GLenum *type , GLchar *name)>("glGetTransformFeedbackVarying"); 
 		DynamicGL_ClampColor = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum clamp)>("glClampColor"); 
 		DynamicGL_BeginConditionalRender = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint id , GLenum mode)>("glBeginConditionalRender"); 
 		DynamicGL_EndConditionalRender = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)()>("glEndConditionalRender"); 
+		DynamicGL_VertexAttribIPointer = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLint size , GLenum type , GLsizei stride , const GLvoid *pointer)>("glVertexAttribIPointer"); 
+		DynamicGL_GetVertexAttribIiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLenum pname , GLint *params)>("glGetVertexAttribIiv"); 
+		DynamicGL_GetVertexAttribIuiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLenum pname , GLuint *params)>("glGetVertexAttribIuiv"); 
 		DynamicGL_VertexAttribI1i = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLint x)>("glVertexAttribI1i"); 
 		DynamicGL_VertexAttribI2i = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLint x , GLint y)>("glVertexAttribI2i"); 
 		DynamicGL_VertexAttribI3i = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLint x , GLint y , GLint z)>("glVertexAttribI3i"); 
@@ -5167,9 +6677,6 @@ static void InitDinamicGLFeature_VERSION_3_0() {
 		DynamicGL_VertexAttribI4sv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , const GLshort *v)>("glVertexAttribI4sv"); 
 		DynamicGL_VertexAttribI4ubv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , const GLubyte *v)>("glVertexAttribI4ubv"); 
 		DynamicGL_VertexAttribI4usv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , const GLushort *v)>("glVertexAttribI4usv"); 
-		DynamicGL_VertexAttribIPointer = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLint size , GLenum type , GLsizei stride , const GLvoid *pointer)>("glVertexAttribIPointer"); 
-		DynamicGL_GetVertexAttribIiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLenum pname , GLint *params)>("glGetVertexAttribIiv"); 
-		DynamicGL_GetVertexAttribIuiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLenum pname , GLuint *params)>("glGetVertexAttribIuiv"); 
 		DynamicGL_GetUniformuiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLuint *params)>("glGetUniformuiv"); 
 		DynamicGL_BindFragDataLocation = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLuint color , const GLchar *name)>("glBindFragDataLocation"); 
 		DynamicGL_GetFragDataLocation = DynamicGL_LoadFunction<GLint (DYNAMIC_GL_APIENTRYP)(GLuint program , const GLchar *name)>("glGetFragDataLocation"); 
@@ -5185,10 +6692,10 @@ static void InitDinamicGLFeature_VERSION_3_0() {
 		DynamicGL_TexParameterIuiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum pname , const GLuint *params)>("glTexParameterIuiv"); 
 		DynamicGL_GetTexParameterIiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum pname , GLint *params)>("glGetTexParameterIiv"); 
 		DynamicGL_GetTexParameterIuiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum pname , GLuint *params)>("glGetTexParameterIuiv"); 
-		DynamicGL_ClearBufferiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum buffer , const GLint *value)>("glClearBufferiv"); 
-		DynamicGL_ClearBufferuiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum buffer , const GLuint *value)>("glClearBufferuiv"); 
-		DynamicGL_ClearBufferfv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum buffer , const GLfloat *value)>("glClearBufferfv"); 
-		DynamicGL_ClearBufferfi = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum buffer , GLfloat depth , GLint stencil)>("glClearBufferfi"); 
+		DynamicGL_ClearBufferiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum buffer , GLint drawbuffer , const GLint *value)>("glClearBufferiv"); 
+		DynamicGL_ClearBufferuiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum buffer , GLint drawbuffer , const GLuint *value)>("glClearBufferuiv"); 
+		DynamicGL_ClearBufferfv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum buffer , GLint drawbuffer , const GLfloat *value)>("glClearBufferfv"); 
+		DynamicGL_ClearBufferfi = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum buffer , GLint drawbuffer , GLfloat depth , GLint stencil)>("glClearBufferfi"); 
 		DinamicGLFeature_VERSION_3_0_loaded = true; 
 }
 bool DinamicGLFeature_VERSION_3_0_Supported() {
@@ -5210,6 +6717,9 @@ bool DinamicGLFeature_VERSION_3_0_Supported() {
 		if (DynamicGL_ClampColor==0) return false; 
 		if (DynamicGL_BeginConditionalRender==0) return false; 
 		if (DynamicGL_EndConditionalRender==0) return false; 
+		if (DynamicGL_VertexAttribIPointer==0) return false; 
+		if (DynamicGL_GetVertexAttribIiv==0) return false; 
+		if (DynamicGL_GetVertexAttribIuiv==0) return false; 
 		if (DynamicGL_VertexAttribI1i==0) return false; 
 		if (DynamicGL_VertexAttribI2i==0) return false; 
 		if (DynamicGL_VertexAttribI3i==0) return false; 
@@ -5230,9 +6740,6 @@ bool DinamicGLFeature_VERSION_3_0_Supported() {
 		if (DynamicGL_VertexAttribI4sv==0) return false; 
 		if (DynamicGL_VertexAttribI4ubv==0) return false; 
 		if (DynamicGL_VertexAttribI4usv==0) return false; 
-		if (DynamicGL_VertexAttribIPointer==0) return false; 
-		if (DynamicGL_GetVertexAttribIiv==0) return false; 
-		if (DynamicGL_GetVertexAttribIuiv==0) return false; 
 		if (DynamicGL_GetUniformuiv==0) return false; 
 		if (DynamicGL_BindFragDataLocation==0) return false; 
 		if (DynamicGL_GetFragDataLocation==0) return false; 
@@ -5276,6 +6783,41 @@ bool DinamicGLFeature_NV_point_sprite_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_NV_point_sprite*/
 
+/*ARB_uniform_buffer_object*/
+#ifdef USE_DYNAMIC_GL_ARB_uniform_buffer_object
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetUniformIndices)(GLuint program , GLsizei uniformCount , const GLchar* const , GLuint *uniformIndices) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetActiveUniformsiv)(GLuint program , GLsizei uniformCount , const GLuint *uniformIndices , GLenum pname , GLint *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetActiveUniformName)(GLuint program , GLuint uniformIndex , GLsizei bufSize , GLsizei *length , GLchar *uniformName) = 0; }
+extern "C" { GLuint (DYNAMIC_GL_APIENTRYP DynamicGL_GetUniformBlockIndex)(GLuint program , const GLchar *uniformBlockName) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetActiveUniformBlockiv)(GLuint program , GLuint uniformBlockIndex , GLenum pname , GLint *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetActiveUniformBlockName)(GLuint program , GLuint uniformBlockIndex , GLsizei bufSize , GLsizei *length , GLchar *uniformBlockName) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformBlockBinding)(GLuint program , GLuint uniformBlockIndex , GLuint uniformBlockBinding) = 0; }
+static bool DinamicGLFeature_ARB_uniform_buffer_object_loaded = false; 
+static void InitDinamicGLFeature_ARB_uniform_buffer_object() {
+		DynamicGL_GetUniformIndices = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLsizei uniformCount , const GLchar* const , GLuint *uniformIndices)>("glGetUniformIndices"); 
+		DynamicGL_GetActiveUniformsiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLsizei uniformCount , const GLuint *uniformIndices , GLenum pname , GLint *params)>("glGetActiveUniformsiv"); 
+		DynamicGL_GetActiveUniformName = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLuint uniformIndex , GLsizei bufSize , GLsizei *length , GLchar *uniformName)>("glGetActiveUniformName"); 
+		DynamicGL_GetUniformBlockIndex = DynamicGL_LoadFunction<GLuint (DYNAMIC_GL_APIENTRYP)(GLuint program , const GLchar *uniformBlockName)>("glGetUniformBlockIndex"); 
+		DynamicGL_GetActiveUniformBlockiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLuint uniformBlockIndex , GLenum pname , GLint *params)>("glGetActiveUniformBlockiv"); 
+		DynamicGL_GetActiveUniformBlockName = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLuint uniformBlockIndex , GLsizei bufSize , GLsizei *length , GLchar *uniformBlockName)>("glGetActiveUniformBlockName"); 
+		DynamicGL_UniformBlockBinding = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLuint uniformBlockIndex , GLuint uniformBlockBinding)>("glUniformBlockBinding"); 
+		DinamicGLFeature_ARB_uniform_buffer_object_loaded = true; 
+}
+bool DinamicGLFeature_ARB_uniform_buffer_object_Supported() {
+		if (!DinamicGLFeature_ARB_uniform_buffer_object_loaded) {
+			InitDinamicGLFeature_ARB_uniform_buffer_object();
+		}
+		if (DynamicGL_GetUniformIndices==0) return false; 
+		if (DynamicGL_GetActiveUniformsiv==0) return false; 
+		if (DynamicGL_GetActiveUniformName==0) return false; 
+		if (DynamicGL_GetUniformBlockIndex==0) return false; 
+		if (DynamicGL_GetActiveUniformBlockiv==0) return false; 
+		if (DynamicGL_GetActiveUniformBlockName==0) return false; 
+		if (DynamicGL_UniformBlockBinding==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_uniform_buffer_object*/
+
 /*EXT_texture_compression_latc*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_compression_latc
 static bool DinamicGLFeature_EXT_texture_compression_latc_loaded = false; 
@@ -5292,17 +6834,17 @@ bool DinamicGLFeature_EXT_texture_compression_latc_Supported() {
 
 /*ARB_instanced_arrays*/
 #ifdef USE_DYNAMIC_GL_ARB_instanced_arrays
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribDivisor)(GLuint index , GLuint divisor) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribDivisorARB)(GLuint index , GLuint divisor) = 0; }
 static bool DinamicGLFeature_ARB_instanced_arrays_loaded = false; 
 static void InitDinamicGLFeature_ARB_instanced_arrays() {
-		DynamicGL_VertexAttribDivisor = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLuint divisor)>("glVertexAttribDivisor"); 
+		DynamicGL_VertexAttribDivisorARB = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLuint divisor)>("glVertexAttribDivisorARB"); 
 		DinamicGLFeature_ARB_instanced_arrays_loaded = true; 
 }
 bool DinamicGLFeature_ARB_instanced_arrays_Supported() {
 		if (!DinamicGLFeature_ARB_instanced_arrays_loaded) {
 			InitDinamicGLFeature_ARB_instanced_arrays();
 		}
-		if (DynamicGL_VertexAttribDivisor==0) return false; 
+		if (DynamicGL_VertexAttribDivisorARB==0) return false; 
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_instanced_arrays*/
@@ -5314,8 +6856,8 @@ extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_EndTransformFeedbackEXT)() = 0
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindBufferRangeEXT)(GLenum target , GLuint index , GLuint buffer , GLintptr offset , GLsizeiptr size) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindBufferOffsetEXT)(GLenum target , GLuint index , GLuint buffer , GLintptr offset) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindBufferBaseEXT)(GLenum target , GLuint index , GLuint buffer) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TransformFeedbackVaryingsEXT)(GLuint program , GLsizei count , const GLint *locations , GLenum bufferMode) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTransformFeedbackVaryingEXT)(GLuint program , GLuint index , GLint *location) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TransformFeedbackVaryingsEXT)(GLuint program , GLsizei count , const GLchar* *varyings , GLenum bufferMode) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTransformFeedbackVaryingEXT)(GLuint program , GLuint index , GLsizei bufSize , GLsizei *length , GLsizei *size , GLenum *type , GLchar *name) = 0; }
 static bool DinamicGLFeature_EXT_transform_feedback_loaded = false; 
 static void InitDinamicGLFeature_EXT_transform_feedback() {
 		DynamicGL_BeginTransformFeedbackEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum primitiveMode)>("glBeginTransformFeedbackEXT"); 
@@ -5323,8 +6865,8 @@ static void InitDinamicGLFeature_EXT_transform_feedback() {
 		DynamicGL_BindBufferRangeEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint index , GLuint buffer , GLintptr offset , GLsizeiptr size)>("glBindBufferRangeEXT"); 
 		DynamicGL_BindBufferOffsetEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint index , GLuint buffer , GLintptr offset)>("glBindBufferOffsetEXT"); 
 		DynamicGL_BindBufferBaseEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint index , GLuint buffer)>("glBindBufferBaseEXT"); 
-		DynamicGL_TransformFeedbackVaryingsEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLsizei count , const GLint *locations , GLenum bufferMode)>("glTransformFeedbackVaryingsEXT"); 
-		DynamicGL_GetTransformFeedbackVaryingEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLuint index , GLint *location)>("glGetTransformFeedbackVaryingEXT"); 
+		DynamicGL_TransformFeedbackVaryingsEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLsizei count , const GLchar* *varyings , GLenum bufferMode)>("glTransformFeedbackVaryingsEXT"); 
+		DynamicGL_GetTransformFeedbackVaryingEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLuint index , GLsizei bufSize , GLsizei *length , GLsizei *size , GLenum *type , GLchar *name)>("glGetTransformFeedbackVaryingEXT"); 
 		DinamicGLFeature_EXT_transform_feedback_loaded = true; 
 }
 bool DinamicGLFeature_EXT_transform_feedback_Supported() {
@@ -5383,6 +6925,20 @@ bool DinamicGLFeature_NV_texture_shader3_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_texture_shader3*/
+
+/*ARB_imaging_DEPRECATED*/
+#ifdef USE_DYNAMIC_GL_ARB_imaging_DEPRECATED
+static bool DinamicGLFeature_ARB_imaging_DEPRECATED_loaded = false; 
+static void InitDinamicGLFeature_ARB_imaging_DEPRECATED() {
+		DinamicGLFeature_ARB_imaging_DEPRECATED_loaded = true; 
+}
+bool DinamicGLFeature_ARB_imaging_DEPRECATED_Supported() {
+		if (!DinamicGLFeature_ARB_imaging_DEPRECATED_loaded) {
+			InitDinamicGLFeature_ARB_imaging_DEPRECATED();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_imaging_DEPRECATED*/
 
 /*ARB_texture_compression_rgtc*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_compression_rgtc
@@ -5497,6 +7053,20 @@ bool DinamicGLFeature_SGIS_detail_texture_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_SGIS_detail_texture*/
 
+/*AMD_pinned_memory*/
+#ifdef USE_DYNAMIC_GL_AMD_pinned_memory
+static bool DinamicGLFeature_AMD_pinned_memory_loaded = false; 
+static void InitDinamicGLFeature_AMD_pinned_memory() {
+		DinamicGLFeature_AMD_pinned_memory_loaded = true; 
+}
+bool DinamicGLFeature_AMD_pinned_memory_Supported() {
+		if (!DinamicGLFeature_AMD_pinned_memory_loaded) {
+			InitDinamicGLFeature_AMD_pinned_memory();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_AMD_pinned_memory*/
+
 /*MESA_resize_buffers*/
 #ifdef USE_DYNAMIC_GL_MESA_resize_buffers
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ResizeBuffersMESA)() = 0; }
@@ -5566,6 +7136,32 @@ bool DinamicGLFeature_ARB_depth_texture_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_ARB_depth_texture*/
 
+/*AMD_debug_output*/
+#ifdef USE_DYNAMIC_GL_AMD_debug_output
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DebugMessageEnableAMD)(GLenum category , GLenum severity , GLsizei count , const GLuint *ids , GLboolean enabled) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DebugMessageInsertAMD)(GLenum category , GLenum severity , GLuint id , GLsizei length , const GLchar *buf) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DebugMessageCallbackAMD)(GLDEBUGPROCAMD callback , GLvoid *userParam) = 0; }
+extern "C" { GLuint (DYNAMIC_GL_APIENTRYP DynamicGL_GetDebugMessageLogAMD)(GLuint count , GLsizei bufsize , GLenum *categories , GLuint *severities , GLuint *ids , GLsizei *lengths , GLchar *message) = 0; }
+static bool DinamicGLFeature_AMD_debug_output_loaded = false; 
+static void InitDinamicGLFeature_AMD_debug_output() {
+		DynamicGL_DebugMessageEnableAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum category , GLenum severity , GLsizei count , const GLuint *ids , GLboolean enabled)>("glDebugMessageEnableAMD"); 
+		DynamicGL_DebugMessageInsertAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum category , GLenum severity , GLuint id , GLsizei length , const GLchar *buf)>("glDebugMessageInsertAMD"); 
+		DynamicGL_DebugMessageCallbackAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLDEBUGPROCAMD callback , GLvoid *userParam)>("glDebugMessageCallbackAMD"); 
+		DynamicGL_GetDebugMessageLogAMD = DynamicGL_LoadFunction<GLuint (DYNAMIC_GL_APIENTRYP)(GLuint count , GLsizei bufsize , GLenum *categories , GLuint *severities , GLuint *ids , GLsizei *lengths , GLchar *message)>("glGetDebugMessageLogAMD"); 
+		DinamicGLFeature_AMD_debug_output_loaded = true; 
+}
+bool DinamicGLFeature_AMD_debug_output_Supported() {
+		if (!DinamicGLFeature_AMD_debug_output_loaded) {
+			InitDinamicGLFeature_AMD_debug_output();
+		}
+		if (DynamicGL_DebugMessageEnableAMD==0) return false; 
+		if (DynamicGL_DebugMessageInsertAMD==0) return false; 
+		if (DynamicGL_DebugMessageCallbackAMD==0) return false; 
+		if (DynamicGL_GetDebugMessageLogAMD==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_AMD_debug_output*/
+
 /*HP_convolution_border_modes*/
 #ifdef USE_DYNAMIC_GL_HP_convolution_border_modes
 static bool DinamicGLFeature_HP_convolution_border_modes_loaded = false; 
@@ -5579,6 +7175,41 @@ bool DinamicGLFeature_HP_convolution_border_modes_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_HP_convolution_border_modes*/
+
+/*APPLE_vertex_program_evaluators*/
+#ifdef USE_DYNAMIC_GL_APPLE_vertex_program_evaluators
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_EnableVertexAttribAPPLE)(GLuint index , GLenum pname) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DisableVertexAttribAPPLE)(GLuint index , GLenum pname) = 0; }
+extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsVertexAttribEnabledAPPLE)(GLuint index , GLenum pname) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MapVertexAttrib1dAPPLE)(GLuint index , GLuint size , GLdouble u1 , GLdouble u2 , GLint stride , GLint order , const GLdouble *points) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MapVertexAttrib1fAPPLE)(GLuint index , GLuint size , GLfloat u1 , GLfloat u2 , GLint stride , GLint order , const GLfloat *points) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MapVertexAttrib2dAPPLE)(GLuint index , GLuint size , GLdouble u1 , GLdouble u2 , GLint ustride , GLint uorder , GLdouble v1 , GLdouble v2 , GLint vstride , GLint vorder , const GLdouble *points) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MapVertexAttrib2fAPPLE)(GLuint index , GLuint size , GLfloat u1 , GLfloat u2 , GLint ustride , GLint uorder , GLfloat v1 , GLfloat v2 , GLint vstride , GLint vorder , const GLfloat *points) = 0; }
+static bool DinamicGLFeature_APPLE_vertex_program_evaluators_loaded = false; 
+static void InitDinamicGLFeature_APPLE_vertex_program_evaluators() {
+		DynamicGL_EnableVertexAttribAPPLE = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLenum pname)>("glEnableVertexAttribAPPLE"); 
+		DynamicGL_DisableVertexAttribAPPLE = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLenum pname)>("glDisableVertexAttribAPPLE"); 
+		DynamicGL_IsVertexAttribEnabledAPPLE = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLuint index , GLenum pname)>("glIsVertexAttribEnabledAPPLE"); 
+		DynamicGL_MapVertexAttrib1dAPPLE = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLuint size , GLdouble u1 , GLdouble u2 , GLint stride , GLint order , const GLdouble *points)>("glMapVertexAttrib1dAPPLE"); 
+		DynamicGL_MapVertexAttrib1fAPPLE = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLuint size , GLfloat u1 , GLfloat u2 , GLint stride , GLint order , const GLfloat *points)>("glMapVertexAttrib1fAPPLE"); 
+		DynamicGL_MapVertexAttrib2dAPPLE = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLuint size , GLdouble u1 , GLdouble u2 , GLint ustride , GLint uorder , GLdouble v1 , GLdouble v2 , GLint vstride , GLint vorder , const GLdouble *points)>("glMapVertexAttrib2dAPPLE"); 
+		DynamicGL_MapVertexAttrib2fAPPLE = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLuint size , GLfloat u1 , GLfloat u2 , GLint ustride , GLint uorder , GLfloat v1 , GLfloat v2 , GLint vstride , GLint vorder , const GLfloat *points)>("glMapVertexAttrib2fAPPLE"); 
+		DinamicGLFeature_APPLE_vertex_program_evaluators_loaded = true; 
+}
+bool DinamicGLFeature_APPLE_vertex_program_evaluators_Supported() {
+		if (!DinamicGLFeature_APPLE_vertex_program_evaluators_loaded) {
+			InitDinamicGLFeature_APPLE_vertex_program_evaluators();
+		}
+		if (DynamicGL_EnableVertexAttribAPPLE==0) return false; 
+		if (DynamicGL_DisableVertexAttribAPPLE==0) return false; 
+		if (DynamicGL_IsVertexAttribEnabledAPPLE==0) return false; 
+		if (DynamicGL_MapVertexAttrib1dAPPLE==0) return false; 
+		if (DynamicGL_MapVertexAttrib1fAPPLE==0) return false; 
+		if (DynamicGL_MapVertexAttrib2dAPPLE==0) return false; 
+		if (DynamicGL_MapVertexAttrib2fAPPLE==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_APPLE_vertex_program_evaluators*/
 
 /*NV_fragment_program*/
 #ifdef USE_DYNAMIC_GL_NV_fragment_program
@@ -5611,6 +7242,51 @@ bool DinamicGLFeature_NV_fragment_program_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_fragment_program*/
+
+/*VERSION_1_5_DEPRECATED*/
+#ifdef USE_DYNAMIC_GL_VERSION_1_5_DEPRECATED
+static bool DinamicGLFeature_VERSION_1_5_DEPRECATED_loaded = false; 
+static void InitDinamicGLFeature_VERSION_1_5_DEPRECATED() {
+		DinamicGLFeature_VERSION_1_5_DEPRECATED_loaded = true; 
+}
+bool DinamicGLFeature_VERSION_1_5_DEPRECATED_Supported() {
+		if (!DinamicGLFeature_VERSION_1_5_DEPRECATED_loaded) {
+			InitDinamicGLFeature_VERSION_1_5_DEPRECATED();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_VERSION_1_5_DEPRECATED*/
+
+/*NV_copy_image*/
+#ifdef USE_DYNAMIC_GL_NV_copy_image
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CopyImageSubDataNV)(GLuint srcName , GLenum srcTarget , GLint srcLevel , GLint srcX , GLint srcY , GLint srcZ , GLuint dstName , GLenum dstTarget , GLint dstLevel , GLint dstX , GLint dstY , GLint dstZ , GLsizei width , GLsizei height , GLsizei depth) = 0; }
+static bool DinamicGLFeature_NV_copy_image_loaded = false; 
+static void InitDinamicGLFeature_NV_copy_image() {
+		DynamicGL_CopyImageSubDataNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint srcName , GLenum srcTarget , GLint srcLevel , GLint srcX , GLint srcY , GLint srcZ , GLuint dstName , GLenum dstTarget , GLint dstLevel , GLint dstX , GLint dstY , GLint dstZ , GLsizei width , GLsizei height , GLsizei depth)>("glCopyImageSubDataNV"); 
+		DinamicGLFeature_NV_copy_image_loaded = true; 
+}
+bool DinamicGLFeature_NV_copy_image_Supported() {
+		if (!DinamicGLFeature_NV_copy_image_loaded) {
+			InitDinamicGLFeature_NV_copy_image();
+		}
+		if (DynamicGL_CopyImageSubDataNV==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_copy_image*/
+
+/*NV_shader_buffer_store*/
+#ifdef USE_DYNAMIC_GL_NV_shader_buffer_store
+static bool DinamicGLFeature_NV_shader_buffer_store_loaded = false; 
+static void InitDinamicGLFeature_NV_shader_buffer_store() {
+		DinamicGLFeature_NV_shader_buffer_store_loaded = true; 
+}
+bool DinamicGLFeature_NV_shader_buffer_store_Supported() {
+		if (!DinamicGLFeature_NV_shader_buffer_store_loaded) {
+			InitDinamicGLFeature_NV_shader_buffer_store();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_shader_buffer_store*/
 
 /*NV_texture_env_combine4*/
 #ifdef USE_DYNAMIC_GL_NV_texture_env_combine4
@@ -5685,7 +7361,7 @@ bool DinamicGLFeature_SGIS_fog_function_Supported() {
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationSeparate)(GLenum modeRGB , GLenum modeAlpha) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawBuffers)(GLsizei n , const GLenum *bufs) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilOpSeparate)(GLenum face , GLenum sfail , GLenum dpfail , GLenum dppass) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilFuncSeparate)(GLenum frontfunc , GLenum backfunc , GLint ref , GLuint mask) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilFuncSeparate)(GLenum face , GLenum func , GLint ref , GLuint mask) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilMaskSeparate)(GLenum face , GLuint mask) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_AttachShader)(GLuint program , GLuint shader) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindAttribLocation)(GLuint program , GLuint index , const GLchar *name) = 0; }
@@ -5716,7 +7392,7 @@ extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVertexAttribPointerv)(GLuin
 extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsProgram)(GLuint program) = 0; }
 extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsShader)(GLuint shader) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LinkProgram)(GLuint program) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ShaderSource)(GLuint shader , GLsizei count , const GLchar* *string , const GLint *length) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ShaderSource)(GLuint shader , GLsizei count , const GLchar* const , const GLint *length) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_UseProgram)(GLuint program) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform1f)(GLint location , GLfloat v0) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform2f)(GLint location , GLfloat v0 , GLfloat v1) = 0; }
@@ -5780,7 +7456,7 @@ static void InitDinamicGLFeature_VERSION_2_0() {
 		DynamicGL_BlendEquationSeparate = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum modeRGB , GLenum modeAlpha)>("glBlendEquationSeparate"); 
 		DynamicGL_DrawBuffers = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei n , const GLenum *bufs)>("glDrawBuffers"); 
 		DynamicGL_StencilOpSeparate = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum face , GLenum sfail , GLenum dpfail , GLenum dppass)>("glStencilOpSeparate"); 
-		DynamicGL_StencilFuncSeparate = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum frontfunc , GLenum backfunc , GLint ref , GLuint mask)>("glStencilFuncSeparate"); 
+		DynamicGL_StencilFuncSeparate = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum face , GLenum func , GLint ref , GLuint mask)>("glStencilFuncSeparate"); 
 		DynamicGL_StencilMaskSeparate = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum face , GLuint mask)>("glStencilMaskSeparate"); 
 		DynamicGL_AttachShader = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLuint shader)>("glAttachShader"); 
 		DynamicGL_BindAttribLocation = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLuint index , const GLchar *name)>("glBindAttribLocation"); 
@@ -5811,7 +7487,7 @@ static void InitDinamicGLFeature_VERSION_2_0() {
 		DynamicGL_IsProgram = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLuint program)>("glIsProgram"); 
 		DynamicGL_IsShader = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLuint shader)>("glIsShader"); 
 		DynamicGL_LinkProgram = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program)>("glLinkProgram"); 
-		DynamicGL_ShaderSource = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint shader , GLsizei count , const GLchar* *string , const GLint *length)>("glShaderSource"); 
+		DynamicGL_ShaderSource = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint shader , GLsizei count , const GLchar* const , const GLint *length)>("glShaderSource"); 
 		DynamicGL_UseProgram = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program)>("glUseProgram"); 
 		DynamicGL_Uniform1f = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLfloat v0)>("glUniform1f"); 
 		DynamicGL_Uniform2f = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLfloat v0 , GLfloat v1)>("glUniform2f"); 
@@ -6035,6 +7711,29 @@ bool DinamicGLFeature_NV_texgen_reflection_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_NV_texgen_reflection*/
 
+/*AMD_name_gen_delete*/
+#ifdef USE_DYNAMIC_GL_AMD_name_gen_delete
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenNamesAMD)(GLenum identifier , GLuint num , GLuint *names) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteNamesAMD)(GLenum identifier , GLuint num , const GLuint *names) = 0; }
+extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsNameAMD)(GLenum identifier , GLuint name) = 0; }
+static bool DinamicGLFeature_AMD_name_gen_delete_loaded = false; 
+static void InitDinamicGLFeature_AMD_name_gen_delete() {
+		DynamicGL_GenNamesAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum identifier , GLuint num , GLuint *names)>("glGenNamesAMD"); 
+		DynamicGL_DeleteNamesAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum identifier , GLuint num , const GLuint *names)>("glDeleteNamesAMD"); 
+		DynamicGL_IsNameAMD = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLenum identifier , GLuint name)>("glIsNameAMD"); 
+		DinamicGLFeature_AMD_name_gen_delete_loaded = true; 
+}
+bool DinamicGLFeature_AMD_name_gen_delete_Supported() {
+		if (!DinamicGLFeature_AMD_name_gen_delete_loaded) {
+			InitDinamicGLFeature_AMD_name_gen_delete();
+		}
+		if (DynamicGL_GenNamesAMD==0) return false; 
+		if (DynamicGL_DeleteNamesAMD==0) return false; 
+		if (DynamicGL_IsNameAMD==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_AMD_name_gen_delete*/
+
 /*SGIX_list_priority*/
 #ifdef USE_DYNAMIC_GL_SGIX_list_priority
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetListParameterfvSGIX)(GLuint list , GLenum pname , GLfloat *params) = 0; }
@@ -6102,47 +7801,24 @@ bool DinamicGLFeature_NV_occlusion_query_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_NV_occlusion_query*/
 
+/*EXT_texture_shared_exponent*/
+#ifdef USE_DYNAMIC_GL_EXT_texture_shared_exponent
+static bool DinamicGLFeature_EXT_texture_shared_exponent_loaded = false; 
+static void InitDinamicGLFeature_EXT_texture_shared_exponent() {
+		DinamicGLFeature_EXT_texture_shared_exponent_loaded = true; 
+}
+bool DinamicGLFeature_EXT_texture_shared_exponent_Supported() {
+		if (!DinamicGLFeature_EXT_texture_shared_exponent_loaded) {
+			InitDinamicGLFeature_EXT_texture_shared_exponent();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_EXT_texture_shared_exponent*/
+
 /*VERSION_1_3*/
 #ifdef USE_DYNAMIC_GL_VERSION_1_3
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ActiveTexture)(GLenum texture) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClientActiveTexture)(GLenum texture) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1d)(GLenum target , GLdouble s) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1dv)(GLenum target , const GLdouble *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1f)(GLenum target , GLfloat s) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1fv)(GLenum target , const GLfloat *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1i)(GLenum target , GLint s) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1iv)(GLenum target , const GLint *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1s)(GLenum target , GLshort s) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1sv)(GLenum target , const GLshort *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2d)(GLenum target , GLdouble s , GLdouble t) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2dv)(GLenum target , const GLdouble *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2f)(GLenum target , GLfloat s , GLfloat t) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2fv)(GLenum target , const GLfloat *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2i)(GLenum target , GLint s , GLint t) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2iv)(GLenum target , const GLint *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2s)(GLenum target , GLshort s , GLshort t) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2sv)(GLenum target , const GLshort *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3d)(GLenum target , GLdouble s , GLdouble t , GLdouble r) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3dv)(GLenum target , const GLdouble *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3f)(GLenum target , GLfloat s , GLfloat t , GLfloat r) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3fv)(GLenum target , const GLfloat *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3i)(GLenum target , GLint s , GLint t , GLint r) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3iv)(GLenum target , const GLint *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3s)(GLenum target , GLshort s , GLshort t , GLshort r) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3sv)(GLenum target , const GLshort *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4d)(GLenum target , GLdouble s , GLdouble t , GLdouble r , GLdouble q) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4dv)(GLenum target , const GLdouble *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4f)(GLenum target , GLfloat s , GLfloat t , GLfloat r , GLfloat q) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4fv)(GLenum target , const GLfloat *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4i)(GLenum target , GLint s , GLint t , GLint r , GLint q) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4iv)(GLenum target , const GLint *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4s)(GLenum target , GLshort s , GLshort t , GLshort r , GLshort q) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4sv)(GLenum target , const GLshort *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadTransposeMatrixf)(const GLfloat *m) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadTransposeMatrixd)(const GLdouble *m) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultTransposeMatrixf)(const GLfloat *m) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultTransposeMatrixd)(const GLdouble *m) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleCoverage)(GLclampf value , GLboolean invert) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleCoverage)(GLfloat value , GLboolean invert) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CompressedTexImage3D)(GLenum target , GLint level , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth , GLint border , GLsizei imageSize , const GLvoid *data) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CompressedTexImage2D)(GLenum target , GLint level , GLenum internalformat , GLsizei width , GLsizei height , GLint border , GLsizei imageSize , const GLvoid *data) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CompressedTexImage1D)(GLenum target , GLint level , GLenum internalformat , GLsizei width , GLint border , GLsizei imageSize , const GLvoid *data) = 0; }
@@ -6153,44 +7829,7 @@ extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetCompressedTexImage)(GLenum 
 static bool DinamicGLFeature_VERSION_1_3_loaded = false; 
 static void InitDinamicGLFeature_VERSION_1_3() {
 		DynamicGL_ActiveTexture = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum texture)>("glActiveTexture"); 
-		DynamicGL_ClientActiveTexture = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum texture)>("glClientActiveTexture"); 
-		DynamicGL_MultiTexCoord1d = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLdouble s)>("glMultiTexCoord1d"); 
-		DynamicGL_MultiTexCoord1dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLdouble *v)>("glMultiTexCoord1dv"); 
-		DynamicGL_MultiTexCoord1f = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLfloat s)>("glMultiTexCoord1f"); 
-		DynamicGL_MultiTexCoord1fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLfloat *v)>("glMultiTexCoord1fv"); 
-		DynamicGL_MultiTexCoord1i = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint s)>("glMultiTexCoord1i"); 
-		DynamicGL_MultiTexCoord1iv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLint *v)>("glMultiTexCoord1iv"); 
-		DynamicGL_MultiTexCoord1s = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLshort s)>("glMultiTexCoord1s"); 
-		DynamicGL_MultiTexCoord1sv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLshort *v)>("glMultiTexCoord1sv"); 
-		DynamicGL_MultiTexCoord2d = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLdouble s , GLdouble t)>("glMultiTexCoord2d"); 
-		DynamicGL_MultiTexCoord2dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLdouble *v)>("glMultiTexCoord2dv"); 
-		DynamicGL_MultiTexCoord2f = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLfloat s , GLfloat t)>("glMultiTexCoord2f"); 
-		DynamicGL_MultiTexCoord2fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLfloat *v)>("glMultiTexCoord2fv"); 
-		DynamicGL_MultiTexCoord2i = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint s , GLint t)>("glMultiTexCoord2i"); 
-		DynamicGL_MultiTexCoord2iv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLint *v)>("glMultiTexCoord2iv"); 
-		DynamicGL_MultiTexCoord2s = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLshort s , GLshort t)>("glMultiTexCoord2s"); 
-		DynamicGL_MultiTexCoord2sv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLshort *v)>("glMultiTexCoord2sv"); 
-		DynamicGL_MultiTexCoord3d = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLdouble s , GLdouble t , GLdouble r)>("glMultiTexCoord3d"); 
-		DynamicGL_MultiTexCoord3dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLdouble *v)>("glMultiTexCoord3dv"); 
-		DynamicGL_MultiTexCoord3f = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLfloat s , GLfloat t , GLfloat r)>("glMultiTexCoord3f"); 
-		DynamicGL_MultiTexCoord3fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLfloat *v)>("glMultiTexCoord3fv"); 
-		DynamicGL_MultiTexCoord3i = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint s , GLint t , GLint r)>("glMultiTexCoord3i"); 
-		DynamicGL_MultiTexCoord3iv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLint *v)>("glMultiTexCoord3iv"); 
-		DynamicGL_MultiTexCoord3s = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLshort s , GLshort t , GLshort r)>("glMultiTexCoord3s"); 
-		DynamicGL_MultiTexCoord3sv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLshort *v)>("glMultiTexCoord3sv"); 
-		DynamicGL_MultiTexCoord4d = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLdouble s , GLdouble t , GLdouble r , GLdouble q)>("glMultiTexCoord4d"); 
-		DynamicGL_MultiTexCoord4dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLdouble *v)>("glMultiTexCoord4dv"); 
-		DynamicGL_MultiTexCoord4f = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLfloat s , GLfloat t , GLfloat r , GLfloat q)>("glMultiTexCoord4f"); 
-		DynamicGL_MultiTexCoord4fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLfloat *v)>("glMultiTexCoord4fv"); 
-		DynamicGL_MultiTexCoord4i = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint s , GLint t , GLint r , GLint q)>("glMultiTexCoord4i"); 
-		DynamicGL_MultiTexCoord4iv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLint *v)>("glMultiTexCoord4iv"); 
-		DynamicGL_MultiTexCoord4s = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLshort s , GLshort t , GLshort r , GLshort q)>("glMultiTexCoord4s"); 
-		DynamicGL_MultiTexCoord4sv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLshort *v)>("glMultiTexCoord4sv"); 
-		DynamicGL_LoadTransposeMatrixf = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLfloat *m)>("glLoadTransposeMatrixf"); 
-		DynamicGL_LoadTransposeMatrixd = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLdouble *m)>("glLoadTransposeMatrixd"); 
-		DynamicGL_MultTransposeMatrixf = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLfloat *m)>("glMultTransposeMatrixf"); 
-		DynamicGL_MultTransposeMatrixd = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLdouble *m)>("glMultTransposeMatrixd"); 
-		DynamicGL_SampleCoverage = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLclampf value , GLboolean invert)>("glSampleCoverage"); 
+		DynamicGL_SampleCoverage = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLfloat value , GLboolean invert)>("glSampleCoverage"); 
 		DynamicGL_CompressedTexImage3D = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint level , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth , GLint border , GLsizei imageSize , const GLvoid *data)>("glCompressedTexImage3D"); 
 		DynamicGL_CompressedTexImage2D = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint level , GLenum internalformat , GLsizei width , GLsizei height , GLint border , GLsizei imageSize , const GLvoid *data)>("glCompressedTexImage2D"); 
 		DynamicGL_CompressedTexImage1D = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint level , GLenum internalformat , GLsizei width , GLint border , GLsizei imageSize , const GLvoid *data)>("glCompressedTexImage1D"); 
@@ -6205,43 +7844,6 @@ bool DinamicGLFeature_VERSION_1_3_Supported() {
 			InitDinamicGLFeature_VERSION_1_3();
 		}
 		if (DynamicGL_ActiveTexture==0) return false; 
-		if (DynamicGL_ClientActiveTexture==0) return false; 
-		if (DynamicGL_MultiTexCoord1d==0) return false; 
-		if (DynamicGL_MultiTexCoord1dv==0) return false; 
-		if (DynamicGL_MultiTexCoord1f==0) return false; 
-		if (DynamicGL_MultiTexCoord1fv==0) return false; 
-		if (DynamicGL_MultiTexCoord1i==0) return false; 
-		if (DynamicGL_MultiTexCoord1iv==0) return false; 
-		if (DynamicGL_MultiTexCoord1s==0) return false; 
-		if (DynamicGL_MultiTexCoord1sv==0) return false; 
-		if (DynamicGL_MultiTexCoord2d==0) return false; 
-		if (DynamicGL_MultiTexCoord2dv==0) return false; 
-		if (DynamicGL_MultiTexCoord2f==0) return false; 
-		if (DynamicGL_MultiTexCoord2fv==0) return false; 
-		if (DynamicGL_MultiTexCoord2i==0) return false; 
-		if (DynamicGL_MultiTexCoord2iv==0) return false; 
-		if (DynamicGL_MultiTexCoord2s==0) return false; 
-		if (DynamicGL_MultiTexCoord2sv==0) return false; 
-		if (DynamicGL_MultiTexCoord3d==0) return false; 
-		if (DynamicGL_MultiTexCoord3dv==0) return false; 
-		if (DynamicGL_MultiTexCoord3f==0) return false; 
-		if (DynamicGL_MultiTexCoord3fv==0) return false; 
-		if (DynamicGL_MultiTexCoord3i==0) return false; 
-		if (DynamicGL_MultiTexCoord3iv==0) return false; 
-		if (DynamicGL_MultiTexCoord3s==0) return false; 
-		if (DynamicGL_MultiTexCoord3sv==0) return false; 
-		if (DynamicGL_MultiTexCoord4d==0) return false; 
-		if (DynamicGL_MultiTexCoord4dv==0) return false; 
-		if (DynamicGL_MultiTexCoord4f==0) return false; 
-		if (DynamicGL_MultiTexCoord4fv==0) return false; 
-		if (DynamicGL_MultiTexCoord4i==0) return false; 
-		if (DynamicGL_MultiTexCoord4iv==0) return false; 
-		if (DynamicGL_MultiTexCoord4s==0) return false; 
-		if (DynamicGL_MultiTexCoord4sv==0) return false; 
-		if (DynamicGL_LoadTransposeMatrixf==0) return false; 
-		if (DynamicGL_LoadTransposeMatrixd==0) return false; 
-		if (DynamicGL_MultTransposeMatrixf==0) return false; 
-		if (DynamicGL_MultTransposeMatrixd==0) return false; 
 		if (DynamicGL_SampleCoverage==0) return false; 
 		if (DynamicGL_CompressedTexImage3D==0) return false; 
 		if (DynamicGL_CompressedTexImage2D==0) return false; 
@@ -6270,20 +7872,6 @@ bool DinamicGLFeature_ARB_color_buffer_float_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_color_buffer_float*/
-
-/*EXT_texture_shared_exponent*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_shared_exponent
-static bool DinamicGLFeature_EXT_texture_shared_exponent_loaded = false; 
-static void InitDinamicGLFeature_EXT_texture_shared_exponent() {
-		DinamicGLFeature_EXT_texture_shared_exponent_loaded = true; 
-}
-bool DinamicGLFeature_EXT_texture_shared_exponent_Supported() {
-		if (!DinamicGLFeature_EXT_texture_shared_exponent_loaded) {
-			InitDinamicGLFeature_EXT_texture_shared_exponent();
-		}
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_EXT_texture_shared_exponent*/
 
 /*NV_half_float*/
 #ifdef USE_DYNAMIC_GL_NV_half_float
@@ -6437,6 +8025,20 @@ bool DinamicGLFeature_NV_half_float_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_NV_half_float*/
 
+/*APPLE_float_pixels*/
+#ifdef USE_DYNAMIC_GL_APPLE_float_pixels
+static bool DinamicGLFeature_APPLE_float_pixels_loaded = false; 
+static void InitDinamicGLFeature_APPLE_float_pixels() {
+		DinamicGLFeature_APPLE_float_pixels_loaded = true; 
+}
+bool DinamicGLFeature_APPLE_float_pixels_Supported() {
+		if (!DinamicGLFeature_APPLE_float_pixels_loaded) {
+			InitDinamicGLFeature_APPLE_float_pixels();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_APPLE_float_pixels*/
+
 /*EXT_gpu_shader4*/
 #ifdef USE_DYNAMIC_GL_EXT_gpu_shader4
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetUniformuivEXT)(GLuint program , GLint location , GLuint *params) = 0; }
@@ -6484,6 +8086,119 @@ bool DinamicGLFeature_EXT_gpu_shader4_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_EXT_gpu_shader4*/
 
+/*NV_gpu_shader5*/
+#ifdef USE_DYNAMIC_GL_NV_gpu_shader5
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform1i64NV)(GLint location , GLint64EXT x) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform2i64NV)(GLint location , GLint64EXT x , GLint64EXT y) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform3i64NV)(GLint location , GLint64EXT x , GLint64EXT y , GLint64EXT z) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform4i64NV)(GLint location , GLint64EXT x , GLint64EXT y , GLint64EXT z , GLint64EXT w) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform1i64vNV)(GLint location , GLsizei count , const GLint64EXT *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform2i64vNV)(GLint location , GLsizei count , const GLint64EXT *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform3i64vNV)(GLint location , GLsizei count , const GLint64EXT *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform4i64vNV)(GLint location , GLsizei count , const GLint64EXT *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform1ui64NV)(GLint location , GLuint64EXT x) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform2ui64NV)(GLint location , GLuint64EXT x , GLuint64EXT y) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform3ui64NV)(GLint location , GLuint64EXT x , GLuint64EXT y , GLuint64EXT z) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform4ui64NV)(GLint location , GLuint64EXT x , GLuint64EXT y , GLuint64EXT z , GLuint64EXT w) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform1ui64vNV)(GLint location , GLsizei count , const GLuint64EXT *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform2ui64vNV)(GLint location , GLsizei count , const GLuint64EXT *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform3ui64vNV)(GLint location , GLsizei count , const GLuint64EXT *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform4ui64vNV)(GLint location , GLsizei count , const GLuint64EXT *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetUniformi64vNV)(GLuint program , GLint location , GLint64EXT *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1i64NV)(GLuint program , GLint location , GLint64EXT x) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2i64NV)(GLuint program , GLint location , GLint64EXT x , GLint64EXT y) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3i64NV)(GLuint program , GLint location , GLint64EXT x , GLint64EXT y , GLint64EXT z) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4i64NV)(GLuint program , GLint location , GLint64EXT x , GLint64EXT y , GLint64EXT z , GLint64EXT w) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1i64vNV)(GLuint program , GLint location , GLsizei count , const GLint64EXT *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2i64vNV)(GLuint program , GLint location , GLsizei count , const GLint64EXT *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3i64vNV)(GLuint program , GLint location , GLsizei count , const GLint64EXT *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4i64vNV)(GLuint program , GLint location , GLsizei count , const GLint64EXT *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1ui64NV)(GLuint program , GLint location , GLuint64EXT x) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2ui64NV)(GLuint program , GLint location , GLuint64EXT x , GLuint64EXT y) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3ui64NV)(GLuint program , GLint location , GLuint64EXT x , GLuint64EXT y , GLuint64EXT z) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4ui64NV)(GLuint program , GLint location , GLuint64EXT x , GLuint64EXT y , GLuint64EXT z , GLuint64EXT w) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1ui64vNV)(GLuint program , GLint location , GLsizei count , const GLuint64EXT *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2ui64vNV)(GLuint program , GLint location , GLsizei count , const GLuint64EXT *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3ui64vNV)(GLuint program , GLint location , GLsizei count , const GLuint64EXT *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4ui64vNV)(GLuint program , GLint location , GLsizei count , const GLuint64EXT *value) = 0; }
+static bool DinamicGLFeature_NV_gpu_shader5_loaded = false; 
+static void InitDinamicGLFeature_NV_gpu_shader5() {
+		DynamicGL_Uniform1i64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLint64EXT x)>("glUniform1i64NV"); 
+		DynamicGL_Uniform2i64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLint64EXT x , GLint64EXT y)>("glUniform2i64NV"); 
+		DynamicGL_Uniform3i64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLint64EXT x , GLint64EXT y , GLint64EXT z)>("glUniform3i64NV"); 
+		DynamicGL_Uniform4i64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLint64EXT x , GLint64EXT y , GLint64EXT z , GLint64EXT w)>("glUniform4i64NV"); 
+		DynamicGL_Uniform1i64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLsizei count , const GLint64EXT *value)>("glUniform1i64vNV"); 
+		DynamicGL_Uniform2i64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLsizei count , const GLint64EXT *value)>("glUniform2i64vNV"); 
+		DynamicGL_Uniform3i64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLsizei count , const GLint64EXT *value)>("glUniform3i64vNV"); 
+		DynamicGL_Uniform4i64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLsizei count , const GLint64EXT *value)>("glUniform4i64vNV"); 
+		DynamicGL_Uniform1ui64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLuint64EXT x)>("glUniform1ui64NV"); 
+		DynamicGL_Uniform2ui64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLuint64EXT x , GLuint64EXT y)>("glUniform2ui64NV"); 
+		DynamicGL_Uniform3ui64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLuint64EXT x , GLuint64EXT y , GLuint64EXT z)>("glUniform3ui64NV"); 
+		DynamicGL_Uniform4ui64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLuint64EXT x , GLuint64EXT y , GLuint64EXT z , GLuint64EXT w)>("glUniform4ui64NV"); 
+		DynamicGL_Uniform1ui64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLsizei count , const GLuint64EXT *value)>("glUniform1ui64vNV"); 
+		DynamicGL_Uniform2ui64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLsizei count , const GLuint64EXT *value)>("glUniform2ui64vNV"); 
+		DynamicGL_Uniform3ui64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLsizei count , const GLuint64EXT *value)>("glUniform3ui64vNV"); 
+		DynamicGL_Uniform4ui64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLsizei count , const GLuint64EXT *value)>("glUniform4ui64vNV"); 
+		DynamicGL_GetUniformi64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLint64EXT *params)>("glGetUniformi64vNV"); 
+		DynamicGL_ProgramUniform1i64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLint64EXT x)>("glProgramUniform1i64NV"); 
+		DynamicGL_ProgramUniform2i64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLint64EXT x , GLint64EXT y)>("glProgramUniform2i64NV"); 
+		DynamicGL_ProgramUniform3i64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLint64EXT x , GLint64EXT y , GLint64EXT z)>("glProgramUniform3i64NV"); 
+		DynamicGL_ProgramUniform4i64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLint64EXT x , GLint64EXT y , GLint64EXT z , GLint64EXT w)>("glProgramUniform4i64NV"); 
+		DynamicGL_ProgramUniform1i64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLint64EXT *value)>("glProgramUniform1i64vNV"); 
+		DynamicGL_ProgramUniform2i64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLint64EXT *value)>("glProgramUniform2i64vNV"); 
+		DynamicGL_ProgramUniform3i64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLint64EXT *value)>("glProgramUniform3i64vNV"); 
+		DynamicGL_ProgramUniform4i64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLint64EXT *value)>("glProgramUniform4i64vNV"); 
+		DynamicGL_ProgramUniform1ui64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLuint64EXT x)>("glProgramUniform1ui64NV"); 
+		DynamicGL_ProgramUniform2ui64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLuint64EXT x , GLuint64EXT y)>("glProgramUniform2ui64NV"); 
+		DynamicGL_ProgramUniform3ui64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLuint64EXT x , GLuint64EXT y , GLuint64EXT z)>("glProgramUniform3ui64NV"); 
+		DynamicGL_ProgramUniform4ui64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLuint64EXT x , GLuint64EXT y , GLuint64EXT z , GLuint64EXT w)>("glProgramUniform4ui64NV"); 
+		DynamicGL_ProgramUniform1ui64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLuint64EXT *value)>("glProgramUniform1ui64vNV"); 
+		DynamicGL_ProgramUniform2ui64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLuint64EXT *value)>("glProgramUniform2ui64vNV"); 
+		DynamicGL_ProgramUniform3ui64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLuint64EXT *value)>("glProgramUniform3ui64vNV"); 
+		DynamicGL_ProgramUniform4ui64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLuint64EXT *value)>("glProgramUniform4ui64vNV"); 
+		DinamicGLFeature_NV_gpu_shader5_loaded = true; 
+}
+bool DinamicGLFeature_NV_gpu_shader5_Supported() {
+		if (!DinamicGLFeature_NV_gpu_shader5_loaded) {
+			InitDinamicGLFeature_NV_gpu_shader5();
+		}
+		if (DynamicGL_Uniform1i64NV==0) return false; 
+		if (DynamicGL_Uniform2i64NV==0) return false; 
+		if (DynamicGL_Uniform3i64NV==0) return false; 
+		if (DynamicGL_Uniform4i64NV==0) return false; 
+		if (DynamicGL_Uniform1i64vNV==0) return false; 
+		if (DynamicGL_Uniform2i64vNV==0) return false; 
+		if (DynamicGL_Uniform3i64vNV==0) return false; 
+		if (DynamicGL_Uniform4i64vNV==0) return false; 
+		if (DynamicGL_Uniform1ui64NV==0) return false; 
+		if (DynamicGL_Uniform2ui64NV==0) return false; 
+		if (DynamicGL_Uniform3ui64NV==0) return false; 
+		if (DynamicGL_Uniform4ui64NV==0) return false; 
+		if (DynamicGL_Uniform1ui64vNV==0) return false; 
+		if (DynamicGL_Uniform2ui64vNV==0) return false; 
+		if (DynamicGL_Uniform3ui64vNV==0) return false; 
+		if (DynamicGL_Uniform4ui64vNV==0) return false; 
+		if (DynamicGL_GetUniformi64vNV==0) return false; 
+		if (DynamicGL_ProgramUniform1i64NV==0) return false; 
+		if (DynamicGL_ProgramUniform2i64NV==0) return false; 
+		if (DynamicGL_ProgramUniform3i64NV==0) return false; 
+		if (DynamicGL_ProgramUniform4i64NV==0) return false; 
+		if (DynamicGL_ProgramUniform1i64vNV==0) return false; 
+		if (DynamicGL_ProgramUniform2i64vNV==0) return false; 
+		if (DynamicGL_ProgramUniform3i64vNV==0) return false; 
+		if (DynamicGL_ProgramUniform4i64vNV==0) return false; 
+		if (DynamicGL_ProgramUniform1ui64NV==0) return false; 
+		if (DynamicGL_ProgramUniform2ui64NV==0) return false; 
+		if (DynamicGL_ProgramUniform3ui64NV==0) return false; 
+		if (DynamicGL_ProgramUniform4ui64NV==0) return false; 
+		if (DynamicGL_ProgramUniform1ui64vNV==0) return false; 
+		if (DynamicGL_ProgramUniform2ui64vNV==0) return false; 
+		if (DynamicGL_ProgramUniform3ui64vNV==0) return false; 
+		if (DynamicGL_ProgramUniform4ui64vNV==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_gpu_shader5*/
+
 /*NV_light_max_exponent*/
 #ifdef USE_DYNAMIC_GL_NV_light_max_exponent
 static bool DinamicGLFeature_NV_light_max_exponent_loaded = false; 
@@ -6497,6 +8212,20 @@ bool DinamicGLFeature_NV_light_max_exponent_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_light_max_exponent*/
+
+/*EXT_texture_swizzle*/
+#ifdef USE_DYNAMIC_GL_EXT_texture_swizzle
+static bool DinamicGLFeature_EXT_texture_swizzle_loaded = false; 
+static void InitDinamicGLFeature_EXT_texture_swizzle() {
+		DinamicGLFeature_EXT_texture_swizzle_loaded = true; 
+}
+bool DinamicGLFeature_EXT_texture_swizzle_Supported() {
+		if (!DinamicGLFeature_EXT_texture_swizzle_loaded) {
+			InitDinamicGLFeature_EXT_texture_swizzle();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_EXT_texture_swizzle*/
 
 /*INGR_interlace_read*/
 #ifdef USE_DYNAMIC_GL_INGR_interlace_read
@@ -6532,6 +8261,32 @@ bool DinamicGLFeature_ATI_pn_triangles_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_ATI_pn_triangles*/
 
+/*AMD_draw_buffers_blend*/
+#ifdef USE_DYNAMIC_GL_AMD_draw_buffers_blend
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFuncIndexedAMD)(GLuint buf , GLenum src , GLenum dst) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFuncSeparateIndexedAMD)(GLuint buf , GLenum srcRGB , GLenum dstRGB , GLenum srcAlpha , GLenum dstAlpha) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationIndexedAMD)(GLuint buf , GLenum mode) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationSeparateIndexedAMD)(GLuint buf , GLenum modeRGB , GLenum modeAlpha) = 0; }
+static bool DinamicGLFeature_AMD_draw_buffers_blend_loaded = false; 
+static void InitDinamicGLFeature_AMD_draw_buffers_blend() {
+		DynamicGL_BlendFuncIndexedAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint buf , GLenum src , GLenum dst)>("glBlendFuncIndexedAMD"); 
+		DynamicGL_BlendFuncSeparateIndexedAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint buf , GLenum srcRGB , GLenum dstRGB , GLenum srcAlpha , GLenum dstAlpha)>("glBlendFuncSeparateIndexedAMD"); 
+		DynamicGL_BlendEquationIndexedAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint buf , GLenum mode)>("glBlendEquationIndexedAMD"); 
+		DynamicGL_BlendEquationSeparateIndexedAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint buf , GLenum modeRGB , GLenum modeAlpha)>("glBlendEquationSeparateIndexedAMD"); 
+		DinamicGLFeature_AMD_draw_buffers_blend_loaded = true; 
+}
+bool DinamicGLFeature_AMD_draw_buffers_blend_Supported() {
+		if (!DinamicGLFeature_AMD_draw_buffers_blend_loaded) {
+			InitDinamicGLFeature_AMD_draw_buffers_blend();
+		}
+		if (DynamicGL_BlendFuncIndexedAMD==0) return false; 
+		if (DynamicGL_BlendFuncSeparateIndexedAMD==0) return false; 
+		if (DynamicGL_BlendEquationIndexedAMD==0) return false; 
+		if (DynamicGL_BlendEquationSeparateIndexedAMD==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_AMD_draw_buffers_blend*/
+
 /*APPLE_ycbcr_422*/
 #ifdef USE_DYNAMIC_GL_APPLE_ycbcr_422
 static bool DinamicGLFeature_APPLE_ycbcr_422_loaded = false; 
@@ -6563,20 +8318,6 @@ bool DinamicGLFeature_3DFX_tbuffer_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_3DFX_tbuffer*/
 
-/*ARB_texture_float*/
-#ifdef USE_DYNAMIC_GL_ARB_texture_float
-static bool DinamicGLFeature_ARB_texture_float_loaded = false; 
-static void InitDinamicGLFeature_ARB_texture_float() {
-		DinamicGLFeature_ARB_texture_float_loaded = true; 
-}
-bool DinamicGLFeature_ARB_texture_float_Supported() {
-		if (!DinamicGLFeature_ARB_texture_float_loaded) {
-			InitDinamicGLFeature_ARB_texture_float();
-		}
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_ARB_texture_float*/
-
 /*NV_texture_expand_normal*/
 #ifdef USE_DYNAMIC_GL_NV_texture_expand_normal
 static bool DinamicGLFeature_NV_texture_expand_normal_loaded = false; 
@@ -6590,6 +8331,20 @@ bool DinamicGLFeature_NV_texture_expand_normal_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_texture_expand_normal*/
+
+/*ARB_texture_float*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_float
+static bool DinamicGLFeature_ARB_texture_float_loaded = false; 
+static void InitDinamicGLFeature_ARB_texture_float() {
+		DinamicGLFeature_ARB_texture_float_loaded = true; 
+}
+bool DinamicGLFeature_ARB_texture_float_Supported() {
+		if (!DinamicGLFeature_ARB_texture_float_loaded) {
+			InitDinamicGLFeature_ARB_texture_float();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_texture_float*/
 
 /*REND_screen_coordinates*/
 #ifdef USE_DYNAMIC_GL_REND_screen_coordinates
@@ -6605,6 +8360,56 @@ bool DinamicGLFeature_REND_screen_coordinates_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_REND_screen_coordinates*/
 
+/*NV_vertex_buffer_unified_memory*/
+#ifdef USE_DYNAMIC_GL_NV_vertex_buffer_unified_memory
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BufferAddressRangeNV)(GLenum pname , GLuint index , GLuint64EXT address , GLsizeiptr length) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexFormatNV)(GLint size , GLenum type , GLsizei stride) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_NormalFormatNV)(GLenum type , GLsizei stride) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorFormatNV)(GLint size , GLenum type , GLsizei stride) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_IndexFormatNV)(GLenum type , GLsizei stride) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexCoordFormatNV)(GLint size , GLenum type , GLsizei stride) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_EdgeFlagFormatNV)(GLsizei stride) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColorFormatNV)(GLint size , GLenum type , GLsizei stride) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoordFormatNV)(GLenum type , GLsizei stride) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribFormatNV)(GLuint index , GLint size , GLenum type , GLboolean normalized , GLsizei stride) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribIFormatNV)(GLuint index , GLint size , GLenum type , GLsizei stride) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetIntegerui64i_vNV)(GLenum value , GLuint index , GLuint64EXT *result) = 0; }
+static bool DinamicGLFeature_NV_vertex_buffer_unified_memory_loaded = false; 
+static void InitDinamicGLFeature_NV_vertex_buffer_unified_memory() {
+		DynamicGL_BufferAddressRangeNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , GLuint index , GLuint64EXT address , GLsizeiptr length)>("glBufferAddressRangeNV"); 
+		DynamicGL_VertexFormatNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint size , GLenum type , GLsizei stride)>("glVertexFormatNV"); 
+		DynamicGL_NormalFormatNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , GLsizei stride)>("glNormalFormatNV"); 
+		DynamicGL_ColorFormatNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint size , GLenum type , GLsizei stride)>("glColorFormatNV"); 
+		DynamicGL_IndexFormatNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , GLsizei stride)>("glIndexFormatNV"); 
+		DynamicGL_TexCoordFormatNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint size , GLenum type , GLsizei stride)>("glTexCoordFormatNV"); 
+		DynamicGL_EdgeFlagFormatNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei stride)>("glEdgeFlagFormatNV"); 
+		DynamicGL_SecondaryColorFormatNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint size , GLenum type , GLsizei stride)>("glSecondaryColorFormatNV"); 
+		DynamicGL_FogCoordFormatNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , GLsizei stride)>("glFogCoordFormatNV"); 
+		DynamicGL_VertexAttribFormatNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLint size , GLenum type , GLboolean normalized , GLsizei stride)>("glVertexAttribFormatNV"); 
+		DynamicGL_VertexAttribIFormatNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLint size , GLenum type , GLsizei stride)>("glVertexAttribIFormatNV"); 
+		DynamicGL_GetIntegerui64i_vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum value , GLuint index , GLuint64EXT *result)>("glGetIntegerui64i_vNV"); 
+		DinamicGLFeature_NV_vertex_buffer_unified_memory_loaded = true; 
+}
+bool DinamicGLFeature_NV_vertex_buffer_unified_memory_Supported() {
+		if (!DinamicGLFeature_NV_vertex_buffer_unified_memory_loaded) {
+			InitDinamicGLFeature_NV_vertex_buffer_unified_memory();
+		}
+		if (DynamicGL_BufferAddressRangeNV==0) return false; 
+		if (DynamicGL_VertexFormatNV==0) return false; 
+		if (DynamicGL_NormalFormatNV==0) return false; 
+		if (DynamicGL_ColorFormatNV==0) return false; 
+		if (DynamicGL_IndexFormatNV==0) return false; 
+		if (DynamicGL_TexCoordFormatNV==0) return false; 
+		if (DynamicGL_EdgeFlagFormatNV==0) return false; 
+		if (DynamicGL_SecondaryColorFormatNV==0) return false; 
+		if (DynamicGL_FogCoordFormatNV==0) return false; 
+		if (DynamicGL_VertexAttribFormatNV==0) return false; 
+		if (DynamicGL_VertexAttribIFormatNV==0) return false; 
+		if (DynamicGL_GetIntegerui64i_vNV==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_vertex_buffer_unified_memory*/
+
 /*EXT_framebuffer_sRGB*/
 #ifdef USE_DYNAMIC_GL_EXT_framebuffer_sRGB
 static bool DinamicGLFeature_EXT_framebuffer_sRGB_loaded = false; 
@@ -6618,6 +8423,23 @@ bool DinamicGLFeature_EXT_framebuffer_sRGB_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_framebuffer_sRGB*/
+
+/*AMD_stencil_operation_extended*/
+#ifdef USE_DYNAMIC_GL_AMD_stencil_operation_extended
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilOpValueAMD)(GLenum face , GLuint value) = 0; }
+static bool DinamicGLFeature_AMD_stencil_operation_extended_loaded = false; 
+static void InitDinamicGLFeature_AMD_stencil_operation_extended() {
+		DynamicGL_StencilOpValueAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum face , GLuint value)>("glStencilOpValueAMD"); 
+		DinamicGLFeature_AMD_stencil_operation_extended_loaded = true; 
+}
+bool DinamicGLFeature_AMD_stencil_operation_extended_Supported() {
+		if (!DinamicGLFeature_AMD_stencil_operation_extended_loaded) {
+			InitDinamicGLFeature_AMD_stencil_operation_extended();
+		}
+		if (DynamicGL_StencilOpValueAMD==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_AMD_stencil_operation_extended*/
 
 /*SGIX_texture_multi_buffer*/
 #ifdef USE_DYNAMIC_GL_SGIX_texture_multi_buffer
@@ -6663,6 +8485,26 @@ bool DinamicGLFeature_EXT_index_func_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_index_func*/
+
+/*NV_gpu_program5*/
+#ifdef USE_DYNAMIC_GL_NV_gpu_program5
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramSubroutineParametersuivNV)(GLenum target , GLsizei count , const GLuint *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetProgramSubroutineParameteruivNV)(GLenum target , GLuint index , GLuint *param) = 0; }
+static bool DinamicGLFeature_NV_gpu_program5_loaded = false; 
+static void InitDinamicGLFeature_NV_gpu_program5() {
+		DynamicGL_ProgramSubroutineParametersuivNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLsizei count , const GLuint *params)>("glProgramSubroutineParametersuivNV"); 
+		DynamicGL_GetProgramSubroutineParameteruivNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint index , GLuint *param)>("glGetProgramSubroutineParameteruivNV"); 
+		DinamicGLFeature_NV_gpu_program5_loaded = true; 
+}
+bool DinamicGLFeature_NV_gpu_program5_Supported() {
+		if (!DinamicGLFeature_NV_gpu_program5_loaded) {
+			InitDinamicGLFeature_NV_gpu_program5();
+		}
+		if (DynamicGL_ProgramSubroutineParametersuivNV==0) return false; 
+		if (DynamicGL_GetProgramSubroutineParameteruivNV==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_gpu_program5*/
 
 /*NV_multisample_filter_hint*/
 #ifdef USE_DYNAMIC_GL_NV_multisample_filter_hint
@@ -6754,20 +8596,6 @@ bool DinamicGLFeature_ATI_pixel_format_float_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_ATI_pixel_format_float*/
 
-/*ARB_point_sprite*/
-#ifdef USE_DYNAMIC_GL_ARB_point_sprite
-static bool DinamicGLFeature_ARB_point_sprite_loaded = false; 
-static void InitDinamicGLFeature_ARB_point_sprite() {
-		DinamicGLFeature_ARB_point_sprite_loaded = true; 
-}
-bool DinamicGLFeature_ARB_point_sprite_Supported() {
-		if (!DinamicGLFeature_ARB_point_sprite_loaded) {
-			InitDinamicGLFeature_ARB_point_sprite();
-		}
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_ARB_point_sprite*/
-
 /*NV_gpu_program4*/
 #ifdef USE_DYNAMIC_GL_NV_gpu_program4
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramLocalParameterI4iNV)(GLenum target , GLuint index , GLint x , GLint y , GLint z , GLint w) = 0; }
@@ -6830,6 +8658,66 @@ bool DinamicGLFeature_NV_gpu_program4_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_NV_gpu_program4*/
 
+/*ARB_point_sprite*/
+#ifdef USE_DYNAMIC_GL_ARB_point_sprite
+static bool DinamicGLFeature_ARB_point_sprite_loaded = false; 
+static void InitDinamicGLFeature_ARB_point_sprite() {
+		DinamicGLFeature_ARB_point_sprite_loaded = true; 
+}
+bool DinamicGLFeature_ARB_point_sprite_Supported() {
+		if (!DinamicGLFeature_ARB_point_sprite_loaded) {
+			InitDinamicGLFeature_ARB_point_sprite();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_point_sprite*/
+
+/*ARB_transform_feedback3*/
+#ifdef USE_DYNAMIC_GL_ARB_transform_feedback3
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTransformFeedbackStream)(GLenum mode , GLuint id , GLuint stream) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BeginQueryIndexed)(GLenum target , GLuint index , GLuint id) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_EndQueryIndexed)(GLenum target , GLuint index) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetQueryIndexediv)(GLenum target , GLuint index , GLenum pname , GLint *params) = 0; }
+static bool DinamicGLFeature_ARB_transform_feedback3_loaded = false; 
+static void InitDinamicGLFeature_ARB_transform_feedback3() {
+		DynamicGL_DrawTransformFeedbackStream = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLuint id , GLuint stream)>("glDrawTransformFeedbackStream"); 
+		DynamicGL_BeginQueryIndexed = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint index , GLuint id)>("glBeginQueryIndexed"); 
+		DynamicGL_EndQueryIndexed = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint index)>("glEndQueryIndexed"); 
+		DynamicGL_GetQueryIndexediv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint index , GLenum pname , GLint *params)>("glGetQueryIndexediv"); 
+		DinamicGLFeature_ARB_transform_feedback3_loaded = true; 
+}
+bool DinamicGLFeature_ARB_transform_feedback3_Supported() {
+		if (!DinamicGLFeature_ARB_transform_feedback3_loaded) {
+			InitDinamicGLFeature_ARB_transform_feedback3();
+		}
+		if (DynamicGL_DrawTransformFeedbackStream==0) return false; 
+		if (DynamicGL_BeginQueryIndexed==0) return false; 
+		if (DynamicGL_EndQueryIndexed==0) return false; 
+		if (DynamicGL_GetQueryIndexediv==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_transform_feedback3*/
+
+/*AMD_multi_draw_indirect*/
+#ifdef USE_DYNAMIC_GL_AMD_multi_draw_indirect
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawArraysIndirectAMD)(GLenum mode , const GLvoid *indirect , GLsizei primcount , GLsizei stride) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawElementsIndirectAMD)(GLenum mode , GLenum type , const GLvoid *indirect , GLsizei primcount , GLsizei stride) = 0; }
+static bool DinamicGLFeature_AMD_multi_draw_indirect_loaded = false; 
+static void InitDinamicGLFeature_AMD_multi_draw_indirect() {
+		DynamicGL_MultiDrawArraysIndirectAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , const GLvoid *indirect , GLsizei primcount , GLsizei stride)>("glMultiDrawArraysIndirectAMD"); 
+		DynamicGL_MultiDrawElementsIndirectAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLenum type , const GLvoid *indirect , GLsizei primcount , GLsizei stride)>("glMultiDrawElementsIndirectAMD"); 
+		DinamicGLFeature_AMD_multi_draw_indirect_loaded = true; 
+}
+bool DinamicGLFeature_AMD_multi_draw_indirect_Supported() {
+		if (!DinamicGLFeature_AMD_multi_draw_indirect_loaded) {
+			InitDinamicGLFeature_AMD_multi_draw_indirect();
+		}
+		if (DynamicGL_MultiDrawArraysIndirectAMD==0) return false; 
+		if (DynamicGL_MultiDrawElementsIndirectAMD==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_AMD_multi_draw_indirect*/
+
 /*SUN_mesh_array*/
 #ifdef USE_DYNAMIC_GL_SUN_mesh_array
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawMeshArraysSUN)(GLenum mode , GLint first , GLsizei count , GLsizei width) = 0; }
@@ -6846,20 +8734,6 @@ bool DinamicGLFeature_SUN_mesh_array_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_SUN_mesh_array*/
-
-/*NV_texgen_emboss*/
-#ifdef USE_DYNAMIC_GL_NV_texgen_emboss
-static bool DinamicGLFeature_NV_texgen_emboss_loaded = false; 
-static void InitDinamicGLFeature_NV_texgen_emboss() {
-		DinamicGLFeature_NV_texgen_emboss_loaded = true; 
-}
-bool DinamicGLFeature_NV_texgen_emboss_Supported() {
-		if (!DinamicGLFeature_NV_texgen_emboss_loaded) {
-			InitDinamicGLFeature_NV_texgen_emboss();
-		}
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_NV_texgen_emboss*/
 
 /*NV_framebuffer_multisample_coverage*/
 #ifdef USE_DYNAMIC_GL_NV_framebuffer_multisample_coverage
@@ -6878,6 +8752,43 @@ bool DinamicGLFeature_NV_framebuffer_multisample_coverage_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_NV_framebuffer_multisample_coverage*/
 
+/*ARB_timer_query*/
+#ifdef USE_DYNAMIC_GL_ARB_timer_query
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_QueryCounter)(GLuint id , GLenum target) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetQueryObjecti64v)(GLuint id , GLenum pname , GLint64 *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetQueryObjectui64v)(GLuint id , GLenum pname , GLuint64 *params) = 0; }
+static bool DinamicGLFeature_ARB_timer_query_loaded = false; 
+static void InitDinamicGLFeature_ARB_timer_query() {
+		DynamicGL_QueryCounter = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint id , GLenum target)>("glQueryCounter"); 
+		DynamicGL_GetQueryObjecti64v = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint id , GLenum pname , GLint64 *params)>("glGetQueryObjecti64v"); 
+		DynamicGL_GetQueryObjectui64v = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint id , GLenum pname , GLuint64 *params)>("glGetQueryObjectui64v"); 
+		DinamicGLFeature_ARB_timer_query_loaded = true; 
+}
+bool DinamicGLFeature_ARB_timer_query_Supported() {
+		if (!DinamicGLFeature_ARB_timer_query_loaded) {
+			InitDinamicGLFeature_ARB_timer_query();
+		}
+		if (DynamicGL_QueryCounter==0) return false; 
+		if (DynamicGL_GetQueryObjecti64v==0) return false; 
+		if (DynamicGL_GetQueryObjectui64v==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_timer_query*/
+
+/*NV_texgen_emboss*/
+#ifdef USE_DYNAMIC_GL_NV_texgen_emboss
+static bool DinamicGLFeature_NV_texgen_emboss_loaded = false; 
+static void InitDinamicGLFeature_NV_texgen_emboss() {
+		DinamicGLFeature_NV_texgen_emboss_loaded = true; 
+}
+bool DinamicGLFeature_NV_texgen_emboss_Supported() {
+		if (!DinamicGLFeature_NV_texgen_emboss_loaded) {
+			InitDinamicGLFeature_NV_texgen_emboss();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_texgen_emboss*/
+
 /*EXT_separate_specular_color*/
 #ifdef USE_DYNAMIC_GL_EXT_separate_specular_color
 static bool DinamicGLFeature_EXT_separate_specular_color_loaded = false; 
@@ -6891,6 +8802,37 @@ bool DinamicGLFeature_EXT_separate_specular_color_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_separate_specular_color*/
+
+/*ARB_framebuffer_object_DEPRECATED*/
+#ifdef USE_DYNAMIC_GL_ARB_framebuffer_object_DEPRECATED
+static bool DinamicGLFeature_ARB_framebuffer_object_DEPRECATED_loaded = false; 
+static void InitDinamicGLFeature_ARB_framebuffer_object_DEPRECATED() {
+		DinamicGLFeature_ARB_framebuffer_object_DEPRECATED_loaded = true; 
+}
+bool DinamicGLFeature_ARB_framebuffer_object_DEPRECATED_Supported() {
+		if (!DinamicGLFeature_ARB_framebuffer_object_DEPRECATED_loaded) {
+			InitDinamicGLFeature_ARB_framebuffer_object_DEPRECATED();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_framebuffer_object_DEPRECATED*/
+
+/*ARB_shader_atomic_counters*/
+#ifdef USE_DYNAMIC_GL_ARB_shader_atomic_counters
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetActiveAtomicCounterBufferiv)(GLuint program , GLuint bufferIndex , GLenum pname , GLint *params) = 0; }
+static bool DinamicGLFeature_ARB_shader_atomic_counters_loaded = false; 
+static void InitDinamicGLFeature_ARB_shader_atomic_counters() {
+		DynamicGL_GetActiveAtomicCounterBufferiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLuint bufferIndex , GLenum pname , GLint *params)>("glGetActiveAtomicCounterBufferiv"); 
+		DinamicGLFeature_ARB_shader_atomic_counters_loaded = true; 
+}
+bool DinamicGLFeature_ARB_shader_atomic_counters_Supported() {
+		if (!DinamicGLFeature_ARB_shader_atomic_counters_loaded) {
+			InitDinamicGLFeature_ARB_shader_atomic_counters();
+		}
+		if (DynamicGL_GetActiveAtomicCounterBufferiv==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_shader_atomic_counters*/
 
 /*EXT_blend_subtract*/
 #ifdef USE_DYNAMIC_GL_EXT_blend_subtract
@@ -7111,6 +9053,20 @@ bool DinamicGLFeature_SGIX_async_histogram_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_SGIX_async_histogram*/
 
+/*ARB_compressed_texture_pixel_storage*/
+#ifdef USE_DYNAMIC_GL_ARB_compressed_texture_pixel_storage
+static bool DinamicGLFeature_ARB_compressed_texture_pixel_storage_loaded = false; 
+static void InitDinamicGLFeature_ARB_compressed_texture_pixel_storage() {
+		DinamicGLFeature_ARB_compressed_texture_pixel_storage_loaded = true; 
+}
+bool DinamicGLFeature_ARB_compressed_texture_pixel_storage_Supported() {
+		if (!DinamicGLFeature_ARB_compressed_texture_pixel_storage_loaded) {
+			InitDinamicGLFeature_ARB_compressed_texture_pixel_storage();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_compressed_texture_pixel_storage*/
+
 /*SGIX_depth_texture*/
 #ifdef USE_DYNAMIC_GL_SGIX_depth_texture
 static bool DinamicGLFeature_SGIX_depth_texture_loaded = false; 
@@ -7156,19 +9112,28 @@ bool DinamicGLFeature_MESA_pack_invert_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_MESA_pack_invert*/
 
-/*SGIX_texture_lod_bias*/
-#ifdef USE_DYNAMIC_GL_SGIX_texture_lod_bias
-static bool DinamicGLFeature_SGIX_texture_lod_bias_loaded = false; 
-static void InitDinamicGLFeature_SGIX_texture_lod_bias() {
-		DinamicGLFeature_SGIX_texture_lod_bias_loaded = true; 
+/*ARB_get_program_binary*/
+#ifdef USE_DYNAMIC_GL_ARB_get_program_binary
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetProgramBinary)(GLuint program , GLsizei bufSize , GLsizei *length , GLenum *binaryFormat , GLvoid *binary) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramBinary)(GLuint program , GLenum binaryFormat , const GLvoid *binary , GLsizei length) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramParameteri)(GLuint program , GLenum pname , GLint value) = 0; }
+static bool DinamicGLFeature_ARB_get_program_binary_loaded = false; 
+static void InitDinamicGLFeature_ARB_get_program_binary() {
+		DynamicGL_GetProgramBinary = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLsizei bufSize , GLsizei *length , GLenum *binaryFormat , GLvoid *binary)>("glGetProgramBinary"); 
+		DynamicGL_ProgramBinary = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLenum binaryFormat , const GLvoid *binary , GLsizei length)>("glProgramBinary"); 
+		DynamicGL_ProgramParameteri = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLenum pname , GLint value)>("glProgramParameteri"); 
+		DinamicGLFeature_ARB_get_program_binary_loaded = true; 
 }
-bool DinamicGLFeature_SGIX_texture_lod_bias_Supported() {
-		if (!DinamicGLFeature_SGIX_texture_lod_bias_loaded) {
-			InitDinamicGLFeature_SGIX_texture_lod_bias();
+bool DinamicGLFeature_ARB_get_program_binary_Supported() {
+		if (!DinamicGLFeature_ARB_get_program_binary_loaded) {
+			InitDinamicGLFeature_ARB_get_program_binary();
 		}
+		if (DynamicGL_GetProgramBinary==0) return false; 
+		if (DynamicGL_ProgramBinary==0) return false; 
+		if (DynamicGL_ProgramParameteri==0) return false; 
 		return true;
 }
-#endif /*USE_DYNAMIC_GL_SGIX_texture_lod_bias*/
+#endif /*USE_DYNAMIC_GL_ARB_get_program_binary*/
 
 /*EXT_framebuffer_multisample*/
 #ifdef USE_DYNAMIC_GL_EXT_framebuffer_multisample
@@ -7187,6 +9152,54 @@ bool DinamicGLFeature_EXT_framebuffer_multisample_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_EXT_framebuffer_multisample*/
 
+/*ARB_seamless_cube_map*/
+#ifdef USE_DYNAMIC_GL_ARB_seamless_cube_map
+static bool DinamicGLFeature_ARB_seamless_cube_map_loaded = false; 
+static void InitDinamicGLFeature_ARB_seamless_cube_map() {
+		DinamicGLFeature_ARB_seamless_cube_map_loaded = true; 
+}
+bool DinamicGLFeature_ARB_seamless_cube_map_Supported() {
+		if (!DinamicGLFeature_ARB_seamless_cube_map_loaded) {
+			InitDinamicGLFeature_ARB_seamless_cube_map();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_seamless_cube_map*/
+
+/*SGIX_texture_lod_bias*/
+#ifdef USE_DYNAMIC_GL_SGIX_texture_lod_bias
+static bool DinamicGLFeature_SGIX_texture_lod_bias_loaded = false; 
+static void InitDinamicGLFeature_SGIX_texture_lod_bias() {
+		DinamicGLFeature_SGIX_texture_lod_bias_loaded = true; 
+}
+bool DinamicGLFeature_SGIX_texture_lod_bias_Supported() {
+		if (!DinamicGLFeature_SGIX_texture_lod_bias_loaded) {
+			InitDinamicGLFeature_SGIX_texture_lod_bias();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_SGIX_texture_lod_bias*/
+
+/*AMD_vertex_shader_tesselator*/
+#ifdef USE_DYNAMIC_GL_AMD_vertex_shader_tesselator
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TessellationFactorAMD)(GLfloat factor) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TessellationModeAMD)(GLenum mode) = 0; }
+static bool DinamicGLFeature_AMD_vertex_shader_tesselator_loaded = false; 
+static void InitDinamicGLFeature_AMD_vertex_shader_tesselator() {
+		DynamicGL_TessellationFactorAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLfloat factor)>("glTessellationFactorAMD"); 
+		DynamicGL_TessellationModeAMD = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode)>("glTessellationModeAMD"); 
+		DinamicGLFeature_AMD_vertex_shader_tesselator_loaded = true; 
+}
+bool DinamicGLFeature_AMD_vertex_shader_tesselator_Supported() {
+		if (!DinamicGLFeature_AMD_vertex_shader_tesselator_loaded) {
+			InitDinamicGLFeature_AMD_vertex_shader_tesselator();
+		}
+		if (DynamicGL_TessellationFactorAMD==0) return false; 
+		if (DynamicGL_TessellationModeAMD==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_AMD_vertex_shader_tesselator*/
+
 /*EXT_texture_filter_anisotropic*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_filter_anisotropic
 static bool DinamicGLFeature_EXT_texture_filter_anisotropic_loaded = false; 
@@ -7200,6 +9213,259 @@ bool DinamicGLFeature_EXT_texture_filter_anisotropic_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_filter_anisotropic*/
+
+/*VERSION_1_3_DEPRECATED*/
+#ifdef USE_DYNAMIC_GL_VERSION_1_3_DEPRECATED
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClientActiveTexture)(GLenum texture) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1d)(GLenum target , GLdouble s) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1dv)(GLenum target , const GLdouble *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1f)(GLenum target , GLfloat s) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1fv)(GLenum target , const GLfloat *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1i)(GLenum target , GLint s) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1iv)(GLenum target , const GLint *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1s)(GLenum target , GLshort s) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1sv)(GLenum target , const GLshort *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2d)(GLenum target , GLdouble s , GLdouble t) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2dv)(GLenum target , const GLdouble *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2f)(GLenum target , GLfloat s , GLfloat t) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2fv)(GLenum target , const GLfloat *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2i)(GLenum target , GLint s , GLint t) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2iv)(GLenum target , const GLint *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2s)(GLenum target , GLshort s , GLshort t) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2sv)(GLenum target , const GLshort *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3d)(GLenum target , GLdouble s , GLdouble t , GLdouble r) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3dv)(GLenum target , const GLdouble *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3f)(GLenum target , GLfloat s , GLfloat t , GLfloat r) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3fv)(GLenum target , const GLfloat *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3i)(GLenum target , GLint s , GLint t , GLint r) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3iv)(GLenum target , const GLint *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3s)(GLenum target , GLshort s , GLshort t , GLshort r) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3sv)(GLenum target , const GLshort *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4d)(GLenum target , GLdouble s , GLdouble t , GLdouble r , GLdouble q) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4dv)(GLenum target , const GLdouble *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4f)(GLenum target , GLfloat s , GLfloat t , GLfloat r , GLfloat q) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4fv)(GLenum target , const GLfloat *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4i)(GLenum target , GLint s , GLint t , GLint r , GLint q) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4iv)(GLenum target , const GLint *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4s)(GLenum target , GLshort s , GLshort t , GLshort r , GLshort q) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4sv)(GLenum target , const GLshort *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadTransposeMatrixf)(const GLfloat *m) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadTransposeMatrixd)(const GLdouble *m) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultTransposeMatrixf)(const GLfloat *m) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultTransposeMatrixd)(const GLdouble *m) = 0; }
+static bool DinamicGLFeature_VERSION_1_3_DEPRECATED_loaded = false; 
+static void InitDinamicGLFeature_VERSION_1_3_DEPRECATED() {
+		DynamicGL_ClientActiveTexture = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum texture)>("glClientActiveTexture"); 
+		DynamicGL_MultiTexCoord1d = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLdouble s)>("glMultiTexCoord1d"); 
+		DynamicGL_MultiTexCoord1dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLdouble *v)>("glMultiTexCoord1dv"); 
+		DynamicGL_MultiTexCoord1f = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLfloat s)>("glMultiTexCoord1f"); 
+		DynamicGL_MultiTexCoord1fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLfloat *v)>("glMultiTexCoord1fv"); 
+		DynamicGL_MultiTexCoord1i = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint s)>("glMultiTexCoord1i"); 
+		DynamicGL_MultiTexCoord1iv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLint *v)>("glMultiTexCoord1iv"); 
+		DynamicGL_MultiTexCoord1s = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLshort s)>("glMultiTexCoord1s"); 
+		DynamicGL_MultiTexCoord1sv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLshort *v)>("glMultiTexCoord1sv"); 
+		DynamicGL_MultiTexCoord2d = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLdouble s , GLdouble t)>("glMultiTexCoord2d"); 
+		DynamicGL_MultiTexCoord2dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLdouble *v)>("glMultiTexCoord2dv"); 
+		DynamicGL_MultiTexCoord2f = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLfloat s , GLfloat t)>("glMultiTexCoord2f"); 
+		DynamicGL_MultiTexCoord2fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLfloat *v)>("glMultiTexCoord2fv"); 
+		DynamicGL_MultiTexCoord2i = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint s , GLint t)>("glMultiTexCoord2i"); 
+		DynamicGL_MultiTexCoord2iv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLint *v)>("glMultiTexCoord2iv"); 
+		DynamicGL_MultiTexCoord2s = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLshort s , GLshort t)>("glMultiTexCoord2s"); 
+		DynamicGL_MultiTexCoord2sv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLshort *v)>("glMultiTexCoord2sv"); 
+		DynamicGL_MultiTexCoord3d = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLdouble s , GLdouble t , GLdouble r)>("glMultiTexCoord3d"); 
+		DynamicGL_MultiTexCoord3dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLdouble *v)>("glMultiTexCoord3dv"); 
+		DynamicGL_MultiTexCoord3f = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLfloat s , GLfloat t , GLfloat r)>("glMultiTexCoord3f"); 
+		DynamicGL_MultiTexCoord3fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLfloat *v)>("glMultiTexCoord3fv"); 
+		DynamicGL_MultiTexCoord3i = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint s , GLint t , GLint r)>("glMultiTexCoord3i"); 
+		DynamicGL_MultiTexCoord3iv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLint *v)>("glMultiTexCoord3iv"); 
+		DynamicGL_MultiTexCoord3s = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLshort s , GLshort t , GLshort r)>("glMultiTexCoord3s"); 
+		DynamicGL_MultiTexCoord3sv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLshort *v)>("glMultiTexCoord3sv"); 
+		DynamicGL_MultiTexCoord4d = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLdouble s , GLdouble t , GLdouble r , GLdouble q)>("glMultiTexCoord4d"); 
+		DynamicGL_MultiTexCoord4dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLdouble *v)>("glMultiTexCoord4dv"); 
+		DynamicGL_MultiTexCoord4f = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLfloat s , GLfloat t , GLfloat r , GLfloat q)>("glMultiTexCoord4f"); 
+		DynamicGL_MultiTexCoord4fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLfloat *v)>("glMultiTexCoord4fv"); 
+		DynamicGL_MultiTexCoord4i = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint s , GLint t , GLint r , GLint q)>("glMultiTexCoord4i"); 
+		DynamicGL_MultiTexCoord4iv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLint *v)>("glMultiTexCoord4iv"); 
+		DynamicGL_MultiTexCoord4s = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLshort s , GLshort t , GLshort r , GLshort q)>("glMultiTexCoord4s"); 
+		DynamicGL_MultiTexCoord4sv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , const GLshort *v)>("glMultiTexCoord4sv"); 
+		DynamicGL_LoadTransposeMatrixf = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLfloat *m)>("glLoadTransposeMatrixf"); 
+		DynamicGL_LoadTransposeMatrixd = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLdouble *m)>("glLoadTransposeMatrixd"); 
+		DynamicGL_MultTransposeMatrixf = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLfloat *m)>("glMultTransposeMatrixf"); 
+		DynamicGL_MultTransposeMatrixd = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLdouble *m)>("glMultTransposeMatrixd"); 
+		DinamicGLFeature_VERSION_1_3_DEPRECATED_loaded = true; 
+}
+bool DinamicGLFeature_VERSION_1_3_DEPRECATED_Supported() {
+		if (!DinamicGLFeature_VERSION_1_3_DEPRECATED_loaded) {
+			InitDinamicGLFeature_VERSION_1_3_DEPRECATED();
+		}
+		if (DynamicGL_ClientActiveTexture==0) return false; 
+		if (DynamicGL_MultiTexCoord1d==0) return false; 
+		if (DynamicGL_MultiTexCoord1dv==0) return false; 
+		if (DynamicGL_MultiTexCoord1f==0) return false; 
+		if (DynamicGL_MultiTexCoord1fv==0) return false; 
+		if (DynamicGL_MultiTexCoord1i==0) return false; 
+		if (DynamicGL_MultiTexCoord1iv==0) return false; 
+		if (DynamicGL_MultiTexCoord1s==0) return false; 
+		if (DynamicGL_MultiTexCoord1sv==0) return false; 
+		if (DynamicGL_MultiTexCoord2d==0) return false; 
+		if (DynamicGL_MultiTexCoord2dv==0) return false; 
+		if (DynamicGL_MultiTexCoord2f==0) return false; 
+		if (DynamicGL_MultiTexCoord2fv==0) return false; 
+		if (DynamicGL_MultiTexCoord2i==0) return false; 
+		if (DynamicGL_MultiTexCoord2iv==0) return false; 
+		if (DynamicGL_MultiTexCoord2s==0) return false; 
+		if (DynamicGL_MultiTexCoord2sv==0) return false; 
+		if (DynamicGL_MultiTexCoord3d==0) return false; 
+		if (DynamicGL_MultiTexCoord3dv==0) return false; 
+		if (DynamicGL_MultiTexCoord3f==0) return false; 
+		if (DynamicGL_MultiTexCoord3fv==0) return false; 
+		if (DynamicGL_MultiTexCoord3i==0) return false; 
+		if (DynamicGL_MultiTexCoord3iv==0) return false; 
+		if (DynamicGL_MultiTexCoord3s==0) return false; 
+		if (DynamicGL_MultiTexCoord3sv==0) return false; 
+		if (DynamicGL_MultiTexCoord4d==0) return false; 
+		if (DynamicGL_MultiTexCoord4dv==0) return false; 
+		if (DynamicGL_MultiTexCoord4f==0) return false; 
+		if (DynamicGL_MultiTexCoord4fv==0) return false; 
+		if (DynamicGL_MultiTexCoord4i==0) return false; 
+		if (DynamicGL_MultiTexCoord4iv==0) return false; 
+		if (DynamicGL_MultiTexCoord4s==0) return false; 
+		if (DynamicGL_MultiTexCoord4sv==0) return false; 
+		if (DynamicGL_LoadTransposeMatrixf==0) return false; 
+		if (DynamicGL_LoadTransposeMatrixd==0) return false; 
+		if (DynamicGL_MultTransposeMatrixf==0) return false; 
+		if (DynamicGL_MultTransposeMatrixd==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_VERSION_1_3_DEPRECATED*/
+
+/*VERSION_1_4_DEPRECATED*/
+#ifdef USE_DYNAMIC_GL_VERSION_1_4_DEPRECATED
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoordf)(GLfloat coord) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoordfv)(const GLfloat *coord) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoordd)(GLdouble coord) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoorddv)(const GLdouble *coord) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoordPointer)(GLenum type , GLsizei stride , const GLvoid *pointer) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3b)(GLbyte red , GLbyte green , GLbyte blue) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3bv)(const GLbyte *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3d)(GLdouble red , GLdouble green , GLdouble blue) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3dv)(const GLdouble *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3f)(GLfloat red , GLfloat green , GLfloat blue) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3fv)(const GLfloat *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3i)(GLint red , GLint green , GLint blue) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3iv)(const GLint *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3s)(GLshort red , GLshort green , GLshort blue) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3sv)(const GLshort *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3ub)(GLubyte red , GLubyte green , GLubyte blue) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3ubv)(const GLubyte *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3ui)(GLuint red , GLuint green , GLuint blue) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3uiv)(const GLuint *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3us)(GLushort red , GLushort green , GLushort blue) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3usv)(const GLushort *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColorPointer)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2d)(GLdouble x , GLdouble y) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2dv)(const GLdouble *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2f)(GLfloat x , GLfloat y) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2fv)(const GLfloat *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2i)(GLint x , GLint y) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2iv)(const GLint *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2s)(GLshort x , GLshort y) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2sv)(const GLshort *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3d)(GLdouble x , GLdouble y , GLdouble z) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3dv)(const GLdouble *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3f)(GLfloat x , GLfloat y , GLfloat z) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3fv)(const GLfloat *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3i)(GLint x , GLint y , GLint z) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3iv)(const GLint *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3s)(GLshort x , GLshort y , GLshort z) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3sv)(const GLshort *v) = 0; }
+static bool DinamicGLFeature_VERSION_1_4_DEPRECATED_loaded = false; 
+static void InitDinamicGLFeature_VERSION_1_4_DEPRECATED() {
+		DynamicGL_FogCoordf = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLfloat coord)>("glFogCoordf"); 
+		DynamicGL_FogCoordfv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLfloat *coord)>("glFogCoordfv"); 
+		DynamicGL_FogCoordd = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLdouble coord)>("glFogCoordd"); 
+		DynamicGL_FogCoorddv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLdouble *coord)>("glFogCoorddv"); 
+		DynamicGL_FogCoordPointer = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , GLsizei stride , const GLvoid *pointer)>("glFogCoordPointer"); 
+		DynamicGL_SecondaryColor3b = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLbyte red , GLbyte green , GLbyte blue)>("glSecondaryColor3b"); 
+		DynamicGL_SecondaryColor3bv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLbyte *v)>("glSecondaryColor3bv"); 
+		DynamicGL_SecondaryColor3d = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLdouble red , GLdouble green , GLdouble blue)>("glSecondaryColor3d"); 
+		DynamicGL_SecondaryColor3dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLdouble *v)>("glSecondaryColor3dv"); 
+		DynamicGL_SecondaryColor3f = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLfloat red , GLfloat green , GLfloat blue)>("glSecondaryColor3f"); 
+		DynamicGL_SecondaryColor3fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLfloat *v)>("glSecondaryColor3fv"); 
+		DynamicGL_SecondaryColor3i = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint red , GLint green , GLint blue)>("glSecondaryColor3i"); 
+		DynamicGL_SecondaryColor3iv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLint *v)>("glSecondaryColor3iv"); 
+		DynamicGL_SecondaryColor3s = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLshort red , GLshort green , GLshort blue)>("glSecondaryColor3s"); 
+		DynamicGL_SecondaryColor3sv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLshort *v)>("glSecondaryColor3sv"); 
+		DynamicGL_SecondaryColor3ub = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLubyte red , GLubyte green , GLubyte blue)>("glSecondaryColor3ub"); 
+		DynamicGL_SecondaryColor3ubv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLubyte *v)>("glSecondaryColor3ubv"); 
+		DynamicGL_SecondaryColor3ui = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint red , GLuint green , GLuint blue)>("glSecondaryColor3ui"); 
+		DynamicGL_SecondaryColor3uiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLuint *v)>("glSecondaryColor3uiv"); 
+		DynamicGL_SecondaryColor3us = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLushort red , GLushort green , GLushort blue)>("glSecondaryColor3us"); 
+		DynamicGL_SecondaryColor3usv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLushort *v)>("glSecondaryColor3usv"); 
+		DynamicGL_SecondaryColorPointer = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer)>("glSecondaryColorPointer"); 
+		DynamicGL_WindowPos2d = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLdouble x , GLdouble y)>("glWindowPos2d"); 
+		DynamicGL_WindowPos2dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLdouble *v)>("glWindowPos2dv"); 
+		DynamicGL_WindowPos2f = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLfloat x , GLfloat y)>("glWindowPos2f"); 
+		DynamicGL_WindowPos2fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLfloat *v)>("glWindowPos2fv"); 
+		DynamicGL_WindowPos2i = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint x , GLint y)>("glWindowPos2i"); 
+		DynamicGL_WindowPos2iv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLint *v)>("glWindowPos2iv"); 
+		DynamicGL_WindowPos2s = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLshort x , GLshort y)>("glWindowPos2s"); 
+		DynamicGL_WindowPos2sv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLshort *v)>("glWindowPos2sv"); 
+		DynamicGL_WindowPos3d = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLdouble x , GLdouble y , GLdouble z)>("glWindowPos3d"); 
+		DynamicGL_WindowPos3dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLdouble *v)>("glWindowPos3dv"); 
+		DynamicGL_WindowPos3f = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLfloat x , GLfloat y , GLfloat z)>("glWindowPos3f"); 
+		DynamicGL_WindowPos3fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLfloat *v)>("glWindowPos3fv"); 
+		DynamicGL_WindowPos3i = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint x , GLint y , GLint z)>("glWindowPos3i"); 
+		DynamicGL_WindowPos3iv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLint *v)>("glWindowPos3iv"); 
+		DynamicGL_WindowPos3s = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLshort x , GLshort y , GLshort z)>("glWindowPos3s"); 
+		DynamicGL_WindowPos3sv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLshort *v)>("glWindowPos3sv"); 
+		DinamicGLFeature_VERSION_1_4_DEPRECATED_loaded = true; 
+}
+bool DinamicGLFeature_VERSION_1_4_DEPRECATED_Supported() {
+		if (!DinamicGLFeature_VERSION_1_4_DEPRECATED_loaded) {
+			InitDinamicGLFeature_VERSION_1_4_DEPRECATED();
+		}
+		if (DynamicGL_FogCoordf==0) return false; 
+		if (DynamicGL_FogCoordfv==0) return false; 
+		if (DynamicGL_FogCoordd==0) return false; 
+		if (DynamicGL_FogCoorddv==0) return false; 
+		if (DynamicGL_FogCoordPointer==0) return false; 
+		if (DynamicGL_SecondaryColor3b==0) return false; 
+		if (DynamicGL_SecondaryColor3bv==0) return false; 
+		if (DynamicGL_SecondaryColor3d==0) return false; 
+		if (DynamicGL_SecondaryColor3dv==0) return false; 
+		if (DynamicGL_SecondaryColor3f==0) return false; 
+		if (DynamicGL_SecondaryColor3fv==0) return false; 
+		if (DynamicGL_SecondaryColor3i==0) return false; 
+		if (DynamicGL_SecondaryColor3iv==0) return false; 
+		if (DynamicGL_SecondaryColor3s==0) return false; 
+		if (DynamicGL_SecondaryColor3sv==0) return false; 
+		if (DynamicGL_SecondaryColor3ub==0) return false; 
+		if (DynamicGL_SecondaryColor3ubv==0) return false; 
+		if (DynamicGL_SecondaryColor3ui==0) return false; 
+		if (DynamicGL_SecondaryColor3uiv==0) return false; 
+		if (DynamicGL_SecondaryColor3us==0) return false; 
+		if (DynamicGL_SecondaryColor3usv==0) return false; 
+		if (DynamicGL_SecondaryColorPointer==0) return false; 
+		if (DynamicGL_WindowPos2d==0) return false; 
+		if (DynamicGL_WindowPos2dv==0) return false; 
+		if (DynamicGL_WindowPos2f==0) return false; 
+		if (DynamicGL_WindowPos2fv==0) return false; 
+		if (DynamicGL_WindowPos2i==0) return false; 
+		if (DynamicGL_WindowPos2iv==0) return false; 
+		if (DynamicGL_WindowPos2s==0) return false; 
+		if (DynamicGL_WindowPos2sv==0) return false; 
+		if (DynamicGL_WindowPos3d==0) return false; 
+		if (DynamicGL_WindowPos3dv==0) return false; 
+		if (DynamicGL_WindowPos3f==0) return false; 
+		if (DynamicGL_WindowPos3fv==0) return false; 
+		if (DynamicGL_WindowPos3i==0) return false; 
+		if (DynamicGL_WindowPos3iv==0) return false; 
+		if (DynamicGL_WindowPos3s==0) return false; 
+		if (DynamicGL_WindowPos3sv==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_VERSION_1_4_DEPRECATED*/
 
 /*ARB_matrix_palette*/
 #ifdef USE_DYNAMIC_GL_ARB_matrix_palette
@@ -7547,70 +9813,8 @@ bool DinamicGLFeature_WIN_specular_fog_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_WIN_specular_fog*/
 
-/*SGIX_impact_pixel_texture*/
-#ifdef USE_DYNAMIC_GL_SGIX_impact_pixel_texture
-static bool DinamicGLFeature_SGIX_impact_pixel_texture_loaded = false; 
-static void InitDinamicGLFeature_SGIX_impact_pixel_texture() {
-		DinamicGLFeature_SGIX_impact_pixel_texture_loaded = true; 
-}
-bool DinamicGLFeature_SGIX_impact_pixel_texture_Supported() {
-		if (!DinamicGLFeature_SGIX_impact_pixel_texture_loaded) {
-			InitDinamicGLFeature_SGIX_impact_pixel_texture();
-		}
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_SGIX_impact_pixel_texture*/
-
-/*EXT_depth_bounds_test*/
-#ifdef USE_DYNAMIC_GL_EXT_depth_bounds_test
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthBoundsEXT)(GLclampd zmin , GLclampd zmax) = 0; }
-static bool DinamicGLFeature_EXT_depth_bounds_test_loaded = false; 
-static void InitDinamicGLFeature_EXT_depth_bounds_test() {
-		DynamicGL_DepthBoundsEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLclampd zmin , GLclampd zmax)>("glDepthBoundsEXT"); 
-		DinamicGLFeature_EXT_depth_bounds_test_loaded = true; 
-}
-bool DinamicGLFeature_EXT_depth_bounds_test_Supported() {
-		if (!DinamicGLFeature_EXT_depth_bounds_test_loaded) {
-			InitDinamicGLFeature_EXT_depth_bounds_test();
-		}
-		if (DynamicGL_DepthBoundsEXT==0) return false; 
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_EXT_depth_bounds_test*/
-
-/*EXT_texture_mirror_clamp*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_mirror_clamp
-static bool DinamicGLFeature_EXT_texture_mirror_clamp_loaded = false; 
-static void InitDinamicGLFeature_EXT_texture_mirror_clamp() {
-		DinamicGLFeature_EXT_texture_mirror_clamp_loaded = true; 
-}
-bool DinamicGLFeature_EXT_texture_mirror_clamp_Supported() {
-		if (!DinamicGLFeature_EXT_texture_mirror_clamp_loaded) {
-			InitDinamicGLFeature_EXT_texture_mirror_clamp();
-		}
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_EXT_texture_mirror_clamp*/
-
-/*SGIS_texture_lod*/
-#ifdef USE_DYNAMIC_GL_SGIS_texture_lod
-static bool DinamicGLFeature_SGIS_texture_lod_loaded = false; 
-static void InitDinamicGLFeature_SGIS_texture_lod() {
-		DinamicGLFeature_SGIS_texture_lod_loaded = true; 
-}
-bool DinamicGLFeature_SGIS_texture_lod_Supported() {
-		if (!DinamicGLFeature_SGIS_texture_lod_loaded) {
-			InitDinamicGLFeature_SGIS_texture_lod();
-		}
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_SGIS_texture_lod*/
-
-/*VERSION_1_2*/
-#ifdef USE_DYNAMIC_GL_VERSION_1_2
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendColor)(GLclampf red , GLclampf green , GLclampf blue , GLclampf alpha) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquation)(GLenum mode) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawRangeElements)(GLenum mode , GLuint start , GLuint end , GLsizei count , GLenum type , const GLvoid *indices) = 0; }
+/*VERSION_1_2_DEPRECATED*/
+#ifdef USE_DYNAMIC_GL_VERSION_1_2_DEPRECATED
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorTable)(GLenum target , GLenum internalformat , GLsizei width , GLenum format , GLenum type , const GLvoid *table) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorTableParameterfv)(GLenum target , GLenum pname , const GLfloat *params) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorTableParameteriv)(GLenum target , GLenum pname , const GLint *params) = 0; }
@@ -7643,14 +9847,8 @@ extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Histogram)(GLenum target , GLs
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Minmax)(GLenum target , GLenum internalformat , GLboolean sink) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ResetHistogram)(GLenum target) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ResetMinmax)(GLenum target) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexImage3D)(GLenum target , GLint level , GLint internalformat , GLsizei width , GLsizei height , GLsizei depth , GLint border , GLenum format , GLenum type , const GLvoid *pixels) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexSubImage3D)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLint zoffset , GLsizei width , GLsizei height , GLsizei depth , GLenum format , GLenum type , const GLvoid *pixels) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CopyTexSubImage3D)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLint zoffset , GLint x , GLint y , GLsizei width , GLsizei height) = 0; }
-static bool DinamicGLFeature_VERSION_1_2_loaded = false; 
-static void InitDinamicGLFeature_VERSION_1_2() {
-		DynamicGL_BlendColor = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLclampf red , GLclampf green , GLclampf blue , GLclampf alpha)>("glBlendColor"); 
-		DynamicGL_BlendEquation = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode)>("glBlendEquation"); 
-		DynamicGL_DrawRangeElements = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLuint start , GLuint end , GLsizei count , GLenum type , const GLvoid *indices)>("glDrawRangeElements"); 
+static bool DinamicGLFeature_VERSION_1_2_DEPRECATED_loaded = false; 
+static void InitDinamicGLFeature_VERSION_1_2_DEPRECATED() {
 		DynamicGL_ColorTable = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum internalformat , GLsizei width , GLenum format , GLenum type , const GLvoid *table)>("glColorTable"); 
 		DynamicGL_ColorTableParameterfv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum pname , const GLfloat *params)>("glColorTableParameterfv"); 
 		DynamicGL_ColorTableParameteriv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum pname , const GLint *params)>("glColorTableParameteriv"); 
@@ -7683,18 +9881,12 @@ static void InitDinamicGLFeature_VERSION_1_2() {
 		DynamicGL_Minmax = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum internalformat , GLboolean sink)>("glMinmax"); 
 		DynamicGL_ResetHistogram = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target)>("glResetHistogram"); 
 		DynamicGL_ResetMinmax = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target)>("glResetMinmax"); 
-		DynamicGL_TexImage3D = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint level , GLint internalformat , GLsizei width , GLsizei height , GLsizei depth , GLint border , GLenum format , GLenum type , const GLvoid *pixels)>("glTexImage3D"); 
-		DynamicGL_TexSubImage3D = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLint zoffset , GLsizei width , GLsizei height , GLsizei depth , GLenum format , GLenum type , const GLvoid *pixels)>("glTexSubImage3D"); 
-		DynamicGL_CopyTexSubImage3D = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLint zoffset , GLint x , GLint y , GLsizei width , GLsizei height)>("glCopyTexSubImage3D"); 
-		DinamicGLFeature_VERSION_1_2_loaded = true; 
+		DinamicGLFeature_VERSION_1_2_DEPRECATED_loaded = true; 
 }
-bool DinamicGLFeature_VERSION_1_2_Supported() {
-		if (!DinamicGLFeature_VERSION_1_2_loaded) {
-			InitDinamicGLFeature_VERSION_1_2();
+bool DinamicGLFeature_VERSION_1_2_DEPRECATED_Supported() {
+		if (!DinamicGLFeature_VERSION_1_2_DEPRECATED_loaded) {
+			InitDinamicGLFeature_VERSION_1_2_DEPRECATED();
 		}
-		if (DynamicGL_BlendColor==0) return false; 
-		if (DynamicGL_BlendEquation==0) return false; 
-		if (DynamicGL_DrawRangeElements==0) return false; 
 		if (DynamicGL_ColorTable==0) return false; 
 		if (DynamicGL_ColorTableParameterfv==0) return false; 
 		if (DynamicGL_ColorTableParameteriv==0) return false; 
@@ -7727,6 +9919,128 @@ bool DinamicGLFeature_VERSION_1_2_Supported() {
 		if (DynamicGL_Minmax==0) return false; 
 		if (DynamicGL_ResetHistogram==0) return false; 
 		if (DynamicGL_ResetMinmax==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_VERSION_1_2_DEPRECATED*/
+
+/*NV_multisample_coverage*/
+#ifdef USE_DYNAMIC_GL_NV_multisample_coverage
+static bool DinamicGLFeature_NV_multisample_coverage_loaded = false; 
+static void InitDinamicGLFeature_NV_multisample_coverage() {
+		DinamicGLFeature_NV_multisample_coverage_loaded = true; 
+}
+bool DinamicGLFeature_NV_multisample_coverage_Supported() {
+		if (!DinamicGLFeature_NV_multisample_coverage_loaded) {
+			InitDinamicGLFeature_NV_multisample_coverage();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_multisample_coverage*/
+
+/*SGIX_impact_pixel_texture*/
+#ifdef USE_DYNAMIC_GL_SGIX_impact_pixel_texture
+static bool DinamicGLFeature_SGIX_impact_pixel_texture_loaded = false; 
+static void InitDinamicGLFeature_SGIX_impact_pixel_texture() {
+		DinamicGLFeature_SGIX_impact_pixel_texture_loaded = true; 
+}
+bool DinamicGLFeature_SGIX_impact_pixel_texture_Supported() {
+		if (!DinamicGLFeature_SGIX_impact_pixel_texture_loaded) {
+			InitDinamicGLFeature_SGIX_impact_pixel_texture();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_SGIX_impact_pixel_texture*/
+
+/*EXT_depth_bounds_test*/
+#ifdef USE_DYNAMIC_GL_EXT_depth_bounds_test
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthBoundsEXT)(GLclampd zmin , GLclampd zmax) = 0; }
+static bool DinamicGLFeature_EXT_depth_bounds_test_loaded = false; 
+static void InitDinamicGLFeature_EXT_depth_bounds_test() {
+		DynamicGL_DepthBoundsEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLclampd zmin , GLclampd zmax)>("glDepthBoundsEXT"); 
+		DinamicGLFeature_EXT_depth_bounds_test_loaded = true; 
+}
+bool DinamicGLFeature_EXT_depth_bounds_test_Supported() {
+		if (!DinamicGLFeature_EXT_depth_bounds_test_loaded) {
+			InitDinamicGLFeature_EXT_depth_bounds_test();
+		}
+		if (DynamicGL_DepthBoundsEXT==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_EXT_depth_bounds_test*/
+
+/*ARB_shader_image_load_store*/
+#ifdef USE_DYNAMIC_GL_ARB_shader_image_load_store
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindImageTexture)(GLuint unit , GLuint texture , GLint level , GLboolean layered , GLint layer , GLenum access , GLenum format) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MemoryBarrier)(GLbitfield barriers) = 0; }
+static bool DinamicGLFeature_ARB_shader_image_load_store_loaded = false; 
+static void InitDinamicGLFeature_ARB_shader_image_load_store() {
+		DynamicGL_BindImageTexture = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint unit , GLuint texture , GLint level , GLboolean layered , GLint layer , GLenum access , GLenum format)>("glBindImageTexture"); 
+		DynamicGL_MemoryBarrier = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLbitfield barriers)>("glMemoryBarrier"); 
+		DinamicGLFeature_ARB_shader_image_load_store_loaded = true; 
+}
+bool DinamicGLFeature_ARB_shader_image_load_store_Supported() {
+		if (!DinamicGLFeature_ARB_shader_image_load_store_loaded) {
+			InitDinamicGLFeature_ARB_shader_image_load_store();
+		}
+		if (DynamicGL_BindImageTexture==0) return false; 
+		if (DynamicGL_MemoryBarrier==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_shader_image_load_store*/
+
+/*EXT_texture_mirror_clamp*/
+#ifdef USE_DYNAMIC_GL_EXT_texture_mirror_clamp
+static bool DinamicGLFeature_EXT_texture_mirror_clamp_loaded = false; 
+static void InitDinamicGLFeature_EXT_texture_mirror_clamp() {
+		DinamicGLFeature_EXT_texture_mirror_clamp_loaded = true; 
+}
+bool DinamicGLFeature_EXT_texture_mirror_clamp_Supported() {
+		if (!DinamicGLFeature_EXT_texture_mirror_clamp_loaded) {
+			InitDinamicGLFeature_EXT_texture_mirror_clamp();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_EXT_texture_mirror_clamp*/
+
+/*SGIS_texture_lod*/
+#ifdef USE_DYNAMIC_GL_SGIS_texture_lod
+static bool DinamicGLFeature_SGIS_texture_lod_loaded = false; 
+static void InitDinamicGLFeature_SGIS_texture_lod() {
+		DinamicGLFeature_SGIS_texture_lod_loaded = true; 
+}
+bool DinamicGLFeature_SGIS_texture_lod_Supported() {
+		if (!DinamicGLFeature_SGIS_texture_lod_loaded) {
+			InitDinamicGLFeature_SGIS_texture_lod();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_SGIS_texture_lod*/
+
+/*VERSION_1_2*/
+#ifdef USE_DYNAMIC_GL_VERSION_1_2
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendColor)(GLfloat red , GLfloat green , GLfloat blue , GLfloat alpha) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquation)(GLenum mode) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawRangeElements)(GLenum mode , GLuint start , GLuint end , GLsizei count , GLenum type , const GLvoid *indices) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexImage3D)(GLenum target , GLint level , GLint internalformat , GLsizei width , GLsizei height , GLsizei depth , GLint border , GLenum format , GLenum type , const GLvoid *pixels) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexSubImage3D)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLint zoffset , GLsizei width , GLsizei height , GLsizei depth , GLenum format , GLenum type , const GLvoid *pixels) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CopyTexSubImage3D)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLint zoffset , GLint x , GLint y , GLsizei width , GLsizei height) = 0; }
+static bool DinamicGLFeature_VERSION_1_2_loaded = false; 
+static void InitDinamicGLFeature_VERSION_1_2() {
+		DynamicGL_BlendColor = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLfloat red , GLfloat green , GLfloat blue , GLfloat alpha)>("glBlendColor"); 
+		DynamicGL_BlendEquation = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode)>("glBlendEquation"); 
+		DynamicGL_DrawRangeElements = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLuint start , GLuint end , GLsizei count , GLenum type , const GLvoid *indices)>("glDrawRangeElements"); 
+		DynamicGL_TexImage3D = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint level , GLint internalformat , GLsizei width , GLsizei height , GLsizei depth , GLint border , GLenum format , GLenum type , const GLvoid *pixels)>("glTexImage3D"); 
+		DynamicGL_TexSubImage3D = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLint zoffset , GLsizei width , GLsizei height , GLsizei depth , GLenum format , GLenum type , const GLvoid *pixels)>("glTexSubImage3D"); 
+		DynamicGL_CopyTexSubImage3D = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLint zoffset , GLint x , GLint y , GLsizei width , GLsizei height)>("glCopyTexSubImage3D"); 
+		DinamicGLFeature_VERSION_1_2_loaded = true; 
+}
+bool DinamicGLFeature_VERSION_1_2_Supported() {
+		if (!DinamicGLFeature_VERSION_1_2_loaded) {
+			InitDinamicGLFeature_VERSION_1_2();
+		}
+		if (DynamicGL_BlendColor==0) return false; 
+		if (DynamicGL_BlendEquation==0) return false; 
+		if (DynamicGL_DrawRangeElements==0) return false; 
 		if (DynamicGL_TexImage3D==0) return false; 
 		if (DynamicGL_TexSubImage3D==0) return false; 
 		if (DynamicGL_CopyTexSubImage3D==0) return false; 
@@ -7791,6 +10105,263 @@ bool DinamicGLFeature_APPLE_element_array_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_APPLE_element_array*/
 
+/*ARB_sync*/
+#ifdef USE_DYNAMIC_GL_ARB_sync
+extern "C" { GLsync (DYNAMIC_GL_APIENTRYP DynamicGL_FenceSync)(GLenum condition , GLbitfield flags) = 0; }
+extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsSync)(GLsync sync) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteSync)(GLsync sync) = 0; }
+extern "C" { GLenum (DYNAMIC_GL_APIENTRYP DynamicGL_ClientWaitSync)(GLsync sync , GLbitfield flags , GLuint64 timeout) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WaitSync)(GLsync sync , GLbitfield flags , GLuint64 timeout) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetInteger64v)(GLenum pname , GLint64 *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetSynciv)(GLsync sync , GLenum pname , GLsizei bufSize , GLsizei *length , GLint *values) = 0; }
+static bool DinamicGLFeature_ARB_sync_loaded = false; 
+static void InitDinamicGLFeature_ARB_sync() {
+		DynamicGL_FenceSync = DynamicGL_LoadFunction<GLsync (DYNAMIC_GL_APIENTRYP)(GLenum condition , GLbitfield flags)>("glFenceSync"); 
+		DynamicGL_IsSync = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLsync sync)>("glIsSync"); 
+		DynamicGL_DeleteSync = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsync sync)>("glDeleteSync"); 
+		DynamicGL_ClientWaitSync = DynamicGL_LoadFunction<GLenum (DYNAMIC_GL_APIENTRYP)(GLsync sync , GLbitfield flags , GLuint64 timeout)>("glClientWaitSync"); 
+		DynamicGL_WaitSync = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsync sync , GLbitfield flags , GLuint64 timeout)>("glWaitSync"); 
+		DynamicGL_GetInteger64v = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , GLint64 *params)>("glGetInteger64v"); 
+		DynamicGL_GetSynciv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsync sync , GLenum pname , GLsizei bufSize , GLsizei *length , GLint *values)>("glGetSynciv"); 
+		DinamicGLFeature_ARB_sync_loaded = true; 
+}
+bool DinamicGLFeature_ARB_sync_Supported() {
+		if (!DinamicGLFeature_ARB_sync_loaded) {
+			InitDinamicGLFeature_ARB_sync();
+		}
+		if (DynamicGL_FenceSync==0) return false; 
+		if (DynamicGL_IsSync==0) return false; 
+		if (DynamicGL_DeleteSync==0) return false; 
+		if (DynamicGL_ClientWaitSync==0) return false; 
+		if (DynamicGL_WaitSync==0) return false; 
+		if (DynamicGL_GetInteger64v==0) return false; 
+		if (DynamicGL_GetSynciv==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_sync*/
+
+/*NV_tessellation_program5*/
+#ifdef USE_DYNAMIC_GL_NV_tessellation_program5
+static bool DinamicGLFeature_NV_tessellation_program5_loaded = false; 
+static void InitDinamicGLFeature_NV_tessellation_program5() {
+		DinamicGLFeature_NV_tessellation_program5_loaded = true; 
+}
+bool DinamicGLFeature_NV_tessellation_program5_Supported() {
+		if (!DinamicGLFeature_NV_tessellation_program5_loaded) {
+			InitDinamicGLFeature_NV_tessellation_program5();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_tessellation_program5*/
+
+/*ARB_separate_shader_objects*/
+#ifdef USE_DYNAMIC_GL_ARB_separate_shader_objects
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_UseProgramStages)(GLuint pipeline , GLbitfield stages , GLuint program) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ActiveShaderProgram)(GLuint pipeline , GLuint program) = 0; }
+extern "C" { GLuint (DYNAMIC_GL_APIENTRYP DynamicGL_CreateShaderProgramv)(GLenum type , GLsizei count , const GLchar* const) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindProgramPipeline)(GLuint pipeline) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteProgramPipelines)(GLsizei n , const GLuint *pipelines) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenProgramPipelines)(GLsizei n , GLuint *pipelines) = 0; }
+extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsProgramPipeline)(GLuint pipeline) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetProgramPipelineiv)(GLuint pipeline , GLenum pname , GLint *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1i)(GLuint program , GLint location , GLint v0) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1iv)(GLuint program , GLint location , GLsizei count , const GLint *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1f)(GLuint program , GLint location , GLfloat v0) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1fv)(GLuint program , GLint location , GLsizei count , const GLfloat *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1d)(GLuint program , GLint location , GLdouble v0) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1dv)(GLuint program , GLint location , GLsizei count , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1ui)(GLuint program , GLint location , GLuint v0) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1uiv)(GLuint program , GLint location , GLsizei count , const GLuint *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2i)(GLuint program , GLint location , GLint v0 , GLint v1) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2iv)(GLuint program , GLint location , GLsizei count , const GLint *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2f)(GLuint program , GLint location , GLfloat v0 , GLfloat v1) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2fv)(GLuint program , GLint location , GLsizei count , const GLfloat *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2d)(GLuint program , GLint location , GLdouble v0 , GLdouble v1) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2dv)(GLuint program , GLint location , GLsizei count , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2ui)(GLuint program , GLint location , GLuint v0 , GLuint v1) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2uiv)(GLuint program , GLint location , GLsizei count , const GLuint *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3i)(GLuint program , GLint location , GLint v0 , GLint v1 , GLint v2) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3iv)(GLuint program , GLint location , GLsizei count , const GLint *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3f)(GLuint program , GLint location , GLfloat v0 , GLfloat v1 , GLfloat v2) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3fv)(GLuint program , GLint location , GLsizei count , const GLfloat *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3d)(GLuint program , GLint location , GLdouble v0 , GLdouble v1 , GLdouble v2) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3dv)(GLuint program , GLint location , GLsizei count , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3ui)(GLuint program , GLint location , GLuint v0 , GLuint v1 , GLuint v2) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3uiv)(GLuint program , GLint location , GLsizei count , const GLuint *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4i)(GLuint program , GLint location , GLint v0 , GLint v1 , GLint v2 , GLint v3) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4iv)(GLuint program , GLint location , GLsizei count , const GLint *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4f)(GLuint program , GLint location , GLfloat v0 , GLfloat v1 , GLfloat v2 , GLfloat v3) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4fv)(GLuint program , GLint location , GLsizei count , const GLfloat *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4d)(GLuint program , GLint location , GLdouble v0 , GLdouble v1 , GLdouble v2 , GLdouble v3) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4dv)(GLuint program , GLint location , GLsizei count , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4ui)(GLuint program , GLint location , GLuint v0 , GLuint v1 , GLuint v2 , GLuint v3) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4uiv)(GLuint program , GLint location , GLsizei count , const GLuint *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix2fv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLfloat *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix3fv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLfloat *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix4fv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLfloat *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix2dv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix3dv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix4dv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix2x3fv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLfloat *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix3x2fv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLfloat *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix2x4fv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLfloat *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix4x2fv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLfloat *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix3x4fv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLfloat *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix4x3fv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLfloat *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix2x3dv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix3x2dv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix2x4dv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix4x2dv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix3x4dv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix4x3dv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ValidateProgramPipeline)(GLuint pipeline) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetProgramPipelineInfoLog)(GLuint pipeline , GLsizei bufSize , GLsizei *length , GLchar *infoLog) = 0; }
+static bool DinamicGLFeature_ARB_separate_shader_objects_loaded = false; 
+static void InitDinamicGLFeature_ARB_separate_shader_objects() {
+		DynamicGL_UseProgramStages = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint pipeline , GLbitfield stages , GLuint program)>("glUseProgramStages"); 
+		DynamicGL_ActiveShaderProgram = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint pipeline , GLuint program)>("glActiveShaderProgram"); 
+		DynamicGL_CreateShaderProgramv = DynamicGL_LoadFunction<GLuint (DYNAMIC_GL_APIENTRYP)(GLenum type , GLsizei count , const GLchar* const)>("glCreateShaderProgramv"); 
+		DynamicGL_BindProgramPipeline = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint pipeline)>("glBindProgramPipeline"); 
+		DynamicGL_DeleteProgramPipelines = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei n , const GLuint *pipelines)>("glDeleteProgramPipelines"); 
+		DynamicGL_GenProgramPipelines = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei n , GLuint *pipelines)>("glGenProgramPipelines"); 
+		DynamicGL_IsProgramPipeline = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLuint pipeline)>("glIsProgramPipeline"); 
+		DynamicGL_GetProgramPipelineiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint pipeline , GLenum pname , GLint *params)>("glGetProgramPipelineiv"); 
+		DynamicGL_ProgramUniform1i = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLint v0)>("glProgramUniform1i"); 
+		DynamicGL_ProgramUniform1iv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLint *value)>("glProgramUniform1iv"); 
+		DynamicGL_ProgramUniform1f = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLfloat v0)>("glProgramUniform1f"); 
+		DynamicGL_ProgramUniform1fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLfloat *value)>("glProgramUniform1fv"); 
+		DynamicGL_ProgramUniform1d = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLdouble v0)>("glProgramUniform1d"); 
+		DynamicGL_ProgramUniform1dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLdouble *value)>("glProgramUniform1dv"); 
+		DynamicGL_ProgramUniform1ui = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLuint v0)>("glProgramUniform1ui"); 
+		DynamicGL_ProgramUniform1uiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLuint *value)>("glProgramUniform1uiv"); 
+		DynamicGL_ProgramUniform2i = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLint v0 , GLint v1)>("glProgramUniform2i"); 
+		DynamicGL_ProgramUniform2iv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLint *value)>("glProgramUniform2iv"); 
+		DynamicGL_ProgramUniform2f = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLfloat v0 , GLfloat v1)>("glProgramUniform2f"); 
+		DynamicGL_ProgramUniform2fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLfloat *value)>("glProgramUniform2fv"); 
+		DynamicGL_ProgramUniform2d = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLdouble v0 , GLdouble v1)>("glProgramUniform2d"); 
+		DynamicGL_ProgramUniform2dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLdouble *value)>("glProgramUniform2dv"); 
+		DynamicGL_ProgramUniform2ui = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLuint v0 , GLuint v1)>("glProgramUniform2ui"); 
+		DynamicGL_ProgramUniform2uiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLuint *value)>("glProgramUniform2uiv"); 
+		DynamicGL_ProgramUniform3i = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLint v0 , GLint v1 , GLint v2)>("glProgramUniform3i"); 
+		DynamicGL_ProgramUniform3iv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLint *value)>("glProgramUniform3iv"); 
+		DynamicGL_ProgramUniform3f = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLfloat v0 , GLfloat v1 , GLfloat v2)>("glProgramUniform3f"); 
+		DynamicGL_ProgramUniform3fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLfloat *value)>("glProgramUniform3fv"); 
+		DynamicGL_ProgramUniform3d = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLdouble v0 , GLdouble v1 , GLdouble v2)>("glProgramUniform3d"); 
+		DynamicGL_ProgramUniform3dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLdouble *value)>("glProgramUniform3dv"); 
+		DynamicGL_ProgramUniform3ui = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLuint v0 , GLuint v1 , GLuint v2)>("glProgramUniform3ui"); 
+		DynamicGL_ProgramUniform3uiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLuint *value)>("glProgramUniform3uiv"); 
+		DynamicGL_ProgramUniform4i = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLint v0 , GLint v1 , GLint v2 , GLint v3)>("glProgramUniform4i"); 
+		DynamicGL_ProgramUniform4iv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLint *value)>("glProgramUniform4iv"); 
+		DynamicGL_ProgramUniform4f = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLfloat v0 , GLfloat v1 , GLfloat v2 , GLfloat v3)>("glProgramUniform4f"); 
+		DynamicGL_ProgramUniform4fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLfloat *value)>("glProgramUniform4fv"); 
+		DynamicGL_ProgramUniform4d = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLdouble v0 , GLdouble v1 , GLdouble v2 , GLdouble v3)>("glProgramUniform4d"); 
+		DynamicGL_ProgramUniform4dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLdouble *value)>("glProgramUniform4dv"); 
+		DynamicGL_ProgramUniform4ui = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLuint v0 , GLuint v1 , GLuint v2 , GLuint v3)>("glProgramUniform4ui"); 
+		DynamicGL_ProgramUniform4uiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLuint *value)>("glProgramUniform4uiv"); 
+		DynamicGL_ProgramUniformMatrix2fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLfloat *value)>("glProgramUniformMatrix2fv"); 
+		DynamicGL_ProgramUniformMatrix3fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLfloat *value)>("glProgramUniformMatrix3fv"); 
+		DynamicGL_ProgramUniformMatrix4fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLfloat *value)>("glProgramUniformMatrix4fv"); 
+		DynamicGL_ProgramUniformMatrix2dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glProgramUniformMatrix2dv"); 
+		DynamicGL_ProgramUniformMatrix3dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glProgramUniformMatrix3dv"); 
+		DynamicGL_ProgramUniformMatrix4dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glProgramUniformMatrix4dv"); 
+		DynamicGL_ProgramUniformMatrix2x3fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLfloat *value)>("glProgramUniformMatrix2x3fv"); 
+		DynamicGL_ProgramUniformMatrix3x2fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLfloat *value)>("glProgramUniformMatrix3x2fv"); 
+		DynamicGL_ProgramUniformMatrix2x4fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLfloat *value)>("glProgramUniformMatrix2x4fv"); 
+		DynamicGL_ProgramUniformMatrix4x2fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLfloat *value)>("glProgramUniformMatrix4x2fv"); 
+		DynamicGL_ProgramUniformMatrix3x4fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLfloat *value)>("glProgramUniformMatrix3x4fv"); 
+		DynamicGL_ProgramUniformMatrix4x3fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLfloat *value)>("glProgramUniformMatrix4x3fv"); 
+		DynamicGL_ProgramUniformMatrix2x3dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glProgramUniformMatrix2x3dv"); 
+		DynamicGL_ProgramUniformMatrix3x2dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glProgramUniformMatrix3x2dv"); 
+		DynamicGL_ProgramUniformMatrix2x4dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glProgramUniformMatrix2x4dv"); 
+		DynamicGL_ProgramUniformMatrix4x2dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glProgramUniformMatrix4x2dv"); 
+		DynamicGL_ProgramUniformMatrix3x4dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glProgramUniformMatrix3x4dv"); 
+		DynamicGL_ProgramUniformMatrix4x3dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value)>("glProgramUniformMatrix4x3dv"); 
+		DynamicGL_ValidateProgramPipeline = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint pipeline)>("glValidateProgramPipeline"); 
+		DynamicGL_GetProgramPipelineInfoLog = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint pipeline , GLsizei bufSize , GLsizei *length , GLchar *infoLog)>("glGetProgramPipelineInfoLog"); 
+		DinamicGLFeature_ARB_separate_shader_objects_loaded = true; 
+}
+bool DinamicGLFeature_ARB_separate_shader_objects_Supported() {
+		if (!DinamicGLFeature_ARB_separate_shader_objects_loaded) {
+			InitDinamicGLFeature_ARB_separate_shader_objects();
+		}
+		if (DynamicGL_UseProgramStages==0) return false; 
+		if (DynamicGL_ActiveShaderProgram==0) return false; 
+		if (DynamicGL_CreateShaderProgramv==0) return false; 
+		if (DynamicGL_BindProgramPipeline==0) return false; 
+		if (DynamicGL_DeleteProgramPipelines==0) return false; 
+		if (DynamicGL_GenProgramPipelines==0) return false; 
+		if (DynamicGL_IsProgramPipeline==0) return false; 
+		if (DynamicGL_GetProgramPipelineiv==0) return false; 
+		if (DynamicGL_ProgramUniform1i==0) return false; 
+		if (DynamicGL_ProgramUniform1iv==0) return false; 
+		if (DynamicGL_ProgramUniform1f==0) return false; 
+		if (DynamicGL_ProgramUniform1fv==0) return false; 
+		if (DynamicGL_ProgramUniform1d==0) return false; 
+		if (DynamicGL_ProgramUniform1dv==0) return false; 
+		if (DynamicGL_ProgramUniform1ui==0) return false; 
+		if (DynamicGL_ProgramUniform1uiv==0) return false; 
+		if (DynamicGL_ProgramUniform2i==0) return false; 
+		if (DynamicGL_ProgramUniform2iv==0) return false; 
+		if (DynamicGL_ProgramUniform2f==0) return false; 
+		if (DynamicGL_ProgramUniform2fv==0) return false; 
+		if (DynamicGL_ProgramUniform2d==0) return false; 
+		if (DynamicGL_ProgramUniform2dv==0) return false; 
+		if (DynamicGL_ProgramUniform2ui==0) return false; 
+		if (DynamicGL_ProgramUniform2uiv==0) return false; 
+		if (DynamicGL_ProgramUniform3i==0) return false; 
+		if (DynamicGL_ProgramUniform3iv==0) return false; 
+		if (DynamicGL_ProgramUniform3f==0) return false; 
+		if (DynamicGL_ProgramUniform3fv==0) return false; 
+		if (DynamicGL_ProgramUniform3d==0) return false; 
+		if (DynamicGL_ProgramUniform3dv==0) return false; 
+		if (DynamicGL_ProgramUniform3ui==0) return false; 
+		if (DynamicGL_ProgramUniform3uiv==0) return false; 
+		if (DynamicGL_ProgramUniform4i==0) return false; 
+		if (DynamicGL_ProgramUniform4iv==0) return false; 
+		if (DynamicGL_ProgramUniform4f==0) return false; 
+		if (DynamicGL_ProgramUniform4fv==0) return false; 
+		if (DynamicGL_ProgramUniform4d==0) return false; 
+		if (DynamicGL_ProgramUniform4dv==0) return false; 
+		if (DynamicGL_ProgramUniform4ui==0) return false; 
+		if (DynamicGL_ProgramUniform4uiv==0) return false; 
+		if (DynamicGL_ProgramUniformMatrix2fv==0) return false; 
+		if (DynamicGL_ProgramUniformMatrix3fv==0) return false; 
+		if (DynamicGL_ProgramUniformMatrix4fv==0) return false; 
+		if (DynamicGL_ProgramUniformMatrix2dv==0) return false; 
+		if (DynamicGL_ProgramUniformMatrix3dv==0) return false; 
+		if (DynamicGL_ProgramUniformMatrix4dv==0) return false; 
+		if (DynamicGL_ProgramUniformMatrix2x3fv==0) return false; 
+		if (DynamicGL_ProgramUniformMatrix3x2fv==0) return false; 
+		if (DynamicGL_ProgramUniformMatrix2x4fv==0) return false; 
+		if (DynamicGL_ProgramUniformMatrix4x2fv==0) return false; 
+		if (DynamicGL_ProgramUniformMatrix3x4fv==0) return false; 
+		if (DynamicGL_ProgramUniformMatrix4x3fv==0) return false; 
+		if (DynamicGL_ProgramUniformMatrix2x3dv==0) return false; 
+		if (DynamicGL_ProgramUniformMatrix3x2dv==0) return false; 
+		if (DynamicGL_ProgramUniformMatrix2x4dv==0) return false; 
+		if (DynamicGL_ProgramUniformMatrix4x2dv==0) return false; 
+		if (DynamicGL_ProgramUniformMatrix3x4dv==0) return false; 
+		if (DynamicGL_ProgramUniformMatrix4x3dv==0) return false; 
+		if (DynamicGL_ValidateProgramPipeline==0) return false; 
+		if (DynamicGL_GetProgramPipelineInfoLog==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_separate_shader_objects*/
+
+/*ATI_texture_float*/
+#ifdef USE_DYNAMIC_GL_ATI_texture_float
+static bool DinamicGLFeature_ATI_texture_float_loaded = false; 
+static void InitDinamicGLFeature_ATI_texture_float() {
+		DinamicGLFeature_ATI_texture_float_loaded = true; 
+}
+bool DinamicGLFeature_ATI_texture_float_Supported() {
+		if (!DinamicGLFeature_ATI_texture_float_loaded) {
+			InitDinamicGLFeature_ATI_texture_float();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ATI_texture_float*/
+
 /*EXT_blend_minmax*/
 #ifdef USE_DYNAMIC_GL_EXT_blend_minmax
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationEXT)(GLenum mode) = 0; }
@@ -7808,19 +10379,19 @@ bool DinamicGLFeature_EXT_blend_minmax_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_EXT_blend_minmax*/
 
-/*ATI_texture_float*/
-#ifdef USE_DYNAMIC_GL_ATI_texture_float
-static bool DinamicGLFeature_ATI_texture_float_loaded = false; 
-static void InitDinamicGLFeature_ATI_texture_float() {
-		DinamicGLFeature_ATI_texture_float_loaded = true; 
+/*NV_float_buffer*/
+#ifdef USE_DYNAMIC_GL_NV_float_buffer
+static bool DinamicGLFeature_NV_float_buffer_loaded = false; 
+static void InitDinamicGLFeature_NV_float_buffer() {
+		DinamicGLFeature_NV_float_buffer_loaded = true; 
 }
-bool DinamicGLFeature_ATI_texture_float_Supported() {
-		if (!DinamicGLFeature_ATI_texture_float_loaded) {
-			InitDinamicGLFeature_ATI_texture_float();
+bool DinamicGLFeature_NV_float_buffer_Supported() {
+		if (!DinamicGLFeature_NV_float_buffer_loaded) {
+			InitDinamicGLFeature_NV_float_buffer();
 		}
 		return true;
 }
-#endif /*USE_DYNAMIC_GL_ATI_texture_float*/
+#endif /*USE_DYNAMIC_GL_NV_float_buffer*/
 
 /*SGIX_calligraphic_fragment*/
 #ifdef USE_DYNAMIC_GL_SGIX_calligraphic_fragment
@@ -7836,19 +10407,122 @@ bool DinamicGLFeature_SGIX_calligraphic_fragment_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_SGIX_calligraphic_fragment*/
 
-/*NV_float_buffer*/
-#ifdef USE_DYNAMIC_GL_NV_float_buffer
-static bool DinamicGLFeature_NV_float_buffer_loaded = false; 
-static void InitDinamicGLFeature_NV_float_buffer() {
-		DinamicGLFeature_NV_float_buffer_loaded = true; 
+/*ARB_texture_storage*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_storage
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexStorage1D)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexStorage2D)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexStorage3D)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureStorage1DEXT)(GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureStorage2DEXT)(GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureStorage3DEXT)(GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth) = 0; }
+static bool DinamicGLFeature_ARB_texture_storage_loaded = false; 
+static void InitDinamicGLFeature_ARB_texture_storage() {
+		DynamicGL_TexStorage1D = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width)>("glTexStorage1D"); 
+		DynamicGL_TexStorage2D = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height)>("glTexStorage2D"); 
+		DynamicGL_TexStorage3D = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth)>("glTexStorage3D"); 
+		DynamicGL_TextureStorage1DEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width)>("glTextureStorage1DEXT"); 
+		DynamicGL_TextureStorage2DEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height)>("glTextureStorage2DEXT"); 
+		DynamicGL_TextureStorage3DEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth)>("glTextureStorage3DEXT"); 
+		DinamicGLFeature_ARB_texture_storage_loaded = true; 
 }
-bool DinamicGLFeature_NV_float_buffer_Supported() {
-		if (!DinamicGLFeature_NV_float_buffer_loaded) {
-			InitDinamicGLFeature_NV_float_buffer();
+bool DinamicGLFeature_ARB_texture_storage_Supported() {
+		if (!DinamicGLFeature_ARB_texture_storage_loaded) {
+			InitDinamicGLFeature_ARB_texture_storage();
 		}
+		if (DynamicGL_TexStorage1D==0) return false; 
+		if (DynamicGL_TexStorage2D==0) return false; 
+		if (DynamicGL_TexStorage3D==0) return false; 
+		if (DynamicGL_TextureStorage1DEXT==0) return false; 
+		if (DynamicGL_TextureStorage2DEXT==0) return false; 
+		if (DynamicGL_TextureStorage3DEXT==0) return false; 
 		return true;
 }
-#endif /*USE_DYNAMIC_GL_NV_float_buffer*/
+#endif /*USE_DYNAMIC_GL_ARB_texture_storage*/
+
+/*NV_bindless_texture*/
+#ifdef USE_DYNAMIC_GL_NV_bindless_texture
+extern "C" { GLuint64 (DYNAMIC_GL_APIENTRYP DynamicGL_GetTextureHandleNV)(GLuint texture) = 0; }
+extern "C" { GLuint64 (DYNAMIC_GL_APIENTRYP DynamicGL_GetTextureSamplerHandleNV)(GLuint texture , GLuint sampler) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MakeTextureHandleResidentNV)(GLuint64 handle) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MakeTextureHandleNonResidentNV)(GLuint64 handle) = 0; }
+extern "C" { GLuint64 (DYNAMIC_GL_APIENTRYP DynamicGL_GetImageHandleNV)(GLuint texture , GLint level , GLboolean layered , GLint layer , GLenum format) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MakeImageHandleResidentNV)(GLuint64 handle , GLenum access) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MakeImageHandleNonResidentNV)(GLuint64 handle) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformHandleui64NV)(GLint location , GLuint64 value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformHandleui64vNV)(GLint location , GLsizei count , const GLuint64 *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformHandleui64NV)(GLuint program , GLint location , GLuint64 value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformHandleui64vNV)(GLuint program , GLint location , GLsizei count , const GLuint64 *values) = 0; }
+extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsTextureHandleResidentNV)(GLuint64 handle) = 0; }
+extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsImageHandleResidentNV)(GLuint64 handle) = 0; }
+static bool DinamicGLFeature_NV_bindless_texture_loaded = false; 
+static void InitDinamicGLFeature_NV_bindless_texture() {
+		DynamicGL_GetTextureHandleNV = DynamicGL_LoadFunction<GLuint64 (DYNAMIC_GL_APIENTRYP)(GLuint texture)>("glGetTextureHandleNV"); 
+		DynamicGL_GetTextureSamplerHandleNV = DynamicGL_LoadFunction<GLuint64 (DYNAMIC_GL_APIENTRYP)(GLuint texture , GLuint sampler)>("glGetTextureSamplerHandleNV"); 
+		DynamicGL_MakeTextureHandleResidentNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint64 handle)>("glMakeTextureHandleResidentNV"); 
+		DynamicGL_MakeTextureHandleNonResidentNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint64 handle)>("glMakeTextureHandleNonResidentNV"); 
+		DynamicGL_GetImageHandleNV = DynamicGL_LoadFunction<GLuint64 (DYNAMIC_GL_APIENTRYP)(GLuint texture , GLint level , GLboolean layered , GLint layer , GLenum format)>("glGetImageHandleNV"); 
+		DynamicGL_MakeImageHandleResidentNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint64 handle , GLenum access)>("glMakeImageHandleResidentNV"); 
+		DynamicGL_MakeImageHandleNonResidentNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint64 handle)>("glMakeImageHandleNonResidentNV"); 
+		DynamicGL_UniformHandleui64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLuint64 value)>("glUniformHandleui64NV"); 
+		DynamicGL_UniformHandleui64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLsizei count , const GLuint64 *value)>("glUniformHandleui64vNV"); 
+		DynamicGL_ProgramUniformHandleui64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLuint64 value)>("glProgramUniformHandleui64NV"); 
+		DynamicGL_ProgramUniformHandleui64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLuint64 *values)>("glProgramUniformHandleui64vNV"); 
+		DynamicGL_IsTextureHandleResidentNV = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLuint64 handle)>("glIsTextureHandleResidentNV"); 
+		DynamicGL_IsImageHandleResidentNV = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLuint64 handle)>("glIsImageHandleResidentNV"); 
+		DinamicGLFeature_NV_bindless_texture_loaded = true; 
+}
+bool DinamicGLFeature_NV_bindless_texture_Supported() {
+		if (!DinamicGLFeature_NV_bindless_texture_loaded) {
+			InitDinamicGLFeature_NV_bindless_texture();
+		}
+		if (DynamicGL_GetTextureHandleNV==0) return false; 
+		if (DynamicGL_GetTextureSamplerHandleNV==0) return false; 
+		if (DynamicGL_MakeTextureHandleResidentNV==0) return false; 
+		if (DynamicGL_MakeTextureHandleNonResidentNV==0) return false; 
+		if (DynamicGL_GetImageHandleNV==0) return false; 
+		if (DynamicGL_MakeImageHandleResidentNV==0) return false; 
+		if (DynamicGL_MakeImageHandleNonResidentNV==0) return false; 
+		if (DynamicGL_UniformHandleui64NV==0) return false; 
+		if (DynamicGL_UniformHandleui64vNV==0) return false; 
+		if (DynamicGL_ProgramUniformHandleui64NV==0) return false; 
+		if (DynamicGL_ProgramUniformHandleui64vNV==0) return false; 
+		if (DynamicGL_IsTextureHandleResidentNV==0) return false; 
+		if (DynamicGL_IsImageHandleResidentNV==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_bindless_texture*/
+
+/*SGIX_instruments*/
+#ifdef USE_DYNAMIC_GL_SGIX_instruments
+extern "C" { GLint (DYNAMIC_GL_APIENTRYP DynamicGL_GetInstrumentsSGIX)() = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_InstrumentsBufferSGIX)(GLsizei size , GLint *buffer) = 0; }
+extern "C" { GLint (DYNAMIC_GL_APIENTRYP DynamicGL_PollInstrumentsSGIX)(GLint *marker_p) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ReadInstrumentsSGIX)(GLint marker) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_StartInstrumentsSGIX)() = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_StopInstrumentsSGIX)(GLint marker) = 0; }
+static bool DinamicGLFeature_SGIX_instruments_loaded = false; 
+static void InitDinamicGLFeature_SGIX_instruments() {
+		DynamicGL_GetInstrumentsSGIX = DynamicGL_LoadFunction<GLint (DYNAMIC_GL_APIENTRYP)()>("glGetInstrumentsSGIX"); 
+		DynamicGL_InstrumentsBufferSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei size , GLint *buffer)>("glInstrumentsBufferSGIX"); 
+		DynamicGL_PollInstrumentsSGIX = DynamicGL_LoadFunction<GLint (DYNAMIC_GL_APIENTRYP)(GLint *marker_p)>("glPollInstrumentsSGIX"); 
+		DynamicGL_ReadInstrumentsSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint marker)>("glReadInstrumentsSGIX"); 
+		DynamicGL_StartInstrumentsSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)()>("glStartInstrumentsSGIX"); 
+		DynamicGL_StopInstrumentsSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint marker)>("glStopInstrumentsSGIX"); 
+		DinamicGLFeature_SGIX_instruments_loaded = true; 
+}
+bool DinamicGLFeature_SGIX_instruments_Supported() {
+		if (!DinamicGLFeature_SGIX_instruments_loaded) {
+			InitDinamicGLFeature_SGIX_instruments();
+		}
+		if (DynamicGL_GetInstrumentsSGIX==0) return false; 
+		if (DynamicGL_InstrumentsBufferSGIX==0) return false; 
+		if (DynamicGL_PollInstrumentsSGIX==0) return false; 
+		if (DynamicGL_ReadInstrumentsSGIX==0) return false; 
+		if (DynamicGL_StartInstrumentsSGIX==0) return false; 
+		if (DynamicGL_StopInstrumentsSGIX==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_SGIX_instruments*/
 
 /*SGIX_fragment_lighting*/
 #ifdef USE_DYNAMIC_GL_SGIX_fragment_lighting
@@ -7918,38 +10592,6 @@ bool DinamicGLFeature_SGIX_fragment_lighting_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_SGIX_fragment_lighting*/
 
-/*SGIX_instruments*/
-#ifdef USE_DYNAMIC_GL_SGIX_instruments
-extern "C" { GLint (DYNAMIC_GL_APIENTRYP DynamicGL_GetInstrumentsSGIX)() = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_InstrumentsBufferSGIX)(GLsizei size , GLint *buffer) = 0; }
-extern "C" { GLint (DYNAMIC_GL_APIENTRYP DynamicGL_PollInstrumentsSGIX)(GLint *marker_p) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ReadInstrumentsSGIX)(GLint marker) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_StartInstrumentsSGIX)() = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_StopInstrumentsSGIX)(GLint marker) = 0; }
-static bool DinamicGLFeature_SGIX_instruments_loaded = false; 
-static void InitDinamicGLFeature_SGIX_instruments() {
-		DynamicGL_GetInstrumentsSGIX = DynamicGL_LoadFunction<GLint (DYNAMIC_GL_APIENTRYP)()>("glGetInstrumentsSGIX"); 
-		DynamicGL_InstrumentsBufferSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei size , GLint *buffer)>("glInstrumentsBufferSGIX"); 
-		DynamicGL_PollInstrumentsSGIX = DynamicGL_LoadFunction<GLint (DYNAMIC_GL_APIENTRYP)(GLint *marker_p)>("glPollInstrumentsSGIX"); 
-		DynamicGL_ReadInstrumentsSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint marker)>("glReadInstrumentsSGIX"); 
-		DynamicGL_StartInstrumentsSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)()>("glStartInstrumentsSGIX"); 
-		DynamicGL_StopInstrumentsSGIX = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint marker)>("glStopInstrumentsSGIX"); 
-		DinamicGLFeature_SGIX_instruments_loaded = true; 
-}
-bool DinamicGLFeature_SGIX_instruments_Supported() {
-		if (!DinamicGLFeature_SGIX_instruments_loaded) {
-			InitDinamicGLFeature_SGIX_instruments();
-		}
-		if (DynamicGL_GetInstrumentsSGIX==0) return false; 
-		if (DynamicGL_InstrumentsBufferSGIX==0) return false; 
-		if (DynamicGL_PollInstrumentsSGIX==0) return false; 
-		if (DynamicGL_ReadInstrumentsSGIX==0) return false; 
-		if (DynamicGL_StartInstrumentsSGIX==0) return false; 
-		if (DynamicGL_StopInstrumentsSGIX==0) return false; 
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_SGIX_instruments*/
-
 /*SGIX_ycrcba*/
 #ifdef USE_DYNAMIC_GL_SGIX_ycrcba
 static bool DinamicGLFeature_SGIX_ycrcba_loaded = false; 
@@ -8006,6 +10648,44 @@ bool DinamicGLFeature_EXT_422_pixels_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_EXT_422_pixels*/
 
+/*ARB_shader_subroutine*/
+#ifdef USE_DYNAMIC_GL_ARB_shader_subroutine
+extern "C" { GLint (DYNAMIC_GL_APIENTRYP DynamicGL_GetSubroutineUniformLocation)(GLuint program , GLenum shadertype , const GLchar *name) = 0; }
+extern "C" { GLuint (DYNAMIC_GL_APIENTRYP DynamicGL_GetSubroutineIndex)(GLuint program , GLenum shadertype , const GLchar *name) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetActiveSubroutineUniformiv)(GLuint program , GLenum shadertype , GLuint index , GLenum pname , GLint *values) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetActiveSubroutineUniformName)(GLuint program , GLenum shadertype , GLuint index , GLsizei bufsize , GLsizei *length , GLchar *name) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetActiveSubroutineName)(GLuint program , GLenum shadertype , GLuint index , GLsizei bufsize , GLsizei *length , GLchar *name) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformSubroutinesuiv)(GLenum shadertype , GLsizei count , const GLuint *indices) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetUniformSubroutineuiv)(GLenum shadertype , GLint location , GLuint *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetProgramStageiv)(GLuint program , GLenum shadertype , GLenum pname , GLint *values) = 0; }
+static bool DinamicGLFeature_ARB_shader_subroutine_loaded = false; 
+static void InitDinamicGLFeature_ARB_shader_subroutine() {
+		DynamicGL_GetSubroutineUniformLocation = DynamicGL_LoadFunction<GLint (DYNAMIC_GL_APIENTRYP)(GLuint program , GLenum shadertype , const GLchar *name)>("glGetSubroutineUniformLocation"); 
+		DynamicGL_GetSubroutineIndex = DynamicGL_LoadFunction<GLuint (DYNAMIC_GL_APIENTRYP)(GLuint program , GLenum shadertype , const GLchar *name)>("glGetSubroutineIndex"); 
+		DynamicGL_GetActiveSubroutineUniformiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLenum shadertype , GLuint index , GLenum pname , GLint *values)>("glGetActiveSubroutineUniformiv"); 
+		DynamicGL_GetActiveSubroutineUniformName = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLenum shadertype , GLuint index , GLsizei bufsize , GLsizei *length , GLchar *name)>("glGetActiveSubroutineUniformName"); 
+		DynamicGL_GetActiveSubroutineName = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLenum shadertype , GLuint index , GLsizei bufsize , GLsizei *length , GLchar *name)>("glGetActiveSubroutineName"); 
+		DynamicGL_UniformSubroutinesuiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum shadertype , GLsizei count , const GLuint *indices)>("glUniformSubroutinesuiv"); 
+		DynamicGL_GetUniformSubroutineuiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum shadertype , GLint location , GLuint *params)>("glGetUniformSubroutineuiv"); 
+		DynamicGL_GetProgramStageiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLenum shadertype , GLenum pname , GLint *values)>("glGetProgramStageiv"); 
+		DinamicGLFeature_ARB_shader_subroutine_loaded = true; 
+}
+bool DinamicGLFeature_ARB_shader_subroutine_Supported() {
+		if (!DinamicGLFeature_ARB_shader_subroutine_loaded) {
+			InitDinamicGLFeature_ARB_shader_subroutine();
+		}
+		if (DynamicGL_GetSubroutineUniformLocation==0) return false; 
+		if (DynamicGL_GetSubroutineIndex==0) return false; 
+		if (DynamicGL_GetActiveSubroutineUniformiv==0) return false; 
+		if (DynamicGL_GetActiveSubroutineUniformName==0) return false; 
+		if (DynamicGL_GetActiveSubroutineName==0) return false; 
+		if (DynamicGL_UniformSubroutinesuiv==0) return false; 
+		if (DynamicGL_GetUniformSubroutineuiv==0) return false; 
+		if (DynamicGL_GetProgramStageiv==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_shader_subroutine*/
+
 /*NV_transform_feedback*/
 #ifdef USE_DYNAMIC_GL_NV_transform_feedback
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BeginTransformFeedbackNV)(GLenum primitiveMode) = 0; }
@@ -8019,6 +10699,7 @@ extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ActiveVaryingNV)(GLuint progra
 extern "C" { GLint (DYNAMIC_GL_APIENTRYP DynamicGL_GetVaryingLocationNV)(GLuint program , const GLchar *name) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetActiveVaryingNV)(GLuint program , GLuint index , GLsizei bufSize , GLsizei *length , GLsizei *size , GLenum *type , GLchar *name) = 0; }
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTransformFeedbackVaryingNV)(GLuint program , GLuint index , GLint *location) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TransformFeedbackStreamAttribsNV)(GLsizei count , const GLint *attribs , GLsizei nbuffers , const GLint *bufstreams , GLenum bufferMode) = 0; }
 static bool DinamicGLFeature_NV_transform_feedback_loaded = false; 
 static void InitDinamicGLFeature_NV_transform_feedback() {
 		DynamicGL_BeginTransformFeedbackNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum primitiveMode)>("glBeginTransformFeedbackNV"); 
@@ -8032,6 +10713,7 @@ static void InitDinamicGLFeature_NV_transform_feedback() {
 		DynamicGL_GetVaryingLocationNV = DynamicGL_LoadFunction<GLint (DYNAMIC_GL_APIENTRYP)(GLuint program , const GLchar *name)>("glGetVaryingLocationNV"); 
 		DynamicGL_GetActiveVaryingNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLuint index , GLsizei bufSize , GLsizei *length , GLsizei *size , GLenum *type , GLchar *name)>("glGetActiveVaryingNV"); 
 		DynamicGL_GetTransformFeedbackVaryingNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLuint index , GLint *location)>("glGetTransformFeedbackVaryingNV"); 
+		DynamicGL_TransformFeedbackStreamAttribsNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei count , const GLint *attribs , GLsizei nbuffers , const GLint *bufstreams , GLenum bufferMode)>("glTransformFeedbackStreamAttribsNV"); 
 		DinamicGLFeature_NV_transform_feedback_loaded = true; 
 }
 bool DinamicGLFeature_NV_transform_feedback_Supported() {
@@ -8049,6 +10731,7 @@ bool DinamicGLFeature_NV_transform_feedback_Supported() {
 		if (DynamicGL_GetVaryingLocationNV==0) return false; 
 		if (DynamicGL_GetActiveVaryingNV==0) return false; 
 		if (DynamicGL_GetTransformFeedbackVaryingNV==0) return false; 
+		if (DynamicGL_TransformFeedbackStreamAttribsNV==0) return false; 
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_transform_feedback*/
@@ -8122,6 +10805,20 @@ bool DinamicGLFeature_NV_register_combiners2_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_NV_register_combiners2*/
 
+/*VERSION_2_1_DEPRECATED*/
+#ifdef USE_DYNAMIC_GL_VERSION_2_1_DEPRECATED
+static bool DinamicGLFeature_VERSION_2_1_DEPRECATED_loaded = false; 
+static void InitDinamicGLFeature_VERSION_2_1_DEPRECATED() {
+		DinamicGLFeature_VERSION_2_1_DEPRECATED_loaded = true; 
+}
+bool DinamicGLFeature_VERSION_2_1_DEPRECATED_Supported() {
+		if (!DinamicGLFeature_VERSION_2_1_DEPRECATED_loaded) {
+			InitDinamicGLFeature_VERSION_2_1_DEPRECATED();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_VERSION_2_1_DEPRECATED*/
+
 /*EXT_clip_volume_hint*/
 #ifdef USE_DYNAMIC_GL_EXT_clip_volume_hint
 static bool DinamicGLFeature_EXT_clip_volume_hint_loaded = false; 
@@ -8169,6 +10866,50 @@ bool DinamicGLFeature_APPLE_transform_hint_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_APPLE_transform_hint*/
+
+/*ARB_viewport_array*/
+#ifdef USE_DYNAMIC_GL_ARB_viewport_array
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ViewportArrayv)(GLuint first , GLsizei count , const GLfloat *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ViewportIndexedf)(GLuint index , GLfloat x , GLfloat y , GLfloat w , GLfloat h) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ViewportIndexedfv)(GLuint index , const GLfloat *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ScissorArrayv)(GLuint first , GLsizei count , const GLint *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ScissorIndexed)(GLuint index , GLint left , GLint bottom , GLsizei width , GLsizei height) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ScissorIndexedv)(GLuint index , const GLint *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthRangeArrayv)(GLuint first , GLsizei count , const GLdouble *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthRangeIndexed)(GLuint index , GLdouble n , GLdouble f) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetFloati_v)(GLenum target , GLuint index , GLfloat *data) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetDoublei_v)(GLenum target , GLuint index , GLdouble *data) = 0; }
+static bool DinamicGLFeature_ARB_viewport_array_loaded = false; 
+static void InitDinamicGLFeature_ARB_viewport_array() {
+		DynamicGL_ViewportArrayv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint first , GLsizei count , const GLfloat *v)>("glViewportArrayv"); 
+		DynamicGL_ViewportIndexedf = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLfloat x , GLfloat y , GLfloat w , GLfloat h)>("glViewportIndexedf"); 
+		DynamicGL_ViewportIndexedfv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , const GLfloat *v)>("glViewportIndexedfv"); 
+		DynamicGL_ScissorArrayv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint first , GLsizei count , const GLint *v)>("glScissorArrayv"); 
+		DynamicGL_ScissorIndexed = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLint left , GLint bottom , GLsizei width , GLsizei height)>("glScissorIndexed"); 
+		DynamicGL_ScissorIndexedv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , const GLint *v)>("glScissorIndexedv"); 
+		DynamicGL_DepthRangeArrayv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint first , GLsizei count , const GLdouble *v)>("glDepthRangeArrayv"); 
+		DynamicGL_DepthRangeIndexed = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLdouble n , GLdouble f)>("glDepthRangeIndexed"); 
+		DynamicGL_GetFloati_v = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint index , GLfloat *data)>("glGetFloati_v"); 
+		DynamicGL_GetDoublei_v = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint index , GLdouble *data)>("glGetDoublei_v"); 
+		DinamicGLFeature_ARB_viewport_array_loaded = true; 
+}
+bool DinamicGLFeature_ARB_viewport_array_Supported() {
+		if (!DinamicGLFeature_ARB_viewport_array_loaded) {
+			InitDinamicGLFeature_ARB_viewport_array();
+		}
+		if (DynamicGL_ViewportArrayv==0) return false; 
+		if (DynamicGL_ViewportIndexedf==0) return false; 
+		if (DynamicGL_ViewportIndexedfv==0) return false; 
+		if (DynamicGL_ScissorArrayv==0) return false; 
+		if (DynamicGL_ScissorIndexed==0) return false; 
+		if (DynamicGL_ScissorIndexedv==0) return false; 
+		if (DynamicGL_DepthRangeArrayv==0) return false; 
+		if (DynamicGL_DepthRangeIndexed==0) return false; 
+		if (DynamicGL_GetFloati_v==0) return false; 
+		if (DynamicGL_GetDoublei_v==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_viewport_array*/
 
 /*NV_fragment_program2*/
 #ifdef USE_DYNAMIC_GL_NV_fragment_program2
@@ -8274,6 +11015,29 @@ bool DinamicGLFeature_EXT_texture_lod_bias_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_lod_bias*/
 
+/*NV_explicit_multisample*/
+#ifdef USE_DYNAMIC_GL_NV_explicit_multisample
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetMultisamplefvNV)(GLenum pname , GLuint index , GLfloat *val) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleMaskIndexedNV)(GLuint index , GLbitfield mask) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexRenderbufferNV)(GLenum target , GLuint renderbuffer) = 0; }
+static bool DinamicGLFeature_NV_explicit_multisample_loaded = false; 
+static void InitDinamicGLFeature_NV_explicit_multisample() {
+		DynamicGL_GetMultisamplefvNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , GLuint index , GLfloat *val)>("glGetMultisamplefvNV"); 
+		DynamicGL_SampleMaskIndexedNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLbitfield mask)>("glSampleMaskIndexedNV"); 
+		DynamicGL_TexRenderbufferNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint renderbuffer)>("glTexRenderbufferNV"); 
+		DinamicGLFeature_NV_explicit_multisample_loaded = true; 
+}
+bool DinamicGLFeature_NV_explicit_multisample_Supported() {
+		if (!DinamicGLFeature_NV_explicit_multisample_loaded) {
+			InitDinamicGLFeature_NV_explicit_multisample();
+		}
+		if (DynamicGL_GetMultisamplefvNV==0) return false; 
+		if (DynamicGL_SampleMaskIndexedNV==0) return false; 
+		if (DynamicGL_TexRenderbufferNV==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_explicit_multisample*/
+
 /*ATI_separate_stencil*/
 #ifdef USE_DYNAMIC_GL_ATI_separate_stencil
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilOpSeparateATI)(GLenum face , GLenum sfail , GLenum dpfail , GLenum dppass) = 0; }
@@ -8317,6 +11081,53 @@ bool DinamicGLFeature_APPLE_vertex_array_range_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_APPLE_vertex_array_range*/
 
+/*EXT_vertex_attrib_64bit*/
+#ifdef USE_DYNAMIC_GL_EXT_vertex_attrib_64bit
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL1dEXT)(GLuint index , GLdouble x) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL2dEXT)(GLuint index , GLdouble x , GLdouble y) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL3dEXT)(GLuint index , GLdouble x , GLdouble y , GLdouble z) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL4dEXT)(GLuint index , GLdouble x , GLdouble y , GLdouble z , GLdouble w) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL1dvEXT)(GLuint index , const GLdouble *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL2dvEXT)(GLuint index , const GLdouble *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL3dvEXT)(GLuint index , const GLdouble *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL4dvEXT)(GLuint index , const GLdouble *v) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribLPointerEXT)(GLuint index , GLint size , GLenum type , GLsizei stride , const GLvoid *pointer) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVertexAttribLdvEXT)(GLuint index , GLenum pname , GLdouble *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexArrayVertexAttribLOffsetEXT)(GLuint vaobj , GLuint buffer , GLuint index , GLint size , GLenum type , GLsizei stride , GLintptr offset) = 0; }
+static bool DinamicGLFeature_EXT_vertex_attrib_64bit_loaded = false; 
+static void InitDinamicGLFeature_EXT_vertex_attrib_64bit() {
+		DynamicGL_VertexAttribL1dEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLdouble x)>("glVertexAttribL1dEXT"); 
+		DynamicGL_VertexAttribL2dEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLdouble x , GLdouble y)>("glVertexAttribL2dEXT"); 
+		DynamicGL_VertexAttribL3dEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLdouble x , GLdouble y , GLdouble z)>("glVertexAttribL3dEXT"); 
+		DynamicGL_VertexAttribL4dEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLdouble x , GLdouble y , GLdouble z , GLdouble w)>("glVertexAttribL4dEXT"); 
+		DynamicGL_VertexAttribL1dvEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , const GLdouble *v)>("glVertexAttribL1dvEXT"); 
+		DynamicGL_VertexAttribL2dvEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , const GLdouble *v)>("glVertexAttribL2dvEXT"); 
+		DynamicGL_VertexAttribL3dvEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , const GLdouble *v)>("glVertexAttribL3dvEXT"); 
+		DynamicGL_VertexAttribL4dvEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , const GLdouble *v)>("glVertexAttribL4dvEXT"); 
+		DynamicGL_VertexAttribLPointerEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLint size , GLenum type , GLsizei stride , const GLvoid *pointer)>("glVertexAttribLPointerEXT"); 
+		DynamicGL_GetVertexAttribLdvEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLenum pname , GLdouble *params)>("glGetVertexAttribLdvEXT"); 
+		DynamicGL_VertexArrayVertexAttribLOffsetEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint vaobj , GLuint buffer , GLuint index , GLint size , GLenum type , GLsizei stride , GLintptr offset)>("glVertexArrayVertexAttribLOffsetEXT"); 
+		DinamicGLFeature_EXT_vertex_attrib_64bit_loaded = true; 
+}
+bool DinamicGLFeature_EXT_vertex_attrib_64bit_Supported() {
+		if (!DinamicGLFeature_EXT_vertex_attrib_64bit_loaded) {
+			InitDinamicGLFeature_EXT_vertex_attrib_64bit();
+		}
+		if (DynamicGL_VertexAttribL1dEXT==0) return false; 
+		if (DynamicGL_VertexAttribL2dEXT==0) return false; 
+		if (DynamicGL_VertexAttribL3dEXT==0) return false; 
+		if (DynamicGL_VertexAttribL4dEXT==0) return false; 
+		if (DynamicGL_VertexAttribL1dvEXT==0) return false; 
+		if (DynamicGL_VertexAttribL2dvEXT==0) return false; 
+		if (DynamicGL_VertexAttribL3dvEXT==0) return false; 
+		if (DynamicGL_VertexAttribL4dvEXT==0) return false; 
+		if (DynamicGL_VertexAttribLPointerEXT==0) return false; 
+		if (DynamicGL_GetVertexAttribLdvEXT==0) return false; 
+		if (DynamicGL_VertexArrayVertexAttribLOffsetEXT==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_EXT_vertex_attrib_64bit*/
+
 /*NV_conditional_render*/
 #ifdef USE_DYNAMIC_GL_NV_conditional_render
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BeginConditionalRenderNV)(GLuint id , GLenum mode) = 0; }
@@ -8351,6 +11162,82 @@ bool DinamicGLFeature_SGIS_point_line_texgen_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_SGIS_point_line_texgen*/
 
+/*ARB_blend_func_extended*/
+#ifdef USE_DYNAMIC_GL_ARB_blend_func_extended
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindFragDataLocationIndexed)(GLuint program , GLuint colorNumber , GLuint index , const GLchar *name) = 0; }
+extern "C" { GLint (DYNAMIC_GL_APIENTRYP DynamicGL_GetFragDataIndex)(GLuint program , const GLchar *name) = 0; }
+static bool DinamicGLFeature_ARB_blend_func_extended_loaded = false; 
+static void InitDinamicGLFeature_ARB_blend_func_extended() {
+		DynamicGL_BindFragDataLocationIndexed = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLuint colorNumber , GLuint index , const GLchar *name)>("glBindFragDataLocationIndexed"); 
+		DynamicGL_GetFragDataIndex = DynamicGL_LoadFunction<GLint (DYNAMIC_GL_APIENTRYP)(GLuint program , const GLchar *name)>("glGetFragDataIndex"); 
+		DinamicGLFeature_ARB_blend_func_extended_loaded = true; 
+}
+bool DinamicGLFeature_ARB_blend_func_extended_Supported() {
+		if (!DinamicGLFeature_ARB_blend_func_extended_loaded) {
+			InitDinamicGLFeature_ARB_blend_func_extended();
+		}
+		if (DynamicGL_BindFragDataLocationIndexed==0) return false; 
+		if (DynamicGL_GetFragDataIndex==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_blend_func_extended*/
+
+/*NV_shader_buffer_load*/
+#ifdef USE_DYNAMIC_GL_NV_shader_buffer_load
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MakeBufferResidentNV)(GLenum target , GLenum access) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MakeBufferNonResidentNV)(GLenum target) = 0; }
+extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsBufferResidentNV)(GLenum target) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MakeNamedBufferResidentNV)(GLuint buffer , GLenum access) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MakeNamedBufferNonResidentNV)(GLuint buffer) = 0; }
+extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsNamedBufferResidentNV)(GLuint buffer) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetBufferParameterui64vNV)(GLenum target , GLenum pname , GLuint64EXT *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetNamedBufferParameterui64vNV)(GLuint buffer , GLenum pname , GLuint64EXT *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetIntegerui64vNV)(GLenum value , GLuint64EXT *result) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniformui64NV)(GLint location , GLuint64EXT value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniformui64vNV)(GLint location , GLsizei count , const GLuint64EXT *value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetUniformui64vNV)(GLuint program , GLint location , GLuint64EXT *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformui64NV)(GLuint program , GLint location , GLuint64EXT value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformui64vNV)(GLuint program , GLint location , GLsizei count , const GLuint64EXT *value) = 0; }
+static bool DinamicGLFeature_NV_shader_buffer_load_loaded = false; 
+static void InitDinamicGLFeature_NV_shader_buffer_load() {
+		DynamicGL_MakeBufferResidentNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum access)>("glMakeBufferResidentNV"); 
+		DynamicGL_MakeBufferNonResidentNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target)>("glMakeBufferNonResidentNV"); 
+		DynamicGL_IsBufferResidentNV = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLenum target)>("glIsBufferResidentNV"); 
+		DynamicGL_MakeNamedBufferResidentNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint buffer , GLenum access)>("glMakeNamedBufferResidentNV"); 
+		DynamicGL_MakeNamedBufferNonResidentNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint buffer)>("glMakeNamedBufferNonResidentNV"); 
+		DynamicGL_IsNamedBufferResidentNV = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLuint buffer)>("glIsNamedBufferResidentNV"); 
+		DynamicGL_GetBufferParameterui64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum pname , GLuint64EXT *params)>("glGetBufferParameterui64vNV"); 
+		DynamicGL_GetNamedBufferParameterui64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint buffer , GLenum pname , GLuint64EXT *params)>("glGetNamedBufferParameterui64vNV"); 
+		DynamicGL_GetIntegerui64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum value , GLuint64EXT *result)>("glGetIntegerui64vNV"); 
+		DynamicGL_Uniformui64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLuint64EXT value)>("glUniformui64NV"); 
+		DynamicGL_Uniformui64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint location , GLsizei count , const GLuint64EXT *value)>("glUniformui64vNV"); 
+		DynamicGL_GetUniformui64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLuint64EXT *params)>("glGetUniformui64vNV"); 
+		DynamicGL_ProgramUniformui64NV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLuint64EXT value)>("glProgramUniformui64NV"); 
+		DynamicGL_ProgramUniformui64vNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint program , GLint location , GLsizei count , const GLuint64EXT *value)>("glProgramUniformui64vNV"); 
+		DinamicGLFeature_NV_shader_buffer_load_loaded = true; 
+}
+bool DinamicGLFeature_NV_shader_buffer_load_Supported() {
+		if (!DinamicGLFeature_NV_shader_buffer_load_loaded) {
+			InitDinamicGLFeature_NV_shader_buffer_load();
+		}
+		if (DynamicGL_MakeBufferResidentNV==0) return false; 
+		if (DynamicGL_MakeBufferNonResidentNV==0) return false; 
+		if (DynamicGL_IsBufferResidentNV==0) return false; 
+		if (DynamicGL_MakeNamedBufferResidentNV==0) return false; 
+		if (DynamicGL_MakeNamedBufferNonResidentNV==0) return false; 
+		if (DynamicGL_IsNamedBufferResidentNV==0) return false; 
+		if (DynamicGL_GetBufferParameterui64vNV==0) return false; 
+		if (DynamicGL_GetNamedBufferParameterui64vNV==0) return false; 
+		if (DynamicGL_GetIntegerui64vNV==0) return false; 
+		if (DynamicGL_Uniformui64NV==0) return false; 
+		if (DynamicGL_Uniformui64vNV==0) return false; 
+		if (DynamicGL_GetUniformui64vNV==0) return false; 
+		if (DynamicGL_ProgramUniformui64NV==0) return false; 
+		if (DynamicGL_ProgramUniformui64vNV==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_shader_buffer_load*/
+
 /*EXT_fog_coord*/
 #ifdef USE_DYNAMIC_GL_EXT_fog_coord
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoordfEXT)(GLfloat coord) = 0; }
@@ -8379,155 +11266,6 @@ bool DinamicGLFeature_EXT_fog_coord_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_fog_coord*/
-
-/*VERSION_1_4*/
-#ifdef USE_DYNAMIC_GL_VERSION_1_4
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFuncSeparate)(GLenum sfactorRGB , GLenum dfactorRGB , GLenum sfactorAlpha , GLenum dfactorAlpha) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoordf)(GLfloat coord) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoordfv)(const GLfloat *coord) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoordd)(GLdouble coord) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoorddv)(const GLdouble *coord) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoordPointer)(GLenum type , GLsizei stride , const GLvoid *pointer) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawArrays)(GLenum mode , GLint *first , GLsizei *count , GLsizei primcount) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawElements)(GLenum mode , const GLsizei *count , GLenum type , const GLvoid* *indices , GLsizei primcount) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterf)(GLenum pname , GLfloat param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterfv)(GLenum pname , const GLfloat *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameteri)(GLenum pname , GLint param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameteriv)(GLenum pname , const GLint *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3b)(GLbyte red , GLbyte green , GLbyte blue) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3bv)(const GLbyte *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3d)(GLdouble red , GLdouble green , GLdouble blue) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3dv)(const GLdouble *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3f)(GLfloat red , GLfloat green , GLfloat blue) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3fv)(const GLfloat *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3i)(GLint red , GLint green , GLint blue) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3iv)(const GLint *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3s)(GLshort red , GLshort green , GLshort blue) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3sv)(const GLshort *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3ub)(GLubyte red , GLubyte green , GLubyte blue) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3ubv)(const GLubyte *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3ui)(GLuint red , GLuint green , GLuint blue) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3uiv)(const GLuint *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3us)(GLushort red , GLushort green , GLushort blue) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3usv)(const GLushort *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColorPointer)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2d)(GLdouble x , GLdouble y) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2dv)(const GLdouble *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2f)(GLfloat x , GLfloat y) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2fv)(const GLfloat *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2i)(GLint x , GLint y) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2iv)(const GLint *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2s)(GLshort x , GLshort y) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2sv)(const GLshort *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3d)(GLdouble x , GLdouble y , GLdouble z) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3dv)(const GLdouble *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3f)(GLfloat x , GLfloat y , GLfloat z) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3fv)(const GLfloat *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3i)(GLint x , GLint y , GLint z) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3iv)(const GLint *v) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3s)(GLshort x , GLshort y , GLshort z) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3sv)(const GLshort *v) = 0; }
-static bool DinamicGLFeature_VERSION_1_4_loaded = false; 
-static void InitDinamicGLFeature_VERSION_1_4() {
-		DynamicGL_BlendFuncSeparate = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum sfactorRGB , GLenum dfactorRGB , GLenum sfactorAlpha , GLenum dfactorAlpha)>("glBlendFuncSeparate"); 
-		DynamicGL_FogCoordf = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLfloat coord)>("glFogCoordf"); 
-		DynamicGL_FogCoordfv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLfloat *coord)>("glFogCoordfv"); 
-		DynamicGL_FogCoordd = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLdouble coord)>("glFogCoordd"); 
-		DynamicGL_FogCoorddv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLdouble *coord)>("glFogCoorddv"); 
-		DynamicGL_FogCoordPointer = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum type , GLsizei stride , const GLvoid *pointer)>("glFogCoordPointer"); 
-		DynamicGL_MultiDrawArrays = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLint *first , GLsizei *count , GLsizei primcount)>("glMultiDrawArrays"); 
-		DynamicGL_MultiDrawElements = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , const GLsizei *count , GLenum type , const GLvoid* *indices , GLsizei primcount)>("glMultiDrawElements"); 
-		DynamicGL_PointParameterf = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , GLfloat param)>("glPointParameterf"); 
-		DynamicGL_PointParameterfv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , const GLfloat *params)>("glPointParameterfv"); 
-		DynamicGL_PointParameteri = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , GLint param)>("glPointParameteri"); 
-		DynamicGL_PointParameteriv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , const GLint *params)>("glPointParameteriv"); 
-		DynamicGL_SecondaryColor3b = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLbyte red , GLbyte green , GLbyte blue)>("glSecondaryColor3b"); 
-		DynamicGL_SecondaryColor3bv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLbyte *v)>("glSecondaryColor3bv"); 
-		DynamicGL_SecondaryColor3d = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLdouble red , GLdouble green , GLdouble blue)>("glSecondaryColor3d"); 
-		DynamicGL_SecondaryColor3dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLdouble *v)>("glSecondaryColor3dv"); 
-		DynamicGL_SecondaryColor3f = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLfloat red , GLfloat green , GLfloat blue)>("glSecondaryColor3f"); 
-		DynamicGL_SecondaryColor3fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLfloat *v)>("glSecondaryColor3fv"); 
-		DynamicGL_SecondaryColor3i = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint red , GLint green , GLint blue)>("glSecondaryColor3i"); 
-		DynamicGL_SecondaryColor3iv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLint *v)>("glSecondaryColor3iv"); 
-		DynamicGL_SecondaryColor3s = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLshort red , GLshort green , GLshort blue)>("glSecondaryColor3s"); 
-		DynamicGL_SecondaryColor3sv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLshort *v)>("glSecondaryColor3sv"); 
-		DynamicGL_SecondaryColor3ub = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLubyte red , GLubyte green , GLubyte blue)>("glSecondaryColor3ub"); 
-		DynamicGL_SecondaryColor3ubv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLubyte *v)>("glSecondaryColor3ubv"); 
-		DynamicGL_SecondaryColor3ui = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint red , GLuint green , GLuint blue)>("glSecondaryColor3ui"); 
-		DynamicGL_SecondaryColor3uiv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLuint *v)>("glSecondaryColor3uiv"); 
-		DynamicGL_SecondaryColor3us = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLushort red , GLushort green , GLushort blue)>("glSecondaryColor3us"); 
-		DynamicGL_SecondaryColor3usv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLushort *v)>("glSecondaryColor3usv"); 
-		DynamicGL_SecondaryColorPointer = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer)>("glSecondaryColorPointer"); 
-		DynamicGL_WindowPos2d = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLdouble x , GLdouble y)>("glWindowPos2d"); 
-		DynamicGL_WindowPos2dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLdouble *v)>("glWindowPos2dv"); 
-		DynamicGL_WindowPos2f = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLfloat x , GLfloat y)>("glWindowPos2f"); 
-		DynamicGL_WindowPos2fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLfloat *v)>("glWindowPos2fv"); 
-		DynamicGL_WindowPos2i = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint x , GLint y)>("glWindowPos2i"); 
-		DynamicGL_WindowPos2iv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLint *v)>("glWindowPos2iv"); 
-		DynamicGL_WindowPos2s = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLshort x , GLshort y)>("glWindowPos2s"); 
-		DynamicGL_WindowPos2sv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLshort *v)>("glWindowPos2sv"); 
-		DynamicGL_WindowPos3d = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLdouble x , GLdouble y , GLdouble z)>("glWindowPos3d"); 
-		DynamicGL_WindowPos3dv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLdouble *v)>("glWindowPos3dv"); 
-		DynamicGL_WindowPos3f = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLfloat x , GLfloat y , GLfloat z)>("glWindowPos3f"); 
-		DynamicGL_WindowPos3fv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLfloat *v)>("glWindowPos3fv"); 
-		DynamicGL_WindowPos3i = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint x , GLint y , GLint z)>("glWindowPos3i"); 
-		DynamicGL_WindowPos3iv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLint *v)>("glWindowPos3iv"); 
-		DynamicGL_WindowPos3s = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLshort x , GLshort y , GLshort z)>("glWindowPos3s"); 
-		DynamicGL_WindowPos3sv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(const GLshort *v)>("glWindowPos3sv"); 
-		DinamicGLFeature_VERSION_1_4_loaded = true; 
-}
-bool DinamicGLFeature_VERSION_1_4_Supported() {
-		if (!DinamicGLFeature_VERSION_1_4_loaded) {
-			InitDinamicGLFeature_VERSION_1_4();
-		}
-		if (DynamicGL_BlendFuncSeparate==0) return false; 
-		if (DynamicGL_FogCoordf==0) return false; 
-		if (DynamicGL_FogCoordfv==0) return false; 
-		if (DynamicGL_FogCoordd==0) return false; 
-		if (DynamicGL_FogCoorddv==0) return false; 
-		if (DynamicGL_FogCoordPointer==0) return false; 
-		if (DynamicGL_MultiDrawArrays==0) return false; 
-		if (DynamicGL_MultiDrawElements==0) return false; 
-		if (DynamicGL_PointParameterf==0) return false; 
-		if (DynamicGL_PointParameterfv==0) return false; 
-		if (DynamicGL_PointParameteri==0) return false; 
-		if (DynamicGL_PointParameteriv==0) return false; 
-		if (DynamicGL_SecondaryColor3b==0) return false; 
-		if (DynamicGL_SecondaryColor3bv==0) return false; 
-		if (DynamicGL_SecondaryColor3d==0) return false; 
-		if (DynamicGL_SecondaryColor3dv==0) return false; 
-		if (DynamicGL_SecondaryColor3f==0) return false; 
-		if (DynamicGL_SecondaryColor3fv==0) return false; 
-		if (DynamicGL_SecondaryColor3i==0) return false; 
-		if (DynamicGL_SecondaryColor3iv==0) return false; 
-		if (DynamicGL_SecondaryColor3s==0) return false; 
-		if (DynamicGL_SecondaryColor3sv==0) return false; 
-		if (DynamicGL_SecondaryColor3ub==0) return false; 
-		if (DynamicGL_SecondaryColor3ubv==0) return false; 
-		if (DynamicGL_SecondaryColor3ui==0) return false; 
-		if (DynamicGL_SecondaryColor3uiv==0) return false; 
-		if (DynamicGL_SecondaryColor3us==0) return false; 
-		if (DynamicGL_SecondaryColor3usv==0) return false; 
-		if (DynamicGL_SecondaryColorPointer==0) return false; 
-		if (DynamicGL_WindowPos2d==0) return false; 
-		if (DynamicGL_WindowPos2dv==0) return false; 
-		if (DynamicGL_WindowPos2f==0) return false; 
-		if (DynamicGL_WindowPos2fv==0) return false; 
-		if (DynamicGL_WindowPos2i==0) return false; 
-		if (DynamicGL_WindowPos2iv==0) return false; 
-		if (DynamicGL_WindowPos2s==0) return false; 
-		if (DynamicGL_WindowPos2sv==0) return false; 
-		if (DynamicGL_WindowPos3d==0) return false; 
-		if (DynamicGL_WindowPos3dv==0) return false; 
-		if (DynamicGL_WindowPos3f==0) return false; 
-		if (DynamicGL_WindowPos3fv==0) return false; 
-		if (DynamicGL_WindowPos3i==0) return false; 
-		if (DynamicGL_WindowPos3iv==0) return false; 
-		if (DynamicGL_WindowPos3s==0) return false; 
-		if (DynamicGL_WindowPos3sv==0) return false; 
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_VERSION_1_4*/
 
 /*ARB_vertex_buffer_object*/
 #ifdef USE_DYNAMIC_GL_ARB_vertex_buffer_object
@@ -8573,6 +11311,41 @@ bool DinamicGLFeature_ARB_vertex_buffer_object_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_ARB_vertex_buffer_object*/
 
+/*VERSION_1_4*/
+#ifdef USE_DYNAMIC_GL_VERSION_1_4
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFuncSeparate)(GLenum sfactorRGB , GLenum dfactorRGB , GLenum sfactorAlpha , GLenum dfactorAlpha) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawArrays)(GLenum mode , const GLint *first , const GLsizei *count , GLsizei primcount) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawElements)(GLenum mode , const GLsizei *count , GLenum type , const GLvoid* const , GLsizei primcount) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterf)(GLenum pname , GLfloat param) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterfv)(GLenum pname , const GLfloat *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameteri)(GLenum pname , GLint param) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameteriv)(GLenum pname , const GLint *params) = 0; }
+static bool DinamicGLFeature_VERSION_1_4_loaded = false; 
+static void InitDinamicGLFeature_VERSION_1_4() {
+		DynamicGL_BlendFuncSeparate = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum sfactorRGB , GLenum dfactorRGB , GLenum sfactorAlpha , GLenum dfactorAlpha)>("glBlendFuncSeparate"); 
+		DynamicGL_MultiDrawArrays = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , const GLint *first , const GLsizei *count , GLsizei primcount)>("glMultiDrawArrays"); 
+		DynamicGL_MultiDrawElements = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , const GLsizei *count , GLenum type , const GLvoid* const , GLsizei primcount)>("glMultiDrawElements"); 
+		DynamicGL_PointParameterf = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , GLfloat param)>("glPointParameterf"); 
+		DynamicGL_PointParameterfv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , const GLfloat *params)>("glPointParameterfv"); 
+		DynamicGL_PointParameteri = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , GLint param)>("glPointParameteri"); 
+		DynamicGL_PointParameteriv = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum pname , const GLint *params)>("glPointParameteriv"); 
+		DinamicGLFeature_VERSION_1_4_loaded = true; 
+}
+bool DinamicGLFeature_VERSION_1_4_Supported() {
+		if (!DinamicGLFeature_VERSION_1_4_loaded) {
+			InitDinamicGLFeature_VERSION_1_4();
+		}
+		if (DynamicGL_BlendFuncSeparate==0) return false; 
+		if (DynamicGL_MultiDrawArrays==0) return false; 
+		if (DynamicGL_MultiDrawElements==0) return false; 
+		if (DynamicGL_PointParameterf==0) return false; 
+		if (DynamicGL_PointParameterfv==0) return false; 
+		if (DynamicGL_PointParameteri==0) return false; 
+		if (DynamicGL_PointParameteriv==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_VERSION_1_4*/
+
 /*APPLE_specular_vector*/
 #ifdef USE_DYNAMIC_GL_APPLE_specular_vector
 static bool DinamicGLFeature_APPLE_specular_vector_loaded = false; 
@@ -8587,6 +11360,26 @@ bool DinamicGLFeature_APPLE_specular_vector_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_APPLE_specular_vector*/
 
+/*EXT_shader_image_load_store*/
+#ifdef USE_DYNAMIC_GL_EXT_shader_image_load_store
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindImageTextureEXT)(GLuint index , GLuint texture , GLint level , GLboolean layered , GLint layer , GLenum access , GLint format) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MemoryBarrierEXT)(GLbitfield barriers) = 0; }
+static bool DinamicGLFeature_EXT_shader_image_load_store_loaded = false; 
+static void InitDinamicGLFeature_EXT_shader_image_load_store() {
+		DynamicGL_BindImageTextureEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLuint texture , GLint level , GLboolean layered , GLint layer , GLenum access , GLint format)>("glBindImageTextureEXT"); 
+		DynamicGL_MemoryBarrierEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLbitfield barriers)>("glMemoryBarrierEXT"); 
+		DinamicGLFeature_EXT_shader_image_load_store_loaded = true; 
+}
+bool DinamicGLFeature_EXT_shader_image_load_store_Supported() {
+		if (!DinamicGLFeature_EXT_shader_image_load_store_loaded) {
+			InitDinamicGLFeature_EXT_shader_image_load_store();
+		}
+		if (DynamicGL_BindImageTextureEXT==0) return false; 
+		if (DynamicGL_MemoryBarrierEXT==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_EXT_shader_image_load_store*/
+
 /*NV_copy_depth_to_color*/
 #ifdef USE_DYNAMIC_GL_NV_copy_depth_to_color
 static bool DinamicGLFeature_NV_copy_depth_to_color_loaded = false; 
@@ -8600,6 +11393,23 @@ bool DinamicGLFeature_NV_copy_depth_to_color_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_copy_depth_to_color*/
+
+/*ARB_cl_event*/
+#ifdef USE_DYNAMIC_GL_ARB_cl_event
+extern "C" { GLsync (DYNAMIC_GL_APIENTRYP DynamicGL_CreateSyncFromCLeventARB)(GLstruct _cl_context , GLstruct _cl_event , GLbitfield flags) = 0; }
+static bool DinamicGLFeature_ARB_cl_event_loaded = false; 
+static void InitDinamicGLFeature_ARB_cl_event() {
+		DynamicGL_CreateSyncFromCLeventARB = DynamicGL_LoadFunction<GLsync (DYNAMIC_GL_APIENTRYP)(GLstruct _cl_context , GLstruct _cl_event , GLbitfield flags)>("glCreateSyncFromCLeventARB"); 
+		DinamicGLFeature_ARB_cl_event_loaded = true; 
+}
+bool DinamicGLFeature_ARB_cl_event_Supported() {
+		if (!DinamicGLFeature_ARB_cl_event_loaded) {
+			InitDinamicGLFeature_ARB_cl_event();
+		}
+		if (DynamicGL_CreateSyncFromCLeventARB==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_cl_event*/
 
 /*ARB_texture_cube_map*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_cube_map
@@ -8634,6 +11444,20 @@ bool DinamicGLFeature_NV_vertex_array_range_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_vertex_array_range*/
+
+/*VERSION_2_0_DEPRECATED*/
+#ifdef USE_DYNAMIC_GL_VERSION_2_0_DEPRECATED
+static bool DinamicGLFeature_VERSION_2_0_DEPRECATED_loaded = false; 
+static void InitDinamicGLFeature_VERSION_2_0_DEPRECATED() {
+		DinamicGLFeature_VERSION_2_0_DEPRECATED_loaded = true; 
+}
+bool DinamicGLFeature_VERSION_2_0_DEPRECATED_Supported() {
+		if (!DinamicGLFeature_VERSION_2_0_DEPRECATED_loaded) {
+			InitDinamicGLFeature_VERSION_2_0_DEPRECATED();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_VERSION_2_0_DEPRECATED*/
 
 /*EXT_cull_vertex*/
 #ifdef USE_DYNAMIC_GL_EXT_cull_vertex
@@ -8699,6 +11523,26 @@ bool DinamicGLFeature_INGR_blend_func_separate_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_INGR_blend_func_separate*/
+
+/*ARB_draw_indirect*/
+#ifdef USE_DYNAMIC_GL_ARB_draw_indirect
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawArraysIndirect)(GLenum mode , const GLvoid *indirect) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElementsIndirect)(GLenum mode , GLenum type , const GLvoid *indirect) = 0; }
+static bool DinamicGLFeature_ARB_draw_indirect_loaded = false; 
+static void InitDinamicGLFeature_ARB_draw_indirect() {
+		DynamicGL_DrawArraysIndirect = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , const GLvoid *indirect)>("glDrawArraysIndirect"); 
+		DynamicGL_DrawElementsIndirect = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLenum type , const GLvoid *indirect)>("glDrawElementsIndirect"); 
+		DinamicGLFeature_ARB_draw_indirect_loaded = true; 
+}
+bool DinamicGLFeature_ARB_draw_indirect_Supported() {
+		if (!DinamicGLFeature_ARB_draw_indirect_loaded) {
+			InitDinamicGLFeature_ARB_draw_indirect();
+		}
+		if (DynamicGL_DrawArraysIndirect==0) return false; 
+		if (DynamicGL_DrawElementsIndirect==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_draw_indirect*/
 
 /*APPLE_client_storage*/
 #ifdef USE_DYNAMIC_GL_APPLE_client_storage
@@ -8852,20 +11696,6 @@ bool DinamicGLFeature_EXT_pixel_buffer_object_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_EXT_pixel_buffer_object*/
 
-/*EXT_index_array_formats*/
-#ifdef USE_DYNAMIC_GL_EXT_index_array_formats
-static bool DinamicGLFeature_EXT_index_array_formats_loaded = false; 
-static void InitDinamicGLFeature_EXT_index_array_formats() {
-		DinamicGLFeature_EXT_index_array_formats_loaded = true; 
-}
-bool DinamicGLFeature_EXT_index_array_formats_Supported() {
-		if (!DinamicGLFeature_EXT_index_array_formats_loaded) {
-			InitDinamicGLFeature_EXT_index_array_formats();
-		}
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_EXT_index_array_formats*/
-
 /*EXT_vertex_array*/
 #ifdef USE_DYNAMIC_GL_EXT_vertex_array
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ArrayElementEXT)(GLint i) = 0; }
@@ -8907,6 +11737,20 @@ bool DinamicGLFeature_EXT_vertex_array_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_EXT_vertex_array*/
 
+/*EXT_index_array_formats*/
+#ifdef USE_DYNAMIC_GL_EXT_index_array_formats
+static bool DinamicGLFeature_EXT_index_array_formats_loaded = false; 
+static void InitDinamicGLFeature_EXT_index_array_formats() {
+		DinamicGLFeature_EXT_index_array_formats_loaded = true; 
+}
+bool DinamicGLFeature_EXT_index_array_formats_Supported() {
+		if (!DinamicGLFeature_EXT_index_array_formats_loaded) {
+			InitDinamicGLFeature_EXT_index_array_formats();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_EXT_index_array_formats*/
+
 /*ARB_vertex_array_object*/
 #ifdef USE_DYNAMIC_GL_ARB_vertex_array_object
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindVertexArray)(GLuint array) = 0; }
@@ -8932,6 +11776,52 @@ bool DinamicGLFeature_ARB_vertex_array_object_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARB_vertex_array_object*/
+
+/*NV_texture_multisample*/
+#ifdef USE_DYNAMIC_GL_NV_texture_multisample
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexImage2DMultisampleCoverageNV)(GLenum target , GLsizei coverageSamples , GLsizei colorSamples , GLint internalFormat , GLsizei width , GLsizei height , GLboolean fixedSampleLocations) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexImage3DMultisampleCoverageNV)(GLenum target , GLsizei coverageSamples , GLsizei colorSamples , GLint internalFormat , GLsizei width , GLsizei height , GLsizei depth , GLboolean fixedSampleLocations) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureImage2DMultisampleNV)(GLuint texture , GLenum target , GLsizei samples , GLint internalFormat , GLsizei width , GLsizei height , GLboolean fixedSampleLocations) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureImage3DMultisampleNV)(GLuint texture , GLenum target , GLsizei samples , GLint internalFormat , GLsizei width , GLsizei height , GLsizei depth , GLboolean fixedSampleLocations) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureImage2DMultisampleCoverageNV)(GLuint texture , GLenum target , GLsizei coverageSamples , GLsizei colorSamples , GLint internalFormat , GLsizei width , GLsizei height , GLboolean fixedSampleLocations) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureImage3DMultisampleCoverageNV)(GLuint texture , GLenum target , GLsizei coverageSamples , GLsizei colorSamples , GLint internalFormat , GLsizei width , GLsizei height , GLsizei depth , GLboolean fixedSampleLocations) = 0; }
+static bool DinamicGLFeature_NV_texture_multisample_loaded = false; 
+static void InitDinamicGLFeature_NV_texture_multisample() {
+		DynamicGL_TexImage2DMultisampleCoverageNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLsizei coverageSamples , GLsizei colorSamples , GLint internalFormat , GLsizei width , GLsizei height , GLboolean fixedSampleLocations)>("glTexImage2DMultisampleCoverageNV"); 
+		DynamicGL_TexImage3DMultisampleCoverageNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLsizei coverageSamples , GLsizei colorSamples , GLint internalFormat , GLsizei width , GLsizei height , GLsizei depth , GLboolean fixedSampleLocations)>("glTexImage3DMultisampleCoverageNV"); 
+		DynamicGL_TextureImage2DMultisampleNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint texture , GLenum target , GLsizei samples , GLint internalFormat , GLsizei width , GLsizei height , GLboolean fixedSampleLocations)>("glTextureImage2DMultisampleNV"); 
+		DynamicGL_TextureImage3DMultisampleNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint texture , GLenum target , GLsizei samples , GLint internalFormat , GLsizei width , GLsizei height , GLsizei depth , GLboolean fixedSampleLocations)>("glTextureImage3DMultisampleNV"); 
+		DynamicGL_TextureImage2DMultisampleCoverageNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint texture , GLenum target , GLsizei coverageSamples , GLsizei colorSamples , GLint internalFormat , GLsizei width , GLsizei height , GLboolean fixedSampleLocations)>("glTextureImage2DMultisampleCoverageNV"); 
+		DynamicGL_TextureImage3DMultisampleCoverageNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint texture , GLenum target , GLsizei coverageSamples , GLsizei colorSamples , GLint internalFormat , GLsizei width , GLsizei height , GLsizei depth , GLboolean fixedSampleLocations)>("glTextureImage3DMultisampleCoverageNV"); 
+		DinamicGLFeature_NV_texture_multisample_loaded = true; 
+}
+bool DinamicGLFeature_NV_texture_multisample_Supported() {
+		if (!DinamicGLFeature_NV_texture_multisample_loaded) {
+			InitDinamicGLFeature_NV_texture_multisample();
+		}
+		if (DynamicGL_TexImage2DMultisampleCoverageNV==0) return false; 
+		if (DynamicGL_TexImage3DMultisampleCoverageNV==0) return false; 
+		if (DynamicGL_TextureImage2DMultisampleNV==0) return false; 
+		if (DynamicGL_TextureImage3DMultisampleNV==0) return false; 
+		if (DynamicGL_TextureImage2DMultisampleCoverageNV==0) return false; 
+		if (DynamicGL_TextureImage3DMultisampleCoverageNV==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_NV_texture_multisample*/
+
+/*ARB_occlusion_query2*/
+#ifdef USE_DYNAMIC_GL_ARB_occlusion_query2
+static bool DinamicGLFeature_ARB_occlusion_query2_loaded = false; 
+static void InitDinamicGLFeature_ARB_occlusion_query2() {
+		DinamicGLFeature_ARB_occlusion_query2_loaded = true; 
+}
+bool DinamicGLFeature_ARB_occlusion_query2_Supported() {
+		if (!DinamicGLFeature_ARB_occlusion_query2_loaded) {
+			InitDinamicGLFeature_ARB_occlusion_query2();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_occlusion_query2*/
 
 /*IBM_vertex_array_lists*/
 #ifdef USE_DYNAMIC_GL_IBM_vertex_array_lists
@@ -8971,6 +11861,20 @@ bool DinamicGLFeature_IBM_vertex_array_lists_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_IBM_vertex_array_lists*/
 
+/*EXT_texture_compression_rgtc*/
+#ifdef USE_DYNAMIC_GL_EXT_texture_compression_rgtc
+static bool DinamicGLFeature_EXT_texture_compression_rgtc_loaded = false; 
+static void InitDinamicGLFeature_EXT_texture_compression_rgtc() {
+		DinamicGLFeature_EXT_texture_compression_rgtc_loaded = true; 
+}
+bool DinamicGLFeature_EXT_texture_compression_rgtc_Supported() {
+		if (!DinamicGLFeature_EXT_texture_compression_rgtc_loaded) {
+			InitDinamicGLFeature_EXT_texture_compression_rgtc();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_EXT_texture_compression_rgtc*/
+
 /*ATI_draw_buffers*/
 #ifdef USE_DYNAMIC_GL_ATI_draw_buffers
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawBuffersATI)(GLsizei n , const GLenum *bufs) = 0; }
@@ -8987,20 +11891,6 @@ bool DinamicGLFeature_ATI_draw_buffers_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ATI_draw_buffers*/
-
-/*EXT_texture_compression_rgtc*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_compression_rgtc
-static bool DinamicGLFeature_EXT_texture_compression_rgtc_loaded = false; 
-static void InitDinamicGLFeature_EXT_texture_compression_rgtc() {
-		DinamicGLFeature_EXT_texture_compression_rgtc_loaded = true; 
-}
-bool DinamicGLFeature_EXT_texture_compression_rgtc_Supported() {
-		if (!DinamicGLFeature_EXT_texture_compression_rgtc_loaded) {
-			InitDinamicGLFeature_EXT_texture_compression_rgtc();
-		}
-		return true;
-}
-#endif /*USE_DYNAMIC_GL_EXT_texture_compression_rgtc*/
 
 /*ARB_texture_compression*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_compression
@@ -9089,6 +11979,20 @@ bool DinamicGLFeature_EXT_color_subtable_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_EXT_color_subtable*/
 
+/*VERSION_3_0_DEPRECATED*/
+#ifdef USE_DYNAMIC_GL_VERSION_3_0_DEPRECATED
+static bool DinamicGLFeature_VERSION_3_0_DEPRECATED_loaded = false; 
+static void InitDinamicGLFeature_VERSION_3_0_DEPRECATED() {
+		DinamicGLFeature_VERSION_3_0_DEPRECATED_loaded = true; 
+}
+bool DinamicGLFeature_VERSION_3_0_DEPRECATED_Supported() {
+		if (!DinamicGLFeature_VERSION_3_0_DEPRECATED_loaded) {
+			InitDinamicGLFeature_VERSION_3_0_DEPRECATED();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_VERSION_3_0_DEPRECATED*/
+
 /*EXT_convolution*/
 #ifdef USE_DYNAMIC_GL_EXT_convolution
 extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ConvolutionFilter1DEXT)(GLenum target , GLenum internalformat , GLsizei width , GLenum format , GLenum type , const GLvoid *image) = 0; }
@@ -9142,19 +12046,34 @@ bool DinamicGLFeature_EXT_convolution_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_EXT_convolution*/
 
-/*SGIX_fog_offset*/
-#ifdef USE_DYNAMIC_GL_SGIX_fog_offset
-static bool DinamicGLFeature_SGIX_fog_offset_loaded = false; 
-static void InitDinamicGLFeature_SGIX_fog_offset() {
-		DinamicGLFeature_SGIX_fog_offset_loaded = true; 
+/*VERSION_4_0*/
+#ifdef USE_DYNAMIC_GL_VERSION_4_0
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MinSampleShading)(GLfloat value) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationi)(GLuint buf , GLenum mode) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationSeparatei)(GLuint buf , GLenum modeRGB , GLenum modeAlpha) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFunci)(GLuint buf , GLenum src , GLenum dst) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFuncSeparatei)(GLuint buf , GLenum srcRGB , GLenum dstRGB , GLenum srcAlpha , GLenum dstAlpha) = 0; }
+static bool DinamicGLFeature_VERSION_4_0_loaded = false; 
+static void InitDinamicGLFeature_VERSION_4_0() {
+		DynamicGL_MinSampleShading = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLfloat value)>("glMinSampleShading"); 
+		DynamicGL_BlendEquationi = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint buf , GLenum mode)>("glBlendEquationi"); 
+		DynamicGL_BlendEquationSeparatei = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint buf , GLenum modeRGB , GLenum modeAlpha)>("glBlendEquationSeparatei"); 
+		DynamicGL_BlendFunci = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint buf , GLenum src , GLenum dst)>("glBlendFunci"); 
+		DynamicGL_BlendFuncSeparatei = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint buf , GLenum srcRGB , GLenum dstRGB , GLenum srcAlpha , GLenum dstAlpha)>("glBlendFuncSeparatei"); 
+		DinamicGLFeature_VERSION_4_0_loaded = true; 
 }
-bool DinamicGLFeature_SGIX_fog_offset_Supported() {
-		if (!DinamicGLFeature_SGIX_fog_offset_loaded) {
-			InitDinamicGLFeature_SGIX_fog_offset();
+bool DinamicGLFeature_VERSION_4_0_Supported() {
+		if (!DinamicGLFeature_VERSION_4_0_loaded) {
+			InitDinamicGLFeature_VERSION_4_0();
 		}
+		if (DynamicGL_MinSampleShading==0) return false; 
+		if (DynamicGL_BlendEquationi==0) return false; 
+		if (DynamicGL_BlendEquationSeparatei==0) return false; 
+		if (DynamicGL_BlendFunci==0) return false; 
+		if (DynamicGL_BlendFuncSeparatei==0) return false; 
 		return true;
 }
-#endif /*USE_DYNAMIC_GL_SGIX_fog_offset*/
+#endif /*USE_DYNAMIC_GL_VERSION_4_0*/
 
 /*EXT_texture_integer*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_integer
@@ -9187,6 +12106,20 @@ bool DinamicGLFeature_EXT_texture_integer_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_integer*/
+
+/*SGIX_fog_offset*/
+#ifdef USE_DYNAMIC_GL_SGIX_fog_offset
+static bool DinamicGLFeature_SGIX_fog_offset_loaded = false; 
+static void InitDinamicGLFeature_SGIX_fog_offset() {
+		DinamicGLFeature_SGIX_fog_offset_loaded = true; 
+}
+bool DinamicGLFeature_SGIX_fog_offset_Supported() {
+		if (!DinamicGLFeature_SGIX_fog_offset_loaded) {
+			InitDinamicGLFeature_SGIX_fog_offset();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_SGIX_fog_offset*/
 
 /*ATI_vertex_attrib_array_object*/
 #ifdef USE_DYNAMIC_GL_ATI_vertex_attrib_array_object
@@ -9253,6 +12186,29 @@ bool DinamicGLFeature_SGIX_shadow_Supported() {
 }
 #endif /*USE_DYNAMIC_GL_SGIX_shadow*/
 
+/*VERSION_3_2*/
+#ifdef USE_DYNAMIC_GL_VERSION_3_2
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetInteger64i_v)(GLenum target , GLuint index , GLint64 *data) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetBufferParameteri64v)(GLenum target , GLenum pname , GLint64 *params) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FramebufferTexture)(GLenum target , GLenum attachment , GLuint texture , GLint level) = 0; }
+static bool DinamicGLFeature_VERSION_3_2_loaded = false; 
+static void InitDinamicGLFeature_VERSION_3_2() {
+		DynamicGL_GetInteger64i_v = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint index , GLint64 *data)>("glGetInteger64i_v"); 
+		DynamicGL_GetBufferParameteri64v = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum pname , GLint64 *params)>("glGetBufferParameteri64v"); 
+		DynamicGL_FramebufferTexture = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLenum attachment , GLuint texture , GLint level)>("glFramebufferTexture"); 
+		DinamicGLFeature_VERSION_3_2_loaded = true; 
+}
+bool DinamicGLFeature_VERSION_3_2_Supported() {
+		if (!DinamicGLFeature_VERSION_3_2_loaded) {
+			InitDinamicGLFeature_VERSION_3_2();
+		}
+		if (DynamicGL_GetInteger64i_v==0) return false; 
+		if (DynamicGL_GetBufferParameteri64v==0) return false; 
+		if (DynamicGL_FramebufferTexture==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_VERSION_3_2*/
+
 /*ARB_half_float_pixel*/
 #ifdef USE_DYNAMIC_GL_ARB_half_float_pixel
 static bool DinamicGLFeature_ARB_half_float_pixel_loaded = false; 
@@ -9286,6 +12242,95 @@ bool DinamicGLFeature_NV_primitive_restart_Supported() {
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_primitive_restart*/
+
+/*ARB_base_instance*/
+#ifdef USE_DYNAMIC_GL_ARB_base_instance
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawArraysInstancedBaseInstance)(GLenum mode , GLint first , GLsizei count , GLsizei primcount , GLuint baseinstance) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElementsInstancedBaseInstance)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices , GLsizei primcount , GLuint baseinstance) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElementsInstancedBaseVertexBaseInstance)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices , GLsizei primcount , GLint basevertex , GLuint baseinstance) = 0; }
+static bool DinamicGLFeature_ARB_base_instance_loaded = false; 
+static void InitDinamicGLFeature_ARB_base_instance() {
+		DynamicGL_DrawArraysInstancedBaseInstance = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLint first , GLsizei count , GLsizei primcount , GLuint baseinstance)>("glDrawArraysInstancedBaseInstance"); 
+		DynamicGL_DrawElementsInstancedBaseInstance = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices , GLsizei primcount , GLuint baseinstance)>("glDrawElementsInstancedBaseInstance"); 
+		DynamicGL_DrawElementsInstancedBaseVertexBaseInstance = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices , GLsizei primcount , GLint basevertex , GLuint baseinstance)>("glDrawElementsInstancedBaseVertexBaseInstance"); 
+		DinamicGLFeature_ARB_base_instance_loaded = true; 
+}
+bool DinamicGLFeature_ARB_base_instance_Supported() {
+		if (!DinamicGLFeature_ARB_base_instance_loaded) {
+			InitDinamicGLFeature_ARB_base_instance();
+		}
+		if (DynamicGL_DrawArraysInstancedBaseInstance==0) return false; 
+		if (DynamicGL_DrawElementsInstancedBaseInstance==0) return false; 
+		if (DynamicGL_DrawElementsInstancedBaseVertexBaseInstance==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_base_instance*/
+
+/*ARB_transform_feedback2*/
+#ifdef USE_DYNAMIC_GL_ARB_transform_feedback2
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindTransformFeedback)(GLenum target , GLuint id) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteTransformFeedbacks)(GLsizei n , const GLuint *ids) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenTransformFeedbacks)(GLsizei n , GLuint *ids) = 0; }
+extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsTransformFeedback)(GLuint id) = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PauseTransformFeedback)() = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ResumeTransformFeedback)() = 0; }
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTransformFeedback)(GLenum mode , GLuint id) = 0; }
+static bool DinamicGLFeature_ARB_transform_feedback2_loaded = false; 
+static void InitDinamicGLFeature_ARB_transform_feedback2() {
+		DynamicGL_BindTransformFeedback = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLuint id)>("glBindTransformFeedback"); 
+		DynamicGL_DeleteTransformFeedbacks = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei n , const GLuint *ids)>("glDeleteTransformFeedbacks"); 
+		DynamicGL_GenTransformFeedbacks = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei n , GLuint *ids)>("glGenTransformFeedbacks"); 
+		DynamicGL_IsTransformFeedback = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLuint id)>("glIsTransformFeedback"); 
+		DynamicGL_PauseTransformFeedback = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)()>("glPauseTransformFeedback"); 
+		DynamicGL_ResumeTransformFeedback = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)()>("glResumeTransformFeedback"); 
+		DynamicGL_DrawTransformFeedback = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLuint id)>("glDrawTransformFeedback"); 
+		DinamicGLFeature_ARB_transform_feedback2_loaded = true; 
+}
+bool DinamicGLFeature_ARB_transform_feedback2_Supported() {
+		if (!DinamicGLFeature_ARB_transform_feedback2_loaded) {
+			InitDinamicGLFeature_ARB_transform_feedback2();
+		}
+		if (DynamicGL_BindTransformFeedback==0) return false; 
+		if (DynamicGL_DeleteTransformFeedbacks==0) return false; 
+		if (DynamicGL_GenTransformFeedbacks==0) return false; 
+		if (DynamicGL_IsTransformFeedback==0) return false; 
+		if (DynamicGL_PauseTransformFeedback==0) return false; 
+		if (DynamicGL_ResumeTransformFeedback==0) return false; 
+		if (DynamicGL_DrawTransformFeedback==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_transform_feedback2*/
+
+/*VERSION_3_3*/
+#ifdef USE_DYNAMIC_GL_VERSION_3_3
+extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribDivisor)(GLuint index , GLuint divisor) = 0; }
+static bool DinamicGLFeature_VERSION_3_3_loaded = false; 
+static void InitDinamicGLFeature_VERSION_3_3() {
+		DynamicGL_VertexAttribDivisor = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint index , GLuint divisor)>("glVertexAttribDivisor"); 
+		DinamicGLFeature_VERSION_3_3_loaded = true; 
+}
+bool DinamicGLFeature_VERSION_3_3_Supported() {
+		if (!DinamicGLFeature_VERSION_3_3_loaded) {
+			InitDinamicGLFeature_VERSION_3_3();
+		}
+		if (DynamicGL_VertexAttribDivisor==0) return false; 
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_VERSION_3_3*/
+
+/*ARB_texture_gather*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_gather
+static bool DinamicGLFeature_ARB_texture_gather_loaded = false; 
+static void InitDinamicGLFeature_ARB_texture_gather() {
+		DinamicGLFeature_ARB_texture_gather_loaded = true; 
+}
+bool DinamicGLFeature_ARB_texture_gather_Supported() {
+		if (!DinamicGLFeature_ARB_texture_gather_loaded) {
+			InitDinamicGLFeature_ARB_texture_gather();
+		}
+		return true;
+}
+#endif /*USE_DYNAMIC_GL_ARB_texture_gather*/
 
 /*SUN_vertex*/
 #ifdef USE_DYNAMIC_GL_SUN_vertex
@@ -9453,12 +12498,21 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_VERSION_1_1
 			InitDinamicGLFeature_VERSION_1_1();
 #endif /*USE_DYNAMIC_GL_VERSION_1_1*/
+#ifdef USE_DYNAMIC_GL_ARB_copy_buffer
+			InitDinamicGLFeature_ARB_copy_buffer();
+#endif /*USE_DYNAMIC_GL_ARB_copy_buffer*/
 #ifdef USE_DYNAMIC_GL_SGIS_sharpen_texture
 			InitDinamicGLFeature_SGIS_sharpen_texture();
 #endif /*USE_DYNAMIC_GL_SGIS_sharpen_texture*/
+#ifdef USE_DYNAMIC_GL_ARB_internalformat_query
+			InitDinamicGLFeature_ARB_internalformat_query();
+#endif /*USE_DYNAMIC_GL_ARB_internalformat_query*/
 #ifdef USE_DYNAMIC_GL_SGIX_blend_alpha_minmax
 			InitDinamicGLFeature_SGIX_blend_alpha_minmax();
 #endif /*USE_DYNAMIC_GL_SGIX_blend_alpha_minmax*/
+#ifdef USE_DYNAMIC_GL_ATI_meminfo
+			InitDinamicGLFeature_ATI_meminfo();
+#endif /*USE_DYNAMIC_GL_ATI_meminfo*/
 #ifdef USE_DYNAMIC_GL_NV_present_video
 			InitDinamicGLFeature_NV_present_video();
 #endif /*USE_DYNAMIC_GL_NV_present_video*/
@@ -9480,15 +12534,24 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_EXT_draw_range_elements
 			InitDinamicGLFeature_EXT_draw_range_elements();
 #endif /*USE_DYNAMIC_GL_EXT_draw_range_elements*/
+#ifdef USE_DYNAMIC_GL_ARB_shading_language_include
+			InitDinamicGLFeature_ARB_shading_language_include();
+#endif /*USE_DYNAMIC_GL_ARB_shading_language_include*/
 #ifdef USE_DYNAMIC_GL_NV_evaluators
 			InitDinamicGLFeature_NV_evaluators();
 #endif /*USE_DYNAMIC_GL_NV_evaluators*/
+#ifdef USE_DYNAMIC_GL_AMD_sample_positions
+			InitDinamicGLFeature_AMD_sample_positions();
+#endif /*USE_DYNAMIC_GL_AMD_sample_positions*/
 #ifdef USE_DYNAMIC_GL_OML_interlace
 			InitDinamicGLFeature_OML_interlace();
 #endif /*USE_DYNAMIC_GL_OML_interlace*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_border_clamp
 			InitDinamicGLFeature_ARB_texture_border_clamp();
 #endif /*USE_DYNAMIC_GL_ARB_texture_border_clamp*/
+#ifdef USE_DYNAMIC_GL_APPLE_texture_range
+			InitDinamicGLFeature_APPLE_texture_range();
+#endif /*USE_DYNAMIC_GL_APPLE_texture_range*/
 #ifdef USE_DYNAMIC_GL_ARB_shadow_ambient
 			InitDinamicGLFeature_ARB_shadow_ambient();
 #endif /*USE_DYNAMIC_GL_ARB_shadow_ambient*/
@@ -9507,9 +12570,18 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_EXT_texture_buffer_object
 			InitDinamicGLFeature_EXT_texture_buffer_object();
 #endif /*USE_DYNAMIC_GL_EXT_texture_buffer_object*/
+#ifdef USE_DYNAMIC_GL_APPLE_row_bytes
+			InitDinamicGLFeature_APPLE_row_bytes();
+#endif /*USE_DYNAMIC_GL_APPLE_row_bytes*/
 #ifdef USE_DYNAMIC_GL_IBM_multimode_draw_arrays
 			InitDinamicGLFeature_IBM_multimode_draw_arrays();
 #endif /*USE_DYNAMIC_GL_IBM_multimode_draw_arrays*/
+#ifdef USE_DYNAMIC_GL_ARB_draw_elements_base_vertex
+			InitDinamicGLFeature_ARB_draw_elements_base_vertex();
+#endif /*USE_DYNAMIC_GL_ARB_draw_elements_base_vertex*/
+#ifdef USE_DYNAMIC_GL_ARB_depth_clamp
+			InitDinamicGLFeature_ARB_depth_clamp();
+#endif /*USE_DYNAMIC_GL_ARB_depth_clamp*/
 #ifdef USE_DYNAMIC_GL_EXT_framebuffer_object
 			InitDinamicGLFeature_EXT_framebuffer_object();
 #endif /*USE_DYNAMIC_GL_EXT_framebuffer_object*/
@@ -9519,24 +12591,42 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_EXT_pixel_transform
 			InitDinamicGLFeature_EXT_pixel_transform();
 #endif /*USE_DYNAMIC_GL_EXT_pixel_transform*/
+#ifdef USE_DYNAMIC_GL_ARB_sample_shading
+			InitDinamicGLFeature_ARB_sample_shading();
+#endif /*USE_DYNAMIC_GL_ARB_sample_shading*/
+#ifdef USE_DYNAMIC_GL_APPLE_object_purgeable
+			InitDinamicGLFeature_APPLE_object_purgeable();
+#endif /*USE_DYNAMIC_GL_APPLE_object_purgeable*/
 #ifdef USE_DYNAMIC_GL_EXT_index_material
 			InitDinamicGLFeature_EXT_index_material();
 #endif /*USE_DYNAMIC_GL_EXT_index_material*/
 #ifdef USE_DYNAMIC_GL_SGIS_texture_filter4
 			InitDinamicGLFeature_SGIS_texture_filter4();
 #endif /*USE_DYNAMIC_GL_SGIS_texture_filter4*/
+#ifdef USE_DYNAMIC_GL_EXT_framebuffer_multisample_blit_scaled
+			InitDinamicGLFeature_EXT_framebuffer_multisample_blit_scaled();
+#endif /*USE_DYNAMIC_GL_EXT_framebuffer_multisample_blit_scaled*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_compression_bptc
+			InitDinamicGLFeature_ARB_texture_compression_bptc();
+#endif /*USE_DYNAMIC_GL_ARB_texture_compression_bptc*/
 #ifdef USE_DYNAMIC_GL_APPLE_flush_buffer_range
 			InitDinamicGLFeature_APPLE_flush_buffer_range();
 #endif /*USE_DYNAMIC_GL_APPLE_flush_buffer_range*/
 #ifdef USE_DYNAMIC_GL_SGIS_texture_color_mask
 			InitDinamicGLFeature_SGIS_texture_color_mask();
 #endif /*USE_DYNAMIC_GL_SGIS_texture_color_mask*/
+#ifdef USE_DYNAMIC_GL_EXT_provoking_vertex
+			InitDinamicGLFeature_EXT_provoking_vertex();
+#endif /*USE_DYNAMIC_GL_EXT_provoking_vertex*/
 #ifdef USE_DYNAMIC_GL_ARB_fragment_shader
 			InitDinamicGLFeature_ARB_fragment_shader();
 #endif /*USE_DYNAMIC_GL_ARB_fragment_shader*/
 #ifdef USE_DYNAMIC_GL_GREMEDY_frame_terminator
 			InitDinamicGLFeature_GREMEDY_frame_terminator();
 #endif /*USE_DYNAMIC_GL_GREMEDY_frame_terminator*/
+#ifdef USE_DYNAMIC_GL_ARB_robustness
+			InitDinamicGLFeature_ARB_robustness();
+#endif /*USE_DYNAMIC_GL_ARB_robustness*/
 #ifdef USE_DYNAMIC_GL_ARB_shading_language_100
 			InitDinamicGLFeature_ARB_shading_language_100();
 #endif /*USE_DYNAMIC_GL_ARB_shading_language_100*/
@@ -9549,12 +12639,18 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_SGIX_reference_plane
 			InitDinamicGLFeature_SGIX_reference_plane();
 #endif /*USE_DYNAMIC_GL_SGIX_reference_plane*/
+#ifdef USE_DYNAMIC_GL_ARB_gpu_shader5
+			InitDinamicGLFeature_ARB_gpu_shader5();
+#endif /*USE_DYNAMIC_GL_ARB_gpu_shader5*/
 #ifdef USE_DYNAMIC_GL_HP_image_transform
 			InitDinamicGLFeature_HP_image_transform();
 #endif /*USE_DYNAMIC_GL_HP_image_transform*/
 #ifdef USE_DYNAMIC_GL_EXT_direct_state_access
 			InitDinamicGLFeature_EXT_direct_state_access();
 #endif /*USE_DYNAMIC_GL_EXT_direct_state_access*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_swizzle
+			InitDinamicGLFeature_ARB_texture_swizzle();
+#endif /*USE_DYNAMIC_GL_ARB_texture_swizzle*/
 #ifdef USE_DYNAMIC_GL_ARB_multisample
 			InitDinamicGLFeature_ARB_multisample();
 #endif /*USE_DYNAMIC_GL_ARB_multisample*/
@@ -9564,12 +12660,18 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_ATI_texture_mirror_once
 			InitDinamicGLFeature_ATI_texture_mirror_once();
 #endif /*USE_DYNAMIC_GL_ATI_texture_mirror_once*/
+#ifdef USE_DYNAMIC_GL_APPLE_rgb_422
+			InitDinamicGLFeature_APPLE_rgb_422();
+#endif /*USE_DYNAMIC_GL_APPLE_rgb_422*/
 #ifdef USE_DYNAMIC_GL_EXT_shared_texture_palette
 			InitDinamicGLFeature_EXT_shared_texture_palette();
 #endif /*USE_DYNAMIC_GL_EXT_shared_texture_palette*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_rg
 			InitDinamicGLFeature_ARB_texture_rg();
 #endif /*USE_DYNAMIC_GL_ARB_texture_rg*/
+#ifdef USE_DYNAMIC_GL_ARB_draw_buffers_blend
+			InitDinamicGLFeature_ARB_draw_buffers_blend();
+#endif /*USE_DYNAMIC_GL_ARB_draw_buffers_blend*/
 #ifdef USE_DYNAMIC_GL_EXT_stencil_clear_tag
 			InitDinamicGLFeature_EXT_stencil_clear_tag();
 #endif /*USE_DYNAMIC_GL_EXT_stencil_clear_tag*/
@@ -9591,6 +12693,9 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_ATI_vertex_streams
 			InitDinamicGLFeature_ATI_vertex_streams();
 #endif /*USE_DYNAMIC_GL_ATI_vertex_streams*/
+#ifdef USE_DYNAMIC_GL_AMD_depth_clamp_separate
+			InitDinamicGLFeature_AMD_depth_clamp_separate();
+#endif /*USE_DYNAMIC_GL_AMD_depth_clamp_separate*/
 #ifdef USE_DYNAMIC_GL_3DFX_texture_compression_FXT1
 			InitDinamicGLFeature_3DFX_texture_compression_FXT1();
 #endif /*USE_DYNAMIC_GL_3DFX_texture_compression_FXT1*/
@@ -9618,6 +12723,12 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_SGIX_async
 			InitDinamicGLFeature_SGIX_async();
 #endif /*USE_DYNAMIC_GL_SGIX_async*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_cube_map_array
+			InitDinamicGLFeature_ARB_texture_cube_map_array();
+#endif /*USE_DYNAMIC_GL_ARB_texture_cube_map_array*/
+#ifdef USE_DYNAMIC_GL_NV_path_rendering
+			InitDinamicGLFeature_NV_path_rendering();
+#endif /*USE_DYNAMIC_GL_NV_path_rendering*/
 #ifdef USE_DYNAMIC_GL_SGI_texture_color_table
 			InitDinamicGLFeature_SGI_texture_color_table();
 #endif /*USE_DYNAMIC_GL_SGI_texture_color_table*/
@@ -9648,12 +12759,24 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_SGI_color_matrix
 			InitDinamicGLFeature_SGI_color_matrix();
 #endif /*USE_DYNAMIC_GL_SGI_color_matrix*/
+#ifdef USE_DYNAMIC_GL_EXT_x11_sync_object
+			InitDinamicGLFeature_EXT_x11_sync_object();
+#endif /*USE_DYNAMIC_GL_EXT_x11_sync_object*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_sRGB
 			InitDinamicGLFeature_EXT_texture_sRGB();
 #endif /*USE_DYNAMIC_GL_EXT_texture_sRGB*/
 #ifdef USE_DYNAMIC_GL_NV_depth_clamp
 			InitDinamicGLFeature_NV_depth_clamp();
 #endif /*USE_DYNAMIC_GL_NV_depth_clamp*/
+#ifdef USE_DYNAMIC_GL_ARB_ES2_compatibility
+			InitDinamicGLFeature_ARB_ES2_compatibility();
+#endif /*USE_DYNAMIC_GL_ARB_ES2_compatibility*/
+#ifdef USE_DYNAMIC_GL_APPLE_aux_depth_stencil
+			InitDinamicGLFeature_APPLE_aux_depth_stencil();
+#endif /*USE_DYNAMIC_GL_APPLE_aux_depth_stencil*/
+#ifdef USE_DYNAMIC_GL_AMD_performance_monitor
+			InitDinamicGLFeature_AMD_performance_monitor();
+#endif /*USE_DYNAMIC_GL_AMD_performance_monitor*/
 #ifdef USE_DYNAMIC_GL_ARB_half_float_vertex
 			InitDinamicGLFeature_ARB_half_float_vertex();
 #endif /*USE_DYNAMIC_GL_ARB_half_float_vertex*/
@@ -9672,6 +12795,9 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_EXT_texture_env_combine
 			InitDinamicGLFeature_EXT_texture_env_combine();
 #endif /*USE_DYNAMIC_GL_EXT_texture_env_combine*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_rgb10_a2ui
+			InitDinamicGLFeature_ARB_texture_rgb10_a2ui();
+#endif /*USE_DYNAMIC_GL_ARB_texture_rgb10_a2ui*/
 #ifdef USE_DYNAMIC_GL_SGIX_vertex_preclip
 			InitDinamicGLFeature_SGIX_vertex_preclip();
 #endif /*USE_DYNAMIC_GL_SGIX_vertex_preclip*/
@@ -9684,9 +12810,18 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_EXT_texture_perturb_normal
 			InitDinamicGLFeature_EXT_texture_perturb_normal();
 #endif /*USE_DYNAMIC_GL_EXT_texture_perturb_normal*/
+#ifdef USE_DYNAMIC_GL_EXT_separate_shader_objects
+			InitDinamicGLFeature_EXT_separate_shader_objects();
+#endif /*USE_DYNAMIC_GL_EXT_separate_shader_objects*/
 #ifdef USE_DYNAMIC_GL_SGIX_sprite
 			InitDinamicGLFeature_SGIX_sprite();
 #endif /*USE_DYNAMIC_GL_SGIX_sprite*/
+#ifdef USE_DYNAMIC_GL_EXT_texture_snorm
+			InitDinamicGLFeature_EXT_texture_snorm();
+#endif /*USE_DYNAMIC_GL_EXT_texture_snorm*/
+#ifdef USE_DYNAMIC_GL_ARB_debug_output
+			InitDinamicGLFeature_ARB_debug_output();
+#endif /*USE_DYNAMIC_GL_ARB_debug_output*/
 #ifdef USE_DYNAMIC_GL_EXT_draw_buffers2
 			InitDinamicGLFeature_EXT_draw_buffers2();
 #endif /*USE_DYNAMIC_GL_EXT_draw_buffers2*/
@@ -9699,6 +12834,9 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_EXT_texture_env_dot3
 			InitDinamicGLFeature_EXT_texture_env_dot3();
 #endif /*USE_DYNAMIC_GL_EXT_texture_env_dot3*/
+#ifdef USE_DYNAMIC_GL_NV_video_capture
+			InitDinamicGLFeature_NV_video_capture();
+#endif /*USE_DYNAMIC_GL_NV_video_capture*/
 #ifdef USE_DYNAMIC_GL_WIN_phong_shading
 			InitDinamicGLFeature_WIN_phong_shading();
 #endif /*USE_DYNAMIC_GL_WIN_phong_shading*/
@@ -9732,12 +12870,18 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_ARB_transpose_matrix
 			InitDinamicGLFeature_ARB_transpose_matrix();
 #endif /*USE_DYNAMIC_GL_ARB_transpose_matrix*/
+#ifdef USE_DYNAMIC_GL_ARB_transform_feedback_instanced
+			InitDinamicGLFeature_ARB_transform_feedback_instanced();
+#endif /*USE_DYNAMIC_GL_ARB_transform_feedback_instanced*/
 #ifdef USE_DYNAMIC_GL_NV_parameter_buffer_object
 			InitDinamicGLFeature_NV_parameter_buffer_object();
 #endif /*USE_DYNAMIC_GL_NV_parameter_buffer_object*/
 #ifdef USE_DYNAMIC_GL_EXT_packed_depth_stencil
 			InitDinamicGLFeature_EXT_packed_depth_stencil();
 #endif /*USE_DYNAMIC_GL_EXT_packed_depth_stencil*/
+#ifdef USE_DYNAMIC_GL_VERSION_3_1
+			InitDinamicGLFeature_VERSION_3_1();
+#endif /*USE_DYNAMIC_GL_VERSION_3_1*/
 #ifdef USE_DYNAMIC_GL_PGI_vertex_hints
 			InitDinamicGLFeature_PGI_vertex_hints();
 #endif /*USE_DYNAMIC_GL_PGI_vertex_hints*/
@@ -9750,6 +12894,9 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_EXT_histogram
 			InitDinamicGLFeature_EXT_histogram();
 #endif /*USE_DYNAMIC_GL_EXT_histogram*/
+#ifdef USE_DYNAMIC_GL_ARB_vertex_type_2_10_10_10_rev
+			InitDinamicGLFeature_ARB_vertex_type_2_10_10_10_rev();
+#endif /*USE_DYNAMIC_GL_ARB_vertex_type_2_10_10_10_rev*/
 #ifdef USE_DYNAMIC_GL_SGIX_pixel_texture
 			InitDinamicGLFeature_SGIX_pixel_texture();
 #endif /*USE_DYNAMIC_GL_SGIX_pixel_texture*/
@@ -9762,6 +12909,12 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_EXT_blend_func_separate
 			InitDinamicGLFeature_EXT_blend_func_separate();
 #endif /*USE_DYNAMIC_GL_EXT_blend_func_separate*/
+#ifdef USE_DYNAMIC_GL_ARB_sampler_objects
+			InitDinamicGLFeature_ARB_sampler_objects();
+#endif /*USE_DYNAMIC_GL_ARB_sampler_objects*/
+#ifdef USE_DYNAMIC_GL_ARB_vertex_attrib_64bit
+			InitDinamicGLFeature_ARB_vertex_attrib_64bit();
+#endif /*USE_DYNAMIC_GL_ARB_vertex_attrib_64bit*/
 #ifdef USE_DYNAMIC_GL_SGIS_texture_border_clamp
 			InitDinamicGLFeature_SGIS_texture_border_clamp();
 #endif /*USE_DYNAMIC_GL_SGIS_texture_border_clamp*/
@@ -9774,9 +12927,15 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_EXT_paletted_texture
 			InitDinamicGLFeature_EXT_paletted_texture();
 #endif /*USE_DYNAMIC_GL_EXT_paletted_texture*/
+#ifdef USE_DYNAMIC_GL_ARB_gpu_shader_fp64
+			InitDinamicGLFeature_ARB_gpu_shader_fp64();
+#endif /*USE_DYNAMIC_GL_ARB_gpu_shader_fp64*/
 #ifdef USE_DYNAMIC_GL_EXT_light_texture
 			InitDinamicGLFeature_EXT_light_texture();
 #endif /*USE_DYNAMIC_GL_EXT_light_texture*/
+#ifdef USE_DYNAMIC_GL_ARB_map_buffer_alignment
+			InitDinamicGLFeature_ARB_map_buffer_alignment();
+#endif /*USE_DYNAMIC_GL_ARB_map_buffer_alignment*/
 #ifdef USE_DYNAMIC_GL_EXT_multisample
 			InitDinamicGLFeature_EXT_multisample();
 #endif /*USE_DYNAMIC_GL_EXT_multisample*/
@@ -9786,6 +12945,9 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_ARB_vertex_program
 			InitDinamicGLFeature_ARB_vertex_program();
 #endif /*USE_DYNAMIC_GL_ARB_vertex_program*/
+#ifdef USE_DYNAMIC_GL_ARB_tessellation_shader
+			InitDinamicGLFeature_ARB_tessellation_shader();
+#endif /*USE_DYNAMIC_GL_ARB_tessellation_shader*/
 #ifdef USE_DYNAMIC_GL_EXT_point_parameters
 			InitDinamicGLFeature_EXT_point_parameters();
 #endif /*USE_DYNAMIC_GL_EXT_point_parameters*/
@@ -9798,18 +12960,33 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_SGIS_pixel_texture
 			InitDinamicGLFeature_SGIS_pixel_texture();
 #endif /*USE_DYNAMIC_GL_SGIS_pixel_texture*/
+#ifdef USE_DYNAMIC_GL_NV_vertex_attrib_integer_64bit
+			InitDinamicGLFeature_NV_vertex_attrib_integer_64bit();
+#endif /*USE_DYNAMIC_GL_NV_vertex_attrib_integer_64bit*/
+#ifdef USE_DYNAMIC_GL_ARB_provoking_vertex
+			InitDinamicGLFeature_ARB_provoking_vertex();
+#endif /*USE_DYNAMIC_GL_ARB_provoking_vertex*/
 #ifdef USE_DYNAMIC_GL_SGIS_texture4D
 			InitDinamicGLFeature_SGIS_texture4D();
 #endif /*USE_DYNAMIC_GL_SGIS_texture4D*/
-#ifdef USE_DYNAMIC_GL_SGIS_multisample
-			InitDinamicGLFeature_SGIS_multisample();
-#endif /*USE_DYNAMIC_GL_SGIS_multisample*/
 #ifdef USE_DYNAMIC_GL_PGI_misc_hints
 			InitDinamicGLFeature_PGI_misc_hints();
 #endif /*USE_DYNAMIC_GL_PGI_misc_hints*/
+#ifdef USE_DYNAMIC_GL_SGIS_multisample
+			InitDinamicGLFeature_SGIS_multisample();
+#endif /*USE_DYNAMIC_GL_SGIS_multisample*/
+#ifdef USE_DYNAMIC_GL_NV_vdpau_interop
+			InitDinamicGLFeature_NV_vdpau_interop();
+#endif /*USE_DYNAMIC_GL_NV_vdpau_interop*/
+#ifdef USE_DYNAMIC_GL_EXT_texture_sRGB_decode
+			InitDinamicGLFeature_EXT_texture_sRGB_decode();
+#endif /*USE_DYNAMIC_GL_EXT_texture_sRGB_decode*/
 #ifdef USE_DYNAMIC_GL_ARB_window_pos
 			InitDinamicGLFeature_ARB_window_pos();
 #endif /*USE_DYNAMIC_GL_ARB_window_pos*/
+#ifdef USE_DYNAMIC_GL_NV_transform_feedback2
+			InitDinamicGLFeature_NV_transform_feedback2();
+#endif /*USE_DYNAMIC_GL_NV_transform_feedback2*/
 #ifdef USE_DYNAMIC_GL_SGIX_polynomial_ffd
 			InitDinamicGLFeature_SGIX_polynomial_ffd();
 #endif /*USE_DYNAMIC_GL_SGIX_polynomial_ffd*/
@@ -9819,9 +12996,18 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_SGIX_ir_instrument1
 			InitDinamicGLFeature_SGIX_ir_instrument1();
 #endif /*USE_DYNAMIC_GL_SGIX_ir_instrument1*/
+#ifdef USE_DYNAMIC_GL_NV_texture_barrier
+			InitDinamicGLFeature_NV_texture_barrier();
+#endif /*USE_DYNAMIC_GL_NV_texture_barrier*/
 #ifdef USE_DYNAMIC_GL_SGIX_igloo_interface
 			InitDinamicGLFeature_SGIX_igloo_interface();
 #endif /*USE_DYNAMIC_GL_SGIX_igloo_interface*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_multisample
+			InitDinamicGLFeature_ARB_texture_multisample();
+#endif /*USE_DYNAMIC_GL_ARB_texture_multisample*/
+#ifdef USE_DYNAMIC_GL_AMD_blend_minmax_factor
+			InitDinamicGLFeature_AMD_blend_minmax_factor();
+#endif /*USE_DYNAMIC_GL_AMD_blend_minmax_factor*/
 #ifdef USE_DYNAMIC_GL_NV_fence
 			InitDinamicGLFeature_NV_fence();
 #endif /*USE_DYNAMIC_GL_NV_fence*/
@@ -9834,6 +13020,9 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_NV_point_sprite
 			InitDinamicGLFeature_NV_point_sprite();
 #endif /*USE_DYNAMIC_GL_NV_point_sprite*/
+#ifdef USE_DYNAMIC_GL_ARB_uniform_buffer_object
+			InitDinamicGLFeature_ARB_uniform_buffer_object();
+#endif /*USE_DYNAMIC_GL_ARB_uniform_buffer_object*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_compression_latc
 			InitDinamicGLFeature_EXT_texture_compression_latc();
 #endif /*USE_DYNAMIC_GL_EXT_texture_compression_latc*/
@@ -9852,6 +13041,9 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_NV_texture_shader3
 			InitDinamicGLFeature_NV_texture_shader3();
 #endif /*USE_DYNAMIC_GL_NV_texture_shader3*/
+#ifdef USE_DYNAMIC_GL_ARB_imaging_DEPRECATED
+			InitDinamicGLFeature_ARB_imaging_DEPRECATED();
+#endif /*USE_DYNAMIC_GL_ARB_imaging_DEPRECATED*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_compression_rgtc
 			InitDinamicGLFeature_ARB_texture_compression_rgtc();
 #endif /*USE_DYNAMIC_GL_ARB_texture_compression_rgtc*/
@@ -9873,6 +13065,9 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_SGIS_detail_texture
 			InitDinamicGLFeature_SGIS_detail_texture();
 #endif /*USE_DYNAMIC_GL_SGIS_detail_texture*/
+#ifdef USE_DYNAMIC_GL_AMD_pinned_memory
+			InitDinamicGLFeature_AMD_pinned_memory();
+#endif /*USE_DYNAMIC_GL_AMD_pinned_memory*/
 #ifdef USE_DYNAMIC_GL_MESA_resize_buffers
 			InitDinamicGLFeature_MESA_resize_buffers();
 #endif /*USE_DYNAMIC_GL_MESA_resize_buffers*/
@@ -9882,12 +13077,27 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_ARB_depth_texture
 			InitDinamicGLFeature_ARB_depth_texture();
 #endif /*USE_DYNAMIC_GL_ARB_depth_texture*/
+#ifdef USE_DYNAMIC_GL_AMD_debug_output
+			InitDinamicGLFeature_AMD_debug_output();
+#endif /*USE_DYNAMIC_GL_AMD_debug_output*/
 #ifdef USE_DYNAMIC_GL_HP_convolution_border_modes
 			InitDinamicGLFeature_HP_convolution_border_modes();
 #endif /*USE_DYNAMIC_GL_HP_convolution_border_modes*/
+#ifdef USE_DYNAMIC_GL_APPLE_vertex_program_evaluators
+			InitDinamicGLFeature_APPLE_vertex_program_evaluators();
+#endif /*USE_DYNAMIC_GL_APPLE_vertex_program_evaluators*/
 #ifdef USE_DYNAMIC_GL_NV_fragment_program
 			InitDinamicGLFeature_NV_fragment_program();
 #endif /*USE_DYNAMIC_GL_NV_fragment_program*/
+#ifdef USE_DYNAMIC_GL_VERSION_1_5_DEPRECATED
+			InitDinamicGLFeature_VERSION_1_5_DEPRECATED();
+#endif /*USE_DYNAMIC_GL_VERSION_1_5_DEPRECATED*/
+#ifdef USE_DYNAMIC_GL_NV_copy_image
+			InitDinamicGLFeature_NV_copy_image();
+#endif /*USE_DYNAMIC_GL_NV_copy_image*/
+#ifdef USE_DYNAMIC_GL_NV_shader_buffer_store
+			InitDinamicGLFeature_NV_shader_buffer_store();
+#endif /*USE_DYNAMIC_GL_NV_shader_buffer_store*/
 #ifdef USE_DYNAMIC_GL_NV_texture_env_combine4
 			InitDinamicGLFeature_NV_texture_env_combine4();
 #endif /*USE_DYNAMIC_GL_NV_texture_env_combine4*/
@@ -9915,54 +13125,75 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_NV_texgen_reflection
 			InitDinamicGLFeature_NV_texgen_reflection();
 #endif /*USE_DYNAMIC_GL_NV_texgen_reflection*/
+#ifdef USE_DYNAMIC_GL_AMD_name_gen_delete
+			InitDinamicGLFeature_AMD_name_gen_delete();
+#endif /*USE_DYNAMIC_GL_AMD_name_gen_delete*/
 #ifdef USE_DYNAMIC_GL_SGIX_list_priority
 			InitDinamicGLFeature_SGIX_list_priority();
 #endif /*USE_DYNAMIC_GL_SGIX_list_priority*/
 #ifdef USE_DYNAMIC_GL_NV_occlusion_query
 			InitDinamicGLFeature_NV_occlusion_query();
 #endif /*USE_DYNAMIC_GL_NV_occlusion_query*/
+#ifdef USE_DYNAMIC_GL_EXT_texture_shared_exponent
+			InitDinamicGLFeature_EXT_texture_shared_exponent();
+#endif /*USE_DYNAMIC_GL_EXT_texture_shared_exponent*/
 #ifdef USE_DYNAMIC_GL_VERSION_1_3
 			InitDinamicGLFeature_VERSION_1_3();
 #endif /*USE_DYNAMIC_GL_VERSION_1_3*/
 #ifdef USE_DYNAMIC_GL_ARB_color_buffer_float
 			InitDinamicGLFeature_ARB_color_buffer_float();
 #endif /*USE_DYNAMIC_GL_ARB_color_buffer_float*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_shared_exponent
-			InitDinamicGLFeature_EXT_texture_shared_exponent();
-#endif /*USE_DYNAMIC_GL_EXT_texture_shared_exponent*/
 #ifdef USE_DYNAMIC_GL_NV_half_float
 			InitDinamicGLFeature_NV_half_float();
 #endif /*USE_DYNAMIC_GL_NV_half_float*/
+#ifdef USE_DYNAMIC_GL_APPLE_float_pixels
+			InitDinamicGLFeature_APPLE_float_pixels();
+#endif /*USE_DYNAMIC_GL_APPLE_float_pixels*/
 #ifdef USE_DYNAMIC_GL_EXT_gpu_shader4
 			InitDinamicGLFeature_EXT_gpu_shader4();
 #endif /*USE_DYNAMIC_GL_EXT_gpu_shader4*/
+#ifdef USE_DYNAMIC_GL_NV_gpu_shader5
+			InitDinamicGLFeature_NV_gpu_shader5();
+#endif /*USE_DYNAMIC_GL_NV_gpu_shader5*/
 #ifdef USE_DYNAMIC_GL_NV_light_max_exponent
 			InitDinamicGLFeature_NV_light_max_exponent();
 #endif /*USE_DYNAMIC_GL_NV_light_max_exponent*/
+#ifdef USE_DYNAMIC_GL_EXT_texture_swizzle
+			InitDinamicGLFeature_EXT_texture_swizzle();
+#endif /*USE_DYNAMIC_GL_EXT_texture_swizzle*/
 #ifdef USE_DYNAMIC_GL_INGR_interlace_read
 			InitDinamicGLFeature_INGR_interlace_read();
 #endif /*USE_DYNAMIC_GL_INGR_interlace_read*/
 #ifdef USE_DYNAMIC_GL_ATI_pn_triangles
 			InitDinamicGLFeature_ATI_pn_triangles();
 #endif /*USE_DYNAMIC_GL_ATI_pn_triangles*/
+#ifdef USE_DYNAMIC_GL_AMD_draw_buffers_blend
+			InitDinamicGLFeature_AMD_draw_buffers_blend();
+#endif /*USE_DYNAMIC_GL_AMD_draw_buffers_blend*/
 #ifdef USE_DYNAMIC_GL_APPLE_ycbcr_422
 			InitDinamicGLFeature_APPLE_ycbcr_422();
 #endif /*USE_DYNAMIC_GL_APPLE_ycbcr_422*/
 #ifdef USE_DYNAMIC_GL_3DFX_tbuffer
 			InitDinamicGLFeature_3DFX_tbuffer();
 #endif /*USE_DYNAMIC_GL_3DFX_tbuffer*/
-#ifdef USE_DYNAMIC_GL_ARB_texture_float
-			InitDinamicGLFeature_ARB_texture_float();
-#endif /*USE_DYNAMIC_GL_ARB_texture_float*/
 #ifdef USE_DYNAMIC_GL_NV_texture_expand_normal
 			InitDinamicGLFeature_NV_texture_expand_normal();
 #endif /*USE_DYNAMIC_GL_NV_texture_expand_normal*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_float
+			InitDinamicGLFeature_ARB_texture_float();
+#endif /*USE_DYNAMIC_GL_ARB_texture_float*/
 #ifdef USE_DYNAMIC_GL_REND_screen_coordinates
 			InitDinamicGLFeature_REND_screen_coordinates();
 #endif /*USE_DYNAMIC_GL_REND_screen_coordinates*/
+#ifdef USE_DYNAMIC_GL_NV_vertex_buffer_unified_memory
+			InitDinamicGLFeature_NV_vertex_buffer_unified_memory();
+#endif /*USE_DYNAMIC_GL_NV_vertex_buffer_unified_memory*/
 #ifdef USE_DYNAMIC_GL_EXT_framebuffer_sRGB
 			InitDinamicGLFeature_EXT_framebuffer_sRGB();
 #endif /*USE_DYNAMIC_GL_EXT_framebuffer_sRGB*/
+#ifdef USE_DYNAMIC_GL_AMD_stencil_operation_extended
+			InitDinamicGLFeature_AMD_stencil_operation_extended();
+#endif /*USE_DYNAMIC_GL_AMD_stencil_operation_extended*/
 #ifdef USE_DYNAMIC_GL_SGIX_texture_multi_buffer
 			InitDinamicGLFeature_SGIX_texture_multi_buffer();
 #endif /*USE_DYNAMIC_GL_SGIX_texture_multi_buffer*/
@@ -9972,6 +13203,9 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_EXT_index_func
 			InitDinamicGLFeature_EXT_index_func();
 #endif /*USE_DYNAMIC_GL_EXT_index_func*/
+#ifdef USE_DYNAMIC_GL_NV_gpu_program5
+			InitDinamicGLFeature_NV_gpu_program5();
+#endif /*USE_DYNAMIC_GL_NV_gpu_program5*/
 #ifdef USE_DYNAMIC_GL_NV_multisample_filter_hint
 			InitDinamicGLFeature_NV_multisample_filter_hint();
 #endif /*USE_DYNAMIC_GL_NV_multisample_filter_hint*/
@@ -9990,24 +13224,39 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_ATI_pixel_format_float
 			InitDinamicGLFeature_ATI_pixel_format_float();
 #endif /*USE_DYNAMIC_GL_ATI_pixel_format_float*/
-#ifdef USE_DYNAMIC_GL_ARB_point_sprite
-			InitDinamicGLFeature_ARB_point_sprite();
-#endif /*USE_DYNAMIC_GL_ARB_point_sprite*/
 #ifdef USE_DYNAMIC_GL_NV_gpu_program4
 			InitDinamicGLFeature_NV_gpu_program4();
 #endif /*USE_DYNAMIC_GL_NV_gpu_program4*/
+#ifdef USE_DYNAMIC_GL_ARB_point_sprite
+			InitDinamicGLFeature_ARB_point_sprite();
+#endif /*USE_DYNAMIC_GL_ARB_point_sprite*/
+#ifdef USE_DYNAMIC_GL_ARB_transform_feedback3
+			InitDinamicGLFeature_ARB_transform_feedback3();
+#endif /*USE_DYNAMIC_GL_ARB_transform_feedback3*/
+#ifdef USE_DYNAMIC_GL_AMD_multi_draw_indirect
+			InitDinamicGLFeature_AMD_multi_draw_indirect();
+#endif /*USE_DYNAMIC_GL_AMD_multi_draw_indirect*/
 #ifdef USE_DYNAMIC_GL_SUN_mesh_array
 			InitDinamicGLFeature_SUN_mesh_array();
 #endif /*USE_DYNAMIC_GL_SUN_mesh_array*/
-#ifdef USE_DYNAMIC_GL_NV_texgen_emboss
-			InitDinamicGLFeature_NV_texgen_emboss();
-#endif /*USE_DYNAMIC_GL_NV_texgen_emboss*/
 #ifdef USE_DYNAMIC_GL_NV_framebuffer_multisample_coverage
 			InitDinamicGLFeature_NV_framebuffer_multisample_coverage();
 #endif /*USE_DYNAMIC_GL_NV_framebuffer_multisample_coverage*/
+#ifdef USE_DYNAMIC_GL_ARB_timer_query
+			InitDinamicGLFeature_ARB_timer_query();
+#endif /*USE_DYNAMIC_GL_ARB_timer_query*/
+#ifdef USE_DYNAMIC_GL_NV_texgen_emboss
+			InitDinamicGLFeature_NV_texgen_emboss();
+#endif /*USE_DYNAMIC_GL_NV_texgen_emboss*/
 #ifdef USE_DYNAMIC_GL_EXT_separate_specular_color
 			InitDinamicGLFeature_EXT_separate_specular_color();
 #endif /*USE_DYNAMIC_GL_EXT_separate_specular_color*/
+#ifdef USE_DYNAMIC_GL_ARB_framebuffer_object_DEPRECATED
+			InitDinamicGLFeature_ARB_framebuffer_object_DEPRECATED();
+#endif /*USE_DYNAMIC_GL_ARB_framebuffer_object_DEPRECATED*/
+#ifdef USE_DYNAMIC_GL_ARB_shader_atomic_counters
+			InitDinamicGLFeature_ARB_shader_atomic_counters();
+#endif /*USE_DYNAMIC_GL_ARB_shader_atomic_counters*/
 #ifdef USE_DYNAMIC_GL_EXT_blend_subtract
 			InitDinamicGLFeature_EXT_blend_subtract();
 #endif /*USE_DYNAMIC_GL_EXT_blend_subtract*/
@@ -10035,6 +13284,9 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_SGIX_async_histogram
 			InitDinamicGLFeature_SGIX_async_histogram();
 #endif /*USE_DYNAMIC_GL_SGIX_async_histogram*/
+#ifdef USE_DYNAMIC_GL_ARB_compressed_texture_pixel_storage
+			InitDinamicGLFeature_ARB_compressed_texture_pixel_storage();
+#endif /*USE_DYNAMIC_GL_ARB_compressed_texture_pixel_storage*/
 #ifdef USE_DYNAMIC_GL_SGIX_depth_texture
 			InitDinamicGLFeature_SGIX_depth_texture();
 #endif /*USE_DYNAMIC_GL_SGIX_depth_texture*/
@@ -10044,15 +13296,30 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_MESA_pack_invert
 			InitDinamicGLFeature_MESA_pack_invert();
 #endif /*USE_DYNAMIC_GL_MESA_pack_invert*/
-#ifdef USE_DYNAMIC_GL_SGIX_texture_lod_bias
-			InitDinamicGLFeature_SGIX_texture_lod_bias();
-#endif /*USE_DYNAMIC_GL_SGIX_texture_lod_bias*/
+#ifdef USE_DYNAMIC_GL_ARB_get_program_binary
+			InitDinamicGLFeature_ARB_get_program_binary();
+#endif /*USE_DYNAMIC_GL_ARB_get_program_binary*/
 #ifdef USE_DYNAMIC_GL_EXT_framebuffer_multisample
 			InitDinamicGLFeature_EXT_framebuffer_multisample();
 #endif /*USE_DYNAMIC_GL_EXT_framebuffer_multisample*/
+#ifdef USE_DYNAMIC_GL_ARB_seamless_cube_map
+			InitDinamicGLFeature_ARB_seamless_cube_map();
+#endif /*USE_DYNAMIC_GL_ARB_seamless_cube_map*/
+#ifdef USE_DYNAMIC_GL_SGIX_texture_lod_bias
+			InitDinamicGLFeature_SGIX_texture_lod_bias();
+#endif /*USE_DYNAMIC_GL_SGIX_texture_lod_bias*/
+#ifdef USE_DYNAMIC_GL_AMD_vertex_shader_tesselator
+			InitDinamicGLFeature_AMD_vertex_shader_tesselator();
+#endif /*USE_DYNAMIC_GL_AMD_vertex_shader_tesselator*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_filter_anisotropic
 			InitDinamicGLFeature_EXT_texture_filter_anisotropic();
 #endif /*USE_DYNAMIC_GL_EXT_texture_filter_anisotropic*/
+#ifdef USE_DYNAMIC_GL_VERSION_1_3_DEPRECATED
+			InitDinamicGLFeature_VERSION_1_3_DEPRECATED();
+#endif /*USE_DYNAMIC_GL_VERSION_1_3_DEPRECATED*/
+#ifdef USE_DYNAMIC_GL_VERSION_1_4_DEPRECATED
+			InitDinamicGLFeature_VERSION_1_4_DEPRECATED();
+#endif /*USE_DYNAMIC_GL_VERSION_1_4_DEPRECATED*/
 #ifdef USE_DYNAMIC_GL_ARB_matrix_palette
 			InitDinamicGLFeature_ARB_matrix_palette();
 #endif /*USE_DYNAMIC_GL_ARB_matrix_palette*/
@@ -10086,12 +13353,21 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_WIN_specular_fog
 			InitDinamicGLFeature_WIN_specular_fog();
 #endif /*USE_DYNAMIC_GL_WIN_specular_fog*/
+#ifdef USE_DYNAMIC_GL_VERSION_1_2_DEPRECATED
+			InitDinamicGLFeature_VERSION_1_2_DEPRECATED();
+#endif /*USE_DYNAMIC_GL_VERSION_1_2_DEPRECATED*/
+#ifdef USE_DYNAMIC_GL_NV_multisample_coverage
+			InitDinamicGLFeature_NV_multisample_coverage();
+#endif /*USE_DYNAMIC_GL_NV_multisample_coverage*/
 #ifdef USE_DYNAMIC_GL_SGIX_impact_pixel_texture
 			InitDinamicGLFeature_SGIX_impact_pixel_texture();
 #endif /*USE_DYNAMIC_GL_SGIX_impact_pixel_texture*/
 #ifdef USE_DYNAMIC_GL_EXT_depth_bounds_test
 			InitDinamicGLFeature_EXT_depth_bounds_test();
 #endif /*USE_DYNAMIC_GL_EXT_depth_bounds_test*/
+#ifdef USE_DYNAMIC_GL_ARB_shader_image_load_store
+			InitDinamicGLFeature_ARB_shader_image_load_store();
+#endif /*USE_DYNAMIC_GL_ARB_shader_image_load_store*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_mirror_clamp
 			InitDinamicGLFeature_EXT_texture_mirror_clamp();
 #endif /*USE_DYNAMIC_GL_EXT_texture_mirror_clamp*/
@@ -10110,24 +13386,39 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_APPLE_element_array
 			InitDinamicGLFeature_APPLE_element_array();
 #endif /*USE_DYNAMIC_GL_APPLE_element_array*/
-#ifdef USE_DYNAMIC_GL_EXT_blend_minmax
-			InitDinamicGLFeature_EXT_blend_minmax();
-#endif /*USE_DYNAMIC_GL_EXT_blend_minmax*/
+#ifdef USE_DYNAMIC_GL_ARB_sync
+			InitDinamicGLFeature_ARB_sync();
+#endif /*USE_DYNAMIC_GL_ARB_sync*/
+#ifdef USE_DYNAMIC_GL_NV_tessellation_program5
+			InitDinamicGLFeature_NV_tessellation_program5();
+#endif /*USE_DYNAMIC_GL_NV_tessellation_program5*/
+#ifdef USE_DYNAMIC_GL_ARB_separate_shader_objects
+			InitDinamicGLFeature_ARB_separate_shader_objects();
+#endif /*USE_DYNAMIC_GL_ARB_separate_shader_objects*/
 #ifdef USE_DYNAMIC_GL_ATI_texture_float
 			InitDinamicGLFeature_ATI_texture_float();
 #endif /*USE_DYNAMIC_GL_ATI_texture_float*/
-#ifdef USE_DYNAMIC_GL_SGIX_calligraphic_fragment
-			InitDinamicGLFeature_SGIX_calligraphic_fragment();
-#endif /*USE_DYNAMIC_GL_SGIX_calligraphic_fragment*/
+#ifdef USE_DYNAMIC_GL_EXT_blend_minmax
+			InitDinamicGLFeature_EXT_blend_minmax();
+#endif /*USE_DYNAMIC_GL_EXT_blend_minmax*/
 #ifdef USE_DYNAMIC_GL_NV_float_buffer
 			InitDinamicGLFeature_NV_float_buffer();
 #endif /*USE_DYNAMIC_GL_NV_float_buffer*/
-#ifdef USE_DYNAMIC_GL_SGIX_fragment_lighting
-			InitDinamicGLFeature_SGIX_fragment_lighting();
-#endif /*USE_DYNAMIC_GL_SGIX_fragment_lighting*/
+#ifdef USE_DYNAMIC_GL_SGIX_calligraphic_fragment
+			InitDinamicGLFeature_SGIX_calligraphic_fragment();
+#endif /*USE_DYNAMIC_GL_SGIX_calligraphic_fragment*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_storage
+			InitDinamicGLFeature_ARB_texture_storage();
+#endif /*USE_DYNAMIC_GL_ARB_texture_storage*/
+#ifdef USE_DYNAMIC_GL_NV_bindless_texture
+			InitDinamicGLFeature_NV_bindless_texture();
+#endif /*USE_DYNAMIC_GL_NV_bindless_texture*/
 #ifdef USE_DYNAMIC_GL_SGIX_instruments
 			InitDinamicGLFeature_SGIX_instruments();
 #endif /*USE_DYNAMIC_GL_SGIX_instruments*/
+#ifdef USE_DYNAMIC_GL_SGIX_fragment_lighting
+			InitDinamicGLFeature_SGIX_fragment_lighting();
+#endif /*USE_DYNAMIC_GL_SGIX_fragment_lighting*/
 #ifdef USE_DYNAMIC_GL_SGIX_ycrcba
 			InitDinamicGLFeature_SGIX_ycrcba();
 #endif /*USE_DYNAMIC_GL_SGIX_ycrcba*/
@@ -10140,6 +13431,9 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_EXT_422_pixels
 			InitDinamicGLFeature_EXT_422_pixels();
 #endif /*USE_DYNAMIC_GL_EXT_422_pixels*/
+#ifdef USE_DYNAMIC_GL_ARB_shader_subroutine
+			InitDinamicGLFeature_ARB_shader_subroutine();
+#endif /*USE_DYNAMIC_GL_ARB_shader_subroutine*/
 #ifdef USE_DYNAMIC_GL_NV_transform_feedback
 			InitDinamicGLFeature_NV_transform_feedback();
 #endif /*USE_DYNAMIC_GL_NV_transform_feedback*/
@@ -10152,6 +13446,9 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_NV_register_combiners2
 			InitDinamicGLFeature_NV_register_combiners2();
 #endif /*USE_DYNAMIC_GL_NV_register_combiners2*/
+#ifdef USE_DYNAMIC_GL_VERSION_2_1_DEPRECATED
+			InitDinamicGLFeature_VERSION_2_1_DEPRECATED();
+#endif /*USE_DYNAMIC_GL_VERSION_2_1_DEPRECATED*/
 #ifdef USE_DYNAMIC_GL_EXT_clip_volume_hint
 			InitDinamicGLFeature_EXT_clip_volume_hint();
 #endif /*USE_DYNAMIC_GL_EXT_clip_volume_hint*/
@@ -10161,6 +13458,9 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_APPLE_transform_hint
 			InitDinamicGLFeature_APPLE_transform_hint();
 #endif /*USE_DYNAMIC_GL_APPLE_transform_hint*/
+#ifdef USE_DYNAMIC_GL_ARB_viewport_array
+			InitDinamicGLFeature_ARB_viewport_array();
+#endif /*USE_DYNAMIC_GL_ARB_viewport_array*/
 #ifdef USE_DYNAMIC_GL_NV_fragment_program2
 			InitDinamicGLFeature_NV_fragment_program2();
 #endif /*USE_DYNAMIC_GL_NV_fragment_program2*/
@@ -10182,39 +13482,60 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_EXT_texture_lod_bias
 			InitDinamicGLFeature_EXT_texture_lod_bias();
 #endif /*USE_DYNAMIC_GL_EXT_texture_lod_bias*/
+#ifdef USE_DYNAMIC_GL_NV_explicit_multisample
+			InitDinamicGLFeature_NV_explicit_multisample();
+#endif /*USE_DYNAMIC_GL_NV_explicit_multisample*/
 #ifdef USE_DYNAMIC_GL_ATI_separate_stencil
 			InitDinamicGLFeature_ATI_separate_stencil();
 #endif /*USE_DYNAMIC_GL_ATI_separate_stencil*/
 #ifdef USE_DYNAMIC_GL_APPLE_vertex_array_range
 			InitDinamicGLFeature_APPLE_vertex_array_range();
 #endif /*USE_DYNAMIC_GL_APPLE_vertex_array_range*/
+#ifdef USE_DYNAMIC_GL_EXT_vertex_attrib_64bit
+			InitDinamicGLFeature_EXT_vertex_attrib_64bit();
+#endif /*USE_DYNAMIC_GL_EXT_vertex_attrib_64bit*/
 #ifdef USE_DYNAMIC_GL_NV_conditional_render
 			InitDinamicGLFeature_NV_conditional_render();
 #endif /*USE_DYNAMIC_GL_NV_conditional_render*/
 #ifdef USE_DYNAMIC_GL_SGIS_point_line_texgen
 			InitDinamicGLFeature_SGIS_point_line_texgen();
 #endif /*USE_DYNAMIC_GL_SGIS_point_line_texgen*/
+#ifdef USE_DYNAMIC_GL_ARB_blend_func_extended
+			InitDinamicGLFeature_ARB_blend_func_extended();
+#endif /*USE_DYNAMIC_GL_ARB_blend_func_extended*/
+#ifdef USE_DYNAMIC_GL_NV_shader_buffer_load
+			InitDinamicGLFeature_NV_shader_buffer_load();
+#endif /*USE_DYNAMIC_GL_NV_shader_buffer_load*/
 #ifdef USE_DYNAMIC_GL_EXT_fog_coord
 			InitDinamicGLFeature_EXT_fog_coord();
 #endif /*USE_DYNAMIC_GL_EXT_fog_coord*/
-#ifdef USE_DYNAMIC_GL_VERSION_1_4
-			InitDinamicGLFeature_VERSION_1_4();
-#endif /*USE_DYNAMIC_GL_VERSION_1_4*/
 #ifdef USE_DYNAMIC_GL_ARB_vertex_buffer_object
 			InitDinamicGLFeature_ARB_vertex_buffer_object();
 #endif /*USE_DYNAMIC_GL_ARB_vertex_buffer_object*/
+#ifdef USE_DYNAMIC_GL_VERSION_1_4
+			InitDinamicGLFeature_VERSION_1_4();
+#endif /*USE_DYNAMIC_GL_VERSION_1_4*/
 #ifdef USE_DYNAMIC_GL_APPLE_specular_vector
 			InitDinamicGLFeature_APPLE_specular_vector();
 #endif /*USE_DYNAMIC_GL_APPLE_specular_vector*/
+#ifdef USE_DYNAMIC_GL_EXT_shader_image_load_store
+			InitDinamicGLFeature_EXT_shader_image_load_store();
+#endif /*USE_DYNAMIC_GL_EXT_shader_image_load_store*/
 #ifdef USE_DYNAMIC_GL_NV_copy_depth_to_color
 			InitDinamicGLFeature_NV_copy_depth_to_color();
 #endif /*USE_DYNAMIC_GL_NV_copy_depth_to_color*/
+#ifdef USE_DYNAMIC_GL_ARB_cl_event
+			InitDinamicGLFeature_ARB_cl_event();
+#endif /*USE_DYNAMIC_GL_ARB_cl_event*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_cube_map
 			InitDinamicGLFeature_ARB_texture_cube_map();
 #endif /*USE_DYNAMIC_GL_ARB_texture_cube_map*/
 #ifdef USE_DYNAMIC_GL_NV_vertex_array_range
 			InitDinamicGLFeature_NV_vertex_array_range();
 #endif /*USE_DYNAMIC_GL_NV_vertex_array_range*/
+#ifdef USE_DYNAMIC_GL_VERSION_2_0_DEPRECATED
+			InitDinamicGLFeature_VERSION_2_0_DEPRECATED();
+#endif /*USE_DYNAMIC_GL_VERSION_2_0_DEPRECATED*/
 #ifdef USE_DYNAMIC_GL_EXT_cull_vertex
 			InitDinamicGLFeature_EXT_cull_vertex();
 #endif /*USE_DYNAMIC_GL_EXT_cull_vertex*/
@@ -10227,6 +13548,9 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_INGR_blend_func_separate
 			InitDinamicGLFeature_INGR_blend_func_separate();
 #endif /*USE_DYNAMIC_GL_INGR_blend_func_separate*/
+#ifdef USE_DYNAMIC_GL_ARB_draw_indirect
+			InitDinamicGLFeature_ARB_draw_indirect();
+#endif /*USE_DYNAMIC_GL_ARB_draw_indirect*/
 #ifdef USE_DYNAMIC_GL_APPLE_client_storage
 			InitDinamicGLFeature_APPLE_client_storage();
 #endif /*USE_DYNAMIC_GL_APPLE_client_storage*/
@@ -10248,24 +13572,30 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_EXT_pixel_buffer_object
 			InitDinamicGLFeature_EXT_pixel_buffer_object();
 #endif /*USE_DYNAMIC_GL_EXT_pixel_buffer_object*/
-#ifdef USE_DYNAMIC_GL_EXT_index_array_formats
-			InitDinamicGLFeature_EXT_index_array_formats();
-#endif /*USE_DYNAMIC_GL_EXT_index_array_formats*/
 #ifdef USE_DYNAMIC_GL_EXT_vertex_array
 			InitDinamicGLFeature_EXT_vertex_array();
 #endif /*USE_DYNAMIC_GL_EXT_vertex_array*/
+#ifdef USE_DYNAMIC_GL_EXT_index_array_formats
+			InitDinamicGLFeature_EXT_index_array_formats();
+#endif /*USE_DYNAMIC_GL_EXT_index_array_formats*/
 #ifdef USE_DYNAMIC_GL_ARB_vertex_array_object
 			InitDinamicGLFeature_ARB_vertex_array_object();
 #endif /*USE_DYNAMIC_GL_ARB_vertex_array_object*/
+#ifdef USE_DYNAMIC_GL_NV_texture_multisample
+			InitDinamicGLFeature_NV_texture_multisample();
+#endif /*USE_DYNAMIC_GL_NV_texture_multisample*/
+#ifdef USE_DYNAMIC_GL_ARB_occlusion_query2
+			InitDinamicGLFeature_ARB_occlusion_query2();
+#endif /*USE_DYNAMIC_GL_ARB_occlusion_query2*/
 #ifdef USE_DYNAMIC_GL_IBM_vertex_array_lists
 			InitDinamicGLFeature_IBM_vertex_array_lists();
 #endif /*USE_DYNAMIC_GL_IBM_vertex_array_lists*/
-#ifdef USE_DYNAMIC_GL_ATI_draw_buffers
-			InitDinamicGLFeature_ATI_draw_buffers();
-#endif /*USE_DYNAMIC_GL_ATI_draw_buffers*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_compression_rgtc
 			InitDinamicGLFeature_EXT_texture_compression_rgtc();
 #endif /*USE_DYNAMIC_GL_EXT_texture_compression_rgtc*/
+#ifdef USE_DYNAMIC_GL_ATI_draw_buffers
+			InitDinamicGLFeature_ATI_draw_buffers();
+#endif /*USE_DYNAMIC_GL_ATI_draw_buffers*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_compression
 			InitDinamicGLFeature_ARB_texture_compression();
 #endif /*USE_DYNAMIC_GL_ARB_texture_compression*/
@@ -10275,15 +13605,21 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_EXT_color_subtable
 			InitDinamicGLFeature_EXT_color_subtable();
 #endif /*USE_DYNAMIC_GL_EXT_color_subtable*/
+#ifdef USE_DYNAMIC_GL_VERSION_3_0_DEPRECATED
+			InitDinamicGLFeature_VERSION_3_0_DEPRECATED();
+#endif /*USE_DYNAMIC_GL_VERSION_3_0_DEPRECATED*/
 #ifdef USE_DYNAMIC_GL_EXT_convolution
 			InitDinamicGLFeature_EXT_convolution();
 #endif /*USE_DYNAMIC_GL_EXT_convolution*/
-#ifdef USE_DYNAMIC_GL_SGIX_fog_offset
-			InitDinamicGLFeature_SGIX_fog_offset();
-#endif /*USE_DYNAMIC_GL_SGIX_fog_offset*/
+#ifdef USE_DYNAMIC_GL_VERSION_4_0
+			InitDinamicGLFeature_VERSION_4_0();
+#endif /*USE_DYNAMIC_GL_VERSION_4_0*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_integer
 			InitDinamicGLFeature_EXT_texture_integer();
 #endif /*USE_DYNAMIC_GL_EXT_texture_integer*/
+#ifdef USE_DYNAMIC_GL_SGIX_fog_offset
+			InitDinamicGLFeature_SGIX_fog_offset();
+#endif /*USE_DYNAMIC_GL_SGIX_fog_offset*/
 #ifdef USE_DYNAMIC_GL_ATI_vertex_attrib_array_object
 			InitDinamicGLFeature_ATI_vertex_attrib_array_object();
 #endif /*USE_DYNAMIC_GL_ATI_vertex_attrib_array_object*/
@@ -10296,12 +13632,27 @@ void InternalDynamicGLLoadSubset() {
 #ifdef USE_DYNAMIC_GL_SGIX_shadow
 			InitDinamicGLFeature_SGIX_shadow();
 #endif /*USE_DYNAMIC_GL_SGIX_shadow*/
+#ifdef USE_DYNAMIC_GL_VERSION_3_2
+			InitDinamicGLFeature_VERSION_3_2();
+#endif /*USE_DYNAMIC_GL_VERSION_3_2*/
 #ifdef USE_DYNAMIC_GL_ARB_half_float_pixel
 			InitDinamicGLFeature_ARB_half_float_pixel();
 #endif /*USE_DYNAMIC_GL_ARB_half_float_pixel*/
 #ifdef USE_DYNAMIC_GL_NV_primitive_restart
 			InitDinamicGLFeature_NV_primitive_restart();
 #endif /*USE_DYNAMIC_GL_NV_primitive_restart*/
+#ifdef USE_DYNAMIC_GL_ARB_base_instance
+			InitDinamicGLFeature_ARB_base_instance();
+#endif /*USE_DYNAMIC_GL_ARB_base_instance*/
+#ifdef USE_DYNAMIC_GL_ARB_transform_feedback2
+			InitDinamicGLFeature_ARB_transform_feedback2();
+#endif /*USE_DYNAMIC_GL_ARB_transform_feedback2*/
+#ifdef USE_DYNAMIC_GL_VERSION_3_3
+			InitDinamicGLFeature_VERSION_3_3();
+#endif /*USE_DYNAMIC_GL_VERSION_3_3*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_gather
+			InitDinamicGLFeature_ARB_texture_gather();
+#endif /*USE_DYNAMIC_GL_ARB_texture_gather*/
 #ifdef USE_DYNAMIC_GL_SUN_vertex
 			InitDinamicGLFeature_SUN_vertex();
 #endif /*USE_DYNAMIC_GL_SUN_vertex*/

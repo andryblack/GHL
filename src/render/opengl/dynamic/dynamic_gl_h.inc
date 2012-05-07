@@ -1223,6 +1223,15 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_InterleavedArrays)(GLen
 extern bool DinamicGLFeature_VERSION_1_1_Supported();
 #endif /*USE_DYNAMIC_GL_VERSION_1_1*/
 
+/*ARB_copy_buffer*/
+#ifdef USE_DYNAMIC_GL_ARB_copy_buffer
+#define GL_COPY_READ_BUFFER_BINDING 0x8F36
+#define GL_COPY_WRITE_BUFFER_BINDING 0x8F37
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_CopyBufferSubData)(GLenum readTarget , GLenum writeTarget , GLintptr readOffset , GLintptr writeOffset , GLsizeiptr size); }
+#define glCopyBufferSubData DynamicGL_CopyBufferSubData
+extern bool DinamicGLFeature_ARB_copy_buffer_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_copy_buffer*/
+
 /*SGIS_sharpen_texture*/
 #ifdef USE_DYNAMIC_GL_SGIS_sharpen_texture
 #define GL_LINEAR_SHARPEN_SGIS 0x80AD
@@ -1236,12 +1245,28 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetSharpenTexFuncSGIS)(
 extern bool DinamicGLFeature_SGIS_sharpen_texture_Supported();
 #endif /*USE_DYNAMIC_GL_SGIS_sharpen_texture*/
 
+/*ARB_internalformat_query*/
+#ifdef USE_DYNAMIC_GL_ARB_internalformat_query
+#define GL_NUM_SAMPLE_COUNTS 0x9380
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetInternalformativ)(GLenum target , GLenum internalformat , GLenum pname , GLsizei bufSize , GLint *params); }
+#define glGetInternalformativ DynamicGL_GetInternalformativ
+extern bool DinamicGLFeature_ARB_internalformat_query_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_internalformat_query*/
+
 /*SGIX_blend_alpha_minmax*/
 #ifdef USE_DYNAMIC_GL_SGIX_blend_alpha_minmax
 #define GL_ALPHA_MIN_SGIX 0x8320
 #define GL_ALPHA_MAX_SGIX 0x8321
 extern bool DinamicGLFeature_SGIX_blend_alpha_minmax_Supported();
 #endif /*USE_DYNAMIC_GL_SGIX_blend_alpha_minmax*/
+
+/*ATI_meminfo*/
+#ifdef USE_DYNAMIC_GL_ATI_meminfo
+#define GL_VBO_FREE_MEMORY_ATI 0x87FB
+#define GL_TEXTURE_FREE_MEMORY_ATI 0x87FC
+#define GL_RENDERBUFFER_FREE_MEMORY_ATI 0x87FD
+extern bool DinamicGLFeature_ATI_meminfo_Supported();
+#endif /*USE_DYNAMIC_GL_ATI_meminfo*/
 
 /*NV_present_video*/
 #ifdef USE_DYNAMIC_GL_NV_present_video
@@ -1251,6 +1276,18 @@ extern bool DinamicGLFeature_SGIX_blend_alpha_minmax_Supported();
 #define GL_NUM_FILL_STREAMS_NV 0x8E29
 #define GL_PRESENT_TIME_NV 0x8E2A
 #define GL_PRESENT_DURATION_NV 0x8E2B
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PresentFrameKeyedNV)(GLuint video_slot , GLuint64EXT minPresentTime , GLuint beginPresentTimeId , GLuint presentDurationId , GLenum type , GLenum target0 , GLuint fill0 , GLuint key0 , GLenum target1 , GLuint fill1 , GLuint key1); }
+#define glPresentFrameKeyedNV DynamicGL_PresentFrameKeyedNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PresentFrameDualFillNV)(GLuint video_slot , GLuint64EXT minPresentTime , GLuint beginPresentTimeId , GLuint presentDurationId , GLenum type , GLenum target0 , GLuint fill0 , GLenum target1 , GLuint fill1 , GLenum target2 , GLuint fill2 , GLenum target3 , GLuint fill3); }
+#define glPresentFrameDualFillNV DynamicGL_PresentFrameDualFillNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVideoivNV)(GLuint video_slot , GLenum pname , GLint *params); }
+#define glGetVideoivNV DynamicGL_GetVideoivNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVideouivNV)(GLuint video_slot , GLenum pname , GLuint *params); }
+#define glGetVideouivNV DynamicGL_GetVideouivNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVideoi64vNV)(GLuint video_slot , GLenum pname , GLint64EXT *params); }
+#define glGetVideoi64vNV DynamicGL_GetVideoi64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVideoui64vNV)(GLuint video_slot , GLenum pname , GLuint64EXT *params); }
+#define glGetVideoui64vNV DynamicGL_GetVideoui64vNV
 extern bool DinamicGLFeature_NV_present_video_Supported();
 #endif /*USE_DYNAMIC_GL_NV_present_video*/
 
@@ -1419,6 +1456,26 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawRangeElementsEXT)(G
 extern bool DinamicGLFeature_EXT_draw_range_elements_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_draw_range_elements*/
 
+/*ARB_shading_language_include*/
+#ifdef USE_DYNAMIC_GL_ARB_shading_language_include
+#define GL_SHADER_INCLUDE_ARB 0x8DAE
+#define GL_NAMED_STRING_LENGTH_ARB 0x8DE9
+#define GL_NAMED_STRING_TYPE_ARB 0x8DEA
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_NamedStringARB)(GLenum type , GLint namelen , const GLchar *name , GLint stringlen , const GLchar *string); }
+#define glNamedStringARB DynamicGL_NamedStringARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteNamedStringARB)(GLint namelen , const GLchar *name); }
+#define glDeleteNamedStringARB DynamicGL_DeleteNamedStringARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_CompileShaderIncludeARB)(GLuint shader , GLsizei count , const GLchar* *path , const GLint *length); }
+#define glCompileShaderIncludeARB DynamicGL_CompileShaderIncludeARB
+extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsNamedStringARB)(GLint namelen , const GLchar *name); }
+#define glIsNamedStringARB DynamicGL_IsNamedStringARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetNamedStringARB)(GLint namelen , const GLchar *name , GLsizei bufSize , GLint *stringlen , GLchar *string); }
+#define glGetNamedStringARB DynamicGL_GetNamedStringARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetNamedStringivARB)(GLint namelen , const GLchar *name , GLenum pname , GLint *params); }
+#define glGetNamedStringivARB DynamicGL_GetNamedStringivARB
+extern bool DinamicGLFeature_ARB_shading_language_include_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_shading_language_include*/
+
 /*NV_evaluators*/
 #ifdef USE_DYNAMIC_GL_NV_evaluators
 #define GL_EVAL_2D_NV 0x86C0
@@ -1466,6 +1523,14 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_EvalMapsNV)(GLenum targ
 extern bool DinamicGLFeature_NV_evaluators_Supported();
 #endif /*USE_DYNAMIC_GL_NV_evaluators*/
 
+/*AMD_sample_positions*/
+#ifdef USE_DYNAMIC_GL_AMD_sample_positions
+#define GL_SUBSAMPLE_DISTANCE_AMD 0x883F
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SetMultisamplefvAMD)(GLenum pname , GLuint index , const GLfloat *val); }
+#define glSetMultisamplefvAMD DynamicGL_SetMultisamplefvAMD
+extern bool DinamicGLFeature_AMD_sample_positions_Supported();
+#endif /*USE_DYNAMIC_GL_AMD_sample_positions*/
+
 /*OML_interlace*/
 #ifdef USE_DYNAMIC_GL_OML_interlace
 #define GL_INTERLACE_OML 0x8980
@@ -1478,6 +1543,19 @@ extern bool DinamicGLFeature_OML_interlace_Supported();
 #define GL_CLAMP_TO_BORDER_ARB 0x812D
 extern bool DinamicGLFeature_ARB_texture_border_clamp_Supported();
 #endif /*USE_DYNAMIC_GL_ARB_texture_border_clamp*/
+
+/*APPLE_texture_range*/
+#ifdef USE_DYNAMIC_GL_APPLE_texture_range
+#define GL_TEXTURE_RANGE_LENGTH_APPLE 0x85B7
+#define GL_TEXTURE_RANGE_POINTER_APPLE 0x85B8
+#define GL_TEXTURE_STORAGE_HINT_APPLE 0x85BC
+#define GL_STORAGE_PRIVATE_APPLE 0x85BD
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureRangeAPPLE)(GLenum target , GLsizei length , const GLvoid *pointer); }
+#define glTextureRangeAPPLE DynamicGL_TextureRangeAPPLE
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexParameterPointervAPPLE)(GLenum target , GLenum pname , GLvoid* *params); }
+#define glGetTexParameterPointervAPPLE DynamicGL_GetTexParameterPointervAPPLE
+extern bool DinamicGLFeature_APPLE_texture_range_Supported();
+#endif /*USE_DYNAMIC_GL_APPLE_texture_range*/
 
 /*ARB_shadow_ambient*/
 #ifdef USE_DYNAMIC_GL_ARB_shadow_ambient
@@ -1571,6 +1649,13 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexBufferEXT)(GLenum ta
 extern bool DinamicGLFeature_EXT_texture_buffer_object_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_texture_buffer_object*/
 
+/*APPLE_row_bytes*/
+#ifdef USE_DYNAMIC_GL_APPLE_row_bytes
+#define GL_PACK_ROW_BYTES_APPLE 0x8A15
+#define GL_UNPACK_ROW_BYTES_APPLE 0x8A16
+extern bool DinamicGLFeature_APPLE_row_bytes_Supported();
+#endif /*USE_DYNAMIC_GL_APPLE_row_bytes*/
+
 /*IBM_multimode_draw_arrays*/
 #ifdef USE_DYNAMIC_GL_IBM_multimode_draw_arrays
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiModeDrawArraysIBM)(const GLenum *mode , const GLint *first , const GLsizei *count , GLsizei primcount , GLint modestride); }
@@ -1579,6 +1664,25 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiModeDrawElementsIB
 #define glMultiModeDrawElementsIBM DynamicGL_MultiModeDrawElementsIBM
 extern bool DinamicGLFeature_IBM_multimode_draw_arrays_Supported();
 #endif /*USE_DYNAMIC_GL_IBM_multimode_draw_arrays*/
+
+/*ARB_draw_elements_base_vertex*/
+#ifdef USE_DYNAMIC_GL_ARB_draw_elements_base_vertex
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElementsBaseVertex)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices , GLint basevertex); }
+#define glDrawElementsBaseVertex DynamicGL_DrawElementsBaseVertex
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawRangeElementsBaseVertex)(GLenum mode , GLuint start , GLuint end , GLsizei count , GLenum type , const GLvoid *indices , GLint basevertex); }
+#define glDrawRangeElementsBaseVertex DynamicGL_DrawRangeElementsBaseVertex
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElementsInstancedBaseVertex)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices , GLsizei primcount , GLint basevertex); }
+#define glDrawElementsInstancedBaseVertex DynamicGL_DrawElementsInstancedBaseVertex
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawElementsBaseVertex)(GLenum mode , const GLsizei *count , GLenum type , const GLvoid* const , GLsizei primcount , const GLint *basevertex); }
+#define glMultiDrawElementsBaseVertex DynamicGL_MultiDrawElementsBaseVertex
+extern bool DinamicGLFeature_ARB_draw_elements_base_vertex_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_draw_elements_base_vertex*/
+
+/*ARB_depth_clamp*/
+#ifdef USE_DYNAMIC_GL_ARB_depth_clamp
+#define GL_DEPTH_CLAMP 0x864F
+extern bool DinamicGLFeature_ARB_depth_clamp_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_depth_clamp*/
 
 /*EXT_framebuffer_object*/
 #ifdef USE_DYNAMIC_GL_EXT_framebuffer_object
@@ -1716,6 +1820,32 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PixelTransformParameter
 extern bool DinamicGLFeature_EXT_pixel_transform_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_pixel_transform*/
 
+/*ARB_sample_shading*/
+#ifdef USE_DYNAMIC_GL_ARB_sample_shading
+#define GL_SAMPLE_SHADING_ARB 0x8C36
+#define GL_MIN_SAMPLE_SHADING_VALUE_ARB 0x8C37
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MinSampleShadingARB)(GLfloat value); }
+#define glMinSampleShadingARB DynamicGL_MinSampleShadingARB
+extern bool DinamicGLFeature_ARB_sample_shading_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_sample_shading*/
+
+/*APPLE_object_purgeable*/
+#ifdef USE_DYNAMIC_GL_APPLE_object_purgeable
+#define GL_BUFFER_OBJECT_APPLE 0x85B3
+#define GL_RELEASED_APPLE 0x8A19
+#define GL_VOLATILE_APPLE 0x8A1A
+#define GL_RETAINED_APPLE 0x8A1B
+#define GL_UNDEFINED_APPLE 0x8A1C
+#define GL_PURGEABLE_APPLE 0x8A1D
+extern "C" { extern GLenum (DYNAMIC_GL_APIENTRYP DynamicGL_ObjectPurgeableAPPLE)(GLenum objectType , GLuint name , GLenum option); }
+#define glObjectPurgeableAPPLE DynamicGL_ObjectPurgeableAPPLE
+extern "C" { extern GLenum (DYNAMIC_GL_APIENTRYP DynamicGL_ObjectUnpurgeableAPPLE)(GLenum objectType , GLuint name , GLenum option); }
+#define glObjectUnpurgeableAPPLE DynamicGL_ObjectUnpurgeableAPPLE
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetObjectParameterivAPPLE)(GLenum objectType , GLuint name , GLenum pname , GLint *params); }
+#define glGetObjectParameterivAPPLE DynamicGL_GetObjectParameterivAPPLE
+extern bool DinamicGLFeature_APPLE_object_purgeable_Supported();
+#endif /*USE_DYNAMIC_GL_APPLE_object_purgeable*/
+
 /*EXT_index_material*/
 #ifdef USE_DYNAMIC_GL_EXT_index_material
 #define GL_INDEX_MATERIAL_EXT 0x81B8
@@ -1737,6 +1867,22 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexFilterFuncSGIS)(GLen
 extern bool DinamicGLFeature_SGIS_texture_filter4_Supported();
 #endif /*USE_DYNAMIC_GL_SGIS_texture_filter4*/
 
+/*EXT_framebuffer_multisample_blit_scaled*/
+#ifdef USE_DYNAMIC_GL_EXT_framebuffer_multisample_blit_scaled
+#define GL_SCALED_RESOLVE_FASTEST_EXT 0x90BA
+#define GL_SCALED_RESOLVE_NICEST_EXT 0x90BB
+extern bool DinamicGLFeature_EXT_framebuffer_multisample_blit_scaled_Supported();
+#endif /*USE_DYNAMIC_GL_EXT_framebuffer_multisample_blit_scaled*/
+
+/*ARB_texture_compression_bptc*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_compression_bptc
+#define GL_COMPRESSED_RGBA_BPTC_UNORM_ARB 0x8E8C
+#define GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_ARB 0x8E8D
+#define GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_ARB 0x8E8E
+#define GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_ARB 0x8E8F
+extern bool DinamicGLFeature_ARB_texture_compression_bptc_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_texture_compression_bptc*/
+
 /*APPLE_flush_buffer_range*/
 #ifdef USE_DYNAMIC_GL_APPLE_flush_buffer_range
 #define GL_BUFFER_SERIALIZED_MODIFY_APPLE 0x8A12
@@ -1756,6 +1902,17 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureColorMaskSGIS)(G
 extern bool DinamicGLFeature_SGIS_texture_color_mask_Supported();
 #endif /*USE_DYNAMIC_GL_SGIS_texture_color_mask*/
 
+/*EXT_provoking_vertex*/
+#ifdef USE_DYNAMIC_GL_EXT_provoking_vertex
+#define GL_QUADS_FOLLOW_PROVOKING_VERTEX_CONVENTION_EXT 0x8E4C
+#define GL_FIRST_VERTEX_CONVENTION_EXT 0x8E4D
+#define GL_LAST_VERTEX_CONVENTION_EXT 0x8E4E
+#define GL_PROVOKING_VERTEX_EXT 0x8E4F
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProvokingVertexEXT)(GLenum mode); }
+#define glProvokingVertexEXT DynamicGL_ProvokingVertexEXT
+extern bool DinamicGLFeature_EXT_provoking_vertex_Supported();
+#endif /*USE_DYNAMIC_GL_EXT_provoking_vertex*/
+
 /*ARB_fragment_shader*/
 #ifdef USE_DYNAMIC_GL_ARB_fragment_shader
 #define GL_FRAGMENT_SHADER_ARB 0x8B30
@@ -1770,6 +1927,58 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FrameTerminatorGREMEDY)
 #define glFrameTerminatorGREMEDY DynamicGL_FrameTerminatorGREMEDY
 extern bool DinamicGLFeature_GREMEDY_frame_terminator_Supported();
 #endif /*USE_DYNAMIC_GL_GREMEDY_frame_terminator*/
+
+/*ARB_robustness*/
+#ifdef USE_DYNAMIC_GL_ARB_robustness
+#define GL_CONTEXT_FLAG_ROBUST_ACCESS_BIT_ARB 0x00000004
+#define GL_LOSE_CONTEXT_ON_RESET_ARB 0x8252
+#define GL_GUILTY_CONTEXT_RESET_ARB 0x8253
+#define GL_INNOCENT_CONTEXT_RESET_ARB 0x8254
+#define GL_UNKNOWN_CONTEXT_RESET_ARB 0x8255
+#define GL_RESET_NOTIFICATION_STRATEGY_ARB 0x8256
+#define GL_NO_RESET_NOTIFICATION_ARB 0x8261
+extern "C" { extern GLenum (DYNAMIC_GL_APIENTRYP DynamicGL_GetGraphicsResetStatusARB)(); }
+#define glGetGraphicsResetStatusARB DynamicGL_GetGraphicsResetStatusARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnMapdvARB)(GLenum target , GLenum query , GLsizei bufSize , GLdouble *v); }
+#define glGetnMapdvARB DynamicGL_GetnMapdvARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnMapfvARB)(GLenum target , GLenum query , GLsizei bufSize , GLfloat *v); }
+#define glGetnMapfvARB DynamicGL_GetnMapfvARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnMapivARB)(GLenum target , GLenum query , GLsizei bufSize , GLint *v); }
+#define glGetnMapivARB DynamicGL_GetnMapivARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnPixelMapfvARB)(GLenum map , GLsizei bufSize , GLfloat *values); }
+#define glGetnPixelMapfvARB DynamicGL_GetnPixelMapfvARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnPixelMapuivARB)(GLenum map , GLsizei bufSize , GLuint *values); }
+#define glGetnPixelMapuivARB DynamicGL_GetnPixelMapuivARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnPixelMapusvARB)(GLenum map , GLsizei bufSize , GLushort *values); }
+#define glGetnPixelMapusvARB DynamicGL_GetnPixelMapusvARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnPolygonStippleARB)(GLsizei bufSize , GLubyte *pattern); }
+#define glGetnPolygonStippleARB DynamicGL_GetnPolygonStippleARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnColorTableARB)(GLenum target , GLenum format , GLenum type , GLsizei bufSize , GLvoid *table); }
+#define glGetnColorTableARB DynamicGL_GetnColorTableARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnConvolutionFilterARB)(GLenum target , GLenum format , GLenum type , GLsizei bufSize , GLvoid *image); }
+#define glGetnConvolutionFilterARB DynamicGL_GetnConvolutionFilterARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnSeparableFilterARB)(GLenum target , GLenum format , GLenum type , GLsizei rowBufSize , GLvoid *row , GLsizei columnBufSize , GLvoid *column , GLvoid *span); }
+#define glGetnSeparableFilterARB DynamicGL_GetnSeparableFilterARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnHistogramARB)(GLenum target , GLboolean reset , GLenum format , GLenum type , GLsizei bufSize , GLvoid *values); }
+#define glGetnHistogramARB DynamicGL_GetnHistogramARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnMinmaxARB)(GLenum target , GLboolean reset , GLenum format , GLenum type , GLsizei bufSize , GLvoid *values); }
+#define glGetnMinmaxARB DynamicGL_GetnMinmaxARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnTexImageARB)(GLenum target , GLint level , GLenum format , GLenum type , GLsizei bufSize , GLvoid *img); }
+#define glGetnTexImageARB DynamicGL_GetnTexImageARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ReadnPixelsARB)(GLint x , GLint y , GLsizei width , GLsizei height , GLenum format , GLenum type , GLsizei bufSize , GLvoid *data); }
+#define glReadnPixelsARB DynamicGL_ReadnPixelsARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnCompressedTexImageARB)(GLenum target , GLint lod , GLsizei bufSize , GLvoid *img); }
+#define glGetnCompressedTexImageARB DynamicGL_GetnCompressedTexImageARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnUniformfvARB)(GLuint program , GLint location , GLsizei bufSize , GLfloat *params); }
+#define glGetnUniformfvARB DynamicGL_GetnUniformfvARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnUniformivARB)(GLuint program , GLint location , GLsizei bufSize , GLint *params); }
+#define glGetnUniformivARB DynamicGL_GetnUniformivARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnUniformuivARB)(GLuint program , GLint location , GLsizei bufSize , GLuint *params); }
+#define glGetnUniformuivARB DynamicGL_GetnUniformuivARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnUniformdvARB)(GLuint program , GLint location , GLsizei bufSize , GLdouble *params); }
+#define glGetnUniformdvARB DynamicGL_GetnUniformdvARB
+extern bool DinamicGLFeature_ARB_robustness_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_robustness*/
 
 /*ARB_shading_language_100*/
 #ifdef USE_DYNAMIC_GL_ARB_shading_language_100
@@ -1924,6 +2133,16 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ReferencePlaneSGIX)(con
 #define glReferencePlaneSGIX DynamicGL_ReferencePlaneSGIX
 extern bool DinamicGLFeature_SGIX_reference_plane_Supported();
 #endif /*USE_DYNAMIC_GL_SGIX_reference_plane*/
+
+/*ARB_gpu_shader5*/
+#ifdef USE_DYNAMIC_GL_ARB_gpu_shader5
+#define GL_GEOMETRY_SHADER_INVOCATIONS 0x887F
+#define GL_MAX_GEOMETRY_SHADER_INVOCATIONS 0x8E5A
+#define GL_MIN_FRAGMENT_INTERPOLATION_OFFSET 0x8E5B
+#define GL_MAX_FRAGMENT_INTERPOLATION_OFFSET 0x8E5C
+#define GL_FRAGMENT_INTERPOLATION_OFFSET_BITS 0x8E5D
+extern bool DinamicGLFeature_ARB_gpu_shader5_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_gpu_shader5*/
 
 /*HP_image_transform*/
 #ifdef USE_DYNAMIC_GL_HP_image_transform
@@ -2280,6 +2499,10 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_NamedBufferSubDataEXT)(
 #define glNamedBufferSubDataEXT DynamicGL_NamedBufferSubDataEXT
 extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_UnmapNamedBufferEXT)(GLuint buffer); }
 #define glUnmapNamedBufferEXT DynamicGL_UnmapNamedBufferEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FlushMappedNamedBufferRangeEXT)(GLuint buffer , GLintptr offset , GLsizeiptr length); }
+#define glFlushMappedNamedBufferRangeEXT DynamicGL_FlushMappedNamedBufferRangeEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_NamedCopyBufferSubDataEXT)(GLuint readBuffer , GLuint writeBuffer , GLintptr readOffset , GLintptr writeOffset , GLsizeiptr size); }
+#define glNamedCopyBufferSubDataEXT DynamicGL_NamedCopyBufferSubDataEXT
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetNamedBufferParameterivEXT)(GLuint buffer , GLenum pname , GLint *params); }
 #define glGetNamedBufferParameterivEXT DynamicGL_GetNamedBufferParameterivEXT
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetNamedBufferPointervEXT)(GLuint buffer , GLenum pname , GLvoid* *params); }
@@ -2332,8 +2555,52 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureRenderbufferEXT)
 #define glTextureRenderbufferEXT DynamicGL_TextureRenderbufferEXT
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexRenderbufferEXT)(GLenum texunit , GLenum target , GLuint renderbuffer); }
 #define glMultiTexRenderbufferEXT DynamicGL_MultiTexRenderbufferEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1dEXT)(GLuint program , GLint location , GLdouble x); }
+#define glProgramUniform1dEXT DynamicGL_ProgramUniform1dEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2dEXT)(GLuint program , GLint location , GLdouble x , GLdouble y); }
+#define glProgramUniform2dEXT DynamicGL_ProgramUniform2dEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3dEXT)(GLuint program , GLint location , GLdouble x , GLdouble y , GLdouble z); }
+#define glProgramUniform3dEXT DynamicGL_ProgramUniform3dEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4dEXT)(GLuint program , GLint location , GLdouble x , GLdouble y , GLdouble z , GLdouble w); }
+#define glProgramUniform4dEXT DynamicGL_ProgramUniform4dEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1dvEXT)(GLuint program , GLint location , GLsizei count , const GLdouble *value); }
+#define glProgramUniform1dvEXT DynamicGL_ProgramUniform1dvEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2dvEXT)(GLuint program , GLint location , GLsizei count , const GLdouble *value); }
+#define glProgramUniform2dvEXT DynamicGL_ProgramUniform2dvEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3dvEXT)(GLuint program , GLint location , GLsizei count , const GLdouble *value); }
+#define glProgramUniform3dvEXT DynamicGL_ProgramUniform3dvEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4dvEXT)(GLuint program , GLint location , GLsizei count , const GLdouble *value); }
+#define glProgramUniform4dvEXT DynamicGL_ProgramUniform4dvEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix2dvEXT)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value); }
+#define glProgramUniformMatrix2dvEXT DynamicGL_ProgramUniformMatrix2dvEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix3dvEXT)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value); }
+#define glProgramUniformMatrix3dvEXT DynamicGL_ProgramUniformMatrix3dvEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix4dvEXT)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value); }
+#define glProgramUniformMatrix4dvEXT DynamicGL_ProgramUniformMatrix4dvEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix2x3dvEXT)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value); }
+#define glProgramUniformMatrix2x3dvEXT DynamicGL_ProgramUniformMatrix2x3dvEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix2x4dvEXT)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value); }
+#define glProgramUniformMatrix2x4dvEXT DynamicGL_ProgramUniformMatrix2x4dvEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix3x2dvEXT)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value); }
+#define glProgramUniformMatrix3x2dvEXT DynamicGL_ProgramUniformMatrix3x2dvEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix3x4dvEXT)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value); }
+#define glProgramUniformMatrix3x4dvEXT DynamicGL_ProgramUniformMatrix3x4dvEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix4x2dvEXT)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value); }
+#define glProgramUniformMatrix4x2dvEXT DynamicGL_ProgramUniformMatrix4x2dvEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix4x3dvEXT)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value); }
+#define glProgramUniformMatrix4x3dvEXT DynamicGL_ProgramUniformMatrix4x3dvEXT
 extern bool DinamicGLFeature_EXT_direct_state_access_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_direct_state_access*/
+
+/*ARB_texture_swizzle*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_swizzle
+#define GL_TEXTURE_SWIZZLE_R 0x8E42
+#define GL_TEXTURE_SWIZZLE_G 0x8E43
+#define GL_TEXTURE_SWIZZLE_B 0x8E44
+#define GL_TEXTURE_SWIZZLE_A 0x8E45
+#define GL_TEXTURE_SWIZZLE_RGBA 0x8E46
+extern bool DinamicGLFeature_ARB_texture_swizzle_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_texture_swizzle*/
 
 /*ARB_multisample*/
 #ifdef USE_DYNAMIC_GL_ARB_multisample
@@ -2346,7 +2613,7 @@ extern bool DinamicGLFeature_EXT_direct_state_access_Supported();
 #define GL_SAMPLE_COVERAGE_VALUE_ARB 0x80AA
 #define GL_SAMPLE_COVERAGE_INVERT_ARB 0x80AB
 #define GL_MULTISAMPLE_BIT_ARB 0x20000000
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleCoverageARB)(GLclampf value , GLboolean invert); }
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleCoverageARB)(GLfloat value , GLboolean invert); }
 #define glSampleCoverageARB DynamicGL_SampleCoverageARB
 extern bool DinamicGLFeature_ARB_multisample_Supported();
 #endif /*USE_DYNAMIC_GL_ARB_multisample*/
@@ -2364,6 +2631,12 @@ extern bool DinamicGLFeature_SGIX_fog_scale_Supported();
 #define GL_MIRROR_CLAMP_TO_EDGE_ATI 0x8743
 extern bool DinamicGLFeature_ATI_texture_mirror_once_Supported();
 #endif /*USE_DYNAMIC_GL_ATI_texture_mirror_once*/
+
+/*APPLE_rgb_422*/
+#ifdef USE_DYNAMIC_GL_APPLE_rgb_422
+#define GL_RGB_422_APPLE 0x8A1F
+extern bool DinamicGLFeature_APPLE_rgb_422_Supported();
+#endif /*USE_DYNAMIC_GL_APPLE_rgb_422*/
 
 /*EXT_shared_texture_palette*/
 #ifdef USE_DYNAMIC_GL_EXT_shared_texture_palette
@@ -2397,6 +2670,19 @@ extern bool DinamicGLFeature_EXT_shared_texture_palette_Supported();
 #define GL_RG32UI 0x823C
 extern bool DinamicGLFeature_ARB_texture_rg_Supported();
 #endif /*USE_DYNAMIC_GL_ARB_texture_rg*/
+
+/*ARB_draw_buffers_blend*/
+#ifdef USE_DYNAMIC_GL_ARB_draw_buffers_blend
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationiARB)(GLuint buf , GLenum mode); }
+#define glBlendEquationiARB DynamicGL_BlendEquationiARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationSeparateiARB)(GLuint buf , GLenum modeRGB , GLenum modeAlpha); }
+#define glBlendEquationSeparateiARB DynamicGL_BlendEquationSeparateiARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFunciARB)(GLuint buf , GLenum src , GLenum dst); }
+#define glBlendFunciARB DynamicGL_BlendFunciARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFuncSeparateiARB)(GLuint buf , GLenum srcRGB , GLenum dstRGB , GLenum srcAlpha , GLenum dstAlpha); }
+#define glBlendFuncSeparateiARB DynamicGL_BlendFuncSeparateiARB
+extern bool DinamicGLFeature_ARB_draw_buffers_blend_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_draw_buffers_blend*/
 
 /*EXT_stencil_clear_tag*/
 #ifdef USE_DYNAMIC_GL_EXT_stencil_clear_tag
@@ -2588,6 +2874,13 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexBlendEnvfATI)(GLe
 extern bool DinamicGLFeature_ATI_vertex_streams_Supported();
 #endif /*USE_DYNAMIC_GL_ATI_vertex_streams*/
 
+/*AMD_depth_clamp_separate*/
+#ifdef USE_DYNAMIC_GL_AMD_depth_clamp_separate
+#define GL_DEPTH_CLAMP_NEAR_AMD 0x901E
+#define GL_DEPTH_CLAMP_FAR_AMD 0x901F
+extern bool DinamicGLFeature_AMD_depth_clamp_separate_Supported();
+#endif /*USE_DYNAMIC_GL_AMD_depth_clamp_separate*/
+
 /*3DFX_texture_compression_FXT1*/
 #ifdef USE_DYNAMIC_GL_3DFX_texture_compression_FXT1
 #define GL_COMPRESSED_RGB_FXT1_3DFX 0x86B0
@@ -2608,7 +2901,7 @@ extern bool DinamicGLFeature_SGIX_shadow_ambient_Supported();
 #define GL_CONSTANT_ALPHA_EXT 0x8003
 #define GL_ONE_MINUS_CONSTANT_ALPHA_EXT 0x8004
 #define GL_BLEND_COLOR_EXT 0x8005
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendColorEXT)(GLclampf red , GLclampf green , GLclampf blue , GLclampf alpha); }
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendColorEXT)(GLfloat red , GLfloat green , GLfloat blue , GLfloat alpha); }
 #define glBlendColorEXT DynamicGL_BlendColorEXT
 extern bool DinamicGLFeature_EXT_blend_color_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_blend_color*/
@@ -2655,12 +2948,17 @@ extern bool DinamicGLFeature_EXT_bgra_Supported();
 #define GL_FRAMEBUFFER_DEFAULT 0x8218
 #define GL_FRAMEBUFFER_UNDEFINED 0x8219
 #define GL_DEPTH_STENCIL_ATTACHMENT 0x821A
-#define GL_INDEX 0x8222
 #define GL_MAX_RENDERBUFFER_SIZE 0x84E8
 #define GL_DEPTH_STENCIL 0x84F9
 #define GL_UNSIGNED_INT_24_8 0x84FA
 #define GL_DEPTH24_STENCIL8 0x88F0
 #define GL_TEXTURE_STENCIL_SIZE 0x88F1
+#define GL_TEXTURE_RED_TYPE 0x8C10
+#define GL_TEXTURE_GREEN_TYPE 0x8C11
+#define GL_TEXTURE_BLUE_TYPE 0x8C12
+#define GL_TEXTURE_ALPHA_TYPE 0x8C13
+#define GL_TEXTURE_DEPTH_TYPE 0x8C16
+#define GL_UNSIGNED_NORMALIZED 0x8C17
 #define GL_FRAMEBUFFER_BINDING 0x8CA6
 #define GL_RENDERBUFFER_BINDING 0x8CA7
 #define GL_READ_FRAMEBUFFER 0x8CA8
@@ -2774,6 +3072,256 @@ extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsAsyncMarkerSGIX)
 #define glIsAsyncMarkerSGIX DynamicGL_IsAsyncMarkerSGIX
 extern bool DinamicGLFeature_SGIX_async_Supported();
 #endif /*USE_DYNAMIC_GL_SGIX_async*/
+
+/*ARB_texture_cube_map_array*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_cube_map_array
+#define GL_TEXTURE_CUBE_MAP_ARRAY_ARB 0x9009
+#define GL_TEXTURE_BINDING_CUBE_MAP_ARRAY_ARB 0x900A
+#define GL_PROXY_TEXTURE_CUBE_MAP_ARRAY_ARB 0x900B
+#define GL_SAMPLER_CUBE_MAP_ARRAY_ARB 0x900C
+#define GL_SAMPLER_CUBE_MAP_ARRAY_SHADOW_ARB 0x900D
+#define GL_INT_SAMPLER_CUBE_MAP_ARRAY_ARB 0x900E
+#define GL_UNSIGNED_INT_SAMPLER_CUBE_MAP_ARRAY_ARB 0x900F
+extern bool DinamicGLFeature_ARB_texture_cube_map_array_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_texture_cube_map_array*/
+
+/*NV_path_rendering*/
+#ifdef USE_DYNAMIC_GL_NV_path_rendering
+#define GL_PATH_FORMAT_SVG_NV 0x9070
+#define GL_PATH_FORMAT_PS_NV 0x9071
+#define GL_STANDARD_FONT_NAME_NV 0x9072
+#define GL_SYSTEM_FONT_NAME_NV 0x9073
+#define GL_FILE_NAME_NV 0x9074
+#define GL_PATH_STROKE_WIDTH_NV 0x9075
+#define GL_PATH_END_CAPS_NV 0x9076
+#define GL_PATH_INITIAL_END_CAP_NV 0x9077
+#define GL_PATH_TERMINAL_END_CAP_NV 0x9078
+#define GL_PATH_JOIN_STYLE_NV 0x9079
+#define GL_PATH_MITER_LIMIT_NV 0x907A
+#define GL_PATH_DASH_CAPS_NV 0x907B
+#define GL_PATH_INITIAL_DASH_CAP_NV 0x907C
+#define GL_PATH_TERMINAL_DASH_CAP_NV 0x907D
+#define GL_PATH_DASH_OFFSET_NV 0x907E
+#define GL_PATH_CLIENT_LENGTH_NV 0x907F
+#define GL_PATH_FILL_MODE_NV 0x9080
+#define GL_PATH_FILL_MASK_NV 0x9081
+#define GL_PATH_FILL_COVER_MODE_NV 0x9082
+#define GL_PATH_STROKE_COVER_MODE_NV 0x9083
+#define GL_PATH_STROKE_MASK_NV 0x9084
+#define GL_PATH_SAMPLE_QUALITY_NV 0x9085
+#define GL_PATH_STROKE_BOUND_NV 0x9086
+#define GL_PATH_STROKE_OVERSAMPLE_COUNT_NV 0x9087
+#define GL_COUNT_UP_NV 0x9088
+#define GL_COUNT_DOWN_NV 0x9089
+#define GL_PATH_OBJECT_BOUNDING_BOX_NV 0x908A
+#define GL_CONVEX_HULL_NV 0x908B
+#define GL_MULTI_HULLS_NV 0x908C
+#define GL_BOUNDING_BOX_NV 0x908D
+#define GL_TRANSLATE_X_NV 0x908E
+#define GL_TRANSLATE_Y_NV 0x908F
+#define GL_TRANSLATE_2D_NV 0x9090
+#define GL_TRANSLATE_3D_NV 0x9091
+#define GL_AFFINE_2D_NV 0x9092
+#define GL_PROJECTIVE_2D_NV 0x9093
+#define GL_AFFINE_3D_NV 0x9094
+#define GL_PROJECTIVE_3D_NV 0x9095
+#define GL_TRANSPOSE_AFFINE_2D_NV 0x9096
+#define GL_TRANSPOSE_PROJECTIVE_2D_NV 0x9097
+#define GL_TRANSPOSE_AFFINE_3D_NV 0x9098
+#define GL_TRANSPOSE_PROJECTIVE_3D_NV 0x9099
+#define GL_UTF8_NV 0x909A
+#define GL_UTF16_NV 0x909B
+#define GL_BOUNDING_BOX_OF_BOUNDING_BOXES_NV 0x909C
+#define GL_PATH_COMMAND_COUNT_NV 0x909D
+#define GL_PATH_COORD_COUNT_NV 0x909E
+#define GL_PATH_DASH_ARRAY_COUNT_NV 0x909F
+#define GL_PATH_COMPUTED_LENGTH_NV 0x90A0
+#define GL_PATH_FILL_BOUNDING_BOX_NV 0x90A1
+#define GL_PATH_STROKE_BOUNDING_BOX_NV 0x90A2
+#define GL_SQUARE_NV 0x90A3
+#define GL_ROUND_NV 0x90A4
+#define GL_TRIANGULAR_NV 0x90A5
+#define GL_BEVEL_NV 0x90A6
+#define GL_MITER_REVERT_NV 0x90A7
+#define GL_MITER_TRUNCATE_NV 0x90A8
+#define GL_SKIP_MISSING_GLYPH_NV 0x90A9
+#define GL_USE_MISSING_GLYPH_NV 0x90AA
+#define GL_PATH_ERROR_POSITION_NV 0x90AB
+#define GL_PATH_FOG_GEN_MODE_NV 0x90AC
+#define GL_ACCUM_ADJACENT_PAIRS_NV 0x90AD
+#define GL_ADJACENT_PAIRS_NV 0x90AE
+#define GL_FIRST_TO_REST_NV 0x90AF
+#define GL_PATH_GEN_MODE_NV 0x90B0
+#define GL_PATH_GEN_COEFF_NV 0x90B1
+#define GL_PATH_GEN_COLOR_FORMAT_NV 0x90B2
+#define GL_PATH_GEN_COMPONENTS_NV 0x90B3
+#define GL_PATH_STENCIL_FUNC_NV 0x90B7
+#define GL_PATH_STENCIL_REF_NV 0x90B8
+#define GL_PATH_STENCIL_VALUE_MASK_NV 0x90B9
+#define GL_PATH_STENCIL_DEPTH_OFFSET_FACTOR_NV 0x90BD
+#define GL_PATH_STENCIL_DEPTH_OFFSET_UNITS_NV 0x90BE
+#define GL_PATH_COVER_DEPTH_FUNC_NV 0x90BF
+#define GL_PATH_DASH_OFFSET_RESET_NV 0x90B4
+#define GL_MOVE_TO_RESETS_NV 0x90B5
+#define GL_MOVE_TO_CONTINUES_NV 0x90B6
+#define GL_CLOSE_PATH_NV 0x00
+#define GL_MOVE_TO_NV 0x02
+#define GL_RELATIVE_MOVE_TO_NV 0x03
+#define GL_LINE_TO_NV 0x04
+#define GL_RELATIVE_LINE_TO_NV 0x05
+#define GL_HORIZONTAL_LINE_TO_NV 0x06
+#define GL_RELATIVE_HORIZONTAL_LINE_TO_NV 0x07
+#define GL_VERTICAL_LINE_TO_NV 0x08
+#define GL_RELATIVE_VERTICAL_LINE_TO_NV 0x09
+#define GL_QUADRATIC_CURVE_TO_NV 0x0A
+#define GL_RELATIVE_QUADRATIC_CURVE_TO_NV 0x0B
+#define GL_CUBIC_CURVE_TO_NV 0x0C
+#define GL_RELATIVE_CUBIC_CURVE_TO_NV 0x0D
+#define GL_SMOOTH_QUADRATIC_CURVE_TO_NV 0x0E
+#define GL_RELATIVE_SMOOTH_QUADRATIC_CURVE_TO_NV 0x0F
+#define GL_SMOOTH_CUBIC_CURVE_TO_NV 0x10
+#define GL_RELATIVE_SMOOTH_CUBIC_CURVE_TO_NV 0x11
+#define GL_SMALL_CCW_ARC_TO_NV 0x12
+#define GL_RELATIVE_SMALL_CCW_ARC_TO_NV 0x13
+#define GL_SMALL_CW_ARC_TO_NV 0x14
+#define GL_RELATIVE_SMALL_CW_ARC_TO_NV 0x15
+#define GL_LARGE_CCW_ARC_TO_NV 0x16
+#define GL_RELATIVE_LARGE_CCW_ARC_TO_NV 0x17
+#define GL_LARGE_CW_ARC_TO_NV 0x18
+#define GL_RELATIVE_LARGE_CW_ARC_TO_NV 0x19
+#define GL_RESTART_PATH_NV 0xF0
+#define GL_DUP_FIRST_CUBIC_CURVE_TO_NV 0xF2
+#define GL_DUP_LAST_CUBIC_CURVE_TO_NV 0xF4
+#define GL_RECT_NV 0xF6
+#define GL_CIRCULAR_CCW_ARC_TO_NV 0xF8
+#define GL_CIRCULAR_CW_ARC_TO_NV 0xFA
+#define GL_CIRCULAR_TANGENT_ARC_TO_NV 0xFC
+#define GL_ARC_TO_NV 0xFE
+#define GL_RELATIVE_ARC_TO_NV 0xFF
+#define GL_BOLD_BIT_NV 0x01
+#define GL_ITALIC_BIT_NV 0x02
+#define GL_GLYPH_WIDTH_BIT_NV 0x01
+#define GL_GLYPH_HEIGHT_BIT_NV 0x02
+#define GL_GLYPH_HORIZONTAL_BEARING_X_BIT_NV 0x04
+#define GL_GLYPH_HORIZONTAL_BEARING_Y_BIT_NV 0x08
+#define GL_GLYPH_HORIZONTAL_BEARING_ADVANCE_BIT_NV 0x10
+#define GL_GLYPH_VERTICAL_BEARING_X_BIT_NV 0x20
+#define GL_GLYPH_VERTICAL_BEARING_Y_BIT_NV 0x40
+#define GL_GLYPH_VERTICAL_BEARING_ADVANCE_BIT_NV 0x80
+#define GL_GLYPH_HAS_KERNING_NV 0x100
+#define GL_FONT_X_MIN_BOUNDS_NV 0x00010000
+#define GL_FONT_Y_MIN_BOUNDS_NV 0x00020000
+#define GL_FONT_X_MAX_BOUNDS_NV 0x00040000
+#define GL_FONT_Y_MAX_BOUNDS_NV 0x00080000
+#define GL_FONT_UNITS_PER_EM_NV 0x00100000
+#define GL_FONT_ASCENDER_NV 0x00200000
+#define GL_FONT_DESCENDER_NV 0x00400000
+#define GL_FONT_HEIGHT_NV 0x00800000
+#define GL_FONT_MAX_ADVANCE_WIDTH_NV 0x01000000
+#define GL_FONT_MAX_ADVANCE_HEIGHT_NV 0x02000000
+#define GL_FONT_UNDERLINE_POSITION_NV 0x04000000
+#define GL_FONT_UNDERLINE_THICKNESS_NV 0x08000000
+#define GL_FONT_HAS_KERNING_NV 0x10000000
+extern "C" { extern GLuint (DYNAMIC_GL_APIENTRYP DynamicGL_GenPathsNV)(GLsizei range); }
+#define glGenPathsNV DynamicGL_GenPathsNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DeletePathsNV)(GLuint path , GLsizei range); }
+#define glDeletePathsNV DynamicGL_DeletePathsNV
+extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsPathNV)(GLuint path); }
+#define glIsPathNV DynamicGL_IsPathNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PathCommandsNV)(GLuint path , GLsizei numCommands , const GLubyte *commands , GLsizei numCoords , GLenum coordType , const GLvoid *coords); }
+#define glPathCommandsNV DynamicGL_PathCommandsNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PathCoordsNV)(GLuint path , GLsizei numCoords , GLenum coordType , const GLvoid *coords); }
+#define glPathCoordsNV DynamicGL_PathCoordsNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PathSubCommandsNV)(GLuint path , GLsizei commandStart , GLsizei commandsToDelete , GLsizei numCommands , const GLubyte *commands , GLsizei numCoords , GLenum coordType , const GLvoid *coords); }
+#define glPathSubCommandsNV DynamicGL_PathSubCommandsNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PathSubCoordsNV)(GLuint path , GLsizei coordStart , GLsizei numCoords , GLenum coordType , const GLvoid *coords); }
+#define glPathSubCoordsNV DynamicGL_PathSubCoordsNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PathStringNV)(GLuint path , GLenum format , GLsizei length , const GLvoid *pathString); }
+#define glPathStringNV DynamicGL_PathStringNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PathGlyphsNV)(GLuint firstPathName , GLenum fontTarget , const GLvoid *fontName , GLbitfield fontStyle , GLsizei numGlyphs , GLenum type , const GLvoid *charcodes , GLenum handleMissingGlyphs , GLuint pathParameterTemplate , GLfloat emScale); }
+#define glPathGlyphsNV DynamicGL_PathGlyphsNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PathGlyphRangeNV)(GLuint firstPathName , GLenum fontTarget , const GLvoid *fontName , GLbitfield fontStyle , GLuint firstGlyph , GLsizei numGlyphs , GLenum handleMissingGlyphs , GLuint pathParameterTemplate , GLfloat emScale); }
+#define glPathGlyphRangeNV DynamicGL_PathGlyphRangeNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WeightPathsNV)(GLuint resultPath , GLsizei numPaths , const GLuint *paths , const GLfloat *weights); }
+#define glWeightPathsNV DynamicGL_WeightPathsNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_CopyPathNV)(GLuint resultPath , GLuint srcPath); }
+#define glCopyPathNV DynamicGL_CopyPathNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_InterpolatePathsNV)(GLuint resultPath , GLuint pathA , GLuint pathB , GLfloat weight); }
+#define glInterpolatePathsNV DynamicGL_InterpolatePathsNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TransformPathNV)(GLuint resultPath , GLuint srcPath , GLenum transformType , const GLfloat *transformValues); }
+#define glTransformPathNV DynamicGL_TransformPathNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PathParameterivNV)(GLuint path , GLenum pname , const GLint *value); }
+#define glPathParameterivNV DynamicGL_PathParameterivNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PathParameteriNV)(GLuint path , GLenum pname , GLint value); }
+#define glPathParameteriNV DynamicGL_PathParameteriNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PathParameterfvNV)(GLuint path , GLenum pname , const GLfloat *value); }
+#define glPathParameterfvNV DynamicGL_PathParameterfvNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PathParameterfNV)(GLuint path , GLenum pname , GLfloat value); }
+#define glPathParameterfNV DynamicGL_PathParameterfNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PathDashArrayNV)(GLuint path , GLsizei dashCount , const GLfloat *dashArray); }
+#define glPathDashArrayNV DynamicGL_PathDashArrayNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PathStencilFuncNV)(GLenum func , GLint ref , GLuint mask); }
+#define glPathStencilFuncNV DynamicGL_PathStencilFuncNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PathStencilDepthOffsetNV)(GLfloat factor , GLfloat units); }
+#define glPathStencilDepthOffsetNV DynamicGL_PathStencilDepthOffsetNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilFillPathNV)(GLuint path , GLenum fillMode , GLuint mask); }
+#define glStencilFillPathNV DynamicGL_StencilFillPathNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilStrokePathNV)(GLuint path , GLint reference , GLuint mask); }
+#define glStencilStrokePathNV DynamicGL_StencilStrokePathNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilFillPathInstancedNV)(GLsizei numPaths , GLenum pathNameType , const GLvoid *paths , GLuint pathBase , GLenum fillMode , GLuint mask , GLenum transformType , const GLfloat *transformValues); }
+#define glStencilFillPathInstancedNV DynamicGL_StencilFillPathInstancedNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilStrokePathInstancedNV)(GLsizei numPaths , GLenum pathNameType , const GLvoid *paths , GLuint pathBase , GLint reference , GLuint mask , GLenum transformType , const GLfloat *transformValues); }
+#define glStencilStrokePathInstancedNV DynamicGL_StencilStrokePathInstancedNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PathCoverDepthFuncNV)(GLenum func); }
+#define glPathCoverDepthFuncNV DynamicGL_PathCoverDepthFuncNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PathColorGenNV)(GLenum color , GLenum genMode , GLenum colorFormat , const GLfloat *coeffs); }
+#define glPathColorGenNV DynamicGL_PathColorGenNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PathTexGenNV)(GLenum texCoordSet , GLenum genMode , GLint components , const GLfloat *coeffs); }
+#define glPathTexGenNV DynamicGL_PathTexGenNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PathFogGenNV)(GLenum genMode); }
+#define glPathFogGenNV DynamicGL_PathFogGenNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_CoverFillPathNV)(GLuint path , GLenum coverMode); }
+#define glCoverFillPathNV DynamicGL_CoverFillPathNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_CoverStrokePathNV)(GLuint path , GLenum coverMode); }
+#define glCoverStrokePathNV DynamicGL_CoverStrokePathNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_CoverFillPathInstancedNV)(GLsizei numPaths , GLenum pathNameType , const GLvoid *paths , GLuint pathBase , GLenum coverMode , GLenum transformType , const GLfloat *transformValues); }
+#define glCoverFillPathInstancedNV DynamicGL_CoverFillPathInstancedNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_CoverStrokePathInstancedNV)(GLsizei numPaths , GLenum pathNameType , const GLvoid *paths , GLuint pathBase , GLenum coverMode , GLenum transformType , const GLfloat *transformValues); }
+#define glCoverStrokePathInstancedNV DynamicGL_CoverStrokePathInstancedNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPathParameterivNV)(GLuint path , GLenum pname , GLint *value); }
+#define glGetPathParameterivNV DynamicGL_GetPathParameterivNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPathParameterfvNV)(GLuint path , GLenum pname , GLfloat *value); }
+#define glGetPathParameterfvNV DynamicGL_GetPathParameterfvNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPathCommandsNV)(GLuint path , GLubyte *commands); }
+#define glGetPathCommandsNV DynamicGL_GetPathCommandsNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPathCoordsNV)(GLuint path , GLfloat *coords); }
+#define glGetPathCoordsNV DynamicGL_GetPathCoordsNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPathDashArrayNV)(GLuint path , GLfloat *dashArray); }
+#define glGetPathDashArrayNV DynamicGL_GetPathDashArrayNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPathMetricsNV)(GLbitfield metricQueryMask , GLsizei numPaths , GLenum pathNameType , const GLvoid *paths , GLuint pathBase , GLsizei stride , GLfloat *metrics); }
+#define glGetPathMetricsNV DynamicGL_GetPathMetricsNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPathMetricRangeNV)(GLbitfield metricQueryMask , GLuint firstPathName , GLsizei numPaths , GLsizei stride , GLfloat *metrics); }
+#define glGetPathMetricRangeNV DynamicGL_GetPathMetricRangeNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPathSpacingNV)(GLenum pathListMode , GLsizei numPaths , GLenum pathNameType , const GLvoid *paths , GLuint pathBase , GLfloat advanceScale , GLfloat kerningScale , GLenum transformType , GLfloat *returnedSpacing); }
+#define glGetPathSpacingNV DynamicGL_GetPathSpacingNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPathColorGenivNV)(GLenum color , GLenum pname , GLint *value); }
+#define glGetPathColorGenivNV DynamicGL_GetPathColorGenivNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPathColorGenfvNV)(GLenum color , GLenum pname , GLfloat *value); }
+#define glGetPathColorGenfvNV DynamicGL_GetPathColorGenfvNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPathTexGenivNV)(GLenum texCoordSet , GLenum pname , GLint *value); }
+#define glGetPathTexGenivNV DynamicGL_GetPathTexGenivNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPathTexGenfvNV)(GLenum texCoordSet , GLenum pname , GLfloat *value); }
+#define glGetPathTexGenfvNV DynamicGL_GetPathTexGenfvNV
+extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsPointInFillPathNV)(GLuint path , GLuint mask , GLfloat x , GLfloat y); }
+#define glIsPointInFillPathNV DynamicGL_IsPointInFillPathNV
+extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsPointInStrokePathNV)(GLuint path , GLfloat x , GLfloat y); }
+#define glIsPointInStrokePathNV DynamicGL_IsPointInStrokePathNV
+extern "C" { extern GLfloat (DYNAMIC_GL_APIENTRYP DynamicGL_GetPathLengthNV)(GLuint path , GLsizei startSegment , GLsizei numSegments); }
+#define glGetPathLengthNV DynamicGL_GetPathLengthNV
+extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_PointAlongPathNV)(GLuint path , GLsizei startSegment , GLsizei numSegments , GLfloat distance , GLfloat *x , GLfloat *y , GLfloat *tangentX , GLfloat *tangentY); }
+#define glPointAlongPathNV DynamicGL_PointAlongPathNV
+extern bool DinamicGLFeature_NV_path_rendering_Supported();
+#endif /*USE_DYNAMIC_GL_NV_path_rendering*/
 
 /*SGI_texture_color_table*/
 #ifdef USE_DYNAMIC_GL_SGI_texture_color_table
@@ -3026,6 +3574,14 @@ extern bool DinamicGLFeature_NV_pixel_data_range_Supported();
 extern bool DinamicGLFeature_SGI_color_matrix_Supported();
 #endif /*USE_DYNAMIC_GL_SGI_color_matrix*/
 
+/*EXT_x11_sync_object*/
+#ifdef USE_DYNAMIC_GL_EXT_x11_sync_object
+#define GL_SYNC_X11_FENCE_EXT 0x90E1
+extern "C" { extern GLsync (DYNAMIC_GL_APIENTRYP DynamicGL_ImportSyncEXT)(GLenum external_sync_type , GLintptr external_sync , GLbitfield flags); }
+#define glImportSyncEXT DynamicGL_ImportSyncEXT
+extern bool DinamicGLFeature_EXT_x11_sync_object_Supported();
+#endif /*USE_DYNAMIC_GL_EXT_x11_sync_object*/
+
 /*EXT_texture_sRGB*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_sRGB
 #define GL_SRGB_EXT 0x8C40
@@ -3052,6 +3608,76 @@ extern bool DinamicGLFeature_EXT_texture_sRGB_Supported();
 #define GL_DEPTH_CLAMP_NV 0x864F
 extern bool DinamicGLFeature_NV_depth_clamp_Supported();
 #endif /*USE_DYNAMIC_GL_NV_depth_clamp*/
+
+/*ARB_ES2_compatibility*/
+#ifdef USE_DYNAMIC_GL_ARB_ES2_compatibility
+#define GL_FIXED 0x140C
+#define GL_IMPLEMENTATION_COLOR_READ_TYPE 0x8B9A
+#define GL_IMPLEMENTATION_COLOR_READ_FORMAT 0x8B9B
+#define GL_LOW_FLOAT 0x8DF0
+#define GL_MEDIUM_FLOAT 0x8DF1
+#define GL_HIGH_FLOAT 0x8DF2
+#define GL_LOW_INT 0x8DF3
+#define GL_MEDIUM_INT 0x8DF4
+#define GL_HIGH_INT 0x8DF5
+#define GL_SHADER_COMPILER 0x8DFA
+#define GL_NUM_SHADER_BINARY_FORMATS 0x8DF9
+#define GL_MAX_VERTEX_UNIFORM_VECTORS 0x8DFB
+#define GL_MAX_VARYING_VECTORS 0x8DFC
+#define GL_MAX_FRAGMENT_UNIFORM_VECTORS 0x8DFD
+#define GL_RGB565 0x8D62
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ReleaseShaderCompiler)(); }
+#define glReleaseShaderCompiler DynamicGL_ReleaseShaderCompiler
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ShaderBinary)(GLsizei count , const GLuint *shaders , GLenum binaryformat , const GLvoid *binary , GLsizei length); }
+#define glShaderBinary DynamicGL_ShaderBinary
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetShaderPrecisionFormat)(GLenum shadertype , GLenum precisiontype , GLint *range , GLint *precision); }
+#define glGetShaderPrecisionFormat DynamicGL_GetShaderPrecisionFormat
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthRangef)(GLfloat n , GLfloat f); }
+#define glDepthRangef DynamicGL_DepthRangef
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearDepthf)(GLfloat d); }
+#define glClearDepthf DynamicGL_ClearDepthf
+extern bool DinamicGLFeature_ARB_ES2_compatibility_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_ES2_compatibility*/
+
+/*APPLE_aux_depth_stencil*/
+#ifdef USE_DYNAMIC_GL_APPLE_aux_depth_stencil
+#define GL_AUX_DEPTH_STENCIL_APPLE 0x8A14
+extern bool DinamicGLFeature_APPLE_aux_depth_stencil_Supported();
+#endif /*USE_DYNAMIC_GL_APPLE_aux_depth_stencil*/
+
+/*AMD_performance_monitor*/
+#ifdef USE_DYNAMIC_GL_AMD_performance_monitor
+#define GL_COUNTER_TYPE_AMD 0x8BC0
+#define GL_COUNTER_RANGE_AMD 0x8BC1
+#define GL_UNSIGNED_INT64_AMD 0x8BC2
+#define GL_PERCENTAGE_AMD 0x8BC3
+#define GL_PERFMON_RESULT_AVAILABLE_AMD 0x8BC4
+#define GL_PERFMON_RESULT_SIZE_AMD 0x8BC5
+#define GL_PERFMON_RESULT_AMD 0x8BC6
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPerfMonitorGroupsAMD)(GLint *numGroups , GLsizei groupsSize , GLuint *groups); }
+#define glGetPerfMonitorGroupsAMD DynamicGL_GetPerfMonitorGroupsAMD
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPerfMonitorCountersAMD)(GLuint group , GLint *numCounters , GLint *maxActiveCounters , GLsizei counterSize , GLuint *counters); }
+#define glGetPerfMonitorCountersAMD DynamicGL_GetPerfMonitorCountersAMD
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPerfMonitorGroupStringAMD)(GLuint group , GLsizei bufSize , GLsizei *length , GLchar *groupString); }
+#define glGetPerfMonitorGroupStringAMD DynamicGL_GetPerfMonitorGroupStringAMD
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPerfMonitorCounterStringAMD)(GLuint group , GLuint counter , GLsizei bufSize , GLsizei *length , GLchar *counterString); }
+#define glGetPerfMonitorCounterStringAMD DynamicGL_GetPerfMonitorCounterStringAMD
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPerfMonitorCounterInfoAMD)(GLuint group , GLuint counter , GLenum pname , GLvoid *data); }
+#define glGetPerfMonitorCounterInfoAMD DynamicGL_GetPerfMonitorCounterInfoAMD
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GenPerfMonitorsAMD)(GLsizei n , GLuint *monitors); }
+#define glGenPerfMonitorsAMD DynamicGL_GenPerfMonitorsAMD
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DeletePerfMonitorsAMD)(GLsizei n , GLuint *monitors); }
+#define glDeletePerfMonitorsAMD DynamicGL_DeletePerfMonitorsAMD
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SelectPerfMonitorCountersAMD)(GLuint monitor , GLboolean enable , GLuint group , GLint numCounters , GLuint *counterList); }
+#define glSelectPerfMonitorCountersAMD DynamicGL_SelectPerfMonitorCountersAMD
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BeginPerfMonitorAMD)(GLuint monitor); }
+#define glBeginPerfMonitorAMD DynamicGL_BeginPerfMonitorAMD
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_EndPerfMonitorAMD)(GLuint monitor); }
+#define glEndPerfMonitorAMD DynamicGL_EndPerfMonitorAMD
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPerfMonitorCounterDataAMD)(GLuint monitor , GLenum pname , GLsizei dataSize , GLuint *data , GLint *bytesWritten); }
+#define glGetPerfMonitorCounterDataAMD DynamicGL_GetPerfMonitorCounterDataAMD
+extern bool DinamicGLFeature_AMD_performance_monitor_Supported();
+#endif /*USE_DYNAMIC_GL_AMD_performance_monitor*/
 
 /*ARB_half_float_vertex*/
 #ifdef USE_DYNAMIC_GL_ARB_half_float_vertex
@@ -3184,9 +3810,9 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramParameter4fNV)(G
 #define glProgramParameter4fNV DynamicGL_ProgramParameter4fNV
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramParameter4fvNV)(GLenum target , GLuint index , const GLfloat *v); }
 #define glProgramParameter4fvNV DynamicGL_ProgramParameter4fvNV
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramParameters4dvNV)(GLenum target , GLuint index , GLuint count , const GLdouble *v); }
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramParameters4dvNV)(GLenum target , GLuint index , GLsizei count , const GLdouble *v); }
 #define glProgramParameters4dvNV DynamicGL_ProgramParameters4dvNV
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramParameters4fvNV)(GLenum target , GLuint index , GLuint count , const GLfloat *v); }
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramParameters4fvNV)(GLenum target , GLuint index , GLsizei count , const GLfloat *v); }
 #define glProgramParameters4fvNV DynamicGL_ProgramParameters4fvNV
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_RequestResidentProgramsNV)(GLsizei n , const GLuint *programs); }
 #define glRequestResidentProgramsNV DynamicGL_RequestResidentProgramsNV
@@ -3409,6 +4035,12 @@ extern bool DinamicGLFeature_SGIX_tag_sample_buffer_Supported();
 extern bool DinamicGLFeature_EXT_texture_env_combine_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_texture_env_combine*/
 
+/*ARB_texture_rgb10_a2ui*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_rgb10_a2ui
+#define GL_RGB10_A2UI 0x906F
+extern bool DinamicGLFeature_ARB_texture_rgb10_a2ui_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_texture_rgb10_a2ui*/
+
 /*SGIX_vertex_preclip*/
 #ifdef USE_DYNAMIC_GL_SGIX_vertex_preclip
 #define GL_VERTEX_PRECLIP_SGIX 0x83EE
@@ -3449,7 +4081,7 @@ extern bool DinamicGLFeature_ARB_geometry_shader4_Supported();
 
 /*EXT_multi_draw_arrays*/
 #ifdef USE_DYNAMIC_GL_EXT_multi_draw_arrays
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawArraysEXT)(GLenum mode , GLint *first , GLsizei *count , GLsizei primcount); }
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawArraysEXT)(GLenum mode , const GLint *first , const GLsizei *count , GLsizei primcount); }
 #define glMultiDrawArraysEXT DynamicGL_MultiDrawArraysEXT
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawElementsEXT)(GLenum mode , const GLsizei *count , GLenum type , const GLvoid* *indices , GLsizei primcount); }
 #define glMultiDrawElementsEXT DynamicGL_MultiDrawElementsEXT
@@ -3464,6 +4096,18 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureNormalEXT)(GLenu
 #define glTextureNormalEXT DynamicGL_TextureNormalEXT
 extern bool DinamicGLFeature_EXT_texture_perturb_normal_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_texture_perturb_normal*/
+
+/*EXT_separate_shader_objects*/
+#ifdef USE_DYNAMIC_GL_EXT_separate_shader_objects
+#define GL_ACTIVE_PROGRAM_EXT 0x8B8D
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_UseShaderProgramEXT)(GLenum type , GLuint program); }
+#define glUseShaderProgramEXT DynamicGL_UseShaderProgramEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ActiveProgramEXT)(GLuint program); }
+#define glActiveProgramEXT DynamicGL_ActiveProgramEXT
+extern "C" { extern GLuint (DYNAMIC_GL_APIENTRYP DynamicGL_CreateShaderProgramEXT)(GLenum type , const GLchar *string); }
+#define glCreateShaderProgramEXT DynamicGL_CreateShaderProgramEXT
+extern bool DinamicGLFeature_EXT_separate_shader_objects_Supported();
+#endif /*USE_DYNAMIC_GL_EXT_separate_shader_objects*/
 
 /*SGIX_sprite*/
 #ifdef USE_DYNAMIC_GL_SGIX_sprite
@@ -3484,6 +4128,58 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SpriteParameterivSGIX)(
 #define glSpriteParameterivSGIX DynamicGL_SpriteParameterivSGIX
 extern bool DinamicGLFeature_SGIX_sprite_Supported();
 #endif /*USE_DYNAMIC_GL_SGIX_sprite*/
+
+/*EXT_texture_snorm*/
+#ifdef USE_DYNAMIC_GL_EXT_texture_snorm
+#define GL_ALPHA_SNORM 0x9010
+#define GL_LUMINANCE_SNORM 0x9011
+#define GL_LUMINANCE_ALPHA_SNORM 0x9012
+#define GL_INTENSITY_SNORM 0x9013
+#define GL_ALPHA8_SNORM 0x9014
+#define GL_LUMINANCE8_SNORM 0x9015
+#define GL_LUMINANCE8_ALPHA8_SNORM 0x9016
+#define GL_INTENSITY8_SNORM 0x9017
+#define GL_ALPHA16_SNORM 0x9018
+#define GL_LUMINANCE16_SNORM 0x9019
+#define GL_LUMINANCE16_ALPHA16_SNORM 0x901A
+#define GL_INTENSITY16_SNORM 0x901B
+extern bool DinamicGLFeature_EXT_texture_snorm_Supported();
+#endif /*USE_DYNAMIC_GL_EXT_texture_snorm*/
+
+/*ARB_debug_output*/
+#ifdef USE_DYNAMIC_GL_ARB_debug_output
+#define GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB 0x8242
+#define GL_DEBUG_NEXT_LOGGED_MESSAGE_LENGTH_ARB 0x8243
+#define GL_DEBUG_CALLBACK_FUNCTION_ARB 0x8244
+#define GL_DEBUG_CALLBACK_USER_PARAM_ARB 0x8245
+#define GL_DEBUG_SOURCE_API_ARB 0x8246
+#define GL_DEBUG_SOURCE_WINDOW_SYSTEM_ARB 0x8247
+#define GL_DEBUG_SOURCE_SHADER_COMPILER_ARB 0x8248
+#define GL_DEBUG_SOURCE_THIRD_PARTY_ARB 0x8249
+#define GL_DEBUG_SOURCE_APPLICATION_ARB 0x824A
+#define GL_DEBUG_SOURCE_OTHER_ARB 0x824B
+#define GL_DEBUG_TYPE_ERROR_ARB 0x824C
+#define GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_ARB 0x824D
+#define GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_ARB 0x824E
+#define GL_DEBUG_TYPE_PORTABILITY_ARB 0x824F
+#define GL_DEBUG_TYPE_PERFORMANCE_ARB 0x8250
+#define GL_DEBUG_TYPE_OTHER_ARB 0x8251
+#define GL_MAX_DEBUG_MESSAGE_LENGTH_ARB 0x9143
+#define GL_MAX_DEBUG_LOGGED_MESSAGES_ARB 0x9144
+#define GL_DEBUG_LOGGED_MESSAGES_ARB 0x9145
+#define GL_DEBUG_SEVERITY_HIGH_ARB 0x9146
+#define GL_DEBUG_SEVERITY_MEDIUM_ARB 0x9147
+#define GL_DEBUG_SEVERITY_LOW_ARB 0x9148
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DebugMessageControlARB)(GLenum source , GLenum type , GLenum severity , GLsizei count , const GLuint *ids , GLboolean enabled); }
+#define glDebugMessageControlARB DynamicGL_DebugMessageControlARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DebugMessageInsertARB)(GLenum source , GLenum type , GLuint id , GLenum severity , GLsizei length , const GLchar *buf); }
+#define glDebugMessageInsertARB DynamicGL_DebugMessageInsertARB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DebugMessageCallbackARB)(GLDEBUGPROCARB callback , const GLvoid *userParam); }
+#define glDebugMessageCallbackARB DynamicGL_DebugMessageCallbackARB
+extern "C" { extern GLuint (DYNAMIC_GL_APIENTRYP DynamicGL_GetDebugMessageLogARB)(GLuint count , GLsizei bufsize , GLenum *sources , GLenum *types , GLuint *ids , GLenum *severities , GLsizei *lengths , GLchar *messageLog); }
+#define glGetDebugMessageLogARB DynamicGL_GetDebugMessageLogARB
+extern bool DinamicGLFeature_ARB_debug_output_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_debug_output*/
 
 /*EXT_draw_buffers2*/
 #ifdef USE_DYNAMIC_GL_EXT_draw_buffers2
@@ -3528,6 +4224,64 @@ extern bool DinamicGLFeature_EXT_packed_pixels_Supported();
 extern bool DinamicGLFeature_EXT_texture_env_dot3_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_texture_env_dot3*/
 
+/*NV_video_capture*/
+#ifdef USE_DYNAMIC_GL_NV_video_capture
+#define GL_VIDEO_BUFFER_NV 0x9020
+#define GL_VIDEO_BUFFER_BINDING_NV 0x9021
+#define GL_FIELD_UPPER_NV 0x9022
+#define GL_FIELD_LOWER_NV 0x9023
+#define GL_NUM_VIDEO_CAPTURE_STREAMS_NV 0x9024
+#define GL_NEXT_VIDEO_CAPTURE_BUFFER_STATUS_NV 0x9025
+#define GL_VIDEO_CAPTURE_TO_422_SUPPORTED_NV 0x9026
+#define GL_LAST_VIDEO_CAPTURE_STATUS_NV 0x9027
+#define GL_VIDEO_BUFFER_PITCH_NV 0x9028
+#define GL_VIDEO_COLOR_CONVERSION_MATRIX_NV 0x9029
+#define GL_VIDEO_COLOR_CONVERSION_MAX_NV 0x902A
+#define GL_VIDEO_COLOR_CONVERSION_MIN_NV 0x902B
+#define GL_VIDEO_COLOR_CONVERSION_OFFSET_NV 0x902C
+#define GL_VIDEO_BUFFER_INTERNAL_FORMAT_NV 0x902D
+#define GL_PARTIAL_SUCCESS_NV 0x902E
+#define GL_SUCCESS_NV 0x902F
+#define GL_FAILURE_NV 0x9030
+#define GL_YCBYCR8_422_NV 0x9031
+#define GL_YCBAYCR8A_4224_NV 0x9032
+#define GL_Z6Y10Z6CB10Z6Y10Z6CR10_422_NV 0x9033
+#define GL_Z6Y10Z6CB10Z6A10Z6Y10Z6CR10Z6A10_4224_NV 0x9034
+#define GL_Z4Y12Z4CB12Z4Y12Z4CR12_422_NV 0x9035
+#define GL_Z4Y12Z4CB12Z4A12Z4Y12Z4CR12Z4A12_4224_NV 0x9036
+#define GL_Z4Y12Z4CB12Z4CR12_444_NV 0x9037
+#define GL_VIDEO_CAPTURE_FRAME_WIDTH_NV 0x9038
+#define GL_VIDEO_CAPTURE_FRAME_HEIGHT_NV 0x9039
+#define GL_VIDEO_CAPTURE_FIELD_UPPER_HEIGHT_NV 0x903A
+#define GL_VIDEO_CAPTURE_FIELD_LOWER_HEIGHT_NV 0x903B
+#define GL_VIDEO_CAPTURE_SURFACE_ORIGIN_NV 0x903C
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BeginVideoCaptureNV)(GLuint video_capture_slot); }
+#define glBeginVideoCaptureNV DynamicGL_BeginVideoCaptureNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BindVideoCaptureStreamBufferNV)(GLuint video_capture_slot , GLuint stream , GLenum frame_region , GLintptrARB offset); }
+#define glBindVideoCaptureStreamBufferNV DynamicGL_BindVideoCaptureStreamBufferNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BindVideoCaptureStreamTextureNV)(GLuint video_capture_slot , GLuint stream , GLenum frame_region , GLenum target , GLuint texture); }
+#define glBindVideoCaptureStreamTextureNV DynamicGL_BindVideoCaptureStreamTextureNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_EndVideoCaptureNV)(GLuint video_capture_slot); }
+#define glEndVideoCaptureNV DynamicGL_EndVideoCaptureNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVideoCaptureivNV)(GLuint video_capture_slot , GLenum pname , GLint *params); }
+#define glGetVideoCaptureivNV DynamicGL_GetVideoCaptureivNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVideoCaptureStreamivNV)(GLuint video_capture_slot , GLuint stream , GLenum pname , GLint *params); }
+#define glGetVideoCaptureStreamivNV DynamicGL_GetVideoCaptureStreamivNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVideoCaptureStreamfvNV)(GLuint video_capture_slot , GLuint stream , GLenum pname , GLfloat *params); }
+#define glGetVideoCaptureStreamfvNV DynamicGL_GetVideoCaptureStreamfvNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVideoCaptureStreamdvNV)(GLuint video_capture_slot , GLuint stream , GLenum pname , GLdouble *params); }
+#define glGetVideoCaptureStreamdvNV DynamicGL_GetVideoCaptureStreamdvNV
+extern "C" { extern GLenum (DYNAMIC_GL_APIENTRYP DynamicGL_VideoCaptureNV)(GLuint video_capture_slot , GLuint *sequence_num , GLuint64EXT *capture_time); }
+#define glVideoCaptureNV DynamicGL_VideoCaptureNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VideoCaptureStreamParameterivNV)(GLuint video_capture_slot , GLuint stream , GLenum pname , const GLint *params); }
+#define glVideoCaptureStreamParameterivNV DynamicGL_VideoCaptureStreamParameterivNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VideoCaptureStreamParameterfvNV)(GLuint video_capture_slot , GLuint stream , GLenum pname , const GLfloat *params); }
+#define glVideoCaptureStreamParameterfvNV DynamicGL_VideoCaptureStreamParameterfvNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VideoCaptureStreamParameterdvNV)(GLuint video_capture_slot , GLuint stream , GLenum pname , const GLdouble *params); }
+#define glVideoCaptureStreamParameterdvNV DynamicGL_VideoCaptureStreamParameterdvNV
+extern bool DinamicGLFeature_NV_video_capture_Supported();
+#endif /*USE_DYNAMIC_GL_NV_video_capture*/
+
 /*WIN_phong_shading*/
 #ifdef USE_DYNAMIC_GL_WIN_phong_shading
 #define GL_PHONG_WIN 0x80EA
@@ -3543,8 +4297,6 @@ extern bool DinamicGLFeature_WIN_phong_shading_Supported();
 #define GL_MAP_INVALIDATE_BUFFER_BIT 0x0008
 #define GL_MAP_FLUSH_EXPLICIT_BIT 0x0010
 #define GL_MAP_UNSYNCHRONIZED_BIT 0x0020
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MapBufferRange)(GLenum target , GLintptr offset , GLsizeiptr length , GLbitfield access); }
-#define glMapBufferRange DynamicGL_MapBufferRange
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FlushMappedBufferRange)(GLenum target , GLintptr offset , GLsizeiptr length); }
 #define glFlushMappedBufferRange DynamicGL_FlushMappedBufferRange
 extern bool DinamicGLFeature_ARB_map_buffer_range_Supported();
@@ -3871,6 +4623,15 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultTransposeMatrixdARB
 extern bool DinamicGLFeature_ARB_transpose_matrix_Supported();
 #endif /*USE_DYNAMIC_GL_ARB_transpose_matrix*/
 
+/*ARB_transform_feedback_instanced*/
+#ifdef USE_DYNAMIC_GL_ARB_transform_feedback_instanced
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTransformFeedbackInstanced)(GLenum mode , GLuint id , GLsizei primcount); }
+#define glDrawTransformFeedbackInstanced DynamicGL_DrawTransformFeedbackInstanced
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTransformFeedbackStreamInstanced)(GLenum mode , GLuint id , GLuint stream , GLsizei primcount); }
+#define glDrawTransformFeedbackStreamInstanced DynamicGL_DrawTransformFeedbackStreamInstanced
+extern bool DinamicGLFeature_ARB_transform_feedback_instanced_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_transform_feedback_instanced*/
+
 /*NV_parameter_buffer_object*/
 #ifdef USE_DYNAMIC_GL_NV_parameter_buffer_object
 #define GL_MAX_PROGRAM_PARAMETER_BUFFER_BINDINGS_NV 0x8DA0
@@ -3895,6 +4656,50 @@ extern bool DinamicGLFeature_NV_parameter_buffer_object_Supported();
 #define GL_TEXTURE_STENCIL_SIZE_EXT 0x88F1
 extern bool DinamicGLFeature_EXT_packed_depth_stencil_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_packed_depth_stencil*/
+
+/*VERSION_3_1*/
+#ifdef USE_DYNAMIC_GL_VERSION_3_1
+#define GL_SAMPLER_2D_RECT 0x8B63
+#define GL_SAMPLER_2D_RECT_SHADOW 0x8B64
+#define GL_SAMPLER_BUFFER 0x8DC2
+#define GL_INT_SAMPLER_2D_RECT 0x8DCD
+#define GL_INT_SAMPLER_BUFFER 0x8DD0
+#define GL_UNSIGNED_INT_SAMPLER_2D_RECT 0x8DD5
+#define GL_UNSIGNED_INT_SAMPLER_BUFFER 0x8DD8
+#define GL_TEXTURE_BUFFER 0x8C2A
+#define GL_MAX_TEXTURE_BUFFER_SIZE 0x8C2B
+#define GL_TEXTURE_BINDING_BUFFER 0x8C2C
+#define GL_TEXTURE_BUFFER_DATA_STORE_BINDING 0x8C2D
+#define GL_TEXTURE_BUFFER_FORMAT 0x8C2E
+#define GL_TEXTURE_RECTANGLE 0x84F5
+#define GL_TEXTURE_BINDING_RECTANGLE 0x84F6
+#define GL_PROXY_TEXTURE_RECTANGLE 0x84F7
+#define GL_MAX_RECTANGLE_TEXTURE_SIZE 0x84F8
+#define GL_RED_SNORM 0x8F90
+#define GL_RG_SNORM 0x8F91
+#define GL_RGB_SNORM 0x8F92
+#define GL_RGBA_SNORM 0x8F93
+#define GL_R8_SNORM 0x8F94
+#define GL_RG8_SNORM 0x8F95
+#define GL_RGB8_SNORM 0x8F96
+#define GL_RGBA8_SNORM 0x8F97
+#define GL_R16_SNORM 0x8F98
+#define GL_RG16_SNORM 0x8F99
+#define GL_RGB16_SNORM 0x8F9A
+#define GL_RGBA16_SNORM 0x8F9B
+#define GL_SIGNED_NORMALIZED 0x8F9C
+#define GL_PRIMITIVE_RESTART 0x8F9D
+#define GL_PRIMITIVE_RESTART_INDEX 0x8F9E
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawArraysInstanced)(GLenum mode , GLint first , GLsizei count , GLsizei primcount); }
+#define glDrawArraysInstanced DynamicGL_DrawArraysInstanced
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElementsInstanced)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices , GLsizei primcount); }
+#define glDrawElementsInstanced DynamicGL_DrawElementsInstanced
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexBuffer)(GLenum target , GLenum internalformat , GLuint buffer); }
+#define glTexBuffer DynamicGL_TexBuffer
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PrimitiveRestartIndex)(GLuint index); }
+#define glPrimitiveRestartIndex DynamicGL_PrimitiveRestartIndex
+extern bool DinamicGLFeature_VERSION_3_1_Supported();
+#endif /*USE_DYNAMIC_GL_VERSION_3_1*/
 
 /*PGI_vertex_hints*/
 #ifdef USE_DYNAMIC_GL_PGI_vertex_hints
@@ -3990,6 +4795,88 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ResetMinmaxEXT)(GLenum 
 extern bool DinamicGLFeature_EXT_histogram_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_histogram*/
 
+/*ARB_vertex_type_2_10_10_10_rev*/
+#ifdef USE_DYNAMIC_GL_ARB_vertex_type_2_10_10_10_rev
+#define GL_INT_2_10_10_10_REV 0x8D9F
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexP2ui)(GLenum type , GLuint value); }
+#define glVertexP2ui DynamicGL_VertexP2ui
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexP2uiv)(GLenum type , const GLuint *value); }
+#define glVertexP2uiv DynamicGL_VertexP2uiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexP3ui)(GLenum type , GLuint value); }
+#define glVertexP3ui DynamicGL_VertexP3ui
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexP3uiv)(GLenum type , const GLuint *value); }
+#define glVertexP3uiv DynamicGL_VertexP3uiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexP4ui)(GLenum type , GLuint value); }
+#define glVertexP4ui DynamicGL_VertexP4ui
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexP4uiv)(GLenum type , const GLuint *value); }
+#define glVertexP4uiv DynamicGL_VertexP4uiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexCoordP1ui)(GLenum type , GLuint coords); }
+#define glTexCoordP1ui DynamicGL_TexCoordP1ui
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexCoordP1uiv)(GLenum type , const GLuint *coords); }
+#define glTexCoordP1uiv DynamicGL_TexCoordP1uiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexCoordP2ui)(GLenum type , GLuint coords); }
+#define glTexCoordP2ui DynamicGL_TexCoordP2ui
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexCoordP2uiv)(GLenum type , const GLuint *coords); }
+#define glTexCoordP2uiv DynamicGL_TexCoordP2uiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexCoordP3ui)(GLenum type , GLuint coords); }
+#define glTexCoordP3ui DynamicGL_TexCoordP3ui
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexCoordP3uiv)(GLenum type , const GLuint *coords); }
+#define glTexCoordP3uiv DynamicGL_TexCoordP3uiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexCoordP4ui)(GLenum type , GLuint coords); }
+#define glTexCoordP4ui DynamicGL_TexCoordP4ui
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexCoordP4uiv)(GLenum type , const GLuint *coords); }
+#define glTexCoordP4uiv DynamicGL_TexCoordP4uiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoordP1ui)(GLenum texture , GLenum type , GLuint coords); }
+#define glMultiTexCoordP1ui DynamicGL_MultiTexCoordP1ui
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoordP1uiv)(GLenum texture , GLenum type , const GLuint *coords); }
+#define glMultiTexCoordP1uiv DynamicGL_MultiTexCoordP1uiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoordP2ui)(GLenum texture , GLenum type , GLuint coords); }
+#define glMultiTexCoordP2ui DynamicGL_MultiTexCoordP2ui
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoordP2uiv)(GLenum texture , GLenum type , const GLuint *coords); }
+#define glMultiTexCoordP2uiv DynamicGL_MultiTexCoordP2uiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoordP3ui)(GLenum texture , GLenum type , GLuint coords); }
+#define glMultiTexCoordP3ui DynamicGL_MultiTexCoordP3ui
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoordP3uiv)(GLenum texture , GLenum type , const GLuint *coords); }
+#define glMultiTexCoordP3uiv DynamicGL_MultiTexCoordP3uiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoordP4ui)(GLenum texture , GLenum type , GLuint coords); }
+#define glMultiTexCoordP4ui DynamicGL_MultiTexCoordP4ui
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoordP4uiv)(GLenum texture , GLenum type , const GLuint *coords); }
+#define glMultiTexCoordP4uiv DynamicGL_MultiTexCoordP4uiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_NormalP3ui)(GLenum type , GLuint coords); }
+#define glNormalP3ui DynamicGL_NormalP3ui
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_NormalP3uiv)(GLenum type , const GLuint *coords); }
+#define glNormalP3uiv DynamicGL_NormalP3uiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorP3ui)(GLenum type , GLuint color); }
+#define glColorP3ui DynamicGL_ColorP3ui
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorP3uiv)(GLenum type , const GLuint *color); }
+#define glColorP3uiv DynamicGL_ColorP3uiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorP4ui)(GLenum type , GLuint color); }
+#define glColorP4ui DynamicGL_ColorP4ui
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorP4uiv)(GLenum type , const GLuint *color); }
+#define glColorP4uiv DynamicGL_ColorP4uiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColorP3ui)(GLenum type , GLuint color); }
+#define glSecondaryColorP3ui DynamicGL_SecondaryColorP3ui
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColorP3uiv)(GLenum type , const GLuint *color); }
+#define glSecondaryColorP3uiv DynamicGL_SecondaryColorP3uiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribP1ui)(GLuint index , GLenum type , GLboolean normalized , GLuint value); }
+#define glVertexAttribP1ui DynamicGL_VertexAttribP1ui
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribP1uiv)(GLuint index , GLenum type , GLboolean normalized , const GLuint *value); }
+#define glVertexAttribP1uiv DynamicGL_VertexAttribP1uiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribP2ui)(GLuint index , GLenum type , GLboolean normalized , GLuint value); }
+#define glVertexAttribP2ui DynamicGL_VertexAttribP2ui
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribP2uiv)(GLuint index , GLenum type , GLboolean normalized , const GLuint *value); }
+#define glVertexAttribP2uiv DynamicGL_VertexAttribP2uiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribP3ui)(GLuint index , GLenum type , GLboolean normalized , GLuint value); }
+#define glVertexAttribP3ui DynamicGL_VertexAttribP3ui
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribP3uiv)(GLuint index , GLenum type , GLboolean normalized , const GLuint *value); }
+#define glVertexAttribP3uiv DynamicGL_VertexAttribP3uiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribP4ui)(GLuint index , GLenum type , GLboolean normalized , GLuint value); }
+#define glVertexAttribP4ui DynamicGL_VertexAttribP4ui
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribP4uiv)(GLuint index , GLenum type , GLboolean normalized , const GLuint *value); }
+#define glVertexAttribP4uiv DynamicGL_VertexAttribP4uiv
+extern bool DinamicGLFeature_ARB_vertex_type_2_10_10_10_rev_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_vertex_type_2_10_10_10_rev*/
+
 /*SGIX_pixel_texture*/
 #ifdef USE_DYNAMIC_GL_SGIX_pixel_texture
 #define GL_PIXEL_TEX_GEN_SGIX 0x8139
@@ -4041,6 +4928,65 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFuncSeparateEXT)(G
 extern bool DinamicGLFeature_EXT_blend_func_separate_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_blend_func_separate*/
 
+/*ARB_sampler_objects*/
+#ifdef USE_DYNAMIC_GL_ARB_sampler_objects
+#define GL_SAMPLER_BINDING 0x8919
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GenSamplers)(GLsizei count , GLuint *samplers); }
+#define glGenSamplers DynamicGL_GenSamplers
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteSamplers)(GLsizei count , const GLuint *samplers); }
+#define glDeleteSamplers DynamicGL_DeleteSamplers
+extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsSampler)(GLuint sampler); }
+#define glIsSampler DynamicGL_IsSampler
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BindSampler)(GLuint unit , GLuint sampler); }
+#define glBindSampler DynamicGL_BindSampler
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SamplerParameteri)(GLuint sampler , GLenum pname , GLint param); }
+#define glSamplerParameteri DynamicGL_SamplerParameteri
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SamplerParameteriv)(GLuint sampler , GLenum pname , const GLint *param); }
+#define glSamplerParameteriv DynamicGL_SamplerParameteriv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SamplerParameterf)(GLuint sampler , GLenum pname , GLfloat param); }
+#define glSamplerParameterf DynamicGL_SamplerParameterf
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SamplerParameterfv)(GLuint sampler , GLenum pname , const GLfloat *param); }
+#define glSamplerParameterfv DynamicGL_SamplerParameterfv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SamplerParameterIiv)(GLuint sampler , GLenum pname , const GLint *param); }
+#define glSamplerParameterIiv DynamicGL_SamplerParameterIiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SamplerParameterIuiv)(GLuint sampler , GLenum pname , const GLuint *param); }
+#define glSamplerParameterIuiv DynamicGL_SamplerParameterIuiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetSamplerParameteriv)(GLuint sampler , GLenum pname , GLint *params); }
+#define glGetSamplerParameteriv DynamicGL_GetSamplerParameteriv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetSamplerParameterIiv)(GLuint sampler , GLenum pname , GLint *params); }
+#define glGetSamplerParameterIiv DynamicGL_GetSamplerParameterIiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetSamplerParameterfv)(GLuint sampler , GLenum pname , GLfloat *params); }
+#define glGetSamplerParameterfv DynamicGL_GetSamplerParameterfv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetSamplerParameterIuiv)(GLuint sampler , GLenum pname , GLuint *params); }
+#define glGetSamplerParameterIuiv DynamicGL_GetSamplerParameterIuiv
+extern bool DinamicGLFeature_ARB_sampler_objects_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_sampler_objects*/
+
+/*ARB_vertex_attrib_64bit*/
+#ifdef USE_DYNAMIC_GL_ARB_vertex_attrib_64bit
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL1d)(GLuint index , GLdouble x); }
+#define glVertexAttribL1d DynamicGL_VertexAttribL1d
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL2d)(GLuint index , GLdouble x , GLdouble y); }
+#define glVertexAttribL2d DynamicGL_VertexAttribL2d
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL3d)(GLuint index , GLdouble x , GLdouble y , GLdouble z); }
+#define glVertexAttribL3d DynamicGL_VertexAttribL3d
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL4d)(GLuint index , GLdouble x , GLdouble y , GLdouble z , GLdouble w); }
+#define glVertexAttribL4d DynamicGL_VertexAttribL4d
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL1dv)(GLuint index , const GLdouble *v); }
+#define glVertexAttribL1dv DynamicGL_VertexAttribL1dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL2dv)(GLuint index , const GLdouble *v); }
+#define glVertexAttribL2dv DynamicGL_VertexAttribL2dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL3dv)(GLuint index , const GLdouble *v); }
+#define glVertexAttribL3dv DynamicGL_VertexAttribL3dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL4dv)(GLuint index , const GLdouble *v); }
+#define glVertexAttribL4dv DynamicGL_VertexAttribL4dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribLPointer)(GLuint index , GLint size , GLenum type , GLsizei stride , const GLvoid *pointer); }
+#define glVertexAttribLPointer DynamicGL_VertexAttribLPointer
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVertexAttribLdv)(GLuint index , GLenum pname , GLdouble *params); }
+#define glGetVertexAttribLdv DynamicGL_GetVertexAttribLdv
+extern bool DinamicGLFeature_ARB_vertex_attrib_64bit_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_vertex_attrib_64bit*/
+
 /*SGIS_texture_border_clamp*/
 #ifdef USE_DYNAMIC_GL_SGIS_texture_border_clamp
 #define GL_CLAMP_TO_BORDER_SGIS 0x812D
@@ -4082,6 +5028,53 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetColorTableParameterf
 extern bool DinamicGLFeature_EXT_paletted_texture_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_paletted_texture*/
 
+/*ARB_gpu_shader_fp64*/
+#ifdef USE_DYNAMIC_GL_ARB_gpu_shader_fp64
+#define GL_DOUBLE_VEC2 0x8FFC
+#define GL_DOUBLE_VEC3 0x8FFD
+#define GL_DOUBLE_VEC4 0x8FFE
+#define GL_DOUBLE_MAT2 0x8F46
+#define GL_DOUBLE_MAT3 0x8F47
+#define GL_DOUBLE_MAT4 0x8F48
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform1d)(GLint location , GLdouble x); }
+#define glUniform1d DynamicGL_Uniform1d
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform2d)(GLint location , GLdouble x , GLdouble y); }
+#define glUniform2d DynamicGL_Uniform2d
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform3d)(GLint location , GLdouble x , GLdouble y , GLdouble z); }
+#define glUniform3d DynamicGL_Uniform3d
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform4d)(GLint location , GLdouble x , GLdouble y , GLdouble z , GLdouble w); }
+#define glUniform4d DynamicGL_Uniform4d
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform1dv)(GLint location , GLsizei count , const GLdouble *value); }
+#define glUniform1dv DynamicGL_Uniform1dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform2dv)(GLint location , GLsizei count , const GLdouble *value); }
+#define glUniform2dv DynamicGL_Uniform2dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform3dv)(GLint location , GLsizei count , const GLdouble *value); }
+#define glUniform3dv DynamicGL_Uniform3dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform4dv)(GLint location , GLsizei count , const GLdouble *value); }
+#define glUniform4dv DynamicGL_Uniform4dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformMatrix2dv)(GLint location , GLsizei count , GLboolean transpose , const GLdouble *value); }
+#define glUniformMatrix2dv DynamicGL_UniformMatrix2dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformMatrix3dv)(GLint location , GLsizei count , GLboolean transpose , const GLdouble *value); }
+#define glUniformMatrix3dv DynamicGL_UniformMatrix3dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformMatrix4dv)(GLint location , GLsizei count , GLboolean transpose , const GLdouble *value); }
+#define glUniformMatrix4dv DynamicGL_UniformMatrix4dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformMatrix2x3dv)(GLint location , GLsizei count , GLboolean transpose , const GLdouble *value); }
+#define glUniformMatrix2x3dv DynamicGL_UniformMatrix2x3dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformMatrix2x4dv)(GLint location , GLsizei count , GLboolean transpose , const GLdouble *value); }
+#define glUniformMatrix2x4dv DynamicGL_UniformMatrix2x4dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformMatrix3x2dv)(GLint location , GLsizei count , GLboolean transpose , const GLdouble *value); }
+#define glUniformMatrix3x2dv DynamicGL_UniformMatrix3x2dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformMatrix3x4dv)(GLint location , GLsizei count , GLboolean transpose , const GLdouble *value); }
+#define glUniformMatrix3x4dv DynamicGL_UniformMatrix3x4dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformMatrix4x2dv)(GLint location , GLsizei count , GLboolean transpose , const GLdouble *value); }
+#define glUniformMatrix4x2dv DynamicGL_UniformMatrix4x2dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformMatrix4x3dv)(GLint location , GLsizei count , GLboolean transpose , const GLdouble *value); }
+#define glUniformMatrix4x3dv DynamicGL_UniformMatrix4x3dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetUniformdv)(GLuint program , GLint location , GLdouble *params); }
+#define glGetUniformdv DynamicGL_GetUniformdv
+extern bool DinamicGLFeature_ARB_gpu_shader_fp64_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_gpu_shader_fp64*/
+
 /*EXT_light_texture*/
 #ifdef USE_DYNAMIC_GL_EXT_light_texture
 #define GL_FRAGMENT_MATERIAL_EXT 0x8349
@@ -4101,6 +5094,12 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureMaterialEXT)(GLe
 #define glTextureMaterialEXT DynamicGL_TextureMaterialEXT
 extern bool DinamicGLFeature_EXT_light_texture_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_light_texture*/
+
+/*ARB_map_buffer_alignment*/
+#ifdef USE_DYNAMIC_GL_ARB_map_buffer_alignment
+#define GL_MIN_MAP_BUFFER_ALIGNMENT 0x90BC
+extern bool DinamicGLFeature_ARB_map_buffer_alignment_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_map_buffer_alignment*/
 
 /*EXT_multisample*/
 #ifdef USE_DYNAMIC_GL_EXT_multisample
@@ -4346,6 +5345,47 @@ extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsProgramARB)(GLui
 extern bool DinamicGLFeature_ARB_vertex_program_Supported();
 #endif /*USE_DYNAMIC_GL_ARB_vertex_program*/
 
+/*ARB_tessellation_shader*/
+#ifdef USE_DYNAMIC_GL_ARB_tessellation_shader
+#define GL_PATCHES 0x000E
+#define GL_PATCH_VERTICES 0x8E72
+#define GL_PATCH_DEFAULT_INNER_LEVEL 0x8E73
+#define GL_PATCH_DEFAULT_OUTER_LEVEL 0x8E74
+#define GL_TESS_CONTROL_OUTPUT_VERTICES 0x8E75
+#define GL_TESS_GEN_MODE 0x8E76
+#define GL_TESS_GEN_SPACING 0x8E77
+#define GL_TESS_GEN_VERTEX_ORDER 0x8E78
+#define GL_TESS_GEN_POINT_MODE 0x8E79
+#define GL_ISOLINES 0x8E7A
+#define GL_FRACTIONAL_ODD 0x8E7B
+#define GL_FRACTIONAL_EVEN 0x8E7C
+#define GL_MAX_PATCH_VERTICES 0x8E7D
+#define GL_MAX_TESS_GEN_LEVEL 0x8E7E
+#define GL_MAX_TESS_CONTROL_UNIFORM_COMPONENTS 0x8E7F
+#define GL_MAX_TESS_EVALUATION_UNIFORM_COMPONENTS 0x8E80
+#define GL_MAX_TESS_CONTROL_TEXTURE_IMAGE_UNITS 0x8E81
+#define GL_MAX_TESS_EVALUATION_TEXTURE_IMAGE_UNITS 0x8E82
+#define GL_MAX_TESS_CONTROL_OUTPUT_COMPONENTS 0x8E83
+#define GL_MAX_TESS_PATCH_COMPONENTS 0x8E84
+#define GL_MAX_TESS_CONTROL_TOTAL_OUTPUT_COMPONENTS 0x8E85
+#define GL_MAX_TESS_EVALUATION_OUTPUT_COMPONENTS 0x8E86
+#define GL_MAX_TESS_CONTROL_UNIFORM_BLOCKS 0x8E89
+#define GL_MAX_TESS_EVALUATION_UNIFORM_BLOCKS 0x8E8A
+#define GL_MAX_TESS_CONTROL_INPUT_COMPONENTS 0x886C
+#define GL_MAX_TESS_EVALUATION_INPUT_COMPONENTS 0x886D
+#define GL_MAX_COMBINED_TESS_CONTROL_UNIFORM_COMPONENTS 0x8E1E
+#define GL_MAX_COMBINED_TESS_EVALUATION_UNIFORM_COMPONENTS 0x8E1F
+#define GL_UNIFORM_BLOCK_REFERENCED_BY_TESS_CONTROL_SHADER 0x84F0
+#define GL_UNIFORM_BLOCK_REFERENCED_BY_TESS_EVALUATION_SHADER 0x84F1
+#define GL_TESS_EVALUATION_SHADER 0x8E87
+#define GL_TESS_CONTROL_SHADER 0x8E88
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PatchParameteri)(GLenum pname , GLint value); }
+#define glPatchParameteri DynamicGL_PatchParameteri
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PatchParameterfv)(GLenum pname , const GLfloat *values); }
+#define glPatchParameterfv DynamicGL_PatchParameterfv
+extern bool DinamicGLFeature_ARB_tessellation_shader_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_tessellation_shader*/
+
 /*EXT_point_parameters*/
 #ifdef USE_DYNAMIC_GL_EXT_point_parameters
 #define GL_POINT_SIZE_MIN_EXT 0x8126
@@ -4398,6 +5438,60 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPixelTexGenParameter
 extern bool DinamicGLFeature_SGIS_pixel_texture_Supported();
 #endif /*USE_DYNAMIC_GL_SGIS_pixel_texture*/
 
+/*NV_vertex_attrib_integer_64bit*/
+#ifdef USE_DYNAMIC_GL_NV_vertex_attrib_integer_64bit
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL1i64NV)(GLuint index , GLint64EXT x); }
+#define glVertexAttribL1i64NV DynamicGL_VertexAttribL1i64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL2i64NV)(GLuint index , GLint64EXT x , GLint64EXT y); }
+#define glVertexAttribL2i64NV DynamicGL_VertexAttribL2i64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL3i64NV)(GLuint index , GLint64EXT x , GLint64EXT y , GLint64EXT z); }
+#define glVertexAttribL3i64NV DynamicGL_VertexAttribL3i64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL4i64NV)(GLuint index , GLint64EXT x , GLint64EXT y , GLint64EXT z , GLint64EXT w); }
+#define glVertexAttribL4i64NV DynamicGL_VertexAttribL4i64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL1i64vNV)(GLuint index , const GLint64EXT *v); }
+#define glVertexAttribL1i64vNV DynamicGL_VertexAttribL1i64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL2i64vNV)(GLuint index , const GLint64EXT *v); }
+#define glVertexAttribL2i64vNV DynamicGL_VertexAttribL2i64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL3i64vNV)(GLuint index , const GLint64EXT *v); }
+#define glVertexAttribL3i64vNV DynamicGL_VertexAttribL3i64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL4i64vNV)(GLuint index , const GLint64EXT *v); }
+#define glVertexAttribL4i64vNV DynamicGL_VertexAttribL4i64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL1ui64NV)(GLuint index , GLuint64EXT x); }
+#define glVertexAttribL1ui64NV DynamicGL_VertexAttribL1ui64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL2ui64NV)(GLuint index , GLuint64EXT x , GLuint64EXT y); }
+#define glVertexAttribL2ui64NV DynamicGL_VertexAttribL2ui64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL3ui64NV)(GLuint index , GLuint64EXT x , GLuint64EXT y , GLuint64EXT z); }
+#define glVertexAttribL3ui64NV DynamicGL_VertexAttribL3ui64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL4ui64NV)(GLuint index , GLuint64EXT x , GLuint64EXT y , GLuint64EXT z , GLuint64EXT w); }
+#define glVertexAttribL4ui64NV DynamicGL_VertexAttribL4ui64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL1ui64vNV)(GLuint index , const GLuint64EXT *v); }
+#define glVertexAttribL1ui64vNV DynamicGL_VertexAttribL1ui64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL2ui64vNV)(GLuint index , const GLuint64EXT *v); }
+#define glVertexAttribL2ui64vNV DynamicGL_VertexAttribL2ui64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL3ui64vNV)(GLuint index , const GLuint64EXT *v); }
+#define glVertexAttribL3ui64vNV DynamicGL_VertexAttribL3ui64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL4ui64vNV)(GLuint index , const GLuint64EXT *v); }
+#define glVertexAttribL4ui64vNV DynamicGL_VertexAttribL4ui64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVertexAttribLi64vNV)(GLuint index , GLenum pname , GLint64EXT *params); }
+#define glGetVertexAttribLi64vNV DynamicGL_GetVertexAttribLi64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVertexAttribLui64vNV)(GLuint index , GLenum pname , GLuint64EXT *params); }
+#define glGetVertexAttribLui64vNV DynamicGL_GetVertexAttribLui64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribLFormatNV)(GLuint index , GLint size , GLenum type , GLsizei stride); }
+#define glVertexAttribLFormatNV DynamicGL_VertexAttribLFormatNV
+extern bool DinamicGLFeature_NV_vertex_attrib_integer_64bit_Supported();
+#endif /*USE_DYNAMIC_GL_NV_vertex_attrib_integer_64bit*/
+
+/*ARB_provoking_vertex*/
+#ifdef USE_DYNAMIC_GL_ARB_provoking_vertex
+#define GL_QUADS_FOLLOW_PROVOKING_VERTEX_CONVENTION 0x8E4C
+#define GL_FIRST_VERTEX_CONVENTION 0x8E4D
+#define GL_LAST_VERTEX_CONVENTION 0x8E4E
+#define GL_PROVOKING_VERTEX 0x8E4F
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProvokingVertex)(GLenum mode); }
+#define glProvokingVertex DynamicGL_ProvokingVertex
+extern bool DinamicGLFeature_ARB_provoking_vertex_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_provoking_vertex*/
+
 /*SGIS_texture4D*/
 #ifdef USE_DYNAMIC_GL_SGIS_texture4D
 #define GL_PACK_SKIP_VOLUMES_SGIS 0x8130
@@ -4416,31 +5510,6 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexSubImage4DSGIS)(GLen
 #define glTexSubImage4DSGIS DynamicGL_TexSubImage4DSGIS
 extern bool DinamicGLFeature_SGIS_texture4D_Supported();
 #endif /*USE_DYNAMIC_GL_SGIS_texture4D*/
-
-/*SGIS_multisample*/
-#ifdef USE_DYNAMIC_GL_SGIS_multisample
-#define GL_MULTISAMPLE_SGIS 0x809D
-#define GL_SAMPLE_ALPHA_TO_MASK_SGIS 0x809E
-#define GL_SAMPLE_ALPHA_TO_ONE_SGIS 0x809F
-#define GL_SAMPLE_MASK_SGIS 0x80A0
-#define GL_1PASS_SGIS 0x80A1
-#define GL_2PASS_0_SGIS 0x80A2
-#define GL_2PASS_1_SGIS 0x80A3
-#define GL_4PASS_0_SGIS 0x80A4
-#define GL_4PASS_1_SGIS 0x80A5
-#define GL_4PASS_2_SGIS 0x80A6
-#define GL_4PASS_3_SGIS 0x80A7
-#define GL_SAMPLE_BUFFERS_SGIS 0x80A8
-#define GL_SAMPLES_SGIS 0x80A9
-#define GL_SAMPLE_MASK_VALUE_SGIS 0x80AA
-#define GL_SAMPLE_MASK_INVERT_SGIS 0x80AB
-#define GL_SAMPLE_PATTERN_SGIS 0x80AC
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleMaskSGIS)(GLclampf value , GLboolean invert); }
-#define glSampleMaskSGIS DynamicGL_SampleMaskSGIS
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SamplePatternSGIS)(GLenum pattern); }
-#define glSamplePatternSGIS DynamicGL_SamplePatternSGIS
-extern bool DinamicGLFeature_SGIS_multisample_Supported();
-#endif /*USE_DYNAMIC_GL_SGIS_multisample*/
 
 /*PGI_misc_hints*/
 #ifdef USE_DYNAMIC_GL_PGI_misc_hints
@@ -4468,6 +5537,69 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_HintPGI)(GLenum target 
 #define glHintPGI DynamicGL_HintPGI
 extern bool DinamicGLFeature_PGI_misc_hints_Supported();
 #endif /*USE_DYNAMIC_GL_PGI_misc_hints*/
+
+/*SGIS_multisample*/
+#ifdef USE_DYNAMIC_GL_SGIS_multisample
+#define GL_MULTISAMPLE_SGIS 0x809D
+#define GL_SAMPLE_ALPHA_TO_MASK_SGIS 0x809E
+#define GL_SAMPLE_ALPHA_TO_ONE_SGIS 0x809F
+#define GL_SAMPLE_MASK_SGIS 0x80A0
+#define GL_1PASS_SGIS 0x80A1
+#define GL_2PASS_0_SGIS 0x80A2
+#define GL_2PASS_1_SGIS 0x80A3
+#define GL_4PASS_0_SGIS 0x80A4
+#define GL_4PASS_1_SGIS 0x80A5
+#define GL_4PASS_2_SGIS 0x80A6
+#define GL_4PASS_3_SGIS 0x80A7
+#define GL_SAMPLE_BUFFERS_SGIS 0x80A8
+#define GL_SAMPLES_SGIS 0x80A9
+#define GL_SAMPLE_MASK_VALUE_SGIS 0x80AA
+#define GL_SAMPLE_MASK_INVERT_SGIS 0x80AB
+#define GL_SAMPLE_PATTERN_SGIS 0x80AC
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleMaskSGIS)(GLclampf value , GLboolean invert); }
+#define glSampleMaskSGIS DynamicGL_SampleMaskSGIS
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SamplePatternSGIS)(GLenum pattern); }
+#define glSamplePatternSGIS DynamicGL_SamplePatternSGIS
+extern bool DinamicGLFeature_SGIS_multisample_Supported();
+#endif /*USE_DYNAMIC_GL_SGIS_multisample*/
+
+/*NV_vdpau_interop*/
+#ifdef USE_DYNAMIC_GL_NV_vdpau_interop
+typedef GLintptr GLvdpauSurfaceNV;
+#define GL_SURFACE_STATE_NV 0x86EB
+#define GL_SURFACE_REGISTERED_NV 0x86FD
+#define GL_SURFACE_MAPPED_NV 0x8700
+#define GL_WRITE_DISCARD_NV 0x88BE
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VDPAUInitNV)(const GLvoid *vdpDevice , const GLvoid *getProcAddress); }
+#define glVDPAUInitNV DynamicGL_VDPAUInitNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VDPAUFiniNV)(); }
+#define glVDPAUFiniNV DynamicGL_VDPAUFiniNV
+extern "C" { extern GLvdpauSurfaceNV (DYNAMIC_GL_APIENTRYP DynamicGL_VDPAURegisterVideoSurfaceNV)(GLvoid *vdpSurface , GLenum target , GLsizei numTextureNames , const GLuint *textureNames); }
+#define glVDPAURegisterVideoSurfaceNV DynamicGL_VDPAURegisterVideoSurfaceNV
+extern "C" { extern GLvdpauSurfaceNV (DYNAMIC_GL_APIENTRYP DynamicGL_VDPAURegisterOutputSurfaceNV)(GLvoid *vdpSurface , GLenum target , GLsizei numTextureNames , const GLuint *textureNames); }
+#define glVDPAURegisterOutputSurfaceNV DynamicGL_VDPAURegisterOutputSurfaceNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VDPAUIsSurfaceNV)(GLvdpauSurfaceNV surface); }
+#define glVDPAUIsSurfaceNV DynamicGL_VDPAUIsSurfaceNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VDPAUUnregisterSurfaceNV)(GLvdpauSurfaceNV surface); }
+#define glVDPAUUnregisterSurfaceNV DynamicGL_VDPAUUnregisterSurfaceNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VDPAUGetSurfaceivNV)(GLvdpauSurfaceNV surface , GLenum pname , GLsizei bufSize , GLsizei *length , GLint *values); }
+#define glVDPAUGetSurfaceivNV DynamicGL_VDPAUGetSurfaceivNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VDPAUSurfaceAccessNV)(GLvdpauSurfaceNV surface , GLenum access); }
+#define glVDPAUSurfaceAccessNV DynamicGL_VDPAUSurfaceAccessNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VDPAUMapSurfacesNV)(GLsizei numSurfaces , const GLvdpauSurfaceNV *surfaces); }
+#define glVDPAUMapSurfacesNV DynamicGL_VDPAUMapSurfacesNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VDPAUUnmapSurfacesNV)(GLsizei numSurface , const GLvdpauSurfaceNV *surfaces); }
+#define glVDPAUUnmapSurfacesNV DynamicGL_VDPAUUnmapSurfacesNV
+extern bool DinamicGLFeature_NV_vdpau_interop_Supported();
+#endif /*USE_DYNAMIC_GL_NV_vdpau_interop*/
+
+/*EXT_texture_sRGB_decode*/
+#ifdef USE_DYNAMIC_GL_EXT_texture_sRGB_decode
+#define GL_TEXTURE_SRGB_DECODE_EXT 0x8A48
+#define GL_DECODE_EXT 0x8A49
+#define GL_SKIP_DECODE_EXT 0x8A4A
+extern bool DinamicGLFeature_EXT_texture_sRGB_decode_Supported();
+#endif /*USE_DYNAMIC_GL_EXT_texture_sRGB_decode*/
 
 /*ARB_window_pos*/
 #ifdef USE_DYNAMIC_GL_ARB_window_pos
@@ -4506,6 +5638,29 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3svARB)(const 
 extern bool DinamicGLFeature_ARB_window_pos_Supported();
 #endif /*USE_DYNAMIC_GL_ARB_window_pos*/
 
+/*NV_transform_feedback2*/
+#ifdef USE_DYNAMIC_GL_NV_transform_feedback2
+#define GL_TRANSFORM_FEEDBACK_NV 0x8E22
+#define GL_TRANSFORM_FEEDBACK_BUFFER_PAUSED_NV 0x8E23
+#define GL_TRANSFORM_FEEDBACK_BUFFER_ACTIVE_NV 0x8E24
+#define GL_TRANSFORM_FEEDBACK_BINDING_NV 0x8E25
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BindTransformFeedbackNV)(GLenum target , GLuint id); }
+#define glBindTransformFeedbackNV DynamicGL_BindTransformFeedbackNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteTransformFeedbacksNV)(GLsizei n , const GLuint *ids); }
+#define glDeleteTransformFeedbacksNV DynamicGL_DeleteTransformFeedbacksNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GenTransformFeedbacksNV)(GLsizei n , GLuint *ids); }
+#define glGenTransformFeedbacksNV DynamicGL_GenTransformFeedbacksNV
+extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsTransformFeedbackNV)(GLuint id); }
+#define glIsTransformFeedbackNV DynamicGL_IsTransformFeedbackNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PauseTransformFeedbackNV)(); }
+#define glPauseTransformFeedbackNV DynamicGL_PauseTransformFeedbackNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ResumeTransformFeedbackNV)(); }
+#define glResumeTransformFeedbackNV DynamicGL_ResumeTransformFeedbackNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTransformFeedbackNV)(GLenum mode , GLuint id); }
+#define glDrawTransformFeedbackNV DynamicGL_DrawTransformFeedbackNV
+extern bool DinamicGLFeature_NV_transform_feedback2_Supported();
+#endif /*USE_DYNAMIC_GL_NV_transform_feedback2*/
+
 /*SGIX_polynomial_ffd*/
 #ifdef USE_DYNAMIC_GL_SGIX_polynomial_ffd
 #define GL_GEOMETRY_DEFORMATION_SGIX 0x8194
@@ -4541,12 +5696,60 @@ extern bool DinamicGLFeature_EXT_timer_query_Supported();
 extern bool DinamicGLFeature_SGIX_ir_instrument1_Supported();
 #endif /*USE_DYNAMIC_GL_SGIX_ir_instrument1*/
 
+/*NV_texture_barrier*/
+#ifdef USE_DYNAMIC_GL_NV_texture_barrier
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureBarrierNV)(); }
+#define glTextureBarrierNV DynamicGL_TextureBarrierNV
+extern bool DinamicGLFeature_NV_texture_barrier_Supported();
+#endif /*USE_DYNAMIC_GL_NV_texture_barrier*/
+
 /*SGIX_igloo_interface*/
 #ifdef USE_DYNAMIC_GL_SGIX_igloo_interface
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_IglooInterfaceSGIX)(GLenum pname , const GLvoid *params); }
 #define glIglooInterfaceSGIX DynamicGL_IglooInterfaceSGIX
 extern bool DinamicGLFeature_SGIX_igloo_interface_Supported();
 #endif /*USE_DYNAMIC_GL_SGIX_igloo_interface*/
+
+/*ARB_texture_multisample*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_multisample
+#define GL_SAMPLE_POSITION 0x8E50
+#define GL_SAMPLE_MASK 0x8E51
+#define GL_SAMPLE_MASK_VALUE 0x8E52
+#define GL_MAX_SAMPLE_MASK_WORDS 0x8E59
+#define GL_TEXTURE_2D_MULTISAMPLE 0x9100
+#define GL_PROXY_TEXTURE_2D_MULTISAMPLE 0x9101
+#define GL_TEXTURE_2D_MULTISAMPLE_ARRAY 0x9102
+#define GL_PROXY_TEXTURE_2D_MULTISAMPLE_ARRAY 0x9103
+#define GL_TEXTURE_BINDING_2D_MULTISAMPLE 0x9104
+#define GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY 0x9105
+#define GL_TEXTURE_SAMPLES 0x9106
+#define GL_TEXTURE_FIXED_SAMPLE_LOCATIONS 0x9107
+#define GL_SAMPLER_2D_MULTISAMPLE 0x9108
+#define GL_INT_SAMPLER_2D_MULTISAMPLE 0x9109
+#define GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE 0x910A
+#define GL_SAMPLER_2D_MULTISAMPLE_ARRAY 0x910B
+#define GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY 0x910C
+#define GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY 0x910D
+#define GL_MAX_COLOR_TEXTURE_SAMPLES 0x910E
+#define GL_MAX_DEPTH_TEXTURE_SAMPLES 0x910F
+#define GL_MAX_INTEGER_SAMPLES 0x9110
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexImage2DMultisample)(GLenum target , GLsizei samples , GLint internalformat , GLsizei width , GLsizei height , GLboolean fixedsamplelocations); }
+#define glTexImage2DMultisample DynamicGL_TexImage2DMultisample
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexImage3DMultisample)(GLenum target , GLsizei samples , GLint internalformat , GLsizei width , GLsizei height , GLsizei depth , GLboolean fixedsamplelocations); }
+#define glTexImage3DMultisample DynamicGL_TexImage3DMultisample
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetMultisamplefv)(GLenum pname , GLuint index , GLfloat *val); }
+#define glGetMultisamplefv DynamicGL_GetMultisamplefv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleMaski)(GLuint index , GLbitfield mask); }
+#define glSampleMaski DynamicGL_SampleMaski
+extern bool DinamicGLFeature_ARB_texture_multisample_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_texture_multisample*/
+
+/*AMD_blend_minmax_factor*/
+#ifdef USE_DYNAMIC_GL_AMD_blend_minmax_factor
+#define GL_FACTOR_MIN_AMD 0x901C
+#define GL_FACTOR_MAX_AMD 0x901D
+extern bool DinamicGLFeature_AMD_blend_minmax_factor_Supported();
+#endif /*USE_DYNAMIC_GL_AMD_blend_minmax_factor*/
 
 /*NV_fence*/
 #ifdef USE_DYNAMIC_GL_NV_fence
@@ -4654,13 +5857,20 @@ extern bool DinamicGLFeature_NV_register_combiners_Supported();
 
 /*VERSION_3_0*/
 #ifdef USE_DYNAMIC_GL_VERSION_3_0
-typedef const GLubyte;
+#define GL_COMPARE_REF_TO_TEXTURE 0x884E
+#define GL_CLIP_DISTANCE0 0x3000
+#define GL_CLIP_DISTANCE1 0x3001
+#define GL_CLIP_DISTANCE2 0x3002
+#define GL_CLIP_DISTANCE3 0x3003
+#define GL_CLIP_DISTANCE4 0x3004
+#define GL_CLIP_DISTANCE5 0x3005
+#define GL_CLIP_DISTANCE6 0x3006
+#define GL_CLIP_DISTANCE7 0x3007
+#define GL_MAX_CLIP_DISTANCES 0x0D32
 #define GL_MAJOR_VERSION 0x821B
 #define GL_MINOR_VERSION 0x821C
 #define GL_NUM_EXTENSIONS 0x821D
 #define GL_CONTEXT_FLAGS 0x821E
-#define GL_DEPTH_BUFFER 0x8223
-#define GL_STENCIL_BUFFER 0x8224
 #define GL_COMPRESSED_RED 0x8225
 #define GL_COMPRESSED_RG 0x8226
 #define GL_CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT 0x0001
@@ -4672,18 +5882,9 @@ typedef const GLubyte;
 #define GL_MAX_ARRAY_TEXTURE_LAYERS 0x88FF
 #define GL_MIN_PROGRAM_TEXEL_OFFSET 0x8904
 #define GL_MAX_PROGRAM_TEXEL_OFFSET 0x8905
-#define GL_CLAMP_VERTEX_COLOR 0x891A
-#define GL_CLAMP_FRAGMENT_COLOR 0x891B
 #define GL_CLAMP_READ_COLOR 0x891C
 #define GL_FIXED_ONLY 0x891D
-#define GL_TEXTURE_RED_TYPE 0x8C10
-#define GL_TEXTURE_GREEN_TYPE 0x8C11
-#define GL_TEXTURE_BLUE_TYPE 0x8C12
-#define GL_TEXTURE_ALPHA_TYPE 0x8C13
-#define GL_TEXTURE_LUMINANCE_TYPE 0x8C14
-#define GL_TEXTURE_INTENSITY_TYPE 0x8C15
-#define GL_TEXTURE_DEPTH_TYPE 0x8C16
-#define GL_UNSIGNED_NORMALIZED 0x8C17
+#define GL_MAX_VARYING_COMPONENTS 0x8B4B
 #define GL_TEXTURE_1D_ARRAY 0x8C18
 #define GL_PROXY_TEXTURE_1D_ARRAY 0x8C19
 #define GL_TEXTURE_2D_ARRAY 0x8C1A
@@ -4725,7 +5926,6 @@ typedef const GLubyte;
 #define GL_RED_INTEGER 0x8D94
 #define GL_GREEN_INTEGER 0x8D95
 #define GL_BLUE_INTEGER 0x8D96
-#define GL_ALPHA_INTEGER 0x8D97
 #define GL_RGB_INTEGER 0x8D98
 #define GL_RGBA_INTEGER 0x8D99
 #define GL_BGR_INTEGER 0x8D9A
@@ -4754,6 +5954,9 @@ typedef const GLubyte;
 #define GL_QUERY_NO_WAIT 0x8E14
 #define GL_QUERY_BY_REGION_WAIT 0x8E15
 #define GL_QUERY_BY_REGION_NO_WAIT 0x8E16
+#define GL_BUFFER_ACCESS_FLAGS 0x911F
+#define GL_BUFFER_MAP_LENGTH 0x9120
+#define GL_BUFFER_MAP_OFFSET 0x9121
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorMaski)(GLuint index , GLboolean r , GLboolean g , GLboolean b , GLboolean a); }
 #define glColorMaski DynamicGL_ColorMaski
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetBooleani_v)(GLenum target , GLuint index , GLboolean *data); }
@@ -4774,9 +5977,9 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BindBufferRange)(GLenum
 #define glBindBufferRange DynamicGL_BindBufferRange
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BindBufferBase)(GLenum target , GLuint index , GLuint buffer); }
 #define glBindBufferBase DynamicGL_BindBufferBase
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TransformFeedbackVaryings)(GLuint program , GLsizei count , const GLint *locations , GLenum bufferMode); }
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TransformFeedbackVaryings)(GLuint program , GLsizei count , const GLchar* const , GLenum bufferMode); }
 #define glTransformFeedbackVaryings DynamicGL_TransformFeedbackVaryings
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTransformFeedbackVarying)(GLuint program , GLuint index , GLint *location); }
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTransformFeedbackVarying)(GLuint program , GLuint index , GLsizei bufSize , GLsizei *length , GLsizei *size , GLenum *type , GLchar *name); }
 #define glGetTransformFeedbackVarying DynamicGL_GetTransformFeedbackVarying
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClampColor)(GLenum target , GLenum clamp); }
 #define glClampColor DynamicGL_ClampColor
@@ -4784,6 +5987,12 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BeginConditionalRender)
 #define glBeginConditionalRender DynamicGL_BeginConditionalRender
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_EndConditionalRender)(); }
 #define glEndConditionalRender DynamicGL_EndConditionalRender
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribIPointer)(GLuint index , GLint size , GLenum type , GLsizei stride , const GLvoid *pointer); }
+#define glVertexAttribIPointer DynamicGL_VertexAttribIPointer
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVertexAttribIiv)(GLuint index , GLenum pname , GLint *params); }
+#define glGetVertexAttribIiv DynamicGL_GetVertexAttribIiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVertexAttribIuiv)(GLuint index , GLenum pname , GLuint *params); }
+#define glGetVertexAttribIuiv DynamicGL_GetVertexAttribIuiv
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribI1i)(GLuint index , GLint x); }
 #define glVertexAttribI1i DynamicGL_VertexAttribI1i
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribI2i)(GLuint index , GLint x , GLint y); }
@@ -4824,12 +6033,6 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribI4ubv)(GLui
 #define glVertexAttribI4ubv DynamicGL_VertexAttribI4ubv
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribI4usv)(GLuint index , const GLushort *v); }
 #define glVertexAttribI4usv DynamicGL_VertexAttribI4usv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribIPointer)(GLuint index , GLint size , GLenum type , GLsizei stride , const GLvoid *pointer); }
-#define glVertexAttribIPointer DynamicGL_VertexAttribIPointer
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVertexAttribIiv)(GLuint index , GLenum pname , GLint *params); }
-#define glGetVertexAttribIiv DynamicGL_GetVertexAttribIiv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVertexAttribIuiv)(GLuint index , GLenum pname , GLuint *params); }
-#define glGetVertexAttribIuiv DynamicGL_GetVertexAttribIuiv
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetUniformuiv)(GLuint program , GLint location , GLuint *params); }
 #define glGetUniformuiv DynamicGL_GetUniformuiv
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BindFragDataLocation)(GLuint program , GLuint color , const GLchar *name); }
@@ -4860,13 +6063,13 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexParameterIiv)(GLe
 #define glGetTexParameterIiv DynamicGL_GetTexParameterIiv
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexParameterIuiv)(GLenum target , GLenum pname , GLuint *params); }
 #define glGetTexParameterIuiv DynamicGL_GetTexParameterIuiv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearBufferiv)(GLenum buffer , const GLint *value); }
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearBufferiv)(GLenum buffer , GLint drawbuffer , const GLint *value); }
 #define glClearBufferiv DynamicGL_ClearBufferiv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearBufferuiv)(GLenum buffer , const GLuint *value); }
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearBufferuiv)(GLenum buffer , GLint drawbuffer , const GLuint *value); }
 #define glClearBufferuiv DynamicGL_ClearBufferuiv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearBufferfv)(GLenum buffer , const GLfloat *value); }
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearBufferfv)(GLenum buffer , GLint drawbuffer , const GLfloat *value); }
 #define glClearBufferfv DynamicGL_ClearBufferfv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearBufferfi)(GLenum buffer , GLfloat depth , GLint stencil); }
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearBufferfi)(GLenum buffer , GLint drawbuffer , GLfloat depth , GLint stencil); }
 #define glClearBufferfi DynamicGL_ClearBufferfi
 extern bool DinamicGLFeature_VERSION_3_0_Supported();
 #endif /*USE_DYNAMIC_GL_VERSION_3_0*/
@@ -4883,6 +6086,58 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterivNV)(GLe
 extern bool DinamicGLFeature_NV_point_sprite_Supported();
 #endif /*USE_DYNAMIC_GL_NV_point_sprite*/
 
+/*ARB_uniform_buffer_object*/
+#ifdef USE_DYNAMIC_GL_ARB_uniform_buffer_object
+#define GL_UNIFORM_BUFFER 0x8A11
+#define GL_UNIFORM_BUFFER_BINDING 0x8A28
+#define GL_UNIFORM_BUFFER_START 0x8A29
+#define GL_UNIFORM_BUFFER_SIZE 0x8A2A
+#define GL_MAX_VERTEX_UNIFORM_BLOCKS 0x8A2B
+#define GL_MAX_GEOMETRY_UNIFORM_BLOCKS 0x8A2C
+#define GL_MAX_FRAGMENT_UNIFORM_BLOCKS 0x8A2D
+#define GL_MAX_COMBINED_UNIFORM_BLOCKS 0x8A2E
+#define GL_MAX_UNIFORM_BUFFER_BINDINGS 0x8A2F
+#define GL_MAX_UNIFORM_BLOCK_SIZE 0x8A30
+#define GL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS 0x8A31
+#define GL_MAX_COMBINED_GEOMETRY_UNIFORM_COMPONENTS 0x8A32
+#define GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS 0x8A33
+#define GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT 0x8A34
+#define GL_ACTIVE_UNIFORM_BLOCK_MAX_NAME_LENGTH 0x8A35
+#define GL_ACTIVE_UNIFORM_BLOCKS 0x8A36
+#define GL_UNIFORM_TYPE 0x8A37
+#define GL_UNIFORM_SIZE 0x8A38
+#define GL_UNIFORM_NAME_LENGTH 0x8A39
+#define GL_UNIFORM_BLOCK_INDEX 0x8A3A
+#define GL_UNIFORM_OFFSET 0x8A3B
+#define GL_UNIFORM_ARRAY_STRIDE 0x8A3C
+#define GL_UNIFORM_MATRIX_STRIDE 0x8A3D
+#define GL_UNIFORM_IS_ROW_MAJOR 0x8A3E
+#define GL_UNIFORM_BLOCK_BINDING 0x8A3F
+#define GL_UNIFORM_BLOCK_DATA_SIZE 0x8A40
+#define GL_UNIFORM_BLOCK_NAME_LENGTH 0x8A41
+#define GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS 0x8A42
+#define GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES 0x8A43
+#define GL_UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER 0x8A44
+#define GL_UNIFORM_BLOCK_REFERENCED_BY_GEOMETRY_SHADER 0x8A45
+#define GL_UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER 0x8A46
+#define GL_INVALID_INDEX 0xFFFFFFFF
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetUniformIndices)(GLuint program , GLsizei uniformCount , const GLchar* const , GLuint *uniformIndices); }
+#define glGetUniformIndices DynamicGL_GetUniformIndices
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetActiveUniformsiv)(GLuint program , GLsizei uniformCount , const GLuint *uniformIndices , GLenum pname , GLint *params); }
+#define glGetActiveUniformsiv DynamicGL_GetActiveUniformsiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetActiveUniformName)(GLuint program , GLuint uniformIndex , GLsizei bufSize , GLsizei *length , GLchar *uniformName); }
+#define glGetActiveUniformName DynamicGL_GetActiveUniformName
+extern "C" { extern GLuint (DYNAMIC_GL_APIENTRYP DynamicGL_GetUniformBlockIndex)(GLuint program , const GLchar *uniformBlockName); }
+#define glGetUniformBlockIndex DynamicGL_GetUniformBlockIndex
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetActiveUniformBlockiv)(GLuint program , GLuint uniformBlockIndex , GLenum pname , GLint *params); }
+#define glGetActiveUniformBlockiv DynamicGL_GetActiveUniformBlockiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetActiveUniformBlockName)(GLuint program , GLuint uniformBlockIndex , GLsizei bufSize , GLsizei *length , GLchar *uniformBlockName); }
+#define glGetActiveUniformBlockName DynamicGL_GetActiveUniformBlockName
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformBlockBinding)(GLuint program , GLuint uniformBlockIndex , GLuint uniformBlockBinding); }
+#define glUniformBlockBinding DynamicGL_UniformBlockBinding
+extern bool DinamicGLFeature_ARB_uniform_buffer_object_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_uniform_buffer_object*/
+
 /*EXT_texture_compression_latc*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_compression_latc
 #define GL_COMPRESSED_LUMINANCE_LATC1_EXT 0x8C70
@@ -4894,8 +6149,9 @@ extern bool DinamicGLFeature_EXT_texture_compression_latc_Supported();
 
 /*ARB_instanced_arrays*/
 #ifdef USE_DYNAMIC_GL_ARB_instanced_arrays
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribDivisor)(GLuint index , GLuint divisor); }
-#define glVertexAttribDivisor DynamicGL_VertexAttribDivisor
+#define GL_VERTEX_ATTRIB_ARRAY_DIVISOR_ARB 0x88FE
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribDivisorARB)(GLuint index , GLuint divisor); }
+#define glVertexAttribDivisorARB DynamicGL_VertexAttribDivisorARB
 extern bool DinamicGLFeature_ARB_instanced_arrays_Supported();
 #endif /*USE_DYNAMIC_GL_ARB_instanced_arrays*/
 
@@ -4926,9 +6182,9 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BindBufferOffsetEXT)(GL
 #define glBindBufferOffsetEXT DynamicGL_BindBufferOffsetEXT
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BindBufferBaseEXT)(GLenum target , GLuint index , GLuint buffer); }
 #define glBindBufferBaseEXT DynamicGL_BindBufferBaseEXT
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TransformFeedbackVaryingsEXT)(GLuint program , GLsizei count , const GLint *locations , GLenum bufferMode); }
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TransformFeedbackVaryingsEXT)(GLuint program , GLsizei count , const GLchar* *varyings , GLenum bufferMode); }
 #define glTransformFeedbackVaryingsEXT DynamicGL_TransformFeedbackVaryingsEXT
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTransformFeedbackVaryingEXT)(GLuint program , GLuint index , GLint *location); }
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTransformFeedbackVaryingEXT)(GLuint program , GLuint index , GLsizei bufSize , GLsizei *length , GLsizei *size , GLenum *type , GLchar *name); }
 #define glGetTransformFeedbackVaryingEXT DynamicGL_GetTransformFeedbackVaryingEXT
 extern bool DinamicGLFeature_EXT_transform_feedback_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_transform_feedback*/
@@ -4975,6 +6231,75 @@ extern bool DinamicGLFeature_ARB_depth_buffer_float_Supported();
 #define GL_FORCE_BLUE_TO_ONE_NV 0x8860
 extern bool DinamicGLFeature_NV_texture_shader3_Supported();
 #endif /*USE_DYNAMIC_GL_NV_texture_shader3*/
+
+/*ARB_imaging_DEPRECATED*/
+#ifdef USE_DYNAMIC_GL_ARB_imaging_DEPRECATED
+#define GL_CONVOLUTION_1D 0x8010
+#define GL_CONVOLUTION_2D 0x8011
+#define GL_SEPARABLE_2D 0x8012
+#define GL_CONVOLUTION_BORDER_MODE 0x8013
+#define GL_CONVOLUTION_FILTER_SCALE 0x8014
+#define GL_CONVOLUTION_FILTER_BIAS 0x8015
+#define GL_REDUCE 0x8016
+#define GL_CONVOLUTION_FORMAT 0x8017
+#define GL_CONVOLUTION_WIDTH 0x8018
+#define GL_CONVOLUTION_HEIGHT 0x8019
+#define GL_MAX_CONVOLUTION_WIDTH 0x801A
+#define GL_MAX_CONVOLUTION_HEIGHT 0x801B
+#define GL_POST_CONVOLUTION_RED_SCALE 0x801C
+#define GL_POST_CONVOLUTION_GREEN_SCALE 0x801D
+#define GL_POST_CONVOLUTION_BLUE_SCALE 0x801E
+#define GL_POST_CONVOLUTION_ALPHA_SCALE 0x801F
+#define GL_POST_CONVOLUTION_RED_BIAS 0x8020
+#define GL_POST_CONVOLUTION_GREEN_BIAS 0x8021
+#define GL_POST_CONVOLUTION_BLUE_BIAS 0x8022
+#define GL_POST_CONVOLUTION_ALPHA_BIAS 0x8023
+#define GL_HISTOGRAM 0x8024
+#define GL_PROXY_HISTOGRAM 0x8025
+#define GL_HISTOGRAM_WIDTH 0x8026
+#define GL_HISTOGRAM_FORMAT 0x8027
+#define GL_HISTOGRAM_RED_SIZE 0x8028
+#define GL_HISTOGRAM_GREEN_SIZE 0x8029
+#define GL_HISTOGRAM_BLUE_SIZE 0x802A
+#define GL_HISTOGRAM_ALPHA_SIZE 0x802B
+#define GL_HISTOGRAM_LUMINANCE_SIZE 0x802C
+#define GL_HISTOGRAM_SINK 0x802D
+#define GL_MINMAX 0x802E
+#define GL_MINMAX_FORMAT 0x802F
+#define GL_MINMAX_SINK 0x8030
+#define GL_TABLE_TOO_LARGE 0x8031
+#define GL_COLOR_MATRIX 0x80B1
+#define GL_COLOR_MATRIX_STACK_DEPTH 0x80B2
+#define GL_MAX_COLOR_MATRIX_STACK_DEPTH 0x80B3
+#define GL_POST_COLOR_MATRIX_RED_SCALE 0x80B4
+#define GL_POST_COLOR_MATRIX_GREEN_SCALE 0x80B5
+#define GL_POST_COLOR_MATRIX_BLUE_SCALE 0x80B6
+#define GL_POST_COLOR_MATRIX_ALPHA_SCALE 0x80B7
+#define GL_POST_COLOR_MATRIX_RED_BIAS 0x80B8
+#define GL_POST_COLOR_MATRIX_GREEN_BIAS 0x80B9
+#define GL_POST_COLOR_MATRIX_BLUE_BIAS 0x80BA
+#define GL_POST_COLOR_MATRIX_ALPHA_BIAS 0x80BB
+#define GL_COLOR_TABLE 0x80D0
+#define GL_POST_CONVOLUTION_COLOR_TABLE 0x80D1
+#define GL_POST_COLOR_MATRIX_COLOR_TABLE 0x80D2
+#define GL_PROXY_COLOR_TABLE 0x80D3
+#define GL_PROXY_POST_CONVOLUTION_COLOR_TABLE 0x80D4
+#define GL_PROXY_POST_COLOR_MATRIX_COLOR_TABLE 0x80D5
+#define GL_COLOR_TABLE_SCALE 0x80D6
+#define GL_COLOR_TABLE_BIAS 0x80D7
+#define GL_COLOR_TABLE_FORMAT 0x80D8
+#define GL_COLOR_TABLE_WIDTH 0x80D9
+#define GL_COLOR_TABLE_RED_SIZE 0x80DA
+#define GL_COLOR_TABLE_GREEN_SIZE 0x80DB
+#define GL_COLOR_TABLE_BLUE_SIZE 0x80DC
+#define GL_COLOR_TABLE_ALPHA_SIZE 0x80DD
+#define GL_COLOR_TABLE_LUMINANCE_SIZE 0x80DE
+#define GL_COLOR_TABLE_INTENSITY_SIZE 0x80DF
+#define GL_CONSTANT_BORDER 0x8151
+#define GL_REPLICATE_BORDER 0x8153
+#define GL_CONVOLUTION_BORDER_COLOR 0x8154
+extern bool DinamicGLFeature_ARB_imaging_DEPRECATED_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_imaging_DEPRECATED*/
 
 /*ARB_texture_compression_rgtc*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_compression_rgtc
@@ -5047,6 +6372,12 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetDetailTexFuncSGIS)(G
 extern bool DinamicGLFeature_SGIS_detail_texture_Supported();
 #endif /*USE_DYNAMIC_GL_SGIS_detail_texture*/
 
+/*AMD_pinned_memory*/
+#ifdef USE_DYNAMIC_GL_AMD_pinned_memory
+#define GL_EXTERNAL_VIRTUAL_MEMORY_BUFFER_AMD 0x9160
+extern bool DinamicGLFeature_AMD_pinned_memory_Supported();
+#endif /*USE_DYNAMIC_GL_AMD_pinned_memory*/
+
 /*MESA_resize_buffers*/
 #ifdef USE_DYNAMIC_GL_MESA_resize_buffers
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ResizeBuffersMESA)(); }
@@ -5087,6 +6418,32 @@ extern bool DinamicGLFeature_SUN_global_alpha_Supported();
 extern bool DinamicGLFeature_ARB_depth_texture_Supported();
 #endif /*USE_DYNAMIC_GL_ARB_depth_texture*/
 
+/*AMD_debug_output*/
+#ifdef USE_DYNAMIC_GL_AMD_debug_output
+#define GL_MAX_DEBUG_LOGGED_MESSAGES_AMD 0x9144
+#define GL_DEBUG_LOGGED_MESSAGES_AMD 0x9145
+#define GL_DEBUG_SEVERITY_HIGH_AMD 0x9146
+#define GL_DEBUG_SEVERITY_MEDIUM_AMD 0x9147
+#define GL_DEBUG_SEVERITY_LOW_AMD 0x9148
+#define GL_DEBUG_CATEGORY_API_ERROR_AMD 0x9149
+#define GL_DEBUG_CATEGORY_WINDOW_SYSTEM_AMD 0x914A
+#define GL_DEBUG_CATEGORY_DEPRECATION_AMD 0x914B
+#define GL_DEBUG_CATEGORY_UNDEFINED_BEHAVIOR_AMD 0x914C
+#define GL_DEBUG_CATEGORY_PERFORMANCE_AMD 0x914D
+#define GL_DEBUG_CATEGORY_SHADER_COMPILER_AMD 0x914E
+#define GL_DEBUG_CATEGORY_APPLICATION_AMD 0x914F
+#define GL_DEBUG_CATEGORY_OTHER_AMD 0x9150
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DebugMessageEnableAMD)(GLenum category , GLenum severity , GLsizei count , const GLuint *ids , GLboolean enabled); }
+#define glDebugMessageEnableAMD DynamicGL_DebugMessageEnableAMD
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DebugMessageInsertAMD)(GLenum category , GLenum severity , GLuint id , GLsizei length , const GLchar *buf); }
+#define glDebugMessageInsertAMD DynamicGL_DebugMessageInsertAMD
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DebugMessageCallbackAMD)(GLDEBUGPROCAMD callback , GLvoid *userParam); }
+#define glDebugMessageCallbackAMD DynamicGL_DebugMessageCallbackAMD
+extern "C" { extern GLuint (DYNAMIC_GL_APIENTRYP DynamicGL_GetDebugMessageLogAMD)(GLuint count , GLsizei bufsize , GLenum *categories , GLuint *severities , GLuint *ids , GLsizei *lengths , GLchar *message); }
+#define glGetDebugMessageLogAMD DynamicGL_GetDebugMessageLogAMD
+extern bool DinamicGLFeature_AMD_debug_output_Supported();
+#endif /*USE_DYNAMIC_GL_AMD_debug_output*/
+
 /*HP_convolution_border_modes*/
 #ifdef USE_DYNAMIC_GL_HP_convolution_border_modes
 #define GL_IGNORE_BORDER_HP 0x8150
@@ -5095,6 +6452,35 @@ extern bool DinamicGLFeature_ARB_depth_texture_Supported();
 #define GL_CONVOLUTION_BORDER_COLOR_HP 0x8154
 extern bool DinamicGLFeature_HP_convolution_border_modes_Supported();
 #endif /*USE_DYNAMIC_GL_HP_convolution_border_modes*/
+
+/*APPLE_vertex_program_evaluators*/
+#ifdef USE_DYNAMIC_GL_APPLE_vertex_program_evaluators
+#define GL_VERTEX_ATTRIB_MAP1_APPLE 0x8A00
+#define GL_VERTEX_ATTRIB_MAP2_APPLE 0x8A01
+#define GL_VERTEX_ATTRIB_MAP1_SIZE_APPLE 0x8A02
+#define GL_VERTEX_ATTRIB_MAP1_COEFF_APPLE 0x8A03
+#define GL_VERTEX_ATTRIB_MAP1_ORDER_APPLE 0x8A04
+#define GL_VERTEX_ATTRIB_MAP1_DOMAIN_APPLE 0x8A05
+#define GL_VERTEX_ATTRIB_MAP2_SIZE_APPLE 0x8A06
+#define GL_VERTEX_ATTRIB_MAP2_COEFF_APPLE 0x8A07
+#define GL_VERTEX_ATTRIB_MAP2_ORDER_APPLE 0x8A08
+#define GL_VERTEX_ATTRIB_MAP2_DOMAIN_APPLE 0x8A09
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_EnableVertexAttribAPPLE)(GLuint index , GLenum pname); }
+#define glEnableVertexAttribAPPLE DynamicGL_EnableVertexAttribAPPLE
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DisableVertexAttribAPPLE)(GLuint index , GLenum pname); }
+#define glDisableVertexAttribAPPLE DynamicGL_DisableVertexAttribAPPLE
+extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsVertexAttribEnabledAPPLE)(GLuint index , GLenum pname); }
+#define glIsVertexAttribEnabledAPPLE DynamicGL_IsVertexAttribEnabledAPPLE
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MapVertexAttrib1dAPPLE)(GLuint index , GLuint size , GLdouble u1 , GLdouble u2 , GLint stride , GLint order , const GLdouble *points); }
+#define glMapVertexAttrib1dAPPLE DynamicGL_MapVertexAttrib1dAPPLE
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MapVertexAttrib1fAPPLE)(GLuint index , GLuint size , GLfloat u1 , GLfloat u2 , GLint stride , GLint order , const GLfloat *points); }
+#define glMapVertexAttrib1fAPPLE DynamicGL_MapVertexAttrib1fAPPLE
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MapVertexAttrib2dAPPLE)(GLuint index , GLuint size , GLdouble u1 , GLdouble u2 , GLint ustride , GLint uorder , GLdouble v1 , GLdouble v2 , GLint vstride , GLint vorder , const GLdouble *points); }
+#define glMapVertexAttrib2dAPPLE DynamicGL_MapVertexAttrib2dAPPLE
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MapVertexAttrib2fAPPLE)(GLuint index , GLuint size , GLfloat u1 , GLfloat u2 , GLint ustride , GLint uorder , GLfloat v1 , GLfloat v2 , GLint vstride , GLint vorder , const GLfloat *points); }
+#define glMapVertexAttrib2fAPPLE DynamicGL_MapVertexAttrib2fAPPLE
+extern bool DinamicGLFeature_APPLE_vertex_program_evaluators_Supported();
+#endif /*USE_DYNAMIC_GL_APPLE_vertex_program_evaluators*/
 
 /*NV_fragment_program*/
 #ifdef USE_DYNAMIC_GL_NV_fragment_program
@@ -5118,6 +6504,47 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetProgramNamedParamete
 #define glGetProgramNamedParameterdvNV DynamicGL_GetProgramNamedParameterdvNV
 extern bool DinamicGLFeature_NV_fragment_program_Supported();
 #endif /*USE_DYNAMIC_GL_NV_fragment_program*/
+
+/*VERSION_1_5_DEPRECATED*/
+#ifdef USE_DYNAMIC_GL_VERSION_1_5_DEPRECATED
+#define GL_VERTEX_ARRAY_BUFFER_BINDING 0x8896
+#define GL_NORMAL_ARRAY_BUFFER_BINDING 0x8897
+#define GL_COLOR_ARRAY_BUFFER_BINDING 0x8898
+#define GL_INDEX_ARRAY_BUFFER_BINDING 0x8899
+#define GL_TEXTURE_COORD_ARRAY_BUFFER_BINDING 0x889A
+#define GL_EDGE_FLAG_ARRAY_BUFFER_BINDING 0x889B
+#define GL_SECONDARY_COLOR_ARRAY_BUFFER_BINDING 0x889C
+#define GL_FOG_COORDINATE_ARRAY_BUFFER_BINDING 0x889D
+#define GL_WEIGHT_ARRAY_BUFFER_BINDING 0x889E
+#define GL_FOG_COORD_SRC 0x8450
+#define GL_FOG_COORD 0x8451
+#define GL_CURRENT_FOG_COORD 0x8453
+#define GL_FOG_COORD_ARRAY_TYPE 0x8454
+#define GL_FOG_COORD_ARRAY_STRIDE 0x8455
+#define GL_FOG_COORD_ARRAY_POINTER 0x8456
+#define GL_FOG_COORD_ARRAY 0x8457
+#define GL_FOG_COORD_ARRAY_BUFFER_BINDING 0x889D
+#define GL_SRC0_RGB 0x8580
+#define GL_SRC1_RGB 0x8581
+#define GL_SRC2_RGB 0x8582
+#define GL_SRC0_ALPHA 0x8588
+#define GL_SRC1_ALPHA 0x8589
+#define GL_SRC2_ALPHA 0x858A
+extern bool DinamicGLFeature_VERSION_1_5_DEPRECATED_Supported();
+#endif /*USE_DYNAMIC_GL_VERSION_1_5_DEPRECATED*/
+
+/*NV_copy_image*/
+#ifdef USE_DYNAMIC_GL_NV_copy_image
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_CopyImageSubDataNV)(GLuint srcName , GLenum srcTarget , GLint srcLevel , GLint srcX , GLint srcY , GLint srcZ , GLuint dstName , GLenum dstTarget , GLint dstLevel , GLint dstX , GLint dstY , GLint dstZ , GLsizei width , GLsizei height , GLsizei depth); }
+#define glCopyImageSubDataNV DynamicGL_CopyImageSubDataNV
+extern bool DinamicGLFeature_NV_copy_image_Supported();
+#endif /*USE_DYNAMIC_GL_NV_copy_image*/
+
+/*NV_shader_buffer_store*/
+#ifdef USE_DYNAMIC_GL_NV_shader_buffer_store
+#define GL_SHADER_GLOBAL_ACCESS_BARRIER_BIT_NV 0x00000010
+extern bool DinamicGLFeature_NV_shader_buffer_store_Supported();
+#endif /*USE_DYNAMIC_GL_NV_shader_buffer_store*/
 
 /*NV_texture_env_combine4*/
 #ifdef USE_DYNAMIC_GL_NV_texture_env_combine4
@@ -5163,13 +6590,13 @@ extern bool DinamicGLFeature_SGIS_fog_function_Supported();
 /*VERSION_2_0*/
 #ifdef USE_DYNAMIC_GL_VERSION_2_0
 typedef char GLchar;
+#define GL_BLEND_EQUATION_RGB 0x8009
 #define GL_VERTEX_ATTRIB_ARRAY_ENABLED 0x8622
 #define GL_VERTEX_ATTRIB_ARRAY_SIZE 0x8623
 #define GL_VERTEX_ATTRIB_ARRAY_STRIDE 0x8624
 #define GL_VERTEX_ATTRIB_ARRAY_TYPE 0x8625
 #define GL_CURRENT_VERTEX_ATTRIB 0x8626
 #define GL_VERTEX_PROGRAM_POINT_SIZE 0x8642
-#define GL_VERTEX_PROGRAM_TWO_SIDE 0x8643
 #define GL_VERTEX_ATTRIB_ARRAY_POINTER 0x8645
 #define GL_STENCIL_BACK_FUNC 0x8800
 #define GL_STENCIL_BACK_FAIL 0x8801
@@ -5193,11 +6620,8 @@ typedef char GLchar;
 #define GL_DRAW_BUFFER14 0x8833
 #define GL_DRAW_BUFFER15 0x8834
 #define GL_BLEND_EQUATION_ALPHA 0x883D
-#define GL_POINT_SPRITE 0x8861
-#define GL_COORD_REPLACE 0x8862
 #define GL_MAX_VERTEX_ATTRIBS 0x8869
 #define GL_VERTEX_ATTRIB_ARRAY_NORMALIZED 0x886A
-#define GL_MAX_TEXTURE_COORDS 0x8871
 #define GL_MAX_TEXTURE_IMAGE_UNITS 0x8872
 #define GL_FRAGMENT_SHADER 0x8B30
 #define GL_VERTEX_SHADER 0x8B31
@@ -5252,7 +6676,7 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawBuffers)(GLsizei n 
 #define glDrawBuffers DynamicGL_DrawBuffers
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilOpSeparate)(GLenum face , GLenum sfail , GLenum dpfail , GLenum dppass); }
 #define glStencilOpSeparate DynamicGL_StencilOpSeparate
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilFuncSeparate)(GLenum frontfunc , GLenum backfunc , GLint ref , GLuint mask); }
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilFuncSeparate)(GLenum face , GLenum func , GLint ref , GLuint mask); }
 #define glStencilFuncSeparate DynamicGL_StencilFuncSeparate
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilMaskSeparate)(GLenum face , GLuint mask); }
 #define glStencilMaskSeparate DynamicGL_StencilMaskSeparate
@@ -5314,7 +6738,7 @@ extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsShader)(GLuint s
 #define glIsShader DynamicGL_IsShader
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LinkProgram)(GLuint program); }
 #define glLinkProgram DynamicGL_LinkProgram
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ShaderSource)(GLuint shader , GLsizei count , const GLchar* *string , const GLint *length); }
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ShaderSource)(GLuint shader , GLsizei count , const GLchar* const , const GLint *length); }
 #define glShaderSource DynamicGL_ShaderSource
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_UseProgram)(GLuint program); }
 #define glUseProgram DynamicGL_UseProgram
@@ -5466,6 +6890,22 @@ extern bool DinamicGLFeature_OML_subsample_Supported();
 extern bool DinamicGLFeature_NV_texgen_reflection_Supported();
 #endif /*USE_DYNAMIC_GL_NV_texgen_reflection*/
 
+/*AMD_name_gen_delete*/
+#ifdef USE_DYNAMIC_GL_AMD_name_gen_delete
+#define GL_DATA_BUFFER_AMD 0x9151
+#define GL_PERFORMANCE_MONITOR_AMD 0x9152
+#define GL_QUERY_OBJECT_AMD 0x9153
+#define GL_VERTEX_ARRAY_OBJECT_AMD 0x9154
+#define GL_SAMPLER_OBJECT_AMD 0x9155
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GenNamesAMD)(GLenum identifier , GLuint num , GLuint *names); }
+#define glGenNamesAMD DynamicGL_GenNamesAMD
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteNamesAMD)(GLenum identifier , GLuint num , const GLuint *names); }
+#define glDeleteNamesAMD DynamicGL_DeleteNamesAMD
+extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsNameAMD)(GLenum identifier , GLuint name); }
+#define glIsNameAMD DynamicGL_IsNameAMD
+extern bool DinamicGLFeature_AMD_name_gen_delete_Supported();
+#endif /*USE_DYNAMIC_GL_AMD_name_gen_delete*/
+
 /*SGIX_list_priority*/
 #ifdef USE_DYNAMIC_GL_SGIX_list_priority
 #define GL_LIST_PRIORITY_SGIX 0x8182
@@ -5507,6 +6947,14 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetOcclusionQueryuivNV)
 extern bool DinamicGLFeature_NV_occlusion_query_Supported();
 #endif /*USE_DYNAMIC_GL_NV_occlusion_query*/
 
+/*EXT_texture_shared_exponent*/
+#ifdef USE_DYNAMIC_GL_EXT_texture_shared_exponent
+#define GL_RGB9_E5_EXT 0x8C3D
+#define GL_UNSIGNED_INT_5_9_9_9_REV_EXT 0x8C3E
+#define GL_TEXTURE_SHARED_SIZE_EXT 0x8C3F
+extern bool DinamicGLFeature_EXT_texture_shared_exponent_Supported();
+#endif /*USE_DYNAMIC_GL_EXT_texture_shared_exponent*/
+
 /*VERSION_1_3*/
 #ifdef USE_DYNAMIC_GL_VERSION_1_3
 #define GL_TEXTURE0 0x84C0
@@ -5542,12 +6990,6 @@ extern bool DinamicGLFeature_NV_occlusion_query_Supported();
 #define GL_TEXTURE30 0x84DE
 #define GL_TEXTURE31 0x84DF
 #define GL_ACTIVE_TEXTURE 0x84E0
-#define GL_CLIENT_ACTIVE_TEXTURE 0x84E1
-#define GL_MAX_TEXTURE_UNITS 0x84E2
-#define GL_TRANSPOSE_MODELVIEW_MATRIX 0x84E3
-#define GL_TRANSPOSE_PROJECTION_MATRIX 0x84E4
-#define GL_TRANSPOSE_TEXTURE_MATRIX 0x84E5
-#define GL_TRANSPOSE_COLOR_MATRIX 0x84E6
 #define GL_MULTISAMPLE 0x809D
 #define GL_SAMPLE_ALPHA_TO_COVERAGE 0x809E
 #define GL_SAMPLE_ALPHA_TO_ONE 0x809F
@@ -5556,9 +6998,6 @@ extern bool DinamicGLFeature_NV_occlusion_query_Supported();
 #define GL_SAMPLES 0x80A9
 #define GL_SAMPLE_COVERAGE_VALUE 0x80AA
 #define GL_SAMPLE_COVERAGE_INVERT 0x80AB
-#define GL_MULTISAMPLE_BIT 0x20000000
-#define GL_NORMAL_MAP 0x8511
-#define GL_REFLECTION_MAP 0x8512
 #define GL_TEXTURE_CUBE_MAP 0x8513
 #define GL_TEXTURE_BINDING_CUBE_MAP 0x8514
 #define GL_TEXTURE_CUBE_MAP_POSITIVE_X 0x8515
@@ -5569,10 +7008,6 @@ extern bool DinamicGLFeature_NV_occlusion_query_Supported();
 #define GL_TEXTURE_CUBE_MAP_NEGATIVE_Z 0x851A
 #define GL_PROXY_TEXTURE_CUBE_MAP 0x851B
 #define GL_MAX_CUBE_MAP_TEXTURE_SIZE 0x851C
-#define GL_COMPRESSED_ALPHA 0x84E9
-#define GL_COMPRESSED_LUMINANCE 0x84EA
-#define GL_COMPRESSED_LUMINANCE_ALPHA 0x84EB
-#define GL_COMPRESSED_INTENSITY 0x84EC
 #define GL_COMPRESSED_RGB 0x84ED
 #define GL_COMPRESSED_RGBA 0x84EE
 #define GL_TEXTURE_COMPRESSION_HINT 0x84EF
@@ -5581,107 +7016,9 @@ extern bool DinamicGLFeature_NV_occlusion_query_Supported();
 #define GL_NUM_COMPRESSED_TEXTURE_FORMATS 0x86A2
 #define GL_COMPRESSED_TEXTURE_FORMATS 0x86A3
 #define GL_CLAMP_TO_BORDER 0x812D
-#define GL_COMBINE 0x8570
-#define GL_COMBINE_RGB 0x8571
-#define GL_COMBINE_ALPHA 0x8572
-#define GL_SOURCE0_RGB 0x8580
-#define GL_SOURCE1_RGB 0x8581
-#define GL_SOURCE2_RGB 0x8582
-#define GL_SOURCE0_ALPHA 0x8588
-#define GL_SOURCE1_ALPHA 0x8589
-#define GL_SOURCE2_ALPHA 0x858A
-#define GL_OPERAND0_RGB 0x8590
-#define GL_OPERAND1_RGB 0x8591
-#define GL_OPERAND2_RGB 0x8592
-#define GL_OPERAND0_ALPHA 0x8598
-#define GL_OPERAND1_ALPHA 0x8599
-#define GL_OPERAND2_ALPHA 0x859A
-#define GL_RGB_SCALE 0x8573
-#define GL_ADD_SIGNED 0x8574
-#define GL_INTERPOLATE 0x8575
-#define GL_SUBTRACT 0x84E7
-#define GL_CONSTANT 0x8576
-#define GL_PRIMARY_COLOR 0x8577
-#define GL_PREVIOUS 0x8578
-#define GL_DOT3_RGB 0x86AE
-#define GL_DOT3_RGBA 0x86AF
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ActiveTexture)(GLenum texture); }
 #define glActiveTexture DynamicGL_ActiveTexture
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClientActiveTexture)(GLenum texture); }
-#define glClientActiveTexture DynamicGL_ClientActiveTexture
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1d)(GLenum target , GLdouble s); }
-#define glMultiTexCoord1d DynamicGL_MultiTexCoord1d
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1dv)(GLenum target , const GLdouble *v); }
-#define glMultiTexCoord1dv DynamicGL_MultiTexCoord1dv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1f)(GLenum target , GLfloat s); }
-#define glMultiTexCoord1f DynamicGL_MultiTexCoord1f
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1fv)(GLenum target , const GLfloat *v); }
-#define glMultiTexCoord1fv DynamicGL_MultiTexCoord1fv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1i)(GLenum target , GLint s); }
-#define glMultiTexCoord1i DynamicGL_MultiTexCoord1i
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1iv)(GLenum target , const GLint *v); }
-#define glMultiTexCoord1iv DynamicGL_MultiTexCoord1iv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1s)(GLenum target , GLshort s); }
-#define glMultiTexCoord1s DynamicGL_MultiTexCoord1s
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1sv)(GLenum target , const GLshort *v); }
-#define glMultiTexCoord1sv DynamicGL_MultiTexCoord1sv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2d)(GLenum target , GLdouble s , GLdouble t); }
-#define glMultiTexCoord2d DynamicGL_MultiTexCoord2d
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2dv)(GLenum target , const GLdouble *v); }
-#define glMultiTexCoord2dv DynamicGL_MultiTexCoord2dv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2f)(GLenum target , GLfloat s , GLfloat t); }
-#define glMultiTexCoord2f DynamicGL_MultiTexCoord2f
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2fv)(GLenum target , const GLfloat *v); }
-#define glMultiTexCoord2fv DynamicGL_MultiTexCoord2fv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2i)(GLenum target , GLint s , GLint t); }
-#define glMultiTexCoord2i DynamicGL_MultiTexCoord2i
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2iv)(GLenum target , const GLint *v); }
-#define glMultiTexCoord2iv DynamicGL_MultiTexCoord2iv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2s)(GLenum target , GLshort s , GLshort t); }
-#define glMultiTexCoord2s DynamicGL_MultiTexCoord2s
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2sv)(GLenum target , const GLshort *v); }
-#define glMultiTexCoord2sv DynamicGL_MultiTexCoord2sv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3d)(GLenum target , GLdouble s , GLdouble t , GLdouble r); }
-#define glMultiTexCoord3d DynamicGL_MultiTexCoord3d
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3dv)(GLenum target , const GLdouble *v); }
-#define glMultiTexCoord3dv DynamicGL_MultiTexCoord3dv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3f)(GLenum target , GLfloat s , GLfloat t , GLfloat r); }
-#define glMultiTexCoord3f DynamicGL_MultiTexCoord3f
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3fv)(GLenum target , const GLfloat *v); }
-#define glMultiTexCoord3fv DynamicGL_MultiTexCoord3fv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3i)(GLenum target , GLint s , GLint t , GLint r); }
-#define glMultiTexCoord3i DynamicGL_MultiTexCoord3i
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3iv)(GLenum target , const GLint *v); }
-#define glMultiTexCoord3iv DynamicGL_MultiTexCoord3iv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3s)(GLenum target , GLshort s , GLshort t , GLshort r); }
-#define glMultiTexCoord3s DynamicGL_MultiTexCoord3s
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3sv)(GLenum target , const GLshort *v); }
-#define glMultiTexCoord3sv DynamicGL_MultiTexCoord3sv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4d)(GLenum target , GLdouble s , GLdouble t , GLdouble r , GLdouble q); }
-#define glMultiTexCoord4d DynamicGL_MultiTexCoord4d
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4dv)(GLenum target , const GLdouble *v); }
-#define glMultiTexCoord4dv DynamicGL_MultiTexCoord4dv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4f)(GLenum target , GLfloat s , GLfloat t , GLfloat r , GLfloat q); }
-#define glMultiTexCoord4f DynamicGL_MultiTexCoord4f
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4fv)(GLenum target , const GLfloat *v); }
-#define glMultiTexCoord4fv DynamicGL_MultiTexCoord4fv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4i)(GLenum target , GLint s , GLint t , GLint r , GLint q); }
-#define glMultiTexCoord4i DynamicGL_MultiTexCoord4i
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4iv)(GLenum target , const GLint *v); }
-#define glMultiTexCoord4iv DynamicGL_MultiTexCoord4iv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4s)(GLenum target , GLshort s , GLshort t , GLshort r , GLshort q); }
-#define glMultiTexCoord4s DynamicGL_MultiTexCoord4s
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4sv)(GLenum target , const GLshort *v); }
-#define glMultiTexCoord4sv DynamicGL_MultiTexCoord4sv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadTransposeMatrixf)(const GLfloat *m); }
-#define glLoadTransposeMatrixf DynamicGL_LoadTransposeMatrixf
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadTransposeMatrixd)(const GLdouble *m); }
-#define glLoadTransposeMatrixd DynamicGL_LoadTransposeMatrixd
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultTransposeMatrixf)(const GLfloat *m); }
-#define glMultTransposeMatrixf DynamicGL_MultTransposeMatrixf
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultTransposeMatrixd)(const GLdouble *m); }
-#define glMultTransposeMatrixd DynamicGL_MultTransposeMatrixd
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleCoverage)(GLclampf value , GLboolean invert); }
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleCoverage)(GLfloat value , GLboolean invert); }
 #define glSampleCoverage DynamicGL_SampleCoverage
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_CompressedTexImage3D)(GLenum target , GLint level , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth , GLint border , GLsizei imageSize , const GLvoid *data); }
 #define glCompressedTexImage3D DynamicGL_CompressedTexImage3D
@@ -5711,14 +7048,6 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClampColorARB)(GLenum t
 #define glClampColorARB DynamicGL_ClampColorARB
 extern bool DinamicGLFeature_ARB_color_buffer_float_Supported();
 #endif /*USE_DYNAMIC_GL_ARB_color_buffer_float*/
-
-/*EXT_texture_shared_exponent*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_shared_exponent
-#define GL_RGB9_E5_EXT 0x8C3D
-#define GL_UNSIGNED_INT_5_9_9_9_REV_EXT 0x8C3E
-#define GL_TEXTURE_SHARED_SIZE_EXT 0x8C3F
-extern bool DinamicGLFeature_EXT_texture_shared_exponent_Supported();
-#endif /*USE_DYNAMIC_GL_EXT_texture_shared_exponent*/
 
 /*NV_half_float*/
 #ifdef USE_DYNAMIC_GL_NV_half_float
@@ -5819,6 +7148,25 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribs4hvNV)(GLu
 extern bool DinamicGLFeature_NV_half_float_Supported();
 #endif /*USE_DYNAMIC_GL_NV_half_float*/
 
+/*APPLE_float_pixels*/
+#ifdef USE_DYNAMIC_GL_APPLE_float_pixels
+#define GL_HALF_APPLE 0x140B
+#define GL_RGBA_FLOAT32_APPLE 0x8814
+#define GL_RGB_FLOAT32_APPLE 0x8815
+#define GL_ALPHA_FLOAT32_APPLE 0x8816
+#define GL_INTENSITY_FLOAT32_APPLE 0x8817
+#define GL_LUMINANCE_FLOAT32_APPLE 0x8818
+#define GL_LUMINANCE_ALPHA_FLOAT32_APPLE 0x8819
+#define GL_RGBA_FLOAT16_APPLE 0x881A
+#define GL_RGB_FLOAT16_APPLE 0x881B
+#define GL_ALPHA_FLOAT16_APPLE 0x881C
+#define GL_INTENSITY_FLOAT16_APPLE 0x881D
+#define GL_LUMINANCE_FLOAT16_APPLE 0x881E
+#define GL_LUMINANCE_ALPHA_FLOAT16_APPLE 0x881F
+#define GL_COLOR_FLOAT_APPLE 0x8A0F
+extern bool DinamicGLFeature_APPLE_float_pixels_Supported();
+#endif /*USE_DYNAMIC_GL_APPLE_float_pixels*/
+
 /*EXT_gpu_shader4*/
 #ifdef USE_DYNAMIC_GL_EXT_gpu_shader4
 #define GL_SAMPLER_1D_ARRAY_EXT 0x8DC0
@@ -5871,12 +7219,121 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform4uivEXT)(GLint l
 extern bool DinamicGLFeature_EXT_gpu_shader4_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_gpu_shader4*/
 
+/*NV_gpu_shader5*/
+#ifdef USE_DYNAMIC_GL_NV_gpu_shader5
+#define GL_INT64_NV 0x140E
+#define GL_UNSIGNED_INT64_NV 0x140F
+#define GL_INT8_NV 0x8FE0
+#define GL_INT8_VEC2_NV 0x8FE1
+#define GL_INT8_VEC3_NV 0x8FE2
+#define GL_INT8_VEC4_NV 0x8FE3
+#define GL_INT16_NV 0x8FE4
+#define GL_INT16_VEC2_NV 0x8FE5
+#define GL_INT16_VEC3_NV 0x8FE6
+#define GL_INT16_VEC4_NV 0x8FE7
+#define GL_INT64_VEC2_NV 0x8FE9
+#define GL_INT64_VEC3_NV 0x8FEA
+#define GL_INT64_VEC4_NV 0x8FEB
+#define GL_UNSIGNED_INT8_NV 0x8FEC
+#define GL_UNSIGNED_INT8_VEC2_NV 0x8FED
+#define GL_UNSIGNED_INT8_VEC3_NV 0x8FEE
+#define GL_UNSIGNED_INT8_VEC4_NV 0x8FEF
+#define GL_UNSIGNED_INT16_NV 0x8FF0
+#define GL_UNSIGNED_INT16_VEC2_NV 0x8FF1
+#define GL_UNSIGNED_INT16_VEC3_NV 0x8FF2
+#define GL_UNSIGNED_INT16_VEC4_NV 0x8FF3
+#define GL_UNSIGNED_INT64_VEC2_NV 0x8FF5
+#define GL_UNSIGNED_INT64_VEC3_NV 0x8FF6
+#define GL_UNSIGNED_INT64_VEC4_NV 0x8FF7
+#define GL_FLOAT16_NV 0x8FF8
+#define GL_FLOAT16_VEC2_NV 0x8FF9
+#define GL_FLOAT16_VEC3_NV 0x8FFA
+#define GL_FLOAT16_VEC4_NV 0x8FFB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform1i64NV)(GLint location , GLint64EXT x); }
+#define glUniform1i64NV DynamicGL_Uniform1i64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform2i64NV)(GLint location , GLint64EXT x , GLint64EXT y); }
+#define glUniform2i64NV DynamicGL_Uniform2i64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform3i64NV)(GLint location , GLint64EXT x , GLint64EXT y , GLint64EXT z); }
+#define glUniform3i64NV DynamicGL_Uniform3i64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform4i64NV)(GLint location , GLint64EXT x , GLint64EXT y , GLint64EXT z , GLint64EXT w); }
+#define glUniform4i64NV DynamicGL_Uniform4i64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform1i64vNV)(GLint location , GLsizei count , const GLint64EXT *value); }
+#define glUniform1i64vNV DynamicGL_Uniform1i64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform2i64vNV)(GLint location , GLsizei count , const GLint64EXT *value); }
+#define glUniform2i64vNV DynamicGL_Uniform2i64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform3i64vNV)(GLint location , GLsizei count , const GLint64EXT *value); }
+#define glUniform3i64vNV DynamicGL_Uniform3i64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform4i64vNV)(GLint location , GLsizei count , const GLint64EXT *value); }
+#define glUniform4i64vNV DynamicGL_Uniform4i64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform1ui64NV)(GLint location , GLuint64EXT x); }
+#define glUniform1ui64NV DynamicGL_Uniform1ui64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform2ui64NV)(GLint location , GLuint64EXT x , GLuint64EXT y); }
+#define glUniform2ui64NV DynamicGL_Uniform2ui64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform3ui64NV)(GLint location , GLuint64EXT x , GLuint64EXT y , GLuint64EXT z); }
+#define glUniform3ui64NV DynamicGL_Uniform3ui64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform4ui64NV)(GLint location , GLuint64EXT x , GLuint64EXT y , GLuint64EXT z , GLuint64EXT w); }
+#define glUniform4ui64NV DynamicGL_Uniform4ui64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform1ui64vNV)(GLint location , GLsizei count , const GLuint64EXT *value); }
+#define glUniform1ui64vNV DynamicGL_Uniform1ui64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform2ui64vNV)(GLint location , GLsizei count , const GLuint64EXT *value); }
+#define glUniform2ui64vNV DynamicGL_Uniform2ui64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform3ui64vNV)(GLint location , GLsizei count , const GLuint64EXT *value); }
+#define glUniform3ui64vNV DynamicGL_Uniform3ui64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniform4ui64vNV)(GLint location , GLsizei count , const GLuint64EXT *value); }
+#define glUniform4ui64vNV DynamicGL_Uniform4ui64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetUniformi64vNV)(GLuint program , GLint location , GLint64EXT *params); }
+#define glGetUniformi64vNV DynamicGL_GetUniformi64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1i64NV)(GLuint program , GLint location , GLint64EXT x); }
+#define glProgramUniform1i64NV DynamicGL_ProgramUniform1i64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2i64NV)(GLuint program , GLint location , GLint64EXT x , GLint64EXT y); }
+#define glProgramUniform2i64NV DynamicGL_ProgramUniform2i64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3i64NV)(GLuint program , GLint location , GLint64EXT x , GLint64EXT y , GLint64EXT z); }
+#define glProgramUniform3i64NV DynamicGL_ProgramUniform3i64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4i64NV)(GLuint program , GLint location , GLint64EXT x , GLint64EXT y , GLint64EXT z , GLint64EXT w); }
+#define glProgramUniform4i64NV DynamicGL_ProgramUniform4i64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1i64vNV)(GLuint program , GLint location , GLsizei count , const GLint64EXT *value); }
+#define glProgramUniform1i64vNV DynamicGL_ProgramUniform1i64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2i64vNV)(GLuint program , GLint location , GLsizei count , const GLint64EXT *value); }
+#define glProgramUniform2i64vNV DynamicGL_ProgramUniform2i64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3i64vNV)(GLuint program , GLint location , GLsizei count , const GLint64EXT *value); }
+#define glProgramUniform3i64vNV DynamicGL_ProgramUniform3i64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4i64vNV)(GLuint program , GLint location , GLsizei count , const GLint64EXT *value); }
+#define glProgramUniform4i64vNV DynamicGL_ProgramUniform4i64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1ui64NV)(GLuint program , GLint location , GLuint64EXT x); }
+#define glProgramUniform1ui64NV DynamicGL_ProgramUniform1ui64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2ui64NV)(GLuint program , GLint location , GLuint64EXT x , GLuint64EXT y); }
+#define glProgramUniform2ui64NV DynamicGL_ProgramUniform2ui64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3ui64NV)(GLuint program , GLint location , GLuint64EXT x , GLuint64EXT y , GLuint64EXT z); }
+#define glProgramUniform3ui64NV DynamicGL_ProgramUniform3ui64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4ui64NV)(GLuint program , GLint location , GLuint64EXT x , GLuint64EXT y , GLuint64EXT z , GLuint64EXT w); }
+#define glProgramUniform4ui64NV DynamicGL_ProgramUniform4ui64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1ui64vNV)(GLuint program , GLint location , GLsizei count , const GLuint64EXT *value); }
+#define glProgramUniform1ui64vNV DynamicGL_ProgramUniform1ui64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2ui64vNV)(GLuint program , GLint location , GLsizei count , const GLuint64EXT *value); }
+#define glProgramUniform2ui64vNV DynamicGL_ProgramUniform2ui64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3ui64vNV)(GLuint program , GLint location , GLsizei count , const GLuint64EXT *value); }
+#define glProgramUniform3ui64vNV DynamicGL_ProgramUniform3ui64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4ui64vNV)(GLuint program , GLint location , GLsizei count , const GLuint64EXT *value); }
+#define glProgramUniform4ui64vNV DynamicGL_ProgramUniform4ui64vNV
+extern bool DinamicGLFeature_NV_gpu_shader5_Supported();
+#endif /*USE_DYNAMIC_GL_NV_gpu_shader5*/
+
 /*NV_light_max_exponent*/
 #ifdef USE_DYNAMIC_GL_NV_light_max_exponent
 #define GL_MAX_SHININESS_NV 0x8504
 #define GL_MAX_SPOT_EXPONENT_NV 0x8505
 extern bool DinamicGLFeature_NV_light_max_exponent_Supported();
 #endif /*USE_DYNAMIC_GL_NV_light_max_exponent*/
+
+/*EXT_texture_swizzle*/
+#ifdef USE_DYNAMIC_GL_EXT_texture_swizzle
+#define GL_TEXTURE_SWIZZLE_R_EXT 0x8E42
+#define GL_TEXTURE_SWIZZLE_G_EXT 0x8E43
+#define GL_TEXTURE_SWIZZLE_B_EXT 0x8E44
+#define GL_TEXTURE_SWIZZLE_A_EXT 0x8E45
+#define GL_TEXTURE_SWIZZLE_RGBA_EXT 0x8E46
+extern bool DinamicGLFeature_EXT_texture_swizzle_Supported();
+#endif /*USE_DYNAMIC_GL_EXT_texture_swizzle*/
 
 /*INGR_interlace_read*/
 #ifdef USE_DYNAMIC_GL_INGR_interlace_read
@@ -5902,6 +7359,19 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PNTrianglesfATI)(GLenum
 extern bool DinamicGLFeature_ATI_pn_triangles_Supported();
 #endif /*USE_DYNAMIC_GL_ATI_pn_triangles*/
 
+/*AMD_draw_buffers_blend*/
+#ifdef USE_DYNAMIC_GL_AMD_draw_buffers_blend
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFuncIndexedAMD)(GLuint buf , GLenum src , GLenum dst); }
+#define glBlendFuncIndexedAMD DynamicGL_BlendFuncIndexedAMD
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFuncSeparateIndexedAMD)(GLuint buf , GLenum srcRGB , GLenum dstRGB , GLenum srcAlpha , GLenum dstAlpha); }
+#define glBlendFuncSeparateIndexedAMD DynamicGL_BlendFuncSeparateIndexedAMD
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationIndexedAMD)(GLuint buf , GLenum mode); }
+#define glBlendEquationIndexedAMD DynamicGL_BlendEquationIndexedAMD
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationSeparateIndexedAMD)(GLuint buf , GLenum modeRGB , GLenum modeAlpha); }
+#define glBlendEquationSeparateIndexedAMD DynamicGL_BlendEquationSeparateIndexedAMD
+extern bool DinamicGLFeature_AMD_draw_buffers_blend_Supported();
+#endif /*USE_DYNAMIC_GL_AMD_draw_buffers_blend*/
+
 /*APPLE_ycbcr_422*/
 #ifdef USE_DYNAMIC_GL_APPLE_ycbcr_422
 #define GL_YCBCR_422_APPLE 0x85B9
@@ -5916,6 +7386,12 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TbufferMask3DFX)(GLuint
 #define glTbufferMask3DFX DynamicGL_TbufferMask3DFX
 extern bool DinamicGLFeature_3DFX_tbuffer_Supported();
 #endif /*USE_DYNAMIC_GL_3DFX_tbuffer*/
+
+/*NV_texture_expand_normal*/
+#ifdef USE_DYNAMIC_GL_NV_texture_expand_normal
+#define GL_TEXTURE_UNSIGNED_REMAP_MODE_NV 0x888F
+extern bool DinamicGLFeature_NV_texture_expand_normal_Supported();
+#endif /*USE_DYNAMIC_GL_NV_texture_expand_normal*/
 
 /*ARB_texture_float*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_float
@@ -5942,12 +7418,6 @@ extern bool DinamicGLFeature_3DFX_tbuffer_Supported();
 extern bool DinamicGLFeature_ARB_texture_float_Supported();
 #endif /*USE_DYNAMIC_GL_ARB_texture_float*/
 
-/*NV_texture_expand_normal*/
-#ifdef USE_DYNAMIC_GL_NV_texture_expand_normal
-#define GL_TEXTURE_UNSIGNED_REMAP_MODE_NV 0x888F
-extern bool DinamicGLFeature_NV_texture_expand_normal_Supported();
-#endif /*USE_DYNAMIC_GL_NV_texture_expand_normal*/
-
 /*REND_screen_coordinates*/
 #ifdef USE_DYNAMIC_GL_REND_screen_coordinates
 #define GL_SCREEN_COORDINATES_REND 0x8490
@@ -5955,12 +7425,77 @@ extern bool DinamicGLFeature_NV_texture_expand_normal_Supported();
 extern bool DinamicGLFeature_REND_screen_coordinates_Supported();
 #endif /*USE_DYNAMIC_GL_REND_screen_coordinates*/
 
+/*NV_vertex_buffer_unified_memory*/
+#ifdef USE_DYNAMIC_GL_NV_vertex_buffer_unified_memory
+#define GL_VERTEX_ATTRIB_ARRAY_UNIFIED_NV 0x8F1E
+#define GL_ELEMENT_ARRAY_UNIFIED_NV 0x8F1F
+#define GL_VERTEX_ATTRIB_ARRAY_ADDRESS_NV 0x8F20
+#define GL_VERTEX_ARRAY_ADDRESS_NV 0x8F21
+#define GL_NORMAL_ARRAY_ADDRESS_NV 0x8F22
+#define GL_COLOR_ARRAY_ADDRESS_NV 0x8F23
+#define GL_INDEX_ARRAY_ADDRESS_NV 0x8F24
+#define GL_TEXTURE_COORD_ARRAY_ADDRESS_NV 0x8F25
+#define GL_EDGE_FLAG_ARRAY_ADDRESS_NV 0x8F26
+#define GL_SECONDARY_COLOR_ARRAY_ADDRESS_NV 0x8F27
+#define GL_FOG_COORD_ARRAY_ADDRESS_NV 0x8F28
+#define GL_ELEMENT_ARRAY_ADDRESS_NV 0x8F29
+#define GL_VERTEX_ATTRIB_ARRAY_LENGTH_NV 0x8F2A
+#define GL_VERTEX_ARRAY_LENGTH_NV 0x8F2B
+#define GL_NORMAL_ARRAY_LENGTH_NV 0x8F2C
+#define GL_COLOR_ARRAY_LENGTH_NV 0x8F2D
+#define GL_INDEX_ARRAY_LENGTH_NV 0x8F2E
+#define GL_TEXTURE_COORD_ARRAY_LENGTH_NV 0x8F2F
+#define GL_EDGE_FLAG_ARRAY_LENGTH_NV 0x8F30
+#define GL_SECONDARY_COLOR_ARRAY_LENGTH_NV 0x8F31
+#define GL_FOG_COORD_ARRAY_LENGTH_NV 0x8F32
+#define GL_ELEMENT_ARRAY_LENGTH_NV 0x8F33
+#define GL_DRAW_INDIRECT_UNIFIED_NV 0x8F40
+#define GL_DRAW_INDIRECT_ADDRESS_NV 0x8F41
+#define GL_DRAW_INDIRECT_LENGTH_NV 0x8F42
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BufferAddressRangeNV)(GLenum pname , GLuint index , GLuint64EXT address , GLsizeiptr length); }
+#define glBufferAddressRangeNV DynamicGL_BufferAddressRangeNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexFormatNV)(GLint size , GLenum type , GLsizei stride); }
+#define glVertexFormatNV DynamicGL_VertexFormatNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_NormalFormatNV)(GLenum type , GLsizei stride); }
+#define glNormalFormatNV DynamicGL_NormalFormatNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorFormatNV)(GLint size , GLenum type , GLsizei stride); }
+#define glColorFormatNV DynamicGL_ColorFormatNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_IndexFormatNV)(GLenum type , GLsizei stride); }
+#define glIndexFormatNV DynamicGL_IndexFormatNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexCoordFormatNV)(GLint size , GLenum type , GLsizei stride); }
+#define glTexCoordFormatNV DynamicGL_TexCoordFormatNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_EdgeFlagFormatNV)(GLsizei stride); }
+#define glEdgeFlagFormatNV DynamicGL_EdgeFlagFormatNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColorFormatNV)(GLint size , GLenum type , GLsizei stride); }
+#define glSecondaryColorFormatNV DynamicGL_SecondaryColorFormatNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoordFormatNV)(GLenum type , GLsizei stride); }
+#define glFogCoordFormatNV DynamicGL_FogCoordFormatNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribFormatNV)(GLuint index , GLint size , GLenum type , GLboolean normalized , GLsizei stride); }
+#define glVertexAttribFormatNV DynamicGL_VertexAttribFormatNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribIFormatNV)(GLuint index , GLint size , GLenum type , GLsizei stride); }
+#define glVertexAttribIFormatNV DynamicGL_VertexAttribIFormatNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetIntegerui64i_vNV)(GLenum value , GLuint index , GLuint64EXT *result); }
+#define glGetIntegerui64i_vNV DynamicGL_GetIntegerui64i_vNV
+extern bool DinamicGLFeature_NV_vertex_buffer_unified_memory_Supported();
+#endif /*USE_DYNAMIC_GL_NV_vertex_buffer_unified_memory*/
+
 /*EXT_framebuffer_sRGB*/
 #ifdef USE_DYNAMIC_GL_EXT_framebuffer_sRGB
 #define GL_FRAMEBUFFER_SRGB_EXT 0x8DB9
 #define GL_FRAMEBUFFER_SRGB_CAPABLE_EXT 0x8DBA
 extern bool DinamicGLFeature_EXT_framebuffer_sRGB_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_framebuffer_sRGB*/
+
+/*AMD_stencil_operation_extended*/
+#ifdef USE_DYNAMIC_GL_AMD_stencil_operation_extended
+#define GL_SET_AMD 0x874A
+#define GL_REPLACE_VALUE_AMD 0x874B
+#define GL_STENCIL_OP_VALUE_AMD 0x874C
+#define GL_STENCIL_BACK_OP_VALUE_AMD 0x874D
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilOpValueAMD)(GLenum face , GLuint value); }
+#define glStencilOpValueAMD DynamicGL_StencilOpValueAMD
+extern bool DinamicGLFeature_AMD_stencil_operation_extended_Supported();
+#endif /*USE_DYNAMIC_GL_AMD_stencil_operation_extended*/
 
 /*SGIX_texture_multi_buffer*/
 #ifdef USE_DYNAMIC_GL_SGIX_texture_multi_buffer
@@ -5981,70 +7516,6 @@ extern bool DinamicGLFeature_SGIX_texture_multi_buffer_Supported();
 #define GL_BLEND_EQUATION 0x8009
 #define GL_FUNC_SUBTRACT 0x800A
 #define GL_FUNC_REVERSE_SUBTRACT 0x800B
-#define GL_CONVOLUTION_1D 0x8010
-#define GL_CONVOLUTION_2D 0x8011
-#define GL_SEPARABLE_2D 0x8012
-#define GL_CONVOLUTION_BORDER_MODE 0x8013
-#define GL_CONVOLUTION_FILTER_SCALE 0x8014
-#define GL_CONVOLUTION_FILTER_BIAS 0x8015
-#define GL_REDUCE 0x8016
-#define GL_CONVOLUTION_FORMAT 0x8017
-#define GL_CONVOLUTION_WIDTH 0x8018
-#define GL_CONVOLUTION_HEIGHT 0x8019
-#define GL_MAX_CONVOLUTION_WIDTH 0x801A
-#define GL_MAX_CONVOLUTION_HEIGHT 0x801B
-#define GL_POST_CONVOLUTION_RED_SCALE 0x801C
-#define GL_POST_CONVOLUTION_GREEN_SCALE 0x801D
-#define GL_POST_CONVOLUTION_BLUE_SCALE 0x801E
-#define GL_POST_CONVOLUTION_ALPHA_SCALE 0x801F
-#define GL_POST_CONVOLUTION_RED_BIAS 0x8020
-#define GL_POST_CONVOLUTION_GREEN_BIAS 0x8021
-#define GL_POST_CONVOLUTION_BLUE_BIAS 0x8022
-#define GL_POST_CONVOLUTION_ALPHA_BIAS 0x8023
-#define GL_HISTOGRAM 0x8024
-#define GL_PROXY_HISTOGRAM 0x8025
-#define GL_HISTOGRAM_WIDTH 0x8026
-#define GL_HISTOGRAM_FORMAT 0x8027
-#define GL_HISTOGRAM_RED_SIZE 0x8028
-#define GL_HISTOGRAM_GREEN_SIZE 0x8029
-#define GL_HISTOGRAM_BLUE_SIZE 0x802A
-#define GL_HISTOGRAM_ALPHA_SIZE 0x802B
-#define GL_HISTOGRAM_LUMINANCE_SIZE 0x802C
-#define GL_HISTOGRAM_SINK 0x802D
-#define GL_MINMAX 0x802E
-#define GL_MINMAX_FORMAT 0x802F
-#define GL_MINMAX_SINK 0x8030
-#define GL_TABLE_TOO_LARGE 0x8031
-#define GL_COLOR_MATRIX 0x80B1
-#define GL_COLOR_MATRIX_STACK_DEPTH 0x80B2
-#define GL_MAX_COLOR_MATRIX_STACK_DEPTH 0x80B3
-#define GL_POST_COLOR_MATRIX_RED_SCALE 0x80B4
-#define GL_POST_COLOR_MATRIX_GREEN_SCALE 0x80B5
-#define GL_POST_COLOR_MATRIX_BLUE_SCALE 0x80B6
-#define GL_POST_COLOR_MATRIX_ALPHA_SCALE 0x80B7
-#define GL_POST_COLOR_MATRIX_RED_BIAS 0x80B8
-#define GL_POST_COLOR_MATRIX_GREEN_BIAS 0x80B9
-#define GL_POST_COLOR_MATRIX_BLUE_BIAS 0x80BA
-#define GL_POST_COLOR_MATRIX_ALPHA_BIAS 0x80BB
-#define GL_COLOR_TABLE 0x80D0
-#define GL_POST_CONVOLUTION_COLOR_TABLE 0x80D1
-#define GL_POST_COLOR_MATRIX_COLOR_TABLE 0x80D2
-#define GL_PROXY_COLOR_TABLE 0x80D3
-#define GL_PROXY_POST_CONVOLUTION_COLOR_TABLE 0x80D4
-#define GL_PROXY_POST_COLOR_MATRIX_COLOR_TABLE 0x80D5
-#define GL_COLOR_TABLE_SCALE 0x80D6
-#define GL_COLOR_TABLE_BIAS 0x80D7
-#define GL_COLOR_TABLE_FORMAT 0x80D8
-#define GL_COLOR_TABLE_WIDTH 0x80D9
-#define GL_COLOR_TABLE_RED_SIZE 0x80DA
-#define GL_COLOR_TABLE_GREEN_SIZE 0x80DB
-#define GL_COLOR_TABLE_BLUE_SIZE 0x80DC
-#define GL_COLOR_TABLE_ALPHA_SIZE 0x80DD
-#define GL_COLOR_TABLE_LUMINANCE_SIZE 0x80DE
-#define GL_COLOR_TABLE_INTENSITY_SIZE 0x80DF
-#define GL_CONSTANT_BORDER 0x8151
-#define GL_REPLICATE_BORDER 0x8153
-#define GL_CONVOLUTION_BORDER_COLOR 0x8154
 extern bool DinamicGLFeature_ARB_imaging_Supported();
 #endif /*USE_DYNAMIC_GL_ARB_imaging*/
 
@@ -6057,6 +7528,23 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_IndexFuncEXT)(GLenum fu
 #define glIndexFuncEXT DynamicGL_IndexFuncEXT
 extern bool DinamicGLFeature_EXT_index_func_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_index_func*/
+
+/*NV_gpu_program5*/
+#ifdef USE_DYNAMIC_GL_NV_gpu_program5
+#define GL_MAX_GEOMETRY_PROGRAM_INVOCATIONS_NV 0x8E5A
+#define GL_MIN_FRAGMENT_INTERPOLATION_OFFSET_NV 0x8E5B
+#define GL_MAX_FRAGMENT_INTERPOLATION_OFFSET_NV 0x8E5C
+#define GL_FRAGMENT_PROGRAM_INTERPOLATION_OFFSET_BITS_NV 0x8E5D
+#define GL_MIN_PROGRAM_TEXTURE_GATHER_OFFSET_NV 0x8E5E
+#define GL_MAX_PROGRAM_TEXTURE_GATHER_OFFSET_NV 0x8E5F
+#define GL_MAX_PROGRAM_SUBROUTINE_PARAMETERS_NV 0x8F44
+#define GL_MAX_PROGRAM_SUBROUTINE_NUM_NV 0x8F45
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramSubroutineParametersuivNV)(GLenum target , GLsizei count , const GLuint *params); }
+#define glProgramSubroutineParametersuivNV DynamicGL_ProgramSubroutineParametersuivNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetProgramSubroutineParameteruivNV)(GLenum target , GLuint index , GLuint *param); }
+#define glGetProgramSubroutineParameteruivNV DynamicGL_GetProgramSubroutineParameteruivNV
+extern bool DinamicGLFeature_NV_gpu_program5_Supported();
+#endif /*USE_DYNAMIC_GL_NV_gpu_program5*/
 
 /*NV_multisample_filter_hint*/
 #ifdef USE_DYNAMIC_GL_NV_multisample_filter_hint
@@ -6103,13 +7591,6 @@ extern bool DinamicGLFeature_SGIX_interlace_Supported();
 extern bool DinamicGLFeature_ATI_pixel_format_float_Supported();
 #endif /*USE_DYNAMIC_GL_ATI_pixel_format_float*/
 
-/*ARB_point_sprite*/
-#ifdef USE_DYNAMIC_GL_ARB_point_sprite
-#define GL_POINT_SPRITE_ARB 0x8861
-#define GL_COORD_REPLACE_ARB 0x8862
-extern bool DinamicGLFeature_ARB_point_sprite_Supported();
-#endif /*USE_DYNAMIC_GL_ARB_point_sprite*/
-
 /*NV_gpu_program4*/
 #ifdef USE_DYNAMIC_GL_NV_gpu_program4
 #define GL_MIN_PROGRAM_TEXEL_OFFSET_NV 0x8904
@@ -6155,6 +7636,37 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetProgramEnvParameterI
 extern bool DinamicGLFeature_NV_gpu_program4_Supported();
 #endif /*USE_DYNAMIC_GL_NV_gpu_program4*/
 
+/*ARB_point_sprite*/
+#ifdef USE_DYNAMIC_GL_ARB_point_sprite
+#define GL_POINT_SPRITE_ARB 0x8861
+#define GL_COORD_REPLACE_ARB 0x8862
+extern bool DinamicGLFeature_ARB_point_sprite_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_point_sprite*/
+
+/*ARB_transform_feedback3*/
+#ifdef USE_DYNAMIC_GL_ARB_transform_feedback3
+#define GL_MAX_TRANSFORM_FEEDBACK_BUFFERS 0x8E70
+#define GL_MAX_VERTEX_STREAMS 0x8E71
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTransformFeedbackStream)(GLenum mode , GLuint id , GLuint stream); }
+#define glDrawTransformFeedbackStream DynamicGL_DrawTransformFeedbackStream
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BeginQueryIndexed)(GLenum target , GLuint index , GLuint id); }
+#define glBeginQueryIndexed DynamicGL_BeginQueryIndexed
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_EndQueryIndexed)(GLenum target , GLuint index); }
+#define glEndQueryIndexed DynamicGL_EndQueryIndexed
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetQueryIndexediv)(GLenum target , GLuint index , GLenum pname , GLint *params); }
+#define glGetQueryIndexediv DynamicGL_GetQueryIndexediv
+extern bool DinamicGLFeature_ARB_transform_feedback3_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_transform_feedback3*/
+
+/*AMD_multi_draw_indirect*/
+#ifdef USE_DYNAMIC_GL_AMD_multi_draw_indirect
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawArraysIndirectAMD)(GLenum mode , const GLvoid *indirect , GLsizei primcount , GLsizei stride); }
+#define glMultiDrawArraysIndirectAMD DynamicGL_MultiDrawArraysIndirectAMD
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawElementsIndirectAMD)(GLenum mode , GLenum type , const GLvoid *indirect , GLsizei primcount , GLsizei stride); }
+#define glMultiDrawElementsIndirectAMD DynamicGL_MultiDrawElementsIndirectAMD
+extern bool DinamicGLFeature_AMD_multi_draw_indirect_Supported();
+#endif /*USE_DYNAMIC_GL_AMD_multi_draw_indirect*/
+
 /*SUN_mesh_array*/
 #ifdef USE_DYNAMIC_GL_SUN_mesh_array
 #define GL_QUAD_MESH_SUN 0x8614
@@ -6163,14 +7675,6 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawMeshArraysSUN)(GLen
 #define glDrawMeshArraysSUN DynamicGL_DrawMeshArraysSUN
 extern bool DinamicGLFeature_SUN_mesh_array_Supported();
 #endif /*USE_DYNAMIC_GL_SUN_mesh_array*/
-
-/*NV_texgen_emboss*/
-#ifdef USE_DYNAMIC_GL_NV_texgen_emboss
-#define GL_EMBOSS_LIGHT_NV 0x855D
-#define GL_EMBOSS_CONSTANT_NV 0x855E
-#define GL_EMBOSS_MAP_NV 0x855F
-extern bool DinamicGLFeature_NV_texgen_emboss_Supported();
-#endif /*USE_DYNAMIC_GL_NV_texgen_emboss*/
 
 /*NV_framebuffer_multisample_coverage*/
 #ifdef USE_DYNAMIC_GL_NV_framebuffer_multisample_coverage
@@ -6183,6 +7687,27 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_RenderbufferStorageMult
 extern bool DinamicGLFeature_NV_framebuffer_multisample_coverage_Supported();
 #endif /*USE_DYNAMIC_GL_NV_framebuffer_multisample_coverage*/
 
+/*ARB_timer_query*/
+#ifdef USE_DYNAMIC_GL_ARB_timer_query
+#define GL_TIME_ELAPSED 0x88BF
+#define GL_TIMESTAMP 0x8E28
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_QueryCounter)(GLuint id , GLenum target); }
+#define glQueryCounter DynamicGL_QueryCounter
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetQueryObjecti64v)(GLuint id , GLenum pname , GLint64 *params); }
+#define glGetQueryObjecti64v DynamicGL_GetQueryObjecti64v
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetQueryObjectui64v)(GLuint id , GLenum pname , GLuint64 *params); }
+#define glGetQueryObjectui64v DynamicGL_GetQueryObjectui64v
+extern bool DinamicGLFeature_ARB_timer_query_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_timer_query*/
+
+/*NV_texgen_emboss*/
+#ifdef USE_DYNAMIC_GL_NV_texgen_emboss
+#define GL_EMBOSS_LIGHT_NV 0x855D
+#define GL_EMBOSS_CONSTANT_NV 0x855E
+#define GL_EMBOSS_MAP_NV 0x855F
+extern bool DinamicGLFeature_NV_texgen_emboss_Supported();
+#endif /*USE_DYNAMIC_GL_NV_texgen_emboss*/
+
 /*EXT_separate_specular_color*/
 #ifdef USE_DYNAMIC_GL_EXT_separate_specular_color
 #define GL_LIGHT_MODEL_COLOR_CONTROL_EXT 0x81F8
@@ -6190,6 +7715,50 @@ extern bool DinamicGLFeature_NV_framebuffer_multisample_coverage_Supported();
 #define GL_SEPARATE_SPECULAR_COLOR_EXT 0x81FA
 extern bool DinamicGLFeature_EXT_separate_specular_color_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_separate_specular_color*/
+
+/*ARB_framebuffer_object_DEPRECATED*/
+#ifdef USE_DYNAMIC_GL_ARB_framebuffer_object_DEPRECATED
+#define GL_INDEX 0x8222
+#define GL_TEXTURE_LUMINANCE_TYPE 0x8C14
+#define GL_TEXTURE_INTENSITY_TYPE 0x8C15
+extern bool DinamicGLFeature_ARB_framebuffer_object_DEPRECATED_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_framebuffer_object_DEPRECATED*/
+
+/*ARB_shader_atomic_counters*/
+#ifdef USE_DYNAMIC_GL_ARB_shader_atomic_counters
+#define GL_ATOMIC_COUNTER_BUFFER 0x92C0
+#define GL_ATOMIC_COUNTER_BUFFER_BINDING 0x92C1
+#define GL_ATOMIC_COUNTER_BUFFER_START 0x92C2
+#define GL_ATOMIC_COUNTER_BUFFER_SIZE 0x92C3
+#define GL_ATOMIC_COUNTER_BUFFER_DATA_SIZE 0x92C4
+#define GL_ATOMIC_COUNTER_BUFFER_ACTIVE_ATOMIC_COUNTERS 0x92C5
+#define GL_ATOMIC_COUNTER_BUFFER_ACTIVE_ATOMIC_COUNTER_INDICES 0x92C6
+#define GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_VERTEX_SHADER 0x92C7
+#define GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_TESS_CONTROL_SHADER 0x92C8
+#define GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_TESS_EVALUATION_SHADER 0x92C9
+#define GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_GEOMETRY_SHADER 0x92CA
+#define GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_FRAGMENT_SHADER 0x92CB
+#define GL_MAX_VERTEX_ATOMIC_COUNTER_BUFFERS 0x92CC
+#define GL_MAX_TESS_CONTROL_ATOMIC_COUNTER_BUFFERS 0x92CD
+#define GL_MAX_TESS_EVALUATION_ATOMIC_COUNTER_BUFFERS 0x92CE
+#define GL_MAX_GEOMETRY_ATOMIC_COUNTER_BUFFERS 0x92CF
+#define GL_MAX_FRAGMENT_ATOMIC_COUNTER_BUFFERS 0x92D0
+#define GL_MAX_COMBINED_ATOMIC_COUNTER_BUFFERS 0x92D1
+#define GL_MAX_VERTEX_ATOMIC_COUNTERS 0x92D2
+#define GL_MAX_TESS_CONTROL_ATOMIC_COUNTERS 0x92D3
+#define GL_MAX_TESS_EVALUATION_ATOMIC_COUNTERS 0x92D4
+#define GL_MAX_GEOMETRY_ATOMIC_COUNTERS 0x92D5
+#define GL_MAX_FRAGMENT_ATOMIC_COUNTERS 0x92D6
+#define GL_MAX_COMBINED_ATOMIC_COUNTERS 0x92D7
+#define GL_MAX_ATOMIC_COUNTER_BUFFER_SIZE 0x92D8
+#define GL_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS 0x92DC
+#define GL_ACTIVE_ATOMIC_COUNTER_BUFFERS 0x92D9
+#define GL_UNIFORM_ATOMIC_COUNTER_BUFFER_INDEX 0x92DA
+#define GL_UNSIGNED_INT_ATOMIC_COUNTER 0x92DB
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetActiveAtomicCounterBufferiv)(GLuint program , GLuint bufferIndex , GLenum pname , GLint *params); }
+#define glGetActiveAtomicCounterBufferiv DynamicGL_GetActiveAtomicCounterBufferiv
+extern bool DinamicGLFeature_ARB_shader_atomic_counters_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_shader_atomic_counters*/
 
 /*EXT_blend_subtract*/
 #ifdef USE_DYNAMIC_GL_EXT_blend_subtract
@@ -6339,6 +7908,19 @@ extern bool DinamicGLFeature_SGIX_ycrcb_Supported();
 extern bool DinamicGLFeature_SGIX_async_histogram_Supported();
 #endif /*USE_DYNAMIC_GL_SGIX_async_histogram*/
 
+/*ARB_compressed_texture_pixel_storage*/
+#ifdef USE_DYNAMIC_GL_ARB_compressed_texture_pixel_storage
+#define GL_UNPACK_COMPRESSED_BLOCK_WIDTH 0x9127
+#define GL_UNPACK_COMPRESSED_BLOCK_HEIGHT 0x9128
+#define GL_UNPACK_COMPRESSED_BLOCK_DEPTH 0x9129
+#define GL_UNPACK_COMPRESSED_BLOCK_SIZE 0x912A
+#define GL_PACK_COMPRESSED_BLOCK_WIDTH 0x912B
+#define GL_PACK_COMPRESSED_BLOCK_HEIGHT 0x912C
+#define GL_PACK_COMPRESSED_BLOCK_DEPTH 0x912D
+#define GL_PACK_COMPRESSED_BLOCK_SIZE 0x912E
+extern bool DinamicGLFeature_ARB_compressed_texture_pixel_storage_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_compressed_texture_pixel_storage*/
+
 /*SGIX_depth_texture*/
 #ifdef USE_DYNAMIC_GL_SGIX_depth_texture
 #define GL_DEPTH_COMPONENT16_SGIX 0x81A5
@@ -6362,13 +7944,20 @@ extern bool DinamicGLFeature_EXT_stencil_two_side_Supported();
 extern bool DinamicGLFeature_MESA_pack_invert_Supported();
 #endif /*USE_DYNAMIC_GL_MESA_pack_invert*/
 
-/*SGIX_texture_lod_bias*/
-#ifdef USE_DYNAMIC_GL_SGIX_texture_lod_bias
-#define GL_TEXTURE_LOD_BIAS_S_SGIX 0x818E
-#define GL_TEXTURE_LOD_BIAS_T_SGIX 0x818F
-#define GL_TEXTURE_LOD_BIAS_R_SGIX 0x8190
-extern bool DinamicGLFeature_SGIX_texture_lod_bias_Supported();
-#endif /*USE_DYNAMIC_GL_SGIX_texture_lod_bias*/
+/*ARB_get_program_binary*/
+#ifdef USE_DYNAMIC_GL_ARB_get_program_binary
+#define GL_PROGRAM_BINARY_RETRIEVABLE_HINT 0x8257
+#define GL_PROGRAM_BINARY_LENGTH 0x8741
+#define GL_NUM_PROGRAM_BINARY_FORMATS 0x87FE
+#define GL_PROGRAM_BINARY_FORMATS 0x87FF
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetProgramBinary)(GLuint program , GLsizei bufSize , GLsizei *length , GLenum *binaryFormat , GLvoid *binary); }
+#define glGetProgramBinary DynamicGL_GetProgramBinary
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramBinary)(GLuint program , GLenum binaryFormat , const GLvoid *binary , GLsizei length); }
+#define glProgramBinary DynamicGL_ProgramBinary
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramParameteri)(GLuint program , GLenum pname , GLint value); }
+#define glProgramParameteri DynamicGL_ProgramParameteri
+extern bool DinamicGLFeature_ARB_get_program_binary_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_get_program_binary*/
 
 /*EXT_framebuffer_multisample*/
 #ifdef USE_DYNAMIC_GL_EXT_framebuffer_multisample
@@ -6380,12 +7969,262 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_RenderbufferStorageMult
 extern bool DinamicGLFeature_EXT_framebuffer_multisample_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_framebuffer_multisample*/
 
+/*ARB_seamless_cube_map*/
+#ifdef USE_DYNAMIC_GL_ARB_seamless_cube_map
+#define GL_TEXTURE_CUBE_MAP_SEAMLESS 0x884F
+extern bool DinamicGLFeature_ARB_seamless_cube_map_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_seamless_cube_map*/
+
+/*SGIX_texture_lod_bias*/
+#ifdef USE_DYNAMIC_GL_SGIX_texture_lod_bias
+#define GL_TEXTURE_LOD_BIAS_S_SGIX 0x818E
+#define GL_TEXTURE_LOD_BIAS_T_SGIX 0x818F
+#define GL_TEXTURE_LOD_BIAS_R_SGIX 0x8190
+extern bool DinamicGLFeature_SGIX_texture_lod_bias_Supported();
+#endif /*USE_DYNAMIC_GL_SGIX_texture_lod_bias*/
+
+/*AMD_vertex_shader_tesselator*/
+#ifdef USE_DYNAMIC_GL_AMD_vertex_shader_tesselator
+#define GL_SAMPLER_BUFFER_AMD 0x9001
+#define GL_INT_SAMPLER_BUFFER_AMD 0x9002
+#define GL_UNSIGNED_INT_SAMPLER_BUFFER_AMD 0x9003
+#define GL_TESSELLATION_MODE_AMD 0x9004
+#define GL_TESSELLATION_FACTOR_AMD 0x9005
+#define GL_DISCRETE_AMD 0x9006
+#define GL_CONTINUOUS_AMD 0x9007
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TessellationFactorAMD)(GLfloat factor); }
+#define glTessellationFactorAMD DynamicGL_TessellationFactorAMD
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TessellationModeAMD)(GLenum mode); }
+#define glTessellationModeAMD DynamicGL_TessellationModeAMD
+extern bool DinamicGLFeature_AMD_vertex_shader_tesselator_Supported();
+#endif /*USE_DYNAMIC_GL_AMD_vertex_shader_tesselator*/
+
 /*EXT_texture_filter_anisotropic*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_filter_anisotropic
 #define GL_TEXTURE_MAX_ANISOTROPY_EXT 0x84FE
 #define GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT 0x84FF
 extern bool DinamicGLFeature_EXT_texture_filter_anisotropic_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_texture_filter_anisotropic*/
+
+/*VERSION_1_3_DEPRECATED*/
+#ifdef USE_DYNAMIC_GL_VERSION_1_3_DEPRECATED
+#define GL_CLIENT_ACTIVE_TEXTURE 0x84E1
+#define GL_MAX_TEXTURE_UNITS 0x84E2
+#define GL_TRANSPOSE_MODELVIEW_MATRIX 0x84E3
+#define GL_TRANSPOSE_PROJECTION_MATRIX 0x84E4
+#define GL_TRANSPOSE_TEXTURE_MATRIX 0x84E5
+#define GL_TRANSPOSE_COLOR_MATRIX 0x84E6
+#define GL_MULTISAMPLE_BIT 0x20000000
+#define GL_NORMAL_MAP 0x8511
+#define GL_REFLECTION_MAP 0x8512
+#define GL_COMPRESSED_ALPHA 0x84E9
+#define GL_COMPRESSED_LUMINANCE 0x84EA
+#define GL_COMPRESSED_LUMINANCE_ALPHA 0x84EB
+#define GL_COMPRESSED_INTENSITY 0x84EC
+#define GL_COMBINE 0x8570
+#define GL_COMBINE_RGB 0x8571
+#define GL_COMBINE_ALPHA 0x8572
+#define GL_SOURCE0_RGB 0x8580
+#define GL_SOURCE1_RGB 0x8581
+#define GL_SOURCE2_RGB 0x8582
+#define GL_SOURCE0_ALPHA 0x8588
+#define GL_SOURCE1_ALPHA 0x8589
+#define GL_SOURCE2_ALPHA 0x858A
+#define GL_OPERAND0_RGB 0x8590
+#define GL_OPERAND1_RGB 0x8591
+#define GL_OPERAND2_RGB 0x8592
+#define GL_OPERAND0_ALPHA 0x8598
+#define GL_OPERAND1_ALPHA 0x8599
+#define GL_OPERAND2_ALPHA 0x859A
+#define GL_RGB_SCALE 0x8573
+#define GL_ADD_SIGNED 0x8574
+#define GL_INTERPOLATE 0x8575
+#define GL_SUBTRACT 0x84E7
+#define GL_CONSTANT 0x8576
+#define GL_PRIMARY_COLOR 0x8577
+#define GL_PREVIOUS 0x8578
+#define GL_DOT3_RGB 0x86AE
+#define GL_DOT3_RGBA 0x86AF
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClientActiveTexture)(GLenum texture); }
+#define glClientActiveTexture DynamicGL_ClientActiveTexture
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1d)(GLenum target , GLdouble s); }
+#define glMultiTexCoord1d DynamicGL_MultiTexCoord1d
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1dv)(GLenum target , const GLdouble *v); }
+#define glMultiTexCoord1dv DynamicGL_MultiTexCoord1dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1f)(GLenum target , GLfloat s); }
+#define glMultiTexCoord1f DynamicGL_MultiTexCoord1f
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1fv)(GLenum target , const GLfloat *v); }
+#define glMultiTexCoord1fv DynamicGL_MultiTexCoord1fv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1i)(GLenum target , GLint s); }
+#define glMultiTexCoord1i DynamicGL_MultiTexCoord1i
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1iv)(GLenum target , const GLint *v); }
+#define glMultiTexCoord1iv DynamicGL_MultiTexCoord1iv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1s)(GLenum target , GLshort s); }
+#define glMultiTexCoord1s DynamicGL_MultiTexCoord1s
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord1sv)(GLenum target , const GLshort *v); }
+#define glMultiTexCoord1sv DynamicGL_MultiTexCoord1sv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2d)(GLenum target , GLdouble s , GLdouble t); }
+#define glMultiTexCoord2d DynamicGL_MultiTexCoord2d
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2dv)(GLenum target , const GLdouble *v); }
+#define glMultiTexCoord2dv DynamicGL_MultiTexCoord2dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2f)(GLenum target , GLfloat s , GLfloat t); }
+#define glMultiTexCoord2f DynamicGL_MultiTexCoord2f
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2fv)(GLenum target , const GLfloat *v); }
+#define glMultiTexCoord2fv DynamicGL_MultiTexCoord2fv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2i)(GLenum target , GLint s , GLint t); }
+#define glMultiTexCoord2i DynamicGL_MultiTexCoord2i
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2iv)(GLenum target , const GLint *v); }
+#define glMultiTexCoord2iv DynamicGL_MultiTexCoord2iv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2s)(GLenum target , GLshort s , GLshort t); }
+#define glMultiTexCoord2s DynamicGL_MultiTexCoord2s
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord2sv)(GLenum target , const GLshort *v); }
+#define glMultiTexCoord2sv DynamicGL_MultiTexCoord2sv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3d)(GLenum target , GLdouble s , GLdouble t , GLdouble r); }
+#define glMultiTexCoord3d DynamicGL_MultiTexCoord3d
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3dv)(GLenum target , const GLdouble *v); }
+#define glMultiTexCoord3dv DynamicGL_MultiTexCoord3dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3f)(GLenum target , GLfloat s , GLfloat t , GLfloat r); }
+#define glMultiTexCoord3f DynamicGL_MultiTexCoord3f
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3fv)(GLenum target , const GLfloat *v); }
+#define glMultiTexCoord3fv DynamicGL_MultiTexCoord3fv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3i)(GLenum target , GLint s , GLint t , GLint r); }
+#define glMultiTexCoord3i DynamicGL_MultiTexCoord3i
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3iv)(GLenum target , const GLint *v); }
+#define glMultiTexCoord3iv DynamicGL_MultiTexCoord3iv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3s)(GLenum target , GLshort s , GLshort t , GLshort r); }
+#define glMultiTexCoord3s DynamicGL_MultiTexCoord3s
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord3sv)(GLenum target , const GLshort *v); }
+#define glMultiTexCoord3sv DynamicGL_MultiTexCoord3sv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4d)(GLenum target , GLdouble s , GLdouble t , GLdouble r , GLdouble q); }
+#define glMultiTexCoord4d DynamicGL_MultiTexCoord4d
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4dv)(GLenum target , const GLdouble *v); }
+#define glMultiTexCoord4dv DynamicGL_MultiTexCoord4dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4f)(GLenum target , GLfloat s , GLfloat t , GLfloat r , GLfloat q); }
+#define glMultiTexCoord4f DynamicGL_MultiTexCoord4f
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4fv)(GLenum target , const GLfloat *v); }
+#define glMultiTexCoord4fv DynamicGL_MultiTexCoord4fv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4i)(GLenum target , GLint s , GLint t , GLint r , GLint q); }
+#define glMultiTexCoord4i DynamicGL_MultiTexCoord4i
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4iv)(GLenum target , const GLint *v); }
+#define glMultiTexCoord4iv DynamicGL_MultiTexCoord4iv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4s)(GLenum target , GLshort s , GLshort t , GLshort r , GLshort q); }
+#define glMultiTexCoord4s DynamicGL_MultiTexCoord4s
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4sv)(GLenum target , const GLshort *v); }
+#define glMultiTexCoord4sv DynamicGL_MultiTexCoord4sv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadTransposeMatrixf)(const GLfloat *m); }
+#define glLoadTransposeMatrixf DynamicGL_LoadTransposeMatrixf
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadTransposeMatrixd)(const GLdouble *m); }
+#define glLoadTransposeMatrixd DynamicGL_LoadTransposeMatrixd
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultTransposeMatrixf)(const GLfloat *m); }
+#define glMultTransposeMatrixf DynamicGL_MultTransposeMatrixf
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultTransposeMatrixd)(const GLdouble *m); }
+#define glMultTransposeMatrixd DynamicGL_MultTransposeMatrixd
+extern bool DinamicGLFeature_VERSION_1_3_DEPRECATED_Supported();
+#endif /*USE_DYNAMIC_GL_VERSION_1_3_DEPRECATED*/
+
+/*VERSION_1_4_DEPRECATED*/
+#ifdef USE_DYNAMIC_GL_VERSION_1_4_DEPRECATED
+#define GL_POINT_SIZE_MIN 0x8126
+#define GL_POINT_SIZE_MAX 0x8127
+#define GL_POINT_DISTANCE_ATTENUATION 0x8129
+#define GL_GENERATE_MIPMAP 0x8191
+#define GL_GENERATE_MIPMAP_HINT 0x8192
+#define GL_FOG_COORDINATE_SOURCE 0x8450
+#define GL_FOG_COORDINATE 0x8451
+#define GL_FRAGMENT_DEPTH 0x8452
+#define GL_CURRENT_FOG_COORDINATE 0x8453
+#define GL_FOG_COORDINATE_ARRAY_TYPE 0x8454
+#define GL_FOG_COORDINATE_ARRAY_STRIDE 0x8455
+#define GL_FOG_COORDINATE_ARRAY_POINTER 0x8456
+#define GL_FOG_COORDINATE_ARRAY 0x8457
+#define GL_COLOR_SUM 0x8458
+#define GL_CURRENT_SECONDARY_COLOR 0x8459
+#define GL_SECONDARY_COLOR_ARRAY_SIZE 0x845A
+#define GL_SECONDARY_COLOR_ARRAY_TYPE 0x845B
+#define GL_SECONDARY_COLOR_ARRAY_STRIDE 0x845C
+#define GL_SECONDARY_COLOR_ARRAY_POINTER 0x845D
+#define GL_SECONDARY_COLOR_ARRAY 0x845E
+#define GL_TEXTURE_FILTER_CONTROL 0x8500
+#define GL_DEPTH_TEXTURE_MODE 0x884B
+#define GL_COMPARE_R_TO_TEXTURE 0x884E
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoordf)(GLfloat coord); }
+#define glFogCoordf DynamicGL_FogCoordf
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoordfv)(const GLfloat *coord); }
+#define glFogCoordfv DynamicGL_FogCoordfv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoordd)(GLdouble coord); }
+#define glFogCoordd DynamicGL_FogCoordd
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoorddv)(const GLdouble *coord); }
+#define glFogCoorddv DynamicGL_FogCoorddv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoordPointer)(GLenum type , GLsizei stride , const GLvoid *pointer); }
+#define glFogCoordPointer DynamicGL_FogCoordPointer
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3b)(GLbyte red , GLbyte green , GLbyte blue); }
+#define glSecondaryColor3b DynamicGL_SecondaryColor3b
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3bv)(const GLbyte *v); }
+#define glSecondaryColor3bv DynamicGL_SecondaryColor3bv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3d)(GLdouble red , GLdouble green , GLdouble blue); }
+#define glSecondaryColor3d DynamicGL_SecondaryColor3d
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3dv)(const GLdouble *v); }
+#define glSecondaryColor3dv DynamicGL_SecondaryColor3dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3f)(GLfloat red , GLfloat green , GLfloat blue); }
+#define glSecondaryColor3f DynamicGL_SecondaryColor3f
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3fv)(const GLfloat *v); }
+#define glSecondaryColor3fv DynamicGL_SecondaryColor3fv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3i)(GLint red , GLint green , GLint blue); }
+#define glSecondaryColor3i DynamicGL_SecondaryColor3i
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3iv)(const GLint *v); }
+#define glSecondaryColor3iv DynamicGL_SecondaryColor3iv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3s)(GLshort red , GLshort green , GLshort blue); }
+#define glSecondaryColor3s DynamicGL_SecondaryColor3s
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3sv)(const GLshort *v); }
+#define glSecondaryColor3sv DynamicGL_SecondaryColor3sv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3ub)(GLubyte red , GLubyte green , GLubyte blue); }
+#define glSecondaryColor3ub DynamicGL_SecondaryColor3ub
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3ubv)(const GLubyte *v); }
+#define glSecondaryColor3ubv DynamicGL_SecondaryColor3ubv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3ui)(GLuint red , GLuint green , GLuint blue); }
+#define glSecondaryColor3ui DynamicGL_SecondaryColor3ui
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3uiv)(const GLuint *v); }
+#define glSecondaryColor3uiv DynamicGL_SecondaryColor3uiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3us)(GLushort red , GLushort green , GLushort blue); }
+#define glSecondaryColor3us DynamicGL_SecondaryColor3us
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3usv)(const GLushort *v); }
+#define glSecondaryColor3usv DynamicGL_SecondaryColor3usv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColorPointer)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer); }
+#define glSecondaryColorPointer DynamicGL_SecondaryColorPointer
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2d)(GLdouble x , GLdouble y); }
+#define glWindowPos2d DynamicGL_WindowPos2d
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2dv)(const GLdouble *v); }
+#define glWindowPos2dv DynamicGL_WindowPos2dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2f)(GLfloat x , GLfloat y); }
+#define glWindowPos2f DynamicGL_WindowPos2f
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2fv)(const GLfloat *v); }
+#define glWindowPos2fv DynamicGL_WindowPos2fv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2i)(GLint x , GLint y); }
+#define glWindowPos2i DynamicGL_WindowPos2i
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2iv)(const GLint *v); }
+#define glWindowPos2iv DynamicGL_WindowPos2iv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2s)(GLshort x , GLshort y); }
+#define glWindowPos2s DynamicGL_WindowPos2s
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2sv)(const GLshort *v); }
+#define glWindowPos2sv DynamicGL_WindowPos2sv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3d)(GLdouble x , GLdouble y , GLdouble z); }
+#define glWindowPos3d DynamicGL_WindowPos3d
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3dv)(const GLdouble *v); }
+#define glWindowPos3dv DynamicGL_WindowPos3dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3f)(GLfloat x , GLfloat y , GLfloat z); }
+#define glWindowPos3f DynamicGL_WindowPos3f
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3fv)(const GLfloat *v); }
+#define glWindowPos3fv DynamicGL_WindowPos3fv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3i)(GLint x , GLint y , GLint z); }
+#define glWindowPos3i DynamicGL_WindowPos3i
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3iv)(const GLint *v); }
+#define glWindowPos3iv DynamicGL_WindowPos3iv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3s)(GLshort x , GLshort y , GLshort z); }
+#define glWindowPos3s DynamicGL_WindowPos3s
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3sv)(const GLshort *v); }
+#define glWindowPos3sv DynamicGL_WindowPos3sv
+extern bool DinamicGLFeature_VERSION_1_4_DEPRECATED_Supported();
+#endif /*USE_DYNAMIC_GL_VERSION_1_4_DEPRECATED*/
 
 /*ARB_matrix_palette*/
 #ifdef USE_DYNAMIC_GL_ARB_matrix_palette
@@ -6461,6 +8300,7 @@ extern bool DinamicGLFeature_ATI_element_array_Supported();
 
 /*EXT_blend_equation_separate*/
 #ifdef USE_DYNAMIC_GL_EXT_blend_equation_separate
+#define GL_BLEND_EQUATION_RGB_EXT 0x8009
 #define GL_BLEND_EQUATION_ALPHA_EXT 0x883D
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationSeparateEXT)(GLenum modeRGB , GLenum modeAlpha); }
 #define glBlendEquationSeparateEXT DynamicGL_BlendEquationSeparateEXT
@@ -6481,15 +8321,6 @@ typedef ptrdiff_t GLsizeiptr;
 #define GL_ELEMENT_ARRAY_BUFFER 0x8893
 #define GL_ARRAY_BUFFER_BINDING 0x8894
 #define GL_ELEMENT_ARRAY_BUFFER_BINDING 0x8895
-#define GL_VERTEX_ARRAY_BUFFER_BINDING 0x8896
-#define GL_NORMAL_ARRAY_BUFFER_BINDING 0x8897
-#define GL_COLOR_ARRAY_BUFFER_BINDING 0x8898
-#define GL_INDEX_ARRAY_BUFFER_BINDING 0x8899
-#define GL_TEXTURE_COORD_ARRAY_BUFFER_BINDING 0x889A
-#define GL_EDGE_FLAG_ARRAY_BUFFER_BINDING 0x889B
-#define GL_SECONDARY_COLOR_ARRAY_BUFFER_BINDING 0x889C
-#define GL_FOG_COORDINATE_ARRAY_BUFFER_BINDING 0x889D
-#define GL_WEIGHT_ARRAY_BUFFER_BINDING 0x889E
 #define GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING 0x889F
 #define GL_READ_ONLY 0x88B8
 #define GL_WRITE_ONLY 0x88B9
@@ -6699,93 +8530,13 @@ extern bool DinamicGLFeature_ARB_vertex_blend_Supported();
 extern bool DinamicGLFeature_WIN_specular_fog_Supported();
 #endif /*USE_DYNAMIC_GL_WIN_specular_fog*/
 
-/*SGIX_impact_pixel_texture*/
-#ifdef USE_DYNAMIC_GL_SGIX_impact_pixel_texture
-#define GL_PIXEL_TEX_GEN_Q_CEILING_SGIX 0x8184
-#define GL_PIXEL_TEX_GEN_Q_ROUND_SGIX 0x8185
-#define GL_PIXEL_TEX_GEN_Q_FLOOR_SGIX 0x8186
-#define GL_PIXEL_TEX_GEN_ALPHA_REPLACE_SGIX 0x8187
-#define GL_PIXEL_TEX_GEN_ALPHA_NO_REPLACE_SGIX 0x8188
-#define GL_PIXEL_TEX_GEN_ALPHA_LS_SGIX 0x8189
-#define GL_PIXEL_TEX_GEN_ALPHA_MS_SGIX 0x818A
-extern bool DinamicGLFeature_SGIX_impact_pixel_texture_Supported();
-#endif /*USE_DYNAMIC_GL_SGIX_impact_pixel_texture*/
-
-/*EXT_depth_bounds_test*/
-#ifdef USE_DYNAMIC_GL_EXT_depth_bounds_test
-#define GL_DEPTH_BOUNDS_TEST_EXT 0x8890
-#define GL_DEPTH_BOUNDS_EXT 0x8891
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthBoundsEXT)(GLclampd zmin , GLclampd zmax); }
-#define glDepthBoundsEXT DynamicGL_DepthBoundsEXT
-extern bool DinamicGLFeature_EXT_depth_bounds_test_Supported();
-#endif /*USE_DYNAMIC_GL_EXT_depth_bounds_test*/
-
-/*EXT_texture_mirror_clamp*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_mirror_clamp
-#define GL_MIRROR_CLAMP_EXT 0x8742
-#define GL_MIRROR_CLAMP_TO_EDGE_EXT 0x8743
-#define GL_MIRROR_CLAMP_TO_BORDER_EXT 0x8912
-extern bool DinamicGLFeature_EXT_texture_mirror_clamp_Supported();
-#endif /*USE_DYNAMIC_GL_EXT_texture_mirror_clamp*/
-
-/*SGIS_texture_lod*/
-#ifdef USE_DYNAMIC_GL_SGIS_texture_lod
-#define GL_TEXTURE_MIN_LOD_SGIS 0x813A
-#define GL_TEXTURE_MAX_LOD_SGIS 0x813B
-#define GL_TEXTURE_BASE_LEVEL_SGIS 0x813C
-#define GL_TEXTURE_MAX_LEVEL_SGIS 0x813D
-extern bool DinamicGLFeature_SGIS_texture_lod_Supported();
-#endif /*USE_DYNAMIC_GL_SGIS_texture_lod*/
-
-/*VERSION_1_2*/
-#ifdef USE_DYNAMIC_GL_VERSION_1_2
-#define GL_UNSIGNED_BYTE_3_3_2 0x8032
-#define GL_UNSIGNED_SHORT_4_4_4_4 0x8033
-#define GL_UNSIGNED_SHORT_5_5_5_1 0x8034
-#define GL_UNSIGNED_INT_8_8_8_8 0x8035
-#define GL_UNSIGNED_INT_10_10_10_2 0x8036
+/*VERSION_1_2_DEPRECATED*/
+#ifdef USE_DYNAMIC_GL_VERSION_1_2_DEPRECATED
 #define GL_RESCALE_NORMAL 0x803A
-#define GL_TEXTURE_BINDING_3D 0x806A
-#define GL_PACK_SKIP_IMAGES 0x806B
-#define GL_PACK_IMAGE_HEIGHT 0x806C
-#define GL_UNPACK_SKIP_IMAGES 0x806D
-#define GL_UNPACK_IMAGE_HEIGHT 0x806E
-#define GL_TEXTURE_3D 0x806F
-#define GL_PROXY_TEXTURE_3D 0x8070
-#define GL_TEXTURE_DEPTH 0x8071
-#define GL_TEXTURE_WRAP_R 0x8072
-#define GL_MAX_3D_TEXTURE_SIZE 0x8073
-#define GL_UNSIGNED_BYTE_2_3_3_REV 0x8362
-#define GL_UNSIGNED_SHORT_5_6_5 0x8363
-#define GL_UNSIGNED_SHORT_5_6_5_REV 0x8364
-#define GL_UNSIGNED_SHORT_4_4_4_4_REV 0x8365
-#define GL_UNSIGNED_SHORT_1_5_5_5_REV 0x8366
-#define GL_UNSIGNED_INT_8_8_8_8_REV 0x8367
-#define GL_UNSIGNED_INT_2_10_10_10_REV 0x8368
-#define GL_BGR 0x80E0
-#define GL_BGRA 0x80E1
-#define GL_MAX_ELEMENTS_VERTICES 0x80E8
-#define GL_MAX_ELEMENTS_INDICES 0x80E9
-#define GL_CLAMP_TO_EDGE 0x812F
-#define GL_TEXTURE_MIN_LOD 0x813A
-#define GL_TEXTURE_MAX_LOD 0x813B
-#define GL_TEXTURE_BASE_LEVEL 0x813C
-#define GL_TEXTURE_MAX_LEVEL 0x813D
 #define GL_LIGHT_MODEL_COLOR_CONTROL 0x81F8
 #define GL_SINGLE_COLOR 0x81F9
 #define GL_SEPARATE_SPECULAR_COLOR 0x81FA
-#define GL_SMOOTH_POINT_SIZE_RANGE 0x0B12
-#define GL_SMOOTH_POINT_SIZE_GRANULARITY 0x0B13
-#define GL_SMOOTH_LINE_WIDTH_RANGE 0x0B22
-#define GL_SMOOTH_LINE_WIDTH_GRANULARITY 0x0B23
 #define GL_ALIASED_POINT_SIZE_RANGE 0x846D
-#define GL_ALIASED_LINE_WIDTH_RANGE 0x846E
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendColor)(GLclampf red , GLclampf green , GLclampf blue , GLclampf alpha); }
-#define glBlendColor DynamicGL_BlendColor
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquation)(GLenum mode); }
-#define glBlendEquation DynamicGL_BlendEquation
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawRangeElements)(GLenum mode , GLuint start , GLuint end , GLsizei count , GLenum type , const GLvoid *indices); }
-#define glDrawRangeElements DynamicGL_DrawRangeElements
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorTable)(GLenum target , GLenum internalformat , GLsizei width , GLenum format , GLenum type , const GLvoid *table); }
 #define glColorTable DynamicGL_ColorTable
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorTableParameterfv)(GLenum target , GLenum pname , const GLfloat *params); }
@@ -6850,6 +8601,171 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ResetHistogram)(GLenum 
 #define glResetHistogram DynamicGL_ResetHistogram
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ResetMinmax)(GLenum target); }
 #define glResetMinmax DynamicGL_ResetMinmax
+extern bool DinamicGLFeature_VERSION_1_2_DEPRECATED_Supported();
+#endif /*USE_DYNAMIC_GL_VERSION_1_2_DEPRECATED*/
+
+/*NV_multisample_coverage*/
+#ifdef USE_DYNAMIC_GL_NV_multisample_coverage
+#define GL_COVERAGE_SAMPLES_NV 0x80A9
+#define GL_COLOR_SAMPLES_NV 0x8E20
+extern bool DinamicGLFeature_NV_multisample_coverage_Supported();
+#endif /*USE_DYNAMIC_GL_NV_multisample_coverage*/
+
+/*SGIX_impact_pixel_texture*/
+#ifdef USE_DYNAMIC_GL_SGIX_impact_pixel_texture
+#define GL_PIXEL_TEX_GEN_Q_CEILING_SGIX 0x8184
+#define GL_PIXEL_TEX_GEN_Q_ROUND_SGIX 0x8185
+#define GL_PIXEL_TEX_GEN_Q_FLOOR_SGIX 0x8186
+#define GL_PIXEL_TEX_GEN_ALPHA_REPLACE_SGIX 0x8187
+#define GL_PIXEL_TEX_GEN_ALPHA_NO_REPLACE_SGIX 0x8188
+#define GL_PIXEL_TEX_GEN_ALPHA_LS_SGIX 0x8189
+#define GL_PIXEL_TEX_GEN_ALPHA_MS_SGIX 0x818A
+extern bool DinamicGLFeature_SGIX_impact_pixel_texture_Supported();
+#endif /*USE_DYNAMIC_GL_SGIX_impact_pixel_texture*/
+
+/*EXT_depth_bounds_test*/
+#ifdef USE_DYNAMIC_GL_EXT_depth_bounds_test
+#define GL_DEPTH_BOUNDS_TEST_EXT 0x8890
+#define GL_DEPTH_BOUNDS_EXT 0x8891
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthBoundsEXT)(GLclampd zmin , GLclampd zmax); }
+#define glDepthBoundsEXT DynamicGL_DepthBoundsEXT
+extern bool DinamicGLFeature_EXT_depth_bounds_test_Supported();
+#endif /*USE_DYNAMIC_GL_EXT_depth_bounds_test*/
+
+/*ARB_shader_image_load_store*/
+#ifdef USE_DYNAMIC_GL_ARB_shader_image_load_store
+#define GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT 0x00000001
+#define GL_ELEMENT_ARRAY_BARRIER_BIT 0x00000002
+#define GL_UNIFORM_BARRIER_BIT 0x00000004
+#define GL_TEXTURE_FETCH_BARRIER_BIT 0x00000008
+#define GL_SHADER_IMAGE_ACCESS_BARRIER_BIT 0x00000020
+#define GL_COMMAND_BARRIER_BIT 0x00000040
+#define GL_PIXEL_BUFFER_BARRIER_BIT 0x00000080
+#define GL_TEXTURE_UPDATE_BARRIER_BIT 0x00000100
+#define GL_BUFFER_UPDATE_BARRIER_BIT 0x00000200
+#define GL_FRAMEBUFFER_BARRIER_BIT 0x00000400
+#define GL_TRANSFORM_FEEDBACK_BARRIER_BIT 0x00000800
+#define GL_ATOMIC_COUNTER_BARRIER_BIT 0x00001000
+#define GL_ALL_BARRIER_BITS 0xFFFFFFFF
+#define GL_MAX_IMAGE_UNITS 0x8F38
+#define GL_MAX_COMBINED_IMAGE_UNITS_AND_FRAGMENT_OUTPUTS 0x8F39
+#define GL_IMAGE_BINDING_NAME 0x8F3A
+#define GL_IMAGE_BINDING_LEVEL 0x8F3B
+#define GL_IMAGE_BINDING_LAYERED 0x8F3C
+#define GL_IMAGE_BINDING_LAYER 0x8F3D
+#define GL_IMAGE_BINDING_ACCESS 0x8F3E
+#define GL_IMAGE_1D 0x904C
+#define GL_IMAGE_2D 0x904D
+#define GL_IMAGE_3D 0x904E
+#define GL_IMAGE_2D_RECT 0x904F
+#define GL_IMAGE_CUBE 0x9050
+#define GL_IMAGE_BUFFER 0x9051
+#define GL_IMAGE_1D_ARRAY 0x9052
+#define GL_IMAGE_2D_ARRAY 0x9053
+#define GL_IMAGE_CUBE_MAP_ARRAY 0x9054
+#define GL_IMAGE_2D_MULTISAMPLE 0x9055
+#define GL_IMAGE_2D_MULTISAMPLE_ARRAY 0x9056
+#define GL_INT_IMAGE_1D 0x9057
+#define GL_INT_IMAGE_2D 0x9058
+#define GL_INT_IMAGE_3D 0x9059
+#define GL_INT_IMAGE_2D_RECT 0x905A
+#define GL_INT_IMAGE_CUBE 0x905B
+#define GL_INT_IMAGE_BUFFER 0x905C
+#define GL_INT_IMAGE_1D_ARRAY 0x905D
+#define GL_INT_IMAGE_2D_ARRAY 0x905E
+#define GL_INT_IMAGE_CUBE_MAP_ARRAY 0x905F
+#define GL_INT_IMAGE_2D_MULTISAMPLE 0x9060
+#define GL_INT_IMAGE_2D_MULTISAMPLE_ARRAY 0x9061
+#define GL_UNSIGNED_INT_IMAGE_1D 0x9062
+#define GL_UNSIGNED_INT_IMAGE_2D 0x9063
+#define GL_UNSIGNED_INT_IMAGE_3D 0x9064
+#define GL_UNSIGNED_INT_IMAGE_2D_RECT 0x9065
+#define GL_UNSIGNED_INT_IMAGE_CUBE 0x9066
+#define GL_UNSIGNED_INT_IMAGE_BUFFER 0x9067
+#define GL_UNSIGNED_INT_IMAGE_1D_ARRAY 0x9068
+#define GL_UNSIGNED_INT_IMAGE_2D_ARRAY 0x9069
+#define GL_UNSIGNED_INT_IMAGE_CUBE_MAP_ARRAY 0x906A
+#define GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE 0x906B
+#define GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE_ARRAY 0x906C
+#define GL_MAX_IMAGE_SAMPLES 0x906D
+#define GL_IMAGE_BINDING_FORMAT 0x906E
+#define GL_IMAGE_FORMAT_COMPATIBILITY_TYPE 0x90C7
+#define GL_IMAGE_FORMAT_COMPATIBILITY_BY_SIZE 0x90C8
+#define GL_IMAGE_FORMAT_COMPATIBILITY_BY_CLASS 0x90C9
+#define GL_MAX_VERTEX_IMAGE_UNIFORMS 0x90CA
+#define GL_MAX_TESS_CONTROL_IMAGE_UNIFORMS 0x90CB
+#define GL_MAX_TESS_EVALUATION_IMAGE_UNIFORMS 0x90CC
+#define GL_MAX_GEOMETRY_IMAGE_UNIFORMS 0x90CD
+#define GL_MAX_FRAGMENT_IMAGE_UNIFORMS 0x90CE
+#define GL_MAX_COMBINED_IMAGE_UNIFORMS 0x90CF
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BindImageTexture)(GLuint unit , GLuint texture , GLint level , GLboolean layered , GLint layer , GLenum access , GLenum format); }
+#define glBindImageTexture DynamicGL_BindImageTexture
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MemoryBarrier)(GLbitfield barriers); }
+#define glMemoryBarrier DynamicGL_MemoryBarrier
+extern bool DinamicGLFeature_ARB_shader_image_load_store_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_shader_image_load_store*/
+
+/*EXT_texture_mirror_clamp*/
+#ifdef USE_DYNAMIC_GL_EXT_texture_mirror_clamp
+#define GL_MIRROR_CLAMP_EXT 0x8742
+#define GL_MIRROR_CLAMP_TO_EDGE_EXT 0x8743
+#define GL_MIRROR_CLAMP_TO_BORDER_EXT 0x8912
+extern bool DinamicGLFeature_EXT_texture_mirror_clamp_Supported();
+#endif /*USE_DYNAMIC_GL_EXT_texture_mirror_clamp*/
+
+/*SGIS_texture_lod*/
+#ifdef USE_DYNAMIC_GL_SGIS_texture_lod
+#define GL_TEXTURE_MIN_LOD_SGIS 0x813A
+#define GL_TEXTURE_MAX_LOD_SGIS 0x813B
+#define GL_TEXTURE_BASE_LEVEL_SGIS 0x813C
+#define GL_TEXTURE_MAX_LEVEL_SGIS 0x813D
+extern bool DinamicGLFeature_SGIS_texture_lod_Supported();
+#endif /*USE_DYNAMIC_GL_SGIS_texture_lod*/
+
+/*VERSION_1_2*/
+#ifdef USE_DYNAMIC_GL_VERSION_1_2
+#define GL_UNSIGNED_BYTE_3_3_2 0x8032
+#define GL_UNSIGNED_SHORT_4_4_4_4 0x8033
+#define GL_UNSIGNED_SHORT_5_5_5_1 0x8034
+#define GL_UNSIGNED_INT_8_8_8_8 0x8035
+#define GL_UNSIGNED_INT_10_10_10_2 0x8036
+#define GL_TEXTURE_BINDING_3D 0x806A
+#define GL_PACK_SKIP_IMAGES 0x806B
+#define GL_PACK_IMAGE_HEIGHT 0x806C
+#define GL_UNPACK_SKIP_IMAGES 0x806D
+#define GL_UNPACK_IMAGE_HEIGHT 0x806E
+#define GL_TEXTURE_3D 0x806F
+#define GL_PROXY_TEXTURE_3D 0x8070
+#define GL_TEXTURE_DEPTH 0x8071
+#define GL_TEXTURE_WRAP_R 0x8072
+#define GL_MAX_3D_TEXTURE_SIZE 0x8073
+#define GL_UNSIGNED_BYTE_2_3_3_REV 0x8362
+#define GL_UNSIGNED_SHORT_5_6_5 0x8363
+#define GL_UNSIGNED_SHORT_5_6_5_REV 0x8364
+#define GL_UNSIGNED_SHORT_4_4_4_4_REV 0x8365
+#define GL_UNSIGNED_SHORT_1_5_5_5_REV 0x8366
+#define GL_UNSIGNED_INT_8_8_8_8_REV 0x8367
+#define GL_UNSIGNED_INT_2_10_10_10_REV 0x8368
+#define GL_BGR 0x80E0
+#define GL_BGRA 0x80E1
+#define GL_MAX_ELEMENTS_VERTICES 0x80E8
+#define GL_MAX_ELEMENTS_INDICES 0x80E9
+#define GL_CLAMP_TO_EDGE 0x812F
+#define GL_TEXTURE_MIN_LOD 0x813A
+#define GL_TEXTURE_MAX_LOD 0x813B
+#define GL_TEXTURE_BASE_LEVEL 0x813C
+#define GL_TEXTURE_MAX_LEVEL 0x813D
+#define GL_SMOOTH_POINT_SIZE_RANGE 0x0B12
+#define GL_SMOOTH_POINT_SIZE_GRANULARITY 0x0B13
+#define GL_SMOOTH_LINE_WIDTH_RANGE 0x0B22
+#define GL_SMOOTH_LINE_WIDTH_GRANULARITY 0x0B23
+#define GL_ALIASED_LINE_WIDTH_RANGE 0x846E
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendColor)(GLfloat red , GLfloat green , GLfloat blue , GLfloat alpha); }
+#define glBlendColor DynamicGL_BlendColor
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquation)(GLenum mode); }
+#define glBlendEquation DynamicGL_BlendEquation
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawRangeElements)(GLenum mode , GLuint start , GLuint end , GLsizei count , GLenum type , const GLvoid *indices); }
+#define glDrawRangeElements DynamicGL_DrawRangeElements
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexImage3D)(GLenum target , GLint level , GLint internalformat , GLsizei width , GLsizei height , GLsizei depth , GLint border , GLenum format , GLenum type , const GLvoid *pixels); }
 #define glTexImage3D DynamicGL_TexImage3D
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexSubImage3D)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLint zoffset , GLsizei width , GLsizei height , GLsizei depth , GLenum format , GLenum type , const GLvoid *pixels); }
@@ -6873,9 +8789,9 @@ extern bool DinamicGLFeature_SUN_slice_accum_Supported();
 
 /*APPLE_element_array*/
 #ifdef USE_DYNAMIC_GL_APPLE_element_array
-#define GL_ELEMENT_ARRAY_APPLE 0x8768
-#define GL_ELEMENT_ARRAY_TYPE_APPLE 0x8769
-#define GL_ELEMENT_ARRAY_POINTER_APPLE 0x876A
+#define GL_ELEMENT_ARRAY_APPLE 0x8A0C
+#define GL_ELEMENT_ARRAY_TYPE_APPLE 0x8A0D
+#define GL_ELEMENT_ARRAY_POINTER_APPLE 0x8A0E
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ElementPointerAPPLE)(GLenum type , const GLvoid *pointer); }
 #define glElementPointerAPPLE DynamicGL_ElementPointerAPPLE
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElementArrayAPPLE)(GLenum mode , GLint first , GLsizei count); }
@@ -6889,16 +8805,185 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawRangeElementAr
 extern bool DinamicGLFeature_APPLE_element_array_Supported();
 #endif /*USE_DYNAMIC_GL_APPLE_element_array*/
 
-/*EXT_blend_minmax*/
-#ifdef USE_DYNAMIC_GL_EXT_blend_minmax
-#define GL_FUNC_ADD_EXT 0x8006
-#define GL_MIN_EXT 0x8007
-#define GL_MAX_EXT 0x8008
-#define GL_BLEND_EQUATION_EXT 0x8009
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationEXT)(GLenum mode); }
-#define glBlendEquationEXT DynamicGL_BlendEquationEXT
-extern bool DinamicGLFeature_EXT_blend_minmax_Supported();
-#endif /*USE_DYNAMIC_GL_EXT_blend_minmax*/
+/*ARB_sync*/
+#ifdef USE_DYNAMIC_GL_ARB_sync
+typedef int64_t GLint64;
+typedef uint64_t GLuint64;
+#define GL_MAX_SERVER_WAIT_TIMEOUT 0x9111
+#define GL_OBJECT_TYPE 0x9112
+#define GL_SYNC_CONDITION 0x9113
+#define GL_SYNC_STATUS 0x9114
+#define GL_SYNC_FLAGS 0x9115
+#define GL_SYNC_FENCE 0x9116
+#define GL_SYNC_GPU_COMMANDS_COMPLETE 0x9117
+#define GL_UNSIGNALED 0x9118
+#define GL_SIGNALED 0x9119
+#define GL_ALREADY_SIGNALED 0x911A
+#define GL_TIMEOUT_EXPIRED 0x911B
+#define GL_CONDITION_SATISFIED 0x911C
+#define GL_WAIT_FAILED 0x911D
+#define GL_SYNC_FLUSH_COMMANDS_BIT 0x00000001
+#define GL_TIMEOUT_IGNORED 0xFFFFFFFFFFFFFFFF
+extern "C" { extern GLsync (DYNAMIC_GL_APIENTRYP DynamicGL_FenceSync)(GLenum condition , GLbitfield flags); }
+#define glFenceSync DynamicGL_FenceSync
+extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsSync)(GLsync sync); }
+#define glIsSync DynamicGL_IsSync
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteSync)(GLsync sync); }
+#define glDeleteSync DynamicGL_DeleteSync
+extern "C" { extern GLenum (DYNAMIC_GL_APIENTRYP DynamicGL_ClientWaitSync)(GLsync sync , GLbitfield flags , GLuint64 timeout); }
+#define glClientWaitSync DynamicGL_ClientWaitSync
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WaitSync)(GLsync sync , GLbitfield flags , GLuint64 timeout); }
+#define glWaitSync DynamicGL_WaitSync
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetInteger64v)(GLenum pname , GLint64 *params); }
+#define glGetInteger64v DynamicGL_GetInteger64v
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetSynciv)(GLsync sync , GLenum pname , GLsizei bufSize , GLsizei *length , GLint *values); }
+#define glGetSynciv DynamicGL_GetSynciv
+extern bool DinamicGLFeature_ARB_sync_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_sync*/
+
+/*NV_tessellation_program5*/
+#ifdef USE_DYNAMIC_GL_NV_tessellation_program5
+#define GL_MAX_PROGRAM_PATCH_ATTRIBS_NV 0x86D8
+#define GL_TESS_CONTROL_PROGRAM_NV 0x891E
+#define GL_TESS_EVALUATION_PROGRAM_NV 0x891F
+#define GL_TESS_CONTROL_PROGRAM_PARAMETER_BUFFER_NV 0x8C74
+#define GL_TESS_EVALUATION_PROGRAM_PARAMETER_BUFFER_NV 0x8C75
+extern bool DinamicGLFeature_NV_tessellation_program5_Supported();
+#endif /*USE_DYNAMIC_GL_NV_tessellation_program5*/
+
+/*ARB_separate_shader_objects*/
+#ifdef USE_DYNAMIC_GL_ARB_separate_shader_objects
+#define GL_VERTEX_SHADER_BIT 0x00000001
+#define GL_FRAGMENT_SHADER_BIT 0x00000002
+#define GL_GEOMETRY_SHADER_BIT 0x00000004
+#define GL_TESS_CONTROL_SHADER_BIT 0x00000008
+#define GL_TESS_EVALUATION_SHADER_BIT 0x00000010
+#define GL_ALL_SHADER_BITS 0xFFFFFFFF
+#define GL_PROGRAM_SEPARABLE 0x8258
+#define GL_ACTIVE_PROGRAM 0x8259
+#define GL_PROGRAM_PIPELINE_BINDING 0x825A
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_UseProgramStages)(GLuint pipeline , GLbitfield stages , GLuint program); }
+#define glUseProgramStages DynamicGL_UseProgramStages
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ActiveShaderProgram)(GLuint pipeline , GLuint program); }
+#define glActiveShaderProgram DynamicGL_ActiveShaderProgram
+extern "C" { extern GLuint (DYNAMIC_GL_APIENTRYP DynamicGL_CreateShaderProgramv)(GLenum type , GLsizei count , const GLchar* const); }
+#define glCreateShaderProgramv DynamicGL_CreateShaderProgramv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BindProgramPipeline)(GLuint pipeline); }
+#define glBindProgramPipeline DynamicGL_BindProgramPipeline
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteProgramPipelines)(GLsizei n , const GLuint *pipelines); }
+#define glDeleteProgramPipelines DynamicGL_DeleteProgramPipelines
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GenProgramPipelines)(GLsizei n , GLuint *pipelines); }
+#define glGenProgramPipelines DynamicGL_GenProgramPipelines
+extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsProgramPipeline)(GLuint pipeline); }
+#define glIsProgramPipeline DynamicGL_IsProgramPipeline
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetProgramPipelineiv)(GLuint pipeline , GLenum pname , GLint *params); }
+#define glGetProgramPipelineiv DynamicGL_GetProgramPipelineiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1i)(GLuint program , GLint location , GLint v0); }
+#define glProgramUniform1i DynamicGL_ProgramUniform1i
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1iv)(GLuint program , GLint location , GLsizei count , const GLint *value); }
+#define glProgramUniform1iv DynamicGL_ProgramUniform1iv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1f)(GLuint program , GLint location , GLfloat v0); }
+#define glProgramUniform1f DynamicGL_ProgramUniform1f
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1fv)(GLuint program , GLint location , GLsizei count , const GLfloat *value); }
+#define glProgramUniform1fv DynamicGL_ProgramUniform1fv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1d)(GLuint program , GLint location , GLdouble v0); }
+#define glProgramUniform1d DynamicGL_ProgramUniform1d
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1dv)(GLuint program , GLint location , GLsizei count , const GLdouble *value); }
+#define glProgramUniform1dv DynamicGL_ProgramUniform1dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1ui)(GLuint program , GLint location , GLuint v0); }
+#define glProgramUniform1ui DynamicGL_ProgramUniform1ui
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform1uiv)(GLuint program , GLint location , GLsizei count , const GLuint *value); }
+#define glProgramUniform1uiv DynamicGL_ProgramUniform1uiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2i)(GLuint program , GLint location , GLint v0 , GLint v1); }
+#define glProgramUniform2i DynamicGL_ProgramUniform2i
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2iv)(GLuint program , GLint location , GLsizei count , const GLint *value); }
+#define glProgramUniform2iv DynamicGL_ProgramUniform2iv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2f)(GLuint program , GLint location , GLfloat v0 , GLfloat v1); }
+#define glProgramUniform2f DynamicGL_ProgramUniform2f
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2fv)(GLuint program , GLint location , GLsizei count , const GLfloat *value); }
+#define glProgramUniform2fv DynamicGL_ProgramUniform2fv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2d)(GLuint program , GLint location , GLdouble v0 , GLdouble v1); }
+#define glProgramUniform2d DynamicGL_ProgramUniform2d
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2dv)(GLuint program , GLint location , GLsizei count , const GLdouble *value); }
+#define glProgramUniform2dv DynamicGL_ProgramUniform2dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2ui)(GLuint program , GLint location , GLuint v0 , GLuint v1); }
+#define glProgramUniform2ui DynamicGL_ProgramUniform2ui
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform2uiv)(GLuint program , GLint location , GLsizei count , const GLuint *value); }
+#define glProgramUniform2uiv DynamicGL_ProgramUniform2uiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3i)(GLuint program , GLint location , GLint v0 , GLint v1 , GLint v2); }
+#define glProgramUniform3i DynamicGL_ProgramUniform3i
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3iv)(GLuint program , GLint location , GLsizei count , const GLint *value); }
+#define glProgramUniform3iv DynamicGL_ProgramUniform3iv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3f)(GLuint program , GLint location , GLfloat v0 , GLfloat v1 , GLfloat v2); }
+#define glProgramUniform3f DynamicGL_ProgramUniform3f
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3fv)(GLuint program , GLint location , GLsizei count , const GLfloat *value); }
+#define glProgramUniform3fv DynamicGL_ProgramUniform3fv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3d)(GLuint program , GLint location , GLdouble v0 , GLdouble v1 , GLdouble v2); }
+#define glProgramUniform3d DynamicGL_ProgramUniform3d
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3dv)(GLuint program , GLint location , GLsizei count , const GLdouble *value); }
+#define glProgramUniform3dv DynamicGL_ProgramUniform3dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3ui)(GLuint program , GLint location , GLuint v0 , GLuint v1 , GLuint v2); }
+#define glProgramUniform3ui DynamicGL_ProgramUniform3ui
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform3uiv)(GLuint program , GLint location , GLsizei count , const GLuint *value); }
+#define glProgramUniform3uiv DynamicGL_ProgramUniform3uiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4i)(GLuint program , GLint location , GLint v0 , GLint v1 , GLint v2 , GLint v3); }
+#define glProgramUniform4i DynamicGL_ProgramUniform4i
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4iv)(GLuint program , GLint location , GLsizei count , const GLint *value); }
+#define glProgramUniform4iv DynamicGL_ProgramUniform4iv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4f)(GLuint program , GLint location , GLfloat v0 , GLfloat v1 , GLfloat v2 , GLfloat v3); }
+#define glProgramUniform4f DynamicGL_ProgramUniform4f
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4fv)(GLuint program , GLint location , GLsizei count , const GLfloat *value); }
+#define glProgramUniform4fv DynamicGL_ProgramUniform4fv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4d)(GLuint program , GLint location , GLdouble v0 , GLdouble v1 , GLdouble v2 , GLdouble v3); }
+#define glProgramUniform4d DynamicGL_ProgramUniform4d
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4dv)(GLuint program , GLint location , GLsizei count , const GLdouble *value); }
+#define glProgramUniform4dv DynamicGL_ProgramUniform4dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4ui)(GLuint program , GLint location , GLuint v0 , GLuint v1 , GLuint v2 , GLuint v3); }
+#define glProgramUniform4ui DynamicGL_ProgramUniform4ui
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniform4uiv)(GLuint program , GLint location , GLsizei count , const GLuint *value); }
+#define glProgramUniform4uiv DynamicGL_ProgramUniform4uiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix2fv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLfloat *value); }
+#define glProgramUniformMatrix2fv DynamicGL_ProgramUniformMatrix2fv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix3fv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLfloat *value); }
+#define glProgramUniformMatrix3fv DynamicGL_ProgramUniformMatrix3fv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix4fv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLfloat *value); }
+#define glProgramUniformMatrix4fv DynamicGL_ProgramUniformMatrix4fv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix2dv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value); }
+#define glProgramUniformMatrix2dv DynamicGL_ProgramUniformMatrix2dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix3dv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value); }
+#define glProgramUniformMatrix3dv DynamicGL_ProgramUniformMatrix3dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix4dv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value); }
+#define glProgramUniformMatrix4dv DynamicGL_ProgramUniformMatrix4dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix2x3fv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLfloat *value); }
+#define glProgramUniformMatrix2x3fv DynamicGL_ProgramUniformMatrix2x3fv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix3x2fv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLfloat *value); }
+#define glProgramUniformMatrix3x2fv DynamicGL_ProgramUniformMatrix3x2fv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix2x4fv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLfloat *value); }
+#define glProgramUniformMatrix2x4fv DynamicGL_ProgramUniformMatrix2x4fv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix4x2fv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLfloat *value); }
+#define glProgramUniformMatrix4x2fv DynamicGL_ProgramUniformMatrix4x2fv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix3x4fv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLfloat *value); }
+#define glProgramUniformMatrix3x4fv DynamicGL_ProgramUniformMatrix3x4fv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix4x3fv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLfloat *value); }
+#define glProgramUniformMatrix4x3fv DynamicGL_ProgramUniformMatrix4x3fv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix2x3dv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value); }
+#define glProgramUniformMatrix2x3dv DynamicGL_ProgramUniformMatrix2x3dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix3x2dv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value); }
+#define glProgramUniformMatrix3x2dv DynamicGL_ProgramUniformMatrix3x2dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix2x4dv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value); }
+#define glProgramUniformMatrix2x4dv DynamicGL_ProgramUniformMatrix2x4dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix4x2dv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value); }
+#define glProgramUniformMatrix4x2dv DynamicGL_ProgramUniformMatrix4x2dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix3x4dv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value); }
+#define glProgramUniformMatrix3x4dv DynamicGL_ProgramUniformMatrix3x4dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformMatrix4x3dv)(GLuint program , GLint location , GLsizei count , GLboolean transpose , const GLdouble *value); }
+#define glProgramUniformMatrix4x3dv DynamicGL_ProgramUniformMatrix4x3dv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ValidateProgramPipeline)(GLuint pipeline); }
+#define glValidateProgramPipeline DynamicGL_ValidateProgramPipeline
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetProgramPipelineInfoLog)(GLuint pipeline , GLsizei bufSize , GLsizei *length , GLchar *infoLog); }
+#define glGetProgramPipelineInfoLog DynamicGL_GetProgramPipelineInfoLog
+extern bool DinamicGLFeature_ARB_separate_shader_objects_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_separate_shader_objects*/
 
 /*ATI_texture_float*/
 #ifdef USE_DYNAMIC_GL_ATI_texture_float
@@ -6917,11 +9002,16 @@ extern bool DinamicGLFeature_EXT_blend_minmax_Supported();
 extern bool DinamicGLFeature_ATI_texture_float_Supported();
 #endif /*USE_DYNAMIC_GL_ATI_texture_float*/
 
-/*SGIX_calligraphic_fragment*/
-#ifdef USE_DYNAMIC_GL_SGIX_calligraphic_fragment
-#define GL_CALLIGRAPHIC_FRAGMENT_SGIX 0x8183
-extern bool DinamicGLFeature_SGIX_calligraphic_fragment_Supported();
-#endif /*USE_DYNAMIC_GL_SGIX_calligraphic_fragment*/
+/*EXT_blend_minmax*/
+#ifdef USE_DYNAMIC_GL_EXT_blend_minmax
+#define GL_FUNC_ADD_EXT 0x8006
+#define GL_MIN_EXT 0x8007
+#define GL_MAX_EXT 0x8008
+#define GL_BLEND_EQUATION_EXT 0x8009
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationEXT)(GLenum mode); }
+#define glBlendEquationEXT DynamicGL_BlendEquationEXT
+extern bool DinamicGLFeature_EXT_blend_minmax_Supported();
+#endif /*USE_DYNAMIC_GL_EXT_blend_minmax*/
 
 /*NV_float_buffer*/
 #ifdef USE_DYNAMIC_GL_NV_float_buffer
@@ -6942,6 +9032,80 @@ extern bool DinamicGLFeature_SGIX_calligraphic_fragment_Supported();
 #define GL_FLOAT_RGBA_MODE_NV 0x888E
 extern bool DinamicGLFeature_NV_float_buffer_Supported();
 #endif /*USE_DYNAMIC_GL_NV_float_buffer*/
+
+/*SGIX_calligraphic_fragment*/
+#ifdef USE_DYNAMIC_GL_SGIX_calligraphic_fragment
+#define GL_CALLIGRAPHIC_FRAGMENT_SGIX 0x8183
+extern bool DinamicGLFeature_SGIX_calligraphic_fragment_Supported();
+#endif /*USE_DYNAMIC_GL_SGIX_calligraphic_fragment*/
+
+/*ARB_texture_storage*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_storage
+#define GL_TEXTURE_IMMUTABLE_FORMAT 0x912F
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexStorage1D)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width); }
+#define glTexStorage1D DynamicGL_TexStorage1D
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexStorage2D)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height); }
+#define glTexStorage2D DynamicGL_TexStorage2D
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexStorage3D)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth); }
+#define glTexStorage3D DynamicGL_TexStorage3D
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureStorage1DEXT)(GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width); }
+#define glTextureStorage1DEXT DynamicGL_TextureStorage1DEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureStorage2DEXT)(GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height); }
+#define glTextureStorage2DEXT DynamicGL_TextureStorage2DEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureStorage3DEXT)(GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth); }
+#define glTextureStorage3DEXT DynamicGL_TextureStorage3DEXT
+extern bool DinamicGLFeature_ARB_texture_storage_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_texture_storage*/
+
+/*NV_bindless_texture*/
+#ifdef USE_DYNAMIC_GL_NV_bindless_texture
+extern "C" { extern GLuint64 (DYNAMIC_GL_APIENTRYP DynamicGL_GetTextureHandleNV)(GLuint texture); }
+#define glGetTextureHandleNV DynamicGL_GetTextureHandleNV
+extern "C" { extern GLuint64 (DYNAMIC_GL_APIENTRYP DynamicGL_GetTextureSamplerHandleNV)(GLuint texture , GLuint sampler); }
+#define glGetTextureSamplerHandleNV DynamicGL_GetTextureSamplerHandleNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MakeTextureHandleResidentNV)(GLuint64 handle); }
+#define glMakeTextureHandleResidentNV DynamicGL_MakeTextureHandleResidentNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MakeTextureHandleNonResidentNV)(GLuint64 handle); }
+#define glMakeTextureHandleNonResidentNV DynamicGL_MakeTextureHandleNonResidentNV
+extern "C" { extern GLuint64 (DYNAMIC_GL_APIENTRYP DynamicGL_GetImageHandleNV)(GLuint texture , GLint level , GLboolean layered , GLint layer , GLenum format); }
+#define glGetImageHandleNV DynamicGL_GetImageHandleNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MakeImageHandleResidentNV)(GLuint64 handle , GLenum access); }
+#define glMakeImageHandleResidentNV DynamicGL_MakeImageHandleResidentNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MakeImageHandleNonResidentNV)(GLuint64 handle); }
+#define glMakeImageHandleNonResidentNV DynamicGL_MakeImageHandleNonResidentNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformHandleui64NV)(GLint location , GLuint64 value); }
+#define glUniformHandleui64NV DynamicGL_UniformHandleui64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformHandleui64vNV)(GLint location , GLsizei count , const GLuint64 *value); }
+#define glUniformHandleui64vNV DynamicGL_UniformHandleui64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformHandleui64NV)(GLuint program , GLint location , GLuint64 value); }
+#define glProgramUniformHandleui64NV DynamicGL_ProgramUniformHandleui64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformHandleui64vNV)(GLuint program , GLint location , GLsizei count , const GLuint64 *values); }
+#define glProgramUniformHandleui64vNV DynamicGL_ProgramUniformHandleui64vNV
+extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsTextureHandleResidentNV)(GLuint64 handle); }
+#define glIsTextureHandleResidentNV DynamicGL_IsTextureHandleResidentNV
+extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsImageHandleResidentNV)(GLuint64 handle); }
+#define glIsImageHandleResidentNV DynamicGL_IsImageHandleResidentNV
+extern bool DinamicGLFeature_NV_bindless_texture_Supported();
+#endif /*USE_DYNAMIC_GL_NV_bindless_texture*/
+
+/*SGIX_instruments*/
+#ifdef USE_DYNAMIC_GL_SGIX_instruments
+#define GL_INSTRUMENT_BUFFER_POINTER_SGIX 0x8180
+#define GL_INSTRUMENT_MEASUREMENTS_SGIX 0x8181
+extern "C" { extern GLint (DYNAMIC_GL_APIENTRYP DynamicGL_GetInstrumentsSGIX)(); }
+#define glGetInstrumentsSGIX DynamicGL_GetInstrumentsSGIX
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_InstrumentsBufferSGIX)(GLsizei size , GLint *buffer); }
+#define glInstrumentsBufferSGIX DynamicGL_InstrumentsBufferSGIX
+extern "C" { extern GLint (DYNAMIC_GL_APIENTRYP DynamicGL_PollInstrumentsSGIX)(GLint *marker_p); }
+#define glPollInstrumentsSGIX DynamicGL_PollInstrumentsSGIX
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ReadInstrumentsSGIX)(GLint marker); }
+#define glReadInstrumentsSGIX DynamicGL_ReadInstrumentsSGIX
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_StartInstrumentsSGIX)(); }
+#define glStartInstrumentsSGIX DynamicGL_StartInstrumentsSGIX
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_StopInstrumentsSGIX)(GLint marker); }
+#define glStopInstrumentsSGIX DynamicGL_StopInstrumentsSGIX
+extern bool DinamicGLFeature_SGIX_instruments_Supported();
+#endif /*USE_DYNAMIC_GL_SGIX_instruments*/
 
 /*SGIX_fragment_lighting*/
 #ifdef USE_DYNAMIC_GL_SGIX_fragment_lighting
@@ -7004,25 +9168,6 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LightEnviSGIX)(GLenum p
 extern bool DinamicGLFeature_SGIX_fragment_lighting_Supported();
 #endif /*USE_DYNAMIC_GL_SGIX_fragment_lighting*/
 
-/*SGIX_instruments*/
-#ifdef USE_DYNAMIC_GL_SGIX_instruments
-#define GL_INSTRUMENT_BUFFER_POINTER_SGIX 0x8180
-#define GL_INSTRUMENT_MEASUREMENTS_SGIX 0x8181
-extern "C" { extern GLint (DYNAMIC_GL_APIENTRYP DynamicGL_GetInstrumentsSGIX)(); }
-#define glGetInstrumentsSGIX DynamicGL_GetInstrumentsSGIX
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_InstrumentsBufferSGIX)(GLsizei size , GLint *buffer); }
-#define glInstrumentsBufferSGIX DynamicGL_InstrumentsBufferSGIX
-extern "C" { extern GLint (DYNAMIC_GL_APIENTRYP DynamicGL_PollInstrumentsSGIX)(GLint *marker_p); }
-#define glPollInstrumentsSGIX DynamicGL_PollInstrumentsSGIX
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ReadInstrumentsSGIX)(GLint marker); }
-#define glReadInstrumentsSGIX DynamicGL_ReadInstrumentsSGIX
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_StartInstrumentsSGIX)(); }
-#define glStartInstrumentsSGIX DynamicGL_StartInstrumentsSGIX
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_StopInstrumentsSGIX)(GLint marker); }
-#define glStopInstrumentsSGIX DynamicGL_StopInstrumentsSGIX
-extern bool DinamicGLFeature_SGIX_instruments_Supported();
-#endif /*USE_DYNAMIC_GL_SGIX_instruments*/
-
 /*SGIX_ycrcba*/
 #ifdef USE_DYNAMIC_GL_SGIX_ycrcba
 #define GL_YCRCB_SGIX 0x8318
@@ -7056,6 +9201,36 @@ extern bool DinamicGLFeature_S3_s3tc_Supported();
 extern bool DinamicGLFeature_EXT_422_pixels_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_422_pixels*/
 
+/*ARB_shader_subroutine*/
+#ifdef USE_DYNAMIC_GL_ARB_shader_subroutine
+#define GL_ACTIVE_SUBROUTINES 0x8DE5
+#define GL_ACTIVE_SUBROUTINE_UNIFORMS 0x8DE6
+#define GL_ACTIVE_SUBROUTINE_UNIFORM_LOCATIONS 0x8E47
+#define GL_ACTIVE_SUBROUTINE_MAX_LENGTH 0x8E48
+#define GL_ACTIVE_SUBROUTINE_UNIFORM_MAX_LENGTH 0x8E49
+#define GL_MAX_SUBROUTINES 0x8DE7
+#define GL_MAX_SUBROUTINE_UNIFORM_LOCATIONS 0x8DE8
+#define GL_NUM_COMPATIBLE_SUBROUTINES 0x8E4A
+#define GL_COMPATIBLE_SUBROUTINES 0x8E4B
+extern "C" { extern GLint (DYNAMIC_GL_APIENTRYP DynamicGL_GetSubroutineUniformLocation)(GLuint program , GLenum shadertype , const GLchar *name); }
+#define glGetSubroutineUniformLocation DynamicGL_GetSubroutineUniformLocation
+extern "C" { extern GLuint (DYNAMIC_GL_APIENTRYP DynamicGL_GetSubroutineIndex)(GLuint program , GLenum shadertype , const GLchar *name); }
+#define glGetSubroutineIndex DynamicGL_GetSubroutineIndex
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetActiveSubroutineUniformiv)(GLuint program , GLenum shadertype , GLuint index , GLenum pname , GLint *values); }
+#define glGetActiveSubroutineUniformiv DynamicGL_GetActiveSubroutineUniformiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetActiveSubroutineUniformName)(GLuint program , GLenum shadertype , GLuint index , GLsizei bufsize , GLsizei *length , GLchar *name); }
+#define glGetActiveSubroutineUniformName DynamicGL_GetActiveSubroutineUniformName
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetActiveSubroutineName)(GLuint program , GLenum shadertype , GLuint index , GLsizei bufsize , GLsizei *length , GLchar *name); }
+#define glGetActiveSubroutineName DynamicGL_GetActiveSubroutineName
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformSubroutinesuiv)(GLenum shadertype , GLsizei count , const GLuint *indices); }
+#define glUniformSubroutinesuiv DynamicGL_UniformSubroutinesuiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetUniformSubroutineuiv)(GLenum shadertype , GLint location , GLuint *params); }
+#define glGetUniformSubroutineuiv DynamicGL_GetUniformSubroutineuiv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetProgramStageiv)(GLuint program , GLenum shadertype , GLenum pname , GLint *values); }
+#define glGetProgramStageiv DynamicGL_GetProgramStageiv
+extern bool DinamicGLFeature_ARB_shader_subroutine_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_shader_subroutine*/
+
 /*NV_transform_feedback*/
 #ifdef USE_DYNAMIC_GL_NV_transform_feedback
 #define GL_BACK_PRIMARY_COLOR_NV 0x8C77
@@ -7083,6 +9258,7 @@ extern bool DinamicGLFeature_EXT_422_pixels_Supported();
 #define GL_SEPARATE_ATTRIBS_NV 0x8C8D
 #define GL_TRANSFORM_FEEDBACK_BUFFER_NV 0x8C8E
 #define GL_TRANSFORM_FEEDBACK_BUFFER_BINDING_NV 0x8C8F
+#define GL_LAYER_NV 0x8DAA
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BeginTransformFeedbackNV)(GLenum primitiveMode); }
 #define glBeginTransformFeedbackNV DynamicGL_BeginTransformFeedbackNV
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_EndTransformFeedbackNV)(); }
@@ -7105,6 +9281,8 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetActiveVaryingNV)(GLu
 #define glGetActiveVaryingNV DynamicGL_GetActiveVaryingNV
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTransformFeedbackVaryingNV)(GLuint program , GLuint index , GLint *location); }
 #define glGetTransformFeedbackVaryingNV DynamicGL_GetTransformFeedbackVaryingNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TransformFeedbackStreamAttribsNV)(GLsizei count , const GLint *attribs , GLsizei nbuffers , const GLint *bufstreams , GLenum bufferMode); }
+#define glTransformFeedbackStreamAttribsNV DynamicGL_TransformFeedbackStreamAttribsNV
 extern bool DinamicGLFeature_NV_transform_feedback_Supported();
 #endif /*USE_DYNAMIC_GL_NV_transform_feedback*/
 
@@ -7171,6 +9349,18 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetCombinerStageParamet
 extern bool DinamicGLFeature_NV_register_combiners2_Supported();
 #endif /*USE_DYNAMIC_GL_NV_register_combiners2*/
 
+/*VERSION_2_1_DEPRECATED*/
+#ifdef USE_DYNAMIC_GL_VERSION_2_1_DEPRECATED
+#define GL_CURRENT_RASTER_SECONDARY_COLOR 0x845F
+#define GL_SLUMINANCE_ALPHA 0x8C44
+#define GL_SLUMINANCE8_ALPHA8 0x8C45
+#define GL_SLUMINANCE 0x8C46
+#define GL_SLUMINANCE8 0x8C47
+#define GL_COMPRESSED_SLUMINANCE 0x8C4A
+#define GL_COMPRESSED_SLUMINANCE_ALPHA 0x8C4B
+extern bool DinamicGLFeature_VERSION_2_1_DEPRECATED_Supported();
+#endif /*USE_DYNAMIC_GL_VERSION_2_1_DEPRECATED*/
+
 /*EXT_clip_volume_hint*/
 #ifdef USE_DYNAMIC_GL_EXT_clip_volume_hint
 #define GL_CLIP_VOLUME_CLIPPING_HINT_EXT 0x80F0
@@ -7195,6 +9385,37 @@ extern bool DinamicGLFeature_SGIS_point_parameters_Supported();
 #define GL_TRANSFORM_HINT_APPLE 0x85B1
 extern bool DinamicGLFeature_APPLE_transform_hint_Supported();
 #endif /*USE_DYNAMIC_GL_APPLE_transform_hint*/
+
+/*ARB_viewport_array*/
+#ifdef USE_DYNAMIC_GL_ARB_viewport_array
+#define GL_MAX_VIEWPORTS 0x825B
+#define GL_VIEWPORT_SUBPIXEL_BITS 0x825C
+#define GL_VIEWPORT_BOUNDS_RANGE 0x825D
+#define GL_LAYER_PROVOKING_VERTEX 0x825E
+#define GL_VIEWPORT_INDEX_PROVOKING_VERTEX 0x825F
+#define GL_UNDEFINED_VERTEX 0x8260
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ViewportArrayv)(GLuint first , GLsizei count , const GLfloat *v); }
+#define glViewportArrayv DynamicGL_ViewportArrayv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ViewportIndexedf)(GLuint index , GLfloat x , GLfloat y , GLfloat w , GLfloat h); }
+#define glViewportIndexedf DynamicGL_ViewportIndexedf
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ViewportIndexedfv)(GLuint index , const GLfloat *v); }
+#define glViewportIndexedfv DynamicGL_ViewportIndexedfv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ScissorArrayv)(GLuint first , GLsizei count , const GLint *v); }
+#define glScissorArrayv DynamicGL_ScissorArrayv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ScissorIndexed)(GLuint index , GLint left , GLint bottom , GLsizei width , GLsizei height); }
+#define glScissorIndexed DynamicGL_ScissorIndexed
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ScissorIndexedv)(GLuint index , const GLint *v); }
+#define glScissorIndexedv DynamicGL_ScissorIndexedv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthRangeArrayv)(GLuint first , GLsizei count , const GLdouble *v); }
+#define glDepthRangeArrayv DynamicGL_DepthRangeArrayv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthRangeIndexed)(GLuint index , GLdouble n , GLdouble f); }
+#define glDepthRangeIndexed DynamicGL_DepthRangeIndexed
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetFloati_v)(GLenum target , GLuint index , GLfloat *data); }
+#define glGetFloati_v DynamicGL_GetFloati_v
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetDoublei_v)(GLenum target , GLuint index , GLdouble *data); }
+#define glGetDoublei_v DynamicGL_GetDoublei_v
+extern bool DinamicGLFeature_ARB_viewport_array_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_viewport_array*/
 
 /*NV_fragment_program2*/
 #ifdef USE_DYNAMIC_GL_NV_fragment_program2
@@ -7264,6 +9485,27 @@ extern bool DinamicGLFeature_EXT_texture3D_Supported();
 extern bool DinamicGLFeature_EXT_texture_lod_bias_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_texture_lod_bias*/
 
+/*NV_explicit_multisample*/
+#ifdef USE_DYNAMIC_GL_NV_explicit_multisample
+#define GL_SAMPLE_POSITION_NV 0x8E50
+#define GL_SAMPLE_MASK_NV 0x8E51
+#define GL_SAMPLE_MASK_VALUE_NV 0x8E52
+#define GL_TEXTURE_BINDING_RENDERBUFFER_NV 0x8E53
+#define GL_TEXTURE_RENDERBUFFER_DATA_STORE_BINDING_NV 0x8E54
+#define GL_TEXTURE_RENDERBUFFER_NV 0x8E55
+#define GL_SAMPLER_RENDERBUFFER_NV 0x8E56
+#define GL_INT_SAMPLER_RENDERBUFFER_NV 0x8E57
+#define GL_UNSIGNED_INT_SAMPLER_RENDERBUFFER_NV 0x8E58
+#define GL_MAX_SAMPLE_MASK_WORDS_NV 0x8E59
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetMultisamplefvNV)(GLenum pname , GLuint index , GLfloat *val); }
+#define glGetMultisamplefvNV DynamicGL_GetMultisamplefvNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleMaskIndexedNV)(GLuint index , GLbitfield mask); }
+#define glSampleMaskIndexedNV DynamicGL_SampleMaskIndexedNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexRenderbufferNV)(GLenum target , GLuint renderbuffer); }
+#define glTexRenderbufferNV DynamicGL_TexRenderbufferNV
+extern bool DinamicGLFeature_NV_explicit_multisample_Supported();
+#endif /*USE_DYNAMIC_GL_NV_explicit_multisample*/
+
 /*ATI_separate_stencil*/
 #ifdef USE_DYNAMIC_GL_ATI_separate_stencil
 #define GL_STENCIL_BACK_FUNC_ATI 0x8800
@@ -7283,6 +9525,7 @@ extern bool DinamicGLFeature_ATI_separate_stencil_Supported();
 #define GL_VERTEX_ARRAY_RANGE_LENGTH_APPLE 0x851E
 #define GL_VERTEX_ARRAY_STORAGE_HINT_APPLE 0x851F
 #define GL_VERTEX_ARRAY_RANGE_POINTER_APPLE 0x8521
+#define GL_STORAGE_CLIENT_APPLE 0x85B4
 #define GL_STORAGE_CACHED_APPLE 0x85BE
 #define GL_STORAGE_SHARED_APPLE 0x85BF
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexArrayRangeAPPLE)(GLsizei length , GLvoid *pointer); }
@@ -7293,6 +9536,39 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexArrayParameteriAP
 #define glVertexArrayParameteriAPPLE DynamicGL_VertexArrayParameteriAPPLE
 extern bool DinamicGLFeature_APPLE_vertex_array_range_Supported();
 #endif /*USE_DYNAMIC_GL_APPLE_vertex_array_range*/
+
+/*EXT_vertex_attrib_64bit*/
+#ifdef USE_DYNAMIC_GL_EXT_vertex_attrib_64bit
+#define GL_DOUBLE_VEC2_EXT 0x8FFC
+#define GL_DOUBLE_VEC3_EXT 0x8FFD
+#define GL_DOUBLE_VEC4_EXT 0x8FFE
+#define GL_DOUBLE_MAT2_EXT 0x8F46
+#define GL_DOUBLE_MAT3_EXT 0x8F47
+#define GL_DOUBLE_MAT4_EXT 0x8F48
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL1dEXT)(GLuint index , GLdouble x); }
+#define glVertexAttribL1dEXT DynamicGL_VertexAttribL1dEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL2dEXT)(GLuint index , GLdouble x , GLdouble y); }
+#define glVertexAttribL2dEXT DynamicGL_VertexAttribL2dEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL3dEXT)(GLuint index , GLdouble x , GLdouble y , GLdouble z); }
+#define glVertexAttribL3dEXT DynamicGL_VertexAttribL3dEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL4dEXT)(GLuint index , GLdouble x , GLdouble y , GLdouble z , GLdouble w); }
+#define glVertexAttribL4dEXT DynamicGL_VertexAttribL4dEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL1dvEXT)(GLuint index , const GLdouble *v); }
+#define glVertexAttribL1dvEXT DynamicGL_VertexAttribL1dvEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL2dvEXT)(GLuint index , const GLdouble *v); }
+#define glVertexAttribL2dvEXT DynamicGL_VertexAttribL2dvEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL3dvEXT)(GLuint index , const GLdouble *v); }
+#define glVertexAttribL3dvEXT DynamicGL_VertexAttribL3dvEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribL4dvEXT)(GLuint index , const GLdouble *v); }
+#define glVertexAttribL4dvEXT DynamicGL_VertexAttribL4dvEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribLPointerEXT)(GLuint index , GLint size , GLenum type , GLsizei stride , const GLvoid *pointer); }
+#define glVertexAttribLPointerEXT DynamicGL_VertexAttribLPointerEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetVertexAttribLdvEXT)(GLuint index , GLenum pname , GLdouble *params); }
+#define glGetVertexAttribLdvEXT DynamicGL_GetVertexAttribLdvEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexArrayVertexAttribLOffsetEXT)(GLuint vaobj , GLuint buffer , GLuint index , GLint size , GLenum type , GLsizei stride , GLintptr offset); }
+#define glVertexArrayVertexAttribLOffsetEXT DynamicGL_VertexArrayVertexAttribLOffsetEXT
+extern bool DinamicGLFeature_EXT_vertex_attrib_64bit_Supported();
+#endif /*USE_DYNAMIC_GL_EXT_vertex_attrib_64bit*/
 
 /*NV_conditional_render*/
 #ifdef USE_DYNAMIC_GL_NV_conditional_render
@@ -7320,6 +9596,55 @@ extern bool DinamicGLFeature_NV_conditional_render_Supported();
 extern bool DinamicGLFeature_SGIS_point_line_texgen_Supported();
 #endif /*USE_DYNAMIC_GL_SGIS_point_line_texgen*/
 
+/*ARB_blend_func_extended*/
+#ifdef USE_DYNAMIC_GL_ARB_blend_func_extended
+#define GL_SRC1_COLOR 0x88F9
+#define GL_ONE_MINUS_SRC1_COLOR 0x88FA
+#define GL_ONE_MINUS_SRC1_ALPHA 0x88FB
+#define GL_MAX_DUAL_SOURCE_DRAW_BUFFERS 0x88FC
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BindFragDataLocationIndexed)(GLuint program , GLuint colorNumber , GLuint index , const GLchar *name); }
+#define glBindFragDataLocationIndexed DynamicGL_BindFragDataLocationIndexed
+extern "C" { extern GLint (DYNAMIC_GL_APIENTRYP DynamicGL_GetFragDataIndex)(GLuint program , const GLchar *name); }
+#define glGetFragDataIndex DynamicGL_GetFragDataIndex
+extern bool DinamicGLFeature_ARB_blend_func_extended_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_blend_func_extended*/
+
+/*NV_shader_buffer_load*/
+#ifdef USE_DYNAMIC_GL_NV_shader_buffer_load
+#define GL_BUFFER_GPU_ADDRESS_NV 0x8F1D
+#define GL_GPU_ADDRESS_NV 0x8F34
+#define GL_MAX_SHADER_BUFFER_ADDRESS_NV 0x8F35
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MakeBufferResidentNV)(GLenum target , GLenum access); }
+#define glMakeBufferResidentNV DynamicGL_MakeBufferResidentNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MakeBufferNonResidentNV)(GLenum target); }
+#define glMakeBufferNonResidentNV DynamicGL_MakeBufferNonResidentNV
+extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsBufferResidentNV)(GLenum target); }
+#define glIsBufferResidentNV DynamicGL_IsBufferResidentNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MakeNamedBufferResidentNV)(GLuint buffer , GLenum access); }
+#define glMakeNamedBufferResidentNV DynamicGL_MakeNamedBufferResidentNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MakeNamedBufferNonResidentNV)(GLuint buffer); }
+#define glMakeNamedBufferNonResidentNV DynamicGL_MakeNamedBufferNonResidentNV
+extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsNamedBufferResidentNV)(GLuint buffer); }
+#define glIsNamedBufferResidentNV DynamicGL_IsNamedBufferResidentNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetBufferParameterui64vNV)(GLenum target , GLenum pname , GLuint64EXT *params); }
+#define glGetBufferParameterui64vNV DynamicGL_GetBufferParameterui64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetNamedBufferParameterui64vNV)(GLuint buffer , GLenum pname , GLuint64EXT *params); }
+#define glGetNamedBufferParameterui64vNV DynamicGL_GetNamedBufferParameterui64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetIntegerui64vNV)(GLenum value , GLuint64EXT *result); }
+#define glGetIntegerui64vNV DynamicGL_GetIntegerui64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniformui64NV)(GLint location , GLuint64EXT value); }
+#define glUniformui64NV DynamicGL_Uniformui64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Uniformui64vNV)(GLint location , GLsizei count , const GLuint64EXT *value); }
+#define glUniformui64vNV DynamicGL_Uniformui64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetUniformui64vNV)(GLuint program , GLint location , GLuint64EXT *params); }
+#define glGetUniformui64vNV DynamicGL_GetUniformui64vNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformui64NV)(GLuint program , GLint location , GLuint64EXT value); }
+#define glProgramUniformui64NV DynamicGL_ProgramUniformui64NV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ProgramUniformui64vNV)(GLuint program , GLint location , GLsizei count , const GLuint64EXT *value); }
+#define glProgramUniformui64vNV DynamicGL_ProgramUniformui64vNV
+extern bool DinamicGLFeature_NV_shader_buffer_load_Supported();
+#endif /*USE_DYNAMIC_GL_NV_shader_buffer_load*/
+
 /*EXT_fog_coord*/
 #ifdef USE_DYNAMIC_GL_EXT_fog_coord
 #define GL_FOG_COORDINATE_SOURCE_EXT 0x8450
@@ -7342,140 +9667,6 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoordPointerEXT)(GLe
 #define glFogCoordPointerEXT DynamicGL_FogCoordPointerEXT
 extern bool DinamicGLFeature_EXT_fog_coord_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_fog_coord*/
-
-/*VERSION_1_4*/
-#ifdef USE_DYNAMIC_GL_VERSION_1_4
-#define GL_BLEND_DST_RGB 0x80C8
-#define GL_BLEND_SRC_RGB 0x80C9
-#define GL_BLEND_DST_ALPHA 0x80CA
-#define GL_BLEND_SRC_ALPHA 0x80CB
-#define GL_POINT_SIZE_MIN 0x8126
-#define GL_POINT_SIZE_MAX 0x8127
-#define GL_POINT_FADE_THRESHOLD_SIZE 0x8128
-#define GL_POINT_DISTANCE_ATTENUATION 0x8129
-#define GL_GENERATE_MIPMAP 0x8191
-#define GL_GENERATE_MIPMAP_HINT 0x8192
-#define GL_DEPTH_COMPONENT16 0x81A5
-#define GL_DEPTH_COMPONENT24 0x81A6
-#define GL_DEPTH_COMPONENT32 0x81A7
-#define GL_MIRRORED_REPEAT 0x8370
-#define GL_FOG_COORDINATE_SOURCE 0x8450
-#define GL_FOG_COORDINATE 0x8451
-#define GL_FRAGMENT_DEPTH 0x8452
-#define GL_CURRENT_FOG_COORDINATE 0x8453
-#define GL_FOG_COORDINATE_ARRAY_TYPE 0x8454
-#define GL_FOG_COORDINATE_ARRAY_STRIDE 0x8455
-#define GL_FOG_COORDINATE_ARRAY_POINTER 0x8456
-#define GL_FOG_COORDINATE_ARRAY 0x8457
-#define GL_COLOR_SUM 0x8458
-#define GL_CURRENT_SECONDARY_COLOR 0x8459
-#define GL_SECONDARY_COLOR_ARRAY_SIZE 0x845A
-#define GL_SECONDARY_COLOR_ARRAY_TYPE 0x845B
-#define GL_SECONDARY_COLOR_ARRAY_STRIDE 0x845C
-#define GL_SECONDARY_COLOR_ARRAY_POINTER 0x845D
-#define GL_SECONDARY_COLOR_ARRAY 0x845E
-#define GL_MAX_TEXTURE_LOD_BIAS 0x84FD
-#define GL_TEXTURE_FILTER_CONTROL 0x8500
-#define GL_TEXTURE_LOD_BIAS 0x8501
-#define GL_INCR_WRAP 0x8507
-#define GL_DECR_WRAP 0x8508
-#define GL_TEXTURE_DEPTH_SIZE 0x884A
-#define GL_DEPTH_TEXTURE_MODE 0x884B
-#define GL_TEXTURE_COMPARE_MODE 0x884C
-#define GL_TEXTURE_COMPARE_FUNC 0x884D
-#define GL_COMPARE_R_TO_TEXTURE 0x884E
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFuncSeparate)(GLenum sfactorRGB , GLenum dfactorRGB , GLenum sfactorAlpha , GLenum dfactorAlpha); }
-#define glBlendFuncSeparate DynamicGL_BlendFuncSeparate
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoordf)(GLfloat coord); }
-#define glFogCoordf DynamicGL_FogCoordf
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoordfv)(const GLfloat *coord); }
-#define glFogCoordfv DynamicGL_FogCoordfv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoordd)(GLdouble coord); }
-#define glFogCoordd DynamicGL_FogCoordd
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoorddv)(const GLdouble *coord); }
-#define glFogCoorddv DynamicGL_FogCoorddv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FogCoordPointer)(GLenum type , GLsizei stride , const GLvoid *pointer); }
-#define glFogCoordPointer DynamicGL_FogCoordPointer
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawArrays)(GLenum mode , GLint *first , GLsizei *count , GLsizei primcount); }
-#define glMultiDrawArrays DynamicGL_MultiDrawArrays
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawElements)(GLenum mode , const GLsizei *count , GLenum type , const GLvoid* *indices , GLsizei primcount); }
-#define glMultiDrawElements DynamicGL_MultiDrawElements
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterf)(GLenum pname , GLfloat param); }
-#define glPointParameterf DynamicGL_PointParameterf
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterfv)(GLenum pname , const GLfloat *params); }
-#define glPointParameterfv DynamicGL_PointParameterfv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameteri)(GLenum pname , GLint param); }
-#define glPointParameteri DynamicGL_PointParameteri
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameteriv)(GLenum pname , const GLint *params); }
-#define glPointParameteriv DynamicGL_PointParameteriv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3b)(GLbyte red , GLbyte green , GLbyte blue); }
-#define glSecondaryColor3b DynamicGL_SecondaryColor3b
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3bv)(const GLbyte *v); }
-#define glSecondaryColor3bv DynamicGL_SecondaryColor3bv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3d)(GLdouble red , GLdouble green , GLdouble blue); }
-#define glSecondaryColor3d DynamicGL_SecondaryColor3d
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3dv)(const GLdouble *v); }
-#define glSecondaryColor3dv DynamicGL_SecondaryColor3dv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3f)(GLfloat red , GLfloat green , GLfloat blue); }
-#define glSecondaryColor3f DynamicGL_SecondaryColor3f
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3fv)(const GLfloat *v); }
-#define glSecondaryColor3fv DynamicGL_SecondaryColor3fv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3i)(GLint red , GLint green , GLint blue); }
-#define glSecondaryColor3i DynamicGL_SecondaryColor3i
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3iv)(const GLint *v); }
-#define glSecondaryColor3iv DynamicGL_SecondaryColor3iv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3s)(GLshort red , GLshort green , GLshort blue); }
-#define glSecondaryColor3s DynamicGL_SecondaryColor3s
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3sv)(const GLshort *v); }
-#define glSecondaryColor3sv DynamicGL_SecondaryColor3sv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3ub)(GLubyte red , GLubyte green , GLubyte blue); }
-#define glSecondaryColor3ub DynamicGL_SecondaryColor3ub
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3ubv)(const GLubyte *v); }
-#define glSecondaryColor3ubv DynamicGL_SecondaryColor3ubv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3ui)(GLuint red , GLuint green , GLuint blue); }
-#define glSecondaryColor3ui DynamicGL_SecondaryColor3ui
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3uiv)(const GLuint *v); }
-#define glSecondaryColor3uiv DynamicGL_SecondaryColor3uiv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3us)(GLushort red , GLushort green , GLushort blue); }
-#define glSecondaryColor3us DynamicGL_SecondaryColor3us
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColor3usv)(const GLushort *v); }
-#define glSecondaryColor3usv DynamicGL_SecondaryColor3usv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SecondaryColorPointer)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer); }
-#define glSecondaryColorPointer DynamicGL_SecondaryColorPointer
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2d)(GLdouble x , GLdouble y); }
-#define glWindowPos2d DynamicGL_WindowPos2d
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2dv)(const GLdouble *v); }
-#define glWindowPos2dv DynamicGL_WindowPos2dv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2f)(GLfloat x , GLfloat y); }
-#define glWindowPos2f DynamicGL_WindowPos2f
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2fv)(const GLfloat *v); }
-#define glWindowPos2fv DynamicGL_WindowPos2fv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2i)(GLint x , GLint y); }
-#define glWindowPos2i DynamicGL_WindowPos2i
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2iv)(const GLint *v); }
-#define glWindowPos2iv DynamicGL_WindowPos2iv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2s)(GLshort x , GLshort y); }
-#define glWindowPos2s DynamicGL_WindowPos2s
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos2sv)(const GLshort *v); }
-#define glWindowPos2sv DynamicGL_WindowPos2sv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3d)(GLdouble x , GLdouble y , GLdouble z); }
-#define glWindowPos3d DynamicGL_WindowPos3d
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3dv)(const GLdouble *v); }
-#define glWindowPos3dv DynamicGL_WindowPos3dv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3f)(GLfloat x , GLfloat y , GLfloat z); }
-#define glWindowPos3f DynamicGL_WindowPos3f
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3fv)(const GLfloat *v); }
-#define glWindowPos3fv DynamicGL_WindowPos3fv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3i)(GLint x , GLint y , GLint z); }
-#define glWindowPos3i DynamicGL_WindowPos3i
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3iv)(const GLint *v); }
-#define glWindowPos3iv DynamicGL_WindowPos3iv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3s)(GLshort x , GLshort y , GLshort z); }
-#define glWindowPos3s DynamicGL_WindowPos3s
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WindowPos3sv)(const GLshort *v); }
-#define glWindowPos3sv DynamicGL_WindowPos3sv
-extern bool DinamicGLFeature_VERSION_1_4_Supported();
-#endif /*USE_DYNAMIC_GL_VERSION_1_4*/
 
 /*ARB_vertex_buffer_object*/
 #ifdef USE_DYNAMIC_GL_ARB_vertex_buffer_object
@@ -7535,11 +9726,110 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetBufferPointervARB)(G
 extern bool DinamicGLFeature_ARB_vertex_buffer_object_Supported();
 #endif /*USE_DYNAMIC_GL_ARB_vertex_buffer_object*/
 
+/*VERSION_1_4*/
+#ifdef USE_DYNAMIC_GL_VERSION_1_4
+#define GL_BLEND_DST_RGB 0x80C8
+#define GL_BLEND_SRC_RGB 0x80C9
+#define GL_BLEND_DST_ALPHA 0x80CA
+#define GL_BLEND_SRC_ALPHA 0x80CB
+#define GL_POINT_FADE_THRESHOLD_SIZE 0x8128
+#define GL_DEPTH_COMPONENT16 0x81A5
+#define GL_DEPTH_COMPONENT24 0x81A6
+#define GL_DEPTH_COMPONENT32 0x81A7
+#define GL_MIRRORED_REPEAT 0x8370
+#define GL_MAX_TEXTURE_LOD_BIAS 0x84FD
+#define GL_TEXTURE_LOD_BIAS 0x8501
+#define GL_INCR_WRAP 0x8507
+#define GL_DECR_WRAP 0x8508
+#define GL_TEXTURE_DEPTH_SIZE 0x884A
+#define GL_TEXTURE_COMPARE_MODE 0x884C
+#define GL_TEXTURE_COMPARE_FUNC 0x884D
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFuncSeparate)(GLenum sfactorRGB , GLenum dfactorRGB , GLenum sfactorAlpha , GLenum dfactorAlpha); }
+#define glBlendFuncSeparate DynamicGL_BlendFuncSeparate
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawArrays)(GLenum mode , const GLint *first , const GLsizei *count , GLsizei primcount); }
+#define glMultiDrawArrays DynamicGL_MultiDrawArrays
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawElements)(GLenum mode , const GLsizei *count , GLenum type , const GLvoid* const , GLsizei primcount); }
+#define glMultiDrawElements DynamicGL_MultiDrawElements
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterf)(GLenum pname , GLfloat param); }
+#define glPointParameterf DynamicGL_PointParameterf
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterfv)(GLenum pname , const GLfloat *params); }
+#define glPointParameterfv DynamicGL_PointParameterfv
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameteri)(GLenum pname , GLint param); }
+#define glPointParameteri DynamicGL_PointParameteri
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameteriv)(GLenum pname , const GLint *params); }
+#define glPointParameteriv DynamicGL_PointParameteriv
+extern bool DinamicGLFeature_VERSION_1_4_Supported();
+#endif /*USE_DYNAMIC_GL_VERSION_1_4*/
+
 /*APPLE_specular_vector*/
 #ifdef USE_DYNAMIC_GL_APPLE_specular_vector
 #define GL_LIGHT_MODEL_SPECULAR_VECTOR_APPLE 0x85B0
 extern bool DinamicGLFeature_APPLE_specular_vector_Supported();
 #endif /*USE_DYNAMIC_GL_APPLE_specular_vector*/
+
+/*EXT_shader_image_load_store*/
+#ifdef USE_DYNAMIC_GL_EXT_shader_image_load_store
+#define GL_MAX_IMAGE_UNITS_EXT 0x8F38
+#define GL_MAX_COMBINED_IMAGE_UNITS_AND_FRAGMENT_OUTPUTS_EXT 0x8F39
+#define GL_IMAGE_BINDING_NAME_EXT 0x8F3A
+#define GL_IMAGE_BINDING_LEVEL_EXT 0x8F3B
+#define GL_IMAGE_BINDING_LAYERED_EXT 0x8F3C
+#define GL_IMAGE_BINDING_LAYER_EXT 0x8F3D
+#define GL_IMAGE_BINDING_ACCESS_EXT 0x8F3E
+#define GL_IMAGE_1D_EXT 0x904C
+#define GL_IMAGE_2D_EXT 0x904D
+#define GL_IMAGE_3D_EXT 0x904E
+#define GL_IMAGE_2D_RECT_EXT 0x904F
+#define GL_IMAGE_CUBE_EXT 0x9050
+#define GL_IMAGE_BUFFER_EXT 0x9051
+#define GL_IMAGE_1D_ARRAY_EXT 0x9052
+#define GL_IMAGE_2D_ARRAY_EXT 0x9053
+#define GL_IMAGE_CUBE_MAP_ARRAY_EXT 0x9054
+#define GL_IMAGE_2D_MULTISAMPLE_EXT 0x9055
+#define GL_IMAGE_2D_MULTISAMPLE_ARRAY_EXT 0x9056
+#define GL_INT_IMAGE_1D_EXT 0x9057
+#define GL_INT_IMAGE_2D_EXT 0x9058
+#define GL_INT_IMAGE_3D_EXT 0x9059
+#define GL_INT_IMAGE_2D_RECT_EXT 0x905A
+#define GL_INT_IMAGE_CUBE_EXT 0x905B
+#define GL_INT_IMAGE_BUFFER_EXT 0x905C
+#define GL_INT_IMAGE_1D_ARRAY_EXT 0x905D
+#define GL_INT_IMAGE_2D_ARRAY_EXT 0x905E
+#define GL_INT_IMAGE_CUBE_MAP_ARRAY_EXT 0x905F
+#define GL_INT_IMAGE_2D_MULTISAMPLE_EXT 0x9060
+#define GL_INT_IMAGE_2D_MULTISAMPLE_ARRAY_EXT 0x9061
+#define GL_UNSIGNED_INT_IMAGE_1D_EXT 0x9062
+#define GL_UNSIGNED_INT_IMAGE_2D_EXT 0x9063
+#define GL_UNSIGNED_INT_IMAGE_3D_EXT 0x9064
+#define GL_UNSIGNED_INT_IMAGE_2D_RECT_EXT 0x9065
+#define GL_UNSIGNED_INT_IMAGE_CUBE_EXT 0x9066
+#define GL_UNSIGNED_INT_IMAGE_BUFFER_EXT 0x9067
+#define GL_UNSIGNED_INT_IMAGE_1D_ARRAY_EXT 0x9068
+#define GL_UNSIGNED_INT_IMAGE_2D_ARRAY_EXT 0x9069
+#define GL_UNSIGNED_INT_IMAGE_CUBE_MAP_ARRAY_EXT 0x906A
+#define GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE_EXT 0x906B
+#define GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE_ARRAY_EXT 0x906C
+#define GL_MAX_IMAGE_SAMPLES_EXT 0x906D
+#define GL_IMAGE_BINDING_FORMAT_EXT 0x906E
+#define GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT_EXT 0x00000001
+#define GL_ELEMENT_ARRAY_BARRIER_BIT_EXT 0x00000002
+#define GL_UNIFORM_BARRIER_BIT_EXT 0x00000004
+#define GL_TEXTURE_FETCH_BARRIER_BIT_EXT 0x00000008
+#define GL_SHADER_IMAGE_ACCESS_BARRIER_BIT_EXT 0x00000020
+#define GL_COMMAND_BARRIER_BIT_EXT 0x00000040
+#define GL_PIXEL_BUFFER_BARRIER_BIT_EXT 0x00000080
+#define GL_TEXTURE_UPDATE_BARRIER_BIT_EXT 0x00000100
+#define GL_BUFFER_UPDATE_BARRIER_BIT_EXT 0x00000200
+#define GL_FRAMEBUFFER_BARRIER_BIT_EXT 0x00000400
+#define GL_TRANSFORM_FEEDBACK_BARRIER_BIT_EXT 0x00000800
+#define GL_ATOMIC_COUNTER_BARRIER_BIT_EXT 0x00001000
+#define GL_ALL_BARRIER_BITS_EXT 0xFFFFFFFF
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BindImageTextureEXT)(GLuint index , GLuint texture , GLint level , GLboolean layered , GLint layer , GLenum access , GLint format); }
+#define glBindImageTextureEXT DynamicGL_BindImageTextureEXT
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MemoryBarrierEXT)(GLbitfield barriers); }
+#define glMemoryBarrierEXT DynamicGL_MemoryBarrierEXT
+extern bool DinamicGLFeature_EXT_shader_image_load_store_Supported();
+#endif /*USE_DYNAMIC_GL_EXT_shader_image_load_store*/
 
 /*NV_copy_depth_to_color*/
 #ifdef USE_DYNAMIC_GL_NV_copy_depth_to_color
@@ -7547,6 +9837,15 @@ extern bool DinamicGLFeature_APPLE_specular_vector_Supported();
 #define GL_DEPTH_STENCIL_TO_BGRA_NV 0x886F
 extern bool DinamicGLFeature_NV_copy_depth_to_color_Supported();
 #endif /*USE_DYNAMIC_GL_NV_copy_depth_to_color*/
+
+/*ARB_cl_event*/
+#ifdef USE_DYNAMIC_GL_ARB_cl_event
+#define GL_SYNC_CL_EVENT_ARB 0x8240
+#define GL_SYNC_CL_EVENT_COMPLETE_ARB 0x8241
+extern "C" { extern GLsync (DYNAMIC_GL_APIENTRYP DynamicGL_CreateSyncFromCLeventARB)(GLstruct _cl_context , GLstruct _cl_event , GLbitfield flags); }
+#define glCreateSyncFromCLeventARB DynamicGL_CreateSyncFromCLeventARB
+extern bool DinamicGLFeature_ARB_cl_event_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_cl_event*/
 
 /*ARB_texture_cube_map*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_cube_map
@@ -7578,6 +9877,15 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexArrayRangeNV)(GLs
 #define glVertexArrayRangeNV DynamicGL_VertexArrayRangeNV
 extern bool DinamicGLFeature_NV_vertex_array_range_Supported();
 #endif /*USE_DYNAMIC_GL_NV_vertex_array_range*/
+
+/*VERSION_2_0_DEPRECATED*/
+#ifdef USE_DYNAMIC_GL_VERSION_2_0_DEPRECATED
+#define GL_VERTEX_PROGRAM_TWO_SIDE 0x8643
+#define GL_POINT_SPRITE 0x8861
+#define GL_COORD_REPLACE 0x8862
+#define GL_MAX_TEXTURE_COORDS 0x8871
+extern bool DinamicGLFeature_VERSION_2_0_DEPRECATED_Supported();
+#endif /*USE_DYNAMIC_GL_VERSION_2_0_DEPRECATED*/
 
 /*EXT_cull_vertex*/
 #ifdef USE_DYNAMIC_GL_EXT_cull_vertex
@@ -7611,6 +9919,17 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFuncSeparateINGR)(
 #define glBlendFuncSeparateINGR DynamicGL_BlendFuncSeparateINGR
 extern bool DinamicGLFeature_INGR_blend_func_separate_Supported();
 #endif /*USE_DYNAMIC_GL_INGR_blend_func_separate*/
+
+/*ARB_draw_indirect*/
+#ifdef USE_DYNAMIC_GL_ARB_draw_indirect
+#define GL_DRAW_INDIRECT_BUFFER 0x8F3F
+#define GL_DRAW_INDIRECT_BUFFER_BINDING 0x8F43
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawArraysIndirect)(GLenum mode , const GLvoid *indirect); }
+#define glDrawArraysIndirect DynamicGL_DrawArraysIndirect
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElementsIndirect)(GLenum mode , GLenum type , const GLvoid *indirect); }
+#define glDrawElementsIndirect DynamicGL_DrawElementsIndirect
+extern bool DinamicGLFeature_ARB_draw_indirect_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_draw_indirect*/
 
 /*APPLE_client_storage*/
 #ifdef USE_DYNAMIC_GL_APPLE_client_storage
@@ -7715,19 +10034,6 @@ extern bool DinamicGLFeature_ARB_point_parameters_Supported();
 extern bool DinamicGLFeature_EXT_pixel_buffer_object_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_pixel_buffer_object*/
 
-/*EXT_index_array_formats*/
-#ifdef USE_DYNAMIC_GL_EXT_index_array_formats
-#define GL_IUI_V2F_EXT 0x81AD
-#define GL_IUI_V3F_EXT 0x81AE
-#define GL_IUI_N3F_V2F_EXT 0x81AF
-#define GL_IUI_N3F_V3F_EXT 0x81B0
-#define GL_T2F_IUI_V2F_EXT 0x81B1
-#define GL_T2F_IUI_V3F_EXT 0x81B2
-#define GL_T2F_IUI_N3F_V2F_EXT 0x81B3
-#define GL_T2F_IUI_N3F_V3F_EXT 0x81B4
-extern bool DinamicGLFeature_EXT_index_array_formats_Supported();
-#endif /*USE_DYNAMIC_GL_EXT_index_array_formats*/
-
 /*EXT_vertex_array*/
 #ifdef USE_DYNAMIC_GL_EXT_vertex_array
 #define GL_VERTEX_ARRAY_EXT 0x8074
@@ -7783,6 +10089,19 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexPointerEXT)(GLint
 extern bool DinamicGLFeature_EXT_vertex_array_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_vertex_array*/
 
+/*EXT_index_array_formats*/
+#ifdef USE_DYNAMIC_GL_EXT_index_array_formats
+#define GL_IUI_V2F_EXT 0x81AD
+#define GL_IUI_V3F_EXT 0x81AE
+#define GL_IUI_N3F_V2F_EXT 0x81AF
+#define GL_IUI_N3F_V3F_EXT 0x81B0
+#define GL_T2F_IUI_V2F_EXT 0x81B1
+#define GL_T2F_IUI_V3F_EXT 0x81B2
+#define GL_T2F_IUI_N3F_V2F_EXT 0x81B3
+#define GL_T2F_IUI_N3F_V3F_EXT 0x81B4
+extern bool DinamicGLFeature_EXT_index_array_formats_Supported();
+#endif /*USE_DYNAMIC_GL_EXT_index_array_formats*/
+
 /*ARB_vertex_array_object*/
 #ifdef USE_DYNAMIC_GL_ARB_vertex_array_object
 #define GL_VERTEX_ARRAY_BINDING 0x85B5
@@ -7796,6 +10115,31 @@ extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsVertexArray)(GLu
 #define glIsVertexArray DynamicGL_IsVertexArray
 extern bool DinamicGLFeature_ARB_vertex_array_object_Supported();
 #endif /*USE_DYNAMIC_GL_ARB_vertex_array_object*/
+
+/*NV_texture_multisample*/
+#ifdef USE_DYNAMIC_GL_NV_texture_multisample
+#define GL_TEXTURE_COVERAGE_SAMPLES_NV 0x9045
+#define GL_TEXTURE_COLOR_SAMPLES_NV 0x9046
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexImage2DMultisampleCoverageNV)(GLenum target , GLsizei coverageSamples , GLsizei colorSamples , GLint internalFormat , GLsizei width , GLsizei height , GLboolean fixedSampleLocations); }
+#define glTexImage2DMultisampleCoverageNV DynamicGL_TexImage2DMultisampleCoverageNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexImage3DMultisampleCoverageNV)(GLenum target , GLsizei coverageSamples , GLsizei colorSamples , GLint internalFormat , GLsizei width , GLsizei height , GLsizei depth , GLboolean fixedSampleLocations); }
+#define glTexImage3DMultisampleCoverageNV DynamicGL_TexImage3DMultisampleCoverageNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureImage2DMultisampleNV)(GLuint texture , GLenum target , GLsizei samples , GLint internalFormat , GLsizei width , GLsizei height , GLboolean fixedSampleLocations); }
+#define glTextureImage2DMultisampleNV DynamicGL_TextureImage2DMultisampleNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureImage3DMultisampleNV)(GLuint texture , GLenum target , GLsizei samples , GLint internalFormat , GLsizei width , GLsizei height , GLsizei depth , GLboolean fixedSampleLocations); }
+#define glTextureImage3DMultisampleNV DynamicGL_TextureImage3DMultisampleNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureImage2DMultisampleCoverageNV)(GLuint texture , GLenum target , GLsizei coverageSamples , GLsizei colorSamples , GLint internalFormat , GLsizei width , GLsizei height , GLboolean fixedSampleLocations); }
+#define glTextureImage2DMultisampleCoverageNV DynamicGL_TextureImage2DMultisampleCoverageNV
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureImage3DMultisampleCoverageNV)(GLuint texture , GLenum target , GLsizei coverageSamples , GLsizei colorSamples , GLint internalFormat , GLsizei width , GLsizei height , GLsizei depth , GLboolean fixedSampleLocations); }
+#define glTextureImage3DMultisampleCoverageNV DynamicGL_TextureImage3DMultisampleCoverageNV
+extern bool DinamicGLFeature_NV_texture_multisample_Supported();
+#endif /*USE_DYNAMIC_GL_NV_texture_multisample*/
+
+/*ARB_occlusion_query2*/
+#ifdef USE_DYNAMIC_GL_ARB_occlusion_query2
+#define GL_ANY_SAMPLES_PASSED 0x8C2F
+extern bool DinamicGLFeature_ARB_occlusion_query2_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_occlusion_query2*/
 
 /*IBM_vertex_array_lists*/
 #ifdef USE_DYNAMIC_GL_IBM_vertex_array_lists
@@ -7817,6 +10161,15 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexPointerListIBM)(G
 #define glVertexPointerListIBM DynamicGL_VertexPointerListIBM
 extern bool DinamicGLFeature_IBM_vertex_array_lists_Supported();
 #endif /*USE_DYNAMIC_GL_IBM_vertex_array_lists*/
+
+/*EXT_texture_compression_rgtc*/
+#ifdef USE_DYNAMIC_GL_EXT_texture_compression_rgtc
+#define GL_COMPRESSED_RED_RGTC1_EXT 0x8DBB
+#define GL_COMPRESSED_SIGNED_RED_RGTC1_EXT 0x8DBC
+#define GL_COMPRESSED_RED_GREEN_RGTC2_EXT 0x8DBD
+#define GL_COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT 0x8DBE
+extern bool DinamicGLFeature_EXT_texture_compression_rgtc_Supported();
+#endif /*USE_DYNAMIC_GL_EXT_texture_compression_rgtc*/
 
 /*ATI_draw_buffers*/
 #ifdef USE_DYNAMIC_GL_ATI_draw_buffers
@@ -7841,15 +10194,6 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawBuffersATI)(GLsizei
 #define glDrawBuffersATI DynamicGL_DrawBuffersATI
 extern bool DinamicGLFeature_ATI_draw_buffers_Supported();
 #endif /*USE_DYNAMIC_GL_ATI_draw_buffers*/
-
-/*EXT_texture_compression_rgtc*/
-#ifdef USE_DYNAMIC_GL_EXT_texture_compression_rgtc
-#define GL_COMPRESSED_RED_RGTC1_EXT 0x8DBB
-#define GL_COMPRESSED_SIGNED_RED_RGTC1_EXT 0x8DBC
-#define GL_COMPRESSED_RED_GREEN_RGTC2_EXT 0x8DBD
-#define GL_COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT 0x8DBE
-extern bool DinamicGLFeature_EXT_texture_compression_rgtc_Supported();
-#endif /*USE_DYNAMIC_GL_EXT_texture_compression_rgtc*/
 
 /*ARB_texture_compression*/
 #ifdef USE_DYNAMIC_GL_ARB_texture_compression
@@ -7883,7 +10227,6 @@ extern bool DinamicGLFeature_ARB_texture_compression_Supported();
 
 /*VERSION_2_1*/
 #ifdef USE_DYNAMIC_GL_VERSION_2_1
-#define GL_CURRENT_RASTER_SECONDARY_COLOR 0x845F
 #define GL_PIXEL_PACK_BUFFER 0x88EB
 #define GL_PIXEL_UNPACK_BUFFER 0x88EC
 #define GL_PIXEL_PACK_BUFFER_BINDING 0x88ED
@@ -7892,14 +10235,8 @@ extern bool DinamicGLFeature_ARB_texture_compression_Supported();
 #define GL_SRGB8 0x8C41
 #define GL_SRGB_ALPHA 0x8C42
 #define GL_SRGB8_ALPHA8 0x8C43
-#define GL_SLUMINANCE_ALPHA 0x8C44
-#define GL_SLUMINANCE8_ALPHA8 0x8C45
-#define GL_SLUMINANCE 0x8C46
-#define GL_SLUMINANCE8 0x8C47
 #define GL_COMPRESSED_SRGB 0x8C48
 #define GL_COMPRESSED_SRGB_ALPHA 0x8C49
-#define GL_COMPRESSED_SLUMINANCE 0x8C4A
-#define GL_COMPRESSED_SLUMINANCE_ALPHA 0x8C4B
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformMatrix2x3fv)(GLint location , GLsizei count , GLboolean transpose , const GLfloat *value); }
 #define glUniformMatrix2x3fv DynamicGL_UniformMatrix2x3fv
 extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_UniformMatrix3x2fv)(GLint location , GLsizei count , GLboolean transpose , const GLfloat *value); }
@@ -7923,6 +10260,14 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_CopyColorSubTableEXT)(G
 #define glCopyColorSubTableEXT DynamicGL_CopyColorSubTableEXT
 extern bool DinamicGLFeature_EXT_color_subtable_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_color_subtable*/
+
+/*VERSION_3_0_DEPRECATED*/
+#ifdef USE_DYNAMIC_GL_VERSION_3_0_DEPRECATED
+#define GL_CLAMP_VERTEX_COLOR 0x891A
+#define GL_CLAMP_FRAGMENT_COLOR 0x891B
+#define GL_ALPHA_INTEGER 0x8D97
+extern bool DinamicGLFeature_VERSION_3_0_DEPRECATED_Supported();
+#endif /*USE_DYNAMIC_GL_VERSION_3_0_DEPRECATED*/
 
 /*EXT_convolution*/
 #ifdef USE_DYNAMIC_GL_EXT_convolution
@@ -7975,12 +10320,31 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SeparableFilter2DEXT)(G
 extern bool DinamicGLFeature_EXT_convolution_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_convolution*/
 
-/*SGIX_fog_offset*/
-#ifdef USE_DYNAMIC_GL_SGIX_fog_offset
-#define GL_FOG_OFFSET_SGIX 0x8198
-#define GL_FOG_OFFSET_VALUE_SGIX 0x8199
-extern bool DinamicGLFeature_SGIX_fog_offset_Supported();
-#endif /*USE_DYNAMIC_GL_SGIX_fog_offset*/
+/*VERSION_4_0*/
+#ifdef USE_DYNAMIC_GL_VERSION_4_0
+#define GL_SAMPLE_SHADING 0x8C36
+#define GL_MIN_SAMPLE_SHADING_VALUE 0x8C37
+#define GL_MIN_PROGRAM_TEXTURE_GATHER_OFFSET 0x8E5E
+#define GL_MAX_PROGRAM_TEXTURE_GATHER_OFFSET 0x8E5F
+#define GL_TEXTURE_CUBE_MAP_ARRAY 0x9009
+#define GL_TEXTURE_BINDING_CUBE_MAP_ARRAY 0x900A
+#define GL_PROXY_TEXTURE_CUBE_MAP_ARRAY 0x900B
+#define GL_SAMPLER_CUBE_MAP_ARRAY 0x900C
+#define GL_SAMPLER_CUBE_MAP_ARRAY_SHADOW 0x900D
+#define GL_INT_SAMPLER_CUBE_MAP_ARRAY 0x900E
+#define GL_UNSIGNED_INT_SAMPLER_CUBE_MAP_ARRAY 0x900F
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MinSampleShading)(GLfloat value); }
+#define glMinSampleShading DynamicGL_MinSampleShading
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationi)(GLuint buf , GLenum mode); }
+#define glBlendEquationi DynamicGL_BlendEquationi
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationSeparatei)(GLuint buf , GLenum modeRGB , GLenum modeAlpha); }
+#define glBlendEquationSeparatei DynamicGL_BlendEquationSeparatei
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFunci)(GLuint buf , GLenum src , GLenum dst); }
+#define glBlendFunci DynamicGL_BlendFunci
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFuncSeparatei)(GLuint buf , GLenum srcRGB , GLenum dstRGB , GLenum srcAlpha , GLenum dstAlpha); }
+#define glBlendFuncSeparatei DynamicGL_BlendFuncSeparatei
+extern bool DinamicGLFeature_VERSION_4_0_Supported();
+#endif /*USE_DYNAMIC_GL_VERSION_4_0*/
 
 /*EXT_texture_integer*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_integer
@@ -8045,6 +10409,13 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearColorIuiEXT)(GLuin
 #define glClearColorIuiEXT DynamicGL_ClearColorIuiEXT
 extern bool DinamicGLFeature_EXT_texture_integer_Supported();
 #endif /*USE_DYNAMIC_GL_EXT_texture_integer*/
+
+/*SGIX_fog_offset*/
+#ifdef USE_DYNAMIC_GL_SGIX_fog_offset
+#define GL_FOG_OFFSET_SGIX 0x8198
+#define GL_FOG_OFFSET_VALUE_SGIX 0x8199
+extern bool DinamicGLFeature_SGIX_fog_offset_Supported();
+#endif /*USE_DYNAMIC_GL_SGIX_fog_offset*/
 
 /*ATI_vertex_attrib_array_object*/
 #ifdef USE_DYNAMIC_GL_ATI_vertex_attrib_array_object
@@ -8149,6 +10520,39 @@ extern bool DinamicGLFeature_NV_texture_shader_Supported();
 extern bool DinamicGLFeature_SGIX_shadow_Supported();
 #endif /*USE_DYNAMIC_GL_SGIX_shadow*/
 
+/*VERSION_3_2*/
+#ifdef USE_DYNAMIC_GL_VERSION_3_2
+#define GL_CONTEXT_CORE_PROFILE_BIT 0x00000001
+#define GL_CONTEXT_COMPATIBILITY_PROFILE_BIT 0x00000002
+#define GL_LINES_ADJACENCY 0x000A
+#define GL_LINE_STRIP_ADJACENCY 0x000B
+#define GL_TRIANGLES_ADJACENCY 0x000C
+#define GL_TRIANGLE_STRIP_ADJACENCY 0x000D
+#define GL_PROGRAM_POINT_SIZE 0x8642
+#define GL_MAX_GEOMETRY_TEXTURE_IMAGE_UNITS 0x8C29
+#define GL_FRAMEBUFFER_ATTACHMENT_LAYERED 0x8DA7
+#define GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS 0x8DA8
+#define GL_GEOMETRY_SHADER 0x8DD9
+#define GL_GEOMETRY_VERTICES_OUT 0x8916
+#define GL_GEOMETRY_INPUT_TYPE 0x8917
+#define GL_GEOMETRY_OUTPUT_TYPE 0x8918
+#define GL_MAX_GEOMETRY_UNIFORM_COMPONENTS 0x8DDF
+#define GL_MAX_GEOMETRY_OUTPUT_VERTICES 0x8DE0
+#define GL_MAX_GEOMETRY_TOTAL_OUTPUT_COMPONENTS 0x8DE1
+#define GL_MAX_VERTEX_OUTPUT_COMPONENTS 0x9122
+#define GL_MAX_GEOMETRY_INPUT_COMPONENTS 0x9123
+#define GL_MAX_GEOMETRY_OUTPUT_COMPONENTS 0x9124
+#define GL_MAX_FRAGMENT_INPUT_COMPONENTS 0x9125
+#define GL_CONTEXT_PROFILE_MASK 0x9126
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetInteger64i_v)(GLenum target , GLuint index , GLint64 *data); }
+#define glGetInteger64i_v DynamicGL_GetInteger64i_v
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetBufferParameteri64v)(GLenum target , GLenum pname , GLint64 *params); }
+#define glGetBufferParameteri64v DynamicGL_GetBufferParameteri64v
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FramebufferTexture)(GLenum target , GLenum attachment , GLuint texture , GLint level); }
+#define glFramebufferTexture DynamicGL_FramebufferTexture
+extern bool DinamicGLFeature_VERSION_3_2_Supported();
+#endif /*USE_DYNAMIC_GL_VERSION_3_2*/
+
 /*ARB_half_float_pixel*/
 #ifdef USE_DYNAMIC_GL_ARB_half_float_pixel
 typedef unsigned short GLhalfARB;
@@ -8166,6 +10570,55 @@ extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PrimitiveRestartIndexNV
 #define glPrimitiveRestartIndexNV DynamicGL_PrimitiveRestartIndexNV
 extern bool DinamicGLFeature_NV_primitive_restart_Supported();
 #endif /*USE_DYNAMIC_GL_NV_primitive_restart*/
+
+/*ARB_base_instance*/
+#ifdef USE_DYNAMIC_GL_ARB_base_instance
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawArraysInstancedBaseInstance)(GLenum mode , GLint first , GLsizei count , GLsizei primcount , GLuint baseinstance); }
+#define glDrawArraysInstancedBaseInstance DynamicGL_DrawArraysInstancedBaseInstance
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElementsInstancedBaseInstance)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices , GLsizei primcount , GLuint baseinstance); }
+#define glDrawElementsInstancedBaseInstance DynamicGL_DrawElementsInstancedBaseInstance
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElementsInstancedBaseVertexBaseInstance)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices , GLsizei primcount , GLint basevertex , GLuint baseinstance); }
+#define glDrawElementsInstancedBaseVertexBaseInstance DynamicGL_DrawElementsInstancedBaseVertexBaseInstance
+extern bool DinamicGLFeature_ARB_base_instance_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_base_instance*/
+
+/*ARB_transform_feedback2*/
+#ifdef USE_DYNAMIC_GL_ARB_transform_feedback2
+#define GL_TRANSFORM_FEEDBACK 0x8E22
+#define GL_TRANSFORM_FEEDBACK_PAUSED 0x8E23
+#define GL_TRANSFORM_FEEDBACK_ACTIVE 0x8E24
+#define GL_TRANSFORM_FEEDBACK_BINDING 0x8E25
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BindTransformFeedback)(GLenum target , GLuint id); }
+#define glBindTransformFeedback DynamicGL_BindTransformFeedback
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteTransformFeedbacks)(GLsizei n , const GLuint *ids); }
+#define glDeleteTransformFeedbacks DynamicGL_DeleteTransformFeedbacks
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GenTransformFeedbacks)(GLsizei n , GLuint *ids); }
+#define glGenTransformFeedbacks DynamicGL_GenTransformFeedbacks
+extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsTransformFeedback)(GLuint id); }
+#define glIsTransformFeedback DynamicGL_IsTransformFeedback
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PauseTransformFeedback)(); }
+#define glPauseTransformFeedback DynamicGL_PauseTransformFeedback
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ResumeTransformFeedback)(); }
+#define glResumeTransformFeedback DynamicGL_ResumeTransformFeedback
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTransformFeedback)(GLenum mode , GLuint id); }
+#define glDrawTransformFeedback DynamicGL_DrawTransformFeedback
+extern bool DinamicGLFeature_ARB_transform_feedback2_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_transform_feedback2*/
+
+/*VERSION_3_3*/
+#ifdef USE_DYNAMIC_GL_VERSION_3_3
+#define GL_VERTEX_ATTRIB_ARRAY_DIVISOR 0x88FE
+extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexAttribDivisor)(GLuint index , GLuint divisor); }
+#define glVertexAttribDivisor DynamicGL_VertexAttribDivisor
+extern bool DinamicGLFeature_VERSION_3_3_Supported();
+#endif /*USE_DYNAMIC_GL_VERSION_3_3*/
+
+/*ARB_texture_gather*/
+#ifdef USE_DYNAMIC_GL_ARB_texture_gather
+#define GL_MIN_PROGRAM_TEXTURE_GATHER_OFFSET_ARB 0x8E5E
+#define GL_MAX_PROGRAM_TEXTURE_GATHER_OFFSET_ARB 0x8E5F
+extern bool DinamicGLFeature_ARB_texture_gather_Supported();
+#endif /*USE_DYNAMIC_GL_ARB_texture_gather*/
 
 /*SUN_vertex*/
 #ifdef USE_DYNAMIC_GL_SUN_vertex

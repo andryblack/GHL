@@ -23,6 +23,8 @@
 #include "dynamic_gl_subset.h"
 
 #include <stddef.h>
+#include <inttypes.h>
+
 namespace GHL {
 #include "dynamic_gl_h.inc"
     void DynamicGLInit();
