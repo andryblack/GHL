@@ -13,14 +13,9 @@
 #include "ghl_api.h"
 
 #if defined( GHL_PLATFORM_IOS )
-#include <OpenGLES/ES1/gl.h>
-#include <OpenGLES/ES1/glext.h>
+#include "dynamic/dynamic_gles.h"
+#define GHL_DYNAMIC_GL
 #define GHL_OPENGLES
-#define GHL_SHADERS_UNSUPPORTED
-#define GL_SOURCE0_RGB GL_SRC0_RGB
-#define GL_SOURCE1_RGB GL_SRC1_RGB
-#define GL_SOURCE2_RGB GL_SRC2_RGB
-#define glOrtho glOrthof
 #elif defined ( GHL_PLATFORM_MAC )
 #include "dynamic/dynamic_gl.h"
 #define GHL_DYNAMIC_GL
@@ -40,6 +35,9 @@
 
 #ifdef GHL_OPENGLES
 
+#define GHL_SHADERS_UNSUPPORTED
+#define glOrtho glOrthof
+
 #ifndef GL_SOURCE0_RGB
 #define GL_SOURCE0_RGB GL_SRC0_RGB
 #endif
@@ -52,6 +50,13 @@
 #endif
 #ifndef GL_SOURCE1_ALPHA
 #define GL_SOURCE1_ALPHA GL_SRC1_ALPHA
+#endif
+
+#ifndef GL_SOURCE2_RGB
+#define GL_SOURCE2_RGB GL_SRC2_RGB
+#endif
+#ifndef GL_SOURCE2_ALPHA
+#define GL_SOURCE2_ALPHA GL_SRC2_ALPHA
 #endif
 
 #endif

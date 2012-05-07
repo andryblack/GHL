@@ -67,6 +67,9 @@
 		A436FC5314AE6D2800D53CE4 /* ghl_log.h in Headers */ = {isa = PBXBuildFile; fileRef = A436FC5214AE6D2800D53CE4 /* ghl_log.h */; };
 		A436FC5714AE6D3800D53CE4 /* ghl_log_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A436FC5514AE6D3800D53CE4 /* ghl_log_impl.cpp */; };
 		A436FC5814AE6D3800D53CE4 /* ghl_log_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A436FC5614AE6D3800D53CE4 /* ghl_log_impl.h */; };
+		A474628B1557F6490082318E /* dynamic_gles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A47462891557F6490082318E /* dynamic_gles.cpp */; };
+		A474628C1557F6490082318E /* dynamic_gles.h in Headers */ = {isa = PBXBuildFile; fileRef = A474628A1557F6490082318E /* dynamic_gles.h */; };
+		A474628F1557F6880082318E /* dynamic_gles_subset.h in Headers */ = {isa = PBXBuildFile; fileRef = A474628E1557F6880082318E /* dynamic_gles_subset.h */; };
 		A4772A4514169A8B006A9887 /* adler32.c in Sources */ = {isa = PBXBuildFile; fileRef = A4772A3214169A8B006A9887 /* adler32.c */; };
 		A4772A4614169A8B006A9887 /* crc32.c in Sources */ = {isa = PBXBuildFile; fileRef = A4772A3314169A8B006A9887 /* crc32.c */; };
 		A4772A4714169A8B006A9887 /* crc32.h in Headers */ = {isa = PBXBuildFile; fileRef = A4772A3414169A8B006A9887 /* crc32.h */; };
@@ -175,6 +178,9 @@
 		A436FC5214AE6D2800D53CE4 /* ghl_log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_log.h; sourceTree = "<group>"; };
 		A436FC5514AE6D3800D53CE4 /* ghl_log_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ghl_log_impl.cpp; sourceTree = "<group>"; };
 		A436FC5614AE6D3800D53CE4 /* ghl_log_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_log_impl.h; sourceTree = "<group>"; };
+		A47462891557F6490082318E /* dynamic_gles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dynamic_gles.cpp; path = dynamic/dynamic_gles.cpp; sourceTree = "<group>"; };
+		A474628A1557F6490082318E /* dynamic_gles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dynamic_gles.h; path = dynamic/dynamic_gles.h; sourceTree = "<group>"; };
+		A474628E1557F6880082318E /* dynamic_gles_subset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dynamic_gles_subset.h; path = dynamic/dynamic_gles_subset.h; sourceTree = "<group>"; };
 		A4772A3214169A8B006A9887 /* adler32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = adler32.c; sourceTree = "<group>"; };
 		A4772A3314169A8B006A9887 /* crc32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = crc32.c; sourceTree = "<group>"; };
 		A4772A3414169A8B006A9887 /* crc32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crc32.h; sourceTree = "<group>"; };
@@ -338,6 +344,9 @@
 		A42900A61413949B00429C47 /* opengl */ = {
 			isa = PBXGroup;
 			children = (
+				A474628E1557F6880082318E /* dynamic_gles_subset.h */,
+				A47462891557F6490082318E /* dynamic_gles.cpp */,
+				A474628A1557F6490082318E /* dynamic_gles.h */,
 				A42900AD1413949B00429C47 /* ghl_opengl.h */,
 				A42900AE1413949B00429C47 /* refcount_opengl.h */,
 				A42900AF1413949B00429C47 /* render_opengl.cpp */,
@@ -522,6 +531,8 @@
 				A436FC5814AE6D3800D53CE4 /* ghl_log_impl.h in Headers */,
 				A41D523014DEB75E008B50E8 /* ghl_ref_counter.h in Headers */,
 				A41D523314DEB90B008B50E8 /* ghl_ref_counter_impl.h in Headers */,
+				A474628C1557F6490082318E /* dynamic_gles.h in Headers */,
+				A474628F1557F6880082318E /* dynamic_gles_subset.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -622,6 +633,7 @@
 				A4EDFF071416B45400ED0DC0 /* pngrtran.c in Sources */,
 				A4EDFF111416B4E100ED0DC0 /* pngpread.c in Sources */,
 				A436FC5714AE6D3800D53CE4 /* ghl_log_impl.cpp in Sources */,
+				A474628B1557F6490082318E /* dynamic_gles.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -29,9 +29,15 @@ namespace GHL {
         static bool checked = false;
         static bool result = false;
         if (!checked) {
+#ifdef GHL_OPENGLES
+            result = DinamicGLFeature_OES_framebuffer_object_Supported();
+            checked = true;
+            LOG_VERBOSE("DinamicGLFeature_OES_framebuffer_object_Supported result : " << result);
+#else
             result = DinamicGLFeature_EXT_framebuffer_object_Supported();
             checked = true;
             LOG_VERBOSE("DinamicGLFeature_EXT_framebuffer_object_Supported result : " << result);
+#endif
         }
         return result;
     }

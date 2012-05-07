@@ -172,18 +172,25 @@ namespace GHL {
 #endif
 		
 #ifdef GHL_DYNAMIC_GL
-            DynamicGLInit();
-            DynamicGLLoadSubset();
-		if (!DinamicGLFeature_VERSION_1_1_Supported()) {
+        DynamicGLInit();
+        DynamicGLLoadSubset();
+		
+        if (!DinamicGLFeature_VERSION_1_1_Supported()) {
 			LOG_WARNING( "!DinamicGLFeature_VERSION_1_1_Supported" );
 			//return false;
 		}
+        
+#ifndef GHL_OPENGLES
 		if (!DinamicGLFeature_VERSION_1_2_Supported()) {
 			LOG_WARNING( "!DinamicGLFeature_VERSION_1_2_Supported" );
 			//return false;
 		}
 		if (!DinamicGLFeature_VERSION_1_3_Supported()) {
 			LOG_WARNING( "!DinamicGLFeature_VERSION_1_3_Supported" );
+			//return false;
+		}
+        if (!DinamicGLFeature_VERSION_1_3_DEPRECATED_Supported()) {
+			LOG_WARNING( "!DinamicGLFeature_VERSION_1_3_DEPRECATED_Supported" );
 			//return false;
 		}
 		if (!DinamicGLFeature_VERSION_1_4_Supported()) {
@@ -215,7 +222,7 @@ namespace GHL {
 			LOG_INFO( "!DinamicGLFeature_ARB_vertex_shader_Supported" );
 			m_shaders_support_glsl = false;
 		}
-		
+#endif	
 		
 #endif
 		
