@@ -103,9 +103,19 @@ Image* GHL_CALL ImageDecoderImpl::Decode(DataStream* ds) const
 	}
 	
 	ImageFileFormat GHL_CALL ImageDecoderImpl::GetFileFormat( DataStream* stream ) const {
-		(void)stream;
-		/// @todo
-		return IMAGE_FILE_FORMAT_UNKNOWN;
+		ImageFileFormat format = IMAGE_FILE_FORMAT_UNKNOWN;
+		ImageFileDecoder::CheckBuffer buf;
+		GHL::Int32 size = stream->Read(buf, sizeof(buf));
+		stream->Seek(-size, F_SEEK_CURRENT);
+		if ( size!=sizeof(buf) ) {
+			return format;
+		}
+			
+		for (size_t i=0;i<m_decoders.size();++i) {
+			format = m_decoders[i]->GetFileFormat( buf );
+			if (format!=IMAGE_FILE_FORMAT_UNKNOWN) break;
+		}
+		return format;
 	}
 	
 	bool GHL_CALL ImageDecoderImpl::Encode( const Image* image, DataStream* to, ImageFileFormat fmt) const {

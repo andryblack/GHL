@@ -34,6 +34,7 @@ class PngDecoder : public ImageFileDecoder
 		~PngDecoder();
 		Image* Decode(DataStream* ds);
 		bool Encode( const Image* image, DataStream* ds);
+		virtual ImageFileFormat GetFileFormat(const CheckBuffer&) const;
 };
 
 }/*namespace*/

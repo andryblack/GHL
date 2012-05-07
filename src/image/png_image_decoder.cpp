@@ -65,6 +65,12 @@ static void PNGAPI read_data_fcn(png_structp png_ptr, png_bytep data, png_size_t
 		
 }
 
+ImageFileFormat PngDecoder::GetFileFormat(const CheckBuffer& buf) const {
+	if (png_sig_cmp(buf, 0, 8)==0)
+		return IMAGE_FILE_FORMAT_PNG;
+	return ImageFileDecoder::GetFileFormat(buf);
+}
+
 Image* PngDecoder::Decode(DataStream* file)
 {
 	if (!file)

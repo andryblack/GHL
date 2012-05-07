@@ -23,6 +23,8 @@
 #include "jpeg_image_decoder.h"
 #include "image_impl.h"
 
+#include "../ghl_log_impl.h"
+
 #include <cstring>
 #include <cstdio>
 #include <iostream>
@@ -30,6 +32,8 @@
 #include "jpeg/jpeglib.h"
 
 namespace GHL {
+	
+	static const char* MODULE = "IMAGE:JPEG";
     
     JpegDecoder::JpegDecoder() : ImageFileDecoder( IMAGE_FILE_FORMAT_JPEG )
     {
@@ -98,10 +102,19 @@ namespace GHL {
         // display the error message.
         char temp1[JMSG_LENGTH_MAX];
         (*cinfo->err->format_message)(cinfo, temp1);
-        std::cout << "JPEG error : " << temp1 << std::endl;
-        //os::Printer::log("JPEG FATAL ERROR",temp1, ELL_ERROR); ///@todo
+		LOG_ERROR( temp1 );
     }
     
+	ImageFileFormat JpegDecoder::GetFileFormat(const CheckBuffer& buf) const {
+		for ( size_t i=0; i<sizeof(CheckBuffer);++i) {
+			if (buf[i]!=0xff) {
+				if( buf[i]==0xd8 && i!=0 )
+					return IMAGE_FILE_FORMAT_JPEG;
+				break;
+			}
+		}
+		return ImageFileDecoder::GetFileFormat(buf);
+	}
     Image* JpegDecoder::Decode(DataStream* file)
     {
         if (!file) return 0;
