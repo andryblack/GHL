@@ -147,7 +147,7 @@ namespace GHL {
     };
 
     bool TGAImageDecoder::LoadRLE(DataStream* ds,ImageImpl* img) {
-        Byte* data = img->GetDataPtr();
+        Byte* data = img->GetRawData()->GetDataPtr();
         UInt32 pixels = img->GetWidth()*img->GetHeight();
         const UInt32 bpp = img->GetBpp();
         UInt32 c = 0;
@@ -175,7 +175,9 @@ namespace GHL {
         return pixels == 0;
     }
     bool TGAImageDecoder::SaveRAW32(DataStream* _ds,const Image* img) {
-        const Byte* data = img->GetData();
+		const Data* buffer = img->GetData();
+		if (!buffer) return false;
+        const Byte* data = buffer->GetData();
         UInt32 pixels = img->GetWidth()*img->GetHeight();
         BufferedWriter ds(_ds,1024);
         for (size_t i=0;i<pixels;i++) {
@@ -188,7 +190,9 @@ namespace GHL {
         return true;
     }
     bool TGAImageDecoder::SaveRLE32(DataStream* _ds,const Image* img) {
-        const Byte* data = img->GetData();
+        const Data* buffer = img->GetData();
+		if (!buffer) return false;
+        const Byte* data = buffer->GetData();
         UInt32 pixels = img->GetWidth()*img->GetHeight();
         BufferedWriter ds(_ds,1024);
         UInt32 line_pixels = img->GetWidth();
@@ -246,7 +250,7 @@ namespace GHL {
     bool TGAImageDecoder::LoadRAW(DataStream* ds,ImageImpl* img) {
         UInt32 pixels = img->GetWidth()*img->GetHeight();
         const UInt32 bpp = img->GetBpp();
-        Byte* data = img->GetDataPtr();
+        Byte* data = img->GetRawData()->GetDataPtr();
         UInt32 readed = ds->Read(data,pixels*bpp);
         return readed == pixels*bpp;
     }

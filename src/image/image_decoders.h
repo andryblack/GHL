@@ -37,8 +37,6 @@ namespace GHL {
 		public:
 			ImageDecoderImpl();
 			virtual ~ImageDecoderImpl();
-			/// create image from data
-			virtual Image* GHL_CALL CreateImage( UInt32 w, UInt32 h,ImageFormat fmt, const Byte* data ) const ;
 			/// get image file format
 			virtual ImageFileFormat GHL_CALL GetFileFormat( DataStream* stream ) const;
 			virtual Image* GHL_CALL Decode(DataStream* ds) const;

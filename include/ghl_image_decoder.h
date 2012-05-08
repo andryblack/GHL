@@ -42,8 +42,6 @@ namespace GHL
 	
 	struct ImageDecoder 
 	{
-		/// create image from data
-		virtual Image* GHL_CALL CreateImage( UInt32 w, UInt32 h,ImageFormat fmt, const Byte* data ) const = 0;
 		/// get image file format
 		virtual ImageFileFormat GHL_CALL GetFileFormat( DataStream* stream ) const = 0;
 		/// decode

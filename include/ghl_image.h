@@ -26,6 +26,7 @@
 #include "ghl_types.h"
 #include "ghl_api.h"
 #include "ghl_ref_counter.h"
+#include "ghl_data.h"
 
 namespace GHL
 {
@@ -49,10 +50,8 @@ namespace GHL
         /// get image format
         virtual ImageFormat GHL_CALL GetFormat() const = 0;
         /// get image data
-        virtual const Byte* GHL_CALL GetData() const = 0;
-		/// get image data ptr ( for writing )
-		virtual Byte* GHL_CALL GetDataPtr() = 0;
-        /// convert image to format
+        virtual const Data* GHL_CALL GetData() const = 0;
+		/// convert image to format
         virtual void GHL_CALL Convert(ImageFormat fmt) = 0;
         /// swap RB channels
         virtual void GHL_CALL SwapRB() = 0;

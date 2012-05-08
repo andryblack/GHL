@@ -21,19 +21,19 @@
  */
 
 
-#ifndef GHL_REF_COUNTER_H
-#define GHL_REF_COUNTER_H
+#include "ghl_data_impl.h"
 
 namespace GHL {
-    
-    /** Reference counter interface
-     */
-    struct RefCounter {
-        /// add reference
-        virtual void GHL_CALL AddRef() const = 0;
-        /// release reference
-        virtual void GHL_CALL Release() const = 0;
-    };
-
+ 
+	void GHL_CALL	DataImpl::SetData( UInt32 offset, const Byte* data, UInt32 size ) {
+		if (offset>=m_size) return;
+		Byte* begin = m_buffer + offset;
+		Byte* end = m_buffer + offset + size;
+		if ( end > ( m_buffer + m_size ) ) {
+			end = m_buffer + m_size;
+		}
+		size = end - begin;
+		::memcpy(m_buffer, data, size);
+	}
+	
 }
-#endif /*GHL_REF_COUNTER_H*/

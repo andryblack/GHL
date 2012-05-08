@@ -28,63 +28,74 @@ namespace GHL
 {
 
 	ImageImpl::ImageImpl(UInt32 w,UInt32 h,ImageFormat fmt) : m_width(w),m_height(h),m_fmt(fmt),m_data(0) {
-			if (fmt==IMAGE_FORMAT_RGB)
-				m_data = new Byte [w*h*3];
-			else if (fmt==IMAGE_FORMAT_RGBA)
-				m_data = new Byte [w*h*4];
-			else if (fmt==IMAGE_FORMAT_GRAY)
-				m_data = new Byte [w*h];
+		UInt32 size = 0;	
+		if (fmt==IMAGE_FORMAT_RGB)
+			size = w * h * 3;
+		else if (fmt==IMAGE_FORMAT_RGBA)
+			size = w * h * 4;
+		else if (fmt==IMAGE_FORMAT_GRAY)
+			size = w * h;
+		if ( size ) {
+			m_data = new DataImpl( size );
+		}
+	}
+	
+	ImageImpl::ImageImpl(UInt32 w,UInt32 h,ImageFormat fmt,DataImpl* data) : m_width(w),m_height(h),m_fmt(fmt),m_data(data) {
+		
 	}
 
 	ImageImpl::~ImageImpl() {
-		delete [] m_data;
+		if (m_data) m_data->Release();
 	}
 	
 	void GHL_CALL ImageImpl::Convert(ImageFormat fmt) {
 		if (fmt==m_fmt) return;
 		if (!m_data) return;
+		const Byte* original = m_data->GetData();
 		if (fmt==IMAGE_FORMAT_RGB)
 		{
 			size_t len = m_width*m_height;
-			Byte* data = new Byte [len*3];
+			DataImpl* buffer = new DataImpl( len * 3 );
+			Byte* data = buffer->GetDataPtr();
 			if (m_fmt==IMAGE_FORMAT_RGBA) {
 				for (size_t i=0;i<len;i++) {
-					data[i*3+0]=m_data[i*4+0];
-					data[i*3+1]=m_data[i*4+1];
-					data[i*3+2]=m_data[i*4+2];
+					data[i*3+0]=original[i*4+0];
+					data[i*3+1]=original[i*4+1];
+					data[i*3+2]=original[i*4+2];
 				}
 			} else if (m_fmt==IMAGE_FORMAT_GRAY)
 			{
 				for (size_t i=0;i<len;i++) {
-					data[i*3+0]=m_data[i];
-					data[i*3+1]=m_data[i];
-					data[i*3+2]=m_data[i];
+					data[i*3+0]=original[i];
+					data[i*3+1]=original[i];
+					data[i*3+2]=original[i];
 				}
 			}
-			delete [] m_data;
-			m_data = data;
+			m_data->Release();
+			m_data = buffer;
 		}
 		else if (fmt==IMAGE_FORMAT_RGBA)
 		{
 			size_t len = m_width*m_height;
-			Byte* data = new Byte [len*4];
+			DataImpl* buffer = new DataImpl( len * 3 );
+			Byte* data = buffer->GetDataPtr();
 			if (m_fmt==IMAGE_FORMAT_RGB) {
 				for (size_t i=0;i<len;i++) {
-					data[i*4+0]=m_data[i*3+0];
-					data[i*4+1]=m_data[i*3+1];
-					data[i*4+2]=m_data[i*3+2];
+					data[i*4+0]=original[i*3+0];
+					data[i*4+1]=original[i*3+1];
+					data[i*4+2]=original[i*3+2];
 					data[i*4+3]=0xff;
 				}
 			} else if (m_fmt==IMAGE_FORMAT_GRAY) {
 				for (size_t i=0;i<len;i++) {
-					data[i*4+0]=m_data[i];
-					data[i*4+1]=m_data[i];
-					data[i*4+2]=m_data[i];
+					data[i*4+0]=original[i];
+					data[i*4+1]=original[i];
+					data[i*4+2]=original[i];
 					data[i*4+3]=0xff;
 				}
 			}
-			delete [] m_data;
-			m_data = data;
+			m_data->Release();
+			m_data = buffer;
 		}
         m_fmt = fmt;
 	}
@@ -92,40 +103,44 @@ namespace GHL
 	void ImageImpl::SwapChannelsRB()
 	{
 		if (!m_data) return;
+		Byte* data = m_data->GetDataPtr();
 		if (m_fmt==IMAGE_FORMAT_RGB)
 		{
-			size_t len = m_width*m_height;
+			const size_t len = m_width*m_height;
 			for (size_t i=0;i<len;i++) {
-				std::swap(m_data[i*3+0],m_data[i*3+2]);
+				std::swap(data[i*3+0],data[i*3+2]);
 			}
 		}
 		else if (m_fmt==IMAGE_FORMAT_RGBA)
 		{
-			size_t len = m_width*m_height;
+			const size_t len = m_width*m_height;
 			for (size_t i=0;i<len;i++) {
-				std::swap(m_data[i*4+0],m_data[i*4+2]);
+				std::swap(data[i*4+0],data[i*4+2]);
 			}
 		}
 	}
 
 	void GHL_CALL ImageImpl::SetAlpha(const Image* img) {
 		if (!img) return;
-		const Byte* data = img->GetData();
+		if (!m_data) return;
 		if (GetWidth()!=img->GetWidth()) return;
 		if (GetHeight()!=img->GetHeight()) return;
+		const Data* data = img->GetData();
 		if (!data) return;
+		const Byte* source = data->GetData();
+		Byte* dst = m_data->GetDataPtr();
 		if (img->GetFormat()==IMAGE_FORMAT_GRAY)
 		{
 			Convert(IMAGE_FORMAT_RGBA);
 			size_t len = m_width*m_height;
 			for (size_t i=0;i<len;i++)
-				m_data[i*4+3]=data[i];
+				dst[i*4+3]=source[i];
 		} else if (img->GetFormat()==IMAGE_FORMAT_RGBA)
 		{
 			Convert(IMAGE_FORMAT_RGBA);
 			size_t len = m_width*m_height;
 			for (size_t i=0;i<len;i++)
-				m_data[i*4+3]=data[i*4+3];
+				dst[i*4+3]=source[i*4+3];
 		}
 
 	}
@@ -138,14 +153,16 @@ namespace GHL
 	}
 	
 	void ImageImpl::FlipV() {
+		if (!m_data) return;
+		Byte* data = m_data->GetDataPtr();
 		const UInt32 line_size = GetBpp()*GetWidth();
 		Byte* line = new Byte[line_size];
 		UInt32 y1 = 0;
 		UInt32 y2 = GetHeight()-1;
 		while (y1<y2) {
-			::memcpy(line,&m_data[y2*line_size],line_size);
-			::memcpy(&m_data[y2*line_size],&m_data[y1*line_size],line_size);
-			::memcpy(&m_data[y1*line_size],line,line_size);
+			::memcpy(line,&data[y2*line_size],line_size);
+			::memcpy(&data[y2*line_size],&data[y1*line_size],line_size);
+			::memcpy(&data[y1*line_size],line,line_size);
 			y1++;
 			if (y2==0) break;
 			y2--;
@@ -154,20 +171,22 @@ namespace GHL
 	}
 	
 	Image* GHL_CALL ImageImpl::SubImage(UInt32 x,UInt32 y,UInt32 w,UInt32 h) const {
+		if (!m_data) return 0;
 		if (x>m_width) return 0;
 		if (y>m_height) return 0;
 		if (w>m_width) return 0;
 		if (h>m_height) return 0;
 		if ((x+w)>m_width) return 0;
 		if ((y+h)>m_height) return 0;
-		ImageImpl* res = new ImageImpl(w,h,m_fmt);
+		DataImpl* res = new DataImpl( w * h * GetBpp() );
+		Byte* data = m_data->GetDataPtr();
 		for (UInt32 _y = 0; _y<h;_y++) {
-			const Byte* src = m_data + (_y+y)*m_width*GetBpp();
+			const Byte* src = data + (_y+y)*m_width*GetBpp();
 			src+=x*GetBpp();
 			Byte* dst = res->GetDataPtr()+_y*w*GetBpp();
 			::memcpy(dst,src,w*GetBpp());
 		}
-		return res;
+		return new ImageImpl( w, h, GetFormat(), res );
 	}
 
 }

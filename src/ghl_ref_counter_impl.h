@@ -31,7 +31,7 @@ namespace GHL {
     template <class T>
     class RefCounterImpl : public T {
     private:
-        UInt32  m_refs;
+        mutable UInt32  m_refs;
         /// noncopyable
         RefCounterImpl( const RefCounterImpl& );
         RefCounterImpl& operator = (const RefCounterImpl&);
@@ -45,11 +45,11 @@ namespace GHL {
             }
         }
         
-        virtual void GHL_CALL AddRef() {
+        virtual void GHL_CALL AddRef() const {
             m_refs++;
         }
         
-        virtual void GHL_CALL Release() {
+        virtual void GHL_CALL Release() const {
             if (m_refs==0) {
                 ::GHL::Logger(::GHL::LOG_LEVEL_ERROR,"REFS") << "release released object" ;
             } else {

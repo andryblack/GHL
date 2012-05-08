@@ -20,20 +20,38 @@
  blackicebox (at) gmail (dot) com
  */
 
+#ifndef GHL_DATA_IMPL_H
+#define GHL_DATA_IMPL_H
 
-#ifndef GHL_REF_COUNTER_H
-#define GHL_REF_COUNTER_H
+#include "ghl_data.h"
+#include "ghl_ref_counter_impl.h"
 
 namespace GHL {
-    
-    /** Reference counter interface
-     */
-    struct RefCounter {
-        /// add reference
-        virtual void GHL_CALL AddRef() const = 0;
-        /// release reference
-        virtual void GHL_CALL Release() const = 0;
-    };
+	
+	/// Data buffer holder
+	class DataImpl : public RefCounterImpl<Data>
+	{
+	private:
+		Byte*	m_buffer;
+		UInt32	m_size;
+	public:
+		/// ctr
+		explicit DataImpl(  UInt32 size ) : m_buffer( new Byte[size] ), m_size( size ) {
+			
+		}
+		~DataImpl() {
+			delete [] m_buffer;
+		}
+		/// Data size
+		virtual UInt32 GHL_CALL	GetSize() const { return m_size; }
+		/// Data ptr ( read and write )
+		Byte* GetDataPtr() { return m_buffer; }
+		/// Const data ptr
+		virtual const Byte* GHL_CALL	GetData() const { return m_buffer; }
+		/// set data
+		virtual void GHL_CALL	SetData( UInt32 offset, const Byte* data, UInt32 size ) ;
+	};
+	
+} /*namespace*/
 
-}
-#endif /*GHL_REF_COUNTER_H*/
+#endif /*GHL_DATA_IMPL_H*/

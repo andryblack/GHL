@@ -51,56 +51,49 @@ namespace GHL {
     
     static const char* MODULE = "IMAGE";
 
-ImageDecoderImpl::ImageDecoderImpl() {
+	ImageDecoderImpl::ImageDecoderImpl() {
 #ifdef USE_PNG_DECODER
-	m_decoders.push_back(new PngDecoder());
+		m_decoders.push_back(new PngDecoder());
 #endif
 #ifdef USE_JPEG_DECODER
-	m_decoders.push_back(new JpegDecoder());
+		m_decoders.push_back(new JpegDecoder());
 #endif
 #ifdef USE_QT_IMAGE_DECODER
-        m_decoders.push_back(new QtImageFileDecoder());
+			m_decoders.push_back(new QtImageFileDecoder());
 #endif
 #ifdef USE_IPHONE_IMAGE_DECODER
-	m_decoders.push_back(new iPhoneImageDecoder());
+		m_decoders.push_back(new iPhoneImageDecoder());
 #endif
 #ifdef USE_TGA_IMAGE_DECODER
-	m_decoders.push_back(new TGAImageDecoder());
+		m_decoders.push_back(new TGAImageDecoder());
 #endif
-}
+	}
 
-ImageDecoderImpl::~ImageDecoderImpl()
-{
-	for (size_t i=0;i<m_decoders.size();i++)
-		delete m_decoders[i];
-}
-
-
-Image* GHL_CALL ImageDecoderImpl::Decode(DataStream* ds) const
-{
-	Image* img = 0;
-	for (size_t i=0;i<m_decoders.size();i++)
+	ImageDecoderImpl::~ImageDecoderImpl()
 	{
-		img = m_decoders[i]->Decode(ds);
-		if (img) break;
-        ds->Seek(0, F_SEEK_BEGIN);
+		for (size_t i=0;i<m_decoders.size();i++)
+			delete m_decoders[i];
 	}
-	if (!img) {
-		if (true) {
-			LOG_WARNING( "error decoding"  );
+
+
+	Image* GHL_CALL ImageDecoderImpl::Decode(DataStream* ds) const
+	{
+		Image* img = 0;
+		for (size_t i=0;i<m_decoders.size();i++)
+		{
+			img = m_decoders[i]->Decode(ds);
+			if (img) break;
+			ds->Seek(0, F_SEEK_BEGIN);
 		}
+		if (!img) {
+			if (true) {
+				LOG_WARNING( "error decoding"  );
+			}
+		}
+		return img;
 	}
-	return img;
-}
 	
-	/// create image from data
-	Image* GHL_CALL ImageDecoderImpl::CreateImage( UInt32 w, UInt32 h,ImageFormat fmt, const Byte* data ) const {
-		ImageImpl* impl = new ImageImpl( w, h, fmt);
-		if (data) {
-			memcpy( impl->GetDataPtr(), data,w*h*impl->GetBpp() );
-		}
-		return impl;
-	}
+	
 	
 	ImageFileFormat GHL_CALL ImageDecoderImpl::GetFileFormat( DataStream* stream ) const {
 		ImageFileFormat format = IMAGE_FILE_FORMAT_UNKNOWN;

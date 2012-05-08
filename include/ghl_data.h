@@ -1,6 +1,6 @@
 /*
  GHL - Game Helpers Library
- Copyright (C)  Andrey Kunitsyn 2011
+ Copyright (C)  Andrey Kunitsyn 20011
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -20,20 +20,26 @@
  blackicebox (at) gmail (dot) com
  */
 
+#ifndef GHL_DATA_H
+#define GHL_DATA_H
 
-#ifndef GHL_REF_COUNTER_H
-#define GHL_REF_COUNTER_H
+#include "ghl_types.h"
+#include "ghl_api.h"
+#include "ghl_ref_counter.h"
 
 namespace GHL {
-    
-    /** Reference counter interface
-     */
-    struct RefCounter {
-        /// add reference
-        virtual void GHL_CALL AddRef() const = 0;
-        /// release reference
-        virtual void GHL_CALL Release() const = 0;
-    };
+	
+	/// Data buffer holder
+	struct Data : RefCounter 
+	{
+		/// Data size
+		virtual UInt32 GHL_CALL	GetSize() const = 0;	
+		/// Const data ptr
+		virtual const Byte* GHL_CALL	GetData() const = 0;
+		/// set data
+		virtual void GHL_CALL	SetData( UInt32 offset, const Byte* data, UInt32 size ) = 0;
+	};
+	
+} /*namespace*/
 
-}
-#endif /*GHL_REF_COUNTER_H*/
+#endif /*GHL_DATA_H*/

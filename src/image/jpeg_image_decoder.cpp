@@ -199,9 +199,9 @@ namespace GHL {
         UInt32 rowspan = cinfo.image_width * cinfo.out_color_components;
         UInt32 width = cinfo.image_width;
         UInt32 height = cinfo.image_height;
-        
-        img = new ImageImpl(width,height,IMAGE_FORMAT_RGB);
-        Byte* output = img->GetDataPtr();
+        DataImpl* data = new DataImpl(width*height*3);
+        img = new ImageImpl(width,height,IMAGE_FORMAT_RGB,data);
+        Byte* output = data->GetDataPtr();
         
 		// Here we use the library's state variable cinfo.output_scanline as the
         // loop counter, so that we don't have to keep track ourselves.

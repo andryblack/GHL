@@ -197,7 +197,7 @@ Image* PngDecoder::Decode(DataStream* file)
 	}
 
 	size_t pw = 0;
-		// Create the image structure to be filled by png data
+	// Create the image structure to be filled by png data
 	if (ColorType==PNG_COLOR_TYPE_RGB_ALPHA)
 	{
 		image = new ImageImpl(Width,Height,IMAGE_FORMAT_RGBA);
@@ -230,7 +230,7 @@ Image* PngDecoder::Decode(DataStream* file)
 	}
 
 	// Fill array of pointers to rows in image data
-	Byte* data = image->GetDataPtr();
+	Byte* data = image->GetRawData()->GetDataPtr();
 	for (size_t i=0; i<Height; ++i)
 	{
 		RowPointers[i]=data;
