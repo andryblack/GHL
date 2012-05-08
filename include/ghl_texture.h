@@ -26,6 +26,7 @@
 #include "ghl_types.h"
 #include "ghl_api.h"
 #include "ghl_ref_counter.h"
+#include "ghl_data.h"
 
 namespace GHL 
 {
@@ -36,7 +37,9 @@ namespace GHL
 		TEXTURE_FORMAT_RGB,		///< r,g,b channels
 		TEXTURE_FORMAT_RGBA,	///< r,g,b,alpha channels
 		TEXTURE_FORMAT_565,		///< 5-6-5
-		TEXTURE_FORMAT_4444		///< 4-4-4-4
+		TEXTURE_FORMAT_4444,	///< 4-4-4-4
+		TEXTURE_FORMAT_PVRTC_4BPPV1,	///< compressed, PVRTC_2
+		TEXTURE_FORMAT_PVRTC_2BPPV1		///< compressed, PVRTC_4
 	};
 
 
@@ -89,7 +92,7 @@ namespace GHL
 		virtual TextureWrapMode GHL_CALL GetWrapModeV() const = 0;
 
 		/// set texture pixels
-		virtual void GHL_CALL SetData(UInt32 x,UInt32 y,UInt32 w,UInt32 h,const Byte* data,UInt32 level=0) = 0;
+		virtual void GHL_CALL SetData(UInt32 x,UInt32 y,UInt32 w,UInt32 h,const Data* data,UInt32 level=0) = 0;
 		/// generate mipmaps
 		virtual void GHL_CALL GenerateMipmaps() = 0;
 	};

@@ -325,11 +325,21 @@ namespace GHL {
 	
 	
 	/// create empty texture
-	Texture* GHL_CALL RenderOpenGL::CreateTexture(UInt32 width,UInt32 height,TextureFormat fmt,bool mip_maps) {
-		TextureOpenGL* tex = new TextureOpenGL(this,fmt,width,height);
-		/// @todo
-		GHL_UNUSED(mip_maps);
+	Texture* GHL_CALL RenderOpenGL::CreateTexture(UInt32 width,UInt32 height,TextureFormat fmt,const Data* data) {
+		if ( fmt == TEXTURE_FORMAT_PVRTC_2BPPV1 || fmt == TEXTURE_FORMAT_PVRTC_4BPPV1 ) {
+#ifdef GHL_OPENGLES
+			if ( !DinamicGLFeature_IMG_texture_compression_pvrtc_Supported() ) {
+				return 0;
+			}
+			if ( !data )
+				return 0;
+#else
+			return 0;
+#endif
+		}
+		TextureOpenGL* tex = TextureOpenGL::Create(this,fmt,width,height,data);
 		CHECK_GL_ERROR
+		if (!tex) return tex;
 #ifdef GHL_DEBUG
 		TextureCreated(tex);
 #endif

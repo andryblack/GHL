@@ -59,7 +59,7 @@ namespace GHL
 		virtual void GHL_CALL SetViewport(UInt32 x,UInt32 y,UInt32 w,UInt32 h);
 		
 		/// create empty texture
-		virtual Texture* GHL_CALL CreateTexture(UInt32 width,UInt32 height,TextureFormat fmt,bool mip_maps);
+		virtual Texture* GHL_CALL CreateTexture(UInt32 width,UInt32 height,TextureFormat fmt,const Data* data);
 		
 		/// set current texture
 		virtual void GHL_CALL SetTexture(const Texture* texture, UInt32 stage );

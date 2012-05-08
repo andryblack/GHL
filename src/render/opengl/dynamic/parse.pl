@@ -355,18 +355,18 @@ sub print_h{
                     $ret = mangle_type( { type=>$function->{'rettype'},const=>$function->{'retconst'},pointer=>$function->{'retpointer'}},"GL");
                 }
                 #print "typedef $ret ( DYNAMIC_GL_APIENTRYP DynamicGL_$function->{'name'}_Proc ) ( $args );\n";
-                print "extern \"C\" { extern $ret (DYNAMIC_GL_APIENTRYP DynamicGL_$function->{'name'})($args); }\n";
+                print "extern $ret (DYNAMIC_GL_APIENTRYP DynamicGL_$function->{'name'})($args);\n";
                 print "#define gl$function->{'name'} DynamicGL_$function->{'name'}\n";
             }
 			print "#else\n";
-			print "extern \"C\" {";
+			print "extern \"C\" {\n";
 			foreach my $function ( @{$feature->{'functions'}} ) {
 				my $args = mangle_args(@{$function->{'args'}});
                 my $ret = "void";
                 if ( ! ( ($function->{'rettype'} eq "void") && ($function->{'retconst'} eq "no") && ($function->{'retpointer'} eq "no") ) ) {
                     $ret = mangle_type( { type=>$function->{'rettype'},const=>$function->{'retconst'},pointer=>$function->{'retpointer'}},"GL");
                 }
-                print "DYNAMIC_GL_APIENTRY $ret gl$function->{'name'}( $args );\n";
+                print " DYNAMIC_GL_APIENTRY $ret gl$function->{'name'}( $args );\n";
             }
 			print "}\n";
 			print "#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/\n";
@@ -390,7 +390,7 @@ sub print_cpp{
 					$ret = mangle_type( { type=>$function->{'rettype'},const=>$function->{'retconst'},pointer=>$function->{'retpointer'}},"GL");
 				}
 				#print "typedef $ret ( DYNAMIC_GL_APIENTRYP DynamicGL_$function->{'name'}_Proc ) ( $args );\n";
-				print "extern \"C\" { $ret (DYNAMIC_GL_APIENTRYP DynamicGL_$function->{'name'})($args) = 0; }\n";
+				print "$ret (DYNAMIC_GL_APIENTRYP DynamicGL_$function->{'name'})($args) = 0;\n";
 			}
 			
             print "static bool DinamicGLFeature_$feature->{'name'}_loaded = false; \n";
@@ -409,6 +409,10 @@ sub print_cpp{
             print "#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/\n";
         }
 		print "bool DinamicGLFeature_$feature->{'name'}_Supported() {\n";
+		print "		static bool supported = false;\n";
+		print "		static bool checked = false;\n";
+		print "		if (checked) return supported;\n";
+		print "		checked = true;\n";
 		if ($feature->{'core'} eq "no") {
 			print "		if(!DynamicGL_CheckExtensionSupported(\"GL_$feature->{'name'}\")) return false;\n";
 		}
@@ -422,6 +426,7 @@ sub print_cpp{
             }
             print "#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/\n";
         }
+		print "		supported = true;\n";
 		print "		return true;\n";
 		print "}\n";
 		print "#endif /*USE_DYNAMIC_GL_$feature->{'name'}*/\n\n";

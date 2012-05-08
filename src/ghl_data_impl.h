@@ -28,20 +28,28 @@
 
 namespace GHL {
 	
-	/// Data buffer holder
-	class DataImpl : public RefCounterImpl<Data>
-	{
-	private:
+	class InlinedData : public Data {
+	protected:
 		Byte*	m_buffer;
 		UInt32	m_size;
 	public:
-		/// ctr
-		explicit DataImpl(  UInt32 size ) : m_buffer( new Byte[size] ), m_size( size ) {
+		InlinedData() : m_buffer(0),m_size(0){
 			
 		}
-		~DataImpl() {
-			delete [] m_buffer;
+		/// ctr
+		InlinedData( Byte* data, UInt32 size ) : m_buffer( data ), m_size( size ) {
+			
 		}
+		
+		/// add reference
+        virtual void GHL_CALL AddRef() const {
+			
+		}
+        /// release reference
+        virtual void GHL_CALL Release() const {
+			
+		}
+		
 		/// Data size
 		virtual UInt32 GHL_CALL	GetSize() const { return m_size; }
 		/// Data ptr ( read and write )
@@ -51,6 +59,47 @@ namespace GHL {
 		/// set data
 		virtual void GHL_CALL	SetData( UInt32 offset, const Byte* data, UInt32 size ) ;
 	};
+	
+	class ConstInlinedData : public Data {
+	protected:
+		const Byte*	m_buffer;
+		UInt32	m_size;
+	public:
+			/// ctr
+		ConstInlinedData( const Byte* data, UInt32 size ) : m_buffer( data ), m_size( size ) {
+			
+		}
+		/// add reference
+        virtual void GHL_CALL AddRef() const {
+		}
+        /// release reference
+        virtual void GHL_CALL Release() const {
+		}
+		/// Data size
+		virtual UInt32 GHL_CALL	GetSize() const { return m_size; }
+		/// Const data ptr
+		virtual const Byte* GHL_CALL	GetData() const { return m_buffer; }
+		/// set data
+		virtual void GHL_CALL	SetData( UInt32 offset, const Byte* data, UInt32 size ) {
+			
+		}
+	};
+	
+	/// Data buffer holder
+	class DataImpl : public RefCounterImpl<InlinedData>
+	{
+	public:
+		/// ctr
+		explicit DataImpl(  UInt32 size )  {
+			m_buffer = new Byte[ size ];
+			m_size = size;
+		}
+		~DataImpl() {
+			delete [] m_buffer;
+		}
+	};
+	
+	
 	
 } /*namespace*/
 

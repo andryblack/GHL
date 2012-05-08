@@ -47,6 +47,13 @@ namespace GHL {
 			return false;
 		}
 	};
+	
+	inline static UInt32 SwapLittleToHost( UInt32 data ) {
+		return data;
+	}
+	inline static Int32 SwapLittleToHost( Int32 data ) {
+		return data;
+	}
 
 }/*namespace*/
 

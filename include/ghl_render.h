@@ -177,7 +177,7 @@ namespace GHL
 
 		
 		/// create empty texture
-		virtual Texture* GHL_CALL CreateTexture(UInt32 width,UInt32 height,TextureFormat fmt,bool mip_maps) = 0;
+		virtual Texture* GHL_CALL CreateTexture(UInt32 width,UInt32 height,TextureFormat fmt,const Data* data=0) = 0;
 		
 		/// set current texture
 		virtual void GHL_CALL SetTexture(const Texture* texture, UInt32 stage = 0) = 0;

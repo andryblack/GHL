@@ -48,9 +48,9 @@ namespace GHL
 		if (m_data) m_data->Release();
 	}
 	
-	void GHL_CALL ImageImpl::Convert(ImageFormat fmt) {
-		if (fmt==m_fmt) return;
-		if (!m_data) return;
+	bool GHL_CALL ImageImpl::Convert(ImageFormat fmt) {
+		if (fmt==m_fmt) return true;
+		if (!m_data) return false;
 		const Byte* original = m_data->GetData();
 		if (fmt==IMAGE_FORMAT_RGB)
 		{
@@ -77,7 +77,7 @@ namespace GHL
 		else if (fmt==IMAGE_FORMAT_RGBA)
 		{
 			size_t len = m_width*m_height;
-			DataImpl* buffer = new DataImpl( len * 3 );
+			DataImpl* buffer = new DataImpl( len * 4 );
 			Byte* data = buffer->GetDataPtr();
 			if (m_fmt==IMAGE_FORMAT_RGB) {
 				for (size_t i=0;i<len;i++) {
@@ -96,13 +96,16 @@ namespace GHL
 			}
 			m_data->Release();
 			m_data = buffer;
+		} else {
+			return false;
 		}
         m_fmt = fmt;
+		return true;
 	}
 	
-	void ImageImpl::SwapChannelsRB()
+	bool ImageImpl::SwapChannelsRB()
 	{
-		if (!m_data) return;
+		if (!m_data) return false;
 		Byte* data = m_data->GetDataPtr();
 		if (m_fmt==IMAGE_FORMAT_RGB)
 		{
@@ -117,16 +120,19 @@ namespace GHL
 			for (size_t i=0;i<len;i++) {
 				std::swap(data[i*4+0],data[i*4+2]);
 			}
+		} else {
+			return false;
 		}
+		return true;
 	}
 
-	void GHL_CALL ImageImpl::SetAlpha(const Image* img) {
-		if (!img) return;
-		if (!m_data) return;
-		if (GetWidth()!=img->GetWidth()) return;
-		if (GetHeight()!=img->GetHeight()) return;
+	bool GHL_CALL ImageImpl::SetAlpha(const Image* img) {
+		if (!img) return false;
+		if (!m_data) return false;
+		if (GetWidth()!=img->GetWidth()) return false;
+		if (GetHeight()!=img->GetHeight()) return false;
 		const Data* data = img->GetData();
-		if (!data) return;
+		if (!data) return false;
 		const Byte* source = data->GetData();
 		Byte* dst = m_data->GetDataPtr();
 		if (img->GetFormat()==IMAGE_FORMAT_GRAY)
@@ -141,8 +147,10 @@ namespace GHL
 			size_t len = m_width*m_height;
 			for (size_t i=0;i<len;i++)
 				dst[i*4+3]=source[i*4+3];
+		} else {
+			return false;
 		}
-
+		return true;
 	}
 
 	UInt32 ImageImpl::GetBpp() const {
@@ -154,6 +162,7 @@ namespace GHL
 	
 	void ImageImpl::FlipV() {
 		if (!m_data) return;
+		if (!GetBpp()) return;
 		Byte* data = m_data->GetDataPtr();
 		const UInt32 line_size = GetBpp()*GetWidth();
 		Byte* line = new Byte[line_size];

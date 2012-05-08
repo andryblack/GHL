@@ -49,12 +49,12 @@ namespace GHL {
 		virtual UInt32 GHL_CALL GetHeight() const { return m_height;}
 		virtual const Data* GHL_CALL GetData() const { return m_data;}
 		virtual ImageFormat GHL_CALL GetFormat() const { return m_fmt;}
-		virtual void GHL_CALL Convert(ImageFormat fmt);
-		virtual void GHL_CALL SetAlpha(const Image* img);
+		virtual bool GHL_CALL Convert(ImageFormat fmt);
+		virtual bool GHL_CALL SetAlpha(const Image* img);
 		virtual Image* GHL_CALL SubImage(UInt32 x,UInt32 y,UInt32 w,UInt32 h) const;
-		void SwapChannelsRB();
+		bool SwapChannelsRB();
 		/// swap RB channels
-		virtual void GHL_CALL SwapRB() { SwapChannelsRB() ; }
+		virtual bool GHL_CALL SwapRB() { return SwapChannelsRB() ; }
 		UInt32 GetBpp() const;
 		void FlipV();
 		DataImpl*	GetRawData() { return m_data; }

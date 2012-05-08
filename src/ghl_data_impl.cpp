@@ -25,7 +25,7 @@
 
 namespace GHL {
  
-	void GHL_CALL	DataImpl::SetData( UInt32 offset, const Byte* data, UInt32 size ) {
+	void GHL_CALL	InlinedData::SetData( UInt32 offset, const Byte* data, UInt32 size ) {
 		if (offset>=m_size) return;
 		Byte* begin = m_buffer + offset;
 		Byte* end = m_buffer + offset + size;

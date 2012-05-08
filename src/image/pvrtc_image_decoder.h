@@ -1,6 +1,6 @@
 /*
  GHL - Game Helpers Library
- Copyright (C)  Andrey Kunitsyn 2009
+ Copyright (C)  Andrey Kunitsyn 2011
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -20,28 +20,23 @@
  blackicebox (at) gmail (dot) com
  */
 
-#ifndef IMAGE_CONFIG_H
-#define IMAGE_CONFIG_H
+#ifndef PVRTC_IMAGE_DECODER_H
+#define PVRTC_IMAGE_DECODER_H
 
-#include "ghl_api.h"
+#include "image_file_decoder.h"
 
-#define USE_TGA_IMAGE_DECODER
+namespace GHL {
 
-#if defined( GHL_QT )
-#define USE_QT_IMAGE_DECODER
-#elif defined( GHL_PLATFORM_IOS )
-//#define USE_IPHONE_IMAGE_DECODER
-#define USE_PNG_DECODER
-#define USE_JPEG_DECODER
-#define USE_PVRTC_IMAGE_DECODER
-#elif defined( GHL_PLATFORM_MAC )
-#define USE_PNG_DECODER
-#define USE_JPEG_DECODER
-#elif defined( GHL_PLATFORM_WIN )
-#define USE_PNG_DECODER
-#define USE_JPEG_DECODER
-#else
-//#define USE_PNG_DECODER
-//#define USE_JPEG_DECODER
-#endif
-#endif /*IMAGE_COFIG_H*/
+	class PVRTCDecoder : public ImageFileDecoder
+	{
+	public:
+		PVRTCDecoder();
+		~PVRTCDecoder();
+		Image* Decode(DataStream* ds);
+		virtual ImageFileFormat GetFileFormat(const CheckBuffer&) const;
+	};
+	
+}
+
+
+#endif /*PVRTC_IMAGE_DECODER_H*/

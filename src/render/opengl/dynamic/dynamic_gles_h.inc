@@ -357,433 +357,434 @@ typedef khronos_ssize_t GLsizeiptr;
 #define GL_DOT3_RGB 0x86AE
 #define GL_DOT3_RGBA 0x86AF
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_AlphaFunc)(GLenum func , GLclampf ref); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_AlphaFunc)(GLenum func , GLclampf ref);
 #define glAlphaFunc DynamicGL_AlphaFunc
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearColor)(GLclampf red , GLclampf green , GLclampf blue , GLclampf alpha); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearColor)(GLclampf red , GLclampf green , GLclampf blue , GLclampf alpha);
 #define glClearColor DynamicGL_ClearColor
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearDepthf)(GLclampf depth); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearDepthf)(GLclampf depth);
 #define glClearDepthf DynamicGL_ClearDepthf
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClipPlanef)(GLenum plane , const GLfloat *equation); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClipPlanef)(GLenum plane , const GLfloat *equation);
 #define glClipPlanef DynamicGL_ClipPlanef
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Color4f)(GLfloat red , GLfloat green , GLfloat blue , GLfloat alpha); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Color4f)(GLfloat red , GLfloat green , GLfloat blue , GLfloat alpha);
 #define glColor4f DynamicGL_Color4f
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthRangef)(GLclampf zNear , GLclampf zFar); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthRangef)(GLclampf zNear , GLclampf zFar);
 #define glDepthRangef DynamicGL_DepthRangef
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Fogf)(GLenum pname , GLfloat param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Fogf)(GLenum pname , GLfloat param);
 #define glFogf DynamicGL_Fogf
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Fogfv)(GLenum pname , const GLfloat *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Fogfv)(GLenum pname , const GLfloat *params);
 #define glFogfv DynamicGL_Fogfv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Frustumf)(GLfloat left , GLfloat right , GLfloat bottom , GLfloat top , GLfloat zNear , GLfloat zFar); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Frustumf)(GLfloat left , GLfloat right , GLfloat bottom , GLfloat top , GLfloat zNear , GLfloat zFar);
 #define glFrustumf DynamicGL_Frustumf
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetFloatv)(GLenum pname , GLfloat *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetFloatv)(GLenum pname , GLfloat *params);
 #define glGetFloatv DynamicGL_GetFloatv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetLightfv)(GLenum light , GLenum pname , GLfloat *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetLightfv)(GLenum light , GLenum pname , GLfloat *params);
 #define glGetLightfv DynamicGL_GetLightfv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetMaterialfv)(GLenum face , GLenum pname , GLfloat *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetMaterialfv)(GLenum face , GLenum pname , GLfloat *params);
 #define glGetMaterialfv DynamicGL_GetMaterialfv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexEnvfv)(GLenum env , GLenum pname , GLfloat *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexEnvfv)(GLenum env , GLenum pname , GLfloat *params);
 #define glGetTexEnvfv DynamicGL_GetTexEnvfv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexParameterfv)(GLenum target , GLenum pname , GLfloat *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexParameterfv)(GLenum target , GLenum pname , GLfloat *params);
 #define glGetTexParameterfv DynamicGL_GetTexParameterfv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LightModelf)(GLenum pname , GLfloat param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LightModelf)(GLenum pname , GLfloat param);
 #define glLightModelf DynamicGL_LightModelf
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LightModelfv)(GLenum pname , const GLfloat *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LightModelfv)(GLenum pname , const GLfloat *params);
 #define glLightModelfv DynamicGL_LightModelfv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Lightf)(GLenum light , GLenum pname , GLfloat param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Lightf)(GLenum light , GLenum pname , GLfloat param);
 #define glLightf DynamicGL_Lightf
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Lightfv)(GLenum light , GLenum pname , const GLfloat *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Lightfv)(GLenum light , GLenum pname , const GLfloat *params);
 #define glLightfv DynamicGL_Lightfv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LineWidth)(GLfloat width); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LineWidth)(GLfloat width);
 #define glLineWidth DynamicGL_LineWidth
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadMatrixf)(const GLfloat *m); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadMatrixf)(const GLfloat *m);
 #define glLoadMatrixf DynamicGL_LoadMatrixf
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Materialf)(GLenum face , GLenum pname , GLfloat param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Materialf)(GLenum face , GLenum pname , GLfloat param);
 #define glMaterialf DynamicGL_Materialf
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Materialfv)(GLenum face , GLenum pname , const GLfloat *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Materialfv)(GLenum face , GLenum pname , const GLfloat *params);
 #define glMaterialfv DynamicGL_Materialfv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultMatrixf)(const GLfloat *m); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultMatrixf)(const GLfloat *m);
 #define glMultMatrixf DynamicGL_MultMatrixf
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4f)(GLenum target , GLfloat s , GLfloat t , GLfloat r , GLfloat q); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4f)(GLenum target , GLfloat s , GLfloat t , GLfloat r , GLfloat q);
 #define glMultiTexCoord4f DynamicGL_MultiTexCoord4f
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Normal3f)(GLfloat nx , GLfloat ny , GLfloat nz); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Normal3f)(GLfloat nx , GLfloat ny , GLfloat nz);
 #define glNormal3f DynamicGL_Normal3f
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Orthof)(GLfloat left , GLfloat right , GLfloat bottom , GLfloat top , GLfloat zNear , GLfloat zFar); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Orthof)(GLfloat left , GLfloat right , GLfloat bottom , GLfloat top , GLfloat zNear , GLfloat zFar);
 #define glOrthof DynamicGL_Orthof
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterf)(GLenum pname , GLfloat param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterf)(GLenum pname , GLfloat param);
 #define glPointParameterf DynamicGL_PointParameterf
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterfv)(GLenum pname , const GLfloat *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterfv)(GLenum pname , const GLfloat *params);
 #define glPointParameterfv DynamicGL_PointParameterfv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PointSize)(GLfloat size); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PointSize)(GLfloat size);
 #define glPointSize DynamicGL_PointSize
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PolygonOffset)(GLfloat factor , GLfloat units); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PolygonOffset)(GLfloat factor , GLfloat units);
 #define glPolygonOffset DynamicGL_PolygonOffset
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Rotatef)(GLfloat angle , GLfloat x , GLfloat y , GLfloat z); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Rotatef)(GLfloat angle , GLfloat x , GLfloat y , GLfloat z);
 #define glRotatef DynamicGL_Rotatef
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Scalef)(GLfloat x , GLfloat y , GLfloat z); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Scalef)(GLfloat x , GLfloat y , GLfloat z);
 #define glScalef DynamicGL_Scalef
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvf)(GLenum target , GLenum pname , GLfloat param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvf)(GLenum target , GLenum pname , GLfloat param);
 #define glTexEnvf DynamicGL_TexEnvf
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvfv)(GLenum target , GLenum pname , const GLfloat *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvfv)(GLenum target , GLenum pname , const GLfloat *params);
 #define glTexEnvfv DynamicGL_TexEnvfv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterf)(GLenum target , GLenum pname , GLfloat param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterf)(GLenum target , GLenum pname , GLfloat param);
 #define glTexParameterf DynamicGL_TexParameterf
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterfv)(GLenum target , GLenum pname , const GLfloat *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterfv)(GLenum target , GLenum pname , const GLfloat *params);
 #define glTexParameterfv DynamicGL_TexParameterfv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Translatef)(GLfloat x , GLfloat y , GLfloat z); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Translatef)(GLfloat x , GLfloat y , GLfloat z);
 #define glTranslatef DynamicGL_Translatef
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ActiveTexture)(GLenum texture); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ActiveTexture)(GLenum texture);
 #define glActiveTexture DynamicGL_ActiveTexture
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_AlphaFuncx)(GLenum func , GLclampx ref); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_AlphaFuncx)(GLenum func , GLclampx ref);
 #define glAlphaFuncx DynamicGL_AlphaFuncx
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BindBuffer)(GLenum target , GLuint buffer); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BindBuffer)(GLenum target , GLuint buffer);
 #define glBindBuffer DynamicGL_BindBuffer
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BindTexture)(GLenum target , GLuint texture); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BindTexture)(GLenum target , GLuint texture);
 #define glBindTexture DynamicGL_BindTexture
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFunc)(GLenum sfactor , GLenum dfactor); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFunc)(GLenum sfactor , GLenum dfactor);
 #define glBlendFunc DynamicGL_BlendFunc
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BufferData)(GLenum target , GLsizeiptr size , const GLvoid *data , GLenum usage); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BufferData)(GLenum target , GLsizeiptr size , const GLvoid *data , GLenum usage);
 #define glBufferData DynamicGL_BufferData
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BufferSubData)(GLenum target , GLintptr offset , GLsizeiptr size , const GLvoid *data); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BufferSubData)(GLenum target , GLintptr offset , GLsizeiptr size , const GLvoid *data);
 #define glBufferSubData DynamicGL_BufferSubData
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Clear)(GLbitfield mask); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Clear)(GLbitfield mask);
 #define glClear DynamicGL_Clear
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearColorx)(GLclampx red , GLclampx green , GLclampx blue , GLclampx alpha); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearColorx)(GLclampx red , GLclampx green , GLclampx blue , GLclampx alpha);
 #define glClearColorx DynamicGL_ClearColorx
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearDepthx)(GLclampx depth); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearDepthx)(GLclampx depth);
 #define glClearDepthx DynamicGL_ClearDepthx
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearStencil)(GLint s); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearStencil)(GLint s);
 #define glClearStencil DynamicGL_ClearStencil
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClientActiveTexture)(GLenum texture); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClientActiveTexture)(GLenum texture);
 #define glClientActiveTexture DynamicGL_ClientActiveTexture
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClipPlanex)(GLenum plane , const GLfixed *equation); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClipPlanex)(GLenum plane , const GLfixed *equation);
 #define glClipPlanex DynamicGL_ClipPlanex
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Color4ub)(GLubyte red , GLubyte green , GLubyte blue , GLubyte alpha); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Color4ub)(GLubyte red , GLubyte green , GLubyte blue , GLubyte alpha);
 #define glColor4ub DynamicGL_Color4ub
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Color4x)(GLfixed red , GLfixed green , GLfixed blue , GLfixed alpha); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Color4x)(GLfixed red , GLfixed green , GLfixed blue , GLfixed alpha);
 #define glColor4x DynamicGL_Color4x
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorMask)(GLboolean red , GLboolean green , GLboolean blue , GLboolean alpha); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorMask)(GLboolean red , GLboolean green , GLboolean blue , GLboolean alpha);
 #define glColorMask DynamicGL_ColorMask
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorPointer)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorPointer)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer);
 #define glColorPointer DynamicGL_ColorPointer
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_CompressedTexImage2D)(GLenum target , GLint level , GLenum internalformat , GLsizei width , GLsizei height , GLint border , GLsizei imageSize , const GLvoid *data); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_CompressedTexImage2D)(GLenum target , GLint level , GLenum internalformat , GLsizei width , GLsizei height , GLint border , GLsizei imageSize , const GLvoid *data);
 #define glCompressedTexImage2D DynamicGL_CompressedTexImage2D
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_CompressedTexSubImage2D)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLsizei width , GLsizei height , GLenum format , GLsizei imageSize , const GLvoid *data); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_CompressedTexSubImage2D)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLsizei width , GLsizei height , GLenum format , GLsizei imageSize , const GLvoid *data);
 #define glCompressedTexSubImage2D DynamicGL_CompressedTexSubImage2D
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_CopyTexImage2D)(GLenum target , GLint level , GLenum internalformat , GLint x , GLint y , GLsizei width , GLsizei height , GLint border); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_CopyTexImage2D)(GLenum target , GLint level , GLenum internalformat , GLint x , GLint y , GLsizei width , GLsizei height , GLint border);
 #define glCopyTexImage2D DynamicGL_CopyTexImage2D
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_CopyTexSubImage2D)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLint x , GLint y , GLsizei width , GLsizei height); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_CopyTexSubImage2D)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLint x , GLint y , GLsizei width , GLsizei height);
 #define glCopyTexSubImage2D DynamicGL_CopyTexSubImage2D
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_CullFace)(GLenum mode); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_CullFace)(GLenum mode);
 #define glCullFace DynamicGL_CullFace
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteBuffers)(GLsizei n , const GLuint *buffers); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteBuffers)(GLsizei n , const GLuint *buffers);
 #define glDeleteBuffers DynamicGL_DeleteBuffers
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteTextures)(GLsizei n , const GLuint *textures); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteTextures)(GLsizei n , const GLuint *textures);
 #define glDeleteTextures DynamicGL_DeleteTextures
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthFunc)(GLenum func); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthFunc)(GLenum func);
 #define glDepthFunc DynamicGL_DepthFunc
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthMask)(GLboolean flag); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthMask)(GLboolean flag);
 #define glDepthMask DynamicGL_DepthMask
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthRangex)(GLclampx zNear , GLclampx zFar); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthRangex)(GLclampx zNear , GLclampx zFar);
 #define glDepthRangex DynamicGL_DepthRangex
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Disable)(GLenum cap); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Disable)(GLenum cap);
 #define glDisable DynamicGL_Disable
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DisableClientState)(GLenum array); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DisableClientState)(GLenum array);
 #define glDisableClientState DynamicGL_DisableClientState
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawArrays)(GLenum mode , GLint first , GLsizei count); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawArrays)(GLenum mode , GLint first , GLsizei count);
 #define glDrawArrays DynamicGL_DrawArrays
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElements)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElements)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices);
 #define glDrawElements DynamicGL_DrawElements
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Enable)(GLenum cap); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Enable)(GLenum cap);
 #define glEnable DynamicGL_Enable
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_EnableClientState)(GLenum array); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_EnableClientState)(GLenum array);
 #define glEnableClientState DynamicGL_EnableClientState
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Finish)(); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Finish)();
 #define glFinish DynamicGL_Finish
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Flush)(); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Flush)();
 #define glFlush DynamicGL_Flush
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Fogx)(GLenum pname , GLfixed param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Fogx)(GLenum pname , GLfixed param);
 #define glFogx DynamicGL_Fogx
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Fogxv)(GLenum pname , const GLfixed *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Fogxv)(GLenum pname , const GLfixed *params);
 #define glFogxv DynamicGL_Fogxv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FrontFace)(GLenum mode); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FrontFace)(GLenum mode);
 #define glFrontFace DynamicGL_FrontFace
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Frustumx)(GLfixed left , GLfixed right , GLfixed bottom , GLfixed top , GLfixed zNear , GLfixed zFar); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Frustumx)(GLfixed left , GLfixed right , GLfixed bottom , GLfixed top , GLfixed zNear , GLfixed zFar);
 #define glFrustumx DynamicGL_Frustumx
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetBooleanv)(GLenum pname , GLboolean *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetBooleanv)(GLenum pname , GLboolean *params);
 #define glGetBooleanv DynamicGL_GetBooleanv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetBufferParameteriv)(GLenum target , GLenum pname , GLint *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetBufferParameteriv)(GLenum target , GLenum pname , GLint *params);
 #define glGetBufferParameteriv DynamicGL_GetBufferParameteriv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GenBuffers)(GLsizei n , GLuint *buffers); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GenBuffers)(GLsizei n , GLuint *buffers);
 #define glGenBuffers DynamicGL_GenBuffers
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GenTextures)(GLsizei n , GLuint *textures); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GenTextures)(GLsizei n , GLuint *textures);
 #define glGenTextures DynamicGL_GenTextures
-extern "C" { extern GLenum (DYNAMIC_GL_APIENTRYP DynamicGL_GetError)(); }
+extern GLenum (DYNAMIC_GL_APIENTRYP DynamicGL_GetError)();
 #define glGetError DynamicGL_GetError
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetFixedv)(GLenum pname , GLfixed *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetFixedv)(GLenum pname , GLfixed *params);
 #define glGetFixedv DynamicGL_GetFixedv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetIntegerv)(GLenum pname , GLint *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetIntegerv)(GLenum pname , GLint *params);
 #define glGetIntegerv DynamicGL_GetIntegerv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetLightxv)(GLenum light , GLenum pname , GLfixed *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetLightxv)(GLenum light , GLenum pname , GLfixed *params);
 #define glGetLightxv DynamicGL_GetLightxv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetMaterialxv)(GLenum face , GLenum pname , GLfixed *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetMaterialxv)(GLenum face , GLenum pname , GLfixed *params);
 #define glGetMaterialxv DynamicGL_GetMaterialxv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPointerv)(GLenum pname , GLvoid *p1); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPointerv)(GLenum pname , GLvoid *p1);
 #define glGetPointerv DynamicGL_GetPointerv
-extern "C" { extern GLubyte* (DYNAMIC_GL_APIENTRYP DynamicGL_GetString)(GLenum name); }
+extern GLubyte* (DYNAMIC_GL_APIENTRYP DynamicGL_GetString)(GLenum name);
 #define glGetString DynamicGL_GetString
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexEnviv)(GLenum env , GLenum pname , GLint *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexEnviv)(GLenum env , GLenum pname , GLint *params);
 #define glGetTexEnviv DynamicGL_GetTexEnviv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexEnvxv)(GLenum env , GLenum pname , GLfixed *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexEnvxv)(GLenum env , GLenum pname , GLfixed *params);
 #define glGetTexEnvxv DynamicGL_GetTexEnvxv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexParameteriv)(GLenum target , GLenum pname , GLint *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexParameteriv)(GLenum target , GLenum pname , GLint *params);
 #define glGetTexParameteriv DynamicGL_GetTexParameteriv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexParameterxv)(GLenum target , GLenum pname , GLfixed *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexParameterxv)(GLenum target , GLenum pname , GLfixed *params);
 #define glGetTexParameterxv DynamicGL_GetTexParameterxv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Hint)(GLenum target , GLenum mode); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Hint)(GLenum target , GLenum mode);
 #define glHint DynamicGL_Hint
-extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsBuffer)(GLuint buffer); }
+extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsBuffer)(GLuint buffer);
 #define glIsBuffer DynamicGL_IsBuffer
-extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsEnabled)(GLenum cap); }
+extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsEnabled)(GLenum cap);
 #define glIsEnabled DynamicGL_IsEnabled
-extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsTexture)(GLuint texture); }
+extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsTexture)(GLuint texture);
 #define glIsTexture DynamicGL_IsTexture
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LightModelx)(GLenum pname , GLfixed param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LightModelx)(GLenum pname , GLfixed param);
 #define glLightModelx DynamicGL_LightModelx
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LightModelxv)(GLenum pname , const GLfixed *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LightModelxv)(GLenum pname , const GLfixed *params);
 #define glLightModelxv DynamicGL_LightModelxv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Lightx)(GLenum light , GLenum pname , GLfixed param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Lightx)(GLenum light , GLenum pname , GLfixed param);
 #define glLightx DynamicGL_Lightx
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Lightxv)(GLenum light , GLenum pname , const GLfixed *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Lightxv)(GLenum light , GLenum pname , const GLfixed *params);
 #define glLightxv DynamicGL_Lightxv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LineWidthx)(GLfixed width); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LineWidthx)(GLfixed width);
 #define glLineWidthx DynamicGL_LineWidthx
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadIdentity)(); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadIdentity)();
 #define glLoadIdentity DynamicGL_LoadIdentity
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadMatrixx)(const GLfixed *m); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadMatrixx)(const GLfixed *m);
 #define glLoadMatrixx DynamicGL_LoadMatrixx
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LogicOp)(GLenum opcode); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LogicOp)(GLenum opcode);
 #define glLogicOp DynamicGL_LogicOp
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Materialx)(GLenum face , GLenum pname , GLfixed param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Materialx)(GLenum face , GLenum pname , GLfixed param);
 #define glMaterialx DynamicGL_Materialx
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Materialxv)(GLenum face , GLenum pname , const GLfixed *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Materialxv)(GLenum face , GLenum pname , const GLfixed *params);
 #define glMaterialxv DynamicGL_Materialxv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MatrixMode)(GLenum mode); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MatrixMode)(GLenum mode);
 #define glMatrixMode DynamicGL_MatrixMode
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultMatrixx)(const GLfixed *m); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultMatrixx)(const GLfixed *m);
 #define glMultMatrixx DynamicGL_MultMatrixx
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4x)(GLenum target , GLfixed s , GLfixed t , GLfixed r , GLfixed q); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4x)(GLenum target , GLfixed s , GLfixed t , GLfixed r , GLfixed q);
 #define glMultiTexCoord4x DynamicGL_MultiTexCoord4x
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Normal3x)(GLfixed nx , GLfixed ny , GLfixed nz); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Normal3x)(GLfixed nx , GLfixed ny , GLfixed nz);
 #define glNormal3x DynamicGL_Normal3x
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_NormalPointer)(GLenum type , GLsizei stride , const GLvoid *pointer); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_NormalPointer)(GLenum type , GLsizei stride , const GLvoid *pointer);
 #define glNormalPointer DynamicGL_NormalPointer
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Orthox)(GLfixed left , GLfixed right , GLfixed bottom , GLfixed top , GLfixed zNear , GLfixed zFar); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Orthox)(GLfixed left , GLfixed right , GLfixed bottom , GLfixed top , GLfixed zNear , GLfixed zFar);
 #define glOrthox DynamicGL_Orthox
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PixelStorei)(GLenum pname , GLint param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PixelStorei)(GLenum pname , GLint param);
 #define glPixelStorei DynamicGL_PixelStorei
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterx)(GLenum pname , GLfixed param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterx)(GLenum pname , GLfixed param);
 #define glPointParameterx DynamicGL_PointParameterx
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterxv)(GLenum pname , const GLfixed *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterxv)(GLenum pname , const GLfixed *params);
 #define glPointParameterxv DynamicGL_PointParameterxv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PointSizex)(GLfixed size); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PointSizex)(GLfixed size);
 #define glPointSizex DynamicGL_PointSizex
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PolygonOffsetx)(GLfixed factor , GLfixed units); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PolygonOffsetx)(GLfixed factor , GLfixed units);
 #define glPolygonOffsetx DynamicGL_PolygonOffsetx
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PopMatrix)(); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PopMatrix)();
 #define glPopMatrix DynamicGL_PopMatrix
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PushMatrix)(); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PushMatrix)();
 #define glPushMatrix DynamicGL_PushMatrix
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ReadPixels)(GLint x , GLint y , GLsizei width , GLsizei height , GLenum format , GLenum type , GLvoid *pixels); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ReadPixels)(GLint x , GLint y , GLsizei width , GLsizei height , GLenum format , GLenum type , GLvoid *pixels);
 #define glReadPixels DynamicGL_ReadPixels
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Rotatex)(GLfixed angle , GLfixed x , GLfixed y , GLfixed z); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Rotatex)(GLfixed angle , GLfixed x , GLfixed y , GLfixed z);
 #define glRotatex DynamicGL_Rotatex
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleCoverage)(GLclampf value , GLboolean invert); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleCoverage)(GLclampf value , GLboolean invert);
 #define glSampleCoverage DynamicGL_SampleCoverage
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleCoveragex)(GLclampx value , GLboolean invert); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleCoveragex)(GLclampx value , GLboolean invert);
 #define glSampleCoveragex DynamicGL_SampleCoveragex
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Scalex)(GLfixed x , GLfixed y , GLfixed z); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Scalex)(GLfixed x , GLfixed y , GLfixed z);
 #define glScalex DynamicGL_Scalex
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Scissor)(GLint x , GLint y , GLsizei width , GLsizei height); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Scissor)(GLint x , GLint y , GLsizei width , GLsizei height);
 #define glScissor DynamicGL_Scissor
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ShadeModel)(GLenum mode); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ShadeModel)(GLenum mode);
 #define glShadeModel DynamicGL_ShadeModel
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilFunc)(GLenum func , GLint ref , GLuint mask); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilFunc)(GLenum func , GLint ref , GLuint mask);
 #define glStencilFunc DynamicGL_StencilFunc
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilMask)(GLuint mask); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilMask)(GLuint mask);
 #define glStencilMask DynamicGL_StencilMask
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilOp)(GLenum fail , GLenum zfail , GLenum zpass); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilOp)(GLenum fail , GLenum zfail , GLenum zpass);
 #define glStencilOp DynamicGL_StencilOp
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexCoordPointer)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexCoordPointer)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer);
 #define glTexCoordPointer DynamicGL_TexCoordPointer
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvi)(GLenum target , GLenum pname , GLint param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvi)(GLenum target , GLenum pname , GLint param);
 #define glTexEnvi DynamicGL_TexEnvi
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvx)(GLenum target , GLenum pname , GLfixed param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvx)(GLenum target , GLenum pname , GLfixed param);
 #define glTexEnvx DynamicGL_TexEnvx
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnviv)(GLenum target , GLenum pname , const GLint *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnviv)(GLenum target , GLenum pname , const GLint *params);
 #define glTexEnviv DynamicGL_TexEnviv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvxv)(GLenum target , GLenum pname , const GLfixed *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvxv)(GLenum target , GLenum pname , const GLfixed *params);
 #define glTexEnvxv DynamicGL_TexEnvxv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexImage2D)(GLenum target , GLint level , GLint internalformat , GLsizei width , GLsizei height , GLint border , GLenum format , GLenum type , const GLvoid *pixels); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexImage2D)(GLenum target , GLint level , GLint internalformat , GLsizei width , GLsizei height , GLint border , GLenum format , GLenum type , const GLvoid *pixels);
 #define glTexImage2D DynamicGL_TexImage2D
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameteri)(GLenum target , GLenum pname , GLint param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameteri)(GLenum target , GLenum pname , GLint param);
 #define glTexParameteri DynamicGL_TexParameteri
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterx)(GLenum target , GLenum pname , GLfixed param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterx)(GLenum target , GLenum pname , GLfixed param);
 #define glTexParameterx DynamicGL_TexParameterx
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameteriv)(GLenum target , GLenum pname , const GLint *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameteriv)(GLenum target , GLenum pname , const GLint *params);
 #define glTexParameteriv DynamicGL_TexParameteriv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterxv)(GLenum target , GLenum pname , const GLfixed *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterxv)(GLenum target , GLenum pname , const GLfixed *params);
 #define glTexParameterxv DynamicGL_TexParameterxv
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexSubImage2D)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLsizei width , GLsizei height , GLenum format , GLenum type , const GLvoid *pixels); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexSubImage2D)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLsizei width , GLsizei height , GLenum format , GLenum type , const GLvoid *pixels);
 #define glTexSubImage2D DynamicGL_TexSubImage2D
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Translatex)(GLfixed x , GLfixed y , GLfixed z); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Translatex)(GLfixed x , GLfixed y , GLfixed z);
 #define glTranslatex DynamicGL_Translatex
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexPointer)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexPointer)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer);
 #define glVertexPointer DynamicGL_VertexPointer
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Viewport)(GLint x , GLint y , GLsizei width , GLsizei height); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Viewport)(GLint x , GLint y , GLsizei width , GLsizei height);
 #define glViewport DynamicGL_Viewport
 #else
-extern "C" {DYNAMIC_GL_APIENTRY void glAlphaFunc( GLenum func , GLclampf ref );
-DYNAMIC_GL_APIENTRY void glClearColor( GLclampf red , GLclampf green , GLclampf blue , GLclampf alpha );
-DYNAMIC_GL_APIENTRY void glClearDepthf( GLclampf depth );
-DYNAMIC_GL_APIENTRY void glClipPlanef( GLenum plane , const GLfloat *equation );
-DYNAMIC_GL_APIENTRY void glColor4f( GLfloat red , GLfloat green , GLfloat blue , GLfloat alpha );
-DYNAMIC_GL_APIENTRY void glDepthRangef( GLclampf zNear , GLclampf zFar );
-DYNAMIC_GL_APIENTRY void glFogf( GLenum pname , GLfloat param );
-DYNAMIC_GL_APIENTRY void glFogfv( GLenum pname , const GLfloat *params );
-DYNAMIC_GL_APIENTRY void glFrustumf( GLfloat left , GLfloat right , GLfloat bottom , GLfloat top , GLfloat zNear , GLfloat zFar );
-DYNAMIC_GL_APIENTRY void glGetFloatv( GLenum pname , GLfloat *params );
-DYNAMIC_GL_APIENTRY void glGetLightfv( GLenum light , GLenum pname , GLfloat *params );
-DYNAMIC_GL_APIENTRY void glGetMaterialfv( GLenum face , GLenum pname , GLfloat *params );
-DYNAMIC_GL_APIENTRY void glGetTexEnvfv( GLenum env , GLenum pname , GLfloat *params );
-DYNAMIC_GL_APIENTRY void glGetTexParameterfv( GLenum target , GLenum pname , GLfloat *params );
-DYNAMIC_GL_APIENTRY void glLightModelf( GLenum pname , GLfloat param );
-DYNAMIC_GL_APIENTRY void glLightModelfv( GLenum pname , const GLfloat *params );
-DYNAMIC_GL_APIENTRY void glLightf( GLenum light , GLenum pname , GLfloat param );
-DYNAMIC_GL_APIENTRY void glLightfv( GLenum light , GLenum pname , const GLfloat *params );
-DYNAMIC_GL_APIENTRY void glLineWidth( GLfloat width );
-DYNAMIC_GL_APIENTRY void glLoadMatrixf( const GLfloat *m );
-DYNAMIC_GL_APIENTRY void glMaterialf( GLenum face , GLenum pname , GLfloat param );
-DYNAMIC_GL_APIENTRY void glMaterialfv( GLenum face , GLenum pname , const GLfloat *params );
-DYNAMIC_GL_APIENTRY void glMultMatrixf( const GLfloat *m );
-DYNAMIC_GL_APIENTRY void glMultiTexCoord4f( GLenum target , GLfloat s , GLfloat t , GLfloat r , GLfloat q );
-DYNAMIC_GL_APIENTRY void glNormal3f( GLfloat nx , GLfloat ny , GLfloat nz );
-DYNAMIC_GL_APIENTRY void glOrthof( GLfloat left , GLfloat right , GLfloat bottom , GLfloat top , GLfloat zNear , GLfloat zFar );
-DYNAMIC_GL_APIENTRY void glPointParameterf( GLenum pname , GLfloat param );
-DYNAMIC_GL_APIENTRY void glPointParameterfv( GLenum pname , const GLfloat *params );
-DYNAMIC_GL_APIENTRY void glPointSize( GLfloat size );
-DYNAMIC_GL_APIENTRY void glPolygonOffset( GLfloat factor , GLfloat units );
-DYNAMIC_GL_APIENTRY void glRotatef( GLfloat angle , GLfloat x , GLfloat y , GLfloat z );
-DYNAMIC_GL_APIENTRY void glScalef( GLfloat x , GLfloat y , GLfloat z );
-DYNAMIC_GL_APIENTRY void glTexEnvf( GLenum target , GLenum pname , GLfloat param );
-DYNAMIC_GL_APIENTRY void glTexEnvfv( GLenum target , GLenum pname , const GLfloat *params );
-DYNAMIC_GL_APIENTRY void glTexParameterf( GLenum target , GLenum pname , GLfloat param );
-DYNAMIC_GL_APIENTRY void glTexParameterfv( GLenum target , GLenum pname , const GLfloat *params );
-DYNAMIC_GL_APIENTRY void glTranslatef( GLfloat x , GLfloat y , GLfloat z );
-DYNAMIC_GL_APIENTRY void glActiveTexture( GLenum texture );
-DYNAMIC_GL_APIENTRY void glAlphaFuncx( GLenum func , GLclampx ref );
-DYNAMIC_GL_APIENTRY void glBindBuffer( GLenum target , GLuint buffer );
-DYNAMIC_GL_APIENTRY void glBindTexture( GLenum target , GLuint texture );
-DYNAMIC_GL_APIENTRY void glBlendFunc( GLenum sfactor , GLenum dfactor );
-DYNAMIC_GL_APIENTRY void glBufferData( GLenum target , GLsizeiptr size , const GLvoid *data , GLenum usage );
-DYNAMIC_GL_APIENTRY void glBufferSubData( GLenum target , GLintptr offset , GLsizeiptr size , const GLvoid *data );
-DYNAMIC_GL_APIENTRY void glClear( GLbitfield mask );
-DYNAMIC_GL_APIENTRY void glClearColorx( GLclampx red , GLclampx green , GLclampx blue , GLclampx alpha );
-DYNAMIC_GL_APIENTRY void glClearDepthx( GLclampx depth );
-DYNAMIC_GL_APIENTRY void glClearStencil( GLint s );
-DYNAMIC_GL_APIENTRY void glClientActiveTexture( GLenum texture );
-DYNAMIC_GL_APIENTRY void glClipPlanex( GLenum plane , const GLfixed *equation );
-DYNAMIC_GL_APIENTRY void glColor4ub( GLubyte red , GLubyte green , GLubyte blue , GLubyte alpha );
-DYNAMIC_GL_APIENTRY void glColor4x( GLfixed red , GLfixed green , GLfixed blue , GLfixed alpha );
-DYNAMIC_GL_APIENTRY void glColorMask( GLboolean red , GLboolean green , GLboolean blue , GLboolean alpha );
-DYNAMIC_GL_APIENTRY void glColorPointer( GLint size , GLenum type , GLsizei stride , const GLvoid *pointer );
-DYNAMIC_GL_APIENTRY void glCompressedTexImage2D( GLenum target , GLint level , GLenum internalformat , GLsizei width , GLsizei height , GLint border , GLsizei imageSize , const GLvoid *data );
-DYNAMIC_GL_APIENTRY void glCompressedTexSubImage2D( GLenum target , GLint level , GLint xoffset , GLint yoffset , GLsizei width , GLsizei height , GLenum format , GLsizei imageSize , const GLvoid *data );
-DYNAMIC_GL_APIENTRY void glCopyTexImage2D( GLenum target , GLint level , GLenum internalformat , GLint x , GLint y , GLsizei width , GLsizei height , GLint border );
-DYNAMIC_GL_APIENTRY void glCopyTexSubImage2D( GLenum target , GLint level , GLint xoffset , GLint yoffset , GLint x , GLint y , GLsizei width , GLsizei height );
-DYNAMIC_GL_APIENTRY void glCullFace( GLenum mode );
-DYNAMIC_GL_APIENTRY void glDeleteBuffers( GLsizei n , const GLuint *buffers );
-DYNAMIC_GL_APIENTRY void glDeleteTextures( GLsizei n , const GLuint *textures );
-DYNAMIC_GL_APIENTRY void glDepthFunc( GLenum func );
-DYNAMIC_GL_APIENTRY void glDepthMask( GLboolean flag );
-DYNAMIC_GL_APIENTRY void glDepthRangex( GLclampx zNear , GLclampx zFar );
-DYNAMIC_GL_APIENTRY void glDisable( GLenum cap );
-DYNAMIC_GL_APIENTRY void glDisableClientState( GLenum array );
-DYNAMIC_GL_APIENTRY void glDrawArrays( GLenum mode , GLint first , GLsizei count );
-DYNAMIC_GL_APIENTRY void glDrawElements( GLenum mode , GLsizei count , GLenum type , const GLvoid *indices );
-DYNAMIC_GL_APIENTRY void glEnable( GLenum cap );
-DYNAMIC_GL_APIENTRY void glEnableClientState( GLenum array );
-DYNAMIC_GL_APIENTRY void glFinish(  );
-DYNAMIC_GL_APIENTRY void glFlush(  );
-DYNAMIC_GL_APIENTRY void glFogx( GLenum pname , GLfixed param );
-DYNAMIC_GL_APIENTRY void glFogxv( GLenum pname , const GLfixed *params );
-DYNAMIC_GL_APIENTRY void glFrontFace( GLenum mode );
-DYNAMIC_GL_APIENTRY void glFrustumx( GLfixed left , GLfixed right , GLfixed bottom , GLfixed top , GLfixed zNear , GLfixed zFar );
-DYNAMIC_GL_APIENTRY void glGetBooleanv( GLenum pname , GLboolean *params );
-DYNAMIC_GL_APIENTRY void glGetBufferParameteriv( GLenum target , GLenum pname , GLint *params );
-DYNAMIC_GL_APIENTRY void glGenBuffers( GLsizei n , GLuint *buffers );
-DYNAMIC_GL_APIENTRY void glGenTextures( GLsizei n , GLuint *textures );
-DYNAMIC_GL_APIENTRY GLenum glGetError(  );
-DYNAMIC_GL_APIENTRY void glGetFixedv( GLenum pname , GLfixed *params );
-DYNAMIC_GL_APIENTRY void glGetIntegerv( GLenum pname , GLint *params );
-DYNAMIC_GL_APIENTRY void glGetLightxv( GLenum light , GLenum pname , GLfixed *params );
-DYNAMIC_GL_APIENTRY void glGetMaterialxv( GLenum face , GLenum pname , GLfixed *params );
-DYNAMIC_GL_APIENTRY void glGetPointerv( GLenum pname , GLvoid *p1 );
-DYNAMIC_GL_APIENTRY GLubyte* glGetString( GLenum name );
-DYNAMIC_GL_APIENTRY void glGetTexEnviv( GLenum env , GLenum pname , GLint *params );
-DYNAMIC_GL_APIENTRY void glGetTexEnvxv( GLenum env , GLenum pname , GLfixed *params );
-DYNAMIC_GL_APIENTRY void glGetTexParameteriv( GLenum target , GLenum pname , GLint *params );
-DYNAMIC_GL_APIENTRY void glGetTexParameterxv( GLenum target , GLenum pname , GLfixed *params );
-DYNAMIC_GL_APIENTRY void glHint( GLenum target , GLenum mode );
-DYNAMIC_GL_APIENTRY GLboolean glIsBuffer( GLuint buffer );
-DYNAMIC_GL_APIENTRY GLboolean glIsEnabled( GLenum cap );
-DYNAMIC_GL_APIENTRY GLboolean glIsTexture( GLuint texture );
-DYNAMIC_GL_APIENTRY void glLightModelx( GLenum pname , GLfixed param );
-DYNAMIC_GL_APIENTRY void glLightModelxv( GLenum pname , const GLfixed *params );
-DYNAMIC_GL_APIENTRY void glLightx( GLenum light , GLenum pname , GLfixed param );
-DYNAMIC_GL_APIENTRY void glLightxv( GLenum light , GLenum pname , const GLfixed *params );
-DYNAMIC_GL_APIENTRY void glLineWidthx( GLfixed width );
-DYNAMIC_GL_APIENTRY void glLoadIdentity(  );
-DYNAMIC_GL_APIENTRY void glLoadMatrixx( const GLfixed *m );
-DYNAMIC_GL_APIENTRY void glLogicOp( GLenum opcode );
-DYNAMIC_GL_APIENTRY void glMaterialx( GLenum face , GLenum pname , GLfixed param );
-DYNAMIC_GL_APIENTRY void glMaterialxv( GLenum face , GLenum pname , const GLfixed *params );
-DYNAMIC_GL_APIENTRY void glMatrixMode( GLenum mode );
-DYNAMIC_GL_APIENTRY void glMultMatrixx( const GLfixed *m );
-DYNAMIC_GL_APIENTRY void glMultiTexCoord4x( GLenum target , GLfixed s , GLfixed t , GLfixed r , GLfixed q );
-DYNAMIC_GL_APIENTRY void glNormal3x( GLfixed nx , GLfixed ny , GLfixed nz );
-DYNAMIC_GL_APIENTRY void glNormalPointer( GLenum type , GLsizei stride , const GLvoid *pointer );
-DYNAMIC_GL_APIENTRY void glOrthox( GLfixed left , GLfixed right , GLfixed bottom , GLfixed top , GLfixed zNear , GLfixed zFar );
-DYNAMIC_GL_APIENTRY void glPixelStorei( GLenum pname , GLint param );
-DYNAMIC_GL_APIENTRY void glPointParameterx( GLenum pname , GLfixed param );
-DYNAMIC_GL_APIENTRY void glPointParameterxv( GLenum pname , const GLfixed *params );
-DYNAMIC_GL_APIENTRY void glPointSizex( GLfixed size );
-DYNAMIC_GL_APIENTRY void glPolygonOffsetx( GLfixed factor , GLfixed units );
-DYNAMIC_GL_APIENTRY void glPopMatrix(  );
-DYNAMIC_GL_APIENTRY void glPushMatrix(  );
-DYNAMIC_GL_APIENTRY void glReadPixels( GLint x , GLint y , GLsizei width , GLsizei height , GLenum format , GLenum type , GLvoid *pixels );
-DYNAMIC_GL_APIENTRY void glRotatex( GLfixed angle , GLfixed x , GLfixed y , GLfixed z );
-DYNAMIC_GL_APIENTRY void glSampleCoverage( GLclampf value , GLboolean invert );
-DYNAMIC_GL_APIENTRY void glSampleCoveragex( GLclampx value , GLboolean invert );
-DYNAMIC_GL_APIENTRY void glScalex( GLfixed x , GLfixed y , GLfixed z );
-DYNAMIC_GL_APIENTRY void glScissor( GLint x , GLint y , GLsizei width , GLsizei height );
-DYNAMIC_GL_APIENTRY void glShadeModel( GLenum mode );
-DYNAMIC_GL_APIENTRY void glStencilFunc( GLenum func , GLint ref , GLuint mask );
-DYNAMIC_GL_APIENTRY void glStencilMask( GLuint mask );
-DYNAMIC_GL_APIENTRY void glStencilOp( GLenum fail , GLenum zfail , GLenum zpass );
-DYNAMIC_GL_APIENTRY void glTexCoordPointer( GLint size , GLenum type , GLsizei stride , const GLvoid *pointer );
-DYNAMIC_GL_APIENTRY void glTexEnvi( GLenum target , GLenum pname , GLint param );
-DYNAMIC_GL_APIENTRY void glTexEnvx( GLenum target , GLenum pname , GLfixed param );
-DYNAMIC_GL_APIENTRY void glTexEnviv( GLenum target , GLenum pname , const GLint *params );
-DYNAMIC_GL_APIENTRY void glTexEnvxv( GLenum target , GLenum pname , const GLfixed *params );
-DYNAMIC_GL_APIENTRY void glTexImage2D( GLenum target , GLint level , GLint internalformat , GLsizei width , GLsizei height , GLint border , GLenum format , GLenum type , const GLvoid *pixels );
-DYNAMIC_GL_APIENTRY void glTexParameteri( GLenum target , GLenum pname , GLint param );
-DYNAMIC_GL_APIENTRY void glTexParameterx( GLenum target , GLenum pname , GLfixed param );
-DYNAMIC_GL_APIENTRY void glTexParameteriv( GLenum target , GLenum pname , const GLint *params );
-DYNAMIC_GL_APIENTRY void glTexParameterxv( GLenum target , GLenum pname , const GLfixed *params );
-DYNAMIC_GL_APIENTRY void glTexSubImage2D( GLenum target , GLint level , GLint xoffset , GLint yoffset , GLsizei width , GLsizei height , GLenum format , GLenum type , const GLvoid *pixels );
-DYNAMIC_GL_APIENTRY void glTranslatex( GLfixed x , GLfixed y , GLfixed z );
-DYNAMIC_GL_APIENTRY void glVertexPointer( GLint size , GLenum type , GLsizei stride , const GLvoid *pointer );
-DYNAMIC_GL_APIENTRY void glViewport( GLint x , GLint y , GLsizei width , GLsizei height );
+extern "C" {
+ DYNAMIC_GL_APIENTRY void glAlphaFunc( GLenum func , GLclampf ref );
+ DYNAMIC_GL_APIENTRY void glClearColor( GLclampf red , GLclampf green , GLclampf blue , GLclampf alpha );
+ DYNAMIC_GL_APIENTRY void glClearDepthf( GLclampf depth );
+ DYNAMIC_GL_APIENTRY void glClipPlanef( GLenum plane , const GLfloat *equation );
+ DYNAMIC_GL_APIENTRY void glColor4f( GLfloat red , GLfloat green , GLfloat blue , GLfloat alpha );
+ DYNAMIC_GL_APIENTRY void glDepthRangef( GLclampf zNear , GLclampf zFar );
+ DYNAMIC_GL_APIENTRY void glFogf( GLenum pname , GLfloat param );
+ DYNAMIC_GL_APIENTRY void glFogfv( GLenum pname , const GLfloat *params );
+ DYNAMIC_GL_APIENTRY void glFrustumf( GLfloat left , GLfloat right , GLfloat bottom , GLfloat top , GLfloat zNear , GLfloat zFar );
+ DYNAMIC_GL_APIENTRY void glGetFloatv( GLenum pname , GLfloat *params );
+ DYNAMIC_GL_APIENTRY void glGetLightfv( GLenum light , GLenum pname , GLfloat *params );
+ DYNAMIC_GL_APIENTRY void glGetMaterialfv( GLenum face , GLenum pname , GLfloat *params );
+ DYNAMIC_GL_APIENTRY void glGetTexEnvfv( GLenum env , GLenum pname , GLfloat *params );
+ DYNAMIC_GL_APIENTRY void glGetTexParameterfv( GLenum target , GLenum pname , GLfloat *params );
+ DYNAMIC_GL_APIENTRY void glLightModelf( GLenum pname , GLfloat param );
+ DYNAMIC_GL_APIENTRY void glLightModelfv( GLenum pname , const GLfloat *params );
+ DYNAMIC_GL_APIENTRY void glLightf( GLenum light , GLenum pname , GLfloat param );
+ DYNAMIC_GL_APIENTRY void glLightfv( GLenum light , GLenum pname , const GLfloat *params );
+ DYNAMIC_GL_APIENTRY void glLineWidth( GLfloat width );
+ DYNAMIC_GL_APIENTRY void glLoadMatrixf( const GLfloat *m );
+ DYNAMIC_GL_APIENTRY void glMaterialf( GLenum face , GLenum pname , GLfloat param );
+ DYNAMIC_GL_APIENTRY void glMaterialfv( GLenum face , GLenum pname , const GLfloat *params );
+ DYNAMIC_GL_APIENTRY void glMultMatrixf( const GLfloat *m );
+ DYNAMIC_GL_APIENTRY void glMultiTexCoord4f( GLenum target , GLfloat s , GLfloat t , GLfloat r , GLfloat q );
+ DYNAMIC_GL_APIENTRY void glNormal3f( GLfloat nx , GLfloat ny , GLfloat nz );
+ DYNAMIC_GL_APIENTRY void glOrthof( GLfloat left , GLfloat right , GLfloat bottom , GLfloat top , GLfloat zNear , GLfloat zFar );
+ DYNAMIC_GL_APIENTRY void glPointParameterf( GLenum pname , GLfloat param );
+ DYNAMIC_GL_APIENTRY void glPointParameterfv( GLenum pname , const GLfloat *params );
+ DYNAMIC_GL_APIENTRY void glPointSize( GLfloat size );
+ DYNAMIC_GL_APIENTRY void glPolygonOffset( GLfloat factor , GLfloat units );
+ DYNAMIC_GL_APIENTRY void glRotatef( GLfloat angle , GLfloat x , GLfloat y , GLfloat z );
+ DYNAMIC_GL_APIENTRY void glScalef( GLfloat x , GLfloat y , GLfloat z );
+ DYNAMIC_GL_APIENTRY void glTexEnvf( GLenum target , GLenum pname , GLfloat param );
+ DYNAMIC_GL_APIENTRY void glTexEnvfv( GLenum target , GLenum pname , const GLfloat *params );
+ DYNAMIC_GL_APIENTRY void glTexParameterf( GLenum target , GLenum pname , GLfloat param );
+ DYNAMIC_GL_APIENTRY void glTexParameterfv( GLenum target , GLenum pname , const GLfloat *params );
+ DYNAMIC_GL_APIENTRY void glTranslatef( GLfloat x , GLfloat y , GLfloat z );
+ DYNAMIC_GL_APIENTRY void glActiveTexture( GLenum texture );
+ DYNAMIC_GL_APIENTRY void glAlphaFuncx( GLenum func , GLclampx ref );
+ DYNAMIC_GL_APIENTRY void glBindBuffer( GLenum target , GLuint buffer );
+ DYNAMIC_GL_APIENTRY void glBindTexture( GLenum target , GLuint texture );
+ DYNAMIC_GL_APIENTRY void glBlendFunc( GLenum sfactor , GLenum dfactor );
+ DYNAMIC_GL_APIENTRY void glBufferData( GLenum target , GLsizeiptr size , const GLvoid *data , GLenum usage );
+ DYNAMIC_GL_APIENTRY void glBufferSubData( GLenum target , GLintptr offset , GLsizeiptr size , const GLvoid *data );
+ DYNAMIC_GL_APIENTRY void glClear( GLbitfield mask );
+ DYNAMIC_GL_APIENTRY void glClearColorx( GLclampx red , GLclampx green , GLclampx blue , GLclampx alpha );
+ DYNAMIC_GL_APIENTRY void glClearDepthx( GLclampx depth );
+ DYNAMIC_GL_APIENTRY void glClearStencil( GLint s );
+ DYNAMIC_GL_APIENTRY void glClientActiveTexture( GLenum texture );
+ DYNAMIC_GL_APIENTRY void glClipPlanex( GLenum plane , const GLfixed *equation );
+ DYNAMIC_GL_APIENTRY void glColor4ub( GLubyte red , GLubyte green , GLubyte blue , GLubyte alpha );
+ DYNAMIC_GL_APIENTRY void glColor4x( GLfixed red , GLfixed green , GLfixed blue , GLfixed alpha );
+ DYNAMIC_GL_APIENTRY void glColorMask( GLboolean red , GLboolean green , GLboolean blue , GLboolean alpha );
+ DYNAMIC_GL_APIENTRY void glColorPointer( GLint size , GLenum type , GLsizei stride , const GLvoid *pointer );
+ DYNAMIC_GL_APIENTRY void glCompressedTexImage2D( GLenum target , GLint level , GLenum internalformat , GLsizei width , GLsizei height , GLint border , GLsizei imageSize , const GLvoid *data );
+ DYNAMIC_GL_APIENTRY void glCompressedTexSubImage2D( GLenum target , GLint level , GLint xoffset , GLint yoffset , GLsizei width , GLsizei height , GLenum format , GLsizei imageSize , const GLvoid *data );
+ DYNAMIC_GL_APIENTRY void glCopyTexImage2D( GLenum target , GLint level , GLenum internalformat , GLint x , GLint y , GLsizei width , GLsizei height , GLint border );
+ DYNAMIC_GL_APIENTRY void glCopyTexSubImage2D( GLenum target , GLint level , GLint xoffset , GLint yoffset , GLint x , GLint y , GLsizei width , GLsizei height );
+ DYNAMIC_GL_APIENTRY void glCullFace( GLenum mode );
+ DYNAMIC_GL_APIENTRY void glDeleteBuffers( GLsizei n , const GLuint *buffers );
+ DYNAMIC_GL_APIENTRY void glDeleteTextures( GLsizei n , const GLuint *textures );
+ DYNAMIC_GL_APIENTRY void glDepthFunc( GLenum func );
+ DYNAMIC_GL_APIENTRY void glDepthMask( GLboolean flag );
+ DYNAMIC_GL_APIENTRY void glDepthRangex( GLclampx zNear , GLclampx zFar );
+ DYNAMIC_GL_APIENTRY void glDisable( GLenum cap );
+ DYNAMIC_GL_APIENTRY void glDisableClientState( GLenum array );
+ DYNAMIC_GL_APIENTRY void glDrawArrays( GLenum mode , GLint first , GLsizei count );
+ DYNAMIC_GL_APIENTRY void glDrawElements( GLenum mode , GLsizei count , GLenum type , const GLvoid *indices );
+ DYNAMIC_GL_APIENTRY void glEnable( GLenum cap );
+ DYNAMIC_GL_APIENTRY void glEnableClientState( GLenum array );
+ DYNAMIC_GL_APIENTRY void glFinish(  );
+ DYNAMIC_GL_APIENTRY void glFlush(  );
+ DYNAMIC_GL_APIENTRY void glFogx( GLenum pname , GLfixed param );
+ DYNAMIC_GL_APIENTRY void glFogxv( GLenum pname , const GLfixed *params );
+ DYNAMIC_GL_APIENTRY void glFrontFace( GLenum mode );
+ DYNAMIC_GL_APIENTRY void glFrustumx( GLfixed left , GLfixed right , GLfixed bottom , GLfixed top , GLfixed zNear , GLfixed zFar );
+ DYNAMIC_GL_APIENTRY void glGetBooleanv( GLenum pname , GLboolean *params );
+ DYNAMIC_GL_APIENTRY void glGetBufferParameteriv( GLenum target , GLenum pname , GLint *params );
+ DYNAMIC_GL_APIENTRY void glGenBuffers( GLsizei n , GLuint *buffers );
+ DYNAMIC_GL_APIENTRY void glGenTextures( GLsizei n , GLuint *textures );
+ DYNAMIC_GL_APIENTRY GLenum glGetError(  );
+ DYNAMIC_GL_APIENTRY void glGetFixedv( GLenum pname , GLfixed *params );
+ DYNAMIC_GL_APIENTRY void glGetIntegerv( GLenum pname , GLint *params );
+ DYNAMIC_GL_APIENTRY void glGetLightxv( GLenum light , GLenum pname , GLfixed *params );
+ DYNAMIC_GL_APIENTRY void glGetMaterialxv( GLenum face , GLenum pname , GLfixed *params );
+ DYNAMIC_GL_APIENTRY void glGetPointerv( GLenum pname , GLvoid *p1 );
+ DYNAMIC_GL_APIENTRY GLubyte* glGetString( GLenum name );
+ DYNAMIC_GL_APIENTRY void glGetTexEnviv( GLenum env , GLenum pname , GLint *params );
+ DYNAMIC_GL_APIENTRY void glGetTexEnvxv( GLenum env , GLenum pname , GLfixed *params );
+ DYNAMIC_GL_APIENTRY void glGetTexParameteriv( GLenum target , GLenum pname , GLint *params );
+ DYNAMIC_GL_APIENTRY void glGetTexParameterxv( GLenum target , GLenum pname , GLfixed *params );
+ DYNAMIC_GL_APIENTRY void glHint( GLenum target , GLenum mode );
+ DYNAMIC_GL_APIENTRY GLboolean glIsBuffer( GLuint buffer );
+ DYNAMIC_GL_APIENTRY GLboolean glIsEnabled( GLenum cap );
+ DYNAMIC_GL_APIENTRY GLboolean glIsTexture( GLuint texture );
+ DYNAMIC_GL_APIENTRY void glLightModelx( GLenum pname , GLfixed param );
+ DYNAMIC_GL_APIENTRY void glLightModelxv( GLenum pname , const GLfixed *params );
+ DYNAMIC_GL_APIENTRY void glLightx( GLenum light , GLenum pname , GLfixed param );
+ DYNAMIC_GL_APIENTRY void glLightxv( GLenum light , GLenum pname , const GLfixed *params );
+ DYNAMIC_GL_APIENTRY void glLineWidthx( GLfixed width );
+ DYNAMIC_GL_APIENTRY void glLoadIdentity(  );
+ DYNAMIC_GL_APIENTRY void glLoadMatrixx( const GLfixed *m );
+ DYNAMIC_GL_APIENTRY void glLogicOp( GLenum opcode );
+ DYNAMIC_GL_APIENTRY void glMaterialx( GLenum face , GLenum pname , GLfixed param );
+ DYNAMIC_GL_APIENTRY void glMaterialxv( GLenum face , GLenum pname , const GLfixed *params );
+ DYNAMIC_GL_APIENTRY void glMatrixMode( GLenum mode );
+ DYNAMIC_GL_APIENTRY void glMultMatrixx( const GLfixed *m );
+ DYNAMIC_GL_APIENTRY void glMultiTexCoord4x( GLenum target , GLfixed s , GLfixed t , GLfixed r , GLfixed q );
+ DYNAMIC_GL_APIENTRY void glNormal3x( GLfixed nx , GLfixed ny , GLfixed nz );
+ DYNAMIC_GL_APIENTRY void glNormalPointer( GLenum type , GLsizei stride , const GLvoid *pointer );
+ DYNAMIC_GL_APIENTRY void glOrthox( GLfixed left , GLfixed right , GLfixed bottom , GLfixed top , GLfixed zNear , GLfixed zFar );
+ DYNAMIC_GL_APIENTRY void glPixelStorei( GLenum pname , GLint param );
+ DYNAMIC_GL_APIENTRY void glPointParameterx( GLenum pname , GLfixed param );
+ DYNAMIC_GL_APIENTRY void glPointParameterxv( GLenum pname , const GLfixed *params );
+ DYNAMIC_GL_APIENTRY void glPointSizex( GLfixed size );
+ DYNAMIC_GL_APIENTRY void glPolygonOffsetx( GLfixed factor , GLfixed units );
+ DYNAMIC_GL_APIENTRY void glPopMatrix(  );
+ DYNAMIC_GL_APIENTRY void glPushMatrix(  );
+ DYNAMIC_GL_APIENTRY void glReadPixels( GLint x , GLint y , GLsizei width , GLsizei height , GLenum format , GLenum type , GLvoid *pixels );
+ DYNAMIC_GL_APIENTRY void glRotatex( GLfixed angle , GLfixed x , GLfixed y , GLfixed z );
+ DYNAMIC_GL_APIENTRY void glSampleCoverage( GLclampf value , GLboolean invert );
+ DYNAMIC_GL_APIENTRY void glSampleCoveragex( GLclampx value , GLboolean invert );
+ DYNAMIC_GL_APIENTRY void glScalex( GLfixed x , GLfixed y , GLfixed z );
+ DYNAMIC_GL_APIENTRY void glScissor( GLint x , GLint y , GLsizei width , GLsizei height );
+ DYNAMIC_GL_APIENTRY void glShadeModel( GLenum mode );
+ DYNAMIC_GL_APIENTRY void glStencilFunc( GLenum func , GLint ref , GLuint mask );
+ DYNAMIC_GL_APIENTRY void glStencilMask( GLuint mask );
+ DYNAMIC_GL_APIENTRY void glStencilOp( GLenum fail , GLenum zfail , GLenum zpass );
+ DYNAMIC_GL_APIENTRY void glTexCoordPointer( GLint size , GLenum type , GLsizei stride , const GLvoid *pointer );
+ DYNAMIC_GL_APIENTRY void glTexEnvi( GLenum target , GLenum pname , GLint param );
+ DYNAMIC_GL_APIENTRY void glTexEnvx( GLenum target , GLenum pname , GLfixed param );
+ DYNAMIC_GL_APIENTRY void glTexEnviv( GLenum target , GLenum pname , const GLint *params );
+ DYNAMIC_GL_APIENTRY void glTexEnvxv( GLenum target , GLenum pname , const GLfixed *params );
+ DYNAMIC_GL_APIENTRY void glTexImage2D( GLenum target , GLint level , GLint internalformat , GLsizei width , GLsizei height , GLint border , GLenum format , GLenum type , const GLvoid *pixels );
+ DYNAMIC_GL_APIENTRY void glTexParameteri( GLenum target , GLenum pname , GLint param );
+ DYNAMIC_GL_APIENTRY void glTexParameterx( GLenum target , GLenum pname , GLfixed param );
+ DYNAMIC_GL_APIENTRY void glTexParameteriv( GLenum target , GLenum pname , const GLint *params );
+ DYNAMIC_GL_APIENTRY void glTexParameterxv( GLenum target , GLenum pname , const GLfixed *params );
+ DYNAMIC_GL_APIENTRY void glTexSubImage2D( GLenum target , GLint level , GLint xoffset , GLint yoffset , GLsizei width , GLsizei height , GLenum format , GLenum type , const GLvoid *pixels );
+ DYNAMIC_GL_APIENTRY void glTranslatex( GLfixed x , GLfixed y , GLfixed z );
+ DYNAMIC_GL_APIENTRY void glVertexPointer( GLint size , GLenum type , GLsizei stride , const GLvoid *pointer );
+ DYNAMIC_GL_APIENTRY void glViewport( GLint x , GLint y , GLsizei width , GLsizei height );
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 extern bool DinamicGLFeature_VERSION_1_1_Supported();
@@ -796,10 +797,11 @@ extern bool DinamicGLFeature_VERSION_1_1_Supported();
 #define GL_BLEND_DST_ALPHA_OES 0x80CA
 #define GL_BLEND_SRC_ALPHA_OES 0x80CB
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFuncSeparateOES)(GLenum srcRGB , GLenum dstRGB , GLenum srcAlpha , GLenum dstAlpha); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFuncSeparateOES)(GLenum srcRGB , GLenum dstRGB , GLenum srcAlpha , GLenum dstAlpha);
 #define glBlendFuncSeparateOES DynamicGL_BlendFuncSeparateOES
 #else
-extern "C" {DYNAMIC_GL_APIENTRY void glBlendFuncSeparateOES( GLenum srcRGB , GLenum dstRGB , GLenum srcAlpha , GLenum dstAlpha );
+extern "C" {
+ DYNAMIC_GL_APIENTRY void glBlendFuncSeparateOES( GLenum srcRGB , GLenum dstRGB , GLenum srcAlpha , GLenum dstAlpha );
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 extern bool DinamicGLFeature_OES_blend_func_separate_Supported();
@@ -808,19 +810,20 @@ extern bool DinamicGLFeature_OES_blend_func_separate_Supported();
 /*QCOM_driver_control*/
 #ifdef USE_DYNAMIC_GL_QCOM_driver_control
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetDriverControlsQCOM)(GLint *num , GLsizei size , GLuint *driverControls); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetDriverControlsQCOM)(GLint *num , GLsizei size , GLuint *driverControls);
 #define glGetDriverControlsQCOM DynamicGL_GetDriverControlsQCOM
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetDriverControlStringQCOM)(GLuint driverControl , GLsizei bufSize , GLsizei *length , GLchar *driverControlString); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetDriverControlStringQCOM)(GLuint driverControl , GLsizei bufSize , GLsizei *length , GLchar *driverControlString);
 #define glGetDriverControlStringQCOM DynamicGL_GetDriverControlStringQCOM
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_EnableDriverControlQCOM)(GLuint driverControl); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_EnableDriverControlQCOM)(GLuint driverControl);
 #define glEnableDriverControlQCOM DynamicGL_EnableDriverControlQCOM
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DisableDriverControlQCOM)(GLuint driverControl); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DisableDriverControlQCOM)(GLuint driverControl);
 #define glDisableDriverControlQCOM DynamicGL_DisableDriverControlQCOM
 #else
-extern "C" {DYNAMIC_GL_APIENTRY void glGetDriverControlsQCOM( GLint *num , GLsizei size , GLuint *driverControls );
-DYNAMIC_GL_APIENTRY void glGetDriverControlStringQCOM( GLuint driverControl , GLsizei bufSize , GLsizei *length , GLchar *driverControlString );
-DYNAMIC_GL_APIENTRY void glEnableDriverControlQCOM( GLuint driverControl );
-DYNAMIC_GL_APIENTRY void glDisableDriverControlQCOM( GLuint driverControl );
+extern "C" {
+ DYNAMIC_GL_APIENTRY void glGetDriverControlsQCOM( GLint *num , GLsizei size , GLuint *driverControls );
+ DYNAMIC_GL_APIENTRY void glGetDriverControlStringQCOM( GLuint driverControl , GLsizei bufSize , GLsizei *length , GLchar *driverControlString );
+ DYNAMIC_GL_APIENTRY void glEnableDriverControlQCOM( GLuint driverControl );
+ DYNAMIC_GL_APIENTRY void glDisableDriverControlQCOM( GLuint driverControl );
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 extern bool DinamicGLFeature_QCOM_driver_control_Supported();
@@ -833,13 +836,14 @@ extern bool DinamicGLFeature_QCOM_driver_control_Supported();
 #define GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_EXT 0x9134
 #define GL_MAX_SAMPLES_EXT 0x9135
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_RenderbufferStorageMultisampleEXT)(GLenum target , GLsizei samples , GLenum internalformat , GLsizei width , GLsizei height); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_RenderbufferStorageMultisampleEXT)(GLenum target , GLsizei samples , GLenum internalformat , GLsizei width , GLsizei height);
 #define glRenderbufferStorageMultisampleEXT DynamicGL_RenderbufferStorageMultisampleEXT
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FramebufferTexture2DMultisampleEXT)(GLenum target , GLenum attachment , GLenum textarget , GLuint texture , GLint level , GLsizei samples); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FramebufferTexture2DMultisampleEXT)(GLenum target , GLenum attachment , GLenum textarget , GLuint texture , GLint level , GLsizei samples);
 #define glFramebufferTexture2DMultisampleEXT DynamicGL_FramebufferTexture2DMultisampleEXT
 #else
-extern "C" {DYNAMIC_GL_APIENTRY void glRenderbufferStorageMultisampleEXT( GLenum target , GLsizei samples , GLenum internalformat , GLsizei width , GLsizei height );
-DYNAMIC_GL_APIENTRY void glFramebufferTexture2DMultisampleEXT( GLenum target , GLenum attachment , GLenum textarget , GLuint texture , GLint level , GLsizei samples );
+extern "C" {
+ DYNAMIC_GL_APIENTRY void glRenderbufferStorageMultisampleEXT( GLenum target , GLsizei samples , GLenum internalformat , GLsizei width , GLsizei height );
+ DYNAMIC_GL_APIENTRY void glFramebufferTexture2DMultisampleEXT( GLenum target , GLenum attachment , GLenum textarget , GLuint texture , GLint level , GLsizei samples );
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 extern bool DinamicGLFeature_EXT_multisampled_render_to_texture_Supported();
@@ -864,25 +868,26 @@ extern bool DinamicGLFeature_EXT_multisampled_render_to_texture_Supported();
 #define GL_RGB10_EXT 0x8052
 #define GL_BGRA8_EXT 0x93A1
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexStorage1DEXT)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexStorage1DEXT)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width);
 #define glTexStorage1DEXT DynamicGL_TexStorage1DEXT
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexStorage2DEXT)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexStorage2DEXT)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height);
 #define glTexStorage2DEXT DynamicGL_TexStorage2DEXT
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexStorage3DEXT)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexStorage3DEXT)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth);
 #define glTexStorage3DEXT DynamicGL_TexStorage3DEXT
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureStorage1DEXT)(GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureStorage1DEXT)(GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width);
 #define glTextureStorage1DEXT DynamicGL_TextureStorage1DEXT
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureStorage2DEXT)(GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureStorage2DEXT)(GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height);
 #define glTextureStorage2DEXT DynamicGL_TextureStorage2DEXT
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureStorage3DEXT)(GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureStorage3DEXT)(GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth);
 #define glTextureStorage3DEXT DynamicGL_TextureStorage3DEXT
 #else
-extern "C" {DYNAMIC_GL_APIENTRY void glTexStorage1DEXT( GLenum target , GLsizei levels , GLenum internalformat , GLsizei width );
-DYNAMIC_GL_APIENTRY void glTexStorage2DEXT( GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height );
-DYNAMIC_GL_APIENTRY void glTexStorage3DEXT( GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth );
-DYNAMIC_GL_APIENTRY void glTextureStorage1DEXT( GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width );
-DYNAMIC_GL_APIENTRY void glTextureStorage2DEXT( GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height );
-DYNAMIC_GL_APIENTRY void glTextureStorage3DEXT( GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth );
+extern "C" {
+ DYNAMIC_GL_APIENTRY void glTexStorage1DEXT( GLenum target , GLsizei levels , GLenum internalformat , GLsizei width );
+ DYNAMIC_GL_APIENTRY void glTexStorage2DEXT( GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height );
+ DYNAMIC_GL_APIENTRY void glTexStorage3DEXT( GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth );
+ DYNAMIC_GL_APIENTRY void glTextureStorage1DEXT( GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width );
+ DYNAMIC_GL_APIENTRY void glTextureStorage2DEXT( GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height );
+ DYNAMIC_GL_APIENTRY void glTextureStorage3DEXT( GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth );
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 extern bool DinamicGLFeature_EXT_texture_storage_Supported();
@@ -921,13 +926,14 @@ extern bool DinamicGLFeature_OES_stencil_wrap_Supported();
 #define GL_DRAW_FRAMEBUFFER_BINDING_APPLE 0x8CA6
 #define GL_READ_FRAMEBUFFER_BINDING_APPLE 0x8CAA
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_RenderbufferStorageMultisampleAPPLE)(GLenum target , GLsizei samples , GLenum internalformat , GLsizei width , GLsizei height); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_RenderbufferStorageMultisampleAPPLE)(GLenum target , GLsizei samples , GLenum internalformat , GLsizei width , GLsizei height);
 #define glRenderbufferStorageMultisampleAPPLE DynamicGL_RenderbufferStorageMultisampleAPPLE
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ResolveMultisampleFramebufferAPPLE)(); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ResolveMultisampleFramebufferAPPLE)();
 #define glResolveMultisampleFramebufferAPPLE DynamicGL_ResolveMultisampleFramebufferAPPLE
 #else
-extern "C" {DYNAMIC_GL_APIENTRY void glRenderbufferStorageMultisampleAPPLE( GLenum target , GLsizei samples , GLenum internalformat , GLsizei width , GLsizei height );
-DYNAMIC_GL_APIENTRY void glResolveMultisampleFramebufferAPPLE(  );
+extern "C" {
+ DYNAMIC_GL_APIENTRY void glRenderbufferStorageMultisampleAPPLE( GLenum target , GLsizei samples , GLenum internalformat , GLsizei width , GLsizei height );
+ DYNAMIC_GL_APIENTRY void glResolveMultisampleFramebufferAPPLE(  );
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 extern bool DinamicGLFeature_APPLE_framebuffer_multisample_Supported();
@@ -965,13 +971,14 @@ extern bool DinamicGLFeature_QCOM_perfmon_global_mode_Supported();
 #define GL_CLIP_PLANE5_IMG 0x3005
 #define GL_MAX_CLIP_PLANES_IMG 0x0D32
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClipPlanefIMG)(GLenum p , const GLfloat *eqn); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClipPlanefIMG)(GLenum p , const GLfloat *eqn);
 #define glClipPlanefIMG DynamicGL_ClipPlanefIMG
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClipPlanexIMG)(GLenum p , const GLfixed *eqn); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClipPlanexIMG)(GLenum p , const GLfixed *eqn);
 #define glClipPlanexIMG DynamicGL_ClipPlanexIMG
 #else
-extern "C" {DYNAMIC_GL_APIENTRY void glClipPlanefIMG( GLenum p , const GLfloat *eqn );
-DYNAMIC_GL_APIENTRY void glClipPlanexIMG( GLenum p , const GLfixed *eqn );
+extern "C" {
+ DYNAMIC_GL_APIENTRY void glClipPlanefIMG( GLenum p , const GLfloat *eqn );
+ DYNAMIC_GL_APIENTRY void glClipPlanexIMG( GLenum p , const GLfixed *eqn );
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 extern bool DinamicGLFeature_IMG_user_clip_plane_Supported();
@@ -980,22 +987,23 @@ extern bool DinamicGLFeature_IMG_user_clip_plane_Supported();
 /*OES_single_precision*/
 #ifdef USE_DYNAMIC_GL_OES_single_precision
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthRangefOES)(GLclampf zNear , GLclampf zFar); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthRangefOES)(GLclampf zNear , GLclampf zFar);
 #define glDepthRangefOES DynamicGL_DepthRangefOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FrustumfOES)(GLfloat left , GLfloat right , GLfloat bottom , GLfloat top , GLfloat zNear , GLfloat zFar); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FrustumfOES)(GLfloat left , GLfloat right , GLfloat bottom , GLfloat top , GLfloat zNear , GLfloat zFar);
 #define glFrustumfOES DynamicGL_FrustumfOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_OrthofOES)(GLfloat left , GLfloat right , GLfloat bottom , GLfloat top , GLfloat zNear , GLfloat zFar); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_OrthofOES)(GLfloat left , GLfloat right , GLfloat bottom , GLfloat top , GLfloat zNear , GLfloat zFar);
 #define glOrthofOES DynamicGL_OrthofOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClipPlanefOES)(GLenum plane , const GLfloat *equation); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClipPlanefOES)(GLenum plane , const GLfloat *equation);
 #define glClipPlanefOES DynamicGL_ClipPlanefOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearDepthfOES)(GLclampf depth); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearDepthfOES)(GLclampf depth);
 #define glClearDepthfOES DynamicGL_ClearDepthfOES
 #else
-extern "C" {DYNAMIC_GL_APIENTRY void glDepthRangefOES( GLclampf zNear , GLclampf zFar );
-DYNAMIC_GL_APIENTRY void glFrustumfOES( GLfloat left , GLfloat right , GLfloat bottom , GLfloat top , GLfloat zNear , GLfloat zFar );
-DYNAMIC_GL_APIENTRY void glOrthofOES( GLfloat left , GLfloat right , GLfloat bottom , GLfloat top , GLfloat zNear , GLfloat zFar );
-DYNAMIC_GL_APIENTRY void glClipPlanefOES( GLenum plane , const GLfloat *equation );
-DYNAMIC_GL_APIENTRY void glClearDepthfOES( GLclampf depth );
+extern "C" {
+ DYNAMIC_GL_APIENTRY void glDepthRangefOES( GLclampf zNear , GLclampf zFar );
+ DYNAMIC_GL_APIENTRY void glFrustumfOES( GLfloat left , GLfloat right , GLfloat bottom , GLfloat top , GLfloat zNear , GLfloat zFar );
+ DYNAMIC_GL_APIENTRY void glOrthofOES( GLfloat left , GLfloat right , GLfloat bottom , GLfloat top , GLfloat zNear , GLfloat zFar );
+ DYNAMIC_GL_APIENTRY void glClipPlanefOES( GLenum plane , const GLfloat *equation );
+ DYNAMIC_GL_APIENTRY void glClearDepthfOES( GLclampf depth );
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 extern bool DinamicGLFeature_OES_single_precision_Supported();
@@ -1034,13 +1042,14 @@ extern bool DinamicGLFeature_OES_fbo_render_mipmap_Supported();
 #define GL_MAX_SAMPLES_IMG 0x9135
 #define GL_TEXTURE_SAMPLES_IMG 0x9136
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_RenderbufferStorageMultisampleIMG)(GLenum p1 , GLsizei p2 , GLenum p3 , GLsizei p4 , GLsizei p5); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_RenderbufferStorageMultisampleIMG)(GLenum p1 , GLsizei p2 , GLenum p3 , GLsizei p4 , GLsizei p5);
 #define glRenderbufferStorageMultisampleIMG DynamicGL_RenderbufferStorageMultisampleIMG
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FramebufferTexture2DMultisampleIMG)(GLenum p1 , GLenum p2 , GLenum p3 , GLuint p4 , GLint p5 , GLsizei p6); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FramebufferTexture2DMultisampleIMG)(GLenum p1 , GLenum p2 , GLenum p3 , GLuint p4 , GLint p5 , GLsizei p6);
 #define glFramebufferTexture2DMultisampleIMG DynamicGL_FramebufferTexture2DMultisampleIMG
 #else
-extern "C" {DYNAMIC_GL_APIENTRY void glRenderbufferStorageMultisampleIMG( GLenum p1 , GLsizei p2 , GLenum p3 , GLsizei p4 , GLsizei p5 );
-DYNAMIC_GL_APIENTRY void glFramebufferTexture2DMultisampleIMG( GLenum p1 , GLenum p2 , GLenum p3 , GLuint p4 , GLint p5 , GLsizei p6 );
+extern "C" {
+ DYNAMIC_GL_APIENTRY void glRenderbufferStorageMultisampleIMG( GLenum p1 , GLsizei p2 , GLenum p3 , GLsizei p4 , GLsizei p5 );
+ DYNAMIC_GL_APIENTRY void glFramebufferTexture2DMultisampleIMG( GLenum p1 , GLenum p2 , GLenum p3 , GLuint p4 , GLint p5 , GLsizei p6 );
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 extern bool DinamicGLFeature_IMG_multisampled_render_to_texture_Supported();
@@ -1060,10 +1069,11 @@ extern bool DinamicGLFeature_OES_packed_depth_stencil_Supported();
 #define GL_DEPTH_EXT 0x1801
 #define GL_STENCIL_EXT 0x1802
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DiscardFramebufferEXT)(GLenum target , GLsizei numAttachments , const GLenum *attachments); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DiscardFramebufferEXT)(GLenum target , GLsizei numAttachments , const GLenum *attachments);
 #define glDiscardFramebufferEXT DynamicGL_DiscardFramebufferEXT
 #else
-extern "C" {DYNAMIC_GL_APIENTRY void glDiscardFramebufferEXT( GLenum target , GLsizei numAttachments , const GLenum *attachments );
+extern "C" {
+ DYNAMIC_GL_APIENTRY void glDiscardFramebufferEXT( GLenum target , GLsizei numAttachments , const GLenum *attachments );
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 extern bool DinamicGLFeature_EXT_discard_framebuffer_Supported();
@@ -1072,13 +1082,14 @@ extern bool DinamicGLFeature_EXT_discard_framebuffer_Supported();
 /*OES_EGL_image*/
 #ifdef USE_DYNAMIC_GL_OES_EGL_image
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_EGLImageTargetTexture2DOES)(GLenum target , GLeglImageOES image); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_EGLImageTargetTexture2DOES)(GLenum target , GLeglImageOES image);
 #define glEGLImageTargetTexture2DOES DynamicGL_EGLImageTargetTexture2DOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_EGLImageTargetRenderbufferStorageOES)(GLenum target , GLeglImageOES image); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_EGLImageTargetRenderbufferStorageOES)(GLenum target , GLeglImageOES image);
 #define glEGLImageTargetRenderbufferStorageOES DynamicGL_EGLImageTargetRenderbufferStorageOES
 #else
-extern "C" {DYNAMIC_GL_APIENTRY void glEGLImageTargetTexture2DOES( GLenum target , GLeglImageOES image );
-DYNAMIC_GL_APIENTRY void glEGLImageTargetRenderbufferStorageOES( GLenum target , GLeglImageOES image );
+extern "C" {
+ DYNAMIC_GL_APIENTRY void glEGLImageTargetTexture2DOES( GLenum target , GLeglImageOES image );
+ DYNAMIC_GL_APIENTRY void glEGLImageTargetRenderbufferStorageOES( GLenum target , GLeglImageOES image );
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 extern bool DinamicGLFeature_OES_EGL_image_Supported();
@@ -1090,28 +1101,29 @@ extern bool DinamicGLFeature_OES_EGL_image_Supported();
 #define GL_FENCE_STATUS_NV 0x84F3
 #define GL_FENCE_CONDITION_NV 0x84F4
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteFencesNV)(GLsizei n , const GLuint *fences); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteFencesNV)(GLsizei n , const GLuint *fences);
 #define glDeleteFencesNV DynamicGL_DeleteFencesNV
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GenFencesNV)(GLsizei n , GLuint *fences); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GenFencesNV)(GLsizei n , GLuint *fences);
 #define glGenFencesNV DynamicGL_GenFencesNV
-extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsFenceNV)(GLuint fence); }
+extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsFenceNV)(GLuint fence);
 #define glIsFenceNV DynamicGL_IsFenceNV
-extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_TestFenceNV)(GLuint fence); }
+extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_TestFenceNV)(GLuint fence);
 #define glTestFenceNV DynamicGL_TestFenceNV
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetFenceivNV)(GLuint fence , GLenum pname , GLint *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetFenceivNV)(GLuint fence , GLenum pname , GLint *params);
 #define glGetFenceivNV DynamicGL_GetFenceivNV
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FinishFenceNV)(GLuint fence); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FinishFenceNV)(GLuint fence);
 #define glFinishFenceNV DynamicGL_FinishFenceNV
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SetFenceNV)(GLuint fence , GLenum condition); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SetFenceNV)(GLuint fence , GLenum condition);
 #define glSetFenceNV DynamicGL_SetFenceNV
 #else
-extern "C" {DYNAMIC_GL_APIENTRY void glDeleteFencesNV( GLsizei n , const GLuint *fences );
-DYNAMIC_GL_APIENTRY void glGenFencesNV( GLsizei n , GLuint *fences );
-DYNAMIC_GL_APIENTRY GLboolean glIsFenceNV( GLuint fence );
-DYNAMIC_GL_APIENTRY GLboolean glTestFenceNV( GLuint fence );
-DYNAMIC_GL_APIENTRY void glGetFenceivNV( GLuint fence , GLenum pname , GLint *params );
-DYNAMIC_GL_APIENTRY void glFinishFenceNV( GLuint fence );
-DYNAMIC_GL_APIENTRY void glSetFenceNV( GLuint fence , GLenum condition );
+extern "C" {
+ DYNAMIC_GL_APIENTRY void glDeleteFencesNV( GLsizei n , const GLuint *fences );
+ DYNAMIC_GL_APIENTRY void glGenFencesNV( GLsizei n , GLuint *fences );
+ DYNAMIC_GL_APIENTRY GLboolean glIsFenceNV( GLuint fence );
+ DYNAMIC_GL_APIENTRY GLboolean glTestFenceNV( GLuint fence );
+ DYNAMIC_GL_APIENTRY void glGetFenceivNV( GLuint fence , GLenum pname , GLint *params );
+ DYNAMIC_GL_APIENTRY void glFinishFenceNV( GLuint fence );
+ DYNAMIC_GL_APIENTRY void glSetFenceNV( GLuint fence , GLenum condition );
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 extern bool DinamicGLFeature_NV_fence_Supported();
@@ -1153,10 +1165,11 @@ extern bool DinamicGLFeature_EXT_sRGB_Supported();
 #define GL_BLEND_EQUATION_RGB_OES 0x8009
 #define GL_BLEND_EQUATION_ALPHA_OES 0x883D
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationSeparateOES)(GLenum modeRGB , GLenum modeAlpha); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationSeparateOES)(GLenum modeRGB , GLenum modeAlpha);
 #define glBlendEquationSeparateOES DynamicGL_BlendEquationSeparateOES
 #else
-extern "C" {DYNAMIC_GL_APIENTRY void glBlendEquationSeparateOES( GLenum modeRGB , GLenum modeAlpha );
+extern "C" {
+ DYNAMIC_GL_APIENTRY void glBlendEquationSeparateOES( GLenum modeRGB , GLenum modeAlpha );
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 extern bool DinamicGLFeature_OES_blend_equation_separate_Supported();
@@ -1178,19 +1191,20 @@ extern bool DinamicGLFeature_OES_texture_mirrored_repeat_Supported();
 #define GL_LOSE_CONTEXT_ON_RESET_EXT 0x8252
 #define GL_NO_RESET_NOTIFICATION_EXT 0x8261
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { extern GLenum (DYNAMIC_GL_APIENTRYP DynamicGL_GetGraphicsResetStatusEXT)(); }
+extern GLenum (DYNAMIC_GL_APIENTRYP DynamicGL_GetGraphicsResetStatusEXT)();
 #define glGetGraphicsResetStatusEXT DynamicGL_GetGraphicsResetStatusEXT
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ReadnPixelsEXT)(GLint x , GLint y , GLsizei width , GLsizei height , GLenum format , GLenum type , GLsizei bufSize , GLvoid *data); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ReadnPixelsEXT)(GLint x , GLint y , GLsizei width , GLsizei height , GLenum format , GLenum type , GLsizei bufSize , GLvoid *data);
 #define glReadnPixelsEXT DynamicGL_ReadnPixelsEXT
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnUniformfvEXT)(GLuint program , GLint location , GLsizei bufSize , GLfloat *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnUniformfvEXT)(GLuint program , GLint location , GLsizei bufSize , GLfloat *params);
 #define glGetnUniformfvEXT DynamicGL_GetnUniformfvEXT
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnUniformivEXT)(GLuint program , GLint location , GLsizei bufSize , GLint *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnUniformivEXT)(GLuint program , GLint location , GLsizei bufSize , GLint *params);
 #define glGetnUniformivEXT DynamicGL_GetnUniformivEXT
 #else
-extern "C" {DYNAMIC_GL_APIENTRY GLenum glGetGraphicsResetStatusEXT(  );
-DYNAMIC_GL_APIENTRY void glReadnPixelsEXT( GLint x , GLint y , GLsizei width , GLsizei height , GLenum format , GLenum type , GLsizei bufSize , GLvoid *data );
-DYNAMIC_GL_APIENTRY void glGetnUniformfvEXT( GLuint program , GLint location , GLsizei bufSize , GLfloat *params );
-DYNAMIC_GL_APIENTRY void glGetnUniformivEXT( GLuint program , GLint location , GLsizei bufSize , GLint *params );
+extern "C" {
+ DYNAMIC_GL_APIENTRY GLenum glGetGraphicsResetStatusEXT(  );
+ DYNAMIC_GL_APIENTRY void glReadnPixelsEXT( GLint x , GLint y , GLsizei width , GLsizei height , GLenum format , GLenum type , GLsizei bufSize , GLvoid *data );
+ DYNAMIC_GL_APIENTRY void glGetnUniformfvEXT( GLuint program , GLint location , GLsizei bufSize , GLfloat *params );
+ DYNAMIC_GL_APIENTRY void glGetnUniformivEXT( GLuint program , GLint location , GLsizei bufSize , GLint *params );
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 extern bool DinamicGLFeature_EXT_robustness_Supported();
@@ -1200,31 +1214,32 @@ extern bool DinamicGLFeature_EXT_robustness_Supported();
 #ifdef USE_DYNAMIC_GL_OES_draw_texture
 #define GL_TEXTURE_CROP_RECT_OES 0x8B9D
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexsOES)(GLshort x , GLshort y , GLshort z , GLshort width , GLshort height); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexsOES)(GLshort x , GLshort y , GLshort z , GLshort width , GLshort height);
 #define glDrawTexsOES DynamicGL_DrawTexsOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexiOES)(GLint x , GLint y , GLint z , GLint width , GLint height); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexiOES)(GLint x , GLint y , GLint z , GLint width , GLint height);
 #define glDrawTexiOES DynamicGL_DrawTexiOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexxOES)(GLfixed x , GLfixed y , GLfixed z , GLfixed width , GLfixed height); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexxOES)(GLfixed x , GLfixed y , GLfixed z , GLfixed width , GLfixed height);
 #define glDrawTexxOES DynamicGL_DrawTexxOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexsvOES)(const GLshort *coords); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexsvOES)(const GLshort *coords);
 #define glDrawTexsvOES DynamicGL_DrawTexsvOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexivOES)(const GLint *coords); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexivOES)(const GLint *coords);
 #define glDrawTexivOES DynamicGL_DrawTexivOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexxvOES)(const GLfixed *coords); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexxvOES)(const GLfixed *coords);
 #define glDrawTexxvOES DynamicGL_DrawTexxvOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexfOES)(GLfloat x , GLfloat y , GLfloat z , GLfloat width , GLfloat height); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexfOES)(GLfloat x , GLfloat y , GLfloat z , GLfloat width , GLfloat height);
 #define glDrawTexfOES DynamicGL_DrawTexfOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexfvOES)(const GLfloat *coords); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexfvOES)(const GLfloat *coords);
 #define glDrawTexfvOES DynamicGL_DrawTexfvOES
 #else
-extern "C" {DYNAMIC_GL_APIENTRY void glDrawTexsOES( GLshort x , GLshort y , GLshort z , GLshort width , GLshort height );
-DYNAMIC_GL_APIENTRY void glDrawTexiOES( GLint x , GLint y , GLint z , GLint width , GLint height );
-DYNAMIC_GL_APIENTRY void glDrawTexxOES( GLfixed x , GLfixed y , GLfixed z , GLfixed width , GLfixed height );
-DYNAMIC_GL_APIENTRY void glDrawTexsvOES( const GLshort *coords );
-DYNAMIC_GL_APIENTRY void glDrawTexivOES( const GLint *coords );
-DYNAMIC_GL_APIENTRY void glDrawTexxvOES( const GLfixed *coords );
-DYNAMIC_GL_APIENTRY void glDrawTexfOES( GLfloat x , GLfloat y , GLfloat z , GLfloat width , GLfloat height );
-DYNAMIC_GL_APIENTRY void glDrawTexfvOES( const GLfloat *coords );
+extern "C" {
+ DYNAMIC_GL_APIENTRY void glDrawTexsOES( GLshort x , GLshort y , GLshort z , GLshort width , GLshort height );
+ DYNAMIC_GL_APIENTRY void glDrawTexiOES( GLint x , GLint y , GLint z , GLint width , GLint height );
+ DYNAMIC_GL_APIENTRY void glDrawTexxOES( GLfixed x , GLfixed y , GLfixed z , GLfixed width , GLfixed height );
+ DYNAMIC_GL_APIENTRY void glDrawTexsvOES( const GLshort *coords );
+ DYNAMIC_GL_APIENTRY void glDrawTexivOES( const GLint *coords );
+ DYNAMIC_GL_APIENTRY void glDrawTexxvOES( const GLfixed *coords );
+ DYNAMIC_GL_APIENTRY void glDrawTexfOES( GLfloat x , GLfloat y , GLfloat z , GLfloat width , GLfloat height );
+ DYNAMIC_GL_APIENTRY void glDrawTexfvOES( const GLfloat *coords );
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 extern bool DinamicGLFeature_OES_draw_texture_Supported();
@@ -1265,52 +1280,53 @@ extern bool DinamicGLFeature_OES_draw_texture_Supported();
 #define GL_MAX_RENDERBUFFER_SIZE_OES 0x84E8
 #define GL_INVALID_FRAMEBUFFER_OPERATION_OES 0x0506
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsRenderbufferOES)(GLuint renderbuffer); }
+extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsRenderbufferOES)(GLuint renderbuffer);
 #define glIsRenderbufferOES DynamicGL_IsRenderbufferOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BindRenderbufferOES)(GLenum target , GLuint renderbuffer); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BindRenderbufferOES)(GLenum target , GLuint renderbuffer);
 #define glBindRenderbufferOES DynamicGL_BindRenderbufferOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteRenderbuffersOES)(GLsizei n , const GLuint* renderbuffers); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteRenderbuffersOES)(GLsizei n , const GLuint* renderbuffers);
 #define glDeleteRenderbuffersOES DynamicGL_DeleteRenderbuffersOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GenRenderbuffersOES)(GLsizei n , GLuint* renderbuffers); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GenRenderbuffersOES)(GLsizei n , GLuint* renderbuffers);
 #define glGenRenderbuffersOES DynamicGL_GenRenderbuffersOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_RenderbufferStorageOES)(GLenum target , GLenum internalformat , GLsizei width , GLsizei height); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_RenderbufferStorageOES)(GLenum target , GLenum internalformat , GLsizei width , GLsizei height);
 #define glRenderbufferStorageOES DynamicGL_RenderbufferStorageOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetRenderbufferParameterivOES)(GLenum target , GLenum pname , GLint* params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetRenderbufferParameterivOES)(GLenum target , GLenum pname , GLint* params);
 #define glGetRenderbufferParameterivOES DynamicGL_GetRenderbufferParameterivOES
-extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsFramebufferOES)(GLuint framebuffer); }
+extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsFramebufferOES)(GLuint framebuffer);
 #define glIsFramebufferOES DynamicGL_IsFramebufferOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BindFramebufferOES)(GLenum target , GLuint framebuffer); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BindFramebufferOES)(GLenum target , GLuint framebuffer);
 #define glBindFramebufferOES DynamicGL_BindFramebufferOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteFramebuffersOES)(GLsizei n , const GLuint* framebuffers); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteFramebuffersOES)(GLsizei n , const GLuint* framebuffers);
 #define glDeleteFramebuffersOES DynamicGL_DeleteFramebuffersOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GenFramebuffersOES)(GLsizei n , GLuint* framebuffers); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GenFramebuffersOES)(GLsizei n , GLuint* framebuffers);
 #define glGenFramebuffersOES DynamicGL_GenFramebuffersOES
-extern "C" { extern GLenum (DYNAMIC_GL_APIENTRYP DynamicGL_CheckFramebufferStatusOES)(GLenum target); }
+extern GLenum (DYNAMIC_GL_APIENTRYP DynamicGL_CheckFramebufferStatusOES)(GLenum target);
 #define glCheckFramebufferStatusOES DynamicGL_CheckFramebufferStatusOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FramebufferRenderbufferOES)(GLenum target , GLenum attachment , GLenum renderbuffertarget , GLuint renderbuffer); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FramebufferRenderbufferOES)(GLenum target , GLenum attachment , GLenum renderbuffertarget , GLuint renderbuffer);
 #define glFramebufferRenderbufferOES DynamicGL_FramebufferRenderbufferOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FramebufferTexture2DOES)(GLenum target , GLenum attachment , GLenum textarget , GLuint texture , GLint level); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FramebufferTexture2DOES)(GLenum target , GLenum attachment , GLenum textarget , GLuint texture , GLint level);
 #define glFramebufferTexture2DOES DynamicGL_FramebufferTexture2DOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetFramebufferAttachmentParameterivOES)(GLenum target , GLenum attachment , GLenum pname , GLint* params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetFramebufferAttachmentParameterivOES)(GLenum target , GLenum attachment , GLenum pname , GLint* params);
 #define glGetFramebufferAttachmentParameterivOES DynamicGL_GetFramebufferAttachmentParameterivOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GenerateMipmapOES)(GLenum target); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GenerateMipmapOES)(GLenum target);
 #define glGenerateMipmapOES DynamicGL_GenerateMipmapOES
 #else
-extern "C" {DYNAMIC_GL_APIENTRY GLboolean glIsRenderbufferOES( GLuint renderbuffer );
-DYNAMIC_GL_APIENTRY void glBindRenderbufferOES( GLenum target , GLuint renderbuffer );
-DYNAMIC_GL_APIENTRY void glDeleteRenderbuffersOES( GLsizei n , const GLuint* renderbuffers );
-DYNAMIC_GL_APIENTRY void glGenRenderbuffersOES( GLsizei n , GLuint* renderbuffers );
-DYNAMIC_GL_APIENTRY void glRenderbufferStorageOES( GLenum target , GLenum internalformat , GLsizei width , GLsizei height );
-DYNAMIC_GL_APIENTRY void glGetRenderbufferParameterivOES( GLenum target , GLenum pname , GLint* params );
-DYNAMIC_GL_APIENTRY GLboolean glIsFramebufferOES( GLuint framebuffer );
-DYNAMIC_GL_APIENTRY void glBindFramebufferOES( GLenum target , GLuint framebuffer );
-DYNAMIC_GL_APIENTRY void glDeleteFramebuffersOES( GLsizei n , const GLuint* framebuffers );
-DYNAMIC_GL_APIENTRY void glGenFramebuffersOES( GLsizei n , GLuint* framebuffers );
-DYNAMIC_GL_APIENTRY GLenum glCheckFramebufferStatusOES( GLenum target );
-DYNAMIC_GL_APIENTRY void glFramebufferRenderbufferOES( GLenum target , GLenum attachment , GLenum renderbuffertarget , GLuint renderbuffer );
-DYNAMIC_GL_APIENTRY void glFramebufferTexture2DOES( GLenum target , GLenum attachment , GLenum textarget , GLuint texture , GLint level );
-DYNAMIC_GL_APIENTRY void glGetFramebufferAttachmentParameterivOES( GLenum target , GLenum attachment , GLenum pname , GLint* params );
-DYNAMIC_GL_APIENTRY void glGenerateMipmapOES( GLenum target );
+extern "C" {
+ DYNAMIC_GL_APIENTRY GLboolean glIsRenderbufferOES( GLuint renderbuffer );
+ DYNAMIC_GL_APIENTRY void glBindRenderbufferOES( GLenum target , GLuint renderbuffer );
+ DYNAMIC_GL_APIENTRY void glDeleteRenderbuffersOES( GLsizei n , const GLuint* renderbuffers );
+ DYNAMIC_GL_APIENTRY void glGenRenderbuffersOES( GLsizei n , GLuint* renderbuffers );
+ DYNAMIC_GL_APIENTRY void glRenderbufferStorageOES( GLenum target , GLenum internalformat , GLsizei width , GLsizei height );
+ DYNAMIC_GL_APIENTRY void glGetRenderbufferParameterivOES( GLenum target , GLenum pname , GLint* params );
+ DYNAMIC_GL_APIENTRY GLboolean glIsFramebufferOES( GLuint framebuffer );
+ DYNAMIC_GL_APIENTRY void glBindFramebufferOES( GLenum target , GLuint framebuffer );
+ DYNAMIC_GL_APIENTRY void glDeleteFramebuffersOES( GLsizei n , const GLuint* framebuffers );
+ DYNAMIC_GL_APIENTRY void glGenFramebuffersOES( GLsizei n , GLuint* framebuffers );
+ DYNAMIC_GL_APIENTRY GLenum glCheckFramebufferStatusOES( GLenum target );
+ DYNAMIC_GL_APIENTRY void glFramebufferRenderbufferOES( GLenum target , GLenum attachment , GLenum renderbuffertarget , GLuint renderbuffer );
+ DYNAMIC_GL_APIENTRY void glFramebufferTexture2DOES( GLenum target , GLenum attachment , GLenum textarget , GLuint texture , GLint level );
+ DYNAMIC_GL_APIENTRY void glGetFramebufferAttachmentParameterivOES( GLenum target , GLenum attachment , GLenum pname , GLint* params );
+ DYNAMIC_GL_APIENTRY void glGenerateMipmapOES( GLenum target );
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 extern bool DinamicGLFeature_OES_framebuffer_object_Supported();
@@ -1339,19 +1355,20 @@ extern bool DinamicGLFeature_AMD_compressed_3DC_texture_Supported();
 /*QCOM_extended_get2*/
 #ifdef USE_DYNAMIC_GL_QCOM_extended_get2
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetShadersQCOM)(GLuint *shaders , GLint maxShaders , GLint *numShaders); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetShadersQCOM)(GLuint *shaders , GLint maxShaders , GLint *numShaders);
 #define glExtGetShadersQCOM DynamicGL_ExtGetShadersQCOM
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetProgramsQCOM)(GLuint *programs , GLint maxPrograms , GLint *numPrograms); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetProgramsQCOM)(GLuint *programs , GLint maxPrograms , GLint *numPrograms);
 #define glExtGetProgramsQCOM DynamicGL_ExtGetProgramsQCOM
-extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_ExtIsProgramBinaryQCOM)(GLuint program); }
+extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_ExtIsProgramBinaryQCOM)(GLuint program);
 #define glExtIsProgramBinaryQCOM DynamicGL_ExtIsProgramBinaryQCOM
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetProgramBinarySourceQCOM)(GLuint program , GLenum shadertype , GLchar *source , GLint *length); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetProgramBinarySourceQCOM)(GLuint program , GLenum shadertype , GLchar *source , GLint *length);
 #define glExtGetProgramBinarySourceQCOM DynamicGL_ExtGetProgramBinarySourceQCOM
 #else
-extern "C" {DYNAMIC_GL_APIENTRY void glExtGetShadersQCOM( GLuint *shaders , GLint maxShaders , GLint *numShaders );
-DYNAMIC_GL_APIENTRY void glExtGetProgramsQCOM( GLuint *programs , GLint maxPrograms , GLint *numPrograms );
-DYNAMIC_GL_APIENTRY GLboolean glExtIsProgramBinaryQCOM( GLuint program );
-DYNAMIC_GL_APIENTRY void glExtGetProgramBinarySourceQCOM( GLuint program , GLenum shadertype , GLchar *source , GLint *length );
+extern "C" {
+ DYNAMIC_GL_APIENTRY void glExtGetShadersQCOM( GLuint *shaders , GLint maxShaders , GLint *numShaders );
+ DYNAMIC_GL_APIENTRY void glExtGetProgramsQCOM( GLuint *programs , GLint maxPrograms , GLint *numPrograms );
+ DYNAMIC_GL_APIENTRY GLboolean glExtIsProgramBinaryQCOM( GLuint program );
+ DYNAMIC_GL_APIENTRY void glExtGetProgramBinarySourceQCOM( GLuint program , GLenum shadertype , GLchar *source , GLint *length );
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 extern bool DinamicGLFeature_QCOM_extended_get2_Supported();
@@ -1383,19 +1400,20 @@ extern bool DinamicGLFeature_IMG_read_format_Supported();
 #define GL_WEIGHT_ARRAY_POINTER_OES 0x86AC
 #define GL_WEIGHT_ARRAY_BUFFER_BINDING_OES 0x889E
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_CurrentPaletteMatrixOES)(GLuint matrixpaletteindex); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_CurrentPaletteMatrixOES)(GLuint matrixpaletteindex);
 #define glCurrentPaletteMatrixOES DynamicGL_CurrentPaletteMatrixOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadPaletteFromModelViewMatrixOES)(); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadPaletteFromModelViewMatrixOES)();
 #define glLoadPaletteFromModelViewMatrixOES DynamicGL_LoadPaletteFromModelViewMatrixOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MatrixIndexPointerOES)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MatrixIndexPointerOES)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer);
 #define glMatrixIndexPointerOES DynamicGL_MatrixIndexPointerOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WeightPointerOES)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_WeightPointerOES)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer);
 #define glWeightPointerOES DynamicGL_WeightPointerOES
 #else
-extern "C" {DYNAMIC_GL_APIENTRY void glCurrentPaletteMatrixOES( GLuint matrixpaletteindex );
-DYNAMIC_GL_APIENTRY void glLoadPaletteFromModelViewMatrixOES(  );
-DYNAMIC_GL_APIENTRY void glMatrixIndexPointerOES( GLint size , GLenum type , GLsizei stride , const GLvoid *pointer );
-DYNAMIC_GL_APIENTRY void glWeightPointerOES( GLint size , GLenum type , GLsizei stride , const GLvoid *pointer );
+extern "C" {
+ DYNAMIC_GL_APIENTRY void glCurrentPaletteMatrixOES( GLuint matrixpaletteindex );
+ DYNAMIC_GL_APIENTRY void glLoadPaletteFromModelViewMatrixOES(  );
+ DYNAMIC_GL_APIENTRY void glMatrixIndexPointerOES( GLint size , GLenum type , GLsizei stride , const GLvoid *pointer );
+ DYNAMIC_GL_APIENTRY void glWeightPointerOES( GLint size , GLenum type , GLsizei stride , const GLvoid *pointer );
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 extern bool DinamicGLFeature_OES_matrix_palette_Supported();
@@ -1421,31 +1439,32 @@ extern bool DinamicGLFeature_OES_stencil4_Supported();
 #define GL_TEXTURE_OBJECT_VALID_QCOM 0x8BDB
 #define GL_STATE_RESTORE 0x8BDC
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetTexturesQCOM)(GLuint *textures , GLint maxTextures , GLint *numTextures); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetTexturesQCOM)(GLuint *textures , GLint maxTextures , GLint *numTextures);
 #define glExtGetTexturesQCOM DynamicGL_ExtGetTexturesQCOM
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetBuffersQCOM)(GLuint *buffers , GLint maxBuffers , GLint *numBuffers); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetBuffersQCOM)(GLuint *buffers , GLint maxBuffers , GLint *numBuffers);
 #define glExtGetBuffersQCOM DynamicGL_ExtGetBuffersQCOM
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetRenderbuffersQCOM)(GLuint *renderbuffers , GLint maxRenderbuffers , GLint *numRenderbuffers); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetRenderbuffersQCOM)(GLuint *renderbuffers , GLint maxRenderbuffers , GLint *numRenderbuffers);
 #define glExtGetRenderbuffersQCOM DynamicGL_ExtGetRenderbuffersQCOM
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetFramebuffersQCOM)(GLuint *framebuffers , GLint maxFramebuffers , GLint *numFramebuffers); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetFramebuffersQCOM)(GLuint *framebuffers , GLint maxFramebuffers , GLint *numFramebuffers);
 #define glExtGetFramebuffersQCOM DynamicGL_ExtGetFramebuffersQCOM
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetTexLevelParameterivQCOM)(GLuint texture , GLenum face , GLint level , GLenum pname , GLint *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetTexLevelParameterivQCOM)(GLuint texture , GLenum face , GLint level , GLenum pname , GLint *params);
 #define glExtGetTexLevelParameterivQCOM DynamicGL_ExtGetTexLevelParameterivQCOM
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtTexObjectStateOverrideiQCOM)(GLenum target , GLenum pname , GLint param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtTexObjectStateOverrideiQCOM)(GLenum target , GLenum pname , GLint param);
 #define glExtTexObjectStateOverrideiQCOM DynamicGL_ExtTexObjectStateOverrideiQCOM
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetTexSubImageQCOM)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLint zoffset , GLsizei width , GLsizei height , GLsizei depth , GLenum format , GLenum type , GLvoid *texels); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetTexSubImageQCOM)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLint zoffset , GLsizei width , GLsizei height , GLsizei depth , GLenum format , GLenum type , GLvoid *texels);
 #define glExtGetTexSubImageQCOM DynamicGL_ExtGetTexSubImageQCOM
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetBufferPointervQCOM)(GLenum target , GLvoid *p1); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetBufferPointervQCOM)(GLenum target , GLvoid *p1);
 #define glExtGetBufferPointervQCOM DynamicGL_ExtGetBufferPointervQCOM
 #else
-extern "C" {DYNAMIC_GL_APIENTRY void glExtGetTexturesQCOM( GLuint *textures , GLint maxTextures , GLint *numTextures );
-DYNAMIC_GL_APIENTRY void glExtGetBuffersQCOM( GLuint *buffers , GLint maxBuffers , GLint *numBuffers );
-DYNAMIC_GL_APIENTRY void glExtGetRenderbuffersQCOM( GLuint *renderbuffers , GLint maxRenderbuffers , GLint *numRenderbuffers );
-DYNAMIC_GL_APIENTRY void glExtGetFramebuffersQCOM( GLuint *framebuffers , GLint maxFramebuffers , GLint *numFramebuffers );
-DYNAMIC_GL_APIENTRY void glExtGetTexLevelParameterivQCOM( GLuint texture , GLenum face , GLint level , GLenum pname , GLint *params );
-DYNAMIC_GL_APIENTRY void glExtTexObjectStateOverrideiQCOM( GLenum target , GLenum pname , GLint param );
-DYNAMIC_GL_APIENTRY void glExtGetTexSubImageQCOM( GLenum target , GLint level , GLint xoffset , GLint yoffset , GLint zoffset , GLsizei width , GLsizei height , GLsizei depth , GLenum format , GLenum type , GLvoid *texels );
-DYNAMIC_GL_APIENTRY void glExtGetBufferPointervQCOM( GLenum target , GLvoid *p1 );
+extern "C" {
+ DYNAMIC_GL_APIENTRY void glExtGetTexturesQCOM( GLuint *textures , GLint maxTextures , GLint *numTextures );
+ DYNAMIC_GL_APIENTRY void glExtGetBuffersQCOM( GLuint *buffers , GLint maxBuffers , GLint *numBuffers );
+ DYNAMIC_GL_APIENTRY void glExtGetRenderbuffersQCOM( GLuint *renderbuffers , GLint maxRenderbuffers , GLint *numRenderbuffers );
+ DYNAMIC_GL_APIENTRY void glExtGetFramebuffersQCOM( GLuint *framebuffers , GLint maxFramebuffers , GLint *numFramebuffers );
+ DYNAMIC_GL_APIENTRY void glExtGetTexLevelParameterivQCOM( GLuint texture , GLenum face , GLint level , GLenum pname , GLint *params );
+ DYNAMIC_GL_APIENTRY void glExtTexObjectStateOverrideiQCOM( GLenum target , GLenum pname , GLint param );
+ DYNAMIC_GL_APIENTRY void glExtGetTexSubImageQCOM( GLenum target , GLint level , GLint xoffset , GLint yoffset , GLint zoffset , GLsizei width , GLsizei height , GLsizei depth , GLenum format , GLenum type , GLvoid *texels );
+ DYNAMIC_GL_APIENTRY void glExtGetBufferPointervQCOM( GLenum target , GLvoid *p1 );
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 extern bool DinamicGLFeature_QCOM_extended_get_Supported();
@@ -1463,19 +1482,20 @@ extern bool DinamicGLFeature_OES_EGL_image_external_Supported();
 #ifdef USE_DYNAMIC_GL_OES_vertex_array_object
 #define GL_VERTEX_ARRAY_BINDING_OES 0x85B5
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BindVertexArrayOES)(GLuint array); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BindVertexArrayOES)(GLuint array);
 #define glBindVertexArrayOES DynamicGL_BindVertexArrayOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteVertexArraysOES)(GLsizei n , const GLuint *arrays); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteVertexArraysOES)(GLsizei n , const GLuint *arrays);
 #define glDeleteVertexArraysOES DynamicGL_DeleteVertexArraysOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GenVertexArraysOES)(GLsizei n , GLuint *arrays); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GenVertexArraysOES)(GLsizei n , GLuint *arrays);
 #define glGenVertexArraysOES DynamicGL_GenVertexArraysOES
-extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsVertexArrayOES)(GLuint array); }
+extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsVertexArrayOES)(GLuint array);
 #define glIsVertexArrayOES DynamicGL_IsVertexArrayOES
 #else
-extern "C" {DYNAMIC_GL_APIENTRY void glBindVertexArrayOES( GLuint array );
-DYNAMIC_GL_APIENTRY void glDeleteVertexArraysOES( GLsizei n , const GLuint *arrays );
-DYNAMIC_GL_APIENTRY void glGenVertexArraysOES( GLsizei n , GLuint *arrays );
-DYNAMIC_GL_APIENTRY GLboolean glIsVertexArrayOES( GLuint array );
+extern "C" {
+ DYNAMIC_GL_APIENTRY void glBindVertexArrayOES( GLuint array );
+ DYNAMIC_GL_APIENTRY void glDeleteVertexArraysOES( GLsizei n , const GLuint *arrays );
+ DYNAMIC_GL_APIENTRY void glGenVertexArraysOES( GLsizei n , GLuint *arrays );
+ DYNAMIC_GL_APIENTRY GLboolean glIsVertexArrayOES( GLuint array );
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 extern bool DinamicGLFeature_OES_vertex_array_object_Supported();
@@ -1518,10 +1538,11 @@ extern bool DinamicGLFeature_OES_element_index_uint_Supported();
 #define GL_FUNC_SUBTRACT_OES 0x800A
 #define GL_FUNC_REVERSE_SUBTRACT_OES 0x800B
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationOES)(GLenum mode); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationOES)(GLenum mode);
 #define glBlendEquationOES DynamicGL_BlendEquationOES
 #else
-extern "C" {DYNAMIC_GL_APIENTRY void glBlendEquationOES( GLenum mode );
+extern "C" {
+ DYNAMIC_GL_APIENTRY void glBlendEquationOES( GLenum mode );
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 extern bool DinamicGLFeature_OES_blend_subtract_Supported();
@@ -1584,13 +1605,14 @@ extern bool DinamicGLFeature_ARM_rgba8_Supported();
 #define GL_MULTISAMPLE_BUFFER_BIT6_QCOM 0x40000000
 #define GL_MULTISAMPLE_BUFFER_BIT7_QCOM 0x80000000
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_StartTilingQCOM)(GLuint x , GLuint y , GLuint width , GLuint height , GLbitfield preserveMask); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_StartTilingQCOM)(GLuint x , GLuint y , GLuint width , GLuint height , GLbitfield preserveMask);
 #define glStartTilingQCOM DynamicGL_StartTilingQCOM
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_EndTilingQCOM)(GLbitfield preserveMask); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_EndTilingQCOM)(GLbitfield preserveMask);
 #define glEndTilingQCOM DynamicGL_EndTilingQCOM
 #else
-extern "C" {DYNAMIC_GL_APIENTRY void glStartTilingQCOM( GLuint x , GLuint y , GLuint width , GLuint height , GLbitfield preserveMask );
-DYNAMIC_GL_APIENTRY void glEndTilingQCOM( GLbitfield preserveMask );
+extern "C" {
+ DYNAMIC_GL_APIENTRY void glStartTilingQCOM( GLuint x , GLuint y , GLuint width , GLuint height , GLbitfield preserveMask );
+ DYNAMIC_GL_APIENTRY void glEndTilingQCOM( GLbitfield preserveMask );
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 extern bool DinamicGLFeature_QCOM_tiled_rendering_Supported();
@@ -1633,34 +1655,35 @@ extern bool DinamicGLFeature_OES_stencil1_Supported();
 #define GL_TEXTURE_GEN_MODE_OES 0x2500
 #define GL_TEXTURE_GEN_STR_OES 0x8D60
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexGenfOES)(GLenum coord , GLenum pname , GLfloat param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexGenfOES)(GLenum coord , GLenum pname , GLfloat param);
 #define glTexGenfOES DynamicGL_TexGenfOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexGenfvOES)(GLenum coord , GLenum pname , const GLfloat *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexGenfvOES)(GLenum coord , GLenum pname , const GLfloat *params);
 #define glTexGenfvOES DynamicGL_TexGenfvOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexGeniOES)(GLenum coord , GLenum pname , GLint param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexGeniOES)(GLenum coord , GLenum pname , GLint param);
 #define glTexGeniOES DynamicGL_TexGeniOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexGenivOES)(GLenum coord , GLenum pname , const GLint *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexGenivOES)(GLenum coord , GLenum pname , const GLint *params);
 #define glTexGenivOES DynamicGL_TexGenivOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexGenxOES)(GLenum coord , GLenum pname , GLfixed param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexGenxOES)(GLenum coord , GLenum pname , GLfixed param);
 #define glTexGenxOES DynamicGL_TexGenxOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexGenxvOES)(GLenum coord , GLenum pname , const GLfixed *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexGenxvOES)(GLenum coord , GLenum pname , const GLfixed *params);
 #define glTexGenxvOES DynamicGL_TexGenxvOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexGenfvOES)(GLenum coord , GLenum pname , GLfloat *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexGenfvOES)(GLenum coord , GLenum pname , GLfloat *params);
 #define glGetTexGenfvOES DynamicGL_GetTexGenfvOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexGenivOES)(GLenum coord , GLenum pname , GLint *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexGenivOES)(GLenum coord , GLenum pname , GLint *params);
 #define glGetTexGenivOES DynamicGL_GetTexGenivOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexGenxvOES)(GLenum coord , GLenum pname , GLfixed *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexGenxvOES)(GLenum coord , GLenum pname , GLfixed *params);
 #define glGetTexGenxvOES DynamicGL_GetTexGenxvOES
 #else
-extern "C" {DYNAMIC_GL_APIENTRY void glTexGenfOES( GLenum coord , GLenum pname , GLfloat param );
-DYNAMIC_GL_APIENTRY void glTexGenfvOES( GLenum coord , GLenum pname , const GLfloat *params );
-DYNAMIC_GL_APIENTRY void glTexGeniOES( GLenum coord , GLenum pname , GLint param );
-DYNAMIC_GL_APIENTRY void glTexGenivOES( GLenum coord , GLenum pname , const GLint *params );
-DYNAMIC_GL_APIENTRY void glTexGenxOES( GLenum coord , GLenum pname , GLfixed param );
-DYNAMIC_GL_APIENTRY void glTexGenxvOES( GLenum coord , GLenum pname , const GLfixed *params );
-DYNAMIC_GL_APIENTRY void glGetTexGenfvOES( GLenum coord , GLenum pname , GLfloat *params );
-DYNAMIC_GL_APIENTRY void glGetTexGenivOES( GLenum coord , GLenum pname , GLint *params );
-DYNAMIC_GL_APIENTRY void glGetTexGenxvOES( GLenum coord , GLenum pname , GLfixed *params );
+extern "C" {
+ DYNAMIC_GL_APIENTRY void glTexGenfOES( GLenum coord , GLenum pname , GLfloat param );
+ DYNAMIC_GL_APIENTRY void glTexGenfvOES( GLenum coord , GLenum pname , const GLfloat *params );
+ DYNAMIC_GL_APIENTRY void glTexGeniOES( GLenum coord , GLenum pname , GLint param );
+ DYNAMIC_GL_APIENTRY void glTexGenivOES( GLenum coord , GLenum pname , const GLint *params );
+ DYNAMIC_GL_APIENTRY void glTexGenxOES( GLenum coord , GLenum pname , GLfixed param );
+ DYNAMIC_GL_APIENTRY void glTexGenxvOES( GLenum coord , GLenum pname , const GLfixed *params );
+ DYNAMIC_GL_APIENTRY void glGetTexGenfvOES( GLenum coord , GLenum pname , GLfloat *params );
+ DYNAMIC_GL_APIENTRY void glGetTexGenivOES( GLenum coord , GLenum pname , GLint *params );
+ DYNAMIC_GL_APIENTRY void glGetTexGenxvOES( GLenum coord , GLenum pname , GLfixed *params );
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 extern bool DinamicGLFeature_OES_texture_cube_map_Supported();
@@ -1681,13 +1704,14 @@ extern bool DinamicGLFeature_AMD_compressed_ATC_texture_Supported();
 #define GL_BUFFER_MAPPED_OES 0x88BC
 #define GL_BUFFER_MAP_POINTER_OES 0x88BD
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_UnmapBufferOES)(GLenum target); }
+extern GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_UnmapBufferOES)(GLenum target);
 #define glUnmapBufferOES DynamicGL_UnmapBufferOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetBufferPointervOES)(GLenum target , GLenum pname , GLvoid *p1); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetBufferPointervOES)(GLenum target , GLenum pname , GLvoid *p1);
 #define glGetBufferPointervOES DynamicGL_GetBufferPointervOES
 #else
-extern "C" {DYNAMIC_GL_APIENTRY GLboolean glUnmapBufferOES( GLenum target );
-DYNAMIC_GL_APIENTRY void glGetBufferPointervOES( GLenum target , GLenum pname , GLvoid *p1 );
+extern "C" {
+ DYNAMIC_GL_APIENTRY GLboolean glUnmapBufferOES( GLenum target );
+ DYNAMIC_GL_APIENTRY void glGetBufferPointervOES( GLenum target , GLenum pname , GLvoid *p1 );
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 extern bool DinamicGLFeature_OES_mapbuffer_Supported();
@@ -1703,13 +1727,14 @@ extern bool DinamicGLFeature_EXT_blend_minmax_Supported();
 /*EXT_multi_draw_arrays*/
 #ifdef USE_DYNAMIC_GL_EXT_multi_draw_arrays
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawArraysEXT)(GLenum mode , GLint *first , GLsizei *count , GLsizei primcount); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawArraysEXT)(GLenum mode , GLint *first , GLsizei *count , GLsizei primcount);
 #define glMultiDrawArraysEXT DynamicGL_MultiDrawArraysEXT
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawElementsEXT)(GLenum mode , const GLsizei *count , GLenum type , const GLvoid* *indices , GLsizei primcount); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawElementsEXT)(GLenum mode , const GLsizei *count , GLenum type , const GLvoid* *indices , GLsizei primcount);
 #define glMultiDrawElementsEXT DynamicGL_MultiDrawElementsEXT
 #else
-extern "C" {DYNAMIC_GL_APIENTRY void glMultiDrawArraysEXT( GLenum mode , GLint *first , GLsizei *count , GLsizei primcount );
-DYNAMIC_GL_APIENTRY void glMultiDrawElementsEXT( GLenum mode , const GLsizei *count , GLenum type , const GLvoid* *indices , GLsizei primcount );
+extern "C" {
+ DYNAMIC_GL_APIENTRY void glMultiDrawArraysEXT( GLenum mode , GLint *first , GLsizei *count , GLsizei primcount );
+ DYNAMIC_GL_APIENTRY void glMultiDrawElementsEXT( GLenum mode , const GLsizei *count , GLenum type , const GLvoid* *indices , GLsizei primcount );
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 extern bool DinamicGLFeature_EXT_multi_draw_arrays_Supported();
@@ -1719,121 +1744,122 @@ extern bool DinamicGLFeature_EXT_multi_draw_arrays_Supported();
 #ifdef USE_DYNAMIC_GL_OES_fixed_point
 #define GL_FIXED_OES 0x140C
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_AlphaFuncxOES)(GLenum func , GLclampx ref); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_AlphaFuncxOES)(GLenum func , GLclampx ref);
 #define glAlphaFuncxOES DynamicGL_AlphaFuncxOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearColorxOES)(GLclampx red , GLclampx green , GLclampx blue , GLclampx alpha); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearColorxOES)(GLclampx red , GLclampx green , GLclampx blue , GLclampx alpha);
 #define glClearColorxOES DynamicGL_ClearColorxOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearDepthxOES)(GLclampx depth); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearDepthxOES)(GLclampx depth);
 #define glClearDepthxOES DynamicGL_ClearDepthxOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClipPlanexOES)(GLenum plane , const GLfixed *equation); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ClipPlanexOES)(GLenum plane , const GLfixed *equation);
 #define glClipPlanexOES DynamicGL_ClipPlanexOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Color4xOES)(GLfixed red , GLfixed green , GLfixed blue , GLfixed alpha); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Color4xOES)(GLfixed red , GLfixed green , GLfixed blue , GLfixed alpha);
 #define glColor4xOES DynamicGL_Color4xOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthRangexOES)(GLclampx zNear , GLclampx zFar); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthRangexOES)(GLclampx zNear , GLclampx zFar);
 #define glDepthRangexOES DynamicGL_DepthRangexOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FogxOES)(GLenum pname , GLfixed param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FogxOES)(GLenum pname , GLfixed param);
 #define glFogxOES DynamicGL_FogxOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FogxvOES)(GLenum pname , const GLfixed *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FogxvOES)(GLenum pname , const GLfixed *params);
 #define glFogxvOES DynamicGL_FogxvOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FrustumxOES)(GLfixed left , GLfixed right , GLfixed bottom , GLfixed top , GLfixed zNear , GLfixed zFar); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_FrustumxOES)(GLfixed left , GLfixed right , GLfixed bottom , GLfixed top , GLfixed zNear , GLfixed zFar);
 #define glFrustumxOES DynamicGL_FrustumxOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetFixedvOES)(GLenum pname , GLfixed *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetFixedvOES)(GLenum pname , GLfixed *params);
 #define glGetFixedvOES DynamicGL_GetFixedvOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetLightxvOES)(GLenum light , GLenum pname , GLfixed *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetLightxvOES)(GLenum light , GLenum pname , GLfixed *params);
 #define glGetLightxvOES DynamicGL_GetLightxvOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetMaterialxvOES)(GLenum face , GLenum pname , GLfixed *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetMaterialxvOES)(GLenum face , GLenum pname , GLfixed *params);
 #define glGetMaterialxvOES DynamicGL_GetMaterialxvOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexEnvxvOES)(GLenum env , GLenum pname , GLfixed *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexEnvxvOES)(GLenum env , GLenum pname , GLfixed *params);
 #define glGetTexEnvxvOES DynamicGL_GetTexEnvxvOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexParameterxvOES)(GLenum target , GLenum pname , GLfixed *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexParameterxvOES)(GLenum target , GLenum pname , GLfixed *params);
 #define glGetTexParameterxvOES DynamicGL_GetTexParameterxvOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LightModelxOES)(GLenum pname , GLfixed param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LightModelxOES)(GLenum pname , GLfixed param);
 #define glLightModelxOES DynamicGL_LightModelxOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LightModelxvOES)(GLenum pname , const GLfixed *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LightModelxvOES)(GLenum pname , const GLfixed *params);
 #define glLightModelxvOES DynamicGL_LightModelxvOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LightxOES)(GLenum light , GLenum pname , GLfixed param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LightxOES)(GLenum light , GLenum pname , GLfixed param);
 #define glLightxOES DynamicGL_LightxOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LightxvOES)(GLenum light , GLenum pname , const GLfixed *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LightxvOES)(GLenum light , GLenum pname , const GLfixed *params);
 #define glLightxvOES DynamicGL_LightxvOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LineWidthxOES)(GLfixed width); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LineWidthxOES)(GLfixed width);
 #define glLineWidthxOES DynamicGL_LineWidthxOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadMatrixxOES)(const GLfixed *m); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadMatrixxOES)(const GLfixed *m);
 #define glLoadMatrixxOES DynamicGL_LoadMatrixxOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MaterialxOES)(GLenum face , GLenum pname , GLfixed param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MaterialxOES)(GLenum face , GLenum pname , GLfixed param);
 #define glMaterialxOES DynamicGL_MaterialxOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MaterialxvOES)(GLenum face , GLenum pname , const GLfixed *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MaterialxvOES)(GLenum face , GLenum pname , const GLfixed *params);
 #define glMaterialxvOES DynamicGL_MaterialxvOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultMatrixxOES)(const GLfixed *m); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultMatrixxOES)(const GLfixed *m);
 #define glMultMatrixxOES DynamicGL_MultMatrixxOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4xOES)(GLenum target , GLfixed s , GLfixed t , GLfixed r , GLfixed q); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4xOES)(GLenum target , GLfixed s , GLfixed t , GLfixed r , GLfixed q);
 #define glMultiTexCoord4xOES DynamicGL_MultiTexCoord4xOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Normal3xOES)(GLfixed nx , GLfixed ny , GLfixed nz); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_Normal3xOES)(GLfixed nx , GLfixed ny , GLfixed nz);
 #define glNormal3xOES DynamicGL_Normal3xOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_OrthoxOES)(GLfixed left , GLfixed right , GLfixed bottom , GLfixed top , GLfixed zNear , GLfixed zFar); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_OrthoxOES)(GLfixed left , GLfixed right , GLfixed bottom , GLfixed top , GLfixed zNear , GLfixed zFar);
 #define glOrthoxOES DynamicGL_OrthoxOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterxOES)(GLenum pname , GLfixed param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterxOES)(GLenum pname , GLfixed param);
 #define glPointParameterxOES DynamicGL_PointParameterxOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterxvOES)(GLenum pname , const GLfixed *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterxvOES)(GLenum pname , const GLfixed *params);
 #define glPointParameterxvOES DynamicGL_PointParameterxvOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PointSizexOES)(GLfixed size); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PointSizexOES)(GLfixed size);
 #define glPointSizexOES DynamicGL_PointSizexOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PolygonOffsetxOES)(GLfixed factor , GLfixed units); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_PolygonOffsetxOES)(GLfixed factor , GLfixed units);
 #define glPolygonOffsetxOES DynamicGL_PolygonOffsetxOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_RotatexOES)(GLfixed angle , GLfixed x , GLfixed y , GLfixed z); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_RotatexOES)(GLfixed angle , GLfixed x , GLfixed y , GLfixed z);
 #define glRotatexOES DynamicGL_RotatexOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleCoveragexOES)(GLclampx value , GLboolean invert); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleCoveragexOES)(GLclampx value , GLboolean invert);
 #define glSampleCoveragexOES DynamicGL_SampleCoveragexOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ScalexOES)(GLfixed x , GLfixed y , GLfixed z); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_ScalexOES)(GLfixed x , GLfixed y , GLfixed z);
 #define glScalexOES DynamicGL_ScalexOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvxOES)(GLenum target , GLenum pname , GLfixed param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvxOES)(GLenum target , GLenum pname , GLfixed param);
 #define glTexEnvxOES DynamicGL_TexEnvxOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvxvOES)(GLenum target , GLenum pname , const GLfixed *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvxvOES)(GLenum target , GLenum pname , const GLfixed *params);
 #define glTexEnvxvOES DynamicGL_TexEnvxvOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterxOES)(GLenum target , GLenum pname , GLfixed param); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterxOES)(GLenum target , GLenum pname , GLfixed param);
 #define glTexParameterxOES DynamicGL_TexParameterxOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterxvOES)(GLenum target , GLenum pname , const GLfixed *params); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterxvOES)(GLenum target , GLenum pname , const GLfixed *params);
 #define glTexParameterxvOES DynamicGL_TexParameterxvOES
-extern "C" { extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TranslatexOES)(GLfixed x , GLfixed y , GLfixed z); }
+extern void (DYNAMIC_GL_APIENTRYP DynamicGL_TranslatexOES)(GLfixed x , GLfixed y , GLfixed z);
 #define glTranslatexOES DynamicGL_TranslatexOES
 #else
-extern "C" {DYNAMIC_GL_APIENTRY void glAlphaFuncxOES( GLenum func , GLclampx ref );
-DYNAMIC_GL_APIENTRY void glClearColorxOES( GLclampx red , GLclampx green , GLclampx blue , GLclampx alpha );
-DYNAMIC_GL_APIENTRY void glClearDepthxOES( GLclampx depth );
-DYNAMIC_GL_APIENTRY void glClipPlanexOES( GLenum plane , const GLfixed *equation );
-DYNAMIC_GL_APIENTRY void glColor4xOES( GLfixed red , GLfixed green , GLfixed blue , GLfixed alpha );
-DYNAMIC_GL_APIENTRY void glDepthRangexOES( GLclampx zNear , GLclampx zFar );
-DYNAMIC_GL_APIENTRY void glFogxOES( GLenum pname , GLfixed param );
-DYNAMIC_GL_APIENTRY void glFogxvOES( GLenum pname , const GLfixed *params );
-DYNAMIC_GL_APIENTRY void glFrustumxOES( GLfixed left , GLfixed right , GLfixed bottom , GLfixed top , GLfixed zNear , GLfixed zFar );
-DYNAMIC_GL_APIENTRY void glGetFixedvOES( GLenum pname , GLfixed *params );
-DYNAMIC_GL_APIENTRY void glGetLightxvOES( GLenum light , GLenum pname , GLfixed *params );
-DYNAMIC_GL_APIENTRY void glGetMaterialxvOES( GLenum face , GLenum pname , GLfixed *params );
-DYNAMIC_GL_APIENTRY void glGetTexEnvxvOES( GLenum env , GLenum pname , GLfixed *params );
-DYNAMIC_GL_APIENTRY void glGetTexParameterxvOES( GLenum target , GLenum pname , GLfixed *params );
-DYNAMIC_GL_APIENTRY void glLightModelxOES( GLenum pname , GLfixed param );
-DYNAMIC_GL_APIENTRY void glLightModelxvOES( GLenum pname , const GLfixed *params );
-DYNAMIC_GL_APIENTRY void glLightxOES( GLenum light , GLenum pname , GLfixed param );
-DYNAMIC_GL_APIENTRY void glLightxvOES( GLenum light , GLenum pname , const GLfixed *params );
-DYNAMIC_GL_APIENTRY void glLineWidthxOES( GLfixed width );
-DYNAMIC_GL_APIENTRY void glLoadMatrixxOES( const GLfixed *m );
-DYNAMIC_GL_APIENTRY void glMaterialxOES( GLenum face , GLenum pname , GLfixed param );
-DYNAMIC_GL_APIENTRY void glMaterialxvOES( GLenum face , GLenum pname , const GLfixed *params );
-DYNAMIC_GL_APIENTRY void glMultMatrixxOES( const GLfixed *m );
-DYNAMIC_GL_APIENTRY void glMultiTexCoord4xOES( GLenum target , GLfixed s , GLfixed t , GLfixed r , GLfixed q );
-DYNAMIC_GL_APIENTRY void glNormal3xOES( GLfixed nx , GLfixed ny , GLfixed nz );
-DYNAMIC_GL_APIENTRY void glOrthoxOES( GLfixed left , GLfixed right , GLfixed bottom , GLfixed top , GLfixed zNear , GLfixed zFar );
-DYNAMIC_GL_APIENTRY void glPointParameterxOES( GLenum pname , GLfixed param );
-DYNAMIC_GL_APIENTRY void glPointParameterxvOES( GLenum pname , const GLfixed *params );
-DYNAMIC_GL_APIENTRY void glPointSizexOES( GLfixed size );
-DYNAMIC_GL_APIENTRY void glPolygonOffsetxOES( GLfixed factor , GLfixed units );
-DYNAMIC_GL_APIENTRY void glRotatexOES( GLfixed angle , GLfixed x , GLfixed y , GLfixed z );
-DYNAMIC_GL_APIENTRY void glSampleCoveragexOES( GLclampx value , GLboolean invert );
-DYNAMIC_GL_APIENTRY void glScalexOES( GLfixed x , GLfixed y , GLfixed z );
-DYNAMIC_GL_APIENTRY void glTexEnvxOES( GLenum target , GLenum pname , GLfixed param );
-DYNAMIC_GL_APIENTRY void glTexEnvxvOES( GLenum target , GLenum pname , const GLfixed *params );
-DYNAMIC_GL_APIENTRY void glTexParameterxOES( GLenum target , GLenum pname , GLfixed param );
-DYNAMIC_GL_APIENTRY void glTexParameterxvOES( GLenum target , GLenum pname , const GLfixed *params );
-DYNAMIC_GL_APIENTRY void glTranslatexOES( GLfixed x , GLfixed y , GLfixed z );
+extern "C" {
+ DYNAMIC_GL_APIENTRY void glAlphaFuncxOES( GLenum func , GLclampx ref );
+ DYNAMIC_GL_APIENTRY void glClearColorxOES( GLclampx red , GLclampx green , GLclampx blue , GLclampx alpha );
+ DYNAMIC_GL_APIENTRY void glClearDepthxOES( GLclampx depth );
+ DYNAMIC_GL_APIENTRY void glClipPlanexOES( GLenum plane , const GLfixed *equation );
+ DYNAMIC_GL_APIENTRY void glColor4xOES( GLfixed red , GLfixed green , GLfixed blue , GLfixed alpha );
+ DYNAMIC_GL_APIENTRY void glDepthRangexOES( GLclampx zNear , GLclampx zFar );
+ DYNAMIC_GL_APIENTRY void glFogxOES( GLenum pname , GLfixed param );
+ DYNAMIC_GL_APIENTRY void glFogxvOES( GLenum pname , const GLfixed *params );
+ DYNAMIC_GL_APIENTRY void glFrustumxOES( GLfixed left , GLfixed right , GLfixed bottom , GLfixed top , GLfixed zNear , GLfixed zFar );
+ DYNAMIC_GL_APIENTRY void glGetFixedvOES( GLenum pname , GLfixed *params );
+ DYNAMIC_GL_APIENTRY void glGetLightxvOES( GLenum light , GLenum pname , GLfixed *params );
+ DYNAMIC_GL_APIENTRY void glGetMaterialxvOES( GLenum face , GLenum pname , GLfixed *params );
+ DYNAMIC_GL_APIENTRY void glGetTexEnvxvOES( GLenum env , GLenum pname , GLfixed *params );
+ DYNAMIC_GL_APIENTRY void glGetTexParameterxvOES( GLenum target , GLenum pname , GLfixed *params );
+ DYNAMIC_GL_APIENTRY void glLightModelxOES( GLenum pname , GLfixed param );
+ DYNAMIC_GL_APIENTRY void glLightModelxvOES( GLenum pname , const GLfixed *params );
+ DYNAMIC_GL_APIENTRY void glLightxOES( GLenum light , GLenum pname , GLfixed param );
+ DYNAMIC_GL_APIENTRY void glLightxvOES( GLenum light , GLenum pname , const GLfixed *params );
+ DYNAMIC_GL_APIENTRY void glLineWidthxOES( GLfixed width );
+ DYNAMIC_GL_APIENTRY void glLoadMatrixxOES( const GLfixed *m );
+ DYNAMIC_GL_APIENTRY void glMaterialxOES( GLenum face , GLenum pname , GLfixed param );
+ DYNAMIC_GL_APIENTRY void glMaterialxvOES( GLenum face , GLenum pname , const GLfixed *params );
+ DYNAMIC_GL_APIENTRY void glMultMatrixxOES( const GLfixed *m );
+ DYNAMIC_GL_APIENTRY void glMultiTexCoord4xOES( GLenum target , GLfixed s , GLfixed t , GLfixed r , GLfixed q );
+ DYNAMIC_GL_APIENTRY void glNormal3xOES( GLfixed nx , GLfixed ny , GLfixed nz );
+ DYNAMIC_GL_APIENTRY void glOrthoxOES( GLfixed left , GLfixed right , GLfixed bottom , GLfixed top , GLfixed zNear , GLfixed zFar );
+ DYNAMIC_GL_APIENTRY void glPointParameterxOES( GLenum pname , GLfixed param );
+ DYNAMIC_GL_APIENTRY void glPointParameterxvOES( GLenum pname , const GLfixed *params );
+ DYNAMIC_GL_APIENTRY void glPointSizexOES( GLfixed size );
+ DYNAMIC_GL_APIENTRY void glPolygonOffsetxOES( GLfixed factor , GLfixed units );
+ DYNAMIC_GL_APIENTRY void glRotatexOES( GLfixed angle , GLfixed x , GLfixed y , GLfixed z );
+ DYNAMIC_GL_APIENTRY void glSampleCoveragexOES( GLclampx value , GLboolean invert );
+ DYNAMIC_GL_APIENTRY void glScalexOES( GLfixed x , GLfixed y , GLfixed z );
+ DYNAMIC_GL_APIENTRY void glTexEnvxOES( GLenum target , GLenum pname , GLfixed param );
+ DYNAMIC_GL_APIENTRY void glTexEnvxvOES( GLenum target , GLenum pname , const GLfixed *params );
+ DYNAMIC_GL_APIENTRY void glTexParameterxOES( GLenum target , GLenum pname , GLfixed param );
+ DYNAMIC_GL_APIENTRY void glTexParameterxvOES( GLenum target , GLenum pname , const GLfixed *params );
+ DYNAMIC_GL_APIENTRY void glTranslatexOES( GLfixed x , GLfixed y , GLfixed z );
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 extern bool DinamicGLFeature_OES_fixed_point_Supported();

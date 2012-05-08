@@ -3,7 +3,8 @@
 
 #define USE_DYNAMIC_GL_VERSION_1_1
 
-#define IMG_texture_compression_pvrtc
+#define USE_DYNAMIC_GL_IMG_texture_compression_pvrtc
+#define USE_DYNAMIC_GL_OES_rgb8_rgba8
 
 //#define USE_DYNAMIC_GL_SGIS_texture_edge_clamp
 
@@ -15,6 +16,7 @@
 
 //#define USE_DYNAMIC_GL_EXT_framebuffer_object
 #define USE_DYNAMIC_GL_OES_framebuffer_object
+
 
 //#define USE_DYNAMIC_GL_ARB_depth_texture
 

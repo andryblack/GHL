@@ -37,7 +37,9 @@ namespace GHL
         IMAGE_FORMAT_UNKNOWN,   ///< unknown
         IMAGE_FORMAT_GRAY,		///< grayscale
         IMAGE_FORMAT_RGB,		///< r,g,b channels
-        IMAGE_FORMAT_RGBA		///< r,g,b,alpha channels
+        IMAGE_FORMAT_RGBA,		///< r,g,b,alpha channels
+		IMAGE_FORMAT_PVRTC_2,	///< compressed format PVRTC_2
+		IMAGE_FORMAT_PVRTC_4	///< compressed format PVRTC_4
     };
 
     /// image object interface
@@ -52,14 +54,14 @@ namespace GHL
         /// get image data
         virtual const Data* GHL_CALL GetData() const = 0;
 		/// convert image to format
-        virtual void GHL_CALL Convert(ImageFormat fmt) = 0;
+        virtual bool GHL_CALL Convert(ImageFormat fmt) = 0;
         /// swap RB channels
-        virtual void GHL_CALL SwapRB() = 0;
+        virtual bool GHL_CALL SwapRB() = 0;
         /// set alpha from another image
         /**
          * @arg img image with format IMAGE_FORMAT_GRAY or IMAGE_FORMAT_RGBA
          */
-        virtual void GHL_CALL SetAlpha(const Image* img) = 0;
+        virtual bool GHL_CALL SetAlpha(const Image* img) = 0;
         /// create sub image
         virtual Image* GHL_CALL SubImage(UInt32 x,UInt32 y,UInt32 w,UInt32 h) const = 0;
     };

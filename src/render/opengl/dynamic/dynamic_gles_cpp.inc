@@ -1,148 +1,148 @@
 /*VERSION_1_1*/
 #ifdef USE_DYNAMIC_GL_VERSION_1_1
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_AlphaFunc)(GLenum func , GLclampf ref) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearColor)(GLclampf red , GLclampf green , GLclampf blue , GLclampf alpha) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearDepthf)(GLclampf depth) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClipPlanef)(GLenum plane , const GLfloat *equation) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Color4f)(GLfloat red , GLfloat green , GLfloat blue , GLfloat alpha) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthRangef)(GLclampf zNear , GLclampf zFar) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Fogf)(GLenum pname , GLfloat param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Fogfv)(GLenum pname , const GLfloat *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Frustumf)(GLfloat left , GLfloat right , GLfloat bottom , GLfloat top , GLfloat zNear , GLfloat zFar) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetFloatv)(GLenum pname , GLfloat *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetLightfv)(GLenum light , GLenum pname , GLfloat *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetMaterialfv)(GLenum face , GLenum pname , GLfloat *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexEnvfv)(GLenum env , GLenum pname , GLfloat *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexParameterfv)(GLenum target , GLenum pname , GLfloat *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LightModelf)(GLenum pname , GLfloat param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LightModelfv)(GLenum pname , const GLfloat *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Lightf)(GLenum light , GLenum pname , GLfloat param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Lightfv)(GLenum light , GLenum pname , const GLfloat *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LineWidth)(GLfloat width) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadMatrixf)(const GLfloat *m) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Materialf)(GLenum face , GLenum pname , GLfloat param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Materialfv)(GLenum face , GLenum pname , const GLfloat *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultMatrixf)(const GLfloat *m) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4f)(GLenum target , GLfloat s , GLfloat t , GLfloat r , GLfloat q) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Normal3f)(GLfloat nx , GLfloat ny , GLfloat nz) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Orthof)(GLfloat left , GLfloat right , GLfloat bottom , GLfloat top , GLfloat zNear , GLfloat zFar) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterf)(GLenum pname , GLfloat param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterfv)(GLenum pname , const GLfloat *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PointSize)(GLfloat size) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PolygonOffset)(GLfloat factor , GLfloat units) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Rotatef)(GLfloat angle , GLfloat x , GLfloat y , GLfloat z) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Scalef)(GLfloat x , GLfloat y , GLfloat z) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvf)(GLenum target , GLenum pname , GLfloat param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvfv)(GLenum target , GLenum pname , const GLfloat *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterf)(GLenum target , GLenum pname , GLfloat param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterfv)(GLenum target , GLenum pname , const GLfloat *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Translatef)(GLfloat x , GLfloat y , GLfloat z) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ActiveTexture)(GLenum texture) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_AlphaFuncx)(GLenum func , GLclampx ref) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindBuffer)(GLenum target , GLuint buffer) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindTexture)(GLenum target , GLuint texture) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFunc)(GLenum sfactor , GLenum dfactor) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BufferData)(GLenum target , GLsizeiptr size , const GLvoid *data , GLenum usage) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BufferSubData)(GLenum target , GLintptr offset , GLsizeiptr size , const GLvoid *data) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Clear)(GLbitfield mask) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearColorx)(GLclampx red , GLclampx green , GLclampx blue , GLclampx alpha) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearDepthx)(GLclampx depth) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearStencil)(GLint s) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClientActiveTexture)(GLenum texture) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClipPlanex)(GLenum plane , const GLfixed *equation) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Color4ub)(GLubyte red , GLubyte green , GLubyte blue , GLubyte alpha) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Color4x)(GLfixed red , GLfixed green , GLfixed blue , GLfixed alpha) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorMask)(GLboolean red , GLboolean green , GLboolean blue , GLboolean alpha) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorPointer)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CompressedTexImage2D)(GLenum target , GLint level , GLenum internalformat , GLsizei width , GLsizei height , GLint border , GLsizei imageSize , const GLvoid *data) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CompressedTexSubImage2D)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLsizei width , GLsizei height , GLenum format , GLsizei imageSize , const GLvoid *data) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CopyTexImage2D)(GLenum target , GLint level , GLenum internalformat , GLint x , GLint y , GLsizei width , GLsizei height , GLint border) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CopyTexSubImage2D)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLint x , GLint y , GLsizei width , GLsizei height) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CullFace)(GLenum mode) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteBuffers)(GLsizei n , const GLuint *buffers) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteTextures)(GLsizei n , const GLuint *textures) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthFunc)(GLenum func) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthMask)(GLboolean flag) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthRangex)(GLclampx zNear , GLclampx zFar) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Disable)(GLenum cap) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DisableClientState)(GLenum array) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawArrays)(GLenum mode , GLint first , GLsizei count) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElements)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Enable)(GLenum cap) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_EnableClientState)(GLenum array) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Finish)() = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Flush)() = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Fogx)(GLenum pname , GLfixed param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Fogxv)(GLenum pname , const GLfixed *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FrontFace)(GLenum mode) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Frustumx)(GLfixed left , GLfixed right , GLfixed bottom , GLfixed top , GLfixed zNear , GLfixed zFar) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetBooleanv)(GLenum pname , GLboolean *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetBufferParameteriv)(GLenum target , GLenum pname , GLint *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenBuffers)(GLsizei n , GLuint *buffers) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenTextures)(GLsizei n , GLuint *textures) = 0; }
-extern "C" { GLenum (DYNAMIC_GL_APIENTRYP DynamicGL_GetError)() = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetFixedv)(GLenum pname , GLfixed *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetIntegerv)(GLenum pname , GLint *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetLightxv)(GLenum light , GLenum pname , GLfixed *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetMaterialxv)(GLenum face , GLenum pname , GLfixed *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPointerv)(GLenum pname , GLvoid *p1) = 0; }
-extern "C" { GLubyte* (DYNAMIC_GL_APIENTRYP DynamicGL_GetString)(GLenum name) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexEnviv)(GLenum env , GLenum pname , GLint *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexEnvxv)(GLenum env , GLenum pname , GLfixed *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexParameteriv)(GLenum target , GLenum pname , GLint *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexParameterxv)(GLenum target , GLenum pname , GLfixed *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Hint)(GLenum target , GLenum mode) = 0; }
-extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsBuffer)(GLuint buffer) = 0; }
-extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsEnabled)(GLenum cap) = 0; }
-extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsTexture)(GLuint texture) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LightModelx)(GLenum pname , GLfixed param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LightModelxv)(GLenum pname , const GLfixed *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Lightx)(GLenum light , GLenum pname , GLfixed param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Lightxv)(GLenum light , GLenum pname , const GLfixed *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LineWidthx)(GLfixed width) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadIdentity)() = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadMatrixx)(const GLfixed *m) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LogicOp)(GLenum opcode) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Materialx)(GLenum face , GLenum pname , GLfixed param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Materialxv)(GLenum face , GLenum pname , const GLfixed *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MatrixMode)(GLenum mode) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultMatrixx)(const GLfixed *m) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4x)(GLenum target , GLfixed s , GLfixed t , GLfixed r , GLfixed q) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Normal3x)(GLfixed nx , GLfixed ny , GLfixed nz) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_NormalPointer)(GLenum type , GLsizei stride , const GLvoid *pointer) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Orthox)(GLfixed left , GLfixed right , GLfixed bottom , GLfixed top , GLfixed zNear , GLfixed zFar) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PixelStorei)(GLenum pname , GLint param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterx)(GLenum pname , GLfixed param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterxv)(GLenum pname , const GLfixed *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PointSizex)(GLfixed size) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PolygonOffsetx)(GLfixed factor , GLfixed units) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PopMatrix)() = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PushMatrix)() = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ReadPixels)(GLint x , GLint y , GLsizei width , GLsizei height , GLenum format , GLenum type , GLvoid *pixels) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Rotatex)(GLfixed angle , GLfixed x , GLfixed y , GLfixed z) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleCoverage)(GLclampf value , GLboolean invert) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleCoveragex)(GLclampx value , GLboolean invert) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Scalex)(GLfixed x , GLfixed y , GLfixed z) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Scissor)(GLint x , GLint y , GLsizei width , GLsizei height) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ShadeModel)(GLenum mode) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilFunc)(GLenum func , GLint ref , GLuint mask) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilMask)(GLuint mask) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilOp)(GLenum fail , GLenum zfail , GLenum zpass) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexCoordPointer)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvi)(GLenum target , GLenum pname , GLint param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvx)(GLenum target , GLenum pname , GLfixed param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnviv)(GLenum target , GLenum pname , const GLint *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvxv)(GLenum target , GLenum pname , const GLfixed *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexImage2D)(GLenum target , GLint level , GLint internalformat , GLsizei width , GLsizei height , GLint border , GLenum format , GLenum type , const GLvoid *pixels) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameteri)(GLenum target , GLenum pname , GLint param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterx)(GLenum target , GLenum pname , GLfixed param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameteriv)(GLenum target , GLenum pname , const GLint *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterxv)(GLenum target , GLenum pname , const GLfixed *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexSubImage2D)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLsizei width , GLsizei height , GLenum format , GLenum type , const GLvoid *pixels) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Translatex)(GLfixed x , GLfixed y , GLfixed z) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexPointer)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Viewport)(GLint x , GLint y , GLsizei width , GLsizei height) = 0; }
+void (DYNAMIC_GL_APIENTRYP DynamicGL_AlphaFunc)(GLenum func , GLclampf ref) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearColor)(GLclampf red , GLclampf green , GLclampf blue , GLclampf alpha) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearDepthf)(GLclampf depth) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ClipPlanef)(GLenum plane , const GLfloat *equation) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Color4f)(GLfloat red , GLfloat green , GLfloat blue , GLfloat alpha) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthRangef)(GLclampf zNear , GLclampf zFar) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Fogf)(GLenum pname , GLfloat param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Fogfv)(GLenum pname , const GLfloat *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Frustumf)(GLfloat left , GLfloat right , GLfloat bottom , GLfloat top , GLfloat zNear , GLfloat zFar) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetFloatv)(GLenum pname , GLfloat *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetLightfv)(GLenum light , GLenum pname , GLfloat *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetMaterialfv)(GLenum face , GLenum pname , GLfloat *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexEnvfv)(GLenum env , GLenum pname , GLfloat *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexParameterfv)(GLenum target , GLenum pname , GLfloat *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_LightModelf)(GLenum pname , GLfloat param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_LightModelfv)(GLenum pname , const GLfloat *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Lightf)(GLenum light , GLenum pname , GLfloat param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Lightfv)(GLenum light , GLenum pname , const GLfloat *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_LineWidth)(GLfloat width) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadMatrixf)(const GLfloat *m) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Materialf)(GLenum face , GLenum pname , GLfloat param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Materialfv)(GLenum face , GLenum pname , const GLfloat *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_MultMatrixf)(const GLfloat *m) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4f)(GLenum target , GLfloat s , GLfloat t , GLfloat r , GLfloat q) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Normal3f)(GLfloat nx , GLfloat ny , GLfloat nz) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Orthof)(GLfloat left , GLfloat right , GLfloat bottom , GLfloat top , GLfloat zNear , GLfloat zFar) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterf)(GLenum pname , GLfloat param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterfv)(GLenum pname , const GLfloat *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_PointSize)(GLfloat size) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_PolygonOffset)(GLfloat factor , GLfloat units) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Rotatef)(GLfloat angle , GLfloat x , GLfloat y , GLfloat z) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Scalef)(GLfloat x , GLfloat y , GLfloat z) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvf)(GLenum target , GLenum pname , GLfloat param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvfv)(GLenum target , GLenum pname , const GLfloat *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterf)(GLenum target , GLenum pname , GLfloat param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterfv)(GLenum target , GLenum pname , const GLfloat *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Translatef)(GLfloat x , GLfloat y , GLfloat z) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ActiveTexture)(GLenum texture) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_AlphaFuncx)(GLenum func , GLclampx ref) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_BindBuffer)(GLenum target , GLuint buffer) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_BindTexture)(GLenum target , GLuint texture) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFunc)(GLenum sfactor , GLenum dfactor) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_BufferData)(GLenum target , GLsizeiptr size , const GLvoid *data , GLenum usage) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_BufferSubData)(GLenum target , GLintptr offset , GLsizeiptr size , const GLvoid *data) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Clear)(GLbitfield mask) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearColorx)(GLclampx red , GLclampx green , GLclampx blue , GLclampx alpha) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearDepthx)(GLclampx depth) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearStencil)(GLint s) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ClientActiveTexture)(GLenum texture) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ClipPlanex)(GLenum plane , const GLfixed *equation) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Color4ub)(GLubyte red , GLubyte green , GLubyte blue , GLubyte alpha) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Color4x)(GLfixed red , GLfixed green , GLfixed blue , GLfixed alpha) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorMask)(GLboolean red , GLboolean green , GLboolean blue , GLboolean alpha) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ColorPointer)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_CompressedTexImage2D)(GLenum target , GLint level , GLenum internalformat , GLsizei width , GLsizei height , GLint border , GLsizei imageSize , const GLvoid *data) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_CompressedTexSubImage2D)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLsizei width , GLsizei height , GLenum format , GLsizei imageSize , const GLvoid *data) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_CopyTexImage2D)(GLenum target , GLint level , GLenum internalformat , GLint x , GLint y , GLsizei width , GLsizei height , GLint border) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_CopyTexSubImage2D)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLint x , GLint y , GLsizei width , GLsizei height) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_CullFace)(GLenum mode) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteBuffers)(GLsizei n , const GLuint *buffers) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteTextures)(GLsizei n , const GLuint *textures) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthFunc)(GLenum func) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthMask)(GLboolean flag) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthRangex)(GLclampx zNear , GLclampx zFar) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Disable)(GLenum cap) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_DisableClientState)(GLenum array) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawArrays)(GLenum mode , GLint first , GLsizei count) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawElements)(GLenum mode , GLsizei count , GLenum type , const GLvoid *indices) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Enable)(GLenum cap) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_EnableClientState)(GLenum array) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Finish)() = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Flush)() = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Fogx)(GLenum pname , GLfixed param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Fogxv)(GLenum pname , const GLfixed *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_FrontFace)(GLenum mode) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Frustumx)(GLfixed left , GLfixed right , GLfixed bottom , GLfixed top , GLfixed zNear , GLfixed zFar) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetBooleanv)(GLenum pname , GLboolean *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetBufferParameteriv)(GLenum target , GLenum pname , GLint *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GenBuffers)(GLsizei n , GLuint *buffers) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GenTextures)(GLsizei n , GLuint *textures) = 0;
+GLenum (DYNAMIC_GL_APIENTRYP DynamicGL_GetError)() = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetFixedv)(GLenum pname , GLfixed *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetIntegerv)(GLenum pname , GLint *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetLightxv)(GLenum light , GLenum pname , GLfixed *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetMaterialxv)(GLenum face , GLenum pname , GLfixed *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetPointerv)(GLenum pname , GLvoid *p1) = 0;
+GLubyte* (DYNAMIC_GL_APIENTRYP DynamicGL_GetString)(GLenum name) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexEnviv)(GLenum env , GLenum pname , GLint *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexEnvxv)(GLenum env , GLenum pname , GLfixed *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexParameteriv)(GLenum target , GLenum pname , GLint *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexParameterxv)(GLenum target , GLenum pname , GLfixed *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Hint)(GLenum target , GLenum mode) = 0;
+GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsBuffer)(GLuint buffer) = 0;
+GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsEnabled)(GLenum cap) = 0;
+GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsTexture)(GLuint texture) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_LightModelx)(GLenum pname , GLfixed param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_LightModelxv)(GLenum pname , const GLfixed *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Lightx)(GLenum light , GLenum pname , GLfixed param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Lightxv)(GLenum light , GLenum pname , const GLfixed *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_LineWidthx)(GLfixed width) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadIdentity)() = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadMatrixx)(const GLfixed *m) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_LogicOp)(GLenum opcode) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Materialx)(GLenum face , GLenum pname , GLfixed param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Materialxv)(GLenum face , GLenum pname , const GLfixed *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_MatrixMode)(GLenum mode) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_MultMatrixx)(const GLfixed *m) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4x)(GLenum target , GLfixed s , GLfixed t , GLfixed r , GLfixed q) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Normal3x)(GLfixed nx , GLfixed ny , GLfixed nz) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_NormalPointer)(GLenum type , GLsizei stride , const GLvoid *pointer) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Orthox)(GLfixed left , GLfixed right , GLfixed bottom , GLfixed top , GLfixed zNear , GLfixed zFar) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_PixelStorei)(GLenum pname , GLint param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterx)(GLenum pname , GLfixed param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterxv)(GLenum pname , const GLfixed *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_PointSizex)(GLfixed size) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_PolygonOffsetx)(GLfixed factor , GLfixed units) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_PopMatrix)() = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_PushMatrix)() = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ReadPixels)(GLint x , GLint y , GLsizei width , GLsizei height , GLenum format , GLenum type , GLvoid *pixels) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Rotatex)(GLfixed angle , GLfixed x , GLfixed y , GLfixed z) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleCoverage)(GLclampf value , GLboolean invert) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleCoveragex)(GLclampx value , GLboolean invert) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Scalex)(GLfixed x , GLfixed y , GLfixed z) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Scissor)(GLint x , GLint y , GLsizei width , GLsizei height) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ShadeModel)(GLenum mode) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilFunc)(GLenum func , GLint ref , GLuint mask) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilMask)(GLuint mask) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_StencilOp)(GLenum fail , GLenum zfail , GLenum zpass) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexCoordPointer)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvi)(GLenum target , GLenum pname , GLint param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvx)(GLenum target , GLenum pname , GLfixed param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnviv)(GLenum target , GLenum pname , const GLint *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvxv)(GLenum target , GLenum pname , const GLfixed *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexImage2D)(GLenum target , GLint level , GLint internalformat , GLsizei width , GLsizei height , GLint border , GLenum format , GLenum type , const GLvoid *pixels) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameteri)(GLenum target , GLenum pname , GLint param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterx)(GLenum target , GLenum pname , GLfixed param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameteriv)(GLenum target , GLenum pname , const GLint *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterxv)(GLenum target , GLenum pname , const GLfixed *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexSubImage2D)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLsizei width , GLsizei height , GLenum format , GLenum type , const GLvoid *pixels) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Translatex)(GLfixed x , GLfixed y , GLfixed z) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_VertexPointer)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Viewport)(GLint x , GLint y , GLsizei width , GLsizei height) = 0;
 static bool DinamicGLFeature_VERSION_1_1_loaded = false; 
 static void InitDinamicGLFeature_VERSION_1_1() {
 		DynamicGL_AlphaFunc = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum func , GLclampf ref)>("glAlphaFunc"); 
@@ -291,6 +291,10 @@ static void InitDinamicGLFeature_VERSION_1_1() {
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_VERSION_1_1_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_VERSION_1_1_loaded) {
 			InitDinamicGLFeature_VERSION_1_1();
@@ -438,6 +442,7 @@ bool DinamicGLFeature_VERSION_1_1_Supported() {
 		if (DynamicGL_VertexPointer==0) return false; 
 		if (DynamicGL_Viewport==0) return false; 
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_VERSION_1_1*/
@@ -445,7 +450,7 @@ bool DinamicGLFeature_VERSION_1_1_Supported() {
 /*OES_blend_func_separate*/
 #ifdef USE_DYNAMIC_GL_OES_blend_func_separate
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFuncSeparateOES)(GLenum srcRGB , GLenum dstRGB , GLenum srcAlpha , GLenum dstAlpha) = 0; }
+void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendFuncSeparateOES)(GLenum srcRGB , GLenum dstRGB , GLenum srcAlpha , GLenum dstAlpha) = 0;
 static bool DinamicGLFeature_OES_blend_func_separate_loaded = false; 
 static void InitDinamicGLFeature_OES_blend_func_separate() {
 		DynamicGL_BlendFuncSeparateOES = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum srcRGB , GLenum dstRGB , GLenum srcAlpha , GLenum dstAlpha)>("glBlendFuncSeparateOES"); 
@@ -453,6 +458,10 @@ static void InitDinamicGLFeature_OES_blend_func_separate() {
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_OES_blend_func_separate_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_blend_func_separate")) return false;
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_OES_blend_func_separate_loaded) {
@@ -460,6 +469,7 @@ bool DinamicGLFeature_OES_blend_func_separate_Supported() {
 		}
 		if (DynamicGL_BlendFuncSeparateOES==0) return false; 
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_blend_func_separate*/
@@ -467,10 +477,10 @@ bool DinamicGLFeature_OES_blend_func_separate_Supported() {
 /*QCOM_driver_control*/
 #ifdef USE_DYNAMIC_GL_QCOM_driver_control
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetDriverControlsQCOM)(GLint *num , GLsizei size , GLuint *driverControls) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetDriverControlStringQCOM)(GLuint driverControl , GLsizei bufSize , GLsizei *length , GLchar *driverControlString) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_EnableDriverControlQCOM)(GLuint driverControl) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DisableDriverControlQCOM)(GLuint driverControl) = 0; }
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetDriverControlsQCOM)(GLint *num , GLsizei size , GLuint *driverControls) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetDriverControlStringQCOM)(GLuint driverControl , GLsizei bufSize , GLsizei *length , GLchar *driverControlString) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_EnableDriverControlQCOM)(GLuint driverControl) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_DisableDriverControlQCOM)(GLuint driverControl) = 0;
 static bool DinamicGLFeature_QCOM_driver_control_loaded = false; 
 static void InitDinamicGLFeature_QCOM_driver_control() {
 		DynamicGL_GetDriverControlsQCOM = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLint *num , GLsizei size , GLuint *driverControls)>("glGetDriverControlsQCOM"); 
@@ -481,6 +491,10 @@ static void InitDinamicGLFeature_QCOM_driver_control() {
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_QCOM_driver_control_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_QCOM_driver_control")) return false;
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_QCOM_driver_control_loaded) {
@@ -491,6 +505,7 @@ bool DinamicGLFeature_QCOM_driver_control_Supported() {
 		if (DynamicGL_EnableDriverControlQCOM==0) return false; 
 		if (DynamicGL_DisableDriverControlQCOM==0) return false; 
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_QCOM_driver_control*/
@@ -498,8 +513,8 @@ bool DinamicGLFeature_QCOM_driver_control_Supported() {
 /*EXT_multisampled_render_to_texture*/
 #ifdef USE_DYNAMIC_GL_EXT_multisampled_render_to_texture
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_RenderbufferStorageMultisampleEXT)(GLenum target , GLsizei samples , GLenum internalformat , GLsizei width , GLsizei height) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FramebufferTexture2DMultisampleEXT)(GLenum target , GLenum attachment , GLenum textarget , GLuint texture , GLint level , GLsizei samples) = 0; }
+void (DYNAMIC_GL_APIENTRYP DynamicGL_RenderbufferStorageMultisampleEXT)(GLenum target , GLsizei samples , GLenum internalformat , GLsizei width , GLsizei height) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_FramebufferTexture2DMultisampleEXT)(GLenum target , GLenum attachment , GLenum textarget , GLuint texture , GLint level , GLsizei samples) = 0;
 static bool DinamicGLFeature_EXT_multisampled_render_to_texture_loaded = false; 
 static void InitDinamicGLFeature_EXT_multisampled_render_to_texture() {
 		DynamicGL_RenderbufferStorageMultisampleEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLsizei samples , GLenum internalformat , GLsizei width , GLsizei height)>("glRenderbufferStorageMultisampleEXT"); 
@@ -508,6 +523,10 @@ static void InitDinamicGLFeature_EXT_multisampled_render_to_texture() {
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_multisampled_render_to_texture_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_EXT_multisampled_render_to_texture")) return false;
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_multisampled_render_to_texture_loaded) {
@@ -516,6 +535,7 @@ bool DinamicGLFeature_EXT_multisampled_render_to_texture_Supported() {
 		if (DynamicGL_RenderbufferStorageMultisampleEXT==0) return false; 
 		if (DynamicGL_FramebufferTexture2DMultisampleEXT==0) return false; 
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_multisampled_render_to_texture*/
@@ -523,12 +543,12 @@ bool DinamicGLFeature_EXT_multisampled_render_to_texture_Supported() {
 /*EXT_texture_storage*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_storage
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexStorage1DEXT)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexStorage2DEXT)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexStorage3DEXT)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureStorage1DEXT)(GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureStorage2DEXT)(GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureStorage3DEXT)(GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth) = 0; }
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexStorage1DEXT)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexStorage2DEXT)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexStorage3DEXT)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureStorage1DEXT)(GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureStorage2DEXT)(GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TextureStorage3DEXT)(GLuint texture , GLenum target , GLsizei levels , GLenum internalformat , GLsizei width , GLsizei height , GLsizei depth) = 0;
 static bool DinamicGLFeature_EXT_texture_storage_loaded = false; 
 static void InitDinamicGLFeature_EXT_texture_storage() {
 		DynamicGL_TexStorage1DEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLsizei levels , GLenum internalformat , GLsizei width)>("glTexStorage1DEXT"); 
@@ -541,6 +561,10 @@ static void InitDinamicGLFeature_EXT_texture_storage() {
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_texture_storage_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_storage")) return false;
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_texture_storage_loaded) {
@@ -553,6 +577,7 @@ bool DinamicGLFeature_EXT_texture_storage_Supported() {
 		if (DynamicGL_TextureStorage2DEXT==0) return false; 
 		if (DynamicGL_TextureStorage3DEXT==0) return false; 
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_storage*/
@@ -560,7 +585,12 @@ bool DinamicGLFeature_EXT_texture_storage_Supported() {
 /*OES_query_matrix*/
 #ifdef USE_DYNAMIC_GL_OES_query_matrix
 bool DinamicGLFeature_OES_query_matrix_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_query_matrix")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_query_matrix*/
@@ -568,7 +598,12 @@ bool DinamicGLFeature_OES_query_matrix_Supported() {
 /*OES_stencil8*/
 #ifdef USE_DYNAMIC_GL_OES_stencil8
 bool DinamicGLFeature_OES_stencil8_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_stencil8")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_stencil8*/
@@ -576,7 +611,12 @@ bool DinamicGLFeature_OES_stencil8_Supported() {
 /*APIENTRYP*/
 #ifdef USE_DYNAMIC_GL_APIENTRYP
 bool DinamicGLFeature_APIENTRYP_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_APIENTRYP")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_APIENTRYP*/
@@ -584,7 +624,12 @@ bool DinamicGLFeature_APIENTRYP_Supported() {
 /*OES_stencil_wrap*/
 #ifdef USE_DYNAMIC_GL_OES_stencil_wrap
 bool DinamicGLFeature_OES_stencil_wrap_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_stencil_wrap")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_stencil_wrap*/
@@ -592,8 +637,8 @@ bool DinamicGLFeature_OES_stencil_wrap_Supported() {
 /*APPLE_framebuffer_multisample*/
 #ifdef USE_DYNAMIC_GL_APPLE_framebuffer_multisample
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_RenderbufferStorageMultisampleAPPLE)(GLenum target , GLsizei samples , GLenum internalformat , GLsizei width , GLsizei height) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ResolveMultisampleFramebufferAPPLE)() = 0; }
+void (DYNAMIC_GL_APIENTRYP DynamicGL_RenderbufferStorageMultisampleAPPLE)(GLenum target , GLsizei samples , GLenum internalformat , GLsizei width , GLsizei height) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ResolveMultisampleFramebufferAPPLE)() = 0;
 static bool DinamicGLFeature_APPLE_framebuffer_multisample_loaded = false; 
 static void InitDinamicGLFeature_APPLE_framebuffer_multisample() {
 		DynamicGL_RenderbufferStorageMultisampleAPPLE = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLsizei samples , GLenum internalformat , GLsizei width , GLsizei height)>("glRenderbufferStorageMultisampleAPPLE"); 
@@ -602,6 +647,10 @@ static void InitDinamicGLFeature_APPLE_framebuffer_multisample() {
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_APPLE_framebuffer_multisample_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_APPLE_framebuffer_multisample")) return false;
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_APPLE_framebuffer_multisample_loaded) {
@@ -610,6 +659,7 @@ bool DinamicGLFeature_APPLE_framebuffer_multisample_Supported() {
 		if (DynamicGL_RenderbufferStorageMultisampleAPPLE==0) return false; 
 		if (DynamicGL_ResolveMultisampleFramebufferAPPLE==0) return false; 
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_APPLE_framebuffer_multisample*/
@@ -617,7 +667,12 @@ bool DinamicGLFeature_APPLE_framebuffer_multisample_Supported() {
 /*OES_extended_matrix_palette*/
 #ifdef USE_DYNAMIC_GL_OES_extended_matrix_palette
 bool DinamicGLFeature_OES_extended_matrix_palette_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_extended_matrix_palette")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_extended_matrix_palette*/
@@ -625,7 +680,12 @@ bool DinamicGLFeature_OES_extended_matrix_palette_Supported() {
 /*APPLE_texture_format_BGRA8888*/
 #ifdef USE_DYNAMIC_GL_APPLE_texture_format_BGRA8888
 bool DinamicGLFeature_APPLE_texture_format_BGRA8888_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_APPLE_texture_format_BGRA8888")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_APPLE_texture_format_BGRA8888*/
@@ -633,7 +693,12 @@ bool DinamicGLFeature_APPLE_texture_format_BGRA8888_Supported() {
 /*APPLE_texture_2D_limited_npot*/
 #ifdef USE_DYNAMIC_GL_APPLE_texture_2D_limited_npot
 bool DinamicGLFeature_APPLE_texture_2D_limited_npot_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_APPLE_texture_2D_limited_npot")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_APPLE_texture_2D_limited_npot*/
@@ -641,7 +706,12 @@ bool DinamicGLFeature_APPLE_texture_2D_limited_npot_Supported() {
 /*QCOM_perfmon_global_mode*/
 #ifdef USE_DYNAMIC_GL_QCOM_perfmon_global_mode
 bool DinamicGLFeature_QCOM_perfmon_global_mode_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_QCOM_perfmon_global_mode")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_QCOM_perfmon_global_mode*/
@@ -649,8 +719,8 @@ bool DinamicGLFeature_QCOM_perfmon_global_mode_Supported() {
 /*IMG_user_clip_plane*/
 #ifdef USE_DYNAMIC_GL_IMG_user_clip_plane
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClipPlanefIMG)(GLenum p , const GLfloat *eqn) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClipPlanexIMG)(GLenum p , const GLfixed *eqn) = 0; }
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ClipPlanefIMG)(GLenum p , const GLfloat *eqn) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ClipPlanexIMG)(GLenum p , const GLfixed *eqn) = 0;
 static bool DinamicGLFeature_IMG_user_clip_plane_loaded = false; 
 static void InitDinamicGLFeature_IMG_user_clip_plane() {
 		DynamicGL_ClipPlanefIMG = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum p , const GLfloat *eqn)>("glClipPlanefIMG"); 
@@ -659,6 +729,10 @@ static void InitDinamicGLFeature_IMG_user_clip_plane() {
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_IMG_user_clip_plane_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_IMG_user_clip_plane")) return false;
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_IMG_user_clip_plane_loaded) {
@@ -667,6 +741,7 @@ bool DinamicGLFeature_IMG_user_clip_plane_Supported() {
 		if (DynamicGL_ClipPlanefIMG==0) return false; 
 		if (DynamicGL_ClipPlanexIMG==0) return false; 
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_IMG_user_clip_plane*/
@@ -674,11 +749,11 @@ bool DinamicGLFeature_IMG_user_clip_plane_Supported() {
 /*OES_single_precision*/
 #ifdef USE_DYNAMIC_GL_OES_single_precision
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthRangefOES)(GLclampf zNear , GLclampf zFar) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FrustumfOES)(GLfloat left , GLfloat right , GLfloat bottom , GLfloat top , GLfloat zNear , GLfloat zFar) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_OrthofOES)(GLfloat left , GLfloat right , GLfloat bottom , GLfloat top , GLfloat zNear , GLfloat zFar) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClipPlanefOES)(GLenum plane , const GLfloat *equation) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearDepthfOES)(GLclampf depth) = 0; }
+void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthRangefOES)(GLclampf zNear , GLclampf zFar) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_FrustumfOES)(GLfloat left , GLfloat right , GLfloat bottom , GLfloat top , GLfloat zNear , GLfloat zFar) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_OrthofOES)(GLfloat left , GLfloat right , GLfloat bottom , GLfloat top , GLfloat zNear , GLfloat zFar) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ClipPlanefOES)(GLenum plane , const GLfloat *equation) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearDepthfOES)(GLclampf depth) = 0;
 static bool DinamicGLFeature_OES_single_precision_loaded = false; 
 static void InitDinamicGLFeature_OES_single_precision() {
 		DynamicGL_DepthRangefOES = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLclampf zNear , GLclampf zFar)>("glDepthRangefOES"); 
@@ -690,6 +765,10 @@ static void InitDinamicGLFeature_OES_single_precision() {
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_OES_single_precision_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_single_precision")) return false;
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_OES_single_precision_loaded) {
@@ -701,6 +780,7 @@ bool DinamicGLFeature_OES_single_precision_Supported() {
 		if (DynamicGL_ClipPlanefOES==0) return false; 
 		if (DynamicGL_ClearDepthfOES==0) return false; 
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_single_precision*/
@@ -708,7 +788,12 @@ bool DinamicGLFeature_OES_single_precision_Supported() {
 /*IMG_texture_compression_pvrtc*/
 #ifdef USE_DYNAMIC_GL_IMG_texture_compression_pvrtc
 bool DinamicGLFeature_IMG_texture_compression_pvrtc_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_IMG_texture_compression_pvrtc")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_IMG_texture_compression_pvrtc*/
@@ -716,7 +801,12 @@ bool DinamicGLFeature_IMG_texture_compression_pvrtc_Supported() {
 /*EXT_texture_format_BGRA8888*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_format_BGRA8888
 bool DinamicGLFeature_EXT_texture_format_BGRA8888_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_format_BGRA8888")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_format_BGRA8888*/
@@ -724,7 +814,12 @@ bool DinamicGLFeature_EXT_texture_format_BGRA8888_Supported() {
 /*OES_depth32*/
 #ifdef USE_DYNAMIC_GL_OES_depth32
 bool DinamicGLFeature_OES_depth32_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_depth32")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_depth32*/
@@ -732,7 +827,12 @@ bool DinamicGLFeature_OES_depth32_Supported() {
 /*OES_fbo_render_mipmap*/
 #ifdef USE_DYNAMIC_GL_OES_fbo_render_mipmap
 bool DinamicGLFeature_OES_fbo_render_mipmap_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_fbo_render_mipmap")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_fbo_render_mipmap*/
@@ -740,8 +840,8 @@ bool DinamicGLFeature_OES_fbo_render_mipmap_Supported() {
 /*IMG_multisampled_render_to_texture*/
 #ifdef USE_DYNAMIC_GL_IMG_multisampled_render_to_texture
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_RenderbufferStorageMultisampleIMG)(GLenum p1 , GLsizei p2 , GLenum p3 , GLsizei p4 , GLsizei p5) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FramebufferTexture2DMultisampleIMG)(GLenum p1 , GLenum p2 , GLenum p3 , GLuint p4 , GLint p5 , GLsizei p6) = 0; }
+void (DYNAMIC_GL_APIENTRYP DynamicGL_RenderbufferStorageMultisampleIMG)(GLenum p1 , GLsizei p2 , GLenum p3 , GLsizei p4 , GLsizei p5) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_FramebufferTexture2DMultisampleIMG)(GLenum p1 , GLenum p2 , GLenum p3 , GLuint p4 , GLint p5 , GLsizei p6) = 0;
 static bool DinamicGLFeature_IMG_multisampled_render_to_texture_loaded = false; 
 static void InitDinamicGLFeature_IMG_multisampled_render_to_texture() {
 		DynamicGL_RenderbufferStorageMultisampleIMG = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum p1 , GLsizei p2 , GLenum p3 , GLsizei p4 , GLsizei p5)>("glRenderbufferStorageMultisampleIMG"); 
@@ -750,6 +850,10 @@ static void InitDinamicGLFeature_IMG_multisampled_render_to_texture() {
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_IMG_multisampled_render_to_texture_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_IMG_multisampled_render_to_texture")) return false;
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_IMG_multisampled_render_to_texture_loaded) {
@@ -758,6 +862,7 @@ bool DinamicGLFeature_IMG_multisampled_render_to_texture_Supported() {
 		if (DynamicGL_RenderbufferStorageMultisampleIMG==0) return false; 
 		if (DynamicGL_FramebufferTexture2DMultisampleIMG==0) return false; 
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_IMG_multisampled_render_to_texture*/
@@ -765,7 +870,12 @@ bool DinamicGLFeature_IMG_multisampled_render_to_texture_Supported() {
 /*OES_packed_depth_stencil*/
 #ifdef USE_DYNAMIC_GL_OES_packed_depth_stencil
 bool DinamicGLFeature_OES_packed_depth_stencil_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_packed_depth_stencil")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_packed_depth_stencil*/
@@ -773,7 +883,7 @@ bool DinamicGLFeature_OES_packed_depth_stencil_Supported() {
 /*EXT_discard_framebuffer*/
 #ifdef USE_DYNAMIC_GL_EXT_discard_framebuffer
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DiscardFramebufferEXT)(GLenum target , GLsizei numAttachments , const GLenum *attachments) = 0; }
+void (DYNAMIC_GL_APIENTRYP DynamicGL_DiscardFramebufferEXT)(GLenum target , GLsizei numAttachments , const GLenum *attachments) = 0;
 static bool DinamicGLFeature_EXT_discard_framebuffer_loaded = false; 
 static void InitDinamicGLFeature_EXT_discard_framebuffer() {
 		DynamicGL_DiscardFramebufferEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLsizei numAttachments , const GLenum *attachments)>("glDiscardFramebufferEXT"); 
@@ -781,6 +891,10 @@ static void InitDinamicGLFeature_EXT_discard_framebuffer() {
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_discard_framebuffer_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_EXT_discard_framebuffer")) return false;
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_discard_framebuffer_loaded) {
@@ -788,6 +902,7 @@ bool DinamicGLFeature_EXT_discard_framebuffer_Supported() {
 		}
 		if (DynamicGL_DiscardFramebufferEXT==0) return false; 
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_discard_framebuffer*/
@@ -795,8 +910,8 @@ bool DinamicGLFeature_EXT_discard_framebuffer_Supported() {
 /*OES_EGL_image*/
 #ifdef USE_DYNAMIC_GL_OES_EGL_image
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_EGLImageTargetTexture2DOES)(GLenum target , GLeglImageOES image) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_EGLImageTargetRenderbufferStorageOES)(GLenum target , GLeglImageOES image) = 0; }
+void (DYNAMIC_GL_APIENTRYP DynamicGL_EGLImageTargetTexture2DOES)(GLenum target , GLeglImageOES image) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_EGLImageTargetRenderbufferStorageOES)(GLenum target , GLeglImageOES image) = 0;
 static bool DinamicGLFeature_OES_EGL_image_loaded = false; 
 static void InitDinamicGLFeature_OES_EGL_image() {
 		DynamicGL_EGLImageTargetTexture2DOES = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum target , GLeglImageOES image)>("glEGLImageTargetTexture2DOES"); 
@@ -805,6 +920,10 @@ static void InitDinamicGLFeature_OES_EGL_image() {
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_OES_EGL_image_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_EGL_image")) return false;
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_OES_EGL_image_loaded) {
@@ -813,6 +932,7 @@ bool DinamicGLFeature_OES_EGL_image_Supported() {
 		if (DynamicGL_EGLImageTargetTexture2DOES==0) return false; 
 		if (DynamicGL_EGLImageTargetRenderbufferStorageOES==0) return false; 
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_EGL_image*/
@@ -820,13 +940,13 @@ bool DinamicGLFeature_OES_EGL_image_Supported() {
 /*NV_fence*/
 #ifdef USE_DYNAMIC_GL_NV_fence
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteFencesNV)(GLsizei n , const GLuint *fences) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenFencesNV)(GLsizei n , GLuint *fences) = 0; }
-extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsFenceNV)(GLuint fence) = 0; }
-extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_TestFenceNV)(GLuint fence) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetFenceivNV)(GLuint fence , GLenum pname , GLint *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FinishFenceNV)(GLuint fence) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SetFenceNV)(GLuint fence , GLenum condition) = 0; }
+void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteFencesNV)(GLsizei n , const GLuint *fences) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GenFencesNV)(GLsizei n , GLuint *fences) = 0;
+GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsFenceNV)(GLuint fence) = 0;
+GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_TestFenceNV)(GLuint fence) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetFenceivNV)(GLuint fence , GLenum pname , GLint *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_FinishFenceNV)(GLuint fence) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_SetFenceNV)(GLuint fence , GLenum condition) = 0;
 static bool DinamicGLFeature_NV_fence_loaded = false; 
 static void InitDinamicGLFeature_NV_fence() {
 		DynamicGL_DeleteFencesNV = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLsizei n , const GLuint *fences)>("glDeleteFencesNV"); 
@@ -840,6 +960,10 @@ static void InitDinamicGLFeature_NV_fence() {
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_NV_fence_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_NV_fence")) return false;
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_NV_fence_loaded) {
@@ -853,6 +977,7 @@ bool DinamicGLFeature_NV_fence_Supported() {
 		if (DynamicGL_FinishFenceNV==0) return false; 
 		if (DynamicGL_SetFenceNV==0) return false; 
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_NV_fence*/
@@ -860,7 +985,12 @@ bool DinamicGLFeature_NV_fence_Supported() {
 /*EXT_texture_lod_bias*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_lod_bias
 bool DinamicGLFeature_EXT_texture_lod_bias_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_lod_bias")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_lod_bias*/
@@ -868,7 +998,12 @@ bool DinamicGLFeature_EXT_texture_lod_bias_Supported() {
 /*EXT_texture_filter_anisotropic*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_filter_anisotropic
 bool DinamicGLFeature_EXT_texture_filter_anisotropic_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_filter_anisotropic")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_filter_anisotropic*/
@@ -876,7 +1011,12 @@ bool DinamicGLFeature_EXT_texture_filter_anisotropic_Supported() {
 /*EXT_texture_compression_dxt1*/
 #ifdef USE_DYNAMIC_GL_EXT_texture_compression_dxt1
 bool DinamicGLFeature_EXT_texture_compression_dxt1_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_EXT_texture_compression_dxt1")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_texture_compression_dxt1*/
@@ -884,7 +1024,12 @@ bool DinamicGLFeature_EXT_texture_compression_dxt1_Supported() {
 /*EXT_sRGB*/
 #ifdef USE_DYNAMIC_GL_EXT_sRGB
 bool DinamicGLFeature_EXT_sRGB_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_EXT_sRGB")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_sRGB*/
@@ -892,7 +1037,7 @@ bool DinamicGLFeature_EXT_sRGB_Supported() {
 /*OES_blend_equation_separate*/
 #ifdef USE_DYNAMIC_GL_OES_blend_equation_separate
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationSeparateOES)(GLenum modeRGB , GLenum modeAlpha) = 0; }
+void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationSeparateOES)(GLenum modeRGB , GLenum modeAlpha) = 0;
 static bool DinamicGLFeature_OES_blend_equation_separate_loaded = false; 
 static void InitDinamicGLFeature_OES_blend_equation_separate() {
 		DynamicGL_BlendEquationSeparateOES = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum modeRGB , GLenum modeAlpha)>("glBlendEquationSeparateOES"); 
@@ -900,6 +1045,10 @@ static void InitDinamicGLFeature_OES_blend_equation_separate() {
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_OES_blend_equation_separate_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_blend_equation_separate")) return false;
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_OES_blend_equation_separate_loaded) {
@@ -907,6 +1056,7 @@ bool DinamicGLFeature_OES_blend_equation_separate_Supported() {
 		}
 		if (DynamicGL_BlendEquationSeparateOES==0) return false; 
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_blend_equation_separate*/
@@ -914,7 +1064,12 @@ bool DinamicGLFeature_OES_blend_equation_separate_Supported() {
 /*OES_texture_mirrored_repeat*/
 #ifdef USE_DYNAMIC_GL_OES_texture_mirrored_repeat
 bool DinamicGLFeature_OES_texture_mirrored_repeat_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_texture_mirrored_repeat")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_texture_mirrored_repeat*/
@@ -922,10 +1077,10 @@ bool DinamicGLFeature_OES_texture_mirrored_repeat_Supported() {
 /*EXT_robustness*/
 #ifdef USE_DYNAMIC_GL_EXT_robustness
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { GLenum (DYNAMIC_GL_APIENTRYP DynamicGL_GetGraphicsResetStatusEXT)() = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ReadnPixelsEXT)(GLint x , GLint y , GLsizei width , GLsizei height , GLenum format , GLenum type , GLsizei bufSize , GLvoid *data) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnUniformfvEXT)(GLuint program , GLint location , GLsizei bufSize , GLfloat *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnUniformivEXT)(GLuint program , GLint location , GLsizei bufSize , GLint *params) = 0; }
+GLenum (DYNAMIC_GL_APIENTRYP DynamicGL_GetGraphicsResetStatusEXT)() = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ReadnPixelsEXT)(GLint x , GLint y , GLsizei width , GLsizei height , GLenum format , GLenum type , GLsizei bufSize , GLvoid *data) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnUniformfvEXT)(GLuint program , GLint location , GLsizei bufSize , GLfloat *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetnUniformivEXT)(GLuint program , GLint location , GLsizei bufSize , GLint *params) = 0;
 static bool DinamicGLFeature_EXT_robustness_loaded = false; 
 static void InitDinamicGLFeature_EXT_robustness() {
 		DynamicGL_GetGraphicsResetStatusEXT = DynamicGL_LoadFunction<GLenum (DYNAMIC_GL_APIENTRYP)()>("glGetGraphicsResetStatusEXT"); 
@@ -936,6 +1091,10 @@ static void InitDinamicGLFeature_EXT_robustness() {
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_robustness_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_EXT_robustness")) return false;
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_robustness_loaded) {
@@ -946,6 +1105,7 @@ bool DinamicGLFeature_EXT_robustness_Supported() {
 		if (DynamicGL_GetnUniformfvEXT==0) return false; 
 		if (DynamicGL_GetnUniformivEXT==0) return false; 
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_robustness*/
@@ -953,14 +1113,14 @@ bool DinamicGLFeature_EXT_robustness_Supported() {
 /*OES_draw_texture*/
 #ifdef USE_DYNAMIC_GL_OES_draw_texture
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexsOES)(GLshort x , GLshort y , GLshort z , GLshort width , GLshort height) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexiOES)(GLint x , GLint y , GLint z , GLint width , GLint height) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexxOES)(GLfixed x , GLfixed y , GLfixed z , GLfixed width , GLfixed height) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexsvOES)(const GLshort *coords) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexivOES)(const GLint *coords) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexxvOES)(const GLfixed *coords) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexfOES)(GLfloat x , GLfloat y , GLfloat z , GLfloat width , GLfloat height) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexfvOES)(const GLfloat *coords) = 0; }
+void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexsOES)(GLshort x , GLshort y , GLshort z , GLshort width , GLshort height) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexiOES)(GLint x , GLint y , GLint z , GLint width , GLint height) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexxOES)(GLfixed x , GLfixed y , GLfixed z , GLfixed width , GLfixed height) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexsvOES)(const GLshort *coords) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexivOES)(const GLint *coords) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexxvOES)(const GLfixed *coords) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexfOES)(GLfloat x , GLfloat y , GLfloat z , GLfloat width , GLfloat height) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_DrawTexfvOES)(const GLfloat *coords) = 0;
 static bool DinamicGLFeature_OES_draw_texture_loaded = false; 
 static void InitDinamicGLFeature_OES_draw_texture() {
 		DynamicGL_DrawTexsOES = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLshort x , GLshort y , GLshort z , GLshort width , GLshort height)>("glDrawTexsOES"); 
@@ -975,6 +1135,10 @@ static void InitDinamicGLFeature_OES_draw_texture() {
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_OES_draw_texture_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_draw_texture")) return false;
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_OES_draw_texture_loaded) {
@@ -989,6 +1153,7 @@ bool DinamicGLFeature_OES_draw_texture_Supported() {
 		if (DynamicGL_DrawTexfOES==0) return false; 
 		if (DynamicGL_DrawTexfvOES==0) return false; 
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_draw_texture*/
@@ -996,21 +1161,21 @@ bool DinamicGLFeature_OES_draw_texture_Supported() {
 /*OES_framebuffer_object*/
 #ifdef USE_DYNAMIC_GL_OES_framebuffer_object
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsRenderbufferOES)(GLuint renderbuffer) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindRenderbufferOES)(GLenum target , GLuint renderbuffer) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteRenderbuffersOES)(GLsizei n , const GLuint* renderbuffers) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenRenderbuffersOES)(GLsizei n , GLuint* renderbuffers) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_RenderbufferStorageOES)(GLenum target , GLenum internalformat , GLsizei width , GLsizei height) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetRenderbufferParameterivOES)(GLenum target , GLenum pname , GLint* params) = 0; }
-extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsFramebufferOES)(GLuint framebuffer) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindFramebufferOES)(GLenum target , GLuint framebuffer) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteFramebuffersOES)(GLsizei n , const GLuint* framebuffers) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenFramebuffersOES)(GLsizei n , GLuint* framebuffers) = 0; }
-extern "C" { GLenum (DYNAMIC_GL_APIENTRYP DynamicGL_CheckFramebufferStatusOES)(GLenum target) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FramebufferRenderbufferOES)(GLenum target , GLenum attachment , GLenum renderbuffertarget , GLuint renderbuffer) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FramebufferTexture2DOES)(GLenum target , GLenum attachment , GLenum textarget , GLuint texture , GLint level) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetFramebufferAttachmentParameterivOES)(GLenum target , GLenum attachment , GLenum pname , GLint* params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenerateMipmapOES)(GLenum target) = 0; }
+GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsRenderbufferOES)(GLuint renderbuffer) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_BindRenderbufferOES)(GLenum target , GLuint renderbuffer) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteRenderbuffersOES)(GLsizei n , const GLuint* renderbuffers) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GenRenderbuffersOES)(GLsizei n , GLuint* renderbuffers) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_RenderbufferStorageOES)(GLenum target , GLenum internalformat , GLsizei width , GLsizei height) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetRenderbufferParameterivOES)(GLenum target , GLenum pname , GLint* params) = 0;
+GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsFramebufferOES)(GLuint framebuffer) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_BindFramebufferOES)(GLenum target , GLuint framebuffer) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteFramebuffersOES)(GLsizei n , const GLuint* framebuffers) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GenFramebuffersOES)(GLsizei n , GLuint* framebuffers) = 0;
+GLenum (DYNAMIC_GL_APIENTRYP DynamicGL_CheckFramebufferStatusOES)(GLenum target) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_FramebufferRenderbufferOES)(GLenum target , GLenum attachment , GLenum renderbuffertarget , GLuint renderbuffer) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_FramebufferTexture2DOES)(GLenum target , GLenum attachment , GLenum textarget , GLuint texture , GLint level) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetFramebufferAttachmentParameterivOES)(GLenum target , GLenum attachment , GLenum pname , GLint* params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GenerateMipmapOES)(GLenum target) = 0;
 static bool DinamicGLFeature_OES_framebuffer_object_loaded = false; 
 static void InitDinamicGLFeature_OES_framebuffer_object() {
 		DynamicGL_IsRenderbufferOES = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLuint renderbuffer)>("glIsRenderbufferOES"); 
@@ -1032,6 +1197,10 @@ static void InitDinamicGLFeature_OES_framebuffer_object() {
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_OES_framebuffer_object_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_framebuffer_object")) return false;
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_OES_framebuffer_object_loaded) {
@@ -1053,6 +1222,7 @@ bool DinamicGLFeature_OES_framebuffer_object_Supported() {
 		if (DynamicGL_GetFramebufferAttachmentParameterivOES==0) return false; 
 		if (DynamicGL_GenerateMipmapOES==0) return false; 
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_framebuffer_object*/
@@ -1060,7 +1230,12 @@ bool DinamicGLFeature_OES_framebuffer_object_Supported() {
 /*OES_matrix_get*/
 #ifdef USE_DYNAMIC_GL_OES_matrix_get
 bool DinamicGLFeature_OES_matrix_get_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_matrix_get")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_matrix_get*/
@@ -1068,7 +1243,12 @@ bool DinamicGLFeature_OES_matrix_get_Supported() {
 /*OES_byte_coordinates*/
 #ifdef USE_DYNAMIC_GL_OES_byte_coordinates
 bool DinamicGLFeature_OES_byte_coordinates_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_byte_coordinates")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_byte_coordinates*/
@@ -1076,7 +1256,12 @@ bool DinamicGLFeature_OES_byte_coordinates_Supported() {
 /*AMD_compressed_3DC_texture*/
 #ifdef USE_DYNAMIC_GL_AMD_compressed_3DC_texture
 bool DinamicGLFeature_AMD_compressed_3DC_texture_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_AMD_compressed_3DC_texture")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_AMD_compressed_3DC_texture*/
@@ -1084,10 +1269,10 @@ bool DinamicGLFeature_AMD_compressed_3DC_texture_Supported() {
 /*QCOM_extended_get2*/
 #ifdef USE_DYNAMIC_GL_QCOM_extended_get2
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetShadersQCOM)(GLuint *shaders , GLint maxShaders , GLint *numShaders) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetProgramsQCOM)(GLuint *programs , GLint maxPrograms , GLint *numPrograms) = 0; }
-extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_ExtIsProgramBinaryQCOM)(GLuint program) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetProgramBinarySourceQCOM)(GLuint program , GLenum shadertype , GLchar *source , GLint *length) = 0; }
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetShadersQCOM)(GLuint *shaders , GLint maxShaders , GLint *numShaders) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetProgramsQCOM)(GLuint *programs , GLint maxPrograms , GLint *numPrograms) = 0;
+GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_ExtIsProgramBinaryQCOM)(GLuint program) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetProgramBinarySourceQCOM)(GLuint program , GLenum shadertype , GLchar *source , GLint *length) = 0;
 static bool DinamicGLFeature_QCOM_extended_get2_loaded = false; 
 static void InitDinamicGLFeature_QCOM_extended_get2() {
 		DynamicGL_ExtGetShadersQCOM = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint *shaders , GLint maxShaders , GLint *numShaders)>("glExtGetShadersQCOM"); 
@@ -1098,6 +1283,10 @@ static void InitDinamicGLFeature_QCOM_extended_get2() {
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_QCOM_extended_get2_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_QCOM_extended_get2")) return false;
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_QCOM_extended_get2_loaded) {
@@ -1108,6 +1297,7 @@ bool DinamicGLFeature_QCOM_extended_get2_Supported() {
 		if (DynamicGL_ExtIsProgramBinaryQCOM==0) return false; 
 		if (DynamicGL_ExtGetProgramBinarySourceQCOM==0) return false; 
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_QCOM_extended_get2*/
@@ -1115,7 +1305,12 @@ bool DinamicGLFeature_QCOM_extended_get2_Supported() {
 /*IMG_read_format*/
 #ifdef USE_DYNAMIC_GL_IMG_read_format
 bool DinamicGLFeature_IMG_read_format_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_IMG_read_format")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_IMG_read_format*/
@@ -1123,10 +1318,10 @@ bool DinamicGLFeature_IMG_read_format_Supported() {
 /*OES_matrix_palette*/
 #ifdef USE_DYNAMIC_GL_OES_matrix_palette
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_CurrentPaletteMatrixOES)(GLuint matrixpaletteindex) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadPaletteFromModelViewMatrixOES)() = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MatrixIndexPointerOES)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_WeightPointerOES)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer) = 0; }
+void (DYNAMIC_GL_APIENTRYP DynamicGL_CurrentPaletteMatrixOES)(GLuint matrixpaletteindex) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadPaletteFromModelViewMatrixOES)() = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_MatrixIndexPointerOES)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_WeightPointerOES)(GLint size , GLenum type , GLsizei stride , const GLvoid *pointer) = 0;
 static bool DinamicGLFeature_OES_matrix_palette_loaded = false; 
 static void InitDinamicGLFeature_OES_matrix_palette() {
 		DynamicGL_CurrentPaletteMatrixOES = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint matrixpaletteindex)>("glCurrentPaletteMatrixOES"); 
@@ -1137,6 +1332,10 @@ static void InitDinamicGLFeature_OES_matrix_palette() {
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_OES_matrix_palette_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_matrix_palette")) return false;
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_OES_matrix_palette_loaded) {
@@ -1147,6 +1346,7 @@ bool DinamicGLFeature_OES_matrix_palette_Supported() {
 		if (DynamicGL_MatrixIndexPointerOES==0) return false; 
 		if (DynamicGL_WeightPointerOES==0) return false; 
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_matrix_palette*/
@@ -1154,7 +1354,12 @@ bool DinamicGLFeature_OES_matrix_palette_Supported() {
 /*OES_stencil4*/
 #ifdef USE_DYNAMIC_GL_OES_stencil4
 bool DinamicGLFeature_OES_stencil4_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_stencil4")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_stencil4*/
@@ -1162,14 +1367,14 @@ bool DinamicGLFeature_OES_stencil4_Supported() {
 /*QCOM_extended_get*/
 #ifdef USE_DYNAMIC_GL_QCOM_extended_get
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetTexturesQCOM)(GLuint *textures , GLint maxTextures , GLint *numTextures) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetBuffersQCOM)(GLuint *buffers , GLint maxBuffers , GLint *numBuffers) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetRenderbuffersQCOM)(GLuint *renderbuffers , GLint maxRenderbuffers , GLint *numRenderbuffers) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetFramebuffersQCOM)(GLuint *framebuffers , GLint maxFramebuffers , GLint *numFramebuffers) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetTexLevelParameterivQCOM)(GLuint texture , GLenum face , GLint level , GLenum pname , GLint *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtTexObjectStateOverrideiQCOM)(GLenum target , GLenum pname , GLint param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetTexSubImageQCOM)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLint zoffset , GLsizei width , GLsizei height , GLsizei depth , GLenum format , GLenum type , GLvoid *texels) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetBufferPointervQCOM)(GLenum target , GLvoid *p1) = 0; }
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetTexturesQCOM)(GLuint *textures , GLint maxTextures , GLint *numTextures) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetBuffersQCOM)(GLuint *buffers , GLint maxBuffers , GLint *numBuffers) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetRenderbuffersQCOM)(GLuint *renderbuffers , GLint maxRenderbuffers , GLint *numRenderbuffers) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetFramebuffersQCOM)(GLuint *framebuffers , GLint maxFramebuffers , GLint *numFramebuffers) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetTexLevelParameterivQCOM)(GLuint texture , GLenum face , GLint level , GLenum pname , GLint *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtTexObjectStateOverrideiQCOM)(GLenum target , GLenum pname , GLint param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetTexSubImageQCOM)(GLenum target , GLint level , GLint xoffset , GLint yoffset , GLint zoffset , GLsizei width , GLsizei height , GLsizei depth , GLenum format , GLenum type , GLvoid *texels) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ExtGetBufferPointervQCOM)(GLenum target , GLvoid *p1) = 0;
 static bool DinamicGLFeature_QCOM_extended_get_loaded = false; 
 static void InitDinamicGLFeature_QCOM_extended_get() {
 		DynamicGL_ExtGetTexturesQCOM = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint *textures , GLint maxTextures , GLint *numTextures)>("glExtGetTexturesQCOM"); 
@@ -1184,6 +1389,10 @@ static void InitDinamicGLFeature_QCOM_extended_get() {
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_QCOM_extended_get_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_QCOM_extended_get")) return false;
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_QCOM_extended_get_loaded) {
@@ -1198,6 +1407,7 @@ bool DinamicGLFeature_QCOM_extended_get_Supported() {
 		if (DynamicGL_ExtGetTexSubImageQCOM==0) return false; 
 		if (DynamicGL_ExtGetBufferPointervQCOM==0) return false; 
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_QCOM_extended_get*/
@@ -1205,7 +1415,12 @@ bool DinamicGLFeature_QCOM_extended_get_Supported() {
 /*OES_EGL_image_external*/
 #ifdef USE_DYNAMIC_GL_OES_EGL_image_external
 bool DinamicGLFeature_OES_EGL_image_external_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_EGL_image_external")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_EGL_image_external*/
@@ -1213,10 +1428,10 @@ bool DinamicGLFeature_OES_EGL_image_external_Supported() {
 /*OES_vertex_array_object*/
 #ifdef USE_DYNAMIC_GL_OES_vertex_array_object
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BindVertexArrayOES)(GLuint array) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteVertexArraysOES)(GLsizei n , const GLuint *arrays) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GenVertexArraysOES)(GLsizei n , GLuint *arrays) = 0; }
-extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsVertexArrayOES)(GLuint array) = 0; }
+void (DYNAMIC_GL_APIENTRYP DynamicGL_BindVertexArrayOES)(GLuint array) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_DeleteVertexArraysOES)(GLsizei n , const GLuint *arrays) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GenVertexArraysOES)(GLsizei n , GLuint *arrays) = 0;
+GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_IsVertexArrayOES)(GLuint array) = 0;
 static bool DinamicGLFeature_OES_vertex_array_object_loaded = false; 
 static void InitDinamicGLFeature_OES_vertex_array_object() {
 		DynamicGL_BindVertexArrayOES = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint array)>("glBindVertexArrayOES"); 
@@ -1227,6 +1442,10 @@ static void InitDinamicGLFeature_OES_vertex_array_object() {
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_OES_vertex_array_object_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_vertex_array_object")) return false;
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_OES_vertex_array_object_loaded) {
@@ -1237,6 +1456,7 @@ bool DinamicGLFeature_OES_vertex_array_object_Supported() {
 		if (DynamicGL_GenVertexArraysOES==0) return false; 
 		if (DynamicGL_IsVertexArrayOES==0) return false; 
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_vertex_array_object*/
@@ -1244,7 +1464,12 @@ bool DinamicGLFeature_OES_vertex_array_object_Supported() {
 /*OES_compressed_ETC1_RGB8_texture*/
 #ifdef USE_DYNAMIC_GL_OES_compressed_ETC1_RGB8_texture
 bool DinamicGLFeature_OES_compressed_ETC1_RGB8_texture_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_compressed_ETC1_RGB8_texture")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_compressed_ETC1_RGB8_texture*/
@@ -1252,7 +1477,12 @@ bool DinamicGLFeature_OES_compressed_ETC1_RGB8_texture_Supported() {
 /*OES_depth24*/
 #ifdef USE_DYNAMIC_GL_OES_depth24
 bool DinamicGLFeature_OES_depth24_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_depth24")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_depth24*/
@@ -1260,7 +1490,12 @@ bool DinamicGLFeature_OES_depth24_Supported() {
 /*IMG_texture_env_enhanced_fixed_function*/
 #ifdef USE_DYNAMIC_GL_IMG_texture_env_enhanced_fixed_function
 bool DinamicGLFeature_IMG_texture_env_enhanced_fixed_function_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_IMG_texture_env_enhanced_fixed_function")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_IMG_texture_env_enhanced_fixed_function*/
@@ -1268,7 +1503,12 @@ bool DinamicGLFeature_IMG_texture_env_enhanced_fixed_function_Supported() {
 /*OES_element_index_uint*/
 #ifdef USE_DYNAMIC_GL_OES_element_index_uint
 bool DinamicGLFeature_OES_element_index_uint_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_element_index_uint")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_element_index_uint*/
@@ -1276,7 +1516,7 @@ bool DinamicGLFeature_OES_element_index_uint_Supported() {
 /*OES_blend_subtract*/
 #ifdef USE_DYNAMIC_GL_OES_blend_subtract
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationOES)(GLenum mode) = 0; }
+void (DYNAMIC_GL_APIENTRYP DynamicGL_BlendEquationOES)(GLenum mode) = 0;
 static bool DinamicGLFeature_OES_blend_subtract_loaded = false; 
 static void InitDinamicGLFeature_OES_blend_subtract() {
 		DynamicGL_BlendEquationOES = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode)>("glBlendEquationOES"); 
@@ -1284,6 +1524,10 @@ static void InitDinamicGLFeature_OES_blend_subtract() {
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_OES_blend_subtract_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_blend_subtract")) return false;
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_OES_blend_subtract_loaded) {
@@ -1291,6 +1535,7 @@ bool DinamicGLFeature_OES_blend_subtract_Supported() {
 		}
 		if (DynamicGL_BlendEquationOES==0) return false; 
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_blend_subtract*/
@@ -1298,7 +1543,12 @@ bool DinamicGLFeature_OES_blend_subtract_Supported() {
 /*OES_texture_env_crossbar*/
 #ifdef USE_DYNAMIC_GL_OES_texture_env_crossbar
 bool DinamicGLFeature_OES_texture_env_crossbar_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_texture_env_crossbar")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_texture_env_crossbar*/
@@ -1306,7 +1556,12 @@ bool DinamicGLFeature_OES_texture_env_crossbar_Supported() {
 /*QCOM_writeonly_rendering*/
 #ifdef USE_DYNAMIC_GL_QCOM_writeonly_rendering
 bool DinamicGLFeature_QCOM_writeonly_rendering_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_QCOM_writeonly_rendering")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_QCOM_writeonly_rendering*/
@@ -1314,7 +1569,12 @@ bool DinamicGLFeature_QCOM_writeonly_rendering_Supported() {
 /*APPLE_texture_max_level*/
 #ifdef USE_DYNAMIC_GL_APPLE_texture_max_level
 bool DinamicGLFeature_APPLE_texture_max_level_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_APPLE_texture_max_level")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_APPLE_texture_max_level*/
@@ -1322,7 +1582,12 @@ bool DinamicGLFeature_APPLE_texture_max_level_Supported() {
 /*ARM_rgba8*/
 #ifdef USE_DYNAMIC_GL_ARM_rgba8
 bool DinamicGLFeature_ARM_rgba8_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_ARM_rgba8")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_ARM_rgba8*/
@@ -1330,8 +1595,8 @@ bool DinamicGLFeature_ARM_rgba8_Supported() {
 /*QCOM_tiled_rendering*/
 #ifdef USE_DYNAMIC_GL_QCOM_tiled_rendering
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_StartTilingQCOM)(GLuint x , GLuint y , GLuint width , GLuint height , GLbitfield preserveMask) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_EndTilingQCOM)(GLbitfield preserveMask) = 0; }
+void (DYNAMIC_GL_APIENTRYP DynamicGL_StartTilingQCOM)(GLuint x , GLuint y , GLuint width , GLuint height , GLbitfield preserveMask) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_EndTilingQCOM)(GLbitfield preserveMask) = 0;
 static bool DinamicGLFeature_QCOM_tiled_rendering_loaded = false; 
 static void InitDinamicGLFeature_QCOM_tiled_rendering() {
 		DynamicGL_StartTilingQCOM = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLuint x , GLuint y , GLuint width , GLuint height , GLbitfield preserveMask)>("glStartTilingQCOM"); 
@@ -1340,6 +1605,10 @@ static void InitDinamicGLFeature_QCOM_tiled_rendering() {
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_QCOM_tiled_rendering_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_QCOM_tiled_rendering")) return false;
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_QCOM_tiled_rendering_loaded) {
@@ -1348,6 +1617,7 @@ bool DinamicGLFeature_QCOM_tiled_rendering_Supported() {
 		if (DynamicGL_StartTilingQCOM==0) return false; 
 		if (DynamicGL_EndTilingQCOM==0) return false; 
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_QCOM_tiled_rendering*/
@@ -1355,7 +1625,12 @@ bool DinamicGLFeature_QCOM_tiled_rendering_Supported() {
 /*EXT_read_format_bgra*/
 #ifdef USE_DYNAMIC_GL_EXT_read_format_bgra
 bool DinamicGLFeature_EXT_read_format_bgra_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_EXT_read_format_bgra")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_read_format_bgra*/
@@ -1363,7 +1638,12 @@ bool DinamicGLFeature_EXT_read_format_bgra_Supported() {
 /*OES_rgb8_rgba8*/
 #ifdef USE_DYNAMIC_GL_OES_rgb8_rgba8
 bool DinamicGLFeature_OES_rgb8_rgba8_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_rgb8_rgba8")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_rgb8_rgba8*/
@@ -1371,7 +1651,12 @@ bool DinamicGLFeature_OES_rgb8_rgba8_Supported() {
 /*OES_stencil1*/
 #ifdef USE_DYNAMIC_GL_OES_stencil1
 bool DinamicGLFeature_OES_stencil1_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_stencil1")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_stencil1*/
@@ -1379,15 +1664,15 @@ bool DinamicGLFeature_OES_stencil1_Supported() {
 /*OES_texture_cube_map*/
 #ifdef USE_DYNAMIC_GL_OES_texture_cube_map
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexGenfOES)(GLenum coord , GLenum pname , GLfloat param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexGenfvOES)(GLenum coord , GLenum pname , const GLfloat *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexGeniOES)(GLenum coord , GLenum pname , GLint param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexGenivOES)(GLenum coord , GLenum pname , const GLint *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexGenxOES)(GLenum coord , GLenum pname , GLfixed param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexGenxvOES)(GLenum coord , GLenum pname , const GLfixed *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexGenfvOES)(GLenum coord , GLenum pname , GLfloat *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexGenivOES)(GLenum coord , GLenum pname , GLint *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexGenxvOES)(GLenum coord , GLenum pname , GLfixed *params) = 0; }
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexGenfOES)(GLenum coord , GLenum pname , GLfloat param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexGenfvOES)(GLenum coord , GLenum pname , const GLfloat *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexGeniOES)(GLenum coord , GLenum pname , GLint param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexGenivOES)(GLenum coord , GLenum pname , const GLint *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexGenxOES)(GLenum coord , GLenum pname , GLfixed param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexGenxvOES)(GLenum coord , GLenum pname , const GLfixed *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexGenfvOES)(GLenum coord , GLenum pname , GLfloat *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexGenivOES)(GLenum coord , GLenum pname , GLint *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexGenxvOES)(GLenum coord , GLenum pname , GLfixed *params) = 0;
 static bool DinamicGLFeature_OES_texture_cube_map_loaded = false; 
 static void InitDinamicGLFeature_OES_texture_cube_map() {
 		DynamicGL_TexGenfOES = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum coord , GLenum pname , GLfloat param)>("glTexGenfOES"); 
@@ -1403,6 +1688,10 @@ static void InitDinamicGLFeature_OES_texture_cube_map() {
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_OES_texture_cube_map_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_texture_cube_map")) return false;
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_OES_texture_cube_map_loaded) {
@@ -1418,6 +1707,7 @@ bool DinamicGLFeature_OES_texture_cube_map_Supported() {
 		if (DynamicGL_GetTexGenivOES==0) return false; 
 		if (DynamicGL_GetTexGenxvOES==0) return false; 
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_texture_cube_map*/
@@ -1425,7 +1715,12 @@ bool DinamicGLFeature_OES_texture_cube_map_Supported() {
 /*AMD_compressed_ATC_texture*/
 #ifdef USE_DYNAMIC_GL_AMD_compressed_ATC_texture
 bool DinamicGLFeature_AMD_compressed_ATC_texture_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_AMD_compressed_ATC_texture")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_AMD_compressed_ATC_texture*/
@@ -1433,8 +1728,8 @@ bool DinamicGLFeature_AMD_compressed_ATC_texture_Supported() {
 /*OES_mapbuffer*/
 #ifdef USE_DYNAMIC_GL_OES_mapbuffer
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_UnmapBufferOES)(GLenum target) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetBufferPointervOES)(GLenum target , GLenum pname , GLvoid *p1) = 0; }
+GLboolean (DYNAMIC_GL_APIENTRYP DynamicGL_UnmapBufferOES)(GLenum target) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetBufferPointervOES)(GLenum target , GLenum pname , GLvoid *p1) = 0;
 static bool DinamicGLFeature_OES_mapbuffer_loaded = false; 
 static void InitDinamicGLFeature_OES_mapbuffer() {
 		DynamicGL_UnmapBufferOES = DynamicGL_LoadFunction<GLboolean (DYNAMIC_GL_APIENTRYP)(GLenum target)>("glUnmapBufferOES"); 
@@ -1443,6 +1738,10 @@ static void InitDinamicGLFeature_OES_mapbuffer() {
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_OES_mapbuffer_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_mapbuffer")) return false;
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_OES_mapbuffer_loaded) {
@@ -1451,6 +1750,7 @@ bool DinamicGLFeature_OES_mapbuffer_Supported() {
 		if (DynamicGL_UnmapBufferOES==0) return false; 
 		if (DynamicGL_GetBufferPointervOES==0) return false; 
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_mapbuffer*/
@@ -1458,7 +1758,12 @@ bool DinamicGLFeature_OES_mapbuffer_Supported() {
 /*EXT_blend_minmax*/
 #ifdef USE_DYNAMIC_GL_EXT_blend_minmax
 bool DinamicGLFeature_EXT_blend_minmax_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_EXT_blend_minmax")) return false;
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_blend_minmax*/
@@ -1466,8 +1771,8 @@ bool DinamicGLFeature_EXT_blend_minmax_Supported() {
 /*EXT_multi_draw_arrays*/
 #ifdef USE_DYNAMIC_GL_EXT_multi_draw_arrays
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawArraysEXT)(GLenum mode , GLint *first , GLsizei *count , GLsizei primcount) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawElementsEXT)(GLenum mode , const GLsizei *count , GLenum type , const GLvoid* *indices , GLsizei primcount) = 0; }
+void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawArraysEXT)(GLenum mode , GLint *first , GLsizei *count , GLsizei primcount) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiDrawElementsEXT)(GLenum mode , const GLsizei *count , GLenum type , const GLvoid* *indices , GLsizei primcount) = 0;
 static bool DinamicGLFeature_EXT_multi_draw_arrays_loaded = false; 
 static void InitDinamicGLFeature_EXT_multi_draw_arrays() {
 		DynamicGL_MultiDrawArraysEXT = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum mode , GLint *first , GLsizei *count , GLsizei primcount)>("glMultiDrawArraysEXT"); 
@@ -1476,6 +1781,10 @@ static void InitDinamicGLFeature_EXT_multi_draw_arrays() {
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_EXT_multi_draw_arrays_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_EXT_multi_draw_arrays")) return false;
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_EXT_multi_draw_arrays_loaded) {
@@ -1484,6 +1793,7 @@ bool DinamicGLFeature_EXT_multi_draw_arrays_Supported() {
 		if (DynamicGL_MultiDrawArraysEXT==0) return false; 
 		if (DynamicGL_MultiDrawElementsEXT==0) return false; 
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_EXT_multi_draw_arrays*/
@@ -1491,44 +1801,44 @@ bool DinamicGLFeature_EXT_multi_draw_arrays_Supported() {
 /*OES_fixed_point*/
 #ifdef USE_DYNAMIC_GL_OES_fixed_point
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_AlphaFuncxOES)(GLenum func , GLclampx ref) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearColorxOES)(GLclampx red , GLclampx green , GLclampx blue , GLclampx alpha) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearDepthxOES)(GLclampx depth) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ClipPlanexOES)(GLenum plane , const GLfixed *equation) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Color4xOES)(GLfixed red , GLfixed green , GLfixed blue , GLfixed alpha) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthRangexOES)(GLclampx zNear , GLclampx zFar) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FogxOES)(GLenum pname , GLfixed param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FogxvOES)(GLenum pname , const GLfixed *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_FrustumxOES)(GLfixed left , GLfixed right , GLfixed bottom , GLfixed top , GLfixed zNear , GLfixed zFar) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetFixedvOES)(GLenum pname , GLfixed *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetLightxvOES)(GLenum light , GLenum pname , GLfixed *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetMaterialxvOES)(GLenum face , GLenum pname , GLfixed *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexEnvxvOES)(GLenum env , GLenum pname , GLfixed *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexParameterxvOES)(GLenum target , GLenum pname , GLfixed *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LightModelxOES)(GLenum pname , GLfixed param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LightModelxvOES)(GLenum pname , const GLfixed *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LightxOES)(GLenum light , GLenum pname , GLfixed param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LightxvOES)(GLenum light , GLenum pname , const GLfixed *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LineWidthxOES)(GLfixed width) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadMatrixxOES)(const GLfixed *m) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MaterialxOES)(GLenum face , GLenum pname , GLfixed param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MaterialxvOES)(GLenum face , GLenum pname , const GLfixed *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultMatrixxOES)(const GLfixed *m) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4xOES)(GLenum target , GLfixed s , GLfixed t , GLfixed r , GLfixed q) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_Normal3xOES)(GLfixed nx , GLfixed ny , GLfixed nz) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_OrthoxOES)(GLfixed left , GLfixed right , GLfixed bottom , GLfixed top , GLfixed zNear , GLfixed zFar) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterxOES)(GLenum pname , GLfixed param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterxvOES)(GLenum pname , const GLfixed *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PointSizexOES)(GLfixed size) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_PolygonOffsetxOES)(GLfixed factor , GLfixed units) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_RotatexOES)(GLfixed angle , GLfixed x , GLfixed y , GLfixed z) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleCoveragexOES)(GLclampx value , GLboolean invert) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_ScalexOES)(GLfixed x , GLfixed y , GLfixed z) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvxOES)(GLenum target , GLenum pname , GLfixed param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvxvOES)(GLenum target , GLenum pname , const GLfixed *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterxOES)(GLenum target , GLenum pname , GLfixed param) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterxvOES)(GLenum target , GLenum pname , const GLfixed *params) = 0; }
-extern "C" { void (DYNAMIC_GL_APIENTRYP DynamicGL_TranslatexOES)(GLfixed x , GLfixed y , GLfixed z) = 0; }
+void (DYNAMIC_GL_APIENTRYP DynamicGL_AlphaFuncxOES)(GLenum func , GLclampx ref) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearColorxOES)(GLclampx red , GLclampx green , GLclampx blue , GLclampx alpha) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ClearDepthxOES)(GLclampx depth) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ClipPlanexOES)(GLenum plane , const GLfixed *equation) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Color4xOES)(GLfixed red , GLfixed green , GLfixed blue , GLfixed alpha) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_DepthRangexOES)(GLclampx zNear , GLclampx zFar) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_FogxOES)(GLenum pname , GLfixed param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_FogxvOES)(GLenum pname , const GLfixed *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_FrustumxOES)(GLfixed left , GLfixed right , GLfixed bottom , GLfixed top , GLfixed zNear , GLfixed zFar) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetFixedvOES)(GLenum pname , GLfixed *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetLightxvOES)(GLenum light , GLenum pname , GLfixed *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetMaterialxvOES)(GLenum face , GLenum pname , GLfixed *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexEnvxvOES)(GLenum env , GLenum pname , GLfixed *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_GetTexParameterxvOES)(GLenum target , GLenum pname , GLfixed *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_LightModelxOES)(GLenum pname , GLfixed param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_LightModelxvOES)(GLenum pname , const GLfixed *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_LightxOES)(GLenum light , GLenum pname , GLfixed param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_LightxvOES)(GLenum light , GLenum pname , const GLfixed *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_LineWidthxOES)(GLfixed width) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_LoadMatrixxOES)(const GLfixed *m) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_MaterialxOES)(GLenum face , GLenum pname , GLfixed param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_MaterialxvOES)(GLenum face , GLenum pname , const GLfixed *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_MultMatrixxOES)(const GLfixed *m) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_MultiTexCoord4xOES)(GLenum target , GLfixed s , GLfixed t , GLfixed r , GLfixed q) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_Normal3xOES)(GLfixed nx , GLfixed ny , GLfixed nz) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_OrthoxOES)(GLfixed left , GLfixed right , GLfixed bottom , GLfixed top , GLfixed zNear , GLfixed zFar) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterxOES)(GLenum pname , GLfixed param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_PointParameterxvOES)(GLenum pname , const GLfixed *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_PointSizexOES)(GLfixed size) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_PolygonOffsetxOES)(GLfixed factor , GLfixed units) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_RotatexOES)(GLfixed angle , GLfixed x , GLfixed y , GLfixed z) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_SampleCoveragexOES)(GLclampx value , GLboolean invert) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_ScalexOES)(GLfixed x , GLfixed y , GLfixed z) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvxOES)(GLenum target , GLenum pname , GLfixed param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexEnvxvOES)(GLenum target , GLenum pname , const GLfixed *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterxOES)(GLenum target , GLenum pname , GLfixed param) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TexParameterxvOES)(GLenum target , GLenum pname , const GLfixed *params) = 0;
+void (DYNAMIC_GL_APIENTRYP DynamicGL_TranslatexOES)(GLfixed x , GLfixed y , GLfixed z) = 0;
 static bool DinamicGLFeature_OES_fixed_point_loaded = false; 
 static void InitDinamicGLFeature_OES_fixed_point() {
 		DynamicGL_AlphaFuncxOES = DynamicGL_LoadFunction<void (DYNAMIC_GL_APIENTRYP)(GLenum func , GLclampx ref)>("glAlphaFuncxOES"); 
@@ -1573,6 +1883,10 @@ static void InitDinamicGLFeature_OES_fixed_point() {
 }
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
 bool DinamicGLFeature_OES_fixed_point_Supported() {
+		static bool supported = false;
+		static bool checked = false;
+		if (checked) return supported;
+		checked = true;
 		if(!DynamicGL_CheckExtensionSupported("GL_OES_fixed_point")) return false;
 #ifndef DYNAMIC_GL_NO_FUCPOINTERS
 		if (!DinamicGLFeature_OES_fixed_point_loaded) {
@@ -1617,6 +1931,7 @@ bool DinamicGLFeature_OES_fixed_point_Supported() {
 		if (DynamicGL_TexParameterxvOES==0) return false; 
 		if (DynamicGL_TranslatexOES==0) return false; 
 #endif /*DYNAMIC_GL_NO_FUCPOINTERS*/
+		supported = true;
 		return true;
 }
 #endif /*USE_DYNAMIC_GL_OES_fixed_point*/

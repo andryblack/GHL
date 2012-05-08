@@ -20,7 +20,7 @@ namespace GHL {
 
 	class TextureOpenGL : public RefCounterImpl<Texture> {
 	private:
-            RenderOpenGL* m_parent;
+		RenderOpenGL* m_parent;
 		GLuint	m_name;
 		UInt32	m_width;
 		UInt32	m_height;
@@ -34,10 +34,11 @@ namespace GHL {
 		void calc_filtration_min();
 		void calc_filtration_mag();
 		void check_mips();
-	public:
-        TextureOpenGL(RenderOpenGL* parent,TextureFormat fmt,UInt32 w,UInt32 h);
+		TextureOpenGL(GLuint name,RenderOpenGL* parent,TextureFormat fmt,UInt32 w,UInt32 h);
+   public:
         ~TextureOpenGL();
         
+		static TextureOpenGL* Create( RenderOpenGL* parent,TextureFormat fmt,UInt32 w,UInt32 h, const Data* data);
 		void bind() const;
 		GLuint name() const { return m_name;}
 		/// get texture width
@@ -71,7 +72,7 @@ namespace GHL {
 		virtual TextureWrapMode GHL_CALL GetWrapModeV() const { return m_wrap_v;}
 		
 		/// set texture pixels
-		virtual void GHL_CALL SetData(UInt32 x,UInt32 y,UInt32 w,UInt32 h,const Byte* data,UInt32 level);
+		virtual void GHL_CALL SetData(UInt32 x,UInt32 y,UInt32 w,UInt32 h,const Data* data,UInt32 level);
 		/// generate mipmaps
 		virtual void GHL_CALL GenerateMipmaps();
 	};

@@ -22,9 +22,9 @@ namespace GHL {
 		if (!all_extensions) return false;
 		const char* pos = all_extensions;
 		while ( pos ) {
-			const char* pos = strstr(pos, extensionName);
+			pos = ::strstr(pos, extensionName);
 			if (!pos) return false;
-			pos += strlen(extensionName);
+			pos += ::strlen(extensionName);
 			if (*pos == ' ' || *pos=='\0' || *pos=='\n' || *pos=='\r' || *pos=='\t')
 				return true;
 		}

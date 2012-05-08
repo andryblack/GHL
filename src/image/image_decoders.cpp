@@ -44,6 +44,10 @@
 #include "tga_image_decoder.h"
 #endif
 
+#ifdef USE_PVRTC_IMAGE_DECODER
+#include "pvrtc_image_decoder.h"
+#endif
+
 #include "../ghl_log_impl.h"
 
 namespace GHL {
@@ -57,6 +61,9 @@ namespace GHL {
 #endif
 #ifdef USE_JPEG_DECODER
 		m_decoders.push_back(new JpegDecoder());
+#endif
+#ifdef USE_PVRTC_IMAGE_DECODER
+		m_decoders.push_back(new PVRTCDecoder());
 #endif
 #ifdef USE_QT_IMAGE_DECODER
 			m_decoders.push_back(new QtImageFileDecoder());
