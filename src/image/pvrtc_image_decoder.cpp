@@ -73,7 +73,7 @@ namespace GHL {
 			return 0;
 		/// @todo swap bytes ordering
 		UInt32 formatFlags = SwapLittleToHost(header.flags) & PVR_TEXTURE_FLAG_TYPE_MASK;
-		if ( formatFlags != kPVRTextureFlagTypePVRTC_2 ||
+		if ( formatFlags != kPVRTextureFlagTypePVRTC_2 &&
 			formatFlags != kPVRTextureFlagTypePVRTC_4 ) {
 			return 0;
 		}
