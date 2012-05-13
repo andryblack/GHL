@@ -12,7 +12,7 @@
 
 #include "ghl_shader.h"
 #include "ghl_opengl.h"
-#include "refcount_opengl.h"
+#include "../../ghl_ref_counter_impl.h"
 
 #include <map>
 #include <string>
@@ -26,12 +26,10 @@ namespace GHL {
 	
 #ifndef GHL_SHADERS_UNSUPPORTED
 	
-	class VertexShaderGLSL : public RefCount<VertexShader> {
+	class VertexShaderGLSL : public RefCounterImpl<VertexShader> {
 	public:
 		VertexShaderGLSL(RenderOpenGL* parent,GLhandleARB handle);
 		virtual ~VertexShaderGLSL();
-		
-		virtual void GHL_CALL Release();
 		
 		GLhandleARB handle() const { return m_handle;}
 	private:
@@ -39,12 +37,10 @@ namespace GHL {
 		GLhandleARB	m_handle;
 	};
 	
-	class FragmentShaderGLSL : public RefCount<FragmentShader> {
+	class FragmentShaderGLSL : public RefCounterImpl<FragmentShader> {
 	public:
 		FragmentShaderGLSL(RenderOpenGL* parent,GLhandleARB handle);
 		virtual ~FragmentShaderGLSL();
-		
-		virtual void GHL_CALL Release();
 		
 		GLhandleARB handle() const { return m_handle;}
 	private:
@@ -63,12 +59,10 @@ namespace GHL {
 		virtual void GHL_CALL SetValueInt(Int32 v);
 	};
 	
-	class ShaderProgramGLSL : public RefCount<ShaderProgram> {
+	class ShaderProgramGLSL : public RefCounterImpl<ShaderProgram> {
 	public:
 		ShaderProgramGLSL(RenderOpenGL* parent,GLhandleARB handle,VertexShaderGLSL* vt,FragmentShaderGLSL* fr);
 		virtual ~ShaderProgramGLSL();
-		
-		virtual void GHL_CALL Release();
 		
 		/// get uniform
 		ShaderUniform* GHL_CALL GetUniform(const char* name) ;

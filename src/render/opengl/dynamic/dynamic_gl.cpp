@@ -73,6 +73,22 @@ namespace GHL {
         }
         return (FUNCPROTO) ( func );
     }
+    
+    static bool DynamicGL_CheckExtensionSupported(const char* extensionName) {
+		static const char* all_extensions = (const char*)glGetString(GL_EXTENSIONS);
+		if (!all_extensions) return false;
+		const char* pos = all_extensions;
+		while ( pos ) {
+			pos = ::strstr(pos, extensionName);
+			if (!pos) return false;
+			pos += ::strlen(extensionName);
+			if (*pos == ' ' || *pos=='\0' || *pos=='\n' || *pos=='\r' || *pos=='\t')
+				return true;
+		}
+		return false;
+	}
+    
+    
     void InternalDynamicGLLoadSubset();
 #include "dynamic_gl_cpp.inc"
 

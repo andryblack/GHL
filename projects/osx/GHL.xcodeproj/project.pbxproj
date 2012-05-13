@@ -35,7 +35,6 @@
 		A42900E31413949B00429C47 /* lucida_console_regular_8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900A41413949B00429C47 /* lucida_console_regular_8.cpp */; };
 		A42900E41413949B00429C47 /* lucida_console_regular_8.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900A51413949B00429C47 /* lucida_console_regular_8.h */; };
 		A42900EA1413949B00429C47 /* ghl_opengl.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900AD1413949B00429C47 /* ghl_opengl.h */; };
-		A42900EB1413949B00429C47 /* refcount_opengl.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900AE1413949B00429C47 /* refcount_opengl.h */; };
 		A42900EC1413949B00429C47 /* render_opengl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900AF1413949B00429C47 /* render_opengl.cpp */; };
 		A42900ED1413949B00429C47 /* render_opengl.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900B01413949B00429C47 /* render_opengl.h */; };
 		A42900EE1413949B00429C47 /* rendertarget_opengl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900B11413949B00429C47 /* rendertarget_opengl.cpp */; };
@@ -55,6 +54,9 @@
 		A436FC5314AE6D2800D53CE4 /* ghl_log.h in Headers */ = {isa = PBXBuildFile; fileRef = A436FC5214AE6D2800D53CE4 /* ghl_log.h */; };
 		A436FC5714AE6D3800D53CE4 /* ghl_log_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A436FC5514AE6D3800D53CE4 /* ghl_log_impl.cpp */; };
 		A436FC5814AE6D3800D53CE4 /* ghl_log_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A436FC5614AE6D3800D53CE4 /* ghl_log_impl.h */; };
+		A466B6A0155FEABB00306582 /* ghl_data_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A466B69E155FEABB00306582 /* ghl_data_impl.cpp */; };
+		A466B6A1155FEABB00306582 /* ghl_data_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A466B69F155FEABB00306582 /* ghl_data_impl.h */; };
+		A466B6A4155FEACF00306582 /* ghl_data.h in Headers */ = {isa = PBXBuildFile; fileRef = A466B6A3155FEACF00306582 /* ghl_data.h */; };
 		A4772A4514169A8B006A9887 /* adler32.c in Sources */ = {isa = PBXBuildFile; fileRef = A4772A3214169A8B006A9887 /* adler32.c */; };
 		A4772A4614169A8B006A9887 /* crc32.c in Sources */ = {isa = PBXBuildFile; fileRef = A4772A3314169A8B006A9887 /* crc32.c */; };
 		A4772A4714169A8B006A9887 /* crc32.h in Headers */ = {isa = PBXBuildFile; fileRef = A4772A3414169A8B006A9887 /* crc32.h */; };
@@ -195,7 +197,6 @@
 		A42900A41413949B00429C47 /* lucida_console_regular_8.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lucida_console_regular_8.cpp; sourceTree = "<group>"; };
 		A42900A51413949B00429C47 /* lucida_console_regular_8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lucida_console_regular_8.h; sourceTree = "<group>"; };
 		A42900AD1413949B00429C47 /* ghl_opengl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_opengl.h; sourceTree = "<group>"; };
-		A42900AE1413949B00429C47 /* refcount_opengl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = refcount_opengl.h; sourceTree = "<group>"; };
 		A42900AF1413949B00429C47 /* render_opengl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = render_opengl.cpp; sourceTree = "<group>"; };
 		A42900B01413949B00429C47 /* render_opengl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = render_opengl.h; sourceTree = "<group>"; };
 		A42900B11413949B00429C47 /* rendertarget_opengl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rendertarget_opengl.cpp; sourceTree = "<group>"; };
@@ -215,6 +216,9 @@
 		A436FC5214AE6D2800D53CE4 /* ghl_log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_log.h; sourceTree = "<group>"; };
 		A436FC5514AE6D3800D53CE4 /* ghl_log_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ghl_log_impl.cpp; sourceTree = "<group>"; };
 		A436FC5614AE6D3800D53CE4 /* ghl_log_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_log_impl.h; sourceTree = "<group>"; };
+		A466B69E155FEABB00306582 /* ghl_data_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ghl_data_impl.cpp; path = ../../odissey_ipad_src/GHL/src/ghl_data_impl.cpp; sourceTree = "<group>"; };
+		A466B69F155FEABB00306582 /* ghl_data_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ghl_data_impl.h; path = ../../odissey_ipad_src/GHL/src/ghl_data_impl.h; sourceTree = "<group>"; };
+		A466B6A3155FEACF00306582 /* ghl_data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ghl_data.h; path = ../../odissey_ipad_src/GHL/include/ghl_data.h; sourceTree = "<group>"; };
 		A4772A3214169A8B006A9887 /* adler32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = adler32.c; sourceTree = "<group>"; };
 		A4772A3314169A8B006A9887 /* crc32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = crc32.c; sourceTree = "<group>"; };
 		A4772A3414169A8B006A9887 /* crc32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crc32.h; sourceTree = "<group>"; };
@@ -371,6 +375,7 @@
 		A429007A1413948E00429C47 /* include */ = {
 			isa = PBXGroup;
 			children = (
+				A466B6A3155FEACF00306582 /* ghl_data.h */,
 				A436FC5214AE6D2800D53CE4 /* ghl_log.h */,
 				A429007B1413948E00429C47 /* ghl_api.h */,
 				A429007C1413948E00429C47 /* ghl_application.h */,
@@ -396,6 +401,8 @@
 		A42900991413949B00429C47 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				A466B69E155FEABB00306582 /* ghl_data_impl.cpp */,
+				A466B69F155FEABB00306582 /* ghl_data_impl.h */,
 				A436FC5514AE6D3800D53CE4 /* ghl_log_impl.cpp */,
 				A436FC5614AE6D3800D53CE4 /* ghl_log_impl.h */,
 				A41D523214DEB90B008B50E8 /* ghl_ref_counter_impl.h */,
@@ -449,7 +456,6 @@
 			children = (
 				A47F7F5A14E6D1BB006B37E2 /* dynamic */,
 				A42900AD1413949B00429C47 /* ghl_opengl.h */,
-				A42900AE1413949B00429C47 /* refcount_opengl.h */,
 				A42900AF1413949B00429C47 /* render_opengl.cpp */,
 				A42900B01413949B00429C47 /* render_opengl.h */,
 				A42900B11413949B00429C47 /* rendertarget_opengl.cpp */,
@@ -651,7 +657,6 @@
 				A42900E21413949B00429C47 /* tga_image_decoder.h in Headers */,
 				A42900E41413949B00429C47 /* lucida_console_regular_8.h in Headers */,
 				A42900EA1413949B00429C47 /* ghl_opengl.h in Headers */,
-				A42900EB1413949B00429C47 /* refcount_opengl.h in Headers */,
 				A42900ED1413949B00429C47 /* render_opengl.h in Headers */,
 				A42900EF1413949B00429C47 /* rendertarget_opengl.h in Headers */,
 				A42900F11413949B00429C47 /* shader_glsl.h in Headers */,
@@ -698,6 +703,8 @@
 				A47F7F6414E6D1BB006B37E2 /* dynamic_gl_subset.h in Headers */,
 				A47F7F6D14E6D253006B37E2 /* jdct.h in Headers */,
 				A47F7F6F14E6D253006B37E2 /* jmemsys.h in Headers */,
+				A466B6A1155FEABB00306582 /* ghl_data_impl.h in Headers */,
+				A466B6A4155FEACF00306582 /* ghl_data.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -842,6 +849,7 @@
 				A47F7F6E14E6D253006B37E2 /* jmemnobs.c in Sources */,
 				A48293081541F81C00A9A4B8 /* jquant1.c in Sources */,
 				A482930F1541FB3C00A9A4B8 /* jquant2.c in Sources */,
+				A466B6A0155FEABB00306582 /* ghl_data_impl.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

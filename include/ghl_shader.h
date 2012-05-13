@@ -32,10 +32,8 @@ namespace GHL
 {
 	
 	/// Shader
-	struct Shader
+	struct Shader : RefCounter
 	{
-		/// release shader
-		virtual void GHL_CALL Release() = 0;
 	};
 	
 	/// Vertex shader

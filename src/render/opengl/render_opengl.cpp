@@ -728,7 +728,6 @@ namespace GHL {
 		assert(it!=m_v_shaders_glsl.end() && "release unknown vertex shader");
 		if (it!=m_v_shaders_glsl.end()) {
 			m_v_shaders_glsl.erase(it);
-			delete vs;
 		}
 	}
 #endif
@@ -753,7 +752,6 @@ namespace GHL {
 		assert(it!=m_f_shaders_glsl.end() && "release unknown fragment shader");
 		if (it!=m_f_shaders_glsl.end()) {
 			m_f_shaders_glsl.erase(it);
-			delete fs;
 		}
 	}
 #endif
@@ -793,7 +791,6 @@ namespace GHL {
 		assert(it!=m_shaders_glsl.end() && "release unknown shader program");
 		if (it!=m_shaders_glsl.end()) {
 			m_shaders_glsl.erase(it);
-			delete sp;
 		}
 	}
 #endif

@@ -20,17 +20,11 @@ namespace GHL {
 	
 	VertexShaderGLSL::~VertexShaderGLSL() {
 		glDeleteObjectARB(m_handle);
+        if (m_parent) {
+            m_parent->ReleaseVertexShader(this);
+        }
 	}
 
-	
-	void GHL_CALL VertexShaderGLSL::Release() {
-		if (DeRef()) {
-			if (m_parent) {
-				m_parent->ReleaseVertexShader(this);
-			}
-		}
-	}
-	
 	
 	FragmentShaderGLSL::FragmentShaderGLSL(RenderOpenGL* parent,GLhandleARB handle_) : m_parent(parent),m_handle(handle_) {
 		
@@ -38,16 +32,11 @@ namespace GHL {
 	
 	FragmentShaderGLSL::~FragmentShaderGLSL() {
 		glDeleteObjectARB(m_handle);
+        if (m_parent) {
+            m_parent->ReleaseFragmentShader(this);
+        }
 	}
 	
-	
-	void GHL_CALL FragmentShaderGLSL::Release() {
-		if (DeRef()) {
-			if (m_parent) {
-				m_parent->ReleaseFragmentShader(this);
-			}
-		}
-	}
 	
 	
 	
@@ -59,20 +48,15 @@ namespace GHL {
 	
 	ShaderProgramGLSL::~ShaderProgramGLSL() {
 		glDeleteObjectARB(m_handle);
+        if (m_v) m_v->Release();
+        m_v = 0;
+        if (m_f) m_f->Release();
+        m_f = 0;
+        if (m_parent) {
+            m_parent->ReleaseShaderProgram(this);
+        }
 	}
 	
-	
-	void GHL_CALL ShaderProgramGLSL::Release() {
-		if (DeRef()) {
-			if (m_v) m_v->Release();
-			m_v = 0;
-			if (m_f) m_f->Release();
-			m_f = 0;
-			if (m_parent) {
-				m_parent->ReleaseShaderProgram(this);
-			}
-		}
-	}
 	
 	void GHL_CALL ShaderUniformGLSL::SetValueFloat(float v) {
 		glUniform1fARB(m_location,v);
