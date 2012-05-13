@@ -37,3 +37,13 @@ namespace GHL {
 	}
 	
 }
+
+GHL_API GHL::Data* GHL_CALL GHL_CreateData( GHL::UInt32 size , 
+                                           bool fill  , 
+                                           GHL::Byte filler ) {
+    GHL::DataImpl* data = new GHL::DataImpl( size );
+    if ( fill ) {
+        ::memset(data->GetDataPtr(), filler, size );
+    }
+    return data;
+}

@@ -39,7 +39,12 @@ namespace GHL {
 		/// set data
 		virtual void GHL_CALL	SetData( UInt32 offset, const Byte* data, UInt32 size ) = 0;
 	};
-	
+
+    
 } /*namespace*/
+
+GHL_API GHL::Data* GHL_CALL GHL_CreateData( GHL::UInt32 size , 
+                                           bool fill = false , 
+                                           GHL::Byte filler = 0 );
 
 #endif /*GHL_DATA_H*/
