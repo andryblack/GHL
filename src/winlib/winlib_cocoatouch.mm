@@ -82,14 +82,51 @@ namespace GHL {
 
 @end
 
+class SystemCocoaTouch;
 
+static const size_t max_touches = 10;
+
+@interface WinLibView : UIView<UITextFieldDelegate> {
+	EAGLContext*	m_context;
+	// The OpenGL ES names for the framebuffer and renderbuffer used to render to this view
+    GLuint m_defaultFramebuffer, m_colorRenderbuffer;
+	// The pixel dimensions of the CAEAGLLayer
+    GLint m_backingWidth;
+    GLint m_backingHeight;
+	GHL::ImageDecoderImpl* m_imageDecoder;
+	GHL::SoundOpenAL*	m_sound;
+	NSString*	m_appName;
+	GHL::RenderOpenGL* m_render;
+	NSTimer*	m_timer;
+	bool	m_loaded;
+	::timeval	m_timeval;
+	bool	m_active;
+	UITextField* m_hiddenInput;
+	UITouch* m_touches[max_touches];
+}
+
+- (void)prepareOpenGL;
+- (EAGLContext*) getContext;
+- (void)setActive:(bool) a;
+- (bool)loaded;
+- (void)showKeyboard;
+- (void)hideKeyboard;
+
+@end
+
+@interface WinLibViewController : UIViewController
+{
+	
+}
+
+@end
 
 class SystemCocoaTouch : public GHL::System {
 private:
-	WinLibView* m_view;
+	WinLibViewController* m_controller;
 	AccelerometerDelegate* m_accelerometer;
 public:
-	explicit SystemCocoaTouch(WinLibView* view) : m_view(view) {
+	explicit SystemCocoaTouch(WinLibViewController* controller) : m_controller(controller) {
 		m_accelerometer = 0;
 	}
 	~SystemCocoaTouch() {
@@ -128,6 +165,10 @@ public:
 				return false;
 			memcpy(data, [m_accelerometer get_data], sizeof(float)*3);
 			return true;
+		} else if (name==GHL::DEVICE_DATA_VIEW_CONTROLLER) {
+			if (data) {
+				*((UIViewController**)data) = m_controller;
+			}
 		}
 		return false;
 	}
@@ -137,12 +178,7 @@ public:
     }
 };
 
-@interface WinLibViewController : UIViewController
-{
-	
-}
 
-@end
 
 @implementation WinLibViewController
 
@@ -155,35 +191,7 @@ public:
 }
 
 @end
-static const size_t max_touches = 10;
-@interface WinLibView : UIView<UITextFieldDelegate> {
-	EAGLContext*	m_context;
-	// The OpenGL ES names for the framebuffer and renderbuffer used to render to this view
-    GLuint m_defaultFramebuffer, m_colorRenderbuffer;
-	// The pixel dimensions of the CAEAGLLayer
-    GLint m_backingWidth;
-    GLint m_backingHeight;
-	SystemCocoaTouch*	m_system;
-	GHL::ImageDecoderImpl* m_imageDecoder;
-	GHL::SoundOpenAL*	m_sound;
-	NSString*	m_appName;
-	GHL::RenderOpenGL* m_render;
-	NSTimer*	m_timer;
-	bool	m_loaded;
-	::timeval	m_timeval;
-	bool	m_active;
-	UITextField* m_hiddenInput;
-	UITouch* m_touches[max_touches];
-}
 
-- (void)prepareOpenGL;
-- (EAGLContext*) getContext;
-- (void)setActive:(bool) a;
-- (bool)loaded;
-- (void)showKeyboard;
-- (void)hideKeyboard;
-
-@end
 
 
 @implementation WinLibView
@@ -231,15 +239,12 @@ static const size_t max_touches = 10;
             return nil;
         }
 		
-		m_system = new SystemCocoaTouch(self);
-		g_application->SetSystem(m_system);
 
         if([self respondsToSelector:@selector(setContentScaleFactor:)]){
             self.contentScaleFactor = 1.0;
             LOG_VERBOSE("contentScaleFactor:"<<self.contentScaleFactor);
         }
 		
-		g_application->Initialize();
 		
         // Create default framebuffer object. The backing will be allocated for the current layer in -resizeFromLayer
         glGenFramebuffersOES(1, &m_defaultFramebuffer);
@@ -479,7 +484,6 @@ static const size_t max_touches = 10;
 	delete m_imageDecoder;
 	delete m_sound;
 
-	delete m_system;
 	[super dealloc];
 }
 
@@ -490,6 +494,7 @@ static const size_t max_touches = 10;
 	WinLibView*	view;
 	WinLibViewController* controller;
 	GHL::VFSCocoaImpl*	m_vfs;
+	SystemCocoaTouch*	m_system;
 }
 @end
 
@@ -528,12 +533,17 @@ static const size_t max_touches = 10;
 	
 	
 	controller = [[WinLibViewController alloc] init];
-	
+	m_system = new SystemCocoaTouch(controller);
+	g_application->SetSystem(m_system);
+
 	window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [window setAutoresizesSubviews:YES];
 	
 	view = [[WinLibView alloc] initWithFrame:CGRectMake(0, 0, settings.width, settings.height)];
 	controller.view = view;
+	
+	g_application->Initialize();
+	
 	
 	NSString *reqSysVer = @"4.0";
 	NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
@@ -571,6 +581,13 @@ static const size_t max_touches = 10;
 	//if ([view loaded]) [view drawRect:[view bounds]];
 	LOG_INFO("Activated");
 }
+
+- (void)dealloc
+{
+	delete m_system;
+	[super dealloc];
+}
+
 @end
 
 
@@ -579,11 +596,11 @@ void GHL_CALL SystemCocoaTouch::SwapBuffers() {
 }
 
 void GHL_CALL SystemCocoaTouch::ShowKeyboard() {
-	[m_view showKeyboard];
+	[(WinLibView*)m_controller.view showKeyboard];
 }
 
 void GHL_CALL SystemCocoaTouch::HideKeyboard() {
-	[m_view hideKeyboard];
+	[(WinLibView*)m_controller.view hideKeyboard];
 }
 
 bool GHL_CALL SystemCocoaTouch::SetDeviceState( GHL::DeviceState name, void* data) {
@@ -601,7 +618,7 @@ bool GHL_CALL SystemCocoaTouch::SetDeviceState( GHL::DeviceState name, void* dat
 		return true;
 	} else if (name==GHL::DEVICE_STATE_MULTITOUCH_ENABLED) {
 		bool* state = (bool*)data;
-		m_view.multipleTouchEnabled = state ? YES : NO;
+		m_controller.view.multipleTouchEnabled = state ? YES : NO;
 		return true;
 	}
 	return false;
