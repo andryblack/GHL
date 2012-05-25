@@ -33,6 +33,7 @@ static const char* MODULE = "WINLIB";
 static GHL::Application* g_application = 0;
 static UIInterfaceOrientation g_orientation = UIInterfaceOrientationLandscapeLeft;
 static bool g_orientationLocked = false;
+static bool g_retina_enabled = false;
 
 namespace GHL {
 	extern UInt32 g_default_renderbuffer;
@@ -180,17 +181,7 @@ public:
 
 
 
-@implementation WinLibViewController
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation {
-	if (g_orientation==UIInterfaceOrientationLandscapeRight && !g_orientationLocked) {
-		if (orientation==UIInterfaceOrientationLandscapeLeft)
-			return YES;
-	}
-    return orientation == g_orientation ? YES : NO; 
-}
-
-@end
 
 
 
@@ -218,6 +209,9 @@ public:
 	if (self = [super initWithFrame:rect]) {
 		m_appName = (NSString*)[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
 		m_imageDecoder = 0;
+		
+		m_active = false;
+		
 #ifndef GHL_NO_IMAGE_DECODERS
 		m_imageDecoder = new GHL::ImageDecoderImpl();		
 		g_application->SetImageDecoder(m_imageDecoder);
@@ -241,7 +235,8 @@ public:
 		
 
         if([self respondsToSelector:@selector(setContentScaleFactor:)]){
-            self.contentScaleFactor = 1.0;
+			if (!g_retina_enabled)
+				self.contentScaleFactor = 1.0;
             LOG_VERBOSE("contentScaleFactor:"<<self.contentScaleFactor);
         }
 		
@@ -279,7 +274,8 @@ public:
         [self setAutoresizesSubviews:YES];
         
 		if([self respondsToSelector:@selector(setContentScaleFactor:)]){
-			self.contentScaleFactor = 1.0;
+			if (!g_retina_enabled)
+				self.contentScaleFactor = 1.0;
 			LOG_VERBOSE("contentScaleFactor:"<<self.contentScaleFactor);
 		}
 		
@@ -292,7 +288,8 @@ public:
 {
     LOG_VERBOSE( "layoutSubviews" ); 
 	if([self respondsToSelector:@selector(setContentScaleFactor:)]){
-		self.contentScaleFactor = 1.0;
+		if (!g_retina_enabled)
+			self.contentScaleFactor = 1.0;
 		LOG_VERBOSE("contentScaleFactor:"<<self.contentScaleFactor);
 	}
 
@@ -315,8 +312,20 @@ public:
 	LOG_VERBOSE( "prepareOpenGL" ); 
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	[EAGLContext setCurrentContext:m_context];
-	m_render = new GHL::RenderOpenGL(GHL::UInt32([self bounds].size.width),
-									 GHL::UInt32([self bounds].size.height));
+	int w = [self bounds].size.width;
+	int h = [self bounds].size.height;
+	if([self respondsToSelector:@selector(setContentScaleFactor:)]){
+		if (!g_retina_enabled)
+			self.contentScaleFactor = 1.0;
+		else {
+			w *= self.contentScaleFactor;
+			h *= self.contentScaleFactor;
+		}
+		LOG_VERBOSE("contentScaleFactor:"<<self.contentScaleFactor);
+	}
+	
+	m_render = new GHL::RenderOpenGL(GHL::UInt32(w),
+									 GHL::UInt32(h));
 	m_render->RenderInit();
 	g_application->SetRender(m_render);
 	GHL::g_default_renderbuffer = m_colorRenderbuffer;
@@ -324,7 +333,6 @@ public:
 		m_timer = [NSTimer scheduledTimerWithTimeInterval: 1.0f/200.0f target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
 		[m_timer fire];
 		m_loaded = true;
-		m_active = true;
 	}
 	::gettimeofday(&m_timeval,0);
 	[pool drain];
@@ -332,7 +340,7 @@ public:
 
 - (void)drawRect:(CGRect)dirtyRect {
     (void)dirtyRect;
-	if (m_loaded ) {
+	if (m_loaded  && m_active) {
 		NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 		::timeval time;
 		::gettimeofday(&time,0);
@@ -489,6 +497,34 @@ public:
 
 @end
 
+@implementation WinLibViewController
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation {
+	if (g_orientation==UIInterfaceOrientationLandscapeRight && !g_orientationLocked) {
+		if (orientation==UIInterfaceOrientationLandscapeLeft)
+			return YES;
+	}
+    return orientation == g_orientation ? YES : NO; 
+}
+
+- (void)viewWillAppear:(BOOL)animated    // Called when the view is about to made visible. Default does nothing
+{
+	
+}
+- (void)viewDidAppear:(BOOL)animated     // Called when the view has been fully transitioned onto the screen. Default does nothing
+{
+	[(WinLibView*)self.view setActive: true];
+}
+- (void)viewWillDisappear:(BOOL)animated // Called when the view is dismissed, covered or otherwise hidden. Default does nothing
+{
+	[(WinLibView*)self.view setActive: false];
+}
+- (void)viewDidDisappear:(BOOL)animated  // Called after the view was dismissed, covered or otherwise hidden. Default does 
+{
+	
+}
+@end
+
 @interface WinLibAppDelegate : NSObject<UIApplicationDelegate> {
 	UIWindow* window;
 	WinLibView*	view;
@@ -514,14 +550,32 @@ public:
 	settings.width = rect.size.width;
 	settings.height = rect.size.height;
 	settings.fullscreen = true;
+	
+	
+	
 	g_application->FillSettings(&settings);
 	LOG_INFO("application require " << settings.width << "x" << settings.height);
-    
+    settings.fullscreen = true;
+	
+	if ( rect.size.width==320 && rect.size.height==480 ) {
+		if (( settings.width >= 480*2 && settings.height >= 320*2 ) ||
+			 ( settings.height >= 480*2 && settings.width >= 320*2 ) ) {
+			LOG_VERBOSE("Enable retina");
+			g_retina_enabled = true;
+		}
+	}
+	
+	
+	
 	if (settings.width > settings.height) {
 		g_orientation = UIInterfaceOrientationLandscapeRight;
+		settings.width = rect.size.height;
+		settings.height = rect.size.width;
         LOG_VERBOSE("UIInterfaceOrientationLandscapeRight");
     } else {
 		g_orientation = UIInterfaceOrientationPortrait;
+		settings.width = rect.size.width;
+		settings.height = rect.size.height;
         LOG_VERBOSE("UIInterfaceOrientationPortrait");
 	}
 	
@@ -536,7 +590,7 @@ public:
 	m_system = new SystemCocoaTouch(controller);
 	g_application->SetSystem(m_system);
 
-	window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+	window = [[UIWindow alloc] initWithFrame:rect];
     [window setAutoresizesSubviews:YES];
 	
 	view = [[WinLibView alloc] initWithFrame:CGRectMake(0, 0, settings.width, settings.height)];
@@ -568,7 +622,7 @@ public:
 {
 	[EAGLContext setCurrentContext:[view getContext]];
 	g_application->OnDeactivated();
-	[view setActive:false];
+	//[view setActive:false];
 	//[view drawRect:[view bounds]];
 	LOG_INFO("Deactivated");
 }
@@ -577,7 +631,7 @@ public:
 {
 	[EAGLContext setCurrentContext:[view getContext]];
 	g_application->OnActivated();
-	[view setActive:true];
+	//[view setActive:true];
 	//if ([view loaded]) [view drawRect:[view bounds]];
 	LOG_INFO("Activated");
 }
@@ -604,6 +658,7 @@ void GHL_CALL SystemCocoaTouch::HideKeyboard() {
 }
 
 bool GHL_CALL SystemCocoaTouch::SetDeviceState( GHL::DeviceState name, void* data) {
+	if (!data) return false;
 	if (name==GHL::DEVICE_STATE_ACCELEROMETER_ENABLED) {
 		bool* state = (bool*)data;
 		if (*state && !m_accelerometer) {
@@ -618,7 +673,11 @@ bool GHL_CALL SystemCocoaTouch::SetDeviceState( GHL::DeviceState name, void* dat
 		return true;
 	} else if (name==GHL::DEVICE_STATE_MULTITOUCH_ENABLED) {
 		bool* state = (bool*)data;
-		m_controller.view.multipleTouchEnabled = state ? YES : NO;
+		m_controller.view.multipleTouchEnabled = *state ? YES : NO;
+		return true;
+	} else if (name==GHL::DEVICE_STATR_RETINA_ENABLED) {
+		bool* state = (bool*)data;
+		g_retina_enabled = *state;
 		return true;
 	}
 	return false;
