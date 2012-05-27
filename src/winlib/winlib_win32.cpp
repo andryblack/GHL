@@ -4,7 +4,9 @@
 #include "../vfs/vfs_win32.h"
 #include "../render/opengl/render_opengl.h"
 #include "../image/image_decoders.h"
+#ifndef GHL_NO_SOUND
 #include "../sound/dsound/ghl_sound_dsound.h"
+#endif
 #include "../ghl_log_impl.h"
 
 #include <windows.h>
@@ -278,12 +280,14 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 		return 1;
 	}
 
+#ifndef GHL_NO_SOUND
 	GHL::SoundDSound sound;
 	if (!sound.SoundInit(hwnd)) {
 		LOG_ERROR( "Can't init sound" );
 		return 1;
 	}
 	app->SetSound(&sound);
+#endif
 
 	Win32System sys(hwnd);
 	app->SetSystem(&sys);
@@ -383,7 +387,9 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 	if (m_input)
 		m_input->Update();
 		*/
+#ifndef GHL_NO_SOUND
 		sound.Process();
+#endif
 
 		MSG		msg;
 		while (PeekMessage(&msg,hwnd,0,0,PM_REMOVE) && !done)
@@ -395,7 +401,9 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 					app = 0;
 				}
 				render.RenderDone();
+#ifndef GHL_NO_SOUND
 				sound.SoundDone();
+#endif
 				LOG_INFO( "Done" );
 				break;
 			} else

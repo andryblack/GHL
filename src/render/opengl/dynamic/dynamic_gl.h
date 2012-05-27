@@ -23,7 +23,9 @@
 #include "dynamic_gl_subset.h"
 
 #include <stddef.h>
+#ifndef WIN32_LEAN_AND_MEAN
 #include <inttypes.h>
+#endif
 
 namespace GHL {
 #include "dynamic_gl_h.inc"

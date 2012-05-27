@@ -23,7 +23,7 @@
 #include <ghl_api.h>
 #include <ghl_data_stream.h>
 #include "ghl_sound_decoder.h"
-
+#ifndef GHL_NO_SOUND
 #define GHL_USE_WAV_DECODER
 #define GHL_USE_VORBIS_DECODER
 
@@ -33,7 +33,7 @@
 #ifdef GHL_USE_VORBIS_DECODER
 #include "vorbis_decoder.h"
 #endif
-
+#endif
 namespace GHL
 {
     

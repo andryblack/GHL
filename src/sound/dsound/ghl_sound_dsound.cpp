@@ -1,3 +1,4 @@
+#ifndef GHL_NO_SOUND
 #include "ghl_sound_dsound.h"
 #include <iostream>
 #include <cassert>
@@ -411,3 +412,4 @@ namespace GHL {
 		}
 	}
 }
+#endif
