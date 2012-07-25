@@ -32,7 +32,7 @@ namespace GHL
 	enum DirType
 	{
 		DIR_TYPE_DATA,			///< current application dara dir
-		DIR_TYPE_USER_PROFILE,	///< writable user profile dir
+        DIR_TYPE_USER_PROFILE	///< writable user profile dir
 	};
 
 

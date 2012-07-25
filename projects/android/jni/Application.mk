@@ -1,0 +1,4 @@
+APP_STL := gnustl_static
+APP_PLATFORM := android-9
+APP_MODULES := GHL
+NDK_TOOLCHAIN_VERSION=4.4.3

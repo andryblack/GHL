@@ -25,6 +25,11 @@ typedef long            khronos_ssize_t;
 #define DYNAMIC_GL_NO_FUCPOINTERS
 #endif
 
+#ifdef ANDROID
+#include <KHR/khrplatform.h>
+#define DYNAMIC_GL_NO_FUCPOINTERS
+#endif
+
 #define DYNAMIC_GL_API GLAPI
 #define DYNAMIC_GL_APIENTRY APIENTRY
 #define DYNAMIC_GL_APIENTRYP APIENTRYP

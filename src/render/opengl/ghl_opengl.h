@@ -16,6 +16,10 @@
 #include "dynamic/dynamic_gles.h"
 #define GHL_DYNAMIC_GL
 #define GHL_OPENGLES
+#elif defined ( GHL_PLATFORM_ANDROID )
+#include "dynamic/dynamic_gles.h"
+#define GHL_DYNAMIC_GL
+#define GHL_OPENGLES
 #elif defined ( GHL_PLATFORM_MAC )
 #include "dynamic/dynamic_gl.h"
 #define GHL_DYNAMIC_GL

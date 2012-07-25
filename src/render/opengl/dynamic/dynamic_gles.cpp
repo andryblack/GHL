@@ -4,6 +4,8 @@
 
 #if defined ( GHL_PLATFORM_IOS )
 #include <OpenGLES/ES1/gl.h>
+#elif defined ( GHL_PLATFORM_ANDROID )
+#include <GLES/gl.h>
 #else
 #error "usupported platform"
 #endif

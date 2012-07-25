@@ -38,3 +38,4 @@ GHL_API void GHL_CALL GHL_DestroyVFS(GHL::VFS* vfs) {
     delete reinterpret_cast<GHL::VFSPosixImpl*>(vfs);
 }
 #endif
+
