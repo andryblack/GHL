@@ -20,11 +20,15 @@ namespace GHL {
 			if ( fmt == TEXTURE_FORMAT_PVRTC_4BPPV1 )
 				return GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
 		} 
+        if (fmt==TEXTURE_FORMAT_ALPHA )
+            return GL_ALPHA;
 		if (fmt==TEXTURE_FORMAT_RGB )
 			return GL_RGB;
 		if (fmt==TEXTURE_FORMAT_565)
 			return GL_RGB;
 #else
+        if (fmt==TEXTURE_FORMAT_ALPHA )
+            return GL_ALPHA;
 		if (fmt==TEXTURE_FORMAT_565)
 			return GL_RGB;
 		if (fmt==TEXTURE_FORMAT_RGB)
@@ -41,6 +45,8 @@ namespace GHL {
 	}
 
 	static inline GLenum convert_format( TextureFormat fmt ) {
+        if (fmt==TEXTURE_FORMAT_ALPHA )
+            return GL_ALPHA;
 		if (fmt==TEXTURE_FORMAT_RGB )
 			return GL_RGB;
 		if (fmt==TEXTURE_FORMAT_565)
@@ -76,7 +82,9 @@ namespace GHL {
 	}
 	
 	TextureOpenGL* TextureOpenGL::Create( RenderOpenGL* parent,TextureFormat fmt,UInt32 w,UInt32 h, const Data* data) {
-		GLuint name = 0;
+        if (fmt==TEXTURE_FORMAT_UNKNOWN)
+            return 0;
+        GLuint name = 0;
 		glActiveTexture(GL_TEXTURE0);
 		glGenTextures(1, &name);
 		if (!name) return 0;

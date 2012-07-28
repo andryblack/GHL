@@ -298,3 +298,15 @@ namespace GHL {
     }
 	
 }
+
+GHL_API GHL::TextureFormat GHL_CALL GHL_ImageFormatToTextureFormat( GHL::ImageFormat fmt ) {
+    switch (fmt) {
+        case GHL::IMAGE_FORMAT_GRAY:    return GHL::TEXTURE_FORMAT_ALPHA;
+        case GHL::IMAGE_FORMAT_RGB:     return GHL::TEXTURE_FORMAT_RGB;
+        case GHL::IMAGE_FORMAT_RGBA:    return GHL::TEXTURE_FORMAT_RGBA;
+        case GHL::IMAGE_FORMAT_PVRTC_2: return GHL::TEXTURE_FORMAT_PVRTC_2BPPV1;
+        case GHL::IMAGE_FORMAT_PVRTC_4: return GHL::TEXTURE_FORMAT_PVRTC_4BPPV1;
+        default: break;
+    }
+    return GHL::TEXTURE_FORMAT_UNKNOWN;
+}

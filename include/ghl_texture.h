@@ -27,6 +27,7 @@
 #include "ghl_api.h"
 #include "ghl_ref_counter.h"
 #include "ghl_data.h"
+#include "ghl_image.h"
 
 namespace GHL 
 {
@@ -34,12 +35,14 @@ namespace GHL
 	/// texture format
 	enum TextureFormat
 	{
-		TEXTURE_FORMAT_RGB,		///< r,g,b channels
-		TEXTURE_FORMAT_RGBA,	///< r,g,b,alpha channels
-		TEXTURE_FORMAT_565,		///< 5-6-5
-		TEXTURE_FORMAT_4444,	///< 4-4-4-4
-		TEXTURE_FORMAT_PVRTC_4BPPV1,	///< compressed, PVRTC_2
-		TEXTURE_FORMAT_PVRTC_2BPPV1		///< compressed, PVRTC_4
+        TEXTURE_FORMAT_UNKNOWN,         ///< error
+        TEXTURE_FORMAT_ALPHA,           ///< alpha channel
+		TEXTURE_FORMAT_RGB,             ///< r,g,b channels
+		TEXTURE_FORMAT_RGBA,            ///< r,g,b,alpha channels
+		TEXTURE_FORMAT_565,             ///< 5-6-5
+		TEXTURE_FORMAT_4444,            ///< 4-4-4-4
+		TEXTURE_FORMAT_PVRTC_2BPPV1,	///< compressed, PVRTC_2
+		TEXTURE_FORMAT_PVRTC_4BPPV1		///< compressed, PVRTC_4
 	};
 
 
@@ -97,6 +100,11 @@ namespace GHL
 		virtual void GHL_CALL GenerateMipmaps() = 0;
 	};
 
+
 }
+
+GHL_API GHL::TextureFormat GHL_CALL GHL_ImageFormatToTextureFormat( GHL::ImageFormat fmt );
+
+
 
 #endif /*GHL_TEXTURE_H*/
