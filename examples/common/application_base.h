@@ -2,10 +2,11 @@
 #define APPLICATION_BASE_H
 
 #include <ghl_application.h>
+#include <ghl_texture.h>
 
 
 class ApplicationBase : public GHL::Application {
-    protected:
+protected:
 	GHL::System*	m_system;
 	GHL::VFS*	m_vfs;
 	GHL::Render*	m_render;
@@ -13,7 +14,18 @@ class ApplicationBase : public GHL::Application {
 	GHL::Sound*	m_sound;
 	ApplicationBase();
 	virtual ~ApplicationBase();
-    public:
+    virtual void DrawScene();
+    virtual void OnTimer(GHL::UInt32 usecs);
+
+    GHL::Int32  m_mouse_pos_x;
+    GHL::Int32  m_mouse_pos_y;
+
+    GHL::UInt32 m_frames;
+    GHL::UInt32 m_fps_time;
+    float   m_fps;
+
+    GHL::Texture* LoadTexture(const char* fn);
+public:
     	///
 	virtual void GHL_CALL SetSystem( GHL::System* sys ) ;
 	///
@@ -31,7 +43,7 @@ class ApplicationBase : public GHL::Application {
 	///
 	virtual bool GHL_CALL Load() = 0;
 	///
-	virtual bool GHL_CALL OnFrame( GHL::UInt32 usecs ) = 0;
+    virtual bool GHL_CALL OnFrame( GHL::UInt32 usecs );
 	///
 	virtual void GHL_CALL OnKeyDown( GHL::Key key ) ;
 	///
