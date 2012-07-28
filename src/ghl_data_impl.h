@@ -36,6 +36,7 @@ namespace GHL {
 		InlinedData() : m_buffer(0),m_size(0){
 			
 		}
+        virtual ~InlinedData() {}
 		/// ctr
 		InlinedData( Byte* data, UInt32 size ) : m_buffer( data ), m_size( size ) {
 			
@@ -80,7 +81,7 @@ namespace GHL {
 		/// Const data ptr
 		virtual const Byte* GHL_CALL	GetData() const { return m_buffer; }
 		/// set data
-		virtual void GHL_CALL	SetData( UInt32 offset, const Byte* data, UInt32 size ) {
+        virtual void GHL_CALL	SetData( UInt32 /*offset*/, const Byte* /*data*/, UInt32 /*size*/ ) {
 			
 		}
 	};

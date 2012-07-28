@@ -35,6 +35,10 @@ static const char* MODULE = "WINLIB";
 
 class SystemCocoa : public GHL::System {
 public:
+    virtual ~SystemCocoa() {
+
+    }
+
 	virtual void GHL_CALL Exit() {
 		[[NSApplication sharedApplication] terminate:nil];
 	}
@@ -60,9 +64,9 @@ public:
         return 0;
     }
     ///
-    virtual bool GHL_CALL SetDeviceState( GHL::DeviceState name, void* data);
+    virtual bool GHL_CALL SetDeviceState( GHL::DeviceState /*name*/, void* /*data*/);
     ///
-    virtual bool GHL_CALL GetDeviceData( GHL::DeviceData name, void* data) {
+    virtual bool GHL_CALL GetDeviceData( GHL::DeviceData /*name*/, void* /*data*/) {
         return false;
     }
     ///
@@ -668,6 +672,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 
 /// ---- NSWindowDelegate
 - (void)windowDidBecomeKey:(NSNotification *)notification {
+    (void)notification;
     if (g_fullscreen) {
         //[m_window setIsVisible:YES];
         [m_window setLevel: NSMainMenuWindowLevel+1];
@@ -681,6 +686,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 }
 
 - (void)windowDidResignKey:(NSNotification *)notification {
+    (void)notification;
     if (g_fullscreen) {
         //[m_window setIsVisible:NO];
         [m_window setLevel:NSNormalWindowLevel];
@@ -781,6 +787,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
 }
 
 GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {
+    (void)level;
    	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     NSLog( @"%@",[NSString stringWithUTF8String:message] );
     [pool release];

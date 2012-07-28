@@ -10,6 +10,11 @@ class Application : public ApplicationBase {
     Application() {
     }
 
+    /// called after window created, before first rendered
+    virtual void GHL_CALL Initialize() {
+
+    }
+
     ///
     virtual void GHL_CALL FillSettings( GHL::Settings* settings ) {
         settings->fullscreen = false;
@@ -19,7 +24,7 @@ class Application : public ApplicationBase {
         return true;
     }
     ///
-    virtual bool GHL_CALL OnFrame( GHL::UInt32 usecs ) {
+    virtual bool GHL_CALL OnFrame( GHL::UInt32 /*usecs*/ ) {
         m_render->BeginScene( 0 );
         m_render->Clear( 0, 1, 0, 0);
         m_render->EndScene();
@@ -29,11 +34,15 @@ class Application : public ApplicationBase {
 };
 
 
-#ifdef GHL_WIN32
+#if defined( GHL_PLATFORM_WIN32 )
+#elif defined( GHL_PLATFORM_ANDROID )
+extern "C" __attribute__ ((visibility ("default"))) int ghl_android_app_main(int argc,char** argv) {
+    Application* app = new Application;
+    return GHL_StartApplication(app,argc,argv);
+}
 #else
 int main(int argc,char* argv[]) {
-    Application app;
-    GHL_StartApplication(&app,argc,argv);
-    return 0;
+    Application* app = new Application;
+    return GHL_StartApplication(app,argc,argv);
 }
 #endif

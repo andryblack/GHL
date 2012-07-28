@@ -40,14 +40,14 @@ namespace GHL {
 	{
 	}
 
-    static void error_func(png_structp png_ptr,const char* msg)
+    static void error_func(png_structp /*png_ptr*/,const char* msg)
     {
         LOG_ERROR( msg );	 
     }
 	
 	
 
-	static void warning_func(png_structp png,const char* err)
+    static void warning_func(png_structp /*png*/,const char* err)
 	{
         LOG_WARNING( err );
 	}
@@ -130,24 +130,13 @@ Image* PngDecoder::Decode(DataStream* file)
 	
 	unsigned int Width;
 	unsigned int Height;
-	int BitDepth;
-	int ColorType;
+    int ColorType = png_get_color_type(png_ptr,info_ptr);
+    int BitDepth = png_get_bit_depth(png_ptr,info_ptr);
 
 	// Convert palette color to true color
 	if (ColorType==PNG_COLOR_TYPE_PALETTE)
 		png_set_palette_to_rgb(png_ptr);
 
-	// Convert low bit colors to 8 bit colors
-	if (BitDepth < 8)
-	{
-		/*
-		if (ColorType==PNG_COLOR_TYPE_GRAY || ColorType==PNG_COLOR_TYPE_GRAY_ALPHA)
-			png_set_gray_1_2_4_to_8(png_ptr);
-		else
-			png_set_packing(png_ptr);
-		 */
-		
-	}
 	if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS))
 		png_set_tRNS_to_alpha(png_ptr);
 
@@ -263,7 +252,7 @@ Image* PngDecoder::Decode(DataStream* file)
 	return image;
 }
 	
-	bool PngDecoder::Encode( const Image* image, DataStream* ds) {
+    bool PngDecoder::Encode( const Image* /*image*/, DataStream* /*ds*/) {
 		return false;
 	}
 

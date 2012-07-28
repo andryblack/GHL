@@ -116,14 +116,11 @@ namespace GHL {
 	
     bool RenderImpl::RenderInit() {
         LOG_VERBOSE("RenderImpl::RenderInit");
-        m_sfont_texture = CreateTexture(lucida_console_regular_8_width,lucida_console_regular_8_height,TEXTURE_FORMAT_RGBA,false);
-        if (m_sfont_texture) {
-			size_t size = lucida_console_regular_8_width*lucida_console_regular_8_height*4;
-			ConstInlinedData data((const Byte*)lucida_console_regular_8_data,size);
-            m_sfont_texture->SetData(0,0,lucida_console_regular_8_width,lucida_console_regular_8_height,
-									 &data,0);
-        }
-        return true;
+        size_t size = lucida_console_regular_8_width*lucida_console_regular_8_height*4;
+        ConstInlinedData data((const Byte*)lucida_console_regular_8_data,size);
+        
+        m_sfont_texture = CreateTexture(lucida_console_regular_8_width,lucida_console_regular_8_height,TEXTURE_FORMAT_RGBA,&data);
+        return m_sfont_texture;
     }
 	
 	

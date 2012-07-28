@@ -16,7 +16,7 @@ namespace GHL  {
 	class VFSCocoaImpl : public VFS {
 	public:
 		VFSCocoaImpl();
-		~VFSCocoaImpl();
+        virtual ~VFSCocoaImpl();
 		/// get dir
 		virtual const char* GHL_CALL GetDir(DirType dt) const ;
 		/// attach package

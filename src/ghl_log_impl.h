@@ -40,6 +40,15 @@ namespace GHL {
             m_stream << v;
             return *this;
         }
+        template <class T>
+        Logger& operator << (const T* v) {
+            m_stream << v;
+            return *this;
+        }
+        Logger& operator << (const std::string& v) {
+            m_stream << v.c_str();
+            return *this;
+        }
     private:
         Logger( const Logger& );
         Logger& operator = (const Logger&);

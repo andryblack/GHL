@@ -95,7 +95,7 @@ namespace GHL {
 		CHECK_GL_ERROR_F("_glGenFramebuffers");
 		_glBindFramebuffer(_GL_FRAMEBUFFER,m_framebuffer);
 		CHECK_GL_ERROR_F("ctr _glBindFramebuffer");
-		m_texture = reinterpret_cast<TextureOpenGL*>(m_parent->CreateTexture(w, h, fmt, false));
+		m_texture = reinterpret_cast<TextureOpenGL*>(m_parent->CreateTexture(w, h, fmt, 0));
 		_glFramebufferTexture2D(_GL_FRAMEBUFFER, _GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture->name(), 0);
 		CHECK_GL_ERROR_F("_glFramebufferTexture2D");
 		glBindTexture(GL_TEXTURE_2D,0);

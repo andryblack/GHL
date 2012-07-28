@@ -347,6 +347,7 @@ namespace GHL {
 	}
         
 	void RenderOpenGL::ReleaseTexture(TextureOpenGL* tex) {
+        (void)tex;
 #ifdef GHL_DEBUG
 		TextureReleased(tex);
 #endif
@@ -672,6 +673,7 @@ namespace GHL {
 		
 	void RenderOpenGL::ReleaseRendertarget(RenderTargetOpenGL* rt) {
 		CHECK_GL_ERROR
+        (void)rt;
 #ifdef GHL_DEBUG
         RenderTargetReleased(rt);
 #endif

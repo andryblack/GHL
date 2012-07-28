@@ -39,19 +39,19 @@ void GHL_CALL ApplicationBase::OnKeyDown( GHL::Key key ) {
     }
 }
 ///
-void GHL_CALL ApplicationBase::OnKeyUp( GHL::Key key ) {
+void GHL_CALL ApplicationBase::OnKeyUp( GHL::Key /*key*/ ) {
 }
 ///
-void GHL_CALL ApplicationBase::OnChar( GHL::UInt32 ch ) {
+void GHL_CALL ApplicationBase::OnChar( GHL::UInt32 /*ch*/ ) {
 }
 ///
-void GHL_CALL ApplicationBase::OnMouseDown( GHL::MouseButton btn, GHL::Int32 x, GHL::Int32 y) {
+void GHL_CALL ApplicationBase::OnMouseDown( GHL::MouseButton /*btn*/, GHL::Int32 /*x*/, GHL::Int32 /*y*/) {
 }
 ///
-void GHL_CALL ApplicationBase::OnMouseMove( GHL::MouseButton btn, GHL::Int32 x, GHL::Int32 y) {
+void GHL_CALL ApplicationBase::OnMouseMove( GHL::MouseButton /*btn*/, GHL::Int32 /*x*/, GHL::Int32 /*y*/) {
 }
 ///
-void GHL_CALL ApplicationBase::OnMouseUp( GHL::MouseButton btn, GHL::Int32 x, GHL::Int32 y) {
+void GHL_CALL ApplicationBase::OnMouseUp( GHL::MouseButton /*btn*/, GHL::Int32 /*x*/, GHL::Int32 /*y*/) {
 }
 ///
 void GHL_CALL ApplicationBase::OnDeactivated() {
@@ -63,5 +63,5 @@ void GHL_CALL ApplicationBase::OnActivated() {
 }
 ///
 void GHL_CALL ApplicationBase::Release(  ) {
-
+    delete this;
 }

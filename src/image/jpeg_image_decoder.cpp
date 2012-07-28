@@ -53,14 +53,14 @@ namespace GHL {
         jmp_buf setjmp_buffer;
     };
     
-    static void ghl_jpeg_init_source (j_decompress_ptr cinfo)
+    static void ghl_jpeg_init_source (j_decompress_ptr /*cinfo*/)
     {
         // DO NOTHING
     }
     
     
     
-    static boolean ghl_jpeg_fill_input_buffer (j_decompress_ptr cinfo)
+    static boolean ghl_jpeg_fill_input_buffer (j_decompress_ptr /*cinfo*/)
     {
         // DO NOTHING
         return 1;
@@ -76,7 +76,7 @@ namespace GHL {
         }
     }
     
-    static void ghl_jpeg_term_source (j_decompress_ptr cinfo)
+    static void ghl_jpeg_term_source (j_decompress_ptr /*cinfo*/)
     {
         // DO NOTHING
     }
@@ -229,7 +229,7 @@ namespace GHL {
         return img;
     }
     
-    bool JpegDecoder::Encode( const Image* image, DataStream* ds) {
+    bool JpegDecoder::Encode( const Image* /*image*/, DataStream* /*ds*/) {
         return false;
     }
     

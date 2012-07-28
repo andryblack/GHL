@@ -26,6 +26,8 @@ class ApplicationBase : public GHL::Application {
 	virtual void GHL_CALL SetSound( GHL::Sound* sound) ;
 	///
 	virtual void GHL_CALL FillSettings( GHL::Settings* settings ) = 0;
+    /// called after window created, before first rendered
+    virtual void GHL_CALL Initialize() = 0;
 	///
 	virtual bool GHL_CALL Load() = 0;
 	///

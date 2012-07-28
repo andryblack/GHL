@@ -1,6 +1,11 @@
 SOURCES+=../common/application_base.cpp
 HEADERS+=../common/application_base.h
-LIBS+=-L../../lib -lGHL
+debug {
+    LIBS+=../../lib/libGHL-qt_d.a
+}
+!debug{
+    LIBS+=../../lib/libGHL-qt.a
+}
 CONFIG-=qt
 INCLUDEPATH+=../../include
 linux*{
@@ -8,4 +13,7 @@ linux*{
     LIBS+=-lGL -lX11
     #XF86
     LIBS+=-lXxf86vm
+}
+macx{
+    LIBS += -framework Cocoa
 }
