@@ -6,6 +6,7 @@
 #include <ghl_data.h>
 #include <ghl_image_decoder.h>
 #include <ghl_image.h>
+#include <ghl_log.h>
 #include <algorithm>
 #include <sstream>
 
@@ -135,18 +136,26 @@ bool GHL_CALL ApplicationBase::OnFrame( GHL::UInt32 usecs ) {
 
 GHL::Texture* ApplicationBase::LoadTexture(const char* fn) {
     if (!m_vfs) {
+        GHL_Log(GHL::LOG_LEVEL_ERROR,"LoadTexture no vfs");
         return 0;
     }
-    GHL::DataStream* ds = m_vfs->OpenFile(fn);
+    std::string file = m_vfs->GetDir(GHL::DIR_TYPE_DATA);
+    file+="/";
+    file+=fn;
+    GHL::DataStream* ds = m_vfs->OpenFile(file.c_str());
     if (!ds) {
+        GHL_Log(GHL::LOG_LEVEL_ERROR,"LoadTexture not open file");
         return 0;
     }
     GHL::Image* img = 0;
     if (m_image_decoder) {
         img = m_image_decoder->Decode(ds);
+    } else {
+        GHL_Log(GHL::LOG_LEVEL_ERROR,"LoadTexture no image decoder");
     }
     ds->Release();
     if (!img) {
+        GHL_Log(GHL::LOG_LEVEL_ERROR,"LoadTexture no image");
         return 0;
     }
     GHL::Texture* tex = 0;
@@ -154,6 +163,8 @@ GHL::Texture* ApplicationBase::LoadTexture(const char* fn) {
         tex = m_render->CreateTexture(img->GetWidth(),img->GetHeight(),
                                       GHL_ImageFormatToTextureFormat(img->GetFormat()),
                                       img->GetData());
+    } else {
+        GHL_Log(GHL::LOG_LEVEL_ERROR,"LoadTexture no render");
     }
     img->Release();
     return tex;

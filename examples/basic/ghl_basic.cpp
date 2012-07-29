@@ -73,7 +73,7 @@ public:
     void DrawScene() {
         m_render->Clear( 0.25f, 0.25f, 0.35f, 0);
 
-        if (m_tex_star) {
+        if (m_tex_star && !m_stars.empty() ) {
             std::vector<GHL::Vertex>    vertexes;
             std::vector<GHL::UInt16>    indexes;
             vertexes.resize(m_stars.size()*4);

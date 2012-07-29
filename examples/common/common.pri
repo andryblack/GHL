@@ -14,6 +14,9 @@ linux*{
     #XF86
     LIBS+=-lXxf86vm
 }
-macx{
+mac{
     LIBS += -framework Cocoa
+    DataFiles.files = ../data
+    DataFiles.path = Contents/Resources
+    QMAKE_BUNDLE_DATA += DataFiles
 }
