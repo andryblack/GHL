@@ -21,10 +21,10 @@
 
 #include "../vfs/vfs_cocoa.h"
 #include "../image/image_decoders.h"
-//#include "../sound/iOS/sound_iphone.h"
-#define GHL_NOSOUND
-
+#include "../sound/ghl_sound_impl.h"
 #include "../ghl_log_impl.h"
+
+extern GHL::SoundImpl* GHL_CreateSoundOpenAL();
 
 static bool g_fullscreen = false;
 static bool g_need_fullscreen = false;
@@ -440,7 +440,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 
 -(void) initSound {
 #ifndef GHL_NOSOUND
-	m_sound = new GHL::SoundIPhone();
+	m_sound = GHL_CreateSoundOpenAL();
 	if (!m_sound->SoundInit()) {
 		delete m_sound;
 		m_sound = 0;
@@ -465,7 +465,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 -(GHL::ImageDecoderImpl*) getImageDecoder {
 	return m_imageDecoder;
 }
--(GHL::SoundIPhone*) getSound {
+-(GHL::SoundImpl*) getSound {
 	return m_sound;
 }
 -(NSString*) getAppName {

@@ -54,9 +54,6 @@
 		A436FC5314AE6D2800D53CE4 /* ghl_log.h in Headers */ = {isa = PBXBuildFile; fileRef = A436FC5214AE6D2800D53CE4 /* ghl_log.h */; };
 		A436FC5714AE6D3800D53CE4 /* ghl_log_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A436FC5514AE6D3800D53CE4 /* ghl_log_impl.cpp */; };
 		A436FC5814AE6D3800D53CE4 /* ghl_log_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A436FC5614AE6D3800D53CE4 /* ghl_log_impl.h */; };
-		A466B6A0155FEABB00306582 /* ghl_data_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A466B69E155FEABB00306582 /* ghl_data_impl.cpp */; };
-		A466B6A1155FEABB00306582 /* ghl_data_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A466B69F155FEABB00306582 /* ghl_data_impl.h */; };
-		A466B6A4155FEACF00306582 /* ghl_data.h in Headers */ = {isa = PBXBuildFile; fileRef = A466B6A3155FEACF00306582 /* ghl_data.h */; };
 		A4772A4514169A8B006A9887 /* adler32.c in Sources */ = {isa = PBXBuildFile; fileRef = A4772A3214169A8B006A9887 /* adler32.c */; };
 		A4772A4614169A8B006A9887 /* crc32.c in Sources */ = {isa = PBXBuildFile; fileRef = A4772A3314169A8B006A9887 /* crc32.c */; };
 		A4772A4714169A8B006A9887 /* crc32.h in Headers */ = {isa = PBXBuildFile; fileRef = A4772A3414169A8B006A9887 /* crc32.h */; };
@@ -151,6 +148,19 @@
 		A47F7F6F14E6D253006B37E2 /* jmemsys.h in Headers */ = {isa = PBXBuildFile; fileRef = A47F7F6C14E6D253006B37E2 /* jmemsys.h */; };
 		A48293081541F81C00A9A4B8 /* jquant1.c in Sources */ = {isa = PBXBuildFile; fileRef = A47F7F1E14E6D175006B37E2 /* jquant1.c */; };
 		A482930F1541FB3C00A9A4B8 /* jquant2.c in Sources */ = {isa = PBXBuildFile; fileRef = A47F7F1F14E6D175006B37E2 /* jquant2.c */; };
+		A49E9A7A15EA40070089568B /* ghl_sound_cocoa.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A49E9A7815EA40070089568B /* ghl_sound_cocoa.cpp */; };
+		A49E9A7B15EA40070089568B /* ghl_sound_cocoa.h in Headers */ = {isa = PBXBuildFile; fileRef = A49E9A7915EA40070089568B /* ghl_sound_cocoa.h */; };
+		A4A3561F15E93F0B00835949 /* ghl_data.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A3561E15E93F0B00835949 /* ghl_data.h */; };
+		A4A3562215E93F1700835949 /* ghl_data_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4A3562015E93F1700835949 /* ghl_data_impl.cpp */; };
+		A4A3562315E93F1700835949 /* ghl_data_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A3562115E93F1700835949 /* ghl_data_impl.h */; };
+		A4A3562815E944E700835949 /* ghl_sound_decoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A3562415E944E700835949 /* ghl_sound_decoder.h */; };
+		A4A3562915E944E700835949 /* sound_decoders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4A3562515E944E700835949 /* sound_decoders.cpp */; };
+		A4A3562A15E944E700835949 /* wav_decoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4A3562615E944E700835949 /* wav_decoder.cpp */; };
+		A4A3562B15E944E700835949 /* wav_decoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A3562715E944E700835949 /* wav_decoder.h */; };
+		A4A3563015E947D600835949 /* ghl_openal.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A3562D15E947D600835949 /* ghl_openal.h */; };
+		A4A3563115E947D600835949 /* ghl_sound_openal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4A3562E15E947D600835949 /* ghl_sound_openal.cpp */; };
+		A4A3563215E947D600835949 /* ghl_sound_openal.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A3562F15E947D600835949 /* ghl_sound_openal.h */; };
+		A4A3563415E949FF00835949 /* ghl_sound_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A3563315E949FF00835949 /* ghl_sound_impl.h */; };
 		A4EDFDC714169DCD00ED0DC0 /* png_image_decoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFDC514169DCD00ED0DC0 /* png_image_decoder.cpp */; };
 		A4EDFDC814169DCD00ED0DC0 /* png_image_decoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EDFDC614169DCD00ED0DC0 /* png_image_decoder.h */; };
 		A4EDFEC91416B14B00ED0DC0 /* pngread.c in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFEC81416B14B00ED0DC0 /* pngread.c */; };
@@ -216,9 +226,6 @@
 		A436FC5214AE6D2800D53CE4 /* ghl_log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_log.h; sourceTree = "<group>"; };
 		A436FC5514AE6D3800D53CE4 /* ghl_log_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ghl_log_impl.cpp; sourceTree = "<group>"; };
 		A436FC5614AE6D3800D53CE4 /* ghl_log_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_log_impl.h; sourceTree = "<group>"; };
-		A466B69E155FEABB00306582 /* ghl_data_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ghl_data_impl.cpp; path = ../../odissey_ipad_src/GHL/src/ghl_data_impl.cpp; sourceTree = "<group>"; };
-		A466B69F155FEABB00306582 /* ghl_data_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ghl_data_impl.h; path = ../../odissey_ipad_src/GHL/src/ghl_data_impl.h; sourceTree = "<group>"; };
-		A466B6A3155FEACF00306582 /* ghl_data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ghl_data.h; path = ../../odissey_ipad_src/GHL/include/ghl_data.h; sourceTree = "<group>"; };
 		A4772A3214169A8B006A9887 /* adler32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = adler32.c; sourceTree = "<group>"; };
 		A4772A3314169A8B006A9887 /* crc32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = crc32.c; sourceTree = "<group>"; };
 		A4772A3414169A8B006A9887 /* crc32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crc32.h; sourceTree = "<group>"; };
@@ -315,6 +322,19 @@
 		A47F7F6A14E6D253006B37E2 /* jdct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jdct.h; path = jpeg/jdct.h; sourceTree = "<group>"; };
 		A47F7F6B14E6D253006B37E2 /* jmemnobs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jmemnobs.c; path = jpeg/jmemnobs.c; sourceTree = "<group>"; };
 		A47F7F6C14E6D253006B37E2 /* jmemsys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jmemsys.h; path = jpeg/jmemsys.h; sourceTree = "<group>"; };
+		A49E9A7815EA40070089568B /* ghl_sound_cocoa.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ghl_sound_cocoa.cpp; sourceTree = "<group>"; };
+		A49E9A7915EA40070089568B /* ghl_sound_cocoa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_sound_cocoa.h; sourceTree = "<group>"; };
+		A4A3561E15E93F0B00835949 /* ghl_data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_data.h; sourceTree = "<group>"; };
+		A4A3562015E93F1700835949 /* ghl_data_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ghl_data_impl.cpp; sourceTree = "<group>"; };
+		A4A3562115E93F1700835949 /* ghl_data_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_data_impl.h; sourceTree = "<group>"; };
+		A4A3562415E944E700835949 /* ghl_sound_decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_sound_decoder.h; sourceTree = "<group>"; };
+		A4A3562515E944E700835949 /* sound_decoders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sound_decoders.cpp; sourceTree = "<group>"; };
+		A4A3562615E944E700835949 /* wav_decoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = wav_decoder.cpp; sourceTree = "<group>"; };
+		A4A3562715E944E700835949 /* wav_decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wav_decoder.h; sourceTree = "<group>"; };
+		A4A3562D15E947D600835949 /* ghl_openal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_openal.h; sourceTree = "<group>"; };
+		A4A3562E15E947D600835949 /* ghl_sound_openal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ghl_sound_openal.cpp; sourceTree = "<group>"; };
+		A4A3562F15E947D600835949 /* ghl_sound_openal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_sound_openal.h; sourceTree = "<group>"; };
+		A4A3563315E949FF00835949 /* ghl_sound_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_sound_impl.h; sourceTree = "<group>"; };
 		A4EDFDC514169DCD00ED0DC0 /* png_image_decoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = png_image_decoder.cpp; sourceTree = "<group>"; };
 		A4EDFDC614169DCD00ED0DC0 /* png_image_decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = png_image_decoder.h; sourceTree = "<group>"; };
 		A4EDFEC81416B14B00ED0DC0 /* pngread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngread.c; sourceTree = "<group>"; };
@@ -375,7 +395,7 @@
 		A429007A1413948E00429C47 /* include */ = {
 			isa = PBXGroup;
 			children = (
-				A466B6A3155FEACF00306582 /* ghl_data.h */,
+				A4A3561E15E93F0B00835949 /* ghl_data.h */,
 				A436FC5214AE6D2800D53CE4 /* ghl_log.h */,
 				A429007B1413948E00429C47 /* ghl_api.h */,
 				A429007C1413948E00429C47 /* ghl_application.h */,
@@ -401,8 +421,8 @@
 		A42900991413949B00429C47 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				A466B69E155FEABB00306582 /* ghl_data_impl.cpp */,
-				A466B69F155FEABB00306582 /* ghl_data_impl.h */,
+				A4A3562015E93F1700835949 /* ghl_data_impl.cpp */,
+				A4A3562115E93F1700835949 /* ghl_data_impl.h */,
 				A436FC5514AE6D3800D53CE4 /* ghl_log_impl.cpp */,
 				A436FC5614AE6D3800D53CE4 /* ghl_log_impl.h */,
 				A41D523214DEB90B008B50E8 /* ghl_ref_counter_impl.h */,
@@ -471,6 +491,14 @@
 		A42900BA1413949B00429C47 /* sound */ = {
 			isa = PBXGroup;
 			children = (
+				A49E9A7815EA40070089568B /* ghl_sound_cocoa.cpp */,
+				A49E9A7915EA40070089568B /* ghl_sound_cocoa.h */,
+				A4A3562C15E947D600835949 /* openal */,
+				A4A3562415E944E700835949 /* ghl_sound_decoder.h */,
+				A4A3562515E944E700835949 /* sound_decoders.cpp */,
+				A4A3562615E944E700835949 /* wav_decoder.cpp */,
+				A4A3562715E944E700835949 /* wav_decoder.h */,
+				A4A3563315E949FF00835949 /* ghl_sound_impl.h */,
 			);
 			path = sound;
 			sourceTree = "<group>";
@@ -628,6 +656,16 @@
 			path = dynamic;
 			sourceTree = "<group>";
 		};
+		A4A3562C15E947D600835949 /* openal */ = {
+			isa = PBXGroup;
+			children = (
+				A4A3562D15E947D600835949 /* ghl_openal.h */,
+				A4A3562E15E947D600835949 /* ghl_sound_openal.cpp */,
+				A4A3562F15E947D600835949 /* ghl_sound_openal.h */,
+			);
+			path = openal;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -703,8 +741,14 @@
 				A47F7F6414E6D1BB006B37E2 /* dynamic_gl_subset.h in Headers */,
 				A47F7F6D14E6D253006B37E2 /* jdct.h in Headers */,
 				A47F7F6F14E6D253006B37E2 /* jmemsys.h in Headers */,
-				A466B6A1155FEABB00306582 /* ghl_data_impl.h in Headers */,
-				A466B6A4155FEACF00306582 /* ghl_data.h in Headers */,
+				A4A3561F15E93F0B00835949 /* ghl_data.h in Headers */,
+				A4A3562315E93F1700835949 /* ghl_data_impl.h in Headers */,
+				A4A3562815E944E700835949 /* ghl_sound_decoder.h in Headers */,
+				A4A3562B15E944E700835949 /* wav_decoder.h in Headers */,
+				A4A3563015E947D600835949 /* ghl_openal.h in Headers */,
+				A4A3563215E947D600835949 /* ghl_sound_openal.h in Headers */,
+				A4A3563415E949FF00835949 /* ghl_sound_impl.h in Headers */,
+				A49E9A7B15EA40070089568B /* ghl_sound_cocoa.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -849,7 +893,11 @@
 				A47F7F6E14E6D253006B37E2 /* jmemnobs.c in Sources */,
 				A48293081541F81C00A9A4B8 /* jquant1.c in Sources */,
 				A482930F1541FB3C00A9A4B8 /* jquant2.c in Sources */,
-				A466B6A0155FEABB00306582 /* ghl_data_impl.cpp in Sources */,
+				A4A3562215E93F1700835949 /* ghl_data_impl.cpp in Sources */,
+				A4A3562915E944E700835949 /* sound_decoders.cpp in Sources */,
+				A4A3562A15E944E700835949 /* wav_decoder.cpp in Sources */,
+				A4A3563115E947D600835949 /* ghl_sound_openal.cpp in Sources */,
+				A49E9A7A15EA40070089568B /* ghl_sound_cocoa.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

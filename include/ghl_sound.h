@@ -17,6 +17,7 @@
 namespace GHL {
 	
 	struct DataStream;
+    struct Data;
 	
 	enum SampleType {
 		SAMPLE_TYPE_UNKNOWN,
@@ -37,40 +38,45 @@ namespace GHL {
         virtual UInt32 GHL_CALL ReadSamples(UInt32 samples, Byte* buffer) = 0;
         /// restart reading
         virtual void GHL_CALL Reset() = 0;
+        /// read all
+        virtual Data* GHL_CALL GetAllSamples() = 0;
     };
 	
-	struct SamplesBuffer : RefCounter {
-		virtual SampleType GHL_CALL GetSampleType() const = 0;
-		virtual UInt32 GHL_CALL GetCapacity() const = 0;
-		virtual UInt32 GHL_CALL GetFrequency() const = 0;
-	};
-	
-	struct SoundChannel : RefCounter {
-		virtual SampleType GHL_CALL GetSampleType() const = 0;
-		virtual UInt32 GHL_CALL GetFrequency() const = 0;
-		virtual bool GHL_CALL IsPlaying() const = 0;
-		virtual void GHL_CALL Play(bool loop) = 0;
-		virtual void GHL_CALL Pause() = 0;
-		virtual void GHL_CALL Stop() = 0;
-		virtual void GHL_CALL SetVolume(float val) = 0;
-	};
+    struct SoundEffect : RefCounter {
+        /// sample type
+        virtual SampleType GHL_CALL GetSampleType() const = 0;
+        /// samples rate
+        virtual UInt32 GHL_CALL GetFrequency() const = 0;
+        /// samples amount
+        virtual UInt32 GHL_CALL GetSamplesAmount() const = 0;
+    };
+    
+    struct SoundInstance : RefCounter {
+        /// set volume (0-100)
+        virtual void GHL_CALL SetVolume( float vol ) = 0;
+        /// set pan (-100..0..+100)
+        virtual void GHL_CALL SetPan( float pan ) = 0;
+        /// stop
+        virtual void GHL_CALL Stop() = 0;
+    };
+    
+    struct MusicInstance : SoundInstance {
+        /// pause
+        virtual void GHL_CALL Pause() = 0;
+        /// resume
+        virtual void GHL_CALL Resume() = 0;
+        /// play
+        virtual void GHL_CALL Play( bool loop ) = 0;
+    };
 	
 	struct Sound {
-		/// create samples buffer
-		/**
-		 * @arg type type of samples
-		 * @arg size capacity of buffer in samples 
-		 * @arg freq frequency in hetz
-		 * @arg data data pointer
-		 */
-		virtual SamplesBuffer* GHL_CALL CreateBuffer(SampleType type,UInt32 size,UInt32 freq,const Byte* data) = 0;
-		/// load samples buffer
-		virtual SamplesBuffer* GHL_CALL LoadBuffer(DataStream* stream,SampleType resample = SAMPLE_TYPE_UNKNOWN,UInt32 refreq = 0) = 0;
-		/// create channel
-		virtual SoundChannel* GHL_CALL CreateChannel(SampleType type,UInt32 freq) = 0;
-		virtual void GHL_CALL ChannelClear(SoundChannel* channel) = 0;
-		virtual void GHL_CALL ChannelAddBuffer(SoundChannel* channe,SamplesBuffer* buffer) = 0;
-	};
+        /// create sound effect from data
+        virtual SoundEffect* GHL_CALL CreateEffect( SampleType type, UInt32 freq, Data* data ) = 0;
+        /// play effect
+        virtual void GHL_CALL PlayEffect( SoundEffect* effect , float vol = 100.0f, float pan=0.0f, SoundInstance** instance = 0);
+        /// open music
+        virtual MusicInstance* GHL_CALL OpenMusic( GHL::DataStream* file ) = 0;
+    };
 	
 }
 

@@ -9,11 +9,12 @@
 
 #include "ghl_sound_openal.h"
 #include "../../ghl_log_impl.h"
+#include "../ghl_sound_decoder.h"
 #include <cassert>
 
 namespace GHL {
 
-    static const char* MODULE = "SOUND";
+    static const char* MODULE = "SOUND:OpenAL";
     
 #define CHECK_ERROR  do { ALenum err = alGetError(); if (err!=AL_NO_ERROR) { \
 		LOG_ERROR(  __FUNCTION__ << " :" << alGetString(err) ); \
@@ -35,75 +36,144 @@ namespace GHL {
 	}
 
 	
-	SamplesBufferOpenAL::SamplesBufferOpenAL(SampleType type,UInt32 size,UInt32 freq) : SamplesBufferImpl(type, size, freq) {
-		alGenBuffers(1, &m_name);
+	SoundEffectOpenAL::SoundEffectOpenAL(SampleType type, UInt32 freq)  : SoundEffectImpl(type,freq){
+		alGenBuffers(1, &m_buffer);
 		CHECK_ERROR;
 	}
-	SamplesBufferOpenAL::~SamplesBufferOpenAL() {
-		alDeleteBuffers(1, &m_name);
+	SoundEffectOpenAL::~SoundEffectOpenAL() {
+		alDeleteBuffers(1, &m_buffer);
 	}
 	
-	void GHL_CALL SamplesBufferOpenAL::SetData(const Byte* data) {
-  		alBufferData(m_name, convert_format(GetSampleType()), data, GetCapacity()*SoundImpl::SampleSize(GetSampleType()), GetFrequency());
+	void SoundEffectOpenAL::SetData(const Byte* data, UInt32 bytes ) {
+        SetCapacity(bytes/SoundDecoderBase::GetBps(GetSampleType()));
+  		alBufferData(m_buffer,
+                     convert_format(GetSampleType()),
+                     data,
+                     GetSamplesAmount()*SoundDecoderBase::GetBps(GetSampleType()),
+                     GetFrequency());
 		CHECK_ERROR;
 	}
+	class SoundInstanceOpenAL;
+    class SoundChannelOpenAL {
+    private:
+        ALuint  m_source;
+        ALuint  m_buffer;
+        SoundInstanceOpenAL*   m_instance;
+    public:
+        SoundChannelOpenAL( ALuint source );
+        ~SoundChannelOpenAL();
+        bool IsPlaying() const;
+        void Play(bool loop);
+        void Pause();
+        void Stop();
+        void SetVolume( float val );
+        void SetPan( float pan );
+        void Clear();
+        void SetBuffer(ALuint buff);
+        void SetInstance(SoundInstanceOpenAL* instance);
+    };
+    class SoundInstanceOpenAL: public RefCounterImpl<SoundInstance> {
+    private:
+        SoundChannelOpenAL* m_channel;
+    public:
+        SoundInstanceOpenAL( SoundChannelOpenAL* channel ) : m_channel(channel) {
+            
+        }
+        void Reset() {
+            m_channel = 0;
+        }
+        /// set volume (0-100)
+        virtual void GHL_CALL SetVolume( float vol ) {
+            if (m_channel) {
+                m_channel->SetVolume(vol);
+            }
+        }
+        /// set pan (-100..0..+100)
+        virtual void GHL_CALL SetPan( float pan ) {
+            if (m_channel) {
+                m_channel->SetPan(pan);
+            }
+        }
+        /// stop
+        virtual void GHL_CALL Stop() {
+            if (m_channel) {
+                m_channel->Stop();
+            }
+        }
+    };
 	
-	
-	SoundChannelOpenAL::SoundChannelOpenAL(ALuint source,SampleType type,UInt32 freq) : m_source(source), m_type(type),m_freq(freq){
+	SoundChannelOpenAL::SoundChannelOpenAL(ALuint source) : m_source(source),m_buffer(0){
+        m_instance = 0;
 	}
 	
 	SoundChannelOpenAL::~SoundChannelOpenAL() {
+        if (m_instance) {
+            m_instance->Release();
+        }
 		alSourceStop(m_source);
 		alDeleteSources(1, &m_source);
 		CHECK_ERROR;
 	}
 	
 	
-	bool GHL_CALL SoundChannelOpenAL::IsPlaying() const {
+	bool SoundChannelOpenAL::IsPlaying() const {
 		ALenum state = AL_UNDETERMINED;
 		alGetSourcei(m_source, AL_SOURCE_STATE, &state);
 		return state == AL_PLAYING;
 	}
 	
-	void GHL_CALL SoundChannelOpenAL::Play(bool loop)  {
+	void SoundChannelOpenAL::Play(bool loop)  {
 		alSourcei(m_source, AL_LOOPING, loop ? AL_TRUE : AL_FALSE);
 		alSourcePlay(m_source);
 		CHECK_ERROR;
 	}
 	
-	void GHL_CALL SoundChannelOpenAL::Pause() {
+	void SoundChannelOpenAL::Pause() {
 		alSourcePause(m_source);
 	}
 	
-	void GHL_CALL SoundChannelOpenAL::Stop() {
+	void SoundChannelOpenAL::Stop() {
 		alSourceStop(m_source);
 		alSourceRewind(m_source);
 	}
 	
-	void GHL_CALL SoundChannelOpenAL::SetVolume(float val) {
-		alSourcef(m_source, AL_GAIN, val);
+	void SoundChannelOpenAL::SetVolume(float val) {
+		alSourcef(m_source, AL_GAIN, val / 100.0f );
 	}
+    
+    void SoundChannelOpenAL::SetPan( float pan ) {
+        alSource3f(m_source, AL_POSITION, pan/100.0f, 0.0f, 0.0f);
+    }
 	
 	
 	void SoundChannelOpenAL::Clear() {
+        if (m_instance) {
+            m_instance->Reset();
+            m_instance = 0;
+        }
 		alSourceStop(m_source);
 		CHECK_ERROR_F(alSourceStop);
-		alSourceUnqueueBuffers(m_source, ALuint(m_buffers.size()), &m_buffers.front());
-		CHECK_ERROR_F(alSourceUnqueueBuffers);
-		m_buffers.clear();
+        if (m_buffer) {
+            alSourcei(m_source, AL_BUFFER, 0);
+            m_buffer = 0;
+        }
+    }
+	
+	void SoundChannelOpenAL::SetBuffer(ALuint buffer) {
+        if (m_buffer!=0)
+            Clear();
+        alSourcei(m_source, AL_BUFFER, buffer);
+	    m_buffer = buffer;
 		CHECK_ERROR;
 	}
+    
+    void SoundChannelOpenAL::SetInstance(SoundInstanceOpenAL* instance) {
+        if (m_instance) {
+            m_instance->Reset();
+        }
+        m_instance = instance;
+    }
 	
-	void SoundChannelOpenAL::AddBuffer(SamplesBufferOpenAL* buf) {
-		ALuint buf_name = buf->name();
-		alSourceQueueBuffers(m_source, 1, &buf_name);
-		m_buffers.push_back(buf_name);
-		CHECK_ERROR;
-	}
-	
-	void SoundChannelOpenAL::Update() {
-		
-	}
 	
 	SoundOpenAL::SoundOpenAL() {
 		m_device = 0;
@@ -114,13 +184,12 @@ namespace GHL {
 	}
 	
 	bool SoundOpenAL::SoundInit() {
-		LOG_INFO("SoundOpenAL::SoundInit");
+		LOG_INFO("SoundInit");
 		m_device = alcOpenDevice(NULL);
 		if (!m_device) {
 			LOG_ERROR( "error opening default device" );
 			return false;
 		}
-		
 		
 		m_context = alcCreateContext(m_device, 0);
 		if (!m_context) {
@@ -152,8 +221,13 @@ namespace GHL {
 		return true;
 	}
 	
-	void SoundOpenAL::SoundDone() {
+    void SoundOpenAL::SoundDone() {
 		LOG_INFO( "SoundOpenAL::SoundDone" );
+        for (size_t i=0;i<m_channels.size();i++) {
+            delete m_channels[i];
+        }
+        LOG_INFO("released " << m_channels.size() << " channels");
+        m_channels.clear();
 		if (m_context) {
 			alcSuspendContext(m_context);
 			alcMakeContextCurrent(0);
@@ -166,39 +240,49 @@ namespace GHL {
 		}
 	}
 	
-	SamplesBuffer* GHL_CALL SoundOpenAL::CreateBuffer(SampleType type,UInt32 size,UInt32 freq,const Byte* data) {
-		SamplesBufferOpenAL* buf = new SamplesBufferOpenAL(type,size,freq);
-		buf->SetData(data);
-		return buf;
-	}
-	
-	SoundChannel* GHL_CALL SoundOpenAL::CreateChannel(SampleType type,UInt32 freq) {
-		CHECK_ERROR_F(begforealGenSources);
+    SoundChannelOpenAL* SoundOpenAL::CreateChannel() {
+        CHECK_ERROR_F(begforealGenSources);
 		ALuint source = 0;
 		alGetError();
 		alGenSources(1, &source);
 		if (alGetError()!=AL_NO_ERROR)
 			return 0;
-		return new SoundChannelOpenAL(source,type,freq);
-	}
+		SoundChannelOpenAL* channel = new SoundChannelOpenAL(source);
+        m_channels.push_back(channel);
+        return channel;
+    }
+    
+	SoundChannelOpenAL* SoundOpenAL::GetChannel() {
+        SoundChannelOpenAL* channel = CreateChannel();
+        return channel;
+    }
+        
+    /// create sound effect from data
+    SoundEffect* SoundOpenAL::CreateEffect( SampleType type, UInt32 freq, Data* data ) {
+        SoundEffectOpenAL* effect = new SoundEffectOpenAL(type,freq);
+        if (data) {
+            effect->SetData(data->GetData(), data->GetSize());
+        }
+        return effect;
+    }
+    /// play effect
+    void SoundOpenAL::PlayEffect( SoundEffect* effect_ , float vol , float pan, SoundInstance** instance ) {
+        if (!effect_) return;
+        SoundChannelOpenAL* channel = GetChannel();
+        if (!channel) return;
+        SoundEffectOpenAL* effect = static_cast<SoundEffectOpenAL*>(effect_);
+        channel->SetBuffer(effect->buffer());
+        channel->SetVolume(vol);
+        channel->SetPan(pan);
+        channel->Play(false);
+        if (instance) {
+            SoundInstanceOpenAL* inst = new SoundInstanceOpenAL(channel);
+            channel->SetInstance(inst);
+            *instance = inst;
+        }
+    }
+
+    
 	
-	void GHL_CALL SoundOpenAL::ChannelClear(SoundChannel* channel) {
-		SoundChannelOpenAL* ch = static_cast<SoundChannelOpenAL*> (channel);
-		if (ch) {
-			ch->Clear();
-		}
-	}
-	
-	void GHL_CALL SoundOpenAL::ChannelAddBuffer(SoundChannel* channel,SamplesBuffer* buffer) {
-		SoundChannelOpenAL* ch = static_cast<SoundChannelOpenAL*> (channel);
-		SamplesBufferOpenAL* buf = static_cast<SamplesBufferOpenAL*> (buffer);
-		if (buf->GetFrequency()!=ch->GetFrequency()) {
-			LOG_ERROR( "freq not equal " << ch->GetFrequency() << " <- " << buf->GetFrequency() );
-		}
-		if (ch && buf) {
-			ch->AddBuffer(buf);
-		}
-		CHECK_ERROR;
-	}
 
 }

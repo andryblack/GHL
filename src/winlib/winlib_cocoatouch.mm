@@ -18,7 +18,7 @@
 #include "ghl_system.h"
 #include "../ghl_log_impl.h"
 
-#include "../sound/openal/ghl_sound_openal.h"
+#include "../sound/ghl_sound_impl.h"
 #include "../vfs/vfs_cocoa.h"
 #include "../image/image_decoders.h"
 
@@ -34,6 +34,10 @@ static GHL::Application* g_application = 0;
 static UIInterfaceOrientation g_orientation = UIInterfaceOrientationLandscapeLeft;
 static bool g_orientationLocked = false;
 static bool g_retina_enabled = false;
+
+#ifndef GHL_NOSOUND
+extern GHL::SoundImpl* GHL_CreateSoundCocoa();
+#endif
 
 namespace GHL {
 	extern UInt32 g_default_renderbuffer;
@@ -95,7 +99,7 @@ static const size_t max_touches = 10;
     GLint m_backingWidth;
     GLint m_backingHeight;
 	GHL::ImageDecoderImpl* m_imageDecoder;
-	GHL::SoundOpenAL*	m_sound;
+	GHL::SoundImpl*	m_sound;
 	NSString*	m_appName;
 	GHL::RenderOpenGL* m_render;
 	NSTimer*	m_timer;
@@ -252,7 +256,7 @@ public:
 		
 		m_sound = 0;
 #ifndef GHL_NO_SOUND
-		m_sound = new GHL::SoundOpenAL();
+		m_sound = GHL_CreateSoundCocoa();
 		if (!m_sound->SoundInit()) {
 			delete m_sound;
 			m_sound = 0;

@@ -24,8 +24,12 @@
 #include <ghl_data_stream.h>
 #include "ghl_sound_decoder.h"
 #ifndef GHL_NO_SOUND
+#if defined( GHL_PLATFORM_MAC )
+#define GHL_USE_WAV_DECODER
+#else
 #define GHL_USE_WAV_DECODER
 #define GHL_USE_VORBIS_DECODER
+#endif
 
 #ifdef GHL_USE_WAV_DECODER
 #include "wav_decoder.h"
@@ -34,6 +38,7 @@
 #include "vorbis_decoder.h"
 #endif
 #endif
+
 namespace GHL
 {
     

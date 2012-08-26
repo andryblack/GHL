@@ -26,6 +26,7 @@
 #include <ghl_types.h>
 #include <ghl_sound.h>
 #include "../ghl_ref_counter_impl.h"
+#include "../ghl_data_impl.h"
 
 namespace GHL
 {
@@ -42,12 +43,29 @@ namespace GHL
 		public:
             explicit SoundDecoderBase(DataStream* ds);
             virtual ~SoundDecoderBase();
+            /// bps
+            static UInt32 GetBps(SampleType type) {
+                if (type == SAMPLE_TYPE_MONO_8) return 1;
+                if (type == SAMPLE_TYPE_MONO_16) return 2;
+                if (type == SAMPLE_TYPE_STEREO_8) return 2;
+                if (type == SAMPLE_TYPE_STEREO_16) return 4;
+                return 0;
+            }
             /// sample type
             virtual SampleType GHL_CALL GetSampleType() const { return m_type; }
             /// samples rate
             virtual UInt32 GHL_CALL GetFrequency() const { return m_freq; } 
             /// samples amount
             virtual UInt32 GHL_CALL GetSamplesAmount() const { return m_samples; }
+            /// all samples
+            virtual Data* GHL_CALL GetAllSamples() {
+                UInt32 dataSize = GetBps(GetSampleType())*GetSamplesAmount();
+                if (!dataSize) return 0;
+                Reset();
+                DataImpl* data = new DataImpl(dataSize);
+                ReadSamples(GetSamplesAmount(),data->GetDataPtr());
+                return data;
+            }
     };
 }
 
