@@ -73,7 +73,7 @@ namespace GHL {
         /// create sound effect from data
         virtual SoundEffect* GHL_CALL CreateEffect( SampleType type, UInt32 freq, Data* data ) = 0;
         /// play effect
-        virtual void GHL_CALL PlayEffect( SoundEffect* effect , float vol = 100.0f, float pan=0.0f, SoundInstance** instance = 0);
+        virtual void GHL_CALL PlayEffect( SoundEffect* effect , float vol = 100.0f, float pan=0.0f, SoundInstance** instance = 0) = 0;
         /// open music
         virtual MusicInstance* GHL_CALL OpenMusic( GHL::DataStream* file ) = 0;
     };

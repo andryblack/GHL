@@ -84,7 +84,7 @@ public:
                 float x = it->x;
                 float y = it->y;
                 float size = it->size;
-                GHL::Byte a = it->alpha * 255;
+                GHL::Byte a = GHL::Byte( it->alpha * 255 );
 
                 vertexes[v_index+0].x = x - size;
                 vertexes[v_index+0].y = y - size;
@@ -156,8 +156,8 @@ public:
     virtual void GHL_CALL OnMouseDown( GHL::MouseButton btn, GHL::Int32 x, GHL::Int32 y)  {
         ApplicationBase::OnMouseDown(btn,x,y);
         StarState star;
-        star.x = x;
-        star.y = y;
+        star.x = float(x);
+        star.y = float(y);
         star.size = 10;
         star.angle = 0;
         star.alpha = 1;
@@ -166,7 +166,12 @@ public:
 };
 
 
-#if defined( GHL_PLATFORM_WIN32 )
+#if defined( GHL_PLATFORM_WIN )
+#include <windows.h>
+int WINAPI WinMain(HINSTANCE /*hInst*/,HINSTANCE /*hPrev*/,LPSTR /*cmdLine*/,int /*showCmd*/) {
+	int res =  GHL_StartApplication(new Application(),0,0);
+	return res;
+}
 #elif defined( GHL_PLATFORM_ANDROID )
 extern "C" __attribute__ ((visibility ("default"))) int ghl_android_app_main(int argc,char** argv) {
     Application* app = new Application;

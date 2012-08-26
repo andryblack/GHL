@@ -120,7 +120,7 @@ namespace GHL {
         ConstInlinedData data((const Byte*)lucida_console_regular_8_data,size);
         
         m_sfont_texture = CreateTexture(lucida_console_regular_8_width,lucida_console_regular_8_height,TEXTURE_FORMAT_RGBA,&data);
-        return m_sfont_texture;
+        return m_sfont_texture != 0;
     }
 	
 	

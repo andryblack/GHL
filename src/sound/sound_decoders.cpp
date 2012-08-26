@@ -26,6 +26,8 @@
 #ifndef GHL_NO_SOUND
 #if defined( GHL_PLATFORM_MAC )
 #define GHL_USE_WAV_DECODER
+#elif defined( GHL_PLATFORM_WIN )
+#define GHL_USE_WAV_DECODER
 #else
 #define GHL_USE_WAV_DECODER
 #define GHL_USE_VORBIS_DECODER

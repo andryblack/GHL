@@ -36,7 +36,7 @@ namespace GHL {
     
     class SoundImpl : public Sound {
     public:
-        virtual ~SoundImpl();
+		virtual ~SoundImpl() {}
         virtual bool SoundInit() { return true; }
         virtual bool SoundDone() { return true;}
     };

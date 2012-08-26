@@ -1,5 +1,8 @@
 #ifndef GHL_NO_SOUND
 #include "ghl_sound_dsound.h"
+#include "../ghl_sound_decoder.h"
+#include "../../ghl_log_impl.h"
+#include <ghl_data.h>
 #include <iostream>
 #include <cassert>
 #include <algorithm>
@@ -11,6 +14,18 @@ namespace GHL {
 	const int sampleRate = 44100;
 
 
+	static const char* MODULE = "SOUND:DS";
+    
+
+	SoundEffectDSound::SoundEffectDSound( LPDIRECTSOUNDBUFFER buf,SampleType type,UInt32 freq,UInt32 size )
+		: SoundEffectImpl(type,freq),m_IDSBuffer(buf)
+	{
+		SetCapacity(size);
+	}
+	SoundEffectDSound::~SoundEffectDSound() {
+		m_IDSBuffer->Release();
+	}
+#if 0
 	SoundChannelDSound::SoundChannelDSound(SoundDSound* parent,LPDIRECTSOUNDBUFFER buf,SampleType type,UInt32 freq) :
 		m_parent(parent),m_IDSBuffer(buf),m_type(type),m_freq(freq){
 			m_paused = true;
@@ -29,9 +44,6 @@ namespace GHL {
 	}
 
 
-	void GHL_CALL SoundChannelDSound::Release() {
-		m_parent->ReleaseChannel(this);
-	}
 	bool GHL_CALL SoundChannelDSound::IsPlaying() const {
 		if (m_IDSBuffer==0) return false;
 		DWORD status;
@@ -212,7 +224,24 @@ namespace GHL {
 		}
 	}
 
+#endif
 
+	static HRESULT SetBufferData( IDirectSoundBuffer *pdsBuffer, Data* data ) {
+		Byte *pPtr1 = 0;
+		DWORD dwSize1 = 0;
+		HRESULT hr = pdsBuffer->Lock(0, 0, reinterpret_cast<void**>(&pPtr1), &dwSize1, 0, 0, DSBLOCK_ENTIREBUFFER);
+			
+		if (SUCCEEDED(hr))
+		{
+				UInt32 size = dwSize1<data->GetSize()?dwSize1:data->GetSize();
+				if (pPtr1)
+				{
+					memcpy(pPtr1,data->GetData(),size);
+				}
+				hr = pdsBuffer->Unlock(pPtr1, dwSize1, 0, 0);
+		}
+		return hr;
+	}
 
 	SoundDSound::SoundDSound() : m_IDS(0),m_IDSBPrimary(0) {
 		m_library = 0;
@@ -224,41 +253,42 @@ namespace GHL {
 	typedef HRESULT ( WINAPI * DirectSoundCreate8_Func ) (LPCGUID pcGuidDevice, LPDIRECTSOUND8 *ppDS8, LPUNKNOWN pUnkOuter );
 
 	bool SoundDSound::SoundInit(HWND hwnd) {
+		if (!SoundImpl::SoundInit()) return false;
 		m_library = LoadLibrary( TEXT("dsound.dll") );
 		if (!m_library) {
-			std::cout << "[SOUND] error loading dsound.dll" << std::endl;
+			LOG_ERROR( "failed loading dsound.dll" );
 			return false;
 		}
 		DirectSoundCreate8_Func func = (DirectSoundCreate8_Func)(GetProcAddress(m_library, "DirectSoundCreate8"));
 		if (!func) {
-			std::cout << "[SOUND] error dsound.dll not have entry point DirectSoundCreate8" << std::endl;
+			LOG_ERROR( "dsound.dll not have entry point DirectSoundCreate8" );
 			return false;
 		}
 		HRESULT hr = 0; 
 		if (FAILED(hr = func(NULL, &m_IDS, NULL))) { 
-			std::cout << "[SOUND] error create DirectSound8 interface" << std::endl;
+			LOG_ERROR( "create DirectSound8 interface failed" );
 			return false;
 		}
 
 		if ((SUCCEEDED(hr = m_IDS->SetCooperativeLevel(hwnd, DSSCL_PRIORITY))) && 
 			(SUCCEEDED(InitPrimaryBuffer()) ) )
 		{
-			std::cout << "[SOUND] DS: primary buffer in priority mode" << std::endl;
+			LOG_INFO( "primary buffer in priority mode" );
 			WAVEFORMATEX format;
 			if (SUCCEEDED(hr = m_IDSBPrimary->GetFormat(&format,sizeof(format),0)))
 			{
-				std::cout << "[SOUND] DS: primary buffer format : " << static_cast<int>(format.wBitsPerSample)
+				LOG_INFO( "primary buffer format : " << static_cast<int>(format.wBitsPerSample)
 						<< " bps, " << static_cast<int>(format.nChannels) 
-						<< " channels, "<< static_cast<int>(format.nSamplesPerSec) <<" Hz" << std::endl;
+						<< " channels, "<< static_cast<int>(format.nSamplesPerSec) <<" Hz" );
 			}
 		} else {
 			
 			
 			if (SUCCEEDED(hr = m_IDS->SetCooperativeLevel(hwnd, DSSCL_NORMAL))) {
-				std::cout << "[SOUND] DS: primary buffer in normal mode" << std::endl;
+				LOG_INFO( "primary buffer in normal mode" );
 			} else
 			{
-				std::cout << "[SOUND] DS error init primary buffer" << std::endl;
+				LOG_ERROR("failed init primary buffer");
 				return false;
 			}
 		}
@@ -271,13 +301,13 @@ namespace GHL {
 		caps.dwSize = sizeof(caps);
 		if (SUCCEEDED(hr = m_IDS->GetCaps(&caps)))
 		{
-			std::cout << "[SOUND] DS: primary support 8bps     : " << ( ( caps.dwFlags & DSCAPS_PRIMARY8BIT ) ? "yes" : "no" ) << std::endl;
-			std::cout << "[SOUND] DS: primary support 16bps    : " << (( caps.dwFlags & DSCAPS_PRIMARY16BIT ) ? "yes" : "no") << std::endl;
-			std::cout << "[SOUND] DS: primary support stereo   : " << (( caps.dwFlags & DSCAPS_PRIMARYSTEREO  ) ? "yes" : "no") << std::endl;
+			LOG_INFO( "primary support 8bps     : " << ( ( caps.dwFlags & DSCAPS_PRIMARY8BIT ) ? "yes" : "no" ) );
+			LOG_INFO( "primary support 16bps    : " << (( caps.dwFlags & DSCAPS_PRIMARY16BIT ) ? "yes" : "no") );
+			LOG_INFO( "primary support stereo   : " << (( caps.dwFlags & DSCAPS_PRIMARYSTEREO  ) ? "yes" : "no") );
 	
-			std::cout << "[SOUND] DS: secondary support 8bps   : " << (( caps.dwFlags & DSCAPS_SECONDARY8BIT ) ? "yes" : "no") << std::endl;
-			std::cout << "[SOUND] DS: secondary support 16bps  : " << (( caps.dwFlags & DSCAPS_SECONDARY16BIT ) ? "yes" : "no") << std::endl;
-			std::cout << "[SOUND] DS: secondary support stereo : " << (( caps.dwFlags & DSCAPS_SECONDARYSTEREO  ) ? "yes" : "no") << std::endl;
+			LOG_INFO( "secondary support 8bps   : " << (( caps.dwFlags & DSCAPS_SECONDARY8BIT ) ? "yes" : "no") );
+			LOG_INFO( "secondary support 16bps  : " << (( caps.dwFlags & DSCAPS_SECONDARY16BIT ) ? "yes" : "no") );
+			LOG_INFO( "secondary support stereo : " << (( caps.dwFlags & DSCAPS_SECONDARYSTEREO  ) ? "yes" : "no") );
 			
 		}
 
@@ -286,7 +316,7 @@ namespace GHL {
 
 	HRESULT SoundDSound::InitPrimaryBuffer()
 	{
-		std::cout << "[SOUND] DS: try set primary buffer "<<sampleRate<<" Hz, "<<bitCount<<" bps, "<<channelCount<<" channels"<<std::endl;
+		LOG_INFO( "try set primary buffer "<<sampleRate<<" Hz, "<<bitCount<<" bps, "<<channelCount<<" channels" );
 		
 		HRESULT hr = S_OK;
 		WAVEFORMATEX waveFormat; 
@@ -309,13 +339,13 @@ namespace GHL {
 		
 		if (SUCCEEDED(hr = m_IDS->CreateSoundBuffer(&bufferDesc, &m_IDSBPrimary, 0))) { 
 		  if (FAILED(hr = m_IDSBPrimary->SetFormat(&waveFormat))) { 
-			  std::cout << "[SOUND] DS:  SetFormat failed" << std::endl;
+			LOG_ERROR( "  SetFormat failed" );
 			if (hr==DSERR_BADFORMAT)
-				std::cout << "[SOUND] DS: DSERR_BADFORMAT" << std::endl;
+				LOG_ERROR( "  DSERR_BADFORMAT" );
 			else if (hr==DSERR_UNSUPPORTED)
-				std::cout << "[SOUND] DS: DSERR_UNSUPPORTED" << std::endl;
+				LOG_ERROR( "  DSERR_UNSUPPORTED" );
 			else if (hr==DSERR_INVALIDPARAM)
-				std::cout << "[SOUND] DS: DSERR_INVALIDPARAM" << std::endl;
+				LOG_ERROR( "  DSERR_INVALIDPARAM" );
 
 		  } else
 		  {
@@ -330,7 +360,7 @@ namespace GHL {
 		return hr;	
 	}
 
-	void SoundDSound::SoundDone() {
+	bool SoundDSound::SoundDone() {
 		if (m_IDSBPrimary) {
 			m_IDSBPrimary->Release();
 			m_IDSBPrimary = 0;
@@ -343,18 +373,12 @@ namespace GHL {
 			FreeLibrary(m_library);
 			m_library = 0;
 		}
+		return SoundImpl::SoundDone();
 	}
 
 
-	/// create samples buffer
-	SamplesBuffer* GHL_CALL SoundDSound::CreateBuffer(SampleType type,UInt32 size,UInt32 freq,const Byte* data) {
-		SamplesBufferMemory* buf = new SamplesBufferMemory(type,size,freq);
-		buf->SetData(0,data,size*buf->SampleSize());
-		return buf;
-	}
-	
-	/// create channel
-	SoundChannel* GHL_CALL SoundDSound::CreateChannel(SampleType type,UInt32 freq) {
+	/// create sound effect from data
+	SoundEffect* GHL_CALL SoundDSound::CreateEffect( SampleType type, UInt32 freq, Data* data ) {
 		if (!m_IDS) return 0;
         WAVEFORMATEX waveFormat;
         DSBUFFERDESC bufferDesc;
@@ -367,49 +391,39 @@ namespace GHL {
 			waveFormat.nChannels        = 1;
 		if (type==SAMPLE_TYPE_STEREO_8  || type==SAMPLE_TYPE_STEREO_16)
 			waveFormat.nChannels        = 2;
+		const UInt32 sampleSize = SoundDecoderBase::GetBps(type);
         waveFormat.nSamplesPerSec   = freq;
-        waveFormat.wBitsPerSample   = SampleSize(type)*8/waveFormat.nChannels;
+        waveFormat.wBitsPerSample   = sampleSize*8/waveFormat.nChannels;
         waveFormat.nBlockAlign      = waveFormat.nChannels * waveFormat.wBitsPerSample/8;
         waveFormat.nAvgBytesPerSec  = waveFormat.nSamplesPerSec * waveFormat.nBlockAlign;
-        const UInt32 nSoundLen         = BUFFER_SIZE * waveFormat.nBlockAlign;
+		const UInt32 samples = data ? data->GetSize()/sampleSize : 0;
+        const UInt32 nSoundLen         = samples * waveFormat.nBlockAlign;
         bufferDesc.dwSize           = sizeof(DSBUFFERDESC);
-        bufferDesc.dwFlags          = DSBCAPS_CTRLPAN | DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY | DSBCAPS_GETCURRENTPOSITION2 |DSBCAPS_STICKYFOCUS ;
+        bufferDesc.dwFlags          = DSBCAPS_CTRLPAN | DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY |DSBCAPS_STICKYFOCUS ;
         bufferDesc.dwBufferBytes    = nSoundLen;
         bufferDesc.lpwfxFormat      = &waveFormat;
         HRESULT hr;
         IDirectSoundBuffer *pdsBuffer;
 		if (SUCCEEDED(hr = m_IDS->CreateSoundBuffer(&bufferDesc, &pdsBuffer, 0)))
         {
-			SoundChannelDSound* ch = new SoundChannelDSound(this,pdsBuffer,type,freq);
-			m_channels.push_back(ch);
-			return ch;
+			SoundEffectDSound* effect = new SoundEffectDSound(pdsBuffer,type,freq,samples);
+			if (data) {
+				SetBufferData(pdsBuffer,data);
+			}
+			return effect;
         }
         return 0;
 	}
-
-	void SoundDSound::ReleaseChannel(SoundChannelDSound* ch) {
-		std::vector<SoundChannelDSound*>::iterator it = std::find(m_channels.begin(),m_channels.end(),ch);
-		if (it!=m_channels.end()) {
-			m_channels.erase(it);
-			delete ch;
-		}
+    /// play effect
+	void GHL_CALL SoundDSound::PlayEffect( SoundEffect* effect , float vol, float pan, SoundInstance** instance) {
+	
 	}
-
-	void GHL_CALL SoundDSound::ChannelClear(SoundChannel* channel) {
-		SoundChannelDSound* ch = reinterpret_cast<SoundChannelDSound*>(channel);
-		ch->Clear();
+	/// open music
+	MusicInstance* GHL_CALL SoundDSound::OpenMusic( GHL::DataStream* file ) {
+		return 0;
 	}
-
-	void GHL_CALL SoundDSound::ChannelAddBuffer(SoundChannel* channel,SamplesBuffer* buffer) {
-		SoundChannelDSound* ch = reinterpret_cast<SoundChannelDSound*>(channel);
-		SamplesBufferMemory* buf = reinterpret_cast<SamplesBufferMemory*>(buffer);
-		ch->AddBuffer(buf);
-	}
-
+	
 	void SoundDSound::Process() {
-		for (size_t i=0;i<m_channels.size();i++) {
-			m_channels[i]->Process();
-		}
 	}
 }
 #endif

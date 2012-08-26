@@ -1,1 +1,4 @@
 *-Desktop_Qt_*
+*.exe
+*.pdb
+*.ilk

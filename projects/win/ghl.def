@@ -4,7 +4,10 @@ EXPORTS
 	GHL_CreateImage
 	GHL_CreateImageDecoder
 	GHL_CreateVFS
+	GHL_CreateData
 	GHL_CreateRenderOpenGL
 	GHL_DestroyImageDecoder
 	GHL_DestroyRenderOpenGL
 	GHL_DestroyVFS
+	GHL_CreateSoundDecoder
+	GHL_ImageFormatToTextureFormat
