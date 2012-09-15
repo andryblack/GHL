@@ -281,7 +281,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 	}
 
 #ifndef GHL_NO_SOUND
-	GHL::SoundDSound sound;
+	GHL::SoundDSound sound(8);
 	if (!sound.SoundInit(hwnd)) {
 		LOG_ERROR( "Can't init sound" );
 		return 1;

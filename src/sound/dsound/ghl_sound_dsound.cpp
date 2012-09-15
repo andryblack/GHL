@@ -20,56 +20,44 @@ namespace GHL {
 	SoundEffectDSound::SoundEffectDSound( LPDIRECTSOUNDBUFFER buf,SampleType type,UInt32 freq,UInt32 size )
 		: SoundEffectImpl(type,freq),m_IDSBuffer(buf)
 	{
+		m_IDSBuffer->AddRef();
 		SetCapacity(size);
 	}
 	SoundEffectDSound::~SoundEffectDSound() {
 		m_IDSBuffer->Release();
 	}
-#if 0
-	SoundChannelDSound::SoundChannelDSound(SoundDSound* parent,LPDIRECTSOUNDBUFFER buf,SampleType type,UInt32 freq) :
-		m_parent(parent),m_IDSBuffer(buf),m_type(type),m_freq(freq){
+
+	SoundChannelDSound::SoundChannelDSound(SoundEffectDSound* parent,LPDIRECTSOUNDBUFFER buf) :
+		m_parent(parent),m_IDSBuffer(buf), m_instance(0) {
 			m_paused = true;
 			m_loop = false;
 			m_started = false;
-			m_write_pos = 0;
-			m_current_buf = 0;
-			m_current_read = 0;
-			m_end = false;
-			m_bps = SoundImpl::SampleSize(m_type);
+			m_IDSBuffer->AddRef();
 	}
 	SoundChannelDSound::~SoundChannelDSound() {
-		if (m_IDSBuffer) 
-			m_IDSBuffer->Release();
-		m_IDSBuffer = 0;
+		Clear();
 	}
 
+	SoundEffectDSound* SoundChannelDSound::GetParent() {
+		return m_parent;
+	}
 
-	bool GHL_CALL SoundChannelDSound::IsPlaying() const {
+	bool SoundChannelDSound::IsPlaying() const {
 		if (m_IDSBuffer==0) return false;
 		DWORD status;
 		HRESULT rv = m_IDSBuffer->GetStatus(&status);
 		return (SUCCEEDED(rv) && ( status & DSBSTATUS_PLAYING) );
 	}
-	void GHL_CALL SoundChannelDSound::Play(bool loop) {
+	void SoundChannelDSound::Play(bool loop) {
 		if (m_IDSBuffer==0) return;
-		if (m_buffers.empty()) return;
-		if (m_started) return;
 		if (!m_paused) {
-			m_current_read = 0;
-			m_write_pos = 0;
-			m_current_buf = 0;
 			m_IDSBuffer->SetCurrentPosition(0);
-			m_end = false;
-			UInt32 len = m_buffers.front().buf->Size();
-			if (len>BUFFER_SIZE*m_bps)
-				len = BUFFER_SIZE*m_bps;
-			WriteToBuffer(len);
 		}
-		HRESULT hr = m_IDSBuffer->Play(0, 0,  DSBPLAY_LOOPING );
+		HRESULT hr = m_IDSBuffer->Play(0, 0,  loop ? DSBPLAY_LOOPING : 0);
 		if (DSERR_BUFFERLOST == hr)
 		{
 			m_IDSBuffer->Restore();
-			hr = m_IDSBuffer->Play(0, 0, DSBPLAY_LOOPING );
+			hr = m_IDSBuffer->Play(0, 0, loop ? DSBPLAY_LOOPING : 0 );
 		}
 		if (SUCCEEDED(hr)) {
 			m_loop = loop;
@@ -77,154 +65,83 @@ namespace GHL {
 			m_started = true;
 		}
 	}
-	void GHL_CALL SoundChannelDSound::Pause() {
+	void SoundChannelDSound::Pause() {
 		if (m_IDSBuffer==0) return;
 		m_paused = IsPlaying();
 		if (m_paused)
 			m_IDSBuffer->Stop();
 	}
-	void GHL_CALL SoundChannelDSound::Stop() {
+	void SoundChannelDSound::Stop() {
 		if (m_IDSBuffer==0) return;
+		if (!m_started) return;
 		m_paused = false;
-		m_current_read = 0;
-		m_write_pos = 0;
-		m_current_buf = 0;
 		m_IDSBuffer->Stop();
 		m_started = false;
 	}
-	void GHL_CALL SoundChannelDSound::SetVolume(float vol) {
+	void SoundChannelDSound::SetVolume(float vol) {
 		if (m_IDSBuffer==0) return;
 		LONG val = static_cast<LONG>(DSBVOLUME_MIN + vol * (DSBVOLUME_MAX - DSBVOLUME_MIN));
 		m_IDSBuffer->SetVolume(val);
 	}
 
+	void SoundChannelDSound::SetPan(float pan) {
+		if (m_IDSBuffer==0) return;
+		LONG val = static_cast<LONG>( pan * DSBPAN_RIGHT );
+		m_IDSBuffer->SetPan( val );
+	}
+
 	void SoundChannelDSound::Clear() {
+		if (m_instance) {
+			m_instance->Reset();
+			m_instance->Release();
+			m_instance = 0;
+		}
 		Stop();
-		m_buffers.clear();
-		m_current_buf = 0;
-		m_current_read = 0;
 		m_loop = false;
 		m_started = false;
-	}
-	void SoundChannelDSound::AddBuffer(SamplesBufferMemory* mem) {
-		Buffer buf;
-		buf.buf = mem;
-		m_buffers.push_back(buf);
-	}
-	bool SoundChannelDSound::Read(Byte* buf,UInt32 bytes,UInt32& readed) {
-		readed = 0;
-		if (m_end) return false;
-		if (m_current_buf<m_buffers.size()) {
-			while (bytes) {
-				UInt32 bufSize = m_buffers[m_current_buf].buf->Size();
-				UInt32 len = bytes;
-				if (len>(bufSize-m_current_read)) {
-					len = bufSize-m_current_read;
-				}
-				m_buffers[m_current_buf].buf->GetData(m_current_read,buf,len);
-				buf+=len;
-				readed+=len;
-				m_current_read+=len;
-				if (m_current_read>=bufSize) {
-					m_current_read = 0;
-					m_current_buf++;
-					if (m_current_buf>=m_buffers.size()) {
-						m_current_buf = 0;
-						if (!m_loop) {
-							m_end = true;
-							return false;
-						}
-					}
-				}
-				bytes-=len;
-			}
-		} else {
-			return false;
+		if (m_IDSBuffer) {
+			m_IDSBuffer->Release();
+			m_IDSBuffer = 0;
 		}
-		return true;
 	}
+
+	void SoundChannelDSound::SetInstance(SoundInstanceDSound* instance) {
+		if (m_instance) {
+			m_instance->Reset();
+			m_instance->Release();
+			m_instance = 0;
+		}
+		m_instance = instance;
+		m_instance->AddRef();
+	}
+
 	
-	void SoundChannelDSound::WriteToBuffer(UInt32 bytes) {
-		Byte *pPtr1 = 0, *pPtr2 = 0;
-		DWORD dwSize1 = 0, dwSize2 = 0;
-		HRESULT hr;
-		bool set_stop = false;
-		hr = m_IDSBuffer->Lock(m_write_pos, bytes, reinterpret_cast<void**>(&pPtr1), &dwSize1, reinterpret_cast<void**>(&pPtr2), &dwSize2, 0);
-			if (DSERR_BUFFERLOST == hr)
-			{
-				m_IDSBuffer->Restore();
-				hr = m_IDSBuffer->Lock(m_write_pos, bytes, reinterpret_cast<void**>(&pPtr1), &dwSize1, reinterpret_cast<void**>(&pPtr2), &dwSize2, 0);
-			}
-
-			assert((dwSize1%m_bps)==0);
-			assert((dwSize2%m_bps)==0);
-
-			if (SUCCEEDED(hr))
-			{
-				UInt32 size_1 = dwSize1;
-				UInt32 size_2 = dwSize2;
-				UInt32 read = 0;
-				UInt32 nReaded = 0;
-				if (pPtr1)
-				{
-					if (!Read(pPtr1,size_1,nReaded)) {
-						m_silense_begin = m_write_pos+nReaded;
-						FillMemory(pPtr1 + nReaded, dwSize1 - nReaded, 0);
-						set_stop = true;
-					}
-					read+=nReaded;
-				}
-				if (pPtr2)
-				{
-					nReaded = 0;
-					if (!Read(pPtr2,size_2,nReaded)) {
-						m_silense_begin = nReaded;
-						FillMemory(pPtr2 + nReaded, dwSize2 - nReaded, 0);
-					}
-					read+=nReaded;
-				}
-				m_IDSBuffer->Unlock(pPtr1, dwSize1, pPtr2, dwSize2);
-				m_write_pos=(m_write_pos+read)%(BUFFER_SIZE*m_bps);
-			}
-			if (set_stop) {
-				m_IDSBuffer->Stop();
-				m_IDSBuffer->Play(0,0,0);
-			}
+	SoundInstanceDSound::SoundInstanceDSound(SoundChannelDSound* channel) : m_channel(channel) {
 	}
 
-	void SoundChannelDSound::Process() {
-		if (m_paused) return;
-		if (!m_started) return;
-		if (m_end && !IsPlaying()) {
-			m_started = false;
-			return;
+	void SoundInstanceDSound::Reset() {
+		m_channel = 0;
+	}
+
+	/// set volume (0-100)
+	void GHL_CALL SoundInstanceDSound::SetVolume( float vol ) {
+		if (m_channel) {
+			m_channel->SetVolume( vol ); 
 		}
-		DWORD dwReadPos = 0;
-		HRESULT hr;
-		DWORD dwWritePos;
-		if (SUCCEEDED(hr = m_IDSBuffer->GetCurrentPosition(&dwReadPos, &dwWritePos)))
-		{
-			assert((dwReadPos%m_bps)==0);
-			assert((dwWritePos%m_bps)==0);
-
-			UInt32 read_length = 0;
-		    if ((dwReadPos) < m_write_pos) {
-				read_length = dwReadPos + BUFFER_SIZE*m_bps - m_write_pos;
-			} else {
-				read_length = dwReadPos - m_write_pos;
-			}
-			
-			if (read_length <= 44100*m_bps/10) { ///0.1sec
-			  return;
-			} 			
-
-			//std::cout << "w: " << m_write_pos << " rw: " << dwWritePos << " r: "<<dwReadPos << " s: " << read_length<<std::endl;
-			
-			WriteToBuffer(read_length);
+	}
+    /// set pan (-100..0..+100)
+	void GHL_CALL SoundInstanceDSound::SetPan( float pan ) {
+		if (m_channel) {
+			m_channel->SetPan(pan);
+		}
+	}
+    /// stop
+	void GHL_CALL SoundInstanceDSound::Stop() {
+		if (m_channel) {
+			m_channel->Stop(); 
 		}
 	}
 
-#endif
 
 	static HRESULT SetBufferData( IDirectSoundBuffer *pdsBuffer, Data* data ) {
 		Byte *pPtr1 = 0;
@@ -243,7 +160,7 @@ namespace GHL {
 		return hr;
 	}
 
-	SoundDSound::SoundDSound() : m_IDS(0),m_IDSBPrimary(0) {
+	SoundDSound::SoundDSound(size_t max_channels) : m_IDS(0),m_IDSBPrimary(0),m_max_channels(max_channels) {
 		m_library = 0;
 	}
 
@@ -361,6 +278,10 @@ namespace GHL {
 	}
 
 	bool SoundDSound::SoundDone() {
+		for (std::list<SoundChannelDSound*>::iterator it = m_channels.begin();it!=m_channels.end();++it) {
+			delete (*it);
+		}
+		m_channels.clear();
 		if (m_IDSBPrimary) {
 			m_IDSBPrimary->Release();
 			m_IDSBPrimary = 0;
@@ -414,9 +335,61 @@ namespace GHL {
         }
         return 0;
 	}
+
+	SoundChannelDSound* SoundDSound::GetChannel( SoundEffectDSound* effect ) {
+		SoundChannelDSound* ch = 0;
+		for (std::list<SoundChannelDSound*>::iterator it=m_channels.begin();it!=m_channels.end();++it) {
+			if ( !(*it)->IsPlaying() ) {
+				if ( (*it)->GetParent() == effect ) {
+					ch = *it;
+					m_channels.erase( it );
+					m_channels.push_back( ch );
+					return ch;
+				}
+			}
+		}
+		bool have_parent = false;
+		for (std::list<SoundChannelDSound*>::iterator it=m_channels.begin();it!=m_channels.end();) {
+			if ( (*it)->GetParent() == effect ) {
+				have_parent = true;
+			}
+			if (m_channels.size() >= m_max_channels && !(*it)->IsPlaying()) {
+				delete (*it);
+				it = m_channels.erase(it);
+			} else 
+				++it;
+		}
+		if (m_channels.size()>=m_max_channels) {
+			delete m_channels.front();
+			m_channels.pop_front();
+		}
+		LPDIRECTSOUNDBUFFER buffer = effect->buffer();
+		if (have_parent) {
+			HRESULT hr;
+			if (SUCCEEDED(hr = m_IDS->DuplicateSoundBuffer(buffer, &buffer)))
+			{
+
+			} else {
+				buffer = effect->buffer();
+			}
+		}
+		ch = new SoundChannelDSound( effect, buffer );
+		m_channels.push_back( ch );
+		return ch;
+	}
+
     /// play effect
 	void GHL_CALL SoundDSound::PlayEffect( SoundEffect* effect , float vol, float pan, SoundInstance** instance) {
-	
+		SoundEffectDSound* dseffect = reinterpret_cast<SoundEffectDSound*>(effect);
+		SoundChannelDSound* ch = GetChannel( dseffect );
+		ch->SetVolume(vol);
+		ch->SetPan(pan);
+		ch->Play(false);
+		if ( instance ) {
+			SoundInstanceDSound* inst = new SoundInstanceDSound(ch);
+			ch->SetInstance(inst);
+			*instance = inst;
+		}
 	}
 	/// open music
 	MusicInstance* GHL_CALL SoundDSound::OpenMusic( GHL::DataStream* file ) {
