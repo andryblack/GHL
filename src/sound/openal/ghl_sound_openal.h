@@ -12,7 +12,7 @@
 
 #include "../ghl_sound_impl.h"
 #include "ghl_openal.h"
-#include <vector>
+#include <list>
 
 namespace GHL {
 	
@@ -29,7 +29,7 @@ namespace GHL {
     
     class SoundChannelOpenAL;
 	
-	class SoundOpenAL  {
+	class SoundOpenAL {
 	private:
 		ALCdevice* m_device;
 		ALCcontext* m_context;
@@ -37,13 +37,14 @@ namespace GHL {
 		SoundOpenAL& operator = (const SoundOpenAL&);
         SoundChannelOpenAL* GetChannel();
         SoundChannelOpenAL* CreateChannel();
-        std::vector<SoundChannelOpenAL*>  m_channels;
+        std::list<SoundChannelOpenAL*>  m_channels;
+        size_t  m_max_channels;
 	public:
-		SoundOpenAL();
+		explicit SoundOpenAL(size_t max_channels);
         ~SoundOpenAL();
 		
 		bool SoundInit();
-		void SoundDone();
+		bool SoundDone();
 		
         /// create sound effect from data
         SoundEffect* CreateEffect( SampleType type, UInt32 freq, Data* data );

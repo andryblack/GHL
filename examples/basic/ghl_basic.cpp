@@ -20,6 +20,7 @@ private:
         float angle;
     };
     std::list<StarState>    m_stars;
+    GHL::SoundEffect*   m_effect;
 public:
     Application() {
         m_tex_star = 0;
@@ -48,6 +49,10 @@ public:
         } else {
             m_tex_star->SetMinFilter(GHL::TEX_FILTER_LINEAR);
             m_tex_star->SetMagFilter(GHL::TEX_FILTER_LINEAR);
+        }
+        m_effect = LoadEffect("data/sample.wav");
+        if (!m_effect) {
+            GHL_Log(GHL::LOG_LEVEL_ERROR,"load data/sample.wav");
         }
         return true;
     }
@@ -141,9 +146,9 @@ public:
             m_render->DrawPrimitivesFromMemory(GHL::PRIMITIVE_TYPE_TRIANGLES,
                                                GHL::VERTEX_TYPE_SIMPLE,
                                                &vertexes[0],
-                                               vertexes.size(),
+                                               GHL::UInt32(vertexes.size()),
                                                &indexes[0],
-                                               m_stars.size()*2);
+                                               GHL::UInt32(m_stars.size()*2));
         }
 
 
@@ -162,6 +167,9 @@ public:
         star.angle = 0;
         star.alpha = 1;
         m_stars.push_back(star);
+        if (m_effect && m_sound) {
+            m_sound->PlayEffect(m_effect);
+        }
     }
 };
 

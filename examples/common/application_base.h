@@ -3,7 +3,7 @@
 
 #include <ghl_application.h>
 #include <ghl_texture.h>
-
+#include <ghl_sound.h>
 
 class ApplicationBase : public GHL::Application {
 protected:
@@ -25,6 +25,7 @@ protected:
     float   m_fps;
 
     GHL::Texture* LoadTexture(const char* fn);
+    GHL::SoundEffect*   LoadEffect( const char* fn);
 public:
     	///
 	virtual void GHL_CALL SetSystem( GHL::System* sys ) ;

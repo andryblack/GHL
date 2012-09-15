@@ -175,7 +175,7 @@ namespace GHL {
     }
 	
 	
-	SoundOpenAL::SoundOpenAL() {
+	SoundOpenAL::SoundOpenAL(size_t max_channels) : m_max_channels(max_channels) {
 		m_device = 0;
 		m_context = 0;
 	}
@@ -221,10 +221,10 @@ namespace GHL {
 		return true;
 	}
 	
-    void SoundOpenAL::SoundDone() {
+    bool SoundOpenAL::SoundDone() {
 		LOG_INFO( "SoundOpenAL::SoundDone" );
-        for (size_t i=0;i<m_channels.size();i++) {
-            delete m_channels[i];
+        for (std::list<SoundChannelOpenAL*>::iterator it=m_channels.begin();it!=m_channels.end();++it) {
+            delete *it;
         }
         LOG_INFO("released " << m_channels.size() << " channels");
         m_channels.clear();
@@ -238,6 +238,7 @@ namespace GHL {
 			alcCloseDevice(m_device);
 			m_device = 0;
 		}
+        return true;
 	}
 	
     SoundChannelOpenAL* SoundOpenAL::CreateChannel() {
@@ -253,7 +254,21 @@ namespace GHL {
     }
     
 	SoundChannelOpenAL* SoundOpenAL::GetChannel() {
-        SoundChannelOpenAL* channel = CreateChannel();
+        SoundChannelOpenAL* channel = 0;
+        if ( m_channels.size() >= m_max_channels ) {
+            for ( std::list<SoundChannelOpenAL*>::iterator it = m_channels.begin();it!=m_channels.end();++it) {
+                if ( !(*it)->IsPlaying() ) {
+                    channel = *it;
+                    m_channels.erase(it);
+                    m_channels.push_back(channel);
+                    return channel;
+                }
+            }
+            channel = m_channels.front();
+            m_channels.pop_front();
+            m_channels.push_back(channel);
+        }
+        channel = CreateChannel();
         return channel;
     }
         
@@ -286,3 +301,4 @@ namespace GHL {
 	
 
 }
+

@@ -24,7 +24,7 @@
 #include "../sound/ghl_sound_impl.h"
 #include "../ghl_log_impl.h"
 
-extern GHL::SoundImpl* GHL_CreateSoundOpenAL();
+GHL::SoundImpl* GHL_CreateSoundCocoa();
 
 static bool g_fullscreen = false;
 static bool g_need_fullscreen = false;
@@ -440,7 +440,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 
 -(void) initSound {
 #ifndef GHL_NOSOUND
-	m_sound = GHL_CreateSoundOpenAL();
+	m_sound = GHL_CreateSoundCocoa();
 	if (!m_sound->SoundInit()) {
 		delete m_sound;
 		m_sound = 0;

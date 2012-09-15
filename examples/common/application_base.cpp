@@ -169,3 +169,36 @@ GHL::Texture* ApplicationBase::LoadTexture(const char* fn) {
     img->Release();
     return tex;
 }
+
+GHL::SoundEffect*   ApplicationBase::LoadEffect( const char* fn) {
+    if (!m_vfs) {
+        GHL_Log(GHL::LOG_LEVEL_ERROR,"LoadEffect no vfs");
+        return 0;
+    }
+    std::string file = m_vfs->GetDir(GHL::DIR_TYPE_DATA);
+    file+="/";
+    file+=fn;
+    GHL::DataStream* ds = m_vfs->OpenFile(file.c_str());
+    if (!ds) {
+        GHL_Log(GHL::LOG_LEVEL_ERROR,"LoadEffect not open file");
+        return 0;
+    }
+    GHL::SoundDecoder* decoder = GHL_CreateSoundDecoder(ds);
+    ds->Release();
+    if (!decoder) {
+        GHL_Log(GHL::LOG_LEVEL_ERROR,"LoadEffect not create decoder");
+        return 0;
+    }
+    GHL::SoundEffect* effect = 0;
+    if (m_sound) {
+        effect = m_sound->CreateEffect(decoder->GetSampleType(), decoder->GetFrequency(), decoder->GetAllSamples());
+    } else {
+        GHL_Log(GHL::LOG_LEVEL_ERROR,"LoadEffect no sound");
+    }
+    decoder->Release();
+    if (!effect) {
+        GHL_Log(GHL::LOG_LEVEL_ERROR,"LoadEffect no create effect");
+        return 0;
+    }
+    return effect;
+}

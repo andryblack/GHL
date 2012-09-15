@@ -10,7 +10,7 @@
 
 namespace GHL {
     
-    SoundCocoa::SoundCocoa() {
+    SoundCocoa::SoundCocoa() : m_openal(8) {
         
     }
     
