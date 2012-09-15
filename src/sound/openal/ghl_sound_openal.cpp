@@ -108,7 +108,9 @@ namespace GHL {
 	
 	SoundChannelOpenAL::~SoundChannelOpenAL() {
         if (m_instance) {
+            m_instance->Reset();
             m_instance->Release();
+            m_instance = 0;
         }
 		alSourceStop(m_source);
 		alDeleteSources(1, &m_source);
@@ -149,6 +151,7 @@ namespace GHL {
 	void SoundChannelOpenAL::Clear() {
         if (m_instance) {
             m_instance->Reset();
+            m_instance->Release();
             m_instance = 0;
         }
 		alSourceStop(m_source);
@@ -170,8 +173,10 @@ namespace GHL {
     void SoundChannelOpenAL::SetInstance(SoundInstanceOpenAL* instance) {
         if (m_instance) {
             m_instance->Reset();
+            m_instance->Release();
         }
         m_instance = instance;
+        m_instance->AddRef();
     }
 	
 	
