@@ -283,6 +283,24 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     local_point = [self scale_point: local_point ];
     [m_application getApplication]->OnMouseMove(GHL::MOUSE_BUTTON_LEFT, local_point.x, local_point.y);
 }
+- (void)rightMouseDown:(NSEvent *)theEvent {
+    NSPoint event_location = [theEvent locationInWindow];
+    NSPoint local_point = [self convertPoint:event_location fromView:nil];
+    local_point = [self scale_point: local_point ];
+    [m_application getApplication]->OnMouseDown(GHL::MOUSE_BUTTON_RIGHT, local_point.x, local_point.y);
+}
+- (void)rightMouseUp:(NSEvent *)theEvent {
+    NSPoint event_location = [theEvent locationInWindow];
+    NSPoint local_point = [self convertPoint:event_location fromView:nil];
+    local_point = [self scale_point: local_point ];
+    [m_application getApplication]->OnMouseUp(GHL::MOUSE_BUTTON_RIGHT, local_point.x, local_point.y);
+}
+- (void)rightMouseDragged:(NSEvent *)theEvent {
+    NSPoint event_location = [theEvent locationInWindow];
+    NSPoint local_point = [self convertPoint:event_location fromView:nil];
+    local_point = [self scale_point: local_point ];
+    [m_application getApplication]->OnMouseMove(GHL::MOUSE_BUTTON_RIGHT, local_point.x, local_point.y);
+}
 
 - (BOOL) acceptsFirstResponder
 {
