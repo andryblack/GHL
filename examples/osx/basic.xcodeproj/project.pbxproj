@@ -13,6 +13,7 @@
 		A4215CA3160517B100003B42 /* data in Resources */ = {isa = PBXBuildFile; fileRef = A4215CA2160517B100003B42 /* data */; };
 		A4215CA41605194400003B42 /* libGHL-OSX_d.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4215C921605173D00003B42 /* libGHL-OSX_d.a */; };
 		A4215CA816051B9E00003B42 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4215CA716051B9E00003B42 /* OpenAL.framework */; };
+		A4FAE27F1613A0F900D7E055 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4FAE27E1613A0F900D7E055 /* AudioToolbox.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +46,7 @@
 		A4215C9A1605179D00003B42 /* application_base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = application_base.h; sourceTree = "<group>"; };
 		A4215CA2160517B100003B42 /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = data; path = ../../data; sourceTree = "<group>"; };
 		A4215CA716051B9E00003B42 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		A4FAE27E1613A0F900D7E055 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A4FAE27F1613A0F900D7E055 /* AudioToolbox.framework in Frameworks */,
 				A4215CA816051B9E00003B42 /* OpenAL.framework in Frameworks */,
 				A4215CA41605194400003B42 /* libGHL-OSX_d.a in Frameworks */,
 				A4215C691605165300003B42 /* Cocoa.framework in Frameworks */,
@@ -92,6 +95,7 @@
 		A4215C6A1605165300003B42 /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A4FAE27E1613A0F900D7E055 /* AudioToolbox.framework */,
 				A4215C6B1605165300003B42 /* AppKit.framework */,
 				A4215C6C1605165300003B42 /* CoreData.framework */,
 				A4215C6D1605165300003B42 /* Foundation.framework */,

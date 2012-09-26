@@ -99,8 +99,6 @@
 		A49E9A6815EA3CE90089568B /* ghl_data.h in Headers */ = {isa = PBXBuildFile; fileRef = A49E9A6715EA3CE90089568B /* ghl_data.h */; };
 		A49E9A6B15EA3D040089568B /* ghl_data_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A49E9A6915EA3D040089568B /* ghl_data_impl.cpp */; };
 		A49E9A6C15EA3D040089568B /* ghl_data_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A49E9A6A15EA3D040089568B /* ghl_data_impl.h */; };
-		A49E9A6F15EA3D490089568B /* ghl_sound_cocoa.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A49E9A6D15EA3D490089568B /* ghl_sound_cocoa.cpp */; };
-		A49E9A7015EA3D490089568B /* ghl_sound_cocoa.h in Headers */ = {isa = PBXBuildFile; fileRef = A49E9A6E15EA3D490089568B /* ghl_sound_cocoa.h */; };
 		A49E9A7315EA3FE20089568B /* pvrtc_image_decoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A49E9A7115EA3FE20089568B /* pvrtc_image_decoder.cpp */; };
 		A49E9A7415EA3FE20089568B /* pvrtc_image_decoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A49E9A7215EA3FE20089568B /* pvrtc_image_decoder.h */; };
 		A4EDFDC714169DCD00ED0DC0 /* png_image_decoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFDC514169DCD00ED0DC0 /* png_image_decoder.cpp */; };
@@ -117,6 +115,8 @@
 		A4EDFF011416B3EE00ED0DC0 /* pngget.c in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFF001416B3EE00ED0DC0 /* pngget.c */; };
 		A4EDFF071416B45400ED0DC0 /* pngrtran.c in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFF061416B45400ED0DC0 /* pngrtran.c */; };
 		A4EDFF111416B4E100ED0DC0 /* pngpread.c in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFF101416B4E100ED0DC0 /* pngpread.c */; };
+		A4FAE273161347ED00D7E055 /* ghl_sound_cocoa.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4FAE271161347ED00D7E055 /* ghl_sound_cocoa.cpp */; };
+		A4FAE274161347ED00D7E055 /* ghl_sound_cocoa.h in Headers */ = {isa = PBXBuildFile; fileRef = A4FAE272161347ED00D7E055 /* ghl_sound_cocoa.h */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
@@ -213,8 +213,6 @@
 		A49E9A6715EA3CE90089568B /* ghl_data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_data.h; sourceTree = "<group>"; };
 		A49E9A6915EA3D040089568B /* ghl_data_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ghl_data_impl.cpp; sourceTree = "<group>"; };
 		A49E9A6A15EA3D040089568B /* ghl_data_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_data_impl.h; sourceTree = "<group>"; };
-		A49E9A6D15EA3D490089568B /* ghl_sound_cocoa.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ghl_sound_cocoa.cpp; sourceTree = "<group>"; };
-		A49E9A6E15EA3D490089568B /* ghl_sound_cocoa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_sound_cocoa.h; sourceTree = "<group>"; };
 		A49E9A7115EA3FE20089568B /* pvrtc_image_decoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pvrtc_image_decoder.cpp; sourceTree = "<group>"; };
 		A49E9A7215EA3FE20089568B /* pvrtc_image_decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pvrtc_image_decoder.h; sourceTree = "<group>"; };
 		A4EDFDC514169DCD00ED0DC0 /* png_image_decoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = png_image_decoder.cpp; sourceTree = "<group>"; };
@@ -231,6 +229,8 @@
 		A4EDFF001416B3EE00ED0DC0 /* pngget.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngget.c; sourceTree = "<group>"; };
 		A4EDFF061416B45400ED0DC0 /* pngrtran.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngrtran.c; sourceTree = "<group>"; };
 		A4EDFF101416B4E100ED0DC0 /* pngpread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngpread.c; sourceTree = "<group>"; };
+		A4FAE271161347ED00D7E055 /* ghl_sound_cocoa.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ghl_sound_cocoa.cpp; sourceTree = "<group>"; };
+		A4FAE272161347ED00D7E055 /* ghl_sound_cocoa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_sound_cocoa.h; sourceTree = "<group>"; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2AAC07E0554694100DB518D /* libGHL-Debug-iphonesimulator.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libGHL-Debug-iphonesimulator.a"; path = "libGHL-Debug-iphoneos.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -374,14 +374,13 @@
 		A42900BA1413949B00429C47 /* sound */ = {
 			isa = PBXGroup;
 			children = (
+				A4FAE270161347ED00D7E055 /* cocoa */,
 				A42900C11413949B00429C47 /* ghl_sound_decoder.h */,
 				A42900C31413949B00429C47 /* ghl_sound_impl.h */,
 				A42900C41413949B00429C47 /* openal */,
 				A42900C81413949B00429C47 /* sound_decoders.cpp */,
 				A42900C91413949B00429C47 /* wav_decoder.cpp */,
 				A42900CA1413949B00429C47 /* wav_decoder.h */,
-				A49E9A6D15EA3D490089568B /* ghl_sound_cocoa.cpp */,
-				A49E9A6E15EA3D490089568B /* ghl_sound_cocoa.h */,
 			);
 			path = sound;
 			sourceTree = "<group>";
@@ -472,6 +471,15 @@
 			path = libpng;
 			sourceTree = "<group>";
 		};
+		A4FAE270161347ED00D7E055 /* cocoa */ = {
+			isa = PBXGroup;
+			children = (
+				A4FAE271161347ED00D7E055 /* ghl_sound_cocoa.cpp */,
+				A4FAE272161347ED00D7E055 /* ghl_sound_cocoa.h */,
+			);
+			path = cocoa;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -542,8 +550,8 @@
 				A474628F1557F6880082318E /* dynamic_gles_subset.h in Headers */,
 				A49E9A6815EA3CE90089568B /* ghl_data.h in Headers */,
 				A49E9A6C15EA3D040089568B /* ghl_data_impl.h in Headers */,
-				A49E9A7015EA3D490089568B /* ghl_sound_cocoa.h in Headers */,
 				A49E9A7415EA3FE20089568B /* pvrtc_image_decoder.h in Headers */,
+				A4FAE274161347ED00D7E055 /* ghl_sound_cocoa.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -644,8 +652,8 @@
 				A436FC5714AE6D3800D53CE4 /* ghl_log_impl.cpp in Sources */,
 				A474628B1557F6490082318E /* dynamic_gles.cpp in Sources */,
 				A49E9A6B15EA3D040089568B /* ghl_data_impl.cpp in Sources */,
-				A49E9A6F15EA3D490089568B /* ghl_sound_cocoa.cpp in Sources */,
 				A49E9A7315EA3FE20089568B /* pvrtc_image_decoder.cpp in Sources */,
+				A4FAE273161347ED00D7E055 /* ghl_sound_cocoa.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

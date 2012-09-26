@@ -4,6 +4,8 @@
 #include <ghl_system.h>
 #include <ghl_texture.h>
 #include <ghl_log.h>
+#include <ghl_vfs.h>
+#include <ghl_sound.h>
 #include "../common/application_base.h"
 #include <sstream>
 #include <list>
@@ -21,15 +23,25 @@ private:
     };
     std::list<StarState>    m_stars;
     GHL::SoundEffect*   m_effect;
+    GHL::MusicInstance* m_music;
 public:
     Application() {
         m_tex_star = 0;
+        m_effect = 0;
+        m_music = 0;
     }
 
     ~Application() {
+        if (m_music) {
+            m_music->Release();
+        }
+        if (m_effect) {
+            m_effect->Release();
+        }
         if (m_tex_star) {
             m_tex_star->Release();
         }
+        GHL_Log(GHL::LOG_LEVEL_INFO,"Application destroyed");
     }
 
     /// called after window created, before first rendered
@@ -53,6 +65,19 @@ public:
         m_effect = LoadEffect("data/sample.wav");
         if (!m_effect) {
             GHL_Log(GHL::LOG_LEVEL_ERROR,"load data/sample.wav");
+        }
+        if ( m_sound && m_vfs) {
+            std::string file = m_vfs->GetDir(GHL::DIR_TYPE_DATA);
+            file+="/data/music.mp3";
+            GHL::DataStream* ds = m_vfs->OpenFile(file.c_str());
+            if (!ds) {
+                GHL_Log(GHL::LOG_LEVEL_ERROR,"not open music file");
+            } else {
+                m_music = m_sound->OpenMusic( ds );
+                if ( m_music ) {
+                    m_music->Play(true);
+                }
+            }
         }
         return true;
     }

@@ -41,7 +41,8 @@ namespace GHL {
 		CHECK_ERROR;
 	}
 	SoundEffectOpenAL::~SoundEffectOpenAL() {
-		alDeleteBuffers(1, &m_buffer);
+     	alDeleteBuffers(1, &m_buffer);
+        CHECK_ERROR;
 	}
 	
 	void SoundEffectOpenAL::SetData(const Byte* data, UInt32 bytes ) {
@@ -57,8 +58,8 @@ namespace GHL {
     class SoundChannelOpenAL {
     private:
         ALuint  m_source;
-        ALuint  m_buffer;
-        SoundInstanceOpenAL*   m_instance;
+        SoundEffectOpenAL*      m_effect;
+        SoundInstanceOpenAL*    m_instance;
     public:
         SoundChannelOpenAL( ALuint source );
         ~SoundChannelOpenAL();
@@ -69,7 +70,7 @@ namespace GHL {
         void SetVolume( float val );
         void SetPan( float pan );
         void Clear();
-        void SetBuffer(ALuint buff);
+        void SetEffect( SoundEffectOpenAL* effect );
         void SetInstance(SoundInstanceOpenAL* instance);
     };
     class SoundInstanceOpenAL: public RefCounterImpl<SoundInstance> {
@@ -102,49 +103,51 @@ namespace GHL {
         }
     };
 	
-	SoundChannelOpenAL::SoundChannelOpenAL(ALuint source) : m_source(source),m_buffer(0){
+	SoundChannelOpenAL::SoundChannelOpenAL(ALuint source) : m_source(source),m_effect(0){
         m_instance = 0;
 	}
 	
 	SoundChannelOpenAL::~SoundChannelOpenAL() {
-        if (m_instance) {
-            m_instance->Reset();
-            m_instance->Release();
-            m_instance = 0;
-        }
-		alSourceStop(m_source);
+        Clear();
 		alDeleteSources(1, &m_source);
-		CHECK_ERROR;
+		CHECK_ERROR_F(alDeleteSources);
 	}
 	
 	
 	bool SoundChannelOpenAL::IsPlaying() const {
 		ALenum state = AL_UNDETERMINED;
 		alGetSourcei(m_source, AL_SOURCE_STATE, &state);
+        CHECK_ERROR_F(alGetSourcei);
 		return state == AL_PLAYING;
 	}
 	
 	void SoundChannelOpenAL::Play(bool loop)  {
 		alSourcei(m_source, AL_LOOPING, loop ? AL_TRUE : AL_FALSE);
+        CHECK_ERROR_F(alSourcei);
 		alSourcePlay(m_source);
-		CHECK_ERROR;
+		CHECK_ERROR_F(alSourcePlay);
 	}
 	
 	void SoundChannelOpenAL::Pause() {
 		alSourcePause(m_source);
+        CHECK_ERROR_F(alSourcePause);
 	}
 	
 	void SoundChannelOpenAL::Stop() {
 		alSourceStop(m_source);
+        CHECK_ERROR_F(alSourceStop);
 		alSourceRewind(m_source);
+        CHECK_ERROR_F(alSourceRewind);
 	}
 	
 	void SoundChannelOpenAL::SetVolume(float val) {
 		alSourcef(m_source, AL_GAIN, val / 100.0f );
+        CHECK_ERROR_F(alSourcef);
 	}
     
     void SoundChannelOpenAL::SetPan( float pan ) {
         alSource3f(m_source, AL_POSITION, pan/100.0f, 0.0f, 0.0f);
+        CHECK_ERROR_F(alSource3f);
     }
 	
 	
@@ -156,17 +159,20 @@ namespace GHL {
         }
 		alSourceStop(m_source);
 		CHECK_ERROR_F(alSourceStop);
-        if (m_buffer) {
+        if (m_effect) {
             alSourcei(m_source, AL_BUFFER, 0);
-            m_buffer = 0;
+            CHECK_ERROR_F(alSourcei);
+            m_effect->Release();
+            m_effect = 0;
         }
     }
 	
-	void SoundChannelOpenAL::SetBuffer(ALuint buffer) {
-        if (m_buffer!=0)
+	void SoundChannelOpenAL::SetEffect(SoundEffectOpenAL* effect) {
+        if (m_effect!=0)
             Clear();
-        alSourcei(m_source, AL_BUFFER, buffer);
-	    m_buffer = buffer;
+        alSourcei(m_source, AL_BUFFER, effect->buffer() );
+	    m_effect = effect;
+        m_effect->AddRef();
 		CHECK_ERROR;
 	}
     
@@ -228,6 +234,9 @@ namespace GHL {
 	
     bool SoundOpenAL::SoundDone() {
 		LOG_INFO( "SoundOpenAL::SoundDone" );
+        if (m_context) {
+            alcMakeContextCurrent(m_context);
+        }
         for (std::list<SoundChannelOpenAL*>::iterator it=m_channels.begin();it!=m_channels.end();++it) {
             delete *it;
         }
@@ -251,8 +260,11 @@ namespace GHL {
 		ALuint source = 0;
 		alGetError();
 		alGenSources(1, &source);
-		if (alGetError()!=AL_NO_ERROR)
-			return 0;
+        ALenum err = alGetError();
+		if (err!=AL_NO_ERROR) {
+            LOG_ERROR("Create channel failed: " << alGetString(err));
+            return 0;
+        }
 		SoundChannelOpenAL* channel = new SoundChannelOpenAL(source);
         m_channels.push_back(channel);
         return channel;
@@ -291,7 +303,7 @@ namespace GHL {
         SoundChannelOpenAL* channel = GetChannel();
         if (!channel) return;
         SoundEffectOpenAL* effect = static_cast<SoundEffectOpenAL*>(effect_);
-        channel->SetBuffer(effect->buffer());
+        channel->SetEffect(effect);
         channel->SetVolume(vol);
         channel->SetPan(pan);
         channel->Play(false);
@@ -301,8 +313,6 @@ namespace GHL {
             *instance = inst;
         }
     }
-
-    
 	
 
 }

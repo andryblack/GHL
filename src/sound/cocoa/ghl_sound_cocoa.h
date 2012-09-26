@@ -9,10 +9,12 @@
 #ifndef __GHL__ghl_sound_cocoa__
 #define __GHL__ghl_sound_cocoa__
 
-#include "ghl_sound_impl.h"
-#include "openal/ghl_sound_openal.h"
+#include "../ghl_sound_impl.h"
+#include "../openal/ghl_sound_openal.h"
 
 namespace GHL {
+    
+    
     
     class SoundCocoa : public SoundImpl {
     private:

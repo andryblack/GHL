@@ -191,7 +191,11 @@ GHL::SoundEffect*   ApplicationBase::LoadEffect( const char* fn) {
     }
     GHL::SoundEffect* effect = 0;
     if (m_sound) {
-        effect = m_sound->CreateEffect(decoder->GetSampleType(), decoder->GetFrequency(), decoder->GetAllSamples());
+        GHL::Data* data = decoder->GetAllSamples();
+        if (data) {
+            effect = m_sound->CreateEffect(decoder->GetSampleType(), decoder->GetFrequency(), data);
+        }
+        data->Release();
     } else {
         GHL_Log(GHL::LOG_LEVEL_ERROR,"LoadEffect no sound");
     }
