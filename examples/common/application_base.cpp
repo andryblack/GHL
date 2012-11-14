@@ -126,12 +126,21 @@ bool GHL_CALL ApplicationBase::OnFrame( GHL::UInt32 usecs ) {
     m_render->SetProjectionMatrix(&projectionOrtho[0]);
     m_render->SetViewMatrix(&identity[0][0]);
     DrawScene();
-    std::stringstream ss;
-    ss << "fps: " << m_fps;
-    m_render->DebugDrawText(20,20,ss.str().c_str());
+    
+    DrawDebug(20,20);
+    
     m_render->EndScene();
+
     ++m_frames;
     return true;
+}
+
+int ApplicationBase::DrawDebug(GHL::Int32 x, GHL::Int32 y) {
+    std::stringstream ss;
+    ss << "fps: " << m_fps;
+    m_render->SetupBlend(true,GHL::BLEND_FACTOR_SRC_ALPHA,GHL::BLEND_FACTOR_SRC_ALPHA_INV);
+    m_render->DebugDrawText(x,y,ss.str().c_str());
+    return y + 16;
 }
 
 GHL::Texture* ApplicationBase::LoadTexture(const char* fn) {

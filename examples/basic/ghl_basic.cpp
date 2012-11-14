@@ -175,14 +175,17 @@ public:
                                                &indexes[0],
                                                GHL::UInt32(m_stars.size()*2));
         }
-
-
-        GHL::Int32 y = 40;
-        m_render->DebugDrawText(20,y,"GHL example");    y+=20;
+    }
+    
+    virtual int  DrawDebug(GHL::Int32 x, GHL::Int32 y) {
+        y = ApplicationBase::DrawDebug(x, y);
+        m_render->DebugDrawText(x,y,"GHL example");    y+=16;
         std::stringstream ss;
         ss << "mouse: " << m_mouse_pos_x << "," << m_mouse_pos_y;
-        m_render->DebugDrawText(20,y,ss.str().c_str()); y+=20;
+        m_render->DebugDrawText(x,y,ss.str().c_str()); y+=16;
+        return y;
     }
+    
     virtual void GHL_CALL OnMouseDown( GHL::MouseButton btn, GHL::Int32 x, GHL::Int32 y)  {
         ApplicationBase::OnMouseDown(btn,x,y);
         StarState star;

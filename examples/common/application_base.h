@@ -15,6 +15,7 @@ protected:
 	ApplicationBase();
 	virtual ~ApplicationBase();
     virtual void DrawScene();
+    virtual int  DrawDebug(GHL::Int32 x, GHL::Int32 y);
     virtual void OnTimer(GHL::UInt32 usecs);
 
     GHL::Int32  m_mouse_pos_x;
