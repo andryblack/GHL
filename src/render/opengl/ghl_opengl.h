@@ -14,24 +14,18 @@
 
 #if defined( GHL_PLATFORM_IOS )
 #include "dynamic/dynamic_gles.h"
-#define GHL_DYNAMIC_GL
 #define GHL_OPENGLES
 #elif defined ( GHL_PLATFORM_ANDROID )
 #include "dynamic/dynamic_gles.h"
-#define GHL_DYNAMIC_GL
 #define GHL_OPENGLES
 #elif defined ( GHL_PLATFORM_MAC )
 #include "dynamic/dynamic_gl.h"
-#define GHL_DYNAMIC_GL
 #elif defined ( GHL_PLATFORM_WIN )
 #include "dynamic/dynamic_gl.h"
-#define GHL_DYNAMIC_GL
 #elif defined ( GHL_PLATFORM_LINUX )
 #include "dynamic/dynamic_gl.h"
-#define GHL_DYNAMIC_GL
 #else
-#include <GL/gl.h>
-#include <GL/glext.h>
+#error "Unsupported platform"
 #endif
 
 #ifdef GHL_QT

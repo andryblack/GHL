@@ -14,63 +14,54 @@
 
 namespace GHL {
 
-	VertexShaderGLSL::VertexShaderGLSL(RenderOpenGL* parent,GLhandleARB handle_) : m_parent(parent),m_handle(handle_) {
+	VertexShaderGLSL::VertexShaderGLSL(RenderOpenGL* parent,GL::GLhandleARB handle_) : m_parent(parent),m_handle(handle_) {
 	
 	}
 	
 	VertexShaderGLSL::~VertexShaderGLSL() {
-		glDeleteObjectARB(m_handle);
-        if (m_parent) {
-            m_parent->ReleaseVertexShader(this);
-        }
-	}
+		gl.DeleteObjectARB(m_handle);
+ 	}
 
 	
-	FragmentShaderGLSL::FragmentShaderGLSL(RenderOpenGL* parent,GLhandleARB handle_) : m_parent(parent),m_handle(handle_) {
+	FragmentShaderGLSL::FragmentShaderGLSL(RenderOpenGL* parent,GL::GLhandleARB handle_) : m_parent(parent),m_handle(handle_) {
 		
 	}
 	
 	FragmentShaderGLSL::~FragmentShaderGLSL() {
-		glDeleteObjectARB(m_handle);
-        if (m_parent) {
-            m_parent->ReleaseFragmentShader(this);
-        }
+		gl.DeleteObjectARB(m_handle);
 	}
 	
 	
 	
 	
-	ShaderProgramGLSL::ShaderProgramGLSL(RenderOpenGL* parent,GLhandleARB handle_,VertexShaderGLSL* vt,FragmentShaderGLSL* fr) : 
+	ShaderProgramGLSL::ShaderProgramGLSL(RenderOpenGL* parent,GL::GLhandleARB handle_,VertexShaderGLSL* vt,FragmentShaderGLSL* fr) :
 		m_parent(parent),m_handle(handle_),m_v(vt),m_f(fr) {
 			m_v->AddRef();
 			m_f->AddRef();
 	}
 	
 	ShaderProgramGLSL::~ShaderProgramGLSL() {
-		glDeleteObjectARB(m_handle);
+		gl.DeleteObjectARB(m_handle);
         if (m_v) m_v->Release();
         m_v = 0;
         if (m_f) m_f->Release();
         m_f = 0;
-        if (m_parent) {
-            m_parent->ReleaseShaderProgram(this);
-        }
-	}
+    }
 	
 	
 	void GHL_CALL ShaderUniformGLSL::SetValueFloat(float v) {
-		glUniform1fARB(m_location,v);
+		gl.Uniform1fARB(m_location,v);
 	}
 	
 	void GHL_CALL ShaderUniformGLSL::SetValueInt(Int32 v) {
-		glUniform1iARB(m_location,v);
+		gl.Uniform1iARB(m_location,v);
 	}
 	ShaderUniform* GHL_CALL ShaderProgramGLSL::GetUniform(const char* name) {
 		std::string sname(name);
 		std::map<std::string,ShaderUniformGLSL>::iterator it = m_uniforms.find(sname);
 		if (it!=m_uniforms.end())
 			return &it->second;
-		GLint location = glGetUniformLocationARB(m_handle,name);
+        GL::GLint location = gl.GetUniformLocationARB(m_handle,name);
 		if (location==-1)
 			return 0;
 		m_uniforms.insert(std::make_pair(sname,ShaderUniformGLSL(location)));

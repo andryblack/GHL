@@ -31,27 +31,19 @@
 namespace GHL {
 
 	class RenderTargetImpl;
+    class TextureImpl;
+    class VertexShaderImpl;
+    class FragmentShaderImpl;
+    class ShaderProgramImpl;
+    
+    bool HaveAlpha(const Texture* tex);
 
 	class RenderImpl : public Render
 	{
-	protected:
-		UInt32 	m_width;
-		UInt32	m_height;
-		RenderTargetImpl* m_scene_target;
-		bool	m_scene_started;
-#ifdef GHL_DEBUG
-		void TextureCreated(const Texture*);
-		bool CheckTexture(const Texture*);
-		void TextureReleased(const Texture*);
-		void RenderTargetCreated(const RenderTarget*);
-		bool CheckRenderTarget(const RenderTarget*);
-		void RenderTargetReleased(const RenderTarget*);
-#endif
-		const Texture*	m_current_texture;
 	public:
 		RenderImpl(UInt32 w,UInt32 h);
 		virtual ~RenderImpl();
-	
+
 		void Resize(UInt32 w,UInt32 h);
         
 		virtual void GHL_CALL Release();
@@ -70,16 +62,53 @@ namespace GHL {
 		virtual UInt32 GHL_CALL GetWidth() const;
 		virtual UInt32 GHL_CALL GetHeight() const;
 	
+        void GHL_CALL SetTexture( const Texture* texture, UInt32 stage);
+        void GHL_CALL SetShader(const GHL::ShaderProgram *shader);
+        
 		virtual void GHL_CALL DebugDrawText( Int32 x,Int32 y,const char* text );
 	
-		virtual UInt32 GHL_CALL GetTexturesMemory() const ;
+		virtual UInt32 GHL_CALL GetTexturesMemory() const;
+    protected:
+#ifdef GHL_DEBUG
+		bool CheckTexture(const Texture*);
+		bool CheckRenderTarget(const RenderTarget*);
+#endif
+        const Texture* GetTexture(UInt32 stage);
+        UInt32  GetRenderWidth() const { return m_width; }
+        UInt32  GetRenderHeight() const { return m_height; }
+        bool  IsSceneStarted() const { return m_scene_started; }
 	private:
+        UInt32 	m_width;
+		UInt32	m_height;
+		RenderTargetImpl* m_scene_target;
+		bool	m_scene_started;
+		const Texture*	m_current_texture[MAX_TEXTURE_STAGES];
+        const ShaderProgram*   m_current_shader;
+
 		Texture* m_sfont_texture;
 #ifdef GHL_DEBUG
-		std::vector<const Texture*>       m_textures;
-		std::vector<const RenderTarget*>  m_targets;
+		std::vector<const TextureImpl*>         m_textures;
+		std::vector<const RenderTargetImpl*>    m_targets;
+        std::vector<const VertexShaderImpl*>    m_v_shaders;
+		std::vector<const FragmentShaderImpl*>  m_f_shaders;
+		std::vector<const ShaderProgramImpl*>   m_shaders;
 #endif
-	}; 
+        friend class TextureImpl;
+        void TextureCreated(const TextureImpl*);
+        void TextureReleased(const TextureImpl*);
+        friend class RenderTargetImpl;
+		void RenderTargetCreated(const RenderTargetImpl*);
+        void RenderTargetReleased(const RenderTargetImpl*);
+        friend class VertexShaderImpl;
+        void VertexShaderCreated(const VertexShaderImpl* vs);
+        void VertexShaderReleased(const VertexShaderImpl* vs);
+        friend class FragmentShaderImpl;
+		void FragmentShaderCreated(const FragmentShaderImpl* fs);
+        void FragmentShaderReleased(const FragmentShaderImpl* fs);
+        friend class ShaderProgramImpl;
+		void ShaderProgramCreated(const ShaderProgramImpl* sp);
+        void ShaderProgramReleased(const ShaderProgramImpl* sp);
+	};
 
 }
 

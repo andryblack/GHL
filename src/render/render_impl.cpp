@@ -23,6 +23,8 @@
 #include "render_impl.h"
 #include "lucida_console_regular_8.h"
 #include "rendertarget_impl.h"
+#include "texture_impl.h"
+#include "shader_impl.h"
 #include <cstdio>
 #include <algorithm>
 #include <cassert>
@@ -30,6 +32,20 @@
 #include "../ghl_data_impl.h"
 
 namespace GHL {
+    
+    
+    bool HaveAlpha(const Texture* tex) {
+        if (!tex) return false;
+        switch (tex->GetFormat()) {
+            case TEXTURE_FORMAT_4444:
+            case TEXTURE_FORMAT_ALPHA:
+            case TEXTURE_FORMAT_RGBA:
+                return true;
+            default:
+                break;
+        }
+        return false;
+    }
 	
     static const char* MODULE = "RENDER";
     
@@ -37,7 +53,9 @@ namespace GHL {
 	m_width(w),m_height(h),m_sfont_texture(0)
     {
         m_scene_target = 0;
-		m_current_texture = 0;
+        for (UInt32 i=0;i<MAX_TEXTURE_STAGES;++i)
+            m_current_texture[i]=0;
+        m_current_shader = 0;
 		m_scene_started = false;
         (void)MODULE;
     }
@@ -97,6 +115,7 @@ namespace GHL {
 	
     void RenderImpl::ResetRenderState()
     {
+        SetShader(0);
         SetTexture(0,0);
         SetTexture(0,1);
         SetIndexBuffer(0);
@@ -116,6 +135,7 @@ namespace GHL {
 	
     bool RenderImpl::RenderInit() {
         LOG_VERBOSE("RenderImpl::RenderInit");
+        if (m_sfont_texture) return true;
         size_t size = lucida_console_regular_8_width*lucida_console_regular_8_height*4;
         ConstInlinedData data((const Byte*)lucida_console_regular_8_data,size);
         
@@ -125,15 +145,35 @@ namespace GHL {
 	
 	
     void RenderImpl::RenderDone() {
-        if (m_sfont_texture)
+        ResetRenderState();
+        if (m_sfont_texture) {
             m_sfont_texture->Release();
+            m_sfont_texture = 0;
+        }
+#ifdef GHL_DEBUG
+        if (!m_textures.empty()) {
+            LOG_ERROR("unreleased " << m_textures.size() << " textures");
+        }
+        if (!m_targets.empty()) {
+            LOG_ERROR("unreleased " << m_targets.size() << " targets");
+        }
+        if (!m_v_shaders.empty()) {
+            LOG_ERROR("unreleased " << m_v_shaders.size() << " vertex shaders");
+        }
+        if (!m_f_shaders.empty()) {
+            LOG_ERROR("unreleased " << m_f_shaders.size() << " fragment shaders");
+        }
+        if (!m_shaders.empty()) {
+            LOG_ERROR("unreleased " << m_shaders.size() << " shaders");
+        }
+#endif
     }
 	
 	
     void GHL_CALL RenderImpl::DebugDrawText(Int32 x, Int32 y, const char *text) {
         if (m_sfont_texture) {
-			const Texture* oldTexture = m_current_texture;
-            SetTexture(m_sfont_texture);
+			const Texture* oldTexture = m_current_texture[0];
+            SetTexture(m_sfont_texture,0);
             static Vertex vtxbuf[128];
             static const UInt16 indxbuf[] = {
                 0,1,2,2,3,0,
@@ -217,56 +257,115 @@ namespace GHL {
             if (chars) {
                 DrawPrimitivesFromMemory(PRIMITIVE_TYPE_TRIANGLES,VERTEX_TYPE_SIMPLE,vtxbuf,chars*4,indxbuf,chars*2);
             }
-			SetTexture(oldTexture);
+			SetTexture(oldTexture,0);
         }
     }
 	
 #ifdef GHL_DEBUG
 	
-    void RenderImpl::TextureCreated(const Texture * tex)     {
-        m_textures.push_back(tex);
-    }
-	
-    void RenderImpl::TextureReleased(const Texture* tex) {
-        if ( m_current_texture == tex ) {
-            LOG_ERROR( "Release current texture" );
-        }
-        std::vector<const Texture*>::iterator it = std::find(m_textures.begin(),m_textures.end(),tex);
-        assert(it!=m_textures.end() && "release unknown texture");
-        if (it!=m_textures.end()) {
-            m_textures.erase(it);
-        }
-    }
-	
     bool RenderImpl::CheckTexture(const Texture* tex) {
-        std::vector<const Texture*>::iterator it = std::find(m_textures.begin(),m_textures.end(),tex);
+        std::vector<const TextureImpl*>::iterator it = std::find(m_textures.begin(),m_textures.end(),tex);
         if (it==m_textures.end()) {
             return false;
         }
         return true;
     }
 	
-	
-    void RenderImpl::RenderTargetCreated(const RenderTarget * target)  {
-        m_targets.push_back(target);
-    }
-	
-    void RenderImpl::RenderTargetReleased(const RenderTarget * target) {
-        std::vector<const RenderTarget*>::iterator it = std::find(m_targets.begin(),m_targets.end(),target);
-        if (it==m_targets.end()) {
-            assert( false && "unknown target");
-        } else {
-            m_targets.erase(it);
-        }
-    }
     bool RenderImpl::CheckRenderTarget(const RenderTarget* target) {
-        std::vector<const RenderTarget*>::iterator it = std::find(m_targets.begin(),m_targets.end(),target);
+        std::vector<const RenderTargetImpl*>::iterator it = std::find(m_targets.begin(),m_targets.end(),target);
         if (it==m_targets.end()) {
             return false;
         }
         return true;
     }
 #endif
+
+    void RenderImpl::TextureCreated(const TextureImpl * tex)     {
+        (void)tex;
+#ifdef GHL_DEBUG
+        m_textures.push_back(tex);
+#endif
+    }
+
+    void RenderImpl::TextureReleased(const TextureImpl* tex) {
+        (void)tex;
+#ifdef GHL_DEBUG
+        std::vector<const TextureImpl*>::iterator it = std::find(m_textures.begin(),m_textures.end(),tex);
+        assert(it!=m_textures.end() && "release unknown texture");
+        if (it!=m_textures.end()) {
+            m_textures.erase(it);
+        }
+#endif
+    }
+    
+    void RenderImpl::RenderTargetCreated(const RenderTargetImpl * target)  {
+        (void)target;
+#ifdef GHL_DEBUG
+        m_targets.push_back(target);
+#endif
+    }
+    
+    void RenderImpl::RenderTargetReleased(const RenderTargetImpl * target) {
+        (void)target;
+#ifdef GHL_DEBUG
+        std::vector<const RenderTargetImpl*>::iterator it = std::find(m_targets.begin(),m_targets.end(),target);
+        if (it==m_targets.end()) {
+            assert( false && "unknown target");
+        } else {
+            m_targets.erase(it);
+        }
+#endif
+    }
+    
+    void RenderImpl::VertexShaderCreated(const VertexShaderImpl* vs) {
+        (void)vs;
+#ifdef GHL_DEBUG
+		m_v_shaders.push_back(vs);
+#endif
+	}
+    
+	void RenderImpl::VertexShaderReleased(const VertexShaderImpl* vs) {
+#ifdef GHL_DEBUG
+		std::vector<const VertexShaderImpl*>::iterator it = std::find(m_v_shaders.begin(),m_v_shaders.end(),vs);
+		assert(it!=m_v_shaders.end() && "release unknown vertex shader");
+		if (it!=m_v_shaders.end()) {
+			m_v_shaders.erase(it);
+		}
+#endif
+	}
+    
+    void RenderImpl::FragmentShaderCreated(const FragmentShaderImpl* fs) {
+        (void)fs;
+#ifdef GHL_DEBUG
+		m_f_shaders.push_back(fs);
+#endif
+	}
+    
+	void RenderImpl::FragmentShaderReleased(const FragmentShaderImpl* fs) {
+#ifdef GHL_DEBUG
+		std::vector<const FragmentShaderImpl*>::iterator it = std::find(m_f_shaders.begin(),m_f_shaders.end(),fs);
+		assert(it!=m_f_shaders.end() && "release unknown fragment shader");
+		if (it!=m_f_shaders.end()) {
+			m_f_shaders.erase(it);
+		}
+#endif
+	}
+    
+    void RenderImpl::ShaderProgramCreated(const ShaderProgramImpl* sp) {
+        (void)sp;
+#ifdef GHL_DEBUG
+		m_shaders.push_back(sp);
+#endif
+	}
+	void RenderImpl::ShaderProgramReleased(const ShaderProgramImpl* sp) {
+#ifdef GHL_DEBUG
+		std::vector<const ShaderProgramImpl*>::iterator it = std::find(m_shaders.begin(),m_shaders.end(),sp);
+		assert(it!=m_shaders.end() && "release unknown shader program");
+		if (it!=m_shaders.end()) {
+			m_shaders.erase(it);
+		}
+#endif
+	}
 	
     UInt32 GHL_CALL RenderImpl::GetTexturesMemory() const {
         UInt32 res = 0;
@@ -296,7 +395,51 @@ namespace GHL {
 #endif
         return res;
     }
+    
+    
+    const Texture* RenderImpl::GetTexture(UInt32 stage) {
+        assert(stage<MAX_TEXTURE_STAGES);
+        return m_current_texture[stage];
+    }
+    
+    void GHL_CALL RenderImpl::SetTexture( const Texture* texture, UInt32 stage)  {
+        assert(stage<MAX_TEXTURE_STAGES);
+#ifdef GHL_DEBUG
+        if (texture && !CheckTexture(texture)) {
+            LOG_FATAL( "bind unknown texture" );
+            assert(false && "bind unknown texture");
+            return;
+        }
+#endif
+        if (texture) {
+            texture->AddRef();
+        }
+        if (m_current_texture[stage]) {
+            m_current_texture[stage]->Release();
+        }
+        m_current_texture[stage] = texture;
+    }
 	
+    
+    void GHL_CALL RenderImpl::SetShader(const ShaderProgram *shader) {
+#ifdef GHL_DEBUG
+        if (shader) {
+            std::vector<const ShaderProgramImpl*>::iterator it = std::find(m_shaders.begin(),m_shaders.end(),shader);
+            assert(it!=m_shaders.end() && "bind unknown shader");
+            if (it==m_shaders.end()) {
+                LOG_ERROR( "bind unknown shader" );
+                return;
+            }
+        }
+#endif
+        if (shader) {
+            shader->AddRef();
+        }
+        if (m_current_shader) {
+            m_current_shader->Release();
+        }
+        m_current_shader = shader;
+    }
 }
 
 GHL_API GHL::TextureFormat GHL_CALL GHL_ImageFormatToTextureFormat( GHL::ImageFormat fmt ) {

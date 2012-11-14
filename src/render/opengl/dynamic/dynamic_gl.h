@@ -1,37 +1,29 @@
 #ifndef DYNAMIC_GL_H
 #define DYNAMIC_GL_H
 
-#if defined(_WIN32) && !defined(APIENTRY) && !defined(__CYGWIN__) && !defined(__SCITECH_SNAP__)
-#define WIN32_LEAN_AND_MEAN 1
-#include <windows.h>
-#endif
-
-#ifndef APIENTRY
-#define APIENTRY
-#endif
-#ifndef APIENTRYP
-#define APIENTRYP APIENTRY *
-#endif
-#ifndef GLAPI
-#define GLAPI extern
-#endif
-
-#define DYNAMIC_GL_API GLAPI
-#define DYNAMIC_GL_APIENTRY APIENTRY
-#define DYNAMIC_GL_APIENTRYP APIENTRYP
-
 #include "dynamic_gl_subset.h"
-
-#include <stddef.h>
-#ifndef WIN32_LEAN_AND_MEAN
-#include <inttypes.h>
-#endif
+#include <cstddef>
 
 namespace GHL {
-#include "dynamic_gl_h.inc"
-    void DynamicGLInit();
-    void DynamicGLLoadSubset();
-    void DynamicGLFinish();
+    struct GL {
+#define DYNAMIC_GL_FEATURE(Name) bool DinamicGLFeature_##Name##_Supported();
+#define DYNAMIC_GL_TYPEDEF(Type,Alias) typedef Type GL##Alias;
+#define DYNAMIC_GL_CONSTANT(Name,Val) static const GLenum Name = Val;
+#define DYNAMIC_GL_TYPE(Type) GL##Type
+#define DYNAMIC_GL_FUNCTION(Ret,Name,Args,ArgNames) Ret Name Args;
+#define DYNAMIC_GL_FUNCTION_V(Name,Args,ArgNames) void Name Args;
+#include "dynamic_gl_inc.h"
+#undef DYNAMIC_GL_FUNCTION
+#undef DYNAMIC_GL_FUNCTION_V
+#undef DYNAMIC_GL_CONSTANT
+#undef DYNAMIC_GL_FEATURE
+#undef DYNAMIC_GL_TYPEDEF
+#undef DYNAMIC_GL_TYPE
+        static void DynamicGLInit();
+        static void DynamicGLFinish();
+        
+    };
+    extern GL gl;
 }
 
 #endif // DYNAMIC_GL_H

@@ -1,6 +1,6 @@
 /*
  GHL - Game Helpers Library
- Copyright (C)  Andrey Kunitsyn 2011
+ Copyright (C)  Andrey Kunitsyn 2012
  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -20,44 +20,26 @@
  blackicebox (at) gmail (dot) com
  */
 
-#ifndef GHL_SHADER_H
-#define GHL_SHADER_H
+#ifndef TEXTURE_IMPL_H_INCLUDED
+#define TEXTURE_IMPL_H_INCLUDED
 
-#include "ghl_types.h"
-#include "ghl_api.h"
-#include "ghl_data_stream.h"
-#include "ghl_ref_counter.h"
+#include "ghl_texture.h"
+#include "../ghl_ref_counter_impl.h"
 
-namespace GHL 
-{
-	
-	/// Shader
-	struct Shader : RefCounter
-	{
-	};
-	
-	/// Vertex shader
-	struct VertexShader : Shader
-	{
-	};
-	
-	/// Fragment shader
-	struct FragmentShader : Shader
-	{
-	};
-	
-	/// Uniform
-	struct ShaderUniform {
-		virtual void GHL_CALL SetValueFloat(float v) = 0;
-		virtual void GHL_CALL SetValueInt(Int32 v) = 0;
-	};
-	
-	struct ShaderProgram : RefCounter
-	{
-		/// get uniform
-		virtual ShaderUniform* GHL_CALL GetUniform(const char* name) = 0;
-	};
-	
+namespace GHL {
+    
+    class RenderImpl;
+    
+    class TextureImpl : public RefCounterImpl<Texture> {
+    public:
+        virtual ~TextureImpl();
+    protected:
+        explicit TextureImpl( RenderImpl* parent );
+        void RestoreTexture(UInt32 stage);
+    private:
+        RenderImpl* m_parent;
+    };
+    
 }
 
-#endif /*GHL_SHADER_H*/
+#endif /* TEXTURE_IMPL_H_INCLUDED */

@@ -10,18 +10,16 @@
 #ifndef TEXTURE_OPENGL_H
 #define TEXTURE_OPENGL_H
 
-#include "ghl_texture.h"
+#include "../texture_impl.h"
 #include "ghl_opengl.h"
-#include "../../ghl_ref_counter_impl.h"
 
 namespace GHL {
 
     class RenderOpenGL;
 
-	class TextureOpenGL : public RefCounterImpl<Texture> {
+	class TextureOpenGL : public TextureImpl {
 	private:
-		RenderOpenGL* m_parent;
-		GLuint	m_name;
+		GL::GLuint	m_name;
 		UInt32	m_width;
 		UInt32	m_height;
 		TextureFormat	m_fmt;
@@ -34,13 +32,13 @@ namespace GHL {
 		void calc_filtration_min();
 		void calc_filtration_mag();
 		void check_mips();
-		TextureOpenGL(GLuint name,RenderOpenGL* parent,TextureFormat fmt,UInt32 w,UInt32 h);
+		TextureOpenGL(GL::GLuint name,RenderOpenGL* parent,TextureFormat fmt,UInt32 w,UInt32 h);
    public:
         ~TextureOpenGL();
         
 		static TextureOpenGL* Create( RenderOpenGL* parent,TextureFormat fmt,UInt32 w,UInt32 h, const Data* data);
 		void bind() const;
-		GLuint name() const { return m_name;}
+		GL::GLuint name() const { return m_name;}
 		/// get texture width
 		virtual UInt32 GHL_CALL GetWidth() const { return m_width;}
 		/// get texture height

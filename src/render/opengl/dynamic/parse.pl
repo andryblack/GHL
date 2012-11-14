@@ -63,8 +63,16 @@ sub parse_args {
 	#	print " str_pair : $arg_pair\n";
 		my ($type,$name) = split ( / / , $arg_pair );
 		my $const = "no";
+		my $pointer_to_pointer = "no";
+		my $pointer_to_const = "no";
 		if ($type eq 'const' ) {
 			($const,$type,$name) = split ( / / , $arg_pair );
+			if ($name eq 'const') {
+				my ($a,$b,$c,$d) = split ( / / , $arg_pair );
+				$pointer_to_const = 'yes';
+				#print "$args_string : const ptr\n";
+				$name = $d;
+			}
 			$const = "yes";
 		}
 		my $pointer = 'no';
@@ -76,13 +84,32 @@ sub parse_args {
 			$pointer = 'yes';
 			$name = $1;
 		}
+		my $xtype = $type;
+		if ( ($xtype =~ /\s*\*\s*(\w+)/) or ($xtype =~ /(\w+)\*\s*/) ){
+			if ( $pointer eq 'yes' ) {
+				$pointer_to_pointer = 'yes';
+			} else {
+				$pointer = 'yes';
+			}
+			$type = $1;
+		}
 		if ( ! $name ) {
 			$name = "p$def_name";
 			$def_name = $def_name + 1;
 		}
 		$type =~ s/^GL//;
 	#	print " pair : $type $name\n";
-		$args[++$#args] = { type => $type, name => $name , const => $const, pointer => $pointer};
+		$args[++$#args] = { 
+			type => $type, 
+			name => $name , 
+			const => $const, 
+			pointer => $pointer,
+			pointer_to_pointer => $pointer_to_pointer,
+			pointer_to_const => $pointer_to_const
+		};
+		# if ( $pointer_to_const eq 'yes') {
+		# 	print 'arg: $args[$#args]';
+		# }
     }
     return @args;
 }
@@ -97,7 +124,7 @@ my @features = ();
 sub parse_gl_h() {
     open ( my $in , "<" ,"gl.h" ) or die "Can't open file gl.h";
     my @lines = <$in>;
-    my $feature = { name => "VERSION_1_1" , core => "yes" };
+    my $feature = { name => "CORE" , core => "yes" };
     my $skip="no";
     my $wait_endif = "no";
     my $collect_line = "no";
@@ -117,7 +144,7 @@ sub parse_gl_h() {
         } else {
             $line = $xline;
             my $original_line = $xline;
-            if (  $xline =~ /^[A-Z_]+API\s+[\s\*\w]+\s+[GL_]*APIENTRY\s+(\w+)\s*\(\s*/ && !($original_line =~ /;$/) ) {
+            if (  $xline =~ /^[A-Z_]+APIC*A*L*\s+[\s\*\w]+\s+[GL_]*APIENTRY\s+(\w+)\s*\(\s*/ && !($original_line =~ /;$/) ) {
                 $collect_line = "yes";
             }
         }
@@ -159,7 +186,7 @@ sub parse_gl_h() {
                         push ( @{$feature->{'constants'}} , { 'name' => $name, 'value' => $value} );
                     }
                 }
-            } elsif ( $line =~ /^[A-Z_]+API\s+([\s\*\w]+)\s+[GL_]*APIENTRY\s+(\w+)\s*\(\s*([\w\s,\*]*)\s*\)\s*;$/) {
+            } elsif ( $line =~ /^[A-Z_]+APIC*A*L*\s+([\s\*\w]+)\s+[GL_]*APIENTRY\s+(\w+)\s*\(\s*([\w\s,\*]*)\s*\)\s*;$/) {
                 #print "/**$line**/\n";
                 my $res = demangle_type($1);
                 my $name = demangle_func($2);
@@ -219,7 +246,7 @@ sub parse_glext_h() {
 			$args =~ s/\s*$//;
 			$res =~ s/GL//;
 			push ( @{$featurez->{$feature_name}->{'protos'}} , { 'name' => $name, 'res' => $res , 'args' => $args} );
-		} elsif ( /^[A-Z_]+API\s+(\w+)\s+[GL_]*APIENTRY\s+(\w+)\s*\(\s*([\w\s,\*]*)\s*\);/ ) {
+		} elsif ( /^[A-Z_]+APIC*A*L*\s+(\w+)\s+[GL_]*APIENTRY\s+(\w+)\s*\(\s*([\w\s,\*]*)\s*\);/ ) {
 			my $res = demangle_type($1);
 			my $name = demangle_func($2);
 			my $args = $3;
@@ -332,46 +359,111 @@ sub mangle_args {
 	}
 }
 
+sub mangle_args_inc {
+	my (@argsa) = @_;
+	if (@argsa) {
+		my $args = "";
+		my $sep = "";
+		foreach my $arg ( @argsa ) {
+			my $name = $arg->{'name'};
+			my $type = $arg->{'type'};
+			my $const = $arg->{'const'};
+			my $pointer = $arg->{'pointer'};
+			my $pointer_to_pointer = $arg->{'pointer_to_pointer'};
+			my $pointer_to_const = $arg->{'pointer_to_const'};
+			$args = $args . $sep;
+			if ($const eq 'yes' ) {
+				$args = $args . 'const ' ;
+			}
+			$args = $args . "DYNAMIC_GL_TYPE($type) ";
+			if ($pointer eq 'yes' ) {
+				$args = $args . '* ';
+			}
+			if ($pointer_to_const eq 'yes' ) {
+				$args = $args . 'const ' ;
+			}
+			if ($pointer_to_pointer eq 'yes' ) {
+				$args = $args . '* ';
+			}
+			$args = $args . $name;
+			$sep = " , ";
+		}
+		return $args;
+	} else {
+		return "";
+	}
+}
 
-sub print_h{
+sub mangle_arg_names {
+	my (@argsa) = @_;
+	if (@argsa) {
+		my $args = "";
+		my $sep = "";
+		foreach my $arg ( @argsa ) {
+			my $name = $arg->{'name'};
+			my $type = $arg->{'type'};
+			my $const = $arg->{'const'};
+			my $pointer = $arg->{'pointer'};
+			$args = $args . $sep;
+			$args = $args . $name;
+			$sep = " , ";
+		}
+		return $args;
+	} else {
+		return "";
+	}
+}
+
+sub print_inc{
 	
 	foreach my $feature ( @features ) {
 		print "/*$feature->{'name'}*/\n";
 		print "#ifdef USE_DYNAMIC_GL_$feature->{'name'}\n";
+		print "DYNAMIC_GL_FEATURE($feature->{'name'})\n";
 		foreach my $typedef ( @{$feature->{'typedefs'}} ) {
-			print "typedef $typedef->{'type'} GL$typedef->{'name'};\n";
+			print "DYNAMIC_GL_TYPEDEF($typedef->{'type'},$typedef->{'name'})\n";
 			#print "  <typedef name=\"$typedef->{'name'}\" type=\"$typedef->{'type'}\" />\n";
 		}
 		foreach my $constant ( @{$feature->{'constants'}} ) {
-			print "#define GL_$constant->{'name'} $constant->{'value'}\n"; 
+			my $name = $constant->{'name'};
+			if ( $name =~ /^[0-9]+([A-Z0-9_]+)/ ) {
+				$name = "_$constant->{'name'}";
+			} else {
+				$name = $constant->{'name'};
+			}
+			print "DYNAMIC_GL_CONSTANT($name,$constant->{'value'})\n"
+			#print "#define GL_$constant->{'name'} $constant->{'value'}\n"; 
 			#print "  <constant name=\"$constant->{'name'}\" value=\"$constant->{'value'}\" />\n";
 		}
-        if ( @{$feature->{'functions'}} ) {
-            print "#ifndef DYNAMIC_GL_NO_FUCPOINTERS\n";
+        if ( $feature->{'functions'} and @{$feature->{'functions'}} ) {
+            #print "#ifndef DYNAMIC_GL_NO_FUCPOINTERS\n";
             foreach my $function ( @{$feature->{'functions'}} ) {
-                my $args = mangle_args(@{$function->{'args'}});
+                my $args = mangle_args_inc(@{$function->{'args'}});
+                my $arg_names = mangle_arg_names(@{$function->{'args'}});
                 my $ret = "void";
                 if ( ! ( ($function->{'rettype'} eq "void") && ($function->{'retconst'} eq "no") && ($function->{'retpointer'} eq "no") ) ) {
-                    $ret = mangle_type( { type=>$function->{'rettype'},const=>$function->{'retconst'},pointer=>$function->{'retpointer'}},"GL");
+                    $ret = mangle_type( { type=>$function->{'rettype'},const=>$function->{'retconst'},pointer=>$function->{'retpointer'}},"");
+                	print "DYNAMIC_GL_FUNCTION(DYNAMIC_GL_TYPE($ret),$function->{'name'},($args),($arg_names))\n";
+                } else {
+					print "DYNAMIC_GL_FUNCTION_V($function->{'name'},($args),($arg_names))\n";
                 }
                 #print "typedef $ret ( DYNAMIC_GL_APIENTRYP DynamicGL_$function->{'name'}_Proc ) ( $args );\n";
-                print "extern $ret (DYNAMIC_GL_APIENTRYP DynamicGL_$function->{'name'})($args);\n";
-                print "#define gl$function->{'name'} DynamicGL_$function->{'name'}\n";
+                #print "#define gl$function->{'name'} DynamicGL_$function->{'name'}\n";
             }
-			print "#else\n";
-			print "extern \"C\" {\n";
-			foreach my $function ( @{$feature->{'functions'}} ) {
-				my $args = mangle_args(@{$function->{'args'}});
-                my $ret = "void";
-                if ( ! ( ($function->{'rettype'} eq "void") && ($function->{'retconst'} eq "no") && ($function->{'retpointer'} eq "no") ) ) {
-                    $ret = mangle_type( { type=>$function->{'rettype'},const=>$function->{'retconst'},pointer=>$function->{'retpointer'}},"GL");
-                }
-                print " DYNAMIC_GL_APIENTRY $ret gl$function->{'name'}( $args );\n";
-            }
-			print "}\n";
-			print "#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/\n";
+			#print "#else\n";
+			#print "extern \"C\" {\n";
+			#foreach my $function ( @{$feature->{'functions'}} ) {
+			#	my $args = mangle_args(@{$function->{'args'}});
+            #    my $ret = "void";
+            #    if ( ! ( ($function->{'rettype'} eq "void") && ($function->{'retconst'} eq "no") && ($function->{'retpointer'} eq "no") ) ) {
+            #        $ret = mangle_type( { type=>$function->{'rettype'},const=>$function->{'retconst'},pointer=>$function->{'retpointer'}},"GL");
+            #    }
+            #    print " DYNAMIC_GL_APIENTRY $ret gl$function->{'name'}( $args );\n";
+            #}
+			#print "}\n";
+			#print "#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/\n";
         }
-		print "extern bool DinamicGLFeature_$feature->{'name'}_Supported();\n";
+		#print "static bool DinamicGLFeature_$feature->{'name'}_Supported();\n";
 		print "#endif /*USE_DYNAMIC_GL_$feature->{'name'}*/\n\n";
 	}
 }
@@ -381,8 +473,8 @@ sub print_cpp{
 		print "/*$feature->{'name'}*/\n";
 		print "#ifdef USE_DYNAMIC_GL_$feature->{'name'}\n";
 	
-	    if (@{$feature->{'functions'}}) {
-            print "#ifndef DYNAMIC_GL_NO_FUCPOINTERS\n";
+	    if ($feature->{'functions'}) {
+            #print "#ifndef DYNAMIC_GL_NO_FUCPOINTERS\n";
 			foreach my $function ( @{$feature->{'functions'}} ) {
 				my $args = mangle_args(@{$function->{'args'}});
 				my $ret = "void";
@@ -390,52 +482,53 @@ sub print_cpp{
 					$ret = mangle_type( { type=>$function->{'rettype'},const=>$function->{'retconst'},pointer=>$function->{'retpointer'}},"GL");
 				}
 				#print "typedef $ret ( DYNAMIC_GL_APIENTRYP DynamicGL_$function->{'name'}_Proc ) ( $args );\n";
-				print "$ret (DYNAMIC_GL_APIENTRYP DynamicGL_$function->{'name'})($args) = 0;\n";
+				#print "$ret (DYNAMIC_GL_APIENTRYP DynamicGL_$function->{'name'})($args) = 0;\n";
+				print "DYNAMIC_GL_FUNC_IMPL($ret,$function->{'name'},($args))\n";
 			}
 			
-            print "static bool DinamicGLFeature_$feature->{'name'}_loaded = false; \n";
-            print "static void InitDinamicGLFeature_$feature->{'name'}() {\n";
-            foreach my $function ( @{$feature->{'functions'}} ) {
-                my $args = mangle_args(@{$function->{'args'}});
-                my $ret = "void";
-                if ( ! ( ($function->{'rettype'} eq "void") && ($function->{'retconst'} eq "no") && ($function->{'retpointer'} eq "no") ) ) {
-                    $ret = mangle_type( { type=>$function->{'rettype'},const=>$function->{'retconst'},pointer=>$function->{'retpointer'}},"GL");
-                }
-                my $type = "$ret (DYNAMIC_GL_APIENTRYP)($args)";
-                print "		DynamicGL_$function->{'name'} = DynamicGL_LoadFunction<$type>(\"gl$function->{'name'}\"); \n";
-            }
-            print "		DinamicGLFeature_$feature->{'name'}_loaded = true; \n";
-            print "}\n";
-            print "#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/\n";
+            #print "static bool DinamicGLFeature_$feature->{'name'}_loaded = false; \n";
+            #print "static void InitDinamicGLFeature_$feature->{'name'}() {\n";
+            # foreach my $function ( @{$feature->{'functions'}} ) {
+            #     my $args = mangle_args(@{$function->{'args'}});
+            #     my $ret = "void";
+            #     if ( ! ( ($function->{'rettype'} eq "void") && ($function->{'retconst'} eq "no") && ($function->{'retpointer'} eq "no") ) ) {
+            #         $ret = mangle_type( { type=>$function->{'rettype'},const=>$function->{'retconst'},pointer=>$function->{'retpointer'}},"GL");
+            #     }
+            #     my $type = "$ret (DYNAMIC_GL_APIENTRYP)($args)";
+            #     print "		DynamicGL_$function->{'name'} = DynamicGL_LoadFunction<$type>(\"gl$function->{'name'}\"); \n";
+            # }
+            # print "		DinamicGLFeature_$feature->{'name'}_loaded = true; \n";
+            # print "}\n";
+            # print "#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/\n";
         }
-		print "bool DinamicGLFeature_$feature->{'name'}_Supported() {\n";
-		print "		static bool supported = false;\n";
-		print "		static bool checked = false;\n";
-		print "		if (checked) return supported;\n";
-		print "		checked = true;\n";
-		if ($feature->{'core'} eq "no") {
-			print "		if(!DynamicGL_CheckExtensionSupported(\"GL_$feature->{'name'}\")) return false;\n";
-		}
-        if (@{$feature->{'functions'}}) {
-            print "#ifndef DYNAMIC_GL_NO_FUCPOINTERS\n";
-            print "		if (!DinamicGLFeature_$feature->{'name'}_loaded) {\n";
-            print "			InitDinamicGLFeature_$feature->{'name'}();\n";
-            print "		}\n";
-            foreach my $function ( @{$feature->{'functions'}} ) {
-                print "		if (DynamicGL_$function->{'name'}==0) return false; \n";
-            }
-            print "#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/\n";
-        }
-		print "		supported = true;\n";
-		print "		return true;\n";
-		print "}\n";
+		# print "bool DinamicGLFeature_$feature->{'name'}_Supported() {\n";
+		# print "		static bool supported = false;\n";
+		# print "		static bool checked = false;\n";
+		# print "		if (checked) return supported;\n";
+		# print "		checked = true;\n";
+		# if ($feature->{'core'} eq "no") {
+		# 	print "		if(!DynamicGL_CheckExtensionSupported(\"GL_$feature->{'name'}\")) return false;\n";
+		# }
+  #       if ($feature->{'functions'}) {
+  #           print "#ifndef DYNAMIC_GL_NO_FUCPOINTERS\n";
+  #           print "		if (!DinamicGLFeature_$feature->{'name'}_loaded) {\n";
+  #           print "			InitDinamicGLFeature_$feature->{'name'}();\n";
+  #           print "		}\n";
+  #           foreach my $function ( @{$feature->{'functions'}} ) {
+  #               print "		if (DynamicGL_$function->{'name'}==0) return false; \n";
+  #           }
+  #           print "#endif /*DYNAMIC_GL_NO_FUCPOINTERS*/\n";
+  #       }
+		# print "		supported = true;\n";
+		# print "		return true;\n";
+		# print "}\n";
 		print "#endif /*USE_DYNAMIC_GL_$feature->{'name'}*/\n\n";
 	}
 	
 	print "void InternalDynamicGLLoadSubset() {\n";
 	print "#ifndef DYNAMIC_GL_NO_FUCPOINTERS\n";
 	foreach my $feature ( @features ) {
-        if (@{$feature->{'functions'}}) {
+        if ($feature->{'functions'}) {
             print "#ifdef USE_DYNAMIC_GL_$feature->{'name'}\n";
             print "			InitDinamicGLFeature_$feature->{'name'}();\n";
             print "#endif /*USE_DYNAMIC_GL_$feature->{'name'}*/\n";
@@ -451,12 +544,8 @@ if (! $out_type ) {
 }
 if ($out_type eq "xml") {
 	print_xml();
-} elsif ($out_type eq "h" ) {
-	print_h();
+} elsif ($out_type eq "inc" ) {
+	print_inc();
 } elsif ($out_type eq "cpp" ) {
 	print_cpp();
-} elsif ($out_type eq "glesh" ) {
-	print_h();
-} elsif ($out_type eq "glescpp" ) {
-	print_cpp();
-}
+} 

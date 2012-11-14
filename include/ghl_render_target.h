@@ -15,6 +15,8 @@
 #include "ghl_ref_counter.h"
 
 namespace GHL {
+    
+    struct Texture;
 
 	/// render target interface
 	struct RenderTarget : RefCounter

@@ -153,6 +153,8 @@ namespace GHL
 		TEX_OP_INT_TEXTURE_ALPHA,///< interpolate from arg1 to arg2 by texture alpha value
 		TEX_OP_INT_CURRENT_ALPHA,///< interpolate from arg1 to arg2 by current alpha value
 	};
+    
+    static const UInt32 MAX_TEXTURE_STAGES = 2;
 
 	/// render interface
 	struct Render

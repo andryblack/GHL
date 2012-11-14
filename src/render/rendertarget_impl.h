@@ -19,9 +19,14 @@ namespace GHL {
 	
 	class RenderTargetImpl : public RefCounterImpl<RenderTarget> {
 	public:
-		virtual ~RenderTargetImpl() {}
+        explicit RenderTargetImpl( RenderImpl* parent );
+		virtual ~RenderTargetImpl();
 		virtual void BeginScene( RenderImpl* render ) = 0;
 		virtual void EndScene( RenderImpl* render ) = 0;
+    protected:
+        RenderImpl* GetParent();
+    private:
+        RenderImpl* m_parent;
 	};
 	
 }

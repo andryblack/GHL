@@ -27,9 +27,6 @@ namespace GHL
 	private:
 #ifndef GHL_SHADERS_UNSUPPORTED
 		bool	m_shaders_support_glsl;
-		std::vector<VertexShaderGLSL*> m_v_shaders_glsl;
-		std::vector<FragmentShaderGLSL*> m_f_shaders_glsl;
-		std::vector<ShaderProgramGLSL*> m_shaders_glsl;
 #endif
 		bool	ExtensionSupported(const char* all,const char* ext) const;
 	public:
@@ -41,13 +38,7 @@ namespace GHL
 		virtual void RenderDone() ;
 		virtual bool RenderSetFullScreen(bool fs) ;
 		
-		void ReleaseTexture(TextureOpenGL* tex);
-		void ReleaseRendertarget(RenderTargetOpenGL* rt);
-#ifndef GHL_SHADERS_UNSUPPORTED
-		void ReleaseVertexShader(VertexShaderGLSL* vs);
-		void ReleaseFragmentShader(FragmentShaderGLSL* fs);
-		void ReleaseShaderProgram(ShaderProgramGLSL* sp);
-#endif
+
 		void RestoreTexture();
 		/// Render impl
 		

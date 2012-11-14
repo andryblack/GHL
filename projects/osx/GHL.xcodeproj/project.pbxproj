@@ -148,6 +148,17 @@
 		A47F7F6F14E6D253006B37E2 /* jmemsys.h in Headers */ = {isa = PBXBuildFile; fileRef = A47F7F6C14E6D253006B37E2 /* jmemsys.h */; };
 		A48293081541F81C00A9A4B8 /* jquant1.c in Sources */ = {isa = PBXBuildFile; fileRef = A47F7F1E14E6D175006B37E2 /* jquant1.c */; };
 		A482930F1541FB3C00A9A4B8 /* jquant2.c in Sources */ = {isa = PBXBuildFile; fileRef = A47F7F1F14E6D175006B37E2 /* jquant2.c */; };
+		A48B502916519B110023C1F1 /* pfpl_state.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A48B502716519B110023C1F1 /* pfpl_state.cpp */; };
+		A48B502A16519B110023C1F1 /* pfpl_state.h in Headers */ = {isa = PBXBuildFile; fileRef = A48B502816519B110023C1F1 /* pfpl_state.h */; };
+		A48B502D1651A78E0023C1F1 /* pfpl_cache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A48B502B1651A78E0023C1F1 /* pfpl_cache.cpp */; };
+		A48B502E1651A78E0023C1F1 /* pfpl_cache.h in Headers */ = {isa = PBXBuildFile; fileRef = A48B502C1651A78E0023C1F1 /* pfpl_cache.h */; };
+		A48B50311651AF500023C1F1 /* pfpl_render.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A48B502F1651AF500023C1F1 /* pfpl_render.cpp */; };
+		A48B50321651AF500023C1F1 /* pfpl_render.h in Headers */ = {isa = PBXBuildFile; fileRef = A48B50301651AF500023C1F1 /* pfpl_render.h */; };
+		A48B50351651BCB90023C1F1 /* texture_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A48B50331651BCB80023C1F1 /* texture_impl.cpp */; };
+		A48B50361651BCB90023C1F1 /* texture_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A48B50341651BCB90023C1F1 /* texture_impl.h */; };
+		A48B50381651BFA40023C1F1 /* rendertarget_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A48B50371651BFA40023C1F1 /* rendertarget_impl.cpp */; };
+		A48B50491652CE890023C1F1 /* shader_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A48B50471652CE890023C1F1 /* shader_impl.cpp */; };
+		A48B504A1652CE890023C1F1 /* shader_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A48B50481652CE890023C1F1 /* shader_impl.h */; };
 		A4A3561F15E93F0B00835949 /* ghl_data.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A3561E15E93F0B00835949 /* ghl_data.h */; };
 		A4A3562215E93F1700835949 /* ghl_data_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4A3562015E93F1700835949 /* ghl_data_impl.cpp */; };
 		A4A3562315E93F1700835949 /* ghl_data_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A3562115E93F1700835949 /* ghl_data_impl.h */; };
@@ -316,12 +327,22 @@
 		A47F7F2314E6D175006B37E2 /* transupp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = transupp.h; path = jpeg/transupp.h; sourceTree = "<group>"; };
 		A47F7F5B14E6D1BB006B37E2 /* dynamic_gl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dynamic_gl.cpp; sourceTree = "<group>"; };
 		A47F7F5C14E6D1BB006B37E2 /* dynamic_gl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dynamic_gl.h; sourceTree = "<group>"; };
-		A47F7F5D14E6D1BB006B37E2 /* dynamic_gl_cpp.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; path = dynamic_gl_cpp.inc; sourceTree = "<group>"; };
-		A47F7F5E14E6D1BB006B37E2 /* dynamic_gl_h.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; path = dynamic_gl_h.inc; sourceTree = "<group>"; };
 		A47F7F5F14E6D1BB006B37E2 /* dynamic_gl_subset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dynamic_gl_subset.h; sourceTree = "<group>"; };
 		A47F7F6A14E6D253006B37E2 /* jdct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jdct.h; path = jpeg/jdct.h; sourceTree = "<group>"; };
 		A47F7F6B14E6D253006B37E2 /* jmemnobs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jmemnobs.c; path = jpeg/jmemnobs.c; sourceTree = "<group>"; };
 		A47F7F6C14E6D253006B37E2 /* jmemsys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jmemsys.h; path = jpeg/jmemsys.h; sourceTree = "<group>"; };
+		A48B502716519B110023C1F1 /* pfpl_state.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pfpl_state.cpp; sourceTree = "<group>"; };
+		A48B502816519B110023C1F1 /* pfpl_state.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pfpl_state.h; sourceTree = "<group>"; };
+		A48B502B1651A78E0023C1F1 /* pfpl_cache.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pfpl_cache.cpp; sourceTree = "<group>"; };
+		A48B502C1651A78E0023C1F1 /* pfpl_cache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pfpl_cache.h; sourceTree = "<group>"; };
+		A48B502F1651AF500023C1F1 /* pfpl_render.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pfpl_render.cpp; sourceTree = "<group>"; };
+		A48B50301651AF500023C1F1 /* pfpl_render.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pfpl_render.h; sourceTree = "<group>"; };
+		A48B50331651BCB80023C1F1 /* texture_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = texture_impl.cpp; sourceTree = "<group>"; };
+		A48B50341651BCB90023C1F1 /* texture_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = texture_impl.h; sourceTree = "<group>"; };
+		A48B50371651BFA40023C1F1 /* rendertarget_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rendertarget_impl.cpp; sourceTree = "<group>"; };
+		A48B50471652CE890023C1F1 /* shader_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shader_impl.cpp; sourceTree = "<group>"; };
+		A48B50481652CE890023C1F1 /* shader_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shader_impl.h; sourceTree = "<group>"; };
+		A48B504C165306260023C1F1 /* dynamic_gl_inc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dynamic_gl_inc.h; sourceTree = "<group>"; };
 		A4A3561E15E93F0B00835949 /* ghl_data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_data.h; sourceTree = "<group>"; };
 		A4A3562015E93F1700835949 /* ghl_data_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ghl_data_impl.cpp; sourceTree = "<group>"; };
 		A4A3562115E93F1700835949 /* ghl_data_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_data_impl.h; sourceTree = "<group>"; };
@@ -461,12 +482,18 @@
 		A42900A31413949B00429C47 /* render */ = {
 			isa = PBXGroup;
 			children = (
+				A48B502516519AE40023C1F1 /* pfpl */,
 				A42900A41413949B00429C47 /* lucida_console_regular_8.cpp */,
 				A42900A51413949B00429C47 /* lucida_console_regular_8.h */,
 				A42900A61413949B00429C47 /* opengl */,
 				A42900B71413949B00429C47 /* render_impl.cpp */,
 				A42900B81413949B00429C47 /* render_impl.h */,
 				A42900B91413949B00429C47 /* rendertarget_impl.h */,
+				A48B50331651BCB80023C1F1 /* texture_impl.cpp */,
+				A48B50341651BCB90023C1F1 /* texture_impl.h */,
+				A48B50371651BFA40023C1F1 /* rendertarget_impl.cpp */,
+				A48B50471652CE890023C1F1 /* shader_impl.cpp */,
+				A48B50481652CE890023C1F1 /* shader_impl.h */,
 			);
 			path = render;
 			sourceTree = "<group>";
@@ -647,13 +674,25 @@
 		A47F7F5A14E6D1BB006B37E2 /* dynamic */ = {
 			isa = PBXGroup;
 			children = (
+				A48B504C165306260023C1F1 /* dynamic_gl_inc.h */,
 				A47F7F5B14E6D1BB006B37E2 /* dynamic_gl.cpp */,
 				A47F7F5C14E6D1BB006B37E2 /* dynamic_gl.h */,
-				A47F7F5D14E6D1BB006B37E2 /* dynamic_gl_cpp.inc */,
-				A47F7F5E14E6D1BB006B37E2 /* dynamic_gl_h.inc */,
 				A47F7F5F14E6D1BB006B37E2 /* dynamic_gl_subset.h */,
 			);
 			path = dynamic;
+			sourceTree = "<group>";
+		};
+		A48B502516519AE40023C1F1 /* pfpl */ = {
+			isa = PBXGroup;
+			children = (
+				A48B502716519B110023C1F1 /* pfpl_state.cpp */,
+				A48B502816519B110023C1F1 /* pfpl_state.h */,
+				A48B502B1651A78E0023C1F1 /* pfpl_cache.cpp */,
+				A48B502C1651A78E0023C1F1 /* pfpl_cache.h */,
+				A48B502F1651AF500023C1F1 /* pfpl_render.cpp */,
+				A48B50301651AF500023C1F1 /* pfpl_render.h */,
+			);
+			path = pfpl;
 			sourceTree = "<group>";
 		};
 		A4A3562C15E947D600835949 /* openal */ = {
@@ -765,6 +804,11 @@
 				A4A3563215E947D600835949 /* ghl_sound_openal.h in Headers */,
 				A4A3563415E949FF00835949 /* ghl_sound_impl.h in Headers */,
 				A4FAE26B1613471800D7E055 /* ghl_sound_cocoa.h in Headers */,
+				A48B502A16519B110023C1F1 /* pfpl_state.h in Headers */,
+				A48B502E1651A78E0023C1F1 /* pfpl_cache.h in Headers */,
+				A48B50321651AF500023C1F1 /* pfpl_render.h in Headers */,
+				A48B50361651BCB90023C1F1 /* texture_impl.h in Headers */,
+				A48B504A1652CE890023C1F1 /* shader_impl.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -794,7 +838,7 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0450;
 				ORGANIZATIONNAME = AndryBlack;
 			};
 			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "GHL" */;
@@ -914,6 +958,12 @@
 				A4A3562A15E944E700835949 /* wav_decoder.cpp in Sources */,
 				A4A3563115E947D600835949 /* ghl_sound_openal.cpp in Sources */,
 				A4FAE26A1613471800D7E055 /* ghl_sound_cocoa.cpp in Sources */,
+				A48B502916519B110023C1F1 /* pfpl_state.cpp in Sources */,
+				A48B502D1651A78E0023C1F1 /* pfpl_cache.cpp in Sources */,
+				A48B50311651AF500023C1F1 /* pfpl_render.cpp in Sources */,
+				A48B50351651BCB90023C1F1 /* texture_impl.cpp in Sources */,
+				A48B50381651BFA40023C1F1 /* rendertarget_impl.cpp in Sources */,
+				A48B50491652CE890023C1F1 /* shader_impl.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -924,6 +974,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/GHL.dst;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -940,6 +991,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
 				DSTROOT = /tmp/GHL.dst;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
