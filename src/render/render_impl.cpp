@@ -75,6 +75,7 @@ namespace GHL {
 		assert(!m_scene_started);
         m_scene_target = static_cast<RenderTargetImpl*>(target);
         SetViewport(0,0,GetWidth(),GetHeight());
+        SetOrthoProjection();
 		if (m_scene_target) {
             m_scene_target->AddRef();
 			m_scene_target->BeginScene(this);
@@ -94,6 +95,7 @@ namespace GHL {
 		m_scene_started = false;
     }
 	
+    
     
     void RenderImpl::Resize(UInt32 w,UInt32 h) {
         m_width = w;
@@ -172,7 +174,8 @@ namespace GHL {
 	
     void GHL_CALL RenderImpl::DebugDrawText(Int32 x, Int32 y, const char *text) {
         if (m_sfont_texture) {
-			const Texture* oldTexture = m_current_texture[0];
+            SetOrthoProjection();
+            const Texture* oldTexture = m_current_texture[0];
             SetTexture(m_sfont_texture,0);
             static Vertex vtxbuf[128];
             static const UInt16 indxbuf[] = {

@@ -18,72 +18,53 @@
 
 namespace GHL {
 	
-	UInt32 g_default_renderbuffer = 0;
-    static const char* MODULE = "RENDER";
+	static const char* MODULE = "RENDER";
 
-/*
-    static bool extensions_supported() {
-        static bool checked = false;
-        static bool result = false;
-        if (!checked) {
-#ifdef GHL_OPENGLES
-            result = m_api->DinamicGLFeature_OES_framebuffer_object_Supported();
-            checked = true;
-            LOG_VERBOSE("DinamicGLFeature_OES_framebuffer_object_Supported result : " << result);
-#else
-            result = m_api->DinamicGLFeature_EXT_framebuffer_object_Supported();
-            checked = true;
-            LOG_VERBOSE("DinamicGLFeature_EXT_framebuffer_object_Supported result : " << result);
-#endif
-        }
-        return result;
-    }
-*/
 
     RenderTargetOpenGL::RenderTargetOpenGL(RenderOpenGL* parent,UInt32 w,UInt32 h,TextureFormat fmt,bool depth) :
-		RenderTargetImpl(parent),m_width(w),m_height(h),m_have_depth(depth),m_texture(0)
+		RenderTargetImpl(parent),gl(parent->get_api()),m_width(w),m_height(h),m_have_depth(depth),m_texture(0)
 	{
-        if (!m_api) return;
-        m_api->GenFramebuffers(1, &m_framebuffer);
-		m_api->BindFramebuffer(m_api->FRAMEBUFFER,m_framebuffer);
+        if (!gl.rtapi) return;
+        gl.rtapi->GenFramebuffers(1, &m_framebuffer);
+		gl.rtapi->BindFramebuffer(gl.rtapi->FRAMEBUFFER,m_framebuffer);
 		m_texture = reinterpret_cast<TextureOpenGL*>(GetParent()->CreateTexture(w, h, fmt, 0));
-		m_api->FramebufferTexture2D(m_api->FRAMEBUFFER, m_api->COLOR_ATTACHMENT0, GL::TEXTURE_2D, m_texture->name(), 0);
-		gl.BindTexture(GL::TEXTURE_2D,0);
+		gl.rtapi->FramebufferTexture2D(gl.rtapi->FRAMEBUFFER, gl.rtapi->COLOR_ATTACHMENT0, gl.TEXTURE_2D, m_texture->name(), 0);
+		gl.BindTexture(gl.TEXTURE_2D,0);
 		if (depth) {
-            m_api->GenRenderbuffers(1, &m_depth_renderbuffer);
-            m_api->BindRenderbuffer(m_api->RENDERBUFFER, m_depth_renderbuffer);
-            m_api->RenderbufferStorage(m_api->RENDERBUFFER, m_api->DEPTH_COMPONENT16, w, h);
-            m_api->FramebufferRenderbuffer(m_api->FRAMEBUFFER, m_api->DEPTH_ATTACHMENT, m_api->RENDERBUFFER, m_depth_renderbuffer);
+            gl.rtapi->GenRenderbuffers(1, &m_depth_renderbuffer);
+            gl.rtapi->BindRenderbuffer(gl.rtapi->RENDERBUFFER, m_depth_renderbuffer);
+            gl.rtapi->RenderbufferStorage(gl.rtapi->RENDERBUFFER, gl.rtapi->DEPTH_COMPONENT16, w, h);
+            gl.rtapi->FramebufferRenderbuffer(gl.rtapi->FRAMEBUFFER, gl.rtapi->DEPTH_ATTACHMENT, gl.rtapi->RENDERBUFFER, m_depth_renderbuffer);
 		}
 		unbind();
 	}
 	
 	bool RenderTargetOpenGL::check() const {
-		if (!m_api) return false;
+		if (!gl.rtapi) return false;
 		bind();
-        GL::GLenum status = m_api->CheckFramebufferStatus(m_api->FRAMEBUFFER) ;
+        GL::GLenum status = gl.rtapi->CheckFramebufferStatus(gl.rtapi->FRAMEBUFFER) ;
 		unbind();
-		return status == m_api->FRAMEBUFFER_COMPLETE ;
+		return status == gl.rtapi->FRAMEBUFFER_COMPLETE ;
 	}
 	
 	RenderTargetOpenGL::~RenderTargetOpenGL() {
-		if (!m_api) return;
+		if (!gl.rtapi) return;
 		if (m_have_depth)
-			m_api->DeleteRenderbuffers(1,&m_depth_renderbuffer);
+			gl.rtapi->DeleteRenderbuffers(1,&m_depth_renderbuffer);
 		if (m_texture)
 			m_texture->Release();
 		m_texture = 0;
-		m_api->DeleteFramebuffers(1,&m_framebuffer);
+		gl.rtapi->DeleteFramebuffers(1,&m_framebuffer);
     }
 		
 	void RenderTargetOpenGL::bind() const {
-        if (!m_api) return;
-		m_api->BindFramebuffer(m_api->FRAMEBUFFER,m_framebuffer);
+        if (!gl.rtapi) return;
+		gl.rtapi->BindFramebuffer(gl.rtapi->FRAMEBUFFER,m_framebuffer);
 	}
 	
 	void RenderTargetOpenGL::unbind() const {
-        if (!m_api) return;
-		m_api->BindFramebuffer(m_api->FRAMEBUFFER,g_default_renderbuffer);
+        if (!gl.rtapi) return;
+		gl.rtapi->BindFramebuffer(gl.rtapi->FRAMEBUFFER,gl.rtapi->default_renderbuffer);
 	}
 		
 		
@@ -94,12 +75,6 @@ namespace GHL {
 		
 	void RenderTargetOpenGL::BeginScene(RenderImpl* /*render*/)  {
 		bind();
-		gl.Viewport(0, 0, m_width, m_height);
-		gl.MatrixMode(GL::PROJECTION);
-		gl.LoadIdentity();
-		gl.MatrixMode(GL::MODELVIEW);
-		gl.LoadIdentity();
-		gl.Ortho(0, m_width, 0, m_height, -10, 10);
 	}
 	
 	void RenderTargetOpenGL::EndScene(RenderImpl* /*render*/) {
@@ -110,7 +85,7 @@ namespace GHL {
 	void GHL_CALL RenderTargetOpenGL::GetPixels(UInt32 x,UInt32 y,UInt32 w,UInt32 h,Byte* data) {
 		gl.Flush();
 		bind();
-		gl.ReadPixels(x,y, w, h, GL::RGBA, GL::UNSIGNED_BYTE, data);
+		gl.ReadPixels(x,y, w, h, gl.RGBA, gl.UNSIGNED_BYTE, data);
 		unbind();
 		/*const size_t line_size = w*4;
 		Byte line[line_size];

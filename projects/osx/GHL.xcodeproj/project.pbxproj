@@ -190,6 +190,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A401C6871656DA1500DF4C16 /* dynamic_gl_api.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dynamic_gl_api.h; sourceTree = "<group>"; };
 		A41D522F14DEB75E008B50E8 /* ghl_ref_counter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_ref_counter.h; sourceTree = "<group>"; };
 		A41D523214DEB90B008B50E8 /* ghl_ref_counter_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_ref_counter_impl.h; sourceTree = "<group>"; };
 		A429007B1413948E00429C47 /* ghl_api.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_api.h; sourceTree = "<group>"; };
@@ -678,6 +679,7 @@
 				A47F7F5B14E6D1BB006B37E2 /* dynamic_gl.cpp */,
 				A47F7F5C14E6D1BB006B37E2 /* dynamic_gl.h */,
 				A47F7F5F14E6D1BB006B37E2 /* dynamic_gl_subset.h */,
+				A401C6871656DA1500DF4C16 /* dynamic_gl_api.h */,
 			);
 			path = dynamic;
 			sourceTree = "<group>";

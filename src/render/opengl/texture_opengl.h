@@ -19,6 +19,7 @@ namespace GHL {
 
 	class TextureOpenGL : public TextureImpl {
 	private:
+        const GL& gl;
 		GL::GLuint	m_name;
 		UInt32	m_width;
 		UInt32	m_height;

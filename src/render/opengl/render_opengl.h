@@ -25,23 +25,25 @@ namespace GHL
 	class RenderOpenGL : public RenderImpl 
 	{
 	private:
-#ifndef GHL_SHADERS_UNSUPPORTED
-		bool	m_shaders_support_glsl;
-#endif
-		bool	ExtensionSupported(const char* all,const char* ext) const;
+        GLffpl  gl;
 	public:
 		RenderOpenGL(UInt32 w,UInt32 h);
 		~RenderOpenGL();
 		
+        const GL& get_api() const { return gl;}
 		
 		virtual bool RenderInit() ;
 		virtual void RenderDone() ;
 		virtual bool RenderSetFullScreen(bool fs) ;
-		
+		virtual void SetOrthoProjection();
+        virtual void ResetRenderState();
 
 		void RestoreTexture();
 		/// Render impl
-		
+
+		/// Begin graphics scene (frame)
+		virtual void GHL_CALL BeginScene(RenderTarget* target);
+        
 		/// clear scene
 		virtual void GHL_CALL Clear(float r,float g,float b,float a) ;
 		/// clear depth

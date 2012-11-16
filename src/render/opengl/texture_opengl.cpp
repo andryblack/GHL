@@ -12,31 +12,31 @@
 
 namespace GHL {
 
-	static inline GL::GLenum convert_int_format( TextureFormat fmt ) {
+	static inline  GL::GLenum convert_int_format( const GL& gl,TextureFormat fmt ) {
 #ifdef GHL_OPENGLES
 		if (DinamicGLFeature_IMG_texture_compression_pvrtc_Supported()) {
 			if ( fmt == TEXTURE_FORMAT_PVRTC_2BPPV1 )
-				return GL::GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG;
+				return  gl.COMPRESSED_RGBA_PVRTC_2BPPV1_IMG;
 			if ( fmt == TEXTURE_FORMAT_PVRTC_4BPPV1 )
-				return GL::GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
+				return  gl.COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
 		} 
         if (fmt==TEXTURE_FORMAT_ALPHA )
-            return GL::GL_ALPHA;
+            return  gl.ALPHA;
 		if (fmt==TEXTURE_FORMAT_RGB )
-			return GL::GL_RGB;
+			return  gl.RGB;
 		if (fmt==TEXTURE_FORMAT_565)
-			return GL::GL_RGB;
+			return  gl.RGB;
 #else
         if (fmt==TEXTURE_FORMAT_ALPHA )
-            return GL::ALPHA;
+            return  gl.ALPHA;
 		if (fmt==TEXTURE_FORMAT_565)
-			return GL::RGB;
+			return  gl.RGB;
 		if (fmt==TEXTURE_FORMAT_RGB)
-			return GL::RGB8;
+			return  gl.RGB8;
 		if (fmt==TEXTURE_FORMAT_RGBA)
-			return GL::RGBA8;
+			return  gl.RGBA8;
 #endif
-		return GL::RGBA;
+		return  gl.RGBA;
 	}
 	
 	static inline bool format_compressed( TextureFormat fmt ) {
@@ -44,31 +44,31 @@ namespace GHL {
 		fmt == TEXTURE_FORMAT_PVRTC_4BPPV1;
 	}
 
-	static inline GL::GLenum convert_format( TextureFormat fmt ) {
+	static inline  GL::GLenum convert_format(const GL& gl, TextureFormat fmt ) {
         if (fmt==TEXTURE_FORMAT_ALPHA )
-            return GL::ALPHA;
+            return  gl.ALPHA;
 		if (fmt==TEXTURE_FORMAT_RGB )
-			return GL::RGB;
+			return  gl.RGB;
 		if (fmt==TEXTURE_FORMAT_565)
-			return GL::RGB;
-		return GL::RGBA;
+			return  gl.RGB;
+		return  gl.RGBA;
 	}
 	
-	static inline GL::GLenum convert_storage( TextureFormat fmt ) {
+	static inline  GL::GLenum convert_storage(const GL& gl, TextureFormat fmt ) {
 		if (fmt==TEXTURE_FORMAT_565)
-			return GL::UNSIGNED_SHORT_5_6_5;
+			return  gl.UNSIGNED_SHORT_5_6_5;
 		if (fmt==TEXTURE_FORMAT_4444)
-			return GL::UNSIGNED_SHORT_4_4_4_4;
-		return GL::UNSIGNED_BYTE;
+			return  gl.UNSIGNED_SHORT_4_4_4_4;
+		return  gl.UNSIGNED_BYTE;
 	}
 	
-	static inline GL::GLenum convert_wrap( TextureWrapMode m ) {
+	static inline  GL::GLenum convert_wrap(const GL& gl, TextureWrapMode m ) {
 		if (m==TEX_WRAP_CLAMP )
-			return GL::CLAMP_TO_EDGE;
-		return GL::REPEAT;
+			return  gl.CLAMP_TO_EDGE;
+		return  gl.REPEAT;
 	}
 	
-	TextureOpenGL::TextureOpenGL(GL::GLuint name,RenderOpenGL* parent,TextureFormat fmt,UInt32 w,UInt32 h) : TextureImpl(parent),
+	TextureOpenGL::TextureOpenGL(GL::GLuint name,RenderOpenGL* parent,TextureFormat fmt,UInt32 w,UInt32 h) : TextureImpl(parent), gl(parent->get_api()),
 		m_name(name),m_width(w),m_height(h),
 		m_fmt(fmt),
 		m_min_filter(TEX_FILTER_NEAR),
@@ -84,26 +84,29 @@ namespace GHL {
 	TextureOpenGL* TextureOpenGL::Create( RenderOpenGL* parent,TextureFormat fmt,UInt32 w,UInt32 h, const Data* data) {
         if (fmt==TEXTURE_FORMAT_UNKNOWN)
             return 0;
+        const GL& gl(parent->get_api());
         GL::GLuint name = 0;
-		gl.ActiveTexture(GL::TEXTURE0);
+		gl.ActiveTexture(gl.TEXTURE0);
 		gl.GenTextures(1, &name);
 		if (!name) return 0;
-		gl.BindTexture(GL::TEXTURE_2D, name);
+		gl.BindTexture(gl.TEXTURE_2D, name);
 
-		gl.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MIN_FILTER, GL::NEAREST);
-		gl.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MAG_FILTER, GL::NEAREST);
-        gl.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_WRAP_S, GL::CLAMP_TO_EDGE);
-        gl.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_WRAP_T, GL::CLAMP_TO_EDGE);
+		gl.TexParameteri(gl.TEXTURE_2D,  gl.TEXTURE_MIN_FILTER,  gl.NEAREST);
+		gl.TexParameteri(gl.TEXTURE_2D,  gl.TEXTURE_MAG_FILTER,  gl.NEAREST);
+        gl.TexParameteri(gl.TEXTURE_2D,  gl.TEXTURE_WRAP_S,  gl.CLAMP_TO_EDGE);
+        gl.TexParameteri(gl.TEXTURE_2D,  gl.TEXTURE_WRAP_T,  gl.CLAMP_TO_EDGE);
 		if (format_compressed(fmt)) {
 			if ( data )
-				gl.CompressedTexImage2D(GL::TEXTURE_2D, 0, convert_int_format(fmt), w, h, 0, data->GetSize(), data->GetData() );
+				gl.CompressedTexImage2D  (gl.TEXTURE_2D, 0, convert_int_format(gl,fmt), w, h, 0, data->GetSize(), data->GetData() );
 			else {
-				gl.BindTexture(GL::TEXTURE_2D, 0);
+				gl.BindTexture  (gl.TEXTURE_2D, 0);
 				gl.DeleteTextures(1, &name);
 				return 0;
 			}
 		} else {
-			gl.TexImage2D(GL::TEXTURE_2D, 0, convert_int_format(fmt), w, h, 0, convert_format(fmt), convert_storage(fmt),
+			gl.TexImage2D  (gl.TEXTURE_2D, 0,
+                            convert_int_format(gl,fmt), w, h, 0,
+                            convert_format(gl,fmt), convert_storage(gl,fmt),
 						 data ? data->GetData() : 0);
 		}
 		
@@ -115,28 +118,29 @@ namespace GHL {
     }
 	
 	void TextureOpenGL::bind() const {
-		gl.BindTexture(GL::TEXTURE_2D, m_name);
+		gl.BindTexture(gl.TEXTURE_2D, m_name);
 	}
-	static const GL::GLenum min_filters[3][3] = {
-		/// none					// near						// linear
-		{GL::NEAREST,				GL::NEAREST,				GL::LINEAR},               /// mip none
-		{GL::NEAREST_MIPMAP_NEAREST,GL::NEAREST_MIPMAP_NEAREST,	GL::LINEAR_MIPMAP_NEAREST},/// mip near
-		{GL::NEAREST_MIPMAP_LINEAR,	GL::NEAREST_MIPMAP_LINEAR,	GL::LINEAR_MIPMAP_LINEAR}, /// mip linear
-	};
 	
 	void TextureOpenGL::calc_filtration_min() {
+        const  GL::GLenum min_filters[3][3] = {
+            /// none					// near						// linear
+            {gl.NEAREST,				gl.NEAREST,				    gl.LINEAR},               /// mip none
+            {gl.NEAREST_MIPMAP_NEAREST, gl.NEAREST_MIPMAP_NEAREST,	gl.LINEAR_MIPMAP_NEAREST},/// mip near
+            {gl.NEAREST_MIPMAP_LINEAR,	gl.NEAREST_MIPMAP_LINEAR,	gl.LINEAR_MIPMAP_LINEAR}, /// mip linear
+        };
         GL::GLenum filter = min_filters[m_mip_filter][m_min_filter];
-		gl.ActiveTexture(GL::TEXTURE0);
+		gl.ActiveTexture(gl.TEXTURE0);
 		bind();
-		gl.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MIN_FILTER, filter);
+		gl.TexParameteri(gl.TEXTURE_2D,  gl.TEXTURE_MIN_FILTER, filter);
 		RestoreTexture(0);
 	}
 	
 	void TextureOpenGL::calc_filtration_mag() {
-		gl.ActiveTexture(GL::TEXTURE0);
+		gl.ActiveTexture(gl.TEXTURE0);
 		bind();
-        GL::GLenum filter = min_filters[0][m_mag_filter];
-		gl.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MAG_FILTER, filter);
+        const  GL::GLenum mag_filters[] = {gl.NEAREST,gl.NEAREST,gl.LINEAR};
+        GL::GLenum filter = mag_filters[m_mag_filter];
+		gl.TexParameteri(gl.TEXTURE_2D,  gl.TEXTURE_MAG_FILTER, filter);
 		RestoreTexture(0);
 	}
 	
@@ -170,37 +174,35 @@ namespace GHL {
 	
 	/// set texture wrap U
 	void GHL_CALL TextureOpenGL::SetWrapModeU(TextureWrapMode wm) {
-		gl.ActiveTexture(GL::TEXTURE0);
+		gl.ActiveTexture(gl.TEXTURE0);
 		bind();
-		gl.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_WRAP_S, convert_wrap(wm));
+		gl.TexParameteri(gl.TEXTURE_2D,  gl.TEXTURE_WRAP_S, convert_wrap(gl,wm));
 		RestoreTexture(0);
 	}
 	/// set texture wrap V
 	void GHL_CALL TextureOpenGL::SetWrapModeV(TextureWrapMode wm) {
-		gl.ActiveTexture(GL::TEXTURE0);
+		gl.ActiveTexture(gl.TEXTURE0);
 		bind();
-		gl.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_WRAP_T, convert_wrap(wm));
+		gl.TexParameteri(gl.TEXTURE_2D,  gl.TEXTURE_WRAP_T, convert_wrap(gl,wm));
 		RestoreTexture(0);
 	}
 	
 	/// set texture pixels
 	void GHL_CALL TextureOpenGL::SetData(UInt32 x,UInt32 y,UInt32 w,UInt32 h,const Data* data,UInt32 level) {
-		gl.ActiveTexture(GL::TEXTURE0);
+		gl.ActiveTexture  (gl.TEXTURE0);
 		//glClientActiveTexture(GL_TEXTURE0);
 		bind();
-		gl.PixelStorei(GL::UNPACK_ALIGNMENT,1);
-#ifndef GHL_OPENGLES
-		gl.PixelStorei(GL::UNPACK_ROW_LENGTH,w);
-#endif
+		gl.PixelStorei(gl.UNPACK_ALIGNMENT,1);
+		gl.PixelStorei(gl.UNPACK_ROW_LENGTH,w);
 		if (format_compressed(m_fmt)) {
-			gl.CompressedTexSubImage2D(GL::TEXTURE_2D, level, x, y, w, h, convert_int_format(m_fmt), data->GetSize(), data->GetData());
+			gl.CompressedTexSubImage2D  (gl.TEXTURE_2D, level, x, y, w, h,
+                                         convert_int_format(gl,m_fmt), data->GetSize(), data->GetData());
 		} else {
-			gl.TexSubImage2D(GL::TEXTURE_2D, level, x, y, w, h, convert_format(m_fmt), convert_storage(m_fmt), data->GetData());
+			gl.TexSubImage2D  (gl.TEXTURE_2D, level, x, y, w, h,
+                               convert_format(gl,m_fmt), convert_storage(gl,m_fmt), data->GetData());
 		}
-		gl.PixelStorei(GL::UNPACK_ALIGNMENT,4);
-#ifndef GHL_OPENGLES
-		gl.PixelStorei(GL::UNPACK_ROW_LENGTH,0);
-#endif
+		gl.PixelStorei  (gl.UNPACK_ALIGNMENT,4);
+		gl.PixelStorei  (gl.UNPACK_ROW_LENGTH,0);
 		RestoreTexture(0);
 	}
 	/// generate mipmaps

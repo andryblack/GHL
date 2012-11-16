@@ -211,7 +211,26 @@ namespace GHL {
 		const ALCchar* SPEC = alcGetString(m_device, ALC_DEVICE_SPECIFIER);
 		if (SPEC) LOG_INFO( "ALC_DEVICE_SPECIFIER : " << SPEC );
 		const ALCchar* EXT = alcGetString(m_device, ALC_EXTENSIONS);
-		if (EXT) LOG_INFO( "ALC_EXTENSIONS : " << EXT );
+        if (EXT) {
+            std::string str( EXT );
+            LOG_INFO("ALC_EXTENSIONS :");
+            {
+                std::string::size_type ppos = 0;
+                std::string::size_type pos = str.find(' ');
+                while ( pos!=str.npos ) {
+                    LOG_INFO( "\t" << str.substr(ppos,pos-ppos) );
+                    std::string::size_type next = pos+1;
+                    pos = str.find( ' ', next );
+                    ppos = next;
+                    if (pos == str.npos ) {
+                        LOG_INFO( "\t" << str.substr(ppos,str.npos) );
+                        break;
+                    }
+                }
+            }
+        }
+        
+        
 		const ALchar* VERSION = alGetString( AL_VERSION );
 		if (VERSION) LOG_INFO("AL_VERSION	: " << VERSION );
 		const ALchar* VENDOR = alGetString( AL_VENDOR);
@@ -219,7 +238,24 @@ namespace GHL {
 		const ALchar* RENDERER = alGetString( AL_RENDERER);
 		if (RENDERER) LOG_INFO( "AL_RENDERER	: " << RENDERER );
 		const ALchar* EXTENSIONS = alGetString( AL_EXTENSIONS);
-		if (EXTENSIONS) LOG_INFO( "AL_EXTENSIONS: " << EXTENSIONS );
+        if (EXTENSIONS) {
+            std::string str(EXTENSIONS);
+            LOG_INFO( "AL_EXTENSIONS: ");
+            {
+                std::string::size_type ppos = 0;
+                std::string::size_type pos = str.find(' ');
+                while ( pos!=str.npos ) {
+                    LOG_INFO( "\t" << str.substr(ppos,pos-ppos) );
+                    std::string::size_type next = pos+1;
+                    pos = str.find( ' ', next );
+                    ppos = next;
+                    if (pos == str.npos ) {
+                        LOG_INFO( "\t" << str.substr(ppos,str.npos) );
+                        break;
+                    }
+                }
+            }
+        }
 		alcMakeContextCurrent(m_context);
 		alcProcessContext(m_context);
 		{

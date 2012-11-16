@@ -54,10 +54,11 @@ namespace GHL {
 		virtual void GHL_CALL EndScene() ;
 	
 	
-		void ResetRenderState();
+		virtual void ResetRenderState();
 		virtual bool RenderInit() = 0;
 		virtual void RenderDone() = 0;
 		virtual bool RenderSetFullScreen(bool fs) = 0;
+        virtual void SetOrthoProjection() = 0;
 	
 		virtual UInt32 GHL_CALL GetWidth() const;
 		virtual UInt32 GHL_CALL GetHeight() const;
