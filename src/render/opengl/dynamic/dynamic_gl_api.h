@@ -32,7 +32,7 @@ namespace GHL {
         typedef double GLclampd;
         
         typedef char GLchar;
-        typedef void *GLhandle;
+        typedef unsigned int GLhandle;
         
         static const GLboolean TRUE = 1;
         static const GLboolean FALSE = 0;
@@ -193,6 +193,7 @@ namespace GHL {
 #undef DYNAMIC_GL_FUNCTION
         
         struct RenderTargetAPI {
+            bool valid;
             void (*GenFramebuffers)(GLsizei n , GLuint *framebuffers);
             void (*BindFramebuffer)(GLenum target , GLuint framebuffer);
             void (*DeleteFramebuffers)(GLsizei n , const GLuint *framebuffers);
@@ -211,33 +212,42 @@ namespace GHL {
             GLenum FRAMEBUFFER_COMPLETE;
             
             GLuint default_renderbuffer;
-        }* rtapi;
+        } rtapi;
         
         struct ShaderAPI {
-            GLhandle (*CreateProgramObject)();
-            void (*DeleteObject)(GLhandle);
-            void (*Uniform1f)(GLint,GLfloat);
-            void (*Uniform1i)(GLint,GLint);
-            GLint (*GetUniformLocation)(GLhandle,const GLchar *);
-            GLhandle (*CreateShaderObject)(GLenum);
-            void (*ShaderSource)(GLhandle,GLsizei,const GLchar * *,const GLint *);
-            void (*CompileShader)(GLhandle);
-            void (*LinkProgram)(GLhandle);
-            void (*GetObjectParameteriv)(GLhandle,GLenum,GLint *);
-            void (*GetInfoLog)(GLhandle,GLsizei,GLsizei *,GLchar *);
-            void (*AttachObject)(GLhandle,GLhandle);
-            void (*UseProgramObject)(GLhandle);
-            
-            GLenum OBJECT_COMPILE_STATUS;
-            GLenum OBJECT_LINK_STATUS;
-            GLenum VERTEX_SHADER_ARB;
+            bool valid;
+#define DYNAMIC_GL_FUNCTIONS_ShaderObject \
+            DYNAMIC_GL_FUNCTION(GLhandle,CreateProgram,())\
+            DYNAMIC_GL_FUNCTION(void,LinkProgram,(GLhandle))\
+            DYNAMIC_GL_FUNCTION(void,UseProgram,(GLhandle))\
+            DYNAMIC_GL_FUNCTION(void,GetProgramiv,(GLhandle,GLenum,GLint *))\
+            DYNAMIC_GL_FUNCTION(void,GetProgramInfoLog,(GLhandle,GLsizei,GLsizei *,GLchar *))\
+            DYNAMIC_GL_FUNCTION(void,DeleteProgram,(GLhandle))\
+            DYNAMIC_GL_FUNCTION(void,Uniform1f,(GLint,GLfloat))\
+            DYNAMIC_GL_FUNCTION(void,Uniform1i,(GLint,GLint))\
+            DYNAMIC_GL_FUNCTION(GLint,GetUniformLocation,(GLhandle,const GLchar *))\
+            DYNAMIC_GL_FUNCTION(GLhandle,CreateShader,(GLenum))\
+            DYNAMIC_GL_FUNCTION(void,DeleteShader,(GLhandle))\
+            DYNAMIC_GL_FUNCTION(void,ShaderSource,(GLhandle,GLsizei,const GLchar*const*,const GLint *))\
+            DYNAMIC_GL_FUNCTION(void,CompileShader,(GLhandle))\
+            DYNAMIC_GL_FUNCTION(void,GetShaderiv,(GLhandle,GLenum,GLint *))\
+            DYNAMIC_GL_FUNCTION(void,GetShaderInfoLog,(GLhandle,GLsizei,GLsizei *,GLchar *))\
+            DYNAMIC_GL_FUNCTION(void,AttachShader,(GLhandle,GLhandle))\
+
+#define DYNAMIC_GL_FUNCTION(Res,Name,Args) Res(*Name)Args;
+            DYNAMIC_GL_FUNCTIONS_ShaderObject
+#undef DYNAMIC_GL_FUNCTION
+
+            GLenum COMPILE_STATUS;
+            GLenum LINK_STATUS;
+            GLenum VERTEX_SHADER;
             GLenum FRAGMENT_SHADER;
-        }* sdrapi;
+        } sdrapi;
         
         void (*Release)();
     };
     
-    struct GLffpl : GL {
+    struct GLffpl {
         
 #define DYNAMIC_GL_ffpl_CONSTANTS \
         DYNAMIC_GL_ffpl_CONSTANT(COMBINE)\
@@ -258,7 +268,7 @@ namespace GHL {
         \
         DYNAMIC_GL_ffpl_CONSTANT(INTERPOLATE)\
         
-#define DYNAMIC_GL_ffpl_CONSTANT(Name) GLenum Name;
+#define DYNAMIC_GL_ffpl_CONSTANT(Name) GL::GLenum Name;
         DYNAMIC_GL_ffpl_CONSTANTS
 #undef DYNAMIC_GL_ffpl_CONSTANT
 

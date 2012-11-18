@@ -19,8 +19,9 @@ namespace GHL {
     }
     
     bool pfpl_cache::init(pfpl_shader_generator_base* generator) {
-        if (generator)
+        if (!generator)
             return false;
+        m_generator = generator;
         clear();
         return true;
     }
@@ -35,11 +36,11 @@ namespace GHL {
         m_entries_amount = 0;
     }
     
-    FragmentShader* pfpl_cache::get_shader(const pfpl_state_data &state) {
+    ShaderProgram* pfpl_cache::get_shader(const pfpl_state_data &state,bool tex2) {
         pfpl_state_data copy(state);
         normalize(copy);
         for (size_t i=0;i<m_entries_amount;++i) {
-            if (compare(copy, m_entries[i].state)) {
+            if (compare(copy, m_entries[i].state) && m_entries[i].tex2==tex2) {
                 return m_entries[i].shader;
             }
         }
@@ -61,8 +62,9 @@ namespace GHL {
             m_entries[idx].shader->Release();
         }
         m_entries[idx].state = copy;
-        m_entries[idx].shader = m_generator->generate(copy);
+        m_entries[idx].shader = m_generator->generate(copy,tex2);
         m_entries[idx].usage = 0;
+        m_entries[idx].tex2 = tex2;
         return m_entries[idx].shader;
     }
     

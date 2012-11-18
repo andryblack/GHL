@@ -25,7 +25,6 @@
 
 #include "ghl_types.h"
 #include "ghl_api.h"
-#include "ghl_data_stream.h"
 #include "ghl_ref_counter.h"
 
 namespace GHL 

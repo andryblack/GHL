@@ -107,21 +107,18 @@ namespace GHL {
 		}
 	}
 	
-	RenderOpenGL::RenderOpenGL(UInt32 w,UInt32 h) : RenderImpl(w,h) {
+	RenderOpenGLBase::RenderOpenGLBase(UInt32 w,UInt32 h) : RenderImpl(w,h) {
 	}
 
-	RenderOpenGL::~RenderOpenGL() {
+	RenderOpenGLBase::~RenderOpenGLBase() {
         LOG_VERBOSE("Destructor");
 	}
 
 #define NOT_IMPLEMENTED LOG_ERROR( "render openGL function " << __FUNCTION__ << " not implemented" )
 
-	bool RenderOpenGL::RenderInit() {
-        LOG_INFO("RenderOpenGL::RenderInit");
+	bool RenderOpenGLBase::RenderInit() {
+        LOG_INFO("RenderOpenGLBase::RenderInit");
         if (!GLApi::InitGL(&gl)) {
-            return false;
-        }
-        if (!GLApi::InitGLffpl(&gl)) {
             return false;
         }
         		
@@ -130,19 +127,19 @@ namespace GHL {
         return RenderImpl::RenderInit();
 	}
 	
-	void RenderOpenGL::RenderDone() {
+	void RenderOpenGLBase::RenderDone() {
         gl.Release();
 		RenderImpl::RenderDone();
 	}
 	
-	bool RenderOpenGL::RenderSetFullScreen(bool fs)
+	bool RenderOpenGLBase::RenderSetFullScreen(bool fs)
 	{
             ///@ todo
             GHL_UNUSED(fs);
             return true;
 	}
 	
-    void RenderOpenGL::SetOrthoProjection(){
+    void RenderOpenGLBase::SetOrthoProjection(){
         gl.MatrixMode(gl.PROJECTION);
         gl.LoadIdentity();
         gl.Ortho(0,GetWidth(),GetHeight(),0,-1.0,1.0);
@@ -151,7 +148,7 @@ namespace GHL {
     }
 	
 	
-    void RenderOpenGL::ResetRenderState() {
+    void RenderOpenGLBase::ResetRenderState() {
         RenderImpl::ResetRenderState();
         gl.EnableClientState(gl.VERTEX_ARRAY);
         gl.EnableClientState(gl.COLOR_ARRAY);
@@ -159,17 +156,17 @@ namespace GHL {
     }
 	
     /// Begin graphics scene (frame)
-    void GHL_CALL RenderOpenGL::BeginScene(RenderTarget* target) {
+    void GHL_CALL RenderOpenGLBase::BeginScene(RenderTarget* target) {
         RenderImpl::BeginScene(target);
     }
     
-	void GHL_CALL RenderOpenGL::SetViewport(UInt32 x,UInt32 y,UInt32 w,UInt32 h) {
+	void GHL_CALL RenderOpenGLBase::SetViewport(UInt32 x,UInt32 y,UInt32 w,UInt32 h) {
 		UInt32 _y = GetHeight()-h-y;
 		gl.Viewport(x,_y,w,h);
 	}
 	
 	/// setup scisor test
-	void GHL_CALL RenderOpenGL::SetupScisor( bool enable, UInt32 x, UInt32 y, UInt32 w, UInt32 h ) {
+	void GHL_CALL RenderOpenGLBase::SetupScisor( bool enable, UInt32 x, UInt32 y, UInt32 w, UInt32 h ) {
 		if (!enable) {
 			gl.Disable(gl.SCISSOR_TEST);
 		} else {
@@ -182,12 +179,12 @@ namespace GHL {
 	
 		
 	/// clear scene
-	void GHL_CALL RenderOpenGL::Clear(float r,float g,float b,float a=1.0f) {
+	void GHL_CALL RenderOpenGLBase::Clear(float r,float g,float b,float a=1.0f) {
 		gl.ClearColor(r, g, b, a);
 		gl.Clear(gl.COLOR_BUFFER_BIT);
 	}
 	/// clear depth
-	void GHL_CALL RenderOpenGL::ClearDepth(float d) {
+	void GHL_CALL RenderOpenGLBase::ClearDepth(float d) {
         gl.ClearDepth(d);
 		gl.Clear(gl.DEPTH_BUFFER_BIT);
 	}
@@ -195,7 +192,7 @@ namespace GHL {
 	
 	
 	/// create empty texture
-	Texture* GHL_CALL RenderOpenGL::CreateTexture(UInt32 width,UInt32 height,TextureFormat fmt,const Data* data) {
+	Texture* GHL_CALL RenderOpenGLBase::CreateTexture(UInt32 width,UInt32 height,TextureFormat fmt,const Data* data) {
 		if ( fmt == TEXTURE_FORMAT_PVRTC_2BPPV1 || fmt == TEXTURE_FORMAT_PVRTC_4BPPV1 ) {
 #ifdef GHL_OPENGLES
 			if ( !DinamicGLFeature_IMG_texture_compression_pvrtc_Supported() ) {
@@ -212,12 +209,12 @@ namespace GHL {
 		return tex;
 	}
 	
-	void RenderOpenGL::RestoreTexture() {
+	void RenderOpenGLBase::RestoreTexture() {
 		SetTexture(GetTexture(0), 0);
 	}
 
 	/// set current texture
-	void GHL_CALL RenderOpenGL::SetTexture( const Texture* texture, UInt32 stage) {
+	void GHL_CALL RenderOpenGLBase::SetTexture( const Texture* texture, UInt32 stage) {
         RenderImpl::SetTexture(texture, stage);
 		set_texture_stage(gl,stage);
 		//glClientActiveTexture(texture_stages[stage]);
@@ -231,115 +228,9 @@ namespace GHL {
 		}
 		set_texture_stage(gl,0);
 	}
-	/// set texture stage color operation
-	void GHL_CALL RenderOpenGL::SetupTextureStageColorOp(TextureOperation op,TextureArgument arg1,TextureArgument arg2,UInt32 stage ) {
-		set_texture_stage(gl,stage);
 		
-		if (op==TEX_OP_DISABLE) {
-			gl.Disable(gl.TEXTURE_2D);
-		} else {
-			gl.Enable(gl.TEXTURE_2D);
-			gl.TexEnvi(gl.TEXTURE_ENV,gl.TEXTURE_ENV_MODE,gl.COMBINE);
-			GL::GLenum src0 = gl.PREVIOUS;
-			GL::GLenum op0 = gl.SRC_COLOR;
-			conv_texarg(gl,arg1,false,src0,op0);
-			GL::GLenum src1 = gl.TEXTURE;
-			GL::GLenum op1 = gl.SRC_COLOR;
-			conv_texarg(gl,arg2,false,src1,op1);
-			if (op==TEX_OP_SELECT_1)
-			{
-				gl.TexEnvi(gl.TEXTURE_ENV, gl.COMBINE_RGB,gl.REPLACE);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.SOURCE0_RGB,src0);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.OPERAND0_RGB,op0);
-				
-			} else if (op==TEX_OP_SELECT_2)
-			{
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.COMBINE_RGB,gl.REPLACE);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.SOURCE0_RGB,src1);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.OPERAND0_RGB,op1);
-				
-			} else if (op==TEX_OP_ADD) {
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.COMBINE_RGB,gl.ADD);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.SOURCE0_RGB,src0);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.OPERAND0_RGB,op0);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.SOURCE1_RGB,src1);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.OPERAND1_RGB,op1);
-			} else if (op==TEX_OP_MODULATE) {
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.COMBINE_RGB,gl.MODULATE);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.SOURCE0_RGB,src0);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.OPERAND0_RGB,op0);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.SOURCE1_RGB,src1);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.OPERAND1_RGB,op1);
-			} else if (op==TEX_OP_INT_DIFFUSE_ALPHA) {
-				NOT_IMPLEMENTED;
-			} else if (op==TEX_OP_INT_TEXTURE_ALPHA) {
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.COMBINE_RGB,gl.INTERPOLATE);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.SOURCE0_RGB,src0);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.OPERAND0_RGB,op0);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.SOURCE1_RGB,src1);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.OPERAND1_RGB,op1);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.SOURCE2_RGB,gl.TEXTURE);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.OPERAND2_RGB,gl.SRC_ALPHA);
-			} else if (op==TEX_OP_INT_CURRENT_ALPHA) {
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.COMBINE_RGB,gl.INTERPOLATE);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.SOURCE0_RGB,src0);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.OPERAND0_RGB,op0);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.SOURCE1_RGB,src1);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.OPERAND1_RGB,op1);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.SOURCE2_RGB,gl.PREVIOUS);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.OPERAND2_RGB,gl.SRC_ALPHA);
-			}
-		}
-		set_texture_stage(gl,0);
-	}
-	/// set texture stage alpha operation
-	void GHL_CALL RenderOpenGL::SetupTextureStageAlphaOp(TextureOperation op,TextureArgument arg1,TextureArgument arg2,UInt32 stage ) {
-		//return;
-		
-		set_texture_stage(gl,stage);
-		if (op==TEX_OP_DISABLE) {
-			gl.Disable(gl.TEXTURE_2D);
-		} else {
-			gl.Enable(gl.TEXTURE_2D);
-           GL::GLenum _arg1 =gl.PREVIOUS;
-           GL::GLenum _op1 =gl.SRC_ALPHA;
-			conv_texarg(gl,arg1,true,_arg1,_op1);
-			GL::GLenum _arg2 =gl.TEXTURE;
-			GL::GLenum _op2 =gl.SRC_ALPHA;
-			conv_texarg(gl,arg2,true,_arg2,_op2);
-			if (op==TEX_OP_SELECT_1) 
-			{
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.SOURCE0_ALPHA,_arg1);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.OPERAND0_ALPHA,_op1);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.COMBINE_ALPHA,gl.REPLACE);
-			} else if (op==TEX_OP_SELECT_2) 
-			{
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.SOURCE0_ALPHA,_arg2);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.OPERAND0_ALPHA,_op2);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.COMBINE_ALPHA,gl.REPLACE);
-			} else {
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.SOURCE0_ALPHA,_arg1);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.OPERAND0_ALPHA,_op1);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.SOURCE1_ALPHA,_arg2);
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.OPERAND1_ALPHA,_op2);
-               GL::GLenum mode =gl.MODULATE;
-				if (op==TEX_OP_ADD) 
-					mode =gl.ADD;
-				else if (op==TEX_OP_INT_DIFFUSE_ALPHA) {
-					NOT_IMPLEMENTED;
-				} else if (op==TEX_OP_INT_TEXTURE_ALPHA) {
-					NOT_IMPLEMENTED;
-				} else if (op==TEX_OP_INT_CURRENT_ALPHA) {
-					NOT_IMPLEMENTED;
-				}
-				gl.TexEnvi(gl.TEXTURE_ENV,gl.COMBINE_ALPHA, mode);
-			}
-		}
-		set_texture_stage(gl,0);
-	}
-	
 	/// set blend factors
-	void GHL_CALL RenderOpenGL::SetupBlend(bool enable,BlendFactor src_factor,BlendFactor dst_factor) {
+	void GHL_CALL RenderOpenGLBase::SetupBlend(bool enable,BlendFactor src_factor,BlendFactor dst_factor) {
 		if (enable) {
 			gl.Enable(gl.BLEND);
 			gl.BlendFunc(convert_blend(gl,src_factor), convert_blend(gl,dst_factor));
@@ -348,7 +239,7 @@ namespace GHL {
 		}
 	}
 	/// set alpha test parameters
-	void GHL_CALL RenderOpenGL::SetupAlphaTest(bool enable,CompareFunc func,float ref=0) {
+	void GHL_CALL RenderOpenGLBase::SetupAlphaTest(bool enable,CompareFunc func,float ref=0) {
 		if (enable) {
 			gl.Enable(gl.ALPHA_TEST);
 			gl.AlphaFunc(conv_compare(gl,func), ref);
@@ -358,7 +249,7 @@ namespace GHL {
 	}
 	
 	/// set depth test
-	void GHL_CALL RenderOpenGL::SetupDepthTest(bool enable,CompareFunc func,bool write_enable) {
+	void GHL_CALL RenderOpenGLBase::SetupDepthTest(bool enable,CompareFunc func,bool write_enable) {
 		if (enable) {
 			gl.Enable(gl.DEPTH_TEST);
 			gl.DepthFunc(conv_compare(gl,func));
@@ -369,7 +260,7 @@ namespace GHL {
 	}
 	
 	/// setup faces culling
-	void GHL_CALL RenderOpenGL::SetupFaceCull(bool enable,bool cw = true) {
+	void GHL_CALL RenderOpenGLBase::SetupFaceCull(bool enable,bool cw = true) {
 		if (enable) {
 			gl.Enable(gl.CULL_FACE);
 			gl.FrontFace( cw ?gl.CW :gl.CCW );
@@ -379,7 +270,7 @@ namespace GHL {
 	}
 	
 	/// create index buffer
-	IndexBuffer* GHL_CALL RenderOpenGL::CreateIndexBuffer(UInt32 size) {
+	IndexBuffer* GHL_CALL RenderOpenGLBase::CreateIndexBuffer(UInt32 size) {
 		NOT_IMPLEMENTED;
 		/// @todo
 		GHL_UNUSED(size);
@@ -387,7 +278,7 @@ namespace GHL {
 	}
 	
 	/// set current index buffer
-	void GHL_CALL RenderOpenGL::SetIndexBuffer(const IndexBuffer* buf) {
+	void GHL_CALL RenderOpenGLBase::SetIndexBuffer(const IndexBuffer* buf) {
 		if (buf==0) {
 			//gl.BindBuffer(gl.ELEMENT_ARRAY_BUFFER,0);
 			return;
@@ -397,7 +288,7 @@ namespace GHL {
 	}
 	
 	/// create vertex buffer
-	VertexBuffer* GHL_CALL RenderOpenGL::CreateVertexBuffer(VertexType type,UInt32 size) {
+	VertexBuffer* GHL_CALL RenderOpenGLBase::CreateVertexBuffer(VertexType type,UInt32 size) {
 		NOT_IMPLEMENTED;
 		/// @todo
 		GHL_UNUSED(type);
@@ -405,7 +296,7 @@ namespace GHL {
 		return 0;
 	}
 	/// set current vertex buffer
-	void GHL_CALL RenderOpenGL::SetVertexBuffer(const VertexBuffer* buf) {
+	void GHL_CALL RenderOpenGLBase::SetVertexBuffer(const VertexBuffer* buf) {
 		if (buf==0) {
 			//gl.BindBuffer(gl.ARRAY_BUFFER,0);
 			return;
@@ -414,14 +305,14 @@ namespace GHL {
 	}
 	
 	/// set projection matrix
-	void GHL_CALL RenderOpenGL::SetProjectionMatrix(const float *m) {
+	void GHL_CALL RenderOpenGLBase::SetProjectionMatrix(const float *m) {
         gl.MatrixMode(gl.PROJECTION);
 		gl.LoadMatrixf(m);
 		gl.MatrixMode(gl.MODELVIEW);
 	}
 	
 	/// set view matrix
-	void GHL_CALL RenderOpenGL::SetViewMatrix(const float* m) {
+	void GHL_CALL RenderOpenGLBase::SetViewMatrix(const float* m) {
 		gl.MatrixMode(gl.MODELVIEW);
 		gl.LoadMatrixf(m);
 	}
@@ -433,7 +324,7 @@ namespace GHL {
 	 * @par i_begin start index buffer position
 	 * @par amount drw primitives amount
 	 */
-	void GHL_CALL RenderOpenGL::DrawPrimitives(PrimitiveType type,UInt32 v_amount,UInt32 i_begin,UInt32 amount) {
+	void GHL_CALL RenderOpenGLBase::DrawPrimitives(PrimitiveType type,UInt32 v_amount,UInt32 i_begin,UInt32 amount) {
             /// @todo
             GHL_UNUSED(type);
             GHL_UNUSED(v_amount);
@@ -443,7 +334,7 @@ namespace GHL {
 	}
 	
 	/// draw primitives from memory
-	void GHL_CALL RenderOpenGL::DrawPrimitivesFromMemory(PrimitiveType type,VertexType v_type,const void* vertices,UInt32 v_amount,const UInt16* indexes,UInt32 prim_amount) {
+	void GHL_CALL RenderOpenGLBase::DrawPrimitivesFromMemory(PrimitiveType type,VertexType v_type,const void* vertices,UInt32 v_amount,const UInt16* indexes,UInt32 prim_amount) {
             /// @todo
             GHL_UNUSED(v_amount);
             UInt32 vertex_size = 0;
@@ -484,7 +375,7 @@ namespace GHL {
 	
 	
 	/// create render target
-	RenderTarget* GHL_CALL RenderOpenGL::CreateRenderTarget(UInt32 w,UInt32 h,TextureFormat fmt,bool depth) {
+	RenderTarget* GHL_CALL RenderOpenGLBase::CreateRenderTarget(UInt32 w,UInt32 h,TextureFormat fmt,bool depth) {
 		assert(!IsSceneStarted());
 		RenderTargetOpenGL* rt = new RenderTargetOpenGL(this,w,h,fmt,depth);
 		if (!rt->check()) {
@@ -496,78 +387,74 @@ namespace GHL {
 	}
     
 	
-	static bool LoadShaderGLSL(const GL& gl,GL::GLhandle handle,DataStream* ds) {
-        if (!gl.sdrapi) return false;
-		ds->Seek(0,F_SEEK_END);
-		const UInt32 dsize = ds->Tell();
-		ds->Seek(0,F_SEEK_BEGIN);
-		std::vector<Byte> buffer(dsize+1);
-		buffer.resize(dsize+1);
-		ds->Read(&buffer[0],dsize);
-		buffer.back()=0;
+	static bool LoadShaderGLSL(const GL& gl,GL::GLhandle handle,const Data* ds) {
+        if (!gl.sdrapi.valid) return false;
         const GL::GLchar* source[] = {
-			reinterpret_cast<GL::GLchar*>(&buffer[0])
+			reinterpret_cast<const GL::GLchar*>(ds->GetData())
 		};
-        GL::GLint len[] = {dsize};
-		gl.sdrapi->ShaderSource(handle,1,source,len);
-		gl.sdrapi->CompileShader(handle);
+        GL::GLint len[] = {ds->GetSize()};
+		gl.sdrapi.ShaderSource(handle,1,source,len);
+		gl.sdrapi.CompileShader(handle);
 		GL::GLint res;
-		gl.sdrapi->GetObjectParameteriv(handle,gl.sdrapi->OBJECT_COMPILE_STATUS,&res);
-		GL::GLchar log[512];
-		GL::GLsizei size;
-		gl.sdrapi->GetInfoLog(handle,512,&size,log);
-		log[size]=0;
-		LOG_VERBOSE( "shader compile result : " << log );
-		if (res!=GL::TRUE)
+		gl.sdrapi.GetShaderiv(handle,gl.sdrapi.COMPILE_STATUS,&res);
+        if (res!=GL::TRUE)
 		{
-			return false;
+            GL::GLchar log[512];
+            GL::GLsizei size = 0;
+            gl.sdrapi.GetShaderInfoLog(handle,512,&size,log);
+            log[size]=0;
+            LOG_VERBOSE( "shader compile result : " << log );
+            
+            return false;
 		}
 		return true;
 	}
 	
-	VertexShader* GHL_CALL RenderOpenGL::CreateVertexShader(DataStream* ds) {
-        if (!gl.sdrapi) return 0;
-		 GL::GLhandle handle = gl.sdrapi->CreateShaderObject(gl.sdrapi->VERTEX_SHADER_ARB);
+	VertexShader* GHL_CALL RenderOpenGLBase::CreateVertexShader(const Data* ds) {
+        if (!gl.sdrapi.valid) return 0;
+		 GL::GLhandle handle = gl.sdrapi.CreateShader(gl.sdrapi.VERTEX_SHADER);
 		if (LoadShaderGLSL(gl,handle,ds)) {
 			VertexShaderGLSL* fs = new VertexShaderGLSL(this,handle);
 			return fs;
 		}
-		gl.sdrapi->DeleteObject(handle);
+		gl.sdrapi.DeleteShader(handle);
 		return 0;
 	}
 
 
 	 
-	FragmentShader* GHL_CALL RenderOpenGL::CreateFragmentShader(DataStream* ds) {
-        if (!gl.sdrapi) return 0;
-		 GL::GLhandle handle = gl.sdrapi->CreateShaderObject(gl.sdrapi->FRAGMENT_SHADER);
+	FragmentShader* GHL_CALL RenderOpenGLBase::CreateFragmentShader(const Data* ds) {
+        if (!gl.sdrapi.valid) return 0;
+		 GL::GLhandle handle = gl.sdrapi.CreateShader(gl.sdrapi.FRAGMENT_SHADER);
 		if (LoadShaderGLSL(gl,handle,ds)) {
 			FragmentShaderGLSL* fs = new FragmentShaderGLSL(this,handle);
 			return fs;
 		}
-		gl.sdrapi->DeleteObject(handle);
+		gl.sdrapi.DeleteShader(handle);
 		return 0;
 	}
 
 	
-	ShaderProgram* GHL_CALL RenderOpenGL::CreateShaderProgram(VertexShader* v,FragmentShader* f) {
-        if (!gl.sdrapi) return 0;
-        GL::GLhandle handle = gl.sdrapi->CreateProgramObject();
+	ShaderProgram* GHL_CALL RenderOpenGLBase::CreateShaderProgram(VertexShader* v,FragmentShader* f) {
+        if (!gl.sdrapi.valid) return 0;
+        if (!v || !f) return 0;
+        GL::GLhandle handle = gl.sdrapi.CreateProgram();
 		VertexShaderGLSL* vs = reinterpret_cast<VertexShaderGLSL*> (v);
 		FragmentShaderGLSL* fs = reinterpret_cast<FragmentShaderGLSL*> (f);
 		// @todo check vs ans fs
-		gl.sdrapi->AttachObject(handle, vs->handle());
-		gl.sdrapi->AttachObject(handle, fs->handle());
-		gl.sdrapi->LinkProgram(handle);
+		gl.sdrapi.AttachShader(handle, vs->handle());
+		gl.sdrapi.AttachShader(handle, fs->handle());
+		gl.sdrapi.LinkProgram(handle);
         GL::GLint res;
-		gl.sdrapi->GetObjectParameteriv(handle,gl.sdrapi->OBJECT_LINK_STATUS,&res);
-        GL::GLchar log[512];
-		GL::GLsizei size;
-		gl.sdrapi->GetInfoLog(handle,512,&size,log);
-		log[size]=0;
-		LOG_VERBOSE( "Shader link result : " << log );
-		if (res!=GL::TRUE) {
-			gl.sdrapi->DeleteObject(handle);
+		gl.sdrapi.GetProgramiv(handle,gl.sdrapi.LINK_STATUS,&res);
+        if (res!=GL::TRUE) {
+            GL::GLchar log[512];
+            GL::GLsizei size;
+            gl.sdrapi.GetProgramInfoLog(handle,512,&size,log);
+            log[size]=0;
+            LOG_VERBOSE( "Shader link result : " << log );
+            
+            gl.sdrapi.DeleteProgram(handle);
 			return 0;
 		}
 		ShaderProgramGLSL* prg = new ShaderProgramGLSL(this,handle,vs,fs);
@@ -575,33 +462,138 @@ namespace GHL {
 	}
 
 	
-	void RenderOpenGL::SetShader(const ShaderProgram* shader) {
+	void RenderOpenGLBase::SetShader(const ShaderProgram* shader) {
         RenderImpl::SetShader(shader);
-        if (!gl.sdrapi) return;
+        if (!gl.sdrapi.valid) return;
 		if (shader) {
 			const ShaderProgramGLSL* sp = reinterpret_cast<const ShaderProgramGLSL*>(shader);
-			gl.sdrapi->UseProgramObject(sp->handle());
+			gl.sdrapi.UseProgram(sp->handle());
 		} else {
-			gl.sdrapi->UseProgramObject(0);
+			gl.sdrapi.UseProgram(0);
 		}
 	}
 
+    
+    RenderOpenGL::RenderOpenGL(UInt32 w,UInt32 h) : RenderOpenGLBase(w,h) {
+        
+    }
+    
+    bool RenderOpenGL::RenderInit() {
+        LOG_INFO("RenderOpenGL::RenderInit");
+        if (!RenderOpenGLBase::RenderInit())
+            return false;
+        return GLApi::InitGLffpl(&glffpl);
+    }
 	
+    
+    /// set texture stage color operation
+	void GHL_CALL RenderOpenGL::SetupTextureStageColorOp(TextureOperation op,TextureArgument arg1,TextureArgument arg2,UInt32 stage ) {
+		set_texture_stage(gl,stage);
+		
+		if (op==TEX_OP_DISABLE) {
+			gl.Disable(gl.TEXTURE_2D);
+		} else {
+			gl.Enable(gl.TEXTURE_2D);
+			gl.TexEnvi(gl.TEXTURE_ENV,gl.TEXTURE_ENV_MODE,glffpl.COMBINE);
+			GL::GLenum src0 = gl.PREVIOUS;
+			GL::GLenum op0 = gl.SRC_COLOR;
+			conv_texarg(gl,arg1,false,src0,op0);
+			GL::GLenum src1 = gl.TEXTURE;
+			GL::GLenum op1 = gl.SRC_COLOR;
+			conv_texarg(gl,arg2,false,src1,op1);
+			if (op==TEX_OP_SELECT_1)
+			{
+				gl.TexEnvi(gl.TEXTURE_ENV, glffpl.COMBINE_RGB,gl.REPLACE);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE0_RGB,src0);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND0_RGB,op0);
+				
+			} else if (op==TEX_OP_SELECT_2)
+			{
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.COMBINE_RGB,gl.REPLACE);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE0_RGB,src1);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND0_RGB,op1);
+				
+			} else if (op==TEX_OP_ADD) {
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.COMBINE_RGB,gl.ADD);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE0_RGB,src0);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND0_RGB,op0);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE1_RGB,src1);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND1_RGB,op1);
+			} else if (op==TEX_OP_MODULATE) {
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.COMBINE_RGB,gl.MODULATE);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE0_RGB,src0);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND0_RGB,op0);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE1_RGB,src1);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND1_RGB,op1);
+			} else if (op==TEX_OP_INT_DIFFUSE_ALPHA) {
+				NOT_IMPLEMENTED;
+			} else if (op==TEX_OP_INT_TEXTURE_ALPHA) {
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.COMBINE_RGB,glffpl.INTERPOLATE);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE0_RGB,src0);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND0_RGB,op0);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE1_RGB,src1);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND1_RGB,op1);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE2_RGB,gl.TEXTURE);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND2_RGB,gl.SRC_ALPHA);
+			} else if (op==TEX_OP_INT_CURRENT_ALPHA) {
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.COMBINE_RGB,glffpl.INTERPOLATE);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE0_RGB,src0);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND0_RGB,op0);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE1_RGB,src1);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND1_RGB,op1);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE2_RGB,gl.PREVIOUS);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND2_RGB,gl.SRC_ALPHA);
+			}
+		}
+		set_texture_stage(gl,0);
+	}
+	/// set texture stage alpha operation
+	void GHL_CALL RenderOpenGL::SetupTextureStageAlphaOp(TextureOperation op,TextureArgument arg1,TextureArgument arg2,UInt32 stage ) {
+		//return;
+		
+		set_texture_stage(gl,stage);
+		if (op==TEX_OP_DISABLE) {
+			gl.Disable(gl.TEXTURE_2D);
+		} else {
+			gl.Enable(gl.TEXTURE_2D);
+            GL::GLenum _arg1 =gl.PREVIOUS;
+            GL::GLenum _op1 =gl.SRC_ALPHA;
+			conv_texarg(gl,arg1,true,_arg1,_op1);
+			GL::GLenum _arg2 =gl.TEXTURE;
+			GL::GLenum _op2 =gl.SRC_ALPHA;
+			conv_texarg(gl,arg2,true,_arg2,_op2);
+			if (op==TEX_OP_SELECT_1)
+			{
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE0_ALPHA,_arg1);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND0_ALPHA,_op1);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.COMBINE_ALPHA,gl.REPLACE);
+			} else if (op==TEX_OP_SELECT_2)
+			{
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE0_ALPHA,_arg2);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND0_ALPHA,_op2);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.COMBINE_ALPHA,gl.REPLACE);
+			} else {
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE0_ALPHA,_arg1);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND0_ALPHA,_op1);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE1_ALPHA,_arg2);
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND1_ALPHA,_op2);
+                GL::GLenum mode =gl.MODULATE;
+				if (op==TEX_OP_ADD)
+					mode =gl.ADD;
+				else if (op==TEX_OP_INT_DIFFUSE_ALPHA) {
+					NOT_IMPLEMENTED;
+				} else if (op==TEX_OP_INT_TEXTURE_ALPHA) {
+					NOT_IMPLEMENTED;
+				} else if (op==TEX_OP_INT_CURRENT_ALPHA) {
+					NOT_IMPLEMENTED;
+				}
+				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.COMBINE_ALPHA, mode);
+			}
+		}
+		set_texture_stage(gl,0);
+	}
+
 }
 
-GHL_API GHL::RenderImpl* GHL_CALL GHL_CreateRenderOpenGL(GHL::UInt32 w,GHL::UInt32 h) {
-	GHL::RenderOpenGL* render = new GHL::RenderOpenGL(w,h);
-	if (!render->RenderInit()) {
-		delete render;
-		render = 0;	
-	}
-	return render;
-} 
-GHL_API void GHL_DestroyRenderOpenGL(GHL::RenderImpl* render_) {
-	GHL::RenderOpenGL* render = reinterpret_cast<GHL::RenderOpenGL*>(render_);
-	if (render) {
-		render->RenderDone();
-		delete render;
-	}
-}
+
 

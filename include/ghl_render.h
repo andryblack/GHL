@@ -29,6 +29,7 @@
 #include "ghl_texture.h"
 #include "ghl_render_target.h"
 #include "ghl_shader.h"
+#include "ghl_data.h"
 
 namespace GHL
 {
@@ -227,8 +228,8 @@ namespace GHL
 		
 		virtual RenderTarget* GHL_CALL CreateRenderTarget(UInt32 w,UInt32 h,TextureFormat fmt,bool depth) = 0;
 		
-		virtual VertexShader* GHL_CALL CreateVertexShader(DataStream* ds) = 0;
-		virtual FragmentShader* GHL_CALL CreateFragmentShader(DataStream* ds) = 0;
+		virtual VertexShader* GHL_CALL CreateVertexShader(const Data* ds) = 0;
+		virtual FragmentShader* GHL_CALL CreateFragmentShader(const Data* ds) = 0;
 		virtual ShaderProgram* GHL_CALL CreateShaderProgram(VertexShader* v,FragmentShader* f) = 0;
 		
 		virtual void GHL_CALL SetShader(const ShaderProgram* shader) = 0;

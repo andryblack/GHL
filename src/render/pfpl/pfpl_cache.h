@@ -30,13 +30,14 @@ namespace GHL {
     
     struct pfpl_cache_entry {
         pfpl_state_data state;
-        FragmentShader* shader;
+        bool    tex2;
+        ShaderProgram* shader;
         size_t  usage;
     };
     
     class pfpl_shader_generator_base {
     public:
-        virtual FragmentShader* generate( const pfpl_state_data& entry ) = 0;
+        virtual ShaderProgram* generate( const pfpl_state_data& entry, bool tex2 ) = 0;
     };
     
     class pfpl_cache {
@@ -44,7 +45,7 @@ namespace GHL {
         explicit pfpl_cache();
         bool init(pfpl_shader_generator_base* generator);
         ~pfpl_cache();
-        FragmentShader* get_shader( const pfpl_state_data& state );
+        ShaderProgram* get_shader( const pfpl_state_data& state , bool tex2);
         void clear();
     private:
         pfpl_shader_generator_base* m_generator;

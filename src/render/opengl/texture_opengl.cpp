@@ -68,7 +68,7 @@ namespace GHL {
 		return  gl.REPEAT;
 	}
 	
-	TextureOpenGL::TextureOpenGL(GL::GLuint name,RenderOpenGL* parent,TextureFormat fmt,UInt32 w,UInt32 h) : TextureImpl(parent), gl(parent->get_api()),
+	TextureOpenGL::TextureOpenGL(GL::GLuint name,RenderOpenGLBase* parent,TextureFormat fmt,UInt32 w,UInt32 h) : TextureImpl(parent), gl(parent->get_api()),
 		m_name(name),m_width(w),m_height(h),
 		m_fmt(fmt),
 		m_min_filter(TEX_FILTER_NEAR),
@@ -81,7 +81,7 @@ namespace GHL {
 		
 	}
 	
-	TextureOpenGL* TextureOpenGL::Create( RenderOpenGL* parent,TextureFormat fmt,UInt32 w,UInt32 h, const Data* data) {
+	TextureOpenGL* TextureOpenGL::Create( RenderOpenGLBase* parent,TextureFormat fmt,UInt32 w,UInt32 h, const Data* data) {
         if (fmt==TEXTURE_FORMAT_UNKNOWN)
             return 0;
         const GL& gl(parent->get_api());

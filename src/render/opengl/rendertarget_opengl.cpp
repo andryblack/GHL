@@ -21,50 +21,50 @@ namespace GHL {
 	static const char* MODULE = "RENDER";
 
 
-    RenderTargetOpenGL::RenderTargetOpenGL(RenderOpenGL* parent,UInt32 w,UInt32 h,TextureFormat fmt,bool depth) :
+    RenderTargetOpenGL::RenderTargetOpenGL(RenderOpenGLBase* parent,UInt32 w,UInt32 h,TextureFormat fmt,bool depth) :
 		RenderTargetImpl(parent),gl(parent->get_api()),m_width(w),m_height(h),m_have_depth(depth),m_texture(0)
 	{
-        if (!gl.rtapi) return;
-        gl.rtapi->GenFramebuffers(1, &m_framebuffer);
-		gl.rtapi->BindFramebuffer(gl.rtapi->FRAMEBUFFER,m_framebuffer);
+        if (!gl.rtapi.valid) return;
+        gl.rtapi.GenFramebuffers(1, &m_framebuffer);
+		gl.rtapi.BindFramebuffer(gl.rtapi.FRAMEBUFFER,m_framebuffer);
 		m_texture = reinterpret_cast<TextureOpenGL*>(GetParent()->CreateTexture(w, h, fmt, 0));
-		gl.rtapi->FramebufferTexture2D(gl.rtapi->FRAMEBUFFER, gl.rtapi->COLOR_ATTACHMENT0, gl.TEXTURE_2D, m_texture->name(), 0);
+		gl.rtapi.FramebufferTexture2D(gl.rtapi.FRAMEBUFFER, gl.rtapi.COLOR_ATTACHMENT0, gl.TEXTURE_2D, m_texture->name(), 0);
 		gl.BindTexture(gl.TEXTURE_2D,0);
 		if (depth) {
-            gl.rtapi->GenRenderbuffers(1, &m_depth_renderbuffer);
-            gl.rtapi->BindRenderbuffer(gl.rtapi->RENDERBUFFER, m_depth_renderbuffer);
-            gl.rtapi->RenderbufferStorage(gl.rtapi->RENDERBUFFER, gl.rtapi->DEPTH_COMPONENT16, w, h);
-            gl.rtapi->FramebufferRenderbuffer(gl.rtapi->FRAMEBUFFER, gl.rtapi->DEPTH_ATTACHMENT, gl.rtapi->RENDERBUFFER, m_depth_renderbuffer);
+            gl.rtapi.GenRenderbuffers(1, &m_depth_renderbuffer);
+            gl.rtapi.BindRenderbuffer(gl.rtapi.RENDERBUFFER, m_depth_renderbuffer);
+            gl.rtapi.RenderbufferStorage(gl.rtapi.RENDERBUFFER, gl.rtapi.DEPTH_COMPONENT16, w, h);
+            gl.rtapi.FramebufferRenderbuffer(gl.rtapi.FRAMEBUFFER, gl.rtapi.DEPTH_ATTACHMENT, gl.rtapi.RENDERBUFFER, m_depth_renderbuffer);
 		}
 		unbind();
 	}
 	
 	bool RenderTargetOpenGL::check() const {
-		if (!gl.rtapi) return false;
+		if (!gl.rtapi.valid) return false;
 		bind();
-        GL::GLenum status = gl.rtapi->CheckFramebufferStatus(gl.rtapi->FRAMEBUFFER) ;
+        GL::GLenum status = gl.rtapi.CheckFramebufferStatus(gl.rtapi.FRAMEBUFFER) ;
 		unbind();
-		return status == gl.rtapi->FRAMEBUFFER_COMPLETE ;
+		return status == gl.rtapi.FRAMEBUFFER_COMPLETE ;
 	}
 	
 	RenderTargetOpenGL::~RenderTargetOpenGL() {
-		if (!gl.rtapi) return;
+		if (!gl.rtapi.valid) return;
 		if (m_have_depth)
-			gl.rtapi->DeleteRenderbuffers(1,&m_depth_renderbuffer);
+			gl.rtapi.DeleteRenderbuffers(1,&m_depth_renderbuffer);
 		if (m_texture)
 			m_texture->Release();
 		m_texture = 0;
-		gl.rtapi->DeleteFramebuffers(1,&m_framebuffer);
+		gl.rtapi.DeleteFramebuffers(1,&m_framebuffer);
     }
 		
 	void RenderTargetOpenGL::bind() const {
-        if (!gl.rtapi) return;
-		gl.rtapi->BindFramebuffer(gl.rtapi->FRAMEBUFFER,m_framebuffer);
+        if (!gl.rtapi.valid) return;
+		gl.rtapi.BindFramebuffer(gl.rtapi.FRAMEBUFFER,m_framebuffer);
 	}
 	
 	void RenderTargetOpenGL::unbind() const {
-        if (!gl.rtapi) return;
-		gl.rtapi->BindFramebuffer(gl.rtapi->FRAMEBUFFER,gl.rtapi->default_renderbuffer);
+        if (!gl.rtapi.valid) return;
+		gl.rtapi.BindFramebuffer(gl.rtapi.FRAMEBUFFER,gl.rtapi.default_renderbuffer);
 	}
 		
 		

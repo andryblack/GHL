@@ -15,7 +15,7 @@
 
 namespace GHL {
 
-    class RenderOpenGL;
+    class RenderOpenGLBase;
 
 	class TextureOpenGL : public TextureImpl {
 	private:
@@ -33,11 +33,11 @@ namespace GHL {
 		void calc_filtration_min();
 		void calc_filtration_mag();
 		void check_mips();
-		TextureOpenGL(GL::GLuint name,RenderOpenGL* parent,TextureFormat fmt,UInt32 w,UInt32 h);
+		TextureOpenGL(GL::GLuint name,RenderOpenGLBase* parent,TextureFormat fmt,UInt32 w,UInt32 h);
    public:
         ~TextureOpenGL();
         
-		static TextureOpenGL* Create( RenderOpenGL* parent,TextureFormat fmt,UInt32 w,UInt32 h, const Data* data);
+		static TextureOpenGL* Create( RenderOpenGLBase* parent,TextureFormat fmt,UInt32 w,UInt32 h, const Data* data);
 		void bind() const;
 		GL::GLuint name() const { return m_name;}
 		/// get texture width

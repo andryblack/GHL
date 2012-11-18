@@ -19,7 +19,7 @@
 
 namespace GHL {
 	
-	class RenderOpenGL;
+	class RenderOpenGLBase;
 	class VertexShaderGLSL;
 	class FragmentShaderGLSL;
 	class ShaderUniformGLSL;
@@ -27,7 +27,7 @@ namespace GHL {
 	
 	class VertexShaderGLSL : public VertexShaderImpl {
 	public:
-		VertexShaderGLSL(RenderOpenGL* parent,GL::GLhandle handle);
+		VertexShaderGLSL(RenderOpenGLBase* parent,GL::GLhandle handle);
 		virtual ~VertexShaderGLSL();
 		
 		GL::GLhandle    handle() const { return m_handle;}
@@ -38,7 +38,7 @@ namespace GHL {
 	
 	class FragmentShaderGLSL : public FragmentShaderImpl {
 	public:
-		FragmentShaderGLSL(RenderOpenGL* parent,GL::GLhandle handle);
+		FragmentShaderGLSL(RenderOpenGLBase* parent,GL::GLhandle handle);
 		virtual ~FragmentShaderGLSL();
 		
 		GL::GLhandle handle() const { return m_handle;}
@@ -62,7 +62,7 @@ namespace GHL {
 	
 	class ShaderProgramGLSL : public ShaderProgramImpl {
 	public:
-		ShaderProgramGLSL(RenderOpenGL* parent,GL::GLhandle handle,VertexShaderGLSL* vt,FragmentShaderGLSL* fr);
+		ShaderProgramGLSL(RenderOpenGLBase* parent,GL::GLhandle handle,VertexShaderGLSL* vt,FragmentShaderGLSL* fr);
 		virtual ~ShaderProgramGLSL();
 		
 		/// get uniform

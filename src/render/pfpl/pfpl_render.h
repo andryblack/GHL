@@ -29,32 +29,18 @@
 
 namespace GHL {
     
-    class PFPLRenderImpl : public RenderImpl {
+    class pfpl_render {
     public:
-        PFPLRenderImpl(UInt32 w, UInt32 h);
-        virtual bool RenderInit();
-		virtual void RenderDone();
-        
-        
-        /// render impl
-        /// set current texture
-		virtual void GHL_CALL SetTexture(const Texture* texture, UInt32 stage = 0) ;
-		/// set texture stage color operation
-		virtual void GHL_CALL SetupTextureStageColorOp(TextureOperation op,TextureArgument arg1,TextureArgument arg2,UInt32 stage = 0) ;
-		/// set texture stage alpha operation
-		virtual void GHL_CALL SetupTextureStageAlphaOp(TextureOperation op,TextureArgument arg1,TextureArgument arg2,UInt32 stage = 0) ;
-		
-		virtual void GHL_CALL SetShader(const ShaderProgram* shader);
-		/////
-    
-    protected:
-        void ApplyShader();
-        virtual pfpl_shader_generator_base* get_generator() = 0;
+        pfpl_render();
+        void init(pfpl_shader_generator_base* g);
+        void done();
+        void set_shader( const ShaderProgram* prg );
+        ShaderProgram* get_shader(const pfpl_state_data& c,bool tex2);
     private:
-        pfpl_cache          m_shaders_cache;
-        pfpl_state_data     m_crnt_state;
+        const ShaderProgram*    m_extern;
+        const ShaderProgram*    m_prev;
+        pfpl_cache  m_cache;
     };
-    
 }
 
 #endif /* PFPL_RENDER_H_INCLUDED */

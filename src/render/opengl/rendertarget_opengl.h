@@ -16,7 +16,7 @@
 
 namespace GHL {
 	
-    class RenderOpenGL;
+    class RenderOpenGLBase;
 	class TextureOpenGL;
 	
     
@@ -31,7 +31,7 @@ namespace GHL {
         GL::GLuint m_framebuffer;
 		GL::GLuint m_depth_renderbuffer;
     public:
-		RenderTargetOpenGL(RenderOpenGL* parent,UInt32 w,UInt32 h,TextureFormat fmt,bool depth);
+		RenderTargetOpenGL(RenderOpenGLBase* parent,UInt32 w,UInt32 h,TextureFormat fmt,bool depth);
 		~RenderTargetOpenGL();
 		
 		void bind() const;

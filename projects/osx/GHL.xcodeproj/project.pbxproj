@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A401C68B16595E7900DF4C16 /* render_opengl2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A401C68916595E7800DF4C16 /* render_opengl2.cpp */; };
+		A401C68C16595E7900DF4C16 /* render_opengl2.h in Headers */ = {isa = PBXBuildFile; fileRef = A401C68A16595E7900DF4C16 /* render_opengl2.h */; };
+		A401C68F16596A2100DF4C16 /* glsl_generator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A401C68D16596A1F00DF4C16 /* glsl_generator.cpp */; };
+		A401C69016596A2100DF4C16 /* glsl_generator.h in Headers */ = {isa = PBXBuildFile; fileRef = A401C68E16596A2000DF4C16 /* glsl_generator.h */; };
 		A41D523014DEB75E008B50E8 /* ghl_ref_counter.h in Headers */ = {isa = PBXBuildFile; fileRef = A41D522F14DEB75E008B50E8 /* ghl_ref_counter.h */; };
 		A41D523314DEB90B008B50E8 /* ghl_ref_counter_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A41D523214DEB90B008B50E8 /* ghl_ref_counter_impl.h */; };
 		A429008A1413948E00429C47 /* ghl_api.h in Headers */ = {isa = PBXBuildFile; fileRef = A429007B1413948E00429C47 /* ghl_api.h */; };
@@ -191,6 +195,10 @@
 
 /* Begin PBXFileReference section */
 		A401C6871656DA1500DF4C16 /* dynamic_gl_api.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dynamic_gl_api.h; sourceTree = "<group>"; };
+		A401C68916595E7800DF4C16 /* render_opengl2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = render_opengl2.cpp; sourceTree = "<group>"; };
+		A401C68A16595E7900DF4C16 /* render_opengl2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = render_opengl2.h; sourceTree = "<group>"; };
+		A401C68D16596A1F00DF4C16 /* glsl_generator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glsl_generator.cpp; sourceTree = "<group>"; };
+		A401C68E16596A2000DF4C16 /* glsl_generator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glsl_generator.h; sourceTree = "<group>"; };
 		A41D522F14DEB75E008B50E8 /* ghl_ref_counter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_ref_counter.h; sourceTree = "<group>"; };
 		A41D523214DEB90B008B50E8 /* ghl_ref_counter_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_ref_counter_impl.h; sourceTree = "<group>"; };
 		A429007B1413948E00429C47 /* ghl_api.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_api.h; sourceTree = "<group>"; };
@@ -512,6 +520,10 @@
 				A42900B41413949B00429C47 /* shader_glsl.h */,
 				A42900B51413949B00429C47 /* texture_opengl.cpp */,
 				A42900B61413949B00429C47 /* texture_opengl.h */,
+				A401C68916595E7800DF4C16 /* render_opengl2.cpp */,
+				A401C68A16595E7900DF4C16 /* render_opengl2.h */,
+				A401C68D16596A1F00DF4C16 /* glsl_generator.cpp */,
+				A401C68E16596A2000DF4C16 /* glsl_generator.h */,
 			);
 			path = opengl;
 			sourceTree = "<group>";
@@ -811,6 +823,8 @@
 				A48B50321651AF500023C1F1 /* pfpl_render.h in Headers */,
 				A48B50361651BCB90023C1F1 /* texture_impl.h in Headers */,
 				A48B504A1652CE890023C1F1 /* shader_impl.h in Headers */,
+				A401C68C16595E7900DF4C16 /* render_opengl2.h in Headers */,
+				A401C69016596A2100DF4C16 /* glsl_generator.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -966,6 +980,8 @@
 				A48B50351651BCB90023C1F1 /* texture_impl.cpp in Sources */,
 				A48B50381651BFA40023C1F1 /* rendertarget_impl.cpp in Sources */,
 				A48B50491652CE890023C1F1 /* shader_impl.cpp in Sources */,
+				A401C68B16595E7900DF4C16 /* render_opengl2.cpp in Sources */,
+				A401C68F16596A2100DF4C16 /* glsl_generator.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

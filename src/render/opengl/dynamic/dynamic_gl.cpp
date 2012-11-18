@@ -155,6 +155,11 @@ namespace GHL {
 #define USE_DYNAMIC_GL_ARB_multitexture
 #define USE_DYNAMIC_GL_ARB_texture_env_combine
 #define USE_DYNAMIC_GL_EXT_texture_env_combine
+#define USE_DYNAMIC_GL_ARB_shader_objects
+#define USE_DYNAMIC_GL_ARB_vertex_shader
+#define USE_DYNAMIC_GL_ARB_fragment_shader
+#define USE_DYNAMIC_GL_ARB_shading_language_100
+#define USE_DYNAMIC_GL_VERSION_2_0
         
 //#define USE_DYNAMIC_GL_VERSION_1_3_DEPRECATED
 //#define USE_DYNAMIC_GL_VERSION_1_4
@@ -211,6 +216,39 @@ namespace GHL {
 #undef DYNAMIC_GL_TYPE
 #undef DYNAMIC_GL_FUNCTION_V
 
+        static void GetShaderInfoLogARB(GLuint shader , GLsizei bufSize , GLsizei * length , GLchar * infoLog) {
+            GetInfoLogARB(shader, bufSize, length, infoLog);
+        }
+        static void GetProgramInfoLogARB(GLuint shader , GLsizei bufSize , GLsizei * length , GLchar * infoLog) {
+            GetInfoLogARB(shader, bufSize, length, infoLog);
+        }
+        static GLhandleARB CreateShaderARB(GLenum type) {
+            return CreateShaderObjectARB(type);
+        }
+        static GLhandleARB CreateProgramARB() {
+            return CreateProgramObjectARB();
+        }
+        static void DeleteShaderARB(GLhandleARB obj) {
+            DeleteObjectARB(obj);
+        }
+        static void DeleteProgramARB(GLhandleARB obj) {
+            DeleteObjectARB(obj);
+        }
+        static void UseProgramARB(GLhandleARB prg) {
+            UseProgramObjectARB(prg);
+        }
+        static void AttachShaderARB(GLhandleARB prh,GLhandleARB sdr) {
+            AttachObjectARB(prh, sdr);
+        }
+        static void GetProgramivARB(GLhandleARB prg,GLenum prm,GLint* v) {
+            GetObjectParameterivARB(prg, prm, v);
+        }
+        static void GetShaderivARB(GLhandleARB prg,GLenum prm,GLint* v) {
+            GetObjectParameterivARB(prg, prm, v);
+        }
+        static void ShaderSourceARB(GLhandleARB sdr,GLsizei sz,const GLchar*const* src,const GLint *len) {
+            ShaderSourceARB(sdr,sz, (const GLchar**)src, len);
+        }
     };
     const char* GLApi_impl::all_extensions = 0;
     
@@ -222,8 +260,8 @@ namespace GHL {
         GLApi_impl::Init();
         
         
-        api->rtapi = 0;
-        api->sdrapi = 0;
+        api->rtapi.valid = false;
+        api->sdrapi.valid = false;
         
         if (!GLApi_impl::Feature_VERSION_1_2_Supported()) {
             LOG_ERROR("minimal OpenGL v1.2 notfound");
@@ -262,6 +300,40 @@ namespace GHL {
 #undef DYNAMIC_GL_FUNCTION
 
         }
+        
+        if (GLApi_impl::Feature_VERSION_2_0_Supported()) {
+            api->sdrapi.valid = true;
+#define DYNAMIC_GL_FUNCTION(Res,Name,Args) api->sdrapi.Name = &GLApi_impl::Name;
+            DYNAMIC_GL_FUNCTIONS_ShaderObject
+#undef DYNAMIC_GL_FUNCTION
+            
+            api->sdrapi.COMPILE_STATUS = GLApi_impl::COMPILE_STATUS;
+            api->sdrapi.LINK_STATUS = GLApi_impl::LINK_STATUS;
+            api->sdrapi.VERTEX_SHADER = GLApi_impl::VERTEX_SHADER;
+            api->sdrapi.FRAGMENT_SHADER = GLApi_impl::FRAGMENT_SHADER;
+ 
+            LOG_INFO("GLSL: " << (const char*)GLApi_impl::GetString(GLApi_impl::SHADING_LANGUAGE_VERSION));
+            
+        } else if (GLApi_impl::Feature_ARB_shader_objects_Supported() &&
+            GLApi_impl::Feature_ARB_vertex_shader_Supported() &&
+            GLApi_impl::Feature_ARB_fragment_shader_Supported() &&
+            GLApi_impl::Feature_ARB_shading_language_100_Supported()) {
+            LOG_INFO("using extension ARB_shader_objects");
+            api->sdrapi.valid = true;
+#define DYNAMIC_GL_FUNCTION(Res,Name,Args) api->sdrapi.Name = &GLApi_impl::Name##ARB;
+            DYNAMIC_GL_FUNCTIONS_ShaderObject
+#undef DYNAMIC_GL_FUNCTION
+            api->sdrapi.COMPILE_STATUS = GLApi_impl::OBJECT_COMPILE_STATUS_ARB;
+            api->sdrapi.LINK_STATUS = GLApi_impl::OBJECT_LINK_STATUS_ARB;
+            LOG_INFO("using extension ARB_vertex_shader");
+            api->sdrapi.VERTEX_SHADER = GLApi_impl::VERTEX_SHADER_ARB;
+            LOG_INFO("using extension ARB_fragment_shader");
+            api->sdrapi.FRAGMENT_SHADER = GLApi_impl::FRAGMENT_SHADER_ARB;
+            LOG_INFO("using extension ARB_shading_language_100");
+            LOG_INFO("GLSL: " << (const char*)GLApi_impl::GetString(GLApi_impl::SHADING_LANGUAGE_VERSION_ARB));
+            
+        }
+        
         api->Release = &GLApi_impl::DynamicGLFinish;
         return true;
     }

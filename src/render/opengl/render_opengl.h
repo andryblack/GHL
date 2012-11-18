@@ -22,13 +22,13 @@ namespace GHL
 	class FragmentShaderGLSL;
 	class ShaderProgramGLSL;
 	
-	class RenderOpenGL : public RenderImpl 
+	class RenderOpenGLBase : public RenderImpl
 	{
-	private:
-        GLffpl  gl;
+	protected:
+        GL  gl;
 	public:
-		RenderOpenGL(UInt32 w,UInt32 h);
-		~RenderOpenGL();
+		RenderOpenGLBase(UInt32 w,UInt32 h);
+		~RenderOpenGLBase();
 		
         const GL& get_api() const { return gl;}
 		
@@ -56,11 +56,7 @@ namespace GHL
 		
 		/// set current texture
 		virtual void GHL_CALL SetTexture(const Texture* texture, UInt32 stage );
-		/// set texture stage color operation
-		virtual void GHL_CALL SetupTextureStageColorOp(TextureOperation op,TextureArgument arg1,TextureArgument arg2,UInt32 stage );
-		/// set texture stage alpha operation
-		virtual void GHL_CALL SetupTextureStageAlphaOp(TextureOperation op,TextureArgument arg1,TextureArgument arg2,UInt32 stage );
-		
+			
 		/// set blend factors
 		virtual void GHL_CALL SetupBlend(bool enable,BlendFactor src_factor,BlendFactor dst_factor) ;
 		/// set alpha test parameters
@@ -103,11 +99,26 @@ namespace GHL
 		virtual RenderTarget* GHL_CALL CreateRenderTarget(UInt32 w,UInt32 h,TextureFormat fmt,bool depth);
 		
 		
-		virtual VertexShader* GHL_CALL CreateVertexShader(DataStream* ds) ;
-		virtual FragmentShader* GHL_CALL CreateFragmentShader(DataStream* ds) ;
+		virtual VertexShader* GHL_CALL CreateVertexShader(const Data* ds) ;
+		virtual FragmentShader* GHL_CALL CreateFragmentShader(const Data* ds) ;
 		virtual ShaderProgram* GHL_CALL CreateShaderProgram(VertexShader* v,FragmentShader* f) ;
 		virtual void GHL_CALL SetShader(const ShaderProgram* shader) ;
 	};
+    
+    class RenderOpenGL : public RenderOpenGLBase {
+    private:
+        GLffpl  glffpl;
+    public:
+        RenderOpenGL(UInt32 w,UInt32 h);
+        
+        bool RenderInit();
+        
+        /// set texture stage color operation
+		virtual void GHL_CALL SetupTextureStageColorOp(TextureOperation op,TextureArgument arg1,TextureArgument arg2,UInt32 stage );
+		/// set texture stage alpha operation
+		virtual void GHL_CALL SetupTextureStageAlphaOp(TextureOperation op,TextureArgument arg1,TextureArgument arg2,UInt32 stage );
+        
+    };
 }
 
 #endif /*GHL_RENDER_OPENGL_H*/
