@@ -37,6 +37,8 @@
 #define GHL_PLATFORM_ANDROID
 #elif defined( __linux__ )
 #define GHL_PLATFORM_LINUX
+#elif defined( __FLASHPLAYER__ )
+#define GHL_PLATFORM_FLASH
 #else 
 #error "unknown platform"
 #endif
