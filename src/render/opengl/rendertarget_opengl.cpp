@@ -18,7 +18,7 @@
 
 namespace GHL {
 	
-	static const char* MODULE = "RENDER";
+	//static const char* MODULE = "RENDER";
 
 
     RenderTargetOpenGL::RenderTargetOpenGL(RenderOpenGLBase* parent,UInt32 w,UInt32 h,TextureFormat fmt,bool depth) :

@@ -102,29 +102,10 @@ void ApplicationBase::OnTimer(GHL::UInt32 usecs) {
 ///
 bool GHL_CALL ApplicationBase::OnFrame( GHL::UInt32 usecs ) {
     OnTimer(usecs);
+    if (!m_render)
+        return false;
     m_render->BeginScene( 0 );
-    float w = float(m_render->GetWidth());
-    float h = float(m_render->GetHeight());
-
-    float projectionOrtho[16];
-    std::fill(projectionOrtho,projectionOrtho+16,0.0f);
-    projectionOrtho[0+0*4] = (2.0f / (w - 0.0f));
-    projectionOrtho[1+1*4] = (2.0f / (0.0f - h));
-    projectionOrtho[2+2*4] = (-2.0f / (1.0f - -1.0f));
-    projectionOrtho[0+3*4] = -(w + 0.0f) / (w - 0.0f);
-    projectionOrtho[1+3*4] = -(0.0f + h) / (0.0f - h);
-    projectionOrtho[2+3*4] = -(1.0f + -1.0f) / (1.0f - -1.0f);
-    projectionOrtho[3+3*4] = 1.0f;
-
-
-    static const float identity[4][4] = {
-        { 1.0f, 0.0f, 0.0f, 0.0f },
-        { 0.0f, 1.0f, 0.0f, 0.0f },
-        { 0.0f, 0.0f, 1.0f, 0.0f },
-        { 0.0f, 0.0f, 0.0f, 1.0f }
-    };
-    m_render->SetProjectionMatrix(&projectionOrtho[0]);
-    m_render->SetViewMatrix(&identity[0][0]);
+    
     DrawScene();
     
     DrawDebug(20,20);
@@ -171,7 +152,10 @@ GHL::Texture* ApplicationBase::LoadTexture(const char* fn) {
     if (m_render) {
         tex = m_render->CreateTexture(img->GetWidth(),img->GetHeight(),
                                       GHL_ImageFormatToTextureFormat(img->GetFormat()),
-                                      img->GetData());
+                                      img);
+        if (!tex) {
+            GHL_Log(GHL::LOG_LEVEL_ERROR,"LoadTexture error CreateTexture");
+        }
     } else {
         GHL_Log(GHL::LOG_LEVEL_ERROR,"LoadTexture no render");
     }
@@ -203,8 +187,10 @@ GHL::SoundEffect*   ApplicationBase::LoadEffect( const char* fn) {
         GHL::Data* data = decoder->GetAllSamples();
         if (data) {
             effect = m_sound->CreateEffect(decoder->GetSampleType(), decoder->GetFrequency(), data);
+            data->Release();
+        } else {
+            GHL_Log(GHL::LOG_LEVEL_ERROR,"LoadEffect no data provided");
         }
-        data->Release();
     } else {
         GHL_Log(GHL::LOG_LEVEL_ERROR,"LoadEffect no sound");
     }

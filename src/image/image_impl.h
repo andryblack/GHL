@@ -52,6 +52,8 @@ namespace GHL {
 		virtual bool GHL_CALL Convert(ImageFormat fmt);
 		virtual bool GHL_CALL SetAlpha(const Image* img);
 		virtual Image* GHL_CALL SubImage(UInt32 x,UInt32 y,UInt32 w,UInt32 h) const;
+        /// clone image
+        virtual Image* GHL_CALL Clone() const;
 		bool SwapChannelsRB();
 		/// swap RB channels
 		virtual bool GHL_CALL SwapRB() { return SwapChannelsRB() ; }

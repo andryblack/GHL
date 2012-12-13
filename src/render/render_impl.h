@@ -35,6 +35,8 @@ namespace GHL {
     class VertexShaderImpl;
     class FragmentShaderImpl;
     class ShaderProgramImpl;
+    class VertexBufferImpl;
+    class IndexBufferImpl;
     
     bool HaveAlpha(const Texture* tex);
 
@@ -58,14 +60,16 @@ namespace GHL {
 		virtual bool RenderInit() = 0;
 		virtual void RenderDone() = 0;
 		virtual bool RenderSetFullScreen(bool fs) = 0;
-        virtual void SetOrthoProjection() = 0;
+        virtual void SetOrthoProjection();
 	
 		virtual UInt32 GHL_CALL GetWidth() const;
 		virtual UInt32 GHL_CALL GetHeight() const;
 	
-        void GHL_CALL SetTexture( const Texture* texture, UInt32 stage);
-        void GHL_CALL SetShader(const GHL::ShaderProgram *shader);
-        
+        virtual void GHL_CALL SetTexture( const Texture* texture, UInt32 stage);
+        virtual void GHL_CALL SetShader(const GHL::ShaderProgram *shader);
+        virtual void GHL_CALL SetIndexBuffer(const IndexBuffer* buf);
+		virtual void GHL_CALL SetVertexBuffer(const VertexBuffer* buf);
+
 		virtual void GHL_CALL DebugDrawText( Int32 x,Int32 y,const char* text );
 	
 		virtual UInt32 GHL_CALL GetTexturesMemory() const;
@@ -78,6 +82,8 @@ namespace GHL {
         UInt32  GetRenderWidth() const { return m_width; }
         UInt32  GetRenderHeight() const { return m_height; }
         bool  IsSceneStarted() const { return m_scene_started; }
+        const IndexBuffer* GetIndexBuffer() const { return m_current_i_buffer; }
+        const VertexBuffer* GetVertexBuffer() const { return m_current_v_buffer; }
 	private:
         UInt32 	m_width;
 		UInt32	m_height;
@@ -85,7 +91,8 @@ namespace GHL {
 		bool	m_scene_started;
 		const Texture*	m_current_texture[MAX_TEXTURE_STAGES];
         const ShaderProgram*   m_current_shader;
-
+        const VertexBuffer*     m_current_v_buffer;
+        const IndexBuffer*      m_current_i_buffer;
 		Texture* m_sfont_texture;
 #ifdef GHL_DEBUG
 		std::vector<const TextureImpl*>         m_textures;
@@ -93,6 +100,8 @@ namespace GHL {
         std::vector<const VertexShaderImpl*>    m_v_shaders;
 		std::vector<const FragmentShaderImpl*>  m_f_shaders;
 		std::vector<const ShaderProgramImpl*>   m_shaders;
+        std::vector<const VertexBufferImpl*>    m_v_buffers;
+        std::vector<const IndexBufferImpl*>    m_i_buffers;
 #endif
         friend class TextureImpl;
         void TextureCreated(const TextureImpl*);
@@ -109,6 +118,12 @@ namespace GHL {
         friend class ShaderProgramImpl;
 		void ShaderProgramCreated(const ShaderProgramImpl* sp);
         void ShaderProgramReleased(const ShaderProgramImpl* sp);
+        friend class VertexBufferImpl;
+        void BufferCreated( const VertexBufferImpl* b );
+        void BufferReleased( const VertexBufferImpl* b );
+        friend class IndexBufferImpl;
+        void BufferCreated( const IndexBufferImpl* b );
+        void BufferReleased( const IndexBufferImpl* b );
 	};
 
 }

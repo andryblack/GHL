@@ -31,6 +31,7 @@
 
 namespace GHL 
 {
+    struct Image;
 
 	/// texture format
 	enum TextureFormat
@@ -95,7 +96,7 @@ namespace GHL
 		virtual TextureWrapMode GHL_CALL GetWrapModeV() const = 0;
 
 		/// set texture pixels
-		virtual void GHL_CALL SetData(UInt32 x,UInt32 y,UInt32 w,UInt32 h,const Data* data,UInt32 level=0) = 0;
+		virtual void GHL_CALL SetData(UInt32 x,UInt32 y,const Image* data,UInt32 level=0) = 0;
 		/// generate mipmaps
 		virtual void GHL_CALL GenerateMipmaps() = 0;
 	};
@@ -104,6 +105,7 @@ namespace GHL
 }
 
 GHL_API GHL::TextureFormat GHL_CALL GHL_ImageFormatToTextureFormat( GHL::ImageFormat fmt );
+GHL_API GHL::ImageFormat GHL_CALL GHL_TextureFormatToImageFormat( GHL::TextureFormat fmt );
 
 
 

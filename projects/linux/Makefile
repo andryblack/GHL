@@ -88,3 +88,5 @@ $(BUILD)/winlib/%.o : $(GHLSRC)/winlib/%.cpp
 
 clean:
 	$(RM) $(OBJECTS) $(ARTEFACTS)
+
+

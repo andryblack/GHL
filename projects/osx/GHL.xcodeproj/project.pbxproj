@@ -28,7 +28,6 @@
 		A42900961413948E00429C47 /* ghl_texture.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900871413948E00429C47 /* ghl_texture.h */; };
 		A42900971413948E00429C47 /* ghl_types.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900881413948E00429C47 /* ghl_types.h */; };
 		A42900981413948E00429C47 /* ghl_vfs.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900891413948E00429C47 /* ghl_vfs.h */; };
-		A42900DB1413949B00429C47 /* image_config.h in Headers */ = {isa = PBXBuildFile; fileRef = A429009B1413949B00429C47 /* image_config.h */; };
 		A42900DC1413949B00429C47 /* image_decoders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A429009C1413949B00429C47 /* image_decoders.cpp */; };
 		A42900DD1413949B00429C47 /* image_decoders.h in Headers */ = {isa = PBXBuildFile; fileRef = A429009D1413949B00429C47 /* image_decoders.h */; };
 		A42900DE1413949B00429C47 /* image_file_decoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A429009E1413949B00429C47 /* image_file_decoder.h */; };
@@ -216,7 +215,6 @@
 		A42900871413948E00429C47 /* ghl_texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_texture.h; sourceTree = "<group>"; };
 		A42900881413948E00429C47 /* ghl_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_types.h; sourceTree = "<group>"; };
 		A42900891413948E00429C47 /* ghl_vfs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_vfs.h; sourceTree = "<group>"; };
-		A429009B1413949B00429C47 /* image_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = image_config.h; sourceTree = "<group>"; };
 		A429009C1413949B00429C47 /* image_decoders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = image_decoders.cpp; sourceTree = "<group>"; };
 		A429009D1413949B00429C47 /* image_decoders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = image_decoders.h; sourceTree = "<group>"; };
 		A429009E1413949B00429C47 /* image_file_decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = image_file_decoder.h; sourceTree = "<group>"; };
@@ -476,7 +474,6 @@
 				A4EDFDC514169DCD00ED0DC0 /* png_image_decoder.cpp */,
 				A4EDFDC614169DCD00ED0DC0 /* png_image_decoder.h */,
 				A4772A6B14169C19006A9887 /* libpng */,
-				A429009B1413949B00429C47 /* image_config.h */,
 				A429009C1413949B00429C47 /* image_decoders.cpp */,
 				A429009D1413949B00429C47 /* image_decoders.h */,
 				A429009E1413949B00429C47 /* image_file_decoder.h */,
@@ -757,7 +754,6 @@
 				A42900961413948E00429C47 /* ghl_texture.h in Headers */,
 				A42900971413948E00429C47 /* ghl_types.h in Headers */,
 				A42900981413948E00429C47 /* ghl_vfs.h in Headers */,
-				A42900DB1413949B00429C47 /* image_config.h in Headers */,
 				A42900DD1413949B00429C47 /* image_decoders.h in Headers */,
 				A42900DE1413949B00429C47 /* image_file_decoder.h in Headers */,
 				A42900E01413949B00429C47 /* image_impl.h in Headers */,

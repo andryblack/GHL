@@ -198,7 +198,18 @@ namespace GHL
 		return new ImageImpl( w, h, GetFormat(), res );
 	}
 
+    /// clone image
+    Image* GHL_CALL ImageImpl::Clone() const {
+        ImageImpl* res = new ImageImpl(GetWidth(),GetHeight(),GetFormat(),
+                                       new DataImpl(m_data->GetSize(),m_data->GetData()));
+        return res;
+    }
 }
 GHL_API GHL::Image* GHL_CALL GHL_CreateImage( GHL::UInt32 w, GHL::UInt32 h,GHL::ImageFormat fmt) {
 	return new GHL::ImageImpl( w,h,fmt);
+}
+GHL_API GHL::Image* GHL_CALL GHL_CreateImageWithData( GHL::UInt32 w, GHL::UInt32 h,GHL::ImageFormat fmt,const GHL::Byte* data) {
+	GHL::ImageImpl* res = new GHL::ImageImpl( w,h,fmt);
+    ::memcpy(res->GetRawData()->GetDataPtr(), data, w*h*res->GetBpp());
+    return res;
 }

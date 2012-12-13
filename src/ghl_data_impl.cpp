@@ -47,3 +47,9 @@ GHL_API GHL::Data* GHL_CALL GHL_CreateData( GHL::UInt32 size ,
     }
     return data;
 }
+
+GHL_API GHL::Data* GHL_CALL GHL_HoldData( GHL::Byte* data_ptr, GHL::UInt32 size  ) {
+    GHL::DataImpl* data = new GHL::DataImpl( size );
+    ::memcpy(data->GetDataPtr(),data_ptr,size);
+    return data;
+}

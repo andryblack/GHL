@@ -12,7 +12,7 @@
 namespace GHL{
 
 #ifdef GHL_DEBUG
-    static const char* MODULE = "PFPL";
+    //static const char* MODULE = "PFPL";
     void dump( const pfpl_state_data& s ) {
         //LOG_DEBUG("{tex:"<<tex
     }

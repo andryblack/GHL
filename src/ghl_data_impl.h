@@ -59,6 +59,8 @@ namespace GHL {
 		virtual const Byte* GHL_CALL	GetData() const { return m_buffer; }
 		/// set data
 		virtual void GHL_CALL	SetData( UInt32 offset, const Byte* data, UInt32 size ) ;
+        /// clone data
+        virtual Data* GHL_CALL  Clone() const { return 0; }
 	};
 	
 	class ConstInlinedData : public Data {
@@ -84,6 +86,8 @@ namespace GHL {
         virtual void GHL_CALL	SetData( UInt32 /*offset*/, const Byte* /*data*/, UInt32 /*size*/ ) {
 			
 		}
+        /// clone data
+        virtual Data* GHL_CALL  Clone() const { return 0; }
 	};
 	
 	/// Data buffer holder
@@ -95,9 +99,18 @@ namespace GHL {
 			m_buffer = new Byte[ size ];
 			m_size = size;
 		}
+        explicit DataImpl( UInt32 size, const Byte* data ) {
+            m_buffer = new Byte[ size ];
+            m_size = size;
+            ::memcpy(m_buffer, data, size);
+        }
 		~DataImpl() {
 			delete [] m_buffer;
 		}
+        /// clone data
+        virtual Data* GHL_CALL  Clone() const {
+            return new DataImpl(m_size,m_buffer);
+        }
 	};
 	
 	

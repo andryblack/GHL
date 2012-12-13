@@ -33,9 +33,44 @@ namespace GHL {
     class TextureImpl : public RefCounterImpl<Texture> {
     public:
         virtual ~TextureImpl();
+        
+        /// get texture width
+		virtual UInt32 GHL_CALL GetWidth() const { return m_width;}
+		/// get texture height
+		virtual UInt32 GHL_CALL GetHeight() const { return m_height;}
+		
+        /// get minification texture filtration
+		virtual TextureFilter GHL_CALL GetMinFilter( ) const { return m_min_filter;}
+		/// set minification texture filtration
+		virtual void GHL_CALL SetMinFilter(TextureFilter min) { m_min_filter = min; }
+		/// get magnification texture filtration
+		virtual TextureFilter GHL_CALL GetMagFilter( ) const { return m_mag_filter;}
+		/// set magnification texture filtration
+		virtual void GHL_CALL SetMagFilter(TextureFilter mag) { m_mag_filter = mag; }
+		/// get mipmap texture filtration
+		virtual TextureFilter GHL_CALL GetMipFilter( ) const { return m_mip_filter;}
+		/// set mipmap texture filtration
+		virtual void GHL_CALL SetMipFilter(TextureFilter mip) { m_min_filter = mip; }
+		/// get texture wrap mode U
+		virtual TextureWrapMode GHL_CALL GetWrapModeU() const { return m_wrap_u;}
+		/// set texture wrap U
+		virtual void GHL_CALL SetWrapModeU(TextureWrapMode wm) { m_wrap_u = wm; }
+        /// get texture wrap mode V
+		virtual TextureWrapMode GHL_CALL GetWrapModeV() const { return m_wrap_v;}
+		/// set texture wrap V
+		virtual void GHL_CALL SetWrapModeV(TextureWrapMode wm) { m_wrap_v = wm; }
+		/// get texture wrap mode V
+		
     protected:
-        explicit TextureImpl( RenderImpl* parent );
+        explicit TextureImpl( RenderImpl* parent, UInt32 w,UInt32 h );
         void RestoreTexture(UInt32 stage);
+        UInt32	m_width;
+		UInt32	m_height;
+        TextureFilter	m_min_filter;
+		TextureFilter	m_mag_filter;
+		TextureFilter	m_mip_filter;
+		TextureWrapMode m_wrap_u;
+		TextureWrapMode m_wrap_v;
     private:
         RenderImpl* m_parent;
     };

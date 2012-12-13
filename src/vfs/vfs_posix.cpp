@@ -6,15 +6,18 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include "../ghl_ref_counter_impl.h"
+#include "../ghl_log_impl.h"
 #ifdef _MSC_VER
 #define snprintf _snprintf
 #endif
 namespace GHL {
+    
+    static const char* MODULE = "VFS";
 
     class PosixFileStream : public RefCounterImpl<DataStream> {
     private:
         FILE* m_file;
-            bool m_eof;
+        bool m_eof;
     public:
         explicit PosixFileStream(FILE* file) {
             m_file = file;
@@ -58,7 +61,9 @@ namespace GHL {
         }
     };
 
-    VFSPosixImpl::VFSPosixImpl() {
+    VFSPosixImpl::VFSPosixImpl(const char* dat,const char* docs) {
+        m_data_dir = dat;
+        m_docs_dir = docs;
     }
 
     VFSPosixImpl::~VFSPosixImpl() {
@@ -66,7 +71,13 @@ namespace GHL {
 
     /// get dir
     const char* GHL_CALL VFSPosixImpl::GetDir(DirType dt) const {
-        return ".";
+        if (dt==DIR_TYPE_DATA) {
+            return m_data_dir.c_str();
+        }
+        if (dt==DIR_TYPE_USER_PROFILE) {
+            return m_docs_dir.c_str();
+        }
+        return "/";
     }
     /// attach package
     void GHL_CALL VFSPosixImpl::AttachPack(DataStream* /*ds*/) {
@@ -88,7 +99,8 @@ namespace GHL {
         return false;
     }
     /// open file
-    DataStream* GHL_CALL VFSPosixImpl::OpenFile(const char* _file,FileOperation ot) {
+    DataStream* GHL_CALL VFSPosixImpl::OpenFile(const char* _file,FileOperation ot){
+        LOG_VERBOSE("try open file '" << _file << "'");
         if (!_file) return 0;
         if (_file[0]==0) return 0;
         FILE* f = fopen(_file,ot==FILE_READ ? "rb" : "rwb" );
@@ -103,8 +115,8 @@ namespace GHL {
 }
 
 
-GHL_API GHL::VFS* GHL_CALL GHL_CreateVFSPosix() {
-    return new GHL::VFSPosixImpl();
+GHL_API GHL::VFS* GHL_CALL GHL_CreateVFSPosix(const char* data,const char* docs) {
+    return new GHL::VFSPosixImpl(data,docs);
 }
 
 GHL_API void GHL_CALL GHL_DestroyVFSPosix(GHL::VFS* vfs) {

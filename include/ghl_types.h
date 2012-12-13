@@ -29,6 +29,8 @@ namespace GHL
 
 	/// byte
 	typedef unsigned char Byte;
+    /// int 8
+    typedef signed char Int8;
 	/// unsigned 32
 	typedef unsigned int UInt32;
 	/// int 32
@@ -43,6 +45,7 @@ namespace GHL
 #define GHL_STATIC_ASSERT(expr) typedef char GHL_CONCAT(ghl_static_assert_failed_at_line_, __LINE__) [(expr) ? 1 : -1]
     
     GHL_STATIC_ASSERT(sizeof(Byte) == 1);
+    GHL_STATIC_ASSERT(sizeof(Int8) == 1);
     GHL_STATIC_ASSERT(sizeof(UInt32) == 4);
     GHL_STATIC_ASSERT(sizeof(Int32) == 4);
     GHL_STATIC_ASSERT(sizeof(UInt16) == 2);

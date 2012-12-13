@@ -140,11 +140,12 @@ namespace GHL {
 	}
 	
     void RenderOpenGLBase::SetOrthoProjection(){
-        gl.MatrixMode(gl.PROJECTION);
-        gl.LoadIdentity();
-        gl.Ortho(0,GetWidth(),GetHeight(),0,-1.0,1.0);
-        gl.MatrixMode(gl.MODELVIEW);
-        gl.LoadIdentity();
+//        gl.MatrixMode(gl.PROJECTION);
+//        gl.LoadIdentity();
+//        gl.Ortho(0,GetWidth(),GetHeight(),0,-1.0,1.0);
+//        gl.MatrixMode(gl.MODELVIEW);
+//        gl.LoadIdentity();
+        RenderImpl::SetOrthoProjection();
     }
 	
 	
@@ -192,7 +193,7 @@ namespace GHL {
 	
 	
 	/// create empty texture
-	Texture* GHL_CALL RenderOpenGLBase::CreateTexture(UInt32 width,UInt32 height,TextureFormat fmt,const Data* data) {
+	Texture* GHL_CALL RenderOpenGLBase::CreateTexture(UInt32 width,UInt32 height,TextureFormat fmt,const Image* data) {
 		if ( fmt == TEXTURE_FORMAT_PVRTC_2BPPV1 || fmt == TEXTURE_FORMAT_PVRTC_4BPPV1 ) {
 #ifdef GHL_OPENGLES
 			if ( !DinamicGLFeature_IMG_texture_compression_pvrtc_Supported() ) {
@@ -279,12 +280,11 @@ namespace GHL {
 	
 	/// set current index buffer
 	void GHL_CALL RenderOpenGLBase::SetIndexBuffer(const IndexBuffer* buf) {
-		if (buf==0) {
-			//gl.BindBuffer(gl.ELEMENT_ARRAY_BUFFER,0);
-			return;
-		}
-		///@todo
-		NOT_IMPLEMENTED;
+        RenderImpl::SetIndexBuffer(buf);
+        if (buf) {
+            ///@todo
+            NOT_IMPLEMENTED;
+        }
 	}
 	
 	/// create vertex buffer
@@ -297,11 +297,10 @@ namespace GHL {
 	}
 	/// set current vertex buffer
 	void GHL_CALL RenderOpenGLBase::SetVertexBuffer(const VertexBuffer* buf) {
-		if (buf==0) {
-			//gl.BindBuffer(gl.ARRAY_BUFFER,0);
-			return;
-		}
-		NOT_IMPLEMENTED;
+		RenderImpl::SetVertexBuffer(buf);
+        if (buf) {
+            NOT_IMPLEMENTED;
+        }
 	}
 	
 	/// set projection matrix

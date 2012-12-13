@@ -64,10 +64,13 @@ namespace GHL
         virtual bool GHL_CALL SetAlpha(const Image* img) = 0;
         /// create sub image
         virtual Image* GHL_CALL SubImage(UInt32 x,UInt32 y,UInt32 w,UInt32 h) const = 0;
+        /// clone image
+        virtual Image* GHL_CALL Clone() const = 0;
     };
 
 } /*namespace*/
 
 GHL_API GHL::Image* GHL_CALL GHL_CreateImage( GHL::UInt32 w, GHL::UInt32 h,GHL::ImageFormat fmt);
+GHL_API GHL::Image* GHL_CALL GHL_CreateImageWithData( GHL::UInt32 w, GHL::UInt32 h,GHL::ImageFormat fmt,const GHL::Byte* data);
 
 #endif /*GHL_IMAGE_H*/

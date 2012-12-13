@@ -70,35 +70,23 @@ namespace GHL
 	};
 
 	/// vertex buffer object
-	struct VertexBuffer
+	struct VertexBuffer : RefCounter
 	{
-		/// release buffer
-		virtual void GHL_CALL Release() = 0;
 		/// get vertex type
 		virtual VertexType GHL_CALL GetType() const = 0;
 		/// get buffer capacity
 		virtual UInt32 GHL_CALL GetCapacity() const = 0;
-		/// lock buffer
-		virtual void* GHL_CALL Lock(UInt32 offset,UInt32 size) = 0;
-		/// locked status
-		virtual bool GHL_CALL GetLocked() const = 0;
-		/// unlock buffer
-		virtual void GHL_CALL Unlock() = 0;
+		/// set buffer data
+		virtual void GHL_CALL SetData(UInt32 offset,const Data* data) = 0;
 	};
 
 	/// index buffer object
-	struct IndexBuffer
+	struct IndexBuffer : RefCounter
 	{
-		/// release buffer
-		virtual void GHL_CALL Release() = 0;
 		/// get buffer capacity
 		virtual UInt32 GHL_CALL GetCapacity() const = 0;
-		/// lock buffer
-		virtual unsigned short* GHL_CALL Lock(UInt32 offset,UInt32 size) = 0;
-		/// locked status
-		virtual bool GHL_CALL GetLocked() const = 0;
-		/// unlock buffer
-		virtual void GHL_CALL Unlock() = 0;
+		/// set buffer data
+		virtual void GHL_CALL SetData(UInt32 offset,const Data* data) = 0;
 	};
 
 
@@ -156,6 +144,8 @@ namespace GHL
 	};
     
     static const UInt32 MAX_TEXTURE_STAGES = 2;
+    
+    struct Image;
 
 	/// render interface
 	struct Render
@@ -180,7 +170,7 @@ namespace GHL
 
 		
 		/// create empty texture
-		virtual Texture* GHL_CALL CreateTexture(UInt32 width,UInt32 height,TextureFormat fmt,const Data* data=0) = 0;
+		virtual Texture* GHL_CALL CreateTexture(UInt32 width,UInt32 height,TextureFormat fmt,const Image* data=0) = 0;
 		
 		/// set current texture
 		virtual void GHL_CALL SetTexture(const Texture* texture, UInt32 stage = 0) = 0;

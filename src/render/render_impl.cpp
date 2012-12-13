@@ -25,6 +25,7 @@
 #include "rendertarget_impl.h"
 #include "texture_impl.h"
 #include "shader_impl.h"
+#include "buffer_impl.h"
 #include <cstdio>
 #include <algorithm>
 #include <cassert>
@@ -56,6 +57,8 @@ namespace GHL {
         for (UInt32 i=0;i<MAX_TEXTURE_STAGES;++i)
             m_current_texture[i]=0;
         m_current_shader = 0;
+        m_current_v_buffer = 0;
+        m_current_i_buffer = 0;
 		m_scene_started = false;
         (void)MODULE;
     }
@@ -72,14 +75,14 @@ namespace GHL {
 	
     /// Begin graphics scene (frame)
     void GHL_CALL RenderImpl::BeginScene(RenderTarget* target) {
-		assert(!m_scene_started);
+        assert(!m_scene_started);
         m_scene_target = static_cast<RenderTargetImpl*>(target);
-        SetViewport(0,0,GetWidth(),GetHeight());
-        SetOrthoProjection();
-		if (m_scene_target) {
+        if (m_scene_target) {
             m_scene_target->AddRef();
 			m_scene_target->BeginScene(this);
 		}
+        SetViewport(0,0,GetWidth(),GetHeight());
+        SetOrthoProjection();
 		ResetRenderState();
         m_scene_started = true;
     }
@@ -138,10 +141,16 @@ namespace GHL {
     bool RenderImpl::RenderInit() {
         LOG_VERBOSE("RenderImpl::RenderInit");
         if (m_sfont_texture) return true;
-        size_t size = lucida_console_regular_8_width*lucida_console_regular_8_height*4;
-        ConstInlinedData data((const Byte*)lucida_console_regular_8_data,size);
-        
-        m_sfont_texture = CreateTexture(lucida_console_regular_8_width,lucida_console_regular_8_height,TEXTURE_FORMAT_RGBA,&data);
+        //size_t size = lucida_console_regular_8_width*lucida_console_regular_8_height*4;
+        //ConstInlinedData data((const Byte*)lucida_console_regular_8_data,size);
+        Image* img = GHL_CreateImageWithData(lucida_console_regular_8_width,
+                                     lucida_console_regular_8_height,
+                                     IMAGE_FORMAT_RGBA,
+                                             (const Byte*)lucida_console_regular_8_data);
+        m_sfont_texture = CreateTexture(lucida_console_regular_8_width,
+                                        lucida_console_regular_8_height,
+                                        TEXTURE_FORMAT_RGBA,img);
+        img->Release();
         return m_sfont_texture != 0;
     }
 	
@@ -168,9 +177,36 @@ namespace GHL {
         if (!m_shaders.empty()) {
             LOG_ERROR("unreleased " << m_shaders.size() << " shaders");
         }
+        if (!m_v_buffers.empty()) {
+            LOG_ERROR("unreleased " << m_v_buffers.size() << " vertex buffers");
+        }
+        if (!m_i_buffers.empty()) {
+            LOG_ERROR("unreleased " << m_i_buffers.size() << " index buffers");
+        }
 #endif
     }
 	
+    void RenderImpl::SetOrthoProjection() {
+        float projectionOrtho[16];
+        const float w = GetWidth();
+        const float h = GetHeight();
+        std::fill(projectionOrtho,projectionOrtho+16,0.0f);
+        projectionOrtho[0+0*4] = (2.0f / (w - 0.0f));
+        projectionOrtho[1+1*4] = (2.0f / (0.0f - h));
+        projectionOrtho[2+2*4] = (-2.0f / (1.0f - -1.0f));
+        projectionOrtho[0+3*4] = -(w + 0.0f) / (w - 0.0f);
+        projectionOrtho[1+3*4] = -(0.0f + h) / (0.0f - h);
+        projectionOrtho[2+3*4] = -(1.0f + -1.0f) / (1.0f - -1.0f);
+        projectionOrtho[3+3*4] = 1.0f;
+        SetProjectionMatrix(&projectionOrtho[0]);
+        static const float identity[4][4] = {
+            { 1.0f, 0.0f, 0.0f, 0.0f },
+            { 0.0f, 1.0f, 0.0f, 0.0f },
+            { 0.0f, 0.0f, 1.0f, 0.0f },
+            { 0.0f, 0.0f, 0.0f, 1.0f }
+        };
+        SetViewMatrix(&identity[0][0]);
+    }
 	
     void GHL_CALL RenderImpl::DebugDrawText(Int32 x, Int32 y, const char *text) {
         if (m_sfont_texture) {
@@ -369,6 +405,43 @@ namespace GHL {
 		}
 #endif
 	}
+    
+    
+    void RenderImpl::BufferCreated(const VertexBufferImpl * b)     {
+        (void)b;
+#ifdef GHL_DEBUG
+        m_v_buffers.push_back(b);
+#endif
+    }
+    
+    void RenderImpl::BufferReleased(const VertexBufferImpl* b) {
+        (void)b;
+#ifdef GHL_DEBUG
+        std::vector<const VertexBufferImpl*>::iterator it = std::find(m_v_buffers.begin(),m_v_buffers.end(),b);
+        assert(it!=m_v_buffers.end() && "release unknown vertex buffer");
+        if (it!=m_v_buffers.end()) {
+            m_v_buffers.erase(it);
+        }
+#endif
+    }
+    
+    void RenderImpl::BufferCreated(const IndexBufferImpl * b)     {
+        (void)b;
+#ifdef GHL_DEBUG
+        m_i_buffers.push_back(b);
+#endif
+    }
+    
+    void RenderImpl::BufferReleased(const IndexBufferImpl* b) {
+        (void)b;
+#ifdef GHL_DEBUG
+        std::vector<const IndexBufferImpl*>::iterator it = std::find(m_i_buffers.begin(),m_i_buffers.end(),b);
+        assert(it!=m_i_buffers.end() && "release unknown index buffer");
+        if (it!=m_i_buffers.end()) {
+            m_i_buffers.erase(it);
+        }
+#endif
+    }
 	
     UInt32 GHL_CALL RenderImpl::GetTexturesMemory() const {
         UInt32 res = 0;
@@ -443,16 +516,48 @@ namespace GHL {
         }
         m_current_shader = shader;
     }
+    
+    
+    void GHL_CALL RenderImpl::SetIndexBuffer(const IndexBuffer* buf) {
+#ifdef GHL_DEBUG
+        if (buf) {
+            std::vector<const IndexBufferImpl*>::iterator it = std::find(m_i_buffers.begin(),m_i_buffers.end(),buf);
+            assert(it!=m_i_buffers.end() && "bind unknown index buffer");
+            if (it==m_i_buffers.end()) {
+                LOG_ERROR( "bind unknown index buffer" );
+                return;
+            }
+        }
+#endif
+        if (buf) {
+            buf->AddRef();
+        }
+        if (m_current_i_buffer) {
+            m_current_i_buffer->Release();
+        }
+        m_current_i_buffer = buf;
+    }
+    
+    void GHL_CALL RenderImpl::SetVertexBuffer(const VertexBuffer* buf) {
+#ifdef GHL_DEBUG
+        if (buf) {
+            std::vector<const VertexBufferImpl*>::iterator it = std::find(m_v_buffers.begin(),m_v_buffers.end(),buf);
+            assert(it!=m_v_buffers.end() && "bind unknown vertex buffer");
+            if (it==m_v_buffers.end()) {
+                LOG_ERROR( "bind unknown vertex buffer" );
+                return;
+            }
+        }
+#endif
+        if (buf) {
+            buf->AddRef();
+        }
+        if (m_current_v_buffer) {
+            m_current_v_buffer->Release();
+        }
+        m_current_v_buffer = buf;
+    }
+    
 }
 
-GHL_API GHL::TextureFormat GHL_CALL GHL_ImageFormatToTextureFormat( GHL::ImageFormat fmt ) {
-    switch (fmt) {
-        case GHL::IMAGE_FORMAT_GRAY:    return GHL::TEXTURE_FORMAT_ALPHA;
-        case GHL::IMAGE_FORMAT_RGB:     return GHL::TEXTURE_FORMAT_RGB;
-        case GHL::IMAGE_FORMAT_RGBA:    return GHL::TEXTURE_FORMAT_RGBA;
-        case GHL::IMAGE_FORMAT_PVRTC_2: return GHL::TEXTURE_FORMAT_PVRTC_2BPPV1;
-        case GHL::IMAGE_FORMAT_PVRTC_4: return GHL::TEXTURE_FORMAT_PVRTC_4BPPV1;
-        default: break;
-    }
-    return GHL::TEXTURE_FORMAT_UNKNOWN;
-}
+

@@ -38,6 +38,8 @@ namespace GHL {
 		virtual const Byte* GHL_CALL	GetData() const = 0;
 		/// set data
 		virtual void GHL_CALL	SetData( UInt32 offset, const Byte* data, UInt32 size ) = 0;
+        /// clone data
+        virtual Data* GHL_CALL  Clone() const = 0;
 	};
 
     
@@ -46,5 +48,6 @@ namespace GHL {
 GHL_API GHL::Data* GHL_CALL GHL_CreateData( GHL::UInt32 size , 
                                            bool fill = false , 
                                            GHL::Byte filler = 0 );
+GHL_API GHL::Data* GHL_CALL GHL_HoldData( GHL::Byte* data, GHL::UInt32 size  );
 
 #endif /*GHL_DATA_H*/

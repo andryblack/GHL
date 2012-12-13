@@ -21,7 +21,7 @@
 */
 
 #include "image_decoders.h"
-#include "image_config.h"
+#include "ghl_image_config.h"
 #include "image_impl.h"
 
 #ifdef USE_PNG_DECODER
@@ -56,22 +56,29 @@ namespace GHL {
     static const char* MODULE = "IMAGE";
 
 	ImageDecoderImpl::ImageDecoderImpl() {
+        LOG_VERBOSE("configure image decoders:");
 #ifdef USE_PVRTC_IMAGE_DECODER
+        LOG_VERBOSE("add PVRTC decoder");
 		m_decoders.push_back(new PVRTCDecoder());
 #endif
 #ifdef USE_PNG_DECODER
+        LOG_VERBOSE("add PNG decoder");
 		m_decoders.push_back(new PngDecoder());
 #endif
 #ifdef USE_JPEG_DECODER
+        LOG_VERBOSE("add JPEG decoder");
 		m_decoders.push_back(new JpegDecoder());
 #endif
 #ifdef USE_QT_IMAGE_DECODER
-			m_decoders.push_back(new QtImageFileDecoder());
+        LOG_VERBOSE("add QT decoder");
+        m_decoders.push_back(new QtImageFileDecoder());
 #endif
 #ifdef USE_IPHONE_IMAGE_DECODER
+        LOG_VERBOSE("add iPhone decoder");
 		m_decoders.push_back(new iPhoneImageDecoder());
 #endif
 #ifdef USE_TGA_IMAGE_DECODER
+        LOG_VERBOSE("add TGA decoder");
 		m_decoders.push_back(new TGAImageDecoder());
 #endif
 	}

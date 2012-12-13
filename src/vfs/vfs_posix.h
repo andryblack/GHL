@@ -8,7 +8,7 @@ namespace GHL {
 
 	class VFSPosixImpl : public VFS {
 	public:
-		VFSPosixImpl();
+		VFSPosixImpl(const char* dat,const char* docs);
 		virtual ~VFSPosixImpl();
 		/// get dir
 		virtual const char* GHL_CALL GetDir(DirType dt) const ;
@@ -26,6 +26,7 @@ namespace GHL {
 		virtual DataStream* GHL_CALL CreateStreamFromMemory(Byte* data,UInt32 size) ;
 	private:
 		std::string m_data_dir;
+        std::string m_docs_dir;
 	};
 
 }

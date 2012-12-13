@@ -68,20 +68,15 @@ namespace GHL {
 		return  gl.REPEAT;
 	}
 	
-	TextureOpenGL::TextureOpenGL(GL::GLuint name,RenderOpenGLBase* parent,TextureFormat fmt,UInt32 w,UInt32 h) : TextureImpl(parent), gl(parent->get_api()),
-		m_name(name),m_width(w),m_height(h),
+	TextureOpenGL::TextureOpenGL(GL::GLuint name,RenderOpenGLBase* parent,TextureFormat fmt,UInt32 w,UInt32 h) : TextureImpl(parent,w,h), gl(parent->get_api()),
+		m_name(name),
 		m_fmt(fmt),
-		m_min_filter(TEX_FILTER_NEAR),
-		m_mag_filter(TEX_FILTER_NEAR),
-		m_mip_filter(TEX_FILTER_NONE),
-		m_have_mipmaps(false),
-        m_wrap_u(TEX_WRAP_CLAMP),
-        m_wrap_v(TEX_WRAP_CLAMP)
+		m_have_mipmaps(false)
 	{
 		
 	}
 	
-	TextureOpenGL* TextureOpenGL::Create( RenderOpenGLBase* parent,TextureFormat fmt,UInt32 w,UInt32 h, const Data* data) {
+	TextureOpenGL* TextureOpenGL::Create( RenderOpenGLBase* parent,TextureFormat fmt,UInt32 w,UInt32 h, const Image* data) {
         if (fmt==TEXTURE_FORMAT_UNKNOWN)
             return 0;
         const GL& gl(parent->get_api());
@@ -91,23 +86,48 @@ namespace GHL {
 		if (!name) return 0;
 		gl.BindTexture(gl.TEXTURE_2D, name);
 
-		gl.TexParameteri(gl.TEXTURE_2D,  gl.TEXTURE_MIN_FILTER,  gl.NEAREST);
+        gl.TexParameteri(gl.TEXTURE_2D,  gl.TEXTURE_MIN_FILTER,  gl.NEAREST);
 		gl.TexParameteri(gl.TEXTURE_2D,  gl.TEXTURE_MAG_FILTER,  gl.NEAREST);
         gl.TexParameteri(gl.TEXTURE_2D,  gl.TEXTURE_WRAP_S,  gl.CLAMP_TO_EDGE);
         gl.TexParameteri(gl.TEXTURE_2D,  gl.TEXTURE_WRAP_T,  gl.CLAMP_TO_EDGE);
-		if (format_compressed(fmt)) {
-			if ( data )
-				gl.CompressedTexImage2D  (gl.TEXTURE_2D, 0, convert_int_format(gl,fmt), w, h, 0, data->GetSize(), data->GetData() );
-			else {
+		
+        
+        if (format_compressed(fmt)) {
+			if ( data ) {
+                const Data* tdata = data->GetData();
+				gl.CompressedTexImage2D  (gl.TEXTURE_2D, 0, convert_int_format(gl,fmt), w, h, 0,tdata->GetSize(), tdata->GetData() );
+			} else {
 				gl.BindTexture  (gl.TEXTURE_2D, 0);
 				gl.DeleteTextures(1, &name);
 				return 0;
 			}
 		} else {
-			gl.TexImage2D  (gl.TEXTURE_2D, 0,
-                            convert_int_format(gl,fmt), w, h, 0,
-                            convert_format(gl,fmt), convert_storage(gl,fmt),
-						 data ? data->GetData() : 0);
+            if (data) {
+                const Data* tdata = data->GetData();
+                ImageFormat ifmt = GHL_TextureFormatToImageFormat(fmt);
+                if (ifmt!=data->GetFormat()) {
+                    Image* cpy = data->Clone();
+                    cpy->Convert(ifmt);
+                    tdata = cpy->GetData();
+                    gl.TexImage2D  (gl.TEXTURE_2D, 0,
+                                    convert_int_format(gl,fmt), w, h, 0,
+                                    convert_format(gl,fmt), convert_storage(gl,fmt),
+                                    tdata->GetData() );
+                    cpy->Release();
+                } else {
+                    gl.TexImage2D  (gl.TEXTURE_2D, 0,
+                                convert_int_format(gl,fmt), w, h, 0,
+                                convert_format(gl,fmt), convert_storage(gl,fmt),
+                                tdata->GetData() );
+                }
+            } else {
+                gl.TexImage2D  (gl.TEXTURE_2D, 0,
+                                convert_int_format(gl,fmt), w, h, 0,
+                                convert_format(gl,fmt), convert_storage(gl,fmt),
+                                0);
+            }
+            
+			
 		}
 		
 		return new TextureOpenGL( name, parent, fmt, w,h );
@@ -154,19 +174,19 @@ namespace GHL {
 	
     /// set minification texture filtration
 	void GHL_CALL TextureOpenGL::SetMinFilter(TextureFilter min) {
-		m_min_filter = min;
+        TextureImpl::SetMinFilter(min);
 		calc_filtration_min();
 		check_mips();
 	}
 	/// set magnification texture filtration
 	void GHL_CALL TextureOpenGL::SetMagFilter(TextureFilter mag) {
-		m_mag_filter = mag;
+        TextureImpl::SetMagFilter(mag);
 		calc_filtration_mag();
 		check_mips();
 	}
 	/// set mipmap texture filtration
 	void GHL_CALL TextureOpenGL::SetMipFilter(TextureFilter mip) {
-		m_mip_filter = mip;
+        TextureImpl::SetMipFilter(mip);
 		calc_filtration_min();
 		calc_filtration_mag();
 		check_mips();
@@ -174,6 +194,7 @@ namespace GHL {
 	
 	/// set texture wrap U
 	void GHL_CALL TextureOpenGL::SetWrapModeU(TextureWrapMode wm) {
+        TextureImpl::SetWrapModeU(wm);
 		gl.ActiveTexture(gl.TEXTURE0);
 		bind();
 		gl.TexParameteri(gl.TEXTURE_2D,  gl.TEXTURE_WRAP_S, convert_wrap(gl,wm));
@@ -181,6 +202,7 @@ namespace GHL {
 	}
 	/// set texture wrap V
 	void GHL_CALL TextureOpenGL::SetWrapModeV(TextureWrapMode wm) {
+        TextureImpl::SetWrapModeV(wm);
 		gl.ActiveTexture(gl.TEXTURE0);
 		bind();
 		gl.TexParameteri(gl.TEXTURE_2D,  gl.TEXTURE_WRAP_T, convert_wrap(gl,wm));
@@ -188,16 +210,32 @@ namespace GHL {
 	}
 	
 	/// set texture pixels
-	void GHL_CALL TextureOpenGL::SetData(UInt32 x,UInt32 y,UInt32 w,UInt32 h,const Data* data,UInt32 level) {
+	void GHL_CALL TextureOpenGL::SetData(UInt32 x,UInt32 y,const Image* data,UInt32 level) {
 		gl.ActiveTexture  (gl.TEXTURE0);
 		//glClientActiveTexture(GL_TEXTURE0);
 		bind();
 		gl.PixelStorei(gl.UNPACK_ALIGNMENT,1);
+        UInt32 w = data->GetWidth();
+        UInt32 h = data->GetHeight();
 		gl.PixelStorei(gl.UNPACK_ROW_LENGTH,w);
 		if (format_compressed(m_fmt)) {
+            const Data* tdata = data->GetData();
 			gl.CompressedTexSubImage2D  (gl.TEXTURE_2D, level, x, y, w, h,
-                                         convert_int_format(gl,m_fmt), data->GetSize(), data->GetData());
+                                         convert_int_format(gl,m_fmt), tdata->GetSize(), tdata->GetData());
 		} else {
+            ImageFormat ifmt = GHL_TextureFormatToImageFormat(GetFormat());
+            if (ifmt!=data->GetFormat()) {
+                Image* cpy = data->Clone();
+                cpy->Convert(ifmt);
+                const Data* tdata = cpy->GetData();
+                gl.TexSubImage2D  (gl.TEXTURE_2D, level, x, y, w, h,
+                                   convert_format(gl,m_fmt), convert_storage(gl,m_fmt), tdata->GetData());
+                cpy->Release();
+            } else {
+                gl.TexSubImage2D  (gl.TEXTURE_2D, level, x, y, w, h,
+                                   convert_format(gl,m_fmt), convert_storage(gl,m_fmt), data->GetData()->GetData());
+            }
+
 			gl.TexSubImage2D  (gl.TEXTURE_2D, level, x, y, w, h,
                                convert_format(gl,m_fmt), convert_storage(gl,m_fmt), data->GetData());
 		}
