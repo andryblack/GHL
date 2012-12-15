@@ -29,6 +29,8 @@
 
 namespace GHL
 {
+    
+    struct Data;
 
 	/// file operation
 	enum FileOperation
@@ -61,5 +63,7 @@ namespace GHL
 	};
 
 } /* namespace */
+
+GHL_API GHL::Data* GHL_CALL GHL_ReadAllData( GHL::DataStream* ds );
 
 #endif /*GHL_DATA_STREAM_H*/

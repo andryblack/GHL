@@ -235,11 +235,8 @@ namespace GHL {
                 gl.TexSubImage2D  (gl.TEXTURE_2D, level, x, y, w, h,
                                    convert_format(gl,m_fmt), convert_storage(gl,m_fmt), data->GetData()->GetData());
             }
-
-			gl.TexSubImage2D  (gl.TEXTURE_2D, level, x, y, w, h,
-                               convert_format(gl,m_fmt), convert_storage(gl,m_fmt), data->GetData());
 		}
-		gl.PixelStorei  (gl.UNPACK_ALIGNMENT,4);
+        gl.PixelStorei  (gl.UNPACK_ALIGNMENT,4);
 		gl.PixelStorei  (gl.UNPACK_ROW_LENGTH,0);
 		RestoreTexture(0);
 	}

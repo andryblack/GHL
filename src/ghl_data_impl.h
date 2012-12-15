@@ -25,6 +25,7 @@
 
 #include "ghl_data.h"
 #include "ghl_ref_counter_impl.h"
+#include <vector>
 
 namespace GHL {
 	
@@ -114,6 +115,40 @@ namespace GHL {
 	};
 	
 	
+    /// Data buffer holder
+	class DataArrayImpl : public RefCounterImpl<Data>
+	{
+	public:
+		/// ctr
+		explicit DataArrayImpl( )  {		}
+        explicit DataArrayImpl( const std::vector<Byte>& buf ) : m_data(buf) { }
+		/// clone data
+        virtual Data* GHL_CALL  Clone() const {
+            return new DataArrayImpl(m_data);
+        }
+        /// Data size
+		virtual UInt32 GHL_CALL	GetSize() const {
+            return m_data.size();
+        }
+		
+        /// Const data ptr
+		virtual const Byte* GHL_CALL	GetData() const  {
+            return &(m_data[0]);
+        }
+		/// set data
+		virtual void GHL_CALL	SetData( UInt32 offset, const Byte* data, UInt32 size ) {
+            ::memcpy(&(m_data[offset]),data,size);
+        }
+        
+        void append( const Byte* data, UInt32 size ) {
+            size_t pos = m_data.size();
+            m_data.resize(m_data.size()+size);
+            SetData(pos,data,size);
+        }
+        
+    private:
+        std::vector<Byte>   m_data;
+	};
 	
 } /*namespace*/
 

@@ -204,3 +204,4 @@ namespace GHL {
 		return new MemoryStream(data,size);
 	}
 }
+

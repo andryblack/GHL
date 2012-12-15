@@ -55,6 +55,8 @@ namespace GHL
         virtual const Data* GHL_CALL GetData() const = 0;
 		/// convert image to format
         virtual bool GHL_CALL Convert(ImageFormat fmt) = 0;
+        /// fill image with specified color
+        virtual void GHL_CALL Fill(UInt32 clr) = 0;
         /// swap RB channels
         virtual bool GHL_CALL SwapRB() = 0;
         /// set alpha from another image

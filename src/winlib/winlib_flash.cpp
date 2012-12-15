@@ -256,6 +256,11 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
     ctx.stage->align = flash::display::StageAlign::TOP_LEFT;
     ctx.stage->frameRate = 60;
     
+    app->SetSystem(&ctx);
+    ctx.imageDecoder = new GHL::ImageDecoderImpl();
+    app->SetImageDecoder(ctx.imageDecoder);
+    app->SetVFS(&ctx.vfs);
+    
     GHL::Settings settings;
     /// default settings
     settings.width = ctx.stage->stageWidth;
@@ -264,10 +269,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
     
     app->FillSettings(&settings);
     
-    app->SetSystem(&ctx);
-    ctx.imageDecoder = new GHL::ImageDecoderImpl();
-    app->SetImageDecoder(ctx.imageDecoder);
-    app->SetVFS(&ctx.vfs);
+    
     
     ctx.valid = false;
     ctx.loaded = false;

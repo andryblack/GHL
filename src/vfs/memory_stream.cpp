@@ -22,6 +22,7 @@
 
 #include "memory_stream.h"
 #include <cstring>
+#include "../ghl_data_impl.h"
 
 namespace GHL
 {
@@ -85,7 +86,15 @@ namespace GHL
 		return false;
 	}
 	
+}
 
-
-	
+GHL_API GHL::Data* GHL_CALL GHL_ReadAllData( GHL::DataStream* ds ) {
+    if (!ds) return 0;
+    GHL::DataArrayImpl* data = new GHL::DataArrayImpl();
+    GHL::Byte buf[1024*8];
+    while (!ds->Eof()) {
+        GHL::UInt32 readed = ds->Read(buf,sizeof(buf));
+        data->append(buf,readed);
+    }
+    return data;
 }

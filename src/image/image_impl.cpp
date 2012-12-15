@@ -47,6 +47,30 @@ namespace GHL
 	ImageImpl::~ImageImpl() {
 		if (m_data) m_data->Release();
 	}
+    
+    void GHL_CALL ImageImpl::Fill(UInt32 clr) {
+        Byte* data = m_data->GetDataPtr();
+        const size_t len = m_width*m_height;
+        
+        if (m_fmt==IMAGE_FORMAT_RGB)
+		{
+			size_t len = m_width*m_height;
+            const Byte b1 = clr & 0xFF;
+            const Byte b2 = (clr>>8) & 0xFF;
+            const Byte b3 = (clr>>16) & 0xFF;
+            for (size_t i =0;i<len;++i) {
+                *data = b1; ++data;
+                *data = b2; ++data;
+                *data = b3; ++data;
+            }
+		} else if (m_fmt==IMAGE_FORMAT_RGBA) {
+            UInt32* ddata = reinterpret_cast<UInt32*>(data);
+            std::fill(ddata, ddata+len, clr);
+        } else if (m_fmt==IMAGE_FORMAT_GRAY)
+        {
+            std::fill(data, data+len, clr&0xFF);
+        }
+    }
 	
 	bool GHL_CALL ImageImpl::Convert(ImageFormat fmt) {
 		if (fmt==m_fmt) return true;
