@@ -97,10 +97,10 @@ namespace GHL {
         static void Init() {
             DynamicGLInit();
             
-            LOG_INFO( "RENDERER : " << (char*)GetString(RENDERER) );
-            const char* version_string = (const char*)GetString(VERSION);
+            LOG_INFO( "RENDERER : " << (char*)GetString(GL_RENDERER) );
+            const char* version_string = (const char*)GetString(GL_VERSION);
             LOG_INFO( "VERSION : " << version_string );
-            all_extensions = (const char*)GetString(EXTENSIONS);
+            all_extensions = (const char*)GetString(GL_EXTENSIONS);
             std::string str( all_extensions );
             LOG_INFO("EXTENSIONS :");
             {
@@ -189,9 +189,9 @@ namespace GHL {
         static bool supported = CheckExtensionSupported(#Name); \
         return supported; \
     }
-#define DYNAMIC_GL_TYPEDEF(Type,Alias) typedef Type GL##Alias;
+#define DYNAMIC_GL_TYPEDEF(Type,Alias) typedef Type Alias;
 #define DYNAMIC_GL_CONSTANT(Name,Val) static const GLenum Name = Val;
-#define DYNAMIC_GL_TYPE(Type) GL##Type
+#define DYNAMIC_GL_TYPE(Type) Type
 #define MAKE_CHECK_FUNC(Ret,Name,Args) \
     typedef Ret (APIENTRYP Name##_Proto) Args; \
     static Name##_Proto func_ptr = 0; \
@@ -268,7 +268,7 @@ namespace GHL {
             return false;
         }
         
-#define DYNAMIC_GL_CONSTANT(Name) api->Name = GLApi_impl::Name;
+#define DYNAMIC_GL_CONSTANT(Name) api->Name = GLApi_impl::GL_##Name;
         DYNAMIC_GL_CONSTANTS
 #undef DYNAMIC_GL_CONSTANT
 #define DYNAMIC_GL_FUNCTION(Name,Args) api->Name = &GLApi_impl::Name;
@@ -279,7 +279,7 @@ namespace GHL {
         if (!GLApi_impl::Feature_VERSION_1_3_Supported()) {
             if (GLApi_impl::Feature_ARB_multitexture_Supported()) {
                 LOG_INFO("using extension ARB_multitexture");
-#define DYNAMIC_GL_CONSTANT(Name) api->Name = GLApi_impl::Name##_ARB;
+#define DYNAMIC_GL_CONSTANT(Name) api->Name = GLApi_impl::GL_##Name##_ARB;
                 DYNAMIC_GL_CONSTANTS_Multitexture
 #undef DYNAMIC_GL_CONSTANT
 #define DYNAMIC_GL_FUNCTION(Name,Args) api->Name = &GLApi_impl::Name##ARB;
@@ -292,7 +292,7 @@ namespace GHL {
             }
         } else {
             
-#define DYNAMIC_GL_CONSTANT(Name) api->Name = GLApi_impl::Name;
+#define DYNAMIC_GL_CONSTANT(Name) api->Name = GLApi_impl::GL_##Name;
             DYNAMIC_GL_CONSTANTS_Multitexture
 #undef DYNAMIC_GL_CONSTANT
 #define DYNAMIC_GL_FUNCTION(Name,Args) api->Name = &GLApi_impl::Name;
@@ -307,12 +307,12 @@ namespace GHL {
             DYNAMIC_GL_FUNCTIONS_ShaderObject
 #undef DYNAMIC_GL_FUNCTION
             
-            api->sdrapi.COMPILE_STATUS = GLApi_impl::COMPILE_STATUS;
-            api->sdrapi.LINK_STATUS = GLApi_impl::LINK_STATUS;
-            api->sdrapi.VERTEX_SHADER = GLApi_impl::VERTEX_SHADER;
-            api->sdrapi.FRAGMENT_SHADER = GLApi_impl::FRAGMENT_SHADER;
+            api->sdrapi.COMPILE_STATUS = GLApi_impl::GL_COMPILE_STATUS;
+            api->sdrapi.LINK_STATUS = GLApi_impl::GL_LINK_STATUS;
+            api->sdrapi.VERTEX_SHADER = GLApi_impl::GL_VERTEX_SHADER;
+            api->sdrapi.FRAGMENT_SHADER = GLApi_impl::GL_FRAGMENT_SHADER;
  
-            LOG_INFO("GLSL: " << (const char*)GLApi_impl::GetString(GLApi_impl::SHADING_LANGUAGE_VERSION));
+            LOG_INFO("GLSL: " << (const char*)GLApi_impl::GetString(GLApi_impl::GL_SHADING_LANGUAGE_VERSION));
             
         } else if (GLApi_impl::Feature_ARB_shader_objects_Supported() &&
             GLApi_impl::Feature_ARB_vertex_shader_Supported() &&
@@ -323,14 +323,14 @@ namespace GHL {
 #define DYNAMIC_GL_FUNCTION(Res,Name,Args) api->sdrapi.Name = &GLApi_impl::Name##ARB;
             DYNAMIC_GL_FUNCTIONS_ShaderObject
 #undef DYNAMIC_GL_FUNCTION
-            api->sdrapi.COMPILE_STATUS = GLApi_impl::OBJECT_COMPILE_STATUS_ARB;
-            api->sdrapi.LINK_STATUS = GLApi_impl::OBJECT_LINK_STATUS_ARB;
+            api->sdrapi.COMPILE_STATUS = GLApi_impl::GL_OBJECT_COMPILE_STATUS_ARB;
+            api->sdrapi.LINK_STATUS = GLApi_impl::GL_OBJECT_LINK_STATUS_ARB;
             LOG_INFO("using extension ARB_vertex_shader");
-            api->sdrapi.VERTEX_SHADER = GLApi_impl::VERTEX_SHADER_ARB;
+            api->sdrapi.VERTEX_SHADER = GLApi_impl::GL_VERTEX_SHADER_ARB;
             LOG_INFO("using extension ARB_fragment_shader");
-            api->sdrapi.FRAGMENT_SHADER = GLApi_impl::FRAGMENT_SHADER_ARB;
+            api->sdrapi.FRAGMENT_SHADER = GLApi_impl::GL_FRAGMENT_SHADER_ARB;
             LOG_INFO("using extension ARB_shading_language_100");
-            LOG_INFO("GLSL: " << (const char*)GLApi_impl::GetString(GLApi_impl::SHADING_LANGUAGE_VERSION_ARB));
+            LOG_INFO("GLSL: " << (const char*)GLApi_impl::GetString(GLApi_impl::GL_SHADING_LANGUAGE_VERSION_ARB));
             
         }
         
@@ -343,12 +343,12 @@ namespace GHL {
         if (!GLApi_impl::Feature_VERSION_1_3_Supported()) {
             if (GLApi_impl::Feature_ARB_texture_env_combine_Supported()) {
                 LOG_INFO("using extension ARB_texture_env_combine");
-#define DYNAMIC_GL_ffpl_CONSTANT(Name) api->Name = GLApi_impl::Name##_ARB;
+#define DYNAMIC_GL_ffpl_CONSTANT(Name) api->Name = GLApi_impl::GL_##Name##_ARB;
                 DYNAMIC_GL_ffpl_CONSTANTS
 #undef DYNAMIC_GL_ffpl_CONSTANT
             } else if (GLApi_impl::Feature_EXT_texture_env_combine_Supported()) {
                 LOG_INFO("using extension EXT_texture_env_combine");
-#define DYNAMIC_GL_ffpl_CONSTANT(Name) api->Name = GLApi_impl::Name##_EXT;
+#define DYNAMIC_GL_ffpl_CONSTANT(Name) api->Name = GLApi_impl::GL_##Name##_EXT;
                 DYNAMIC_GL_ffpl_CONSTANTS
 #undef DYNAMIC_GL_ffpl_CONSTANT
             } else {
@@ -356,7 +356,7 @@ namespace GHL {
                 return false;
             }
         } else {
-#define DYNAMIC_GL_ffpl_CONSTANT(Name) api->Name = GLApi_impl::Name;
+#define DYNAMIC_GL_ffpl_CONSTANT(Name) api->Name = GLApi_impl::GL_##Name;
             DYNAMIC_GL_ffpl_CONSTANTS
 #undef DYNAMIC_GL_ffpl_CONSTANT
             

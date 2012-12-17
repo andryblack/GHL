@@ -375,7 +375,7 @@ sub mangle_args_inc {
 			if ($const eq 'yes' ) {
 				$args = $args . 'const ' ;
 			}
-			$args = $args . "DYNAMIC_GL_TYPE($type) ";
+			$args = $args . "DYNAMIC_GL_TYPE(GL$type) ";
 			if ($pointer eq 'yes' ) {
 				$args = $args . '* ';
 			}
@@ -421,16 +421,16 @@ sub print_inc{
 		print "#ifdef USE_DYNAMIC_GL_$feature->{'name'}\n";
 		print "DYNAMIC_GL_FEATURE($feature->{'name'})\n";
 		foreach my $typedef ( @{$feature->{'typedefs'}} ) {
-			print "DYNAMIC_GL_TYPEDEF($typedef->{'type'},$typedef->{'name'})\n";
+			print "DYNAMIC_GL_TYPEDEF($typedef->{'type'},GL$typedef->{'name'})\n";
 			#print "  <typedef name=\"$typedef->{'name'}\" type=\"$typedef->{'type'}\" />\n";
 		}
 		foreach my $constant ( @{$feature->{'constants'}} ) {
-			my $name = $constant->{'name'};
-			if ( $name =~ /^[0-9]+([A-Z0-9_]+)/ ) {
-				$name = "_$constant->{'name'}";
-			} else {
-				$name = $constant->{'name'};
-			}
+			my $name = "GL_$constant->{'name'}";
+			# if ( $name =~ /^[0-9]+([A-Z0-9_]+)/ ) {
+			# 	$name = "_$constant->{'name'}";
+			# } else {
+			# 	$name = $constant->{'name'};
+			# }
 			print "DYNAMIC_GL_CONSTANT($name,$constant->{'value'})\n"
 			#print "#define GL_$constant->{'name'} $constant->{'value'}\n"; 
 			#print "  <constant name=\"$constant->{'name'}\" value=\"$constant->{'value'}\" />\n";
@@ -443,7 +443,7 @@ sub print_inc{
                 my $ret = "void";
                 if ( ! ( ($function->{'rettype'} eq "void") && ($function->{'retconst'} eq "no") && ($function->{'retpointer'} eq "no") ) ) {
                     $ret = mangle_type( { type=>$function->{'rettype'},const=>$function->{'retconst'},pointer=>$function->{'retpointer'}},"");
-                	print "DYNAMIC_GL_FUNCTION(DYNAMIC_GL_TYPE($ret),$function->{'name'},($args),($arg_names))\n";
+                	print "DYNAMIC_GL_FUNCTION(DYNAMIC_GL_TYPE(GL$ret),$function->{'name'},($args),($arg_names))\n";
                 } else {
 					print "DYNAMIC_GL_FUNCTION_V($function->{'name'},($args),($arg_names))\n";
                 }

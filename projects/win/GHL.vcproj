@@ -696,6 +696,14 @@
 				Name="render"
 				>
 				<File
+					RelativePath="..\..\src\render\buffer_impl.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\render\buffer_impl.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\render\lucida_console_regular_8.cpp"
 					>
 				</File>
@@ -712,7 +720,27 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\render\rendertarget_impl.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\render\rendertarget_impl.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\render\shader_impl.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\render\shader_impl.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\render\texture_impl.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\render\texture_impl.h"
 					>
 				</File>
 				<Filter
@@ -720,6 +748,14 @@
 					>
 					<File
 						RelativePath="..\..\src\render\opengl\ghl_opengl.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\render\opengl\glsl_generator.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\render\opengl\glsl_generator.h"
 						>
 					</File>
 					<File
@@ -732,6 +768,14 @@
 					</File>
 					<File
 						RelativePath="..\..\src\render\opengl\render_opengl.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\render\opengl\render_opengl2.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\render\opengl\render_opengl2.h"
 						>
 					</File>
 					<File
@@ -774,6 +818,34 @@
 							>
 						</File>
 					</Filter>
+				</Filter>
+				<Filter
+					Name="pfpl"
+					>
+					<File
+						RelativePath="..\..\src\render\pfpl\pfpl_cache.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\render\pfpl\pfpl_cache.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\render\pfpl\pfpl_render.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\render\pfpl\pfpl_render.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\render\pfpl\pfpl_state.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\render\pfpl\pfpl_state.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter

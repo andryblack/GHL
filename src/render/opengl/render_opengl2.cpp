@@ -10,6 +10,11 @@
 #include "../../ghl_log_impl.h"
 #include "ghl_shader.h"
 
+
+#ifdef _MSC_VER
+#define snprintf _snprintf
+#endif
+
 namespace GHL {
 
     static const char* MODULE = "RENDER:OpenGL";
