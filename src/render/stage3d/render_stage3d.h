@@ -156,6 +156,7 @@ namespace GHL {
     private:
         float   m_p_matrix[16];
         float   m_v_matrix[16];
+        bool    m_color_cleared;
     };
     
 }

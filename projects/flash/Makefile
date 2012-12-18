@@ -4,7 +4,7 @@ RM=rm -rf
 GHLROOT=../..
 GHLSRC=$(GHLROOT)/src
 
-BUILD=build
+BUILD=build$(POSTFIX)
 LIBDIR=$(GHLROOT)/lib
 
 STATICLIB=$(LIBDIR)/libGHL-flash$(POSTFIX).a
@@ -181,6 +181,9 @@ all: check
 
 debug: check 
 	make build_all OPT_FLAGS="-g -O0" DEFINES=-DGHL_DEBUG POSTFIX=_d
+
+rdebug: check
+	make build_all OPT_FLAGS=-O4 DEFINES="-DGHL_DEBUG" 
 
 build_all: $(DIRS) $(ARTEFACTS) Makefile
 

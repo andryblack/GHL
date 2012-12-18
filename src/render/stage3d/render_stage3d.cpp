@@ -69,8 +69,8 @@ namespace GHL {
     }
     
     
-//#define NOT_IMPLEMENTED LOG_VERBOSE("not implemented " << __FUNCTION__ );
-#define NOT_IMPLEMENTED (void)0;
+#define NOT_IMPLEMENTED LOG_ERROR("not implemented " << __FUNCTION__ );
+//#define NOT_IMPLEMENTED (void)0;
     
     RenderStage3d::RenderStage3d(UInt32 w,UInt32 h) : RenderImpl(w,h) {
         
@@ -84,6 +84,7 @@ namespace GHL {
     bool RenderStage3d::RenderInit() {
         m_generator.init(this);
         m_shaders_render.init(&m_generator);
+        m_color_cleared = false;
         return RenderImpl::RenderInit();
     }
     
@@ -101,6 +102,7 @@ namespace GHL {
         RenderImpl::BeginScene(target);
         if (!target) {
             m_ctx->setRenderToBackBuffer();
+            m_color_cleared = false;
         } else {
             
         }
@@ -120,6 +122,7 @@ namespace GHL {
     /// clear scene
     void GHL_CALL RenderStage3d::Clear(float r,float g,float b,float a) {
         m_ctx->clear(r, g, b, a, 1, 0, flash::display3D::Context3DClearMask::COLOR);
+        m_color_cleared = true;
     }
     
     /// clear depth
@@ -204,7 +207,11 @@ namespace GHL {
     }
     /// set blend factors
     void GHL_CALL RenderStage3d::SetupBlend(bool enable,BlendFactor src_factor,BlendFactor dst_factor) {
-        m_ctx->setBlendFactors(convert(src_factor),convert(dst_factor));
+        if (enable) {
+            m_ctx->setBlendFactors(convert(src_factor),convert(dst_factor));
+        } else {
+            m_ctx->setBlendFactors(flash::display3D::Context3DBlendFactor::ONE,flash::display3D::Context3DBlendFactor::ZERO);
+        }
     }
     /// set alpha test parameters
     void GHL_CALL RenderStage3d::SetupAlphaTest(bool enable,CompareFunc func,float ref) {
@@ -324,6 +331,11 @@ namespace GHL {
     
     /// draw primitives from memory
     void GHL_CALL RenderStage3d::DrawPrimitivesFromMemory(PrimitiveType type,VertexType v_type,const void* vertices,UInt32 v_amount,const UInt16* indexes,UInt32 prim_amount) {
+        
+        if (!m_color_cleared) {
+            m_ctx->clear(0, 0, 0, 0, 1, 0, flash::display3D::Context3DClearMask::COLOR);
+            m_color_cleared = true;
+        }
         ShaderProgram* prg = m_shaders_render.get_shader(m_crnt_state, v_type==VERTEX_TYPE_2_TEX);
         if (prg) {
         

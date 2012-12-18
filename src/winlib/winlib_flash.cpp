@@ -26,7 +26,9 @@ static const char* MODULE = "WinLib";
 class FlashSystem : public GHL::System {
 public:
     FlashSystem() : vfs("","/local"), imageDecoder(0),render(0) {
-        
+        started = false;
+        valid = false;
+        loaded = false;
     }
     ~FlashSystem() {
         delete render;
@@ -72,6 +74,7 @@ public:
     flash::display::Stage stage;
     flash::display::Stage3D s3d;
     flash::display3D::Context3D ctx3d;
+    bool started;
     bool valid;
     bool loaded;
     timeval lastTime;
@@ -142,11 +145,16 @@ static var handleMouseUp(void *arg, var as3Args)
     return internal::_undefined;
 }
 
+static void startApplication();
 // This function will be attached to the ENTER_FRAME event to drive the
 // animation.
 static var enterFrame(void *arg, var as3Args)
 {
     try {
+        if (!ctx.started) {
+            startApplication();
+            ctx.started = true;
+        }
         if (ctx.valid) {
             if (!ctx.loaded) {
                 if (!ctx.application->Load()) {
@@ -244,62 +252,68 @@ static var initContext3D(void *arg, var as3Args)
     return internal::_undefined;
 }
 
+static void startApplication() {
+    try {
+        LOG_INFO( "StartApplication ...." );
+        
+        ctx.stage = internal::get_Stage();
+        
+        ctx.application->SetSystem(&ctx);
+        ctx.imageDecoder = new GHL::ImageDecoderImpl();
+        ctx.application->SetImageDecoder(ctx.imageDecoder);
+        ctx.application->SetVFS(&ctx.vfs);
+        
+        GHL::Settings settings;
+        /// default settings
+        settings.width = ctx.stage->stageWidth;
+        settings.height = ctx.stage->stageHeight;
+        settings.fullscreen = false;
+        
+        ctx.application->FillSettings(&settings);
+        
+        
+        
+        ctx.stage->addEventListener(flash::events::KeyboardEvent::KEY_DOWN, Function::_new(handleKeyDown, NULL));
+        ctx.stage->addEventListener(flash::events::KeyboardEvent::KEY_UP, Function::_new(handleKeyUp, NULL));
+        ctx.stage->addEventListener(flash::events::MouseEvent::MOUSE_MOVE, Function::_new(handleMouseMove, NULL));
+        ctx.stage->addEventListener(flash::events::MouseEvent::MOUSE_DOWN, Function::_new(handleMouseDown, NULL));
+        ctx.stage->addEventListener(flash::events::MouseEvent::MOUSE_UP, Function::_new(handleMouseUp, NULL));
+        
+        try {
+            ctx.stage->addEventListener(flash::events::MouseEvent::RIGHT_CLICK, Function::_new(handleRightClick, NULL));
+        } catch(var e) {
+            // Old players don't support this event so we catch that here
+            // sadly that means old players will still show the default
+            // Flash right-click menu.
+        }
+        
+        // Ask for a Stage3D context to be created
+        ctx.s3d = var(var(ctx.stage->stage3Ds)[0]);
+        ctx.s3d->addEventListener(flash::events::Event::CONTEXT3D_CREATE, Function::_new(initContext3D, NULL));
+        ctx.s3d->addEventListener(flash::events::ErrorEvent::ERROR, Function::_new(context3DError, NULL));
+        ctx.s3d->requestContext3D(flash::display3D::Context3DRenderMode::AUTO,
+                                  flash::display3D::Context3DProfile::BASELINE_CONSTRAINED);
+        LOG_INFO( "StartApplication ok" );
+    } catch (var e) {
+        LOG_ERROR( "startApplication exception" );
+    }
+}
 
 GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/, char** /*argv*/) {
     
-    LOG_INFO( "StartApplication ...." );
-    
     ctx.application = app;
-    ctx.stage = internal::get_Stage();
-    
-    ctx.stage->scaleMode = flash::display::StageScaleMode::NO_SCALE;
-    ctx.stage->align = flash::display::StageAlign::TOP_LEFT;
-    ctx.stage->frameRate = 60;
-    
-    app->SetSystem(&ctx);
-    ctx.imageDecoder = new GHL::ImageDecoderImpl();
-    app->SetImageDecoder(ctx.imageDecoder);
-    app->SetVFS(&ctx.vfs);
-    
-    GHL::Settings settings;
-    /// default settings
-    settings.width = ctx.stage->stageWidth;
-    settings.height = ctx.stage->stageHeight;
-    settings.fullscreen = false;
-    
-    app->FillSettings(&settings);
-    
-    
-    
-    ctx.valid = false;
-    ctx.loaded = false;
     
     LOG_INFO(  "listen frames" );
-    ctx.stage->addEventListener(flash::events::Event::ENTER_FRAME, Function::_new(&enterFrame, NULL));
-    
-    ctx.stage->addEventListener(flash::events::KeyboardEvent::KEY_DOWN, Function::_new(handleKeyDown, NULL));
-    ctx.stage->addEventListener(flash::events::KeyboardEvent::KEY_UP, Function::_new(handleKeyUp, NULL));
-    ctx.stage->addEventListener(flash::events::MouseEvent::MOUSE_MOVE, Function::_new(handleMouseMove, NULL));
-    ctx.stage->addEventListener(flash::events::MouseEvent::MOUSE_DOWN, Function::_new(handleMouseDown, NULL));
-    ctx.stage->addEventListener(flash::events::MouseEvent::MOUSE_UP, Function::_new(handleMouseUp, NULL));
-    
     try {
-        ctx.stage->addEventListener(flash::events::MouseEvent::RIGHT_CLICK, Function::_new(handleRightClick, NULL));
-    } catch(var e) {
-        // Old players don't support this event so we catch that here
-        // sadly that means old players will still show the default
-        // Flash right-click menu.
+        flash::display::Stage stage = internal::get_Stage();
+        stage->scaleMode = flash::display::StageScaleMode::NO_SCALE;
+        stage->align = flash::display::StageAlign::TOP_LEFT;
+        stage->frameRate = 60;
+        stage->addEventListener(flash::events::Event::ENTER_FRAME, Function::_new(&enterFrame, NULL));
+    } catch (var e) {
+        LOG_ERROR( "GHL_StartApplication exception" );
     }
-
-    // Ask for a Stage3D context to be created
-    ctx.s3d = var(var(ctx.stage->stage3Ds)[0]);
-    ctx.s3d->addEventListener(flash::events::Event::CONTEXT3D_CREATE, Function::_new(initContext3D, NULL));
-    ctx.s3d->addEventListener(flash::events::ErrorEvent::ERROR, Function::_new(context3DError, NULL));
-    ctx.s3d->requestContext3D(flash::display3D::Context3DRenderMode::AUTO,
-                          flash::display3D::Context3DProfile::BASELINE_CONSTRAINED);
-    
-    LOG_INFO( "go to background" );
-    
+    LOG_INFO(  "go async" );
     AS3_GoAsync();
     
     LOG_INFO( "end background" );
