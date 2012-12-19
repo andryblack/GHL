@@ -71,6 +71,14 @@ ImageFileFormat PngDecoder::GetFileFormat(const CheckBuffer& buf) const {
 	return ImageFileDecoder::GetFileFormat(buf);
 }
 
+bool PngDecoder::CheckSignature(const Byte* data,UInt32 len) {
+    if (len<8) return false;
+    if ( png_sig_cmp(data, 0, 8)!=0 )
+	{
+		return false;
+	}
+    return true;
+}
 Image* PngDecoder::Decode(DataStream* file)
 {
 	if (!file)

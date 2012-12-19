@@ -156,6 +156,9 @@ namespace GHL {
         if (texture) {
             m_crnt_state.texture_stages[stage].rgb.c.texture = true;
             m_crnt_state.texture_stages[stage].alpha.c.texture = HaveAlpha(texture);
+            m_crnt_state.texture_stages[stage].tex.c.min_filter = texture->GetMinFilter();
+            m_crnt_state.texture_stages[stage].tex.c.mip_filter = texture->GetMipFilter();
+            m_crnt_state.texture_stages[stage].tex.c.wrap_u = texture->GetWrapModeU();
             m_ctx->setTextureAt(stage,reinterpret_cast<const TextureStage3d*>(texture)->texture());
         } else {
             m_crnt_state.texture_stages[stage].rgb.c.texture = false;

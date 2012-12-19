@@ -41,6 +41,16 @@ namespace GHL {
             };
             state rgb;
             state alpha;
+            union {
+                struct {
+                    TextureFilter       min_filter:8;
+                    TextureFilter       mag_filter:8;
+                    TextureFilter       mip_filter:8;
+                    TextureWrapMode     wrap_u:4;
+                    TextureWrapMode     wrap_v:4;
+                } c;
+                UInt32 all;
+            } tex;
         };
         texture_stage   texture_stages[MAX_TEXTURE_STAGES];
         CompareFunc alpha_test_func: 7;
@@ -49,6 +59,10 @@ namespace GHL {
     };
     static inline void normalize( pfpl_state_data& s ) {
         for (UInt32 i=0;i<MAX_TEXTURE_STAGES;++i) {
+            if (!s.texture_stages[i].rgb.c.texture) {
+                s.texture_stages[i].rgb.c.operation = TEX_OP_DISABLE;
+                s.texture_stages[i].tex.all = 0;
+            }
             if (s.texture_stages[i].rgb.c.operation == TEX_OP_DISABLE) {
                 s.texture_stages[i].rgb.c.arg_1 = TEX_ARG_TEXTURE;
                 s.texture_stages[i].rgb.c.arg_2 = TEX_ARG_CURRENT;
@@ -68,6 +82,8 @@ namespace GHL {
             if (a.texture_stages[i].rgb.all!=b.texture_stages[i].rgb.all)
                 return false;
             if (a.texture_stages[i].alpha.all!=b.texture_stages[i].alpha.all)
+                return false;
+            if (a.texture_stages[i].tex.all!=b.texture_stages[i].tex.all)
                 return false;
         }
         if (a.alpha_test_func!=b.alpha_test_func)

@@ -35,6 +35,7 @@ class PngDecoder : public ImageFileDecoder
 		Image* Decode(DataStream* ds);
 		bool Encode( const Image* image, DataStream* ds);
 		virtual ImageFileFormat GetFileFormat(const CheckBuffer&) const;
+        virtual bool CheckSignature(const Byte* data,UInt32 len);
 };
 
 }/*namespace*/

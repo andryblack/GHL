@@ -139,6 +139,18 @@ namespace GHL {
 
         //REGISTER(FS,/* texture sampler      */  0x5,	8,		REG_FRAG | REG_READ )\
         
+        // texture sampler register: always 64 bits
+        // 63.............................................................0
+        // FFFFMMMMWWWWSSSSDDDD--------TTTT--------BBBBBBBBNNNNNNNNNNNNNNNN
+        // N = Sampler index (16 bits)
+        // B = Texture lod bias, signed integer, scale by 8. the floating point value used is b/8.0 (8 bits)
+        // T = Register type, must be reg_sampler
+        // F = Filter (0=nearest,1=linear,2=anisotropic) (4 bits)
+        // M = Mipmap (0=disable,1=nearest,2=linear)
+        // W = Wrapping (0=clamp,1=repeat)
+        // S = Special flag bits (bit 0=centroid sampling, bit 1=single component read)
+        // D = Dimension (0=2D,1=Cube,2=3D)
+        
         class Sampler;
         struct SamplerDef {
             const char* const name;
@@ -146,18 +158,12 @@ namespace GHL {
             const Byte  value;
             Sampler operator [] (UInt16 idx) const;
         };
-        enum SamplerDimension {
-            D_2D = 0,
-            D_Cube = 1,
-            D_3D = 2,
-            D_Rect = 3
-        };
         class Sampler {
         private:
             const SamplerDef& m_def;
             UInt32  m_index;
             Int8    m_lodbias;
-            SamplerDimension    m_dimension;
+            Byte    m_dimension;
             Byte    m_special;
             Byte    m_wrapping;
             Byte    m_mipmap;
@@ -167,7 +173,7 @@ namespace GHL {
             : m_def(def)
             , m_index(idx)
             , m_lodbias(0)
-            , m_dimension(D_2D)
+            , m_dimension(0)
             , m_special(0)
             , m_wrapping(0)
             , m_mipmap(0)
@@ -178,12 +184,16 @@ namespace GHL {
             const Byte type() const { return m_def.value; }
             const UInt16 index() const { return m_index; }
             const Int8 lodbias() const { return m_lodbias; }
-            const SamplerDimension dimension() const { return m_dimension; }
+            const Byte dimension() const { return m_dimension; }
             const Byte special() const { return m_special; }
             const Byte wrapping() const { return m_wrapping; }
             const Byte mipmap() const { return m_mipmap; }
             const Byte filter() const { return m_filter; }
             std::string name_full() const;
+            Sampler& nearest() { m_filter = 0; return *this; }
+            Sampler& linear() { m_filter = 1; return *this; }
+            Sampler& clamp() { m_wrapping = 0; return *this; }
+            Sampler& repeat() { m_wrapping = 1; return *this; }
         };
         extern const SamplerDef FS;
     }

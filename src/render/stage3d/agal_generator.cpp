@@ -66,8 +66,19 @@ namespace GHL {
         {
             AGALCodeGen codegen(AGALCodeGen::FRAGMENT_PROGRAM);
             codegen.add(AGAL::MOV,AGAL::FT[0],AGAL::I[0]);
-            codegen.add(AGAL::TEX,AGAL::FT[1],AGAL::I[1],AGAL::FS[0]);
-            codegen.add(AGAL::MUL,AGAL::FT[0],AGAL::FT[0],AGAL::FT[1]);
+            for (UInt32 i=0;i<MAX_TEXTURE_STAGES;++i) {
+                if (entry.texture_stages[i].rgb.c.texture) {
+                    AGAL::Sampler s = AGAL::FS[i];
+                    if (entry.texture_stages[i].tex.c.wrap_u == TEX_WRAP_REPEAT) {
+                        s.repeat();
+                    }
+                    if (entry.texture_stages[i].tex.c.min_filter == TEX_FILTER_LINEAR) {
+                        s.linear();
+                    }
+                    codegen.add(AGAL::TEX,AGAL::FT[1],AGAL::I[1],s);
+                    codegen.add(AGAL::MUL,AGAL::FT[0],AGAL::FT[0],AGAL::FT[1]);
+                }
+            }
             codegen.add(AGAL::MOV,AGAL::FO,AGAL::FT[0]);
             codegen.dump();
             ConstInlinedData data(codegen.data(),codegen.size());

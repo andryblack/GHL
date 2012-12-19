@@ -19,9 +19,26 @@
 
 #include <sys/time.h>
 
+static const char* MODULE = "WinLib";
+
+class Profiler {
+public:
+    explicit Profiler( const char* text ) : m_text(text) {
+        ::gettimeofday(&m_start,0);
+    }
+    ~Profiler() {
+        ::timeval end;
+        ::gettimeofday(&end,0);
+        GHL::UInt32 time = (end.tv_sec-m_start.tv_sec)*1000000 + (end.tv_usec-m_start.tv_usec);
+        LOG_INFO("Profiler: " << m_text << " " << time << "usecs");
+    }
+private:
+    const char* m_text;
+    ::timeval m_start;
+};
+
 using namespace AS3::ui;
 
-static const char* MODULE = "WinLib";
 
 class FlashSystem : public GHL::System {
 public:
@@ -157,6 +174,7 @@ static var enterFrame(void *arg, var as3Args)
         }
         if (ctx.valid) {
             if (!ctx.loaded) {
+                Profiler pf("Load");
                 if (!ctx.application->Load()) {
                     ctx.valid = false;
                     return internal::_undefined;
@@ -229,6 +247,7 @@ static var initContext3D(void *arg, var as3Args)
                                        ctx.stage->stageHeight, 0,
                                     false, false);
         if (!ctx.render) {
+            Profiler pf("initRender");
             ctx.render = new GHL::RenderStage3d(ctx.stage->stageWidth,
                                                 ctx.stage->stageHeight);
             ctx.render->SetContext(ctx.ctx3d);
@@ -255,6 +274,7 @@ static var initContext3D(void *arg, var as3Args)
 static void startApplication() {
     try {
         LOG_INFO( "StartApplication ...." );
+        Profiler pf("startApplication");
         
         ctx.stage = internal::get_Stage();
         
@@ -268,9 +288,10 @@ static void startApplication() {
         settings.width = ctx.stage->stageWidth;
         settings.height = ctx.stage->stageHeight;
         settings.fullscreen = false;
-        
-        ctx.application->FillSettings(&settings);
-        
+        {
+            Profiler pf("FillSettings");
+            ctx.application->FillSettings(&settings);
+        }
         
         
         ctx.stage->addEventListener(flash::events::KeyboardEvent::KEY_DOWN, Function::_new(handleKeyDown, NULL));

@@ -32,6 +32,9 @@ namespace GHL {
             return false;
         m_generator.init(this);
         m_shaders_render.init(&m_generator);
+        for (UInt32 i=0;i<MAX_TEXTURE_STAGES;++i) {
+            m_crnt_state.texture_stages[i].tex.all = 0;
+        }
         return true;
     }
     
