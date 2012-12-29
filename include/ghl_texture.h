@@ -99,6 +99,10 @@ namespace GHL
 		virtual void GHL_CALL SetData(UInt32 x,UInt32 y,const Image* data,UInt32 level=0) = 0;
 		/// generate mipmaps
 		virtual void GHL_CALL GenerateMipmaps() = 0;
+        /// flush internal data to texture
+        virtual void GHL_CALL FlushInternal() = 0;
+        /// discard internal data (flush if needed)
+        virtual void GHL_CALL DiscardInternal() = 0;
 	};
 
 

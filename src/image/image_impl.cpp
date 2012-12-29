@@ -21,11 +21,13 @@
 */
 
 #include "image_impl.h"
+#include "../ghl_log_impl.h"
 
 #include <algorithm>
 
 namespace GHL
 {
+    static const char* MODULE = "Image";
 
 	ImageImpl::ImageImpl(UInt32 w,UInt32 h,ImageFormat fmt) : m_width(w),m_height(h),m_fmt(fmt),m_data(0) {
 		UInt32 size = 0;	
@@ -221,6 +223,41 @@ namespace GHL
 		}
 		return new ImageImpl( w, h, GetFormat(), res );
 	}
+    void GHL_CALL ImageImpl::Draw(UInt32 x,UInt32 y,const Image* src) {
+        Image* simg = 0;
+        const UInt32 bpp = GetBpp();
+        if (!bpp) {
+            LOG_ERROR("Unsupported format for Draw");
+            return;
+        }
+        if ((x+src->GetWidth())>GetWidth()) {
+            LOG_ERROR("invalid argument for Draw x");
+            return;
+        }
+        if ((y+src->GetHeight())>GetHeight()) {
+            LOG_ERROR("invalid argument for Draw y");
+            return;
+        }
+        if (src->GetFormat()!=GetFormat()) {
+            simg = src->Clone();
+            simg->Convert(GetFormat());
+            src = simg;
+        }
+        const Byte* srcPtr = src->GetData()->GetData();
+        Byte* dstPtr = m_data->GetDataPtr();
+        dstPtr+=x*bpp;
+        dstPtr+=y*(bpp*GetWidth());
+        const UInt32 line = bpp * src->GetWidth();
+        const UInt32 destLine = bpp * GetWidth();
+        for (UInt32 y=0;y<src->GetHeight();++y) {
+            ::memcpy(dstPtr, srcPtr, line);
+            dstPtr += destLine;
+            srcPtr += line;
+        }
+        if (simg) {
+            simg->Release();
+        }
+    }
 
     /// clone image
     Image* GHL_CALL ImageImpl::Clone() const {

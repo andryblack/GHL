@@ -68,6 +68,8 @@ namespace GHL
         virtual Image* GHL_CALL SubImage(UInt32 x,UInt32 y,UInt32 w,UInt32 h) const = 0;
         /// clone image
         virtual Image* GHL_CALL Clone() const = 0;
+        /// Draw other image
+        virtual void GHL_CALL Draw(UInt32 x,UInt32 y,const Image* src) = 0;
     };
 
 } /*namespace*/

@@ -99,7 +99,7 @@ namespace GHL {
 		for (size_t i=0;i<m_decoders.size();i++)
 		{
             if (!m_decoders[i]->CheckSignature(signBuff,signLen))
-                return false;
+                continue;
 			img = m_decoders[i]->Decode(ds);
 			if (img) break;
 			ds->Seek(0, F_SEEK_BEGIN);

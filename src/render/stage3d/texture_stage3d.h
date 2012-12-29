@@ -24,6 +24,7 @@ namespace GHL {
 	private:
         AS3::ui::flash::display3D::textures::Texture	m_tex;
 		bool	m_have_mipmaps;
+        Image*  m_internal_data;
 	 public:
         ~TextureStage3d();
     
@@ -39,6 +40,10 @@ namespace GHL {
 		virtual void GHL_CALL SetData(UInt32 x,UInt32 y,const Image* data,UInt32 level);
 		/// generate mipmaps
 		virtual void GHL_CALL GenerateMipmaps();
+        /// flush internal data to texture
+        virtual void GHL_CALL FlushInternal();
+        /// discard internal data (flush if needed)
+        virtual void GHL_CALL DiscardInternal();
 	};
 }
 

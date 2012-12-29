@@ -61,18 +61,24 @@ namespace GHL {
 		virtual void GHL_CALL SetWrapModeV(TextureWrapMode wm) { m_wrap_v = wm; }
 		/// get texture wrap mode V
 		
+        /// flush internal data to texture
+        virtual void GHL_CALL FlushInternal() { /* do nothing*/ }
+        /// discard internal data
+        virtual void GHL_CALL DiscardInternal() { /* do nothing*/ }
+
+    private:
+        RenderImpl* m_parent;
+
     protected:
         explicit TextureImpl( RenderImpl* parent, UInt32 w,UInt32 h );
         void RestoreTexture(UInt32 stage);
         UInt32	m_width;
-		UInt32	m_height;
+        UInt32	m_height;
         TextureFilter	m_min_filter;
-		TextureFilter	m_mag_filter;
-		TextureFilter	m_mip_filter;
-		TextureWrapMode m_wrap_u;
-		TextureWrapMode m_wrap_v;
-    private:
-        RenderImpl* m_parent;
+        TextureFilter	m_mag_filter;
+        TextureFilter	m_mip_filter;
+        TextureWrapMode m_wrap_u;
+        TextureWrapMode m_wrap_v;
     };
     
 }
