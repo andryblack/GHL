@@ -168,11 +168,12 @@ static void startApplication();
 static var enterFrame(void *arg, var as3Args)
 {
     try {
-        if (!ctx.started) {
-            startApplication();
-            ctx.started = true;
-        }
-        if (ctx.valid) {
+//        if (!) {
+////            startApplication();
+////            ctx.started = true;
+//            return;
+//        }
+        if (ctx.started && ctx.valid) {
             if (!ctx.loaded) {
                 Profiler pf("Load");
                 if (!ctx.application->Load()) {
@@ -314,6 +315,7 @@ static void startApplication() {
         ctx.s3d->addEventListener(flash::events::ErrorEvent::ERROR, Function::_new(context3DError, NULL));
         ctx.s3d->requestContext3D(flash::display3D::Context3DRenderMode::AUTO,
                                   flash::display3D::Context3DProfile::BASELINE_CONSTRAINED);
+        ctx.started = true;
         LOG_INFO( "StartApplication ok" );
     } catch (var e) {
         LOG_ERROR( "startApplication exception" );
@@ -330,6 +332,8 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
         stage->scaleMode = flash::display::StageScaleMode::NO_SCALE;
         stage->align = flash::display::StageAlign::TOP_LEFT;
         stage->frameRate = 60;
+        ctx.started = false;
+        startApplication();
         stage->addEventListener(flash::events::Event::ENTER_FRAME, Function::_new(&enterFrame, NULL));
     } catch (var e) {
         LOG_ERROR( "GHL_StartApplication exception" );
