@@ -43,6 +43,8 @@ namespace GHL {
         explicit VertexBufferImpl( RenderImpl* parent, VertexType type, UInt32 size );
         VertexType	m_type;
 		UInt32	m_size;
+        const VertexBuffer* GetCurrent() const;
+        void RestoreCurrent(const VertexBuffer* vb);
     private:
         RenderImpl* m_parent;
     };
@@ -56,6 +58,8 @@ namespace GHL {
     protected:
         explicit IndexBufferImpl( RenderImpl* parent, UInt32 size );
       	UInt32	m_size;
+        const IndexBuffer* GetCurrent() const;
+        void RestoreCurrent(const IndexBuffer* vb);
     private:
         RenderImpl* m_parent;
     };

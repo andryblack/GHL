@@ -79,7 +79,33 @@ namespace GHL {
     }
     
     void GHL_CALL RenderOpenGL2::DrawPrimitives(PrimitiveType type,UInt32 v_amount,UInt32 i_begin,UInt32 amount) {
-    //    ShaderProgram* prg = m_shaders_render.get_shader(m_crnt_state, type==)
+        const VertexBuffer* vb = GetVertexBuffer();
+        if (!vb) {
+            LOG_ERROR("DrawPrimitives without vertex buffer");
+            return;
+        }
+        const IndexBuffer* ib = GetIndexBuffer();
+        if (!ib) {
+            LOG_ERROR("DrawPrimitives without index buffer");
+            return; 
+        }
+        VertexType v_type = vb->GetType();
+        ShaderProgram* prg = m_shaders_render.get_shader(m_crnt_state, v_type==VERTEX_TYPE_2_TEX);
+        if (prg) {
+            RenderOpenGLBase::SetShader(prg);
+            for (size_t i=0;i<MAX_TEXTURE_STAGES;++i) {
+                if (m_crnt_state.texture_stages[i].rgb.c.texture) {
+                    char uf[64];
+                    ::snprintf(uf, 64, "texture_%d",int(i));
+                    ShaderUniform* uniform = prg->GetUniform(uf);
+                    if (uniform) {
+                        uniform->SetValueInt(i);
+                    }
+                }
+            }
+            
+        }
+        RenderOpenGLBase::DrawPrimitives(type, v_amount, i_begin, amount);
     }
     
     void GHL_CALL RenderOpenGL2::DrawPrimitivesFromMemory(PrimitiveType type,VertexType v_type,const void* vertices,UInt32 v_amount,const UInt16* indexes,UInt32 prim_amoun) {

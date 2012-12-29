@@ -11,6 +11,7 @@
 #define DYNAMIC_GL_API_H_INCLUDED
 
 #include "ghl_api.h"
+#include <stddef.h>
 
 namespace GHL {
     
@@ -33,6 +34,7 @@ namespace GHL {
         
         typedef char GLchar;
         typedef unsigned int GLhandle;
+        typedef ptrdiff_t GLsizeiptr;
         
         static const GLboolean TRUE = 1;
         static const GLboolean FALSE = 0;
@@ -213,6 +215,24 @@ namespace GHL {
             
             GLuint default_renderbuffer;
         } rtapi;
+        
+        struct VBOAPI {
+            bool valid;
+#define DYNAMIC_GL_FUNCTIONS_VBO \
+            DYNAMIC_GL_FUNCTION(void,GenBuffers,(GLsizei,GLuint *))\
+            DYNAMIC_GL_FUNCTION(void,BindBuffer,(GLenum,GLuint))\
+            DYNAMIC_GL_FUNCTION(void,DeleteBuffers,(GLsizei,const GLuint *))\
+            DYNAMIC_GL_FUNCTION(void,BufferData,(GLenum,GLsizeiptr,const GLvoid *, GLenum))\
+
+#define DYNAMIC_GL_FUNCTION(Res,Name,Args) Res(*Name)Args;
+            DYNAMIC_GL_FUNCTIONS_VBO
+#undef DYNAMIC_GL_FUNCTION
+            
+            GLenum ARRAY_BUFFER;
+            GLenum ELEMENT_ARRAY_BUFFER;
+            GLenum STATIC_DRAW;
+            
+        } vboapi;
         
         struct ShaderAPI {
             bool valid;

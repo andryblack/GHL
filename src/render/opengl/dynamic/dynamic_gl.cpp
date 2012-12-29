@@ -160,6 +160,7 @@ namespace GHL {
 #define USE_DYNAMIC_GL_ARB_fragment_shader
 #define USE_DYNAMIC_GL_ARB_shading_language_100
 #define USE_DYNAMIC_GL_VERSION_2_0
+#define USE_DYNAMIC_GL_VERSION_1_5
         
 //#define USE_DYNAMIC_GL_VERSION_1_3_DEPRECATED
 //#define USE_DYNAMIC_GL_VERSION_1_4
@@ -299,6 +300,19 @@ namespace GHL {
             DYNAMIC_GL_FUNCTIONS_Multitexture
 #undef DYNAMIC_GL_FUNCTION
 
+        }
+        
+        api->vboapi.valid = false;
+        if (GLApi_impl::Feature_VERSION_1_5_Supported()) {
+#define DYNAMIC_GL_FUNCTION(Res,Name,Args) api->vboapi.Name = &GLApi_impl::Name;
+            DYNAMIC_GL_FUNCTIONS_VBO
+#undef DYNAMIC_GL_FUNCTION
+            api->vboapi.ARRAY_BUFFER = GLApi_impl::GL_ARRAY_BUFFER;
+            api->vboapi.ELEMENT_ARRAY_BUFFER = GLApi_impl::GL_ELEMENT_ARRAY_BUFFER;
+            api->vboapi.STATIC_DRAW = GLApi_impl::GL_STATIC_DRAW;
+            api->vboapi.valid = true;
+        } else {
+            
         }
         
         if (GLApi_impl::Feature_VERSION_2_0_Supported()) {

@@ -77,7 +77,7 @@ namespace GHL
 		/// get buffer capacity
 		virtual UInt32 GHL_CALL GetCapacity() const = 0;
 		/// set buffer data
-		virtual void GHL_CALL SetData(UInt32 offset,const Data* data) = 0;
+		virtual void GHL_CALL SetData(const Data* data) = 0;
 	};
 
 	/// index buffer object
@@ -86,7 +86,7 @@ namespace GHL
 		/// get buffer capacity
 		virtual UInt32 GHL_CALL GetCapacity() const = 0;
 		/// set buffer data
-		virtual void GHL_CALL SetData(UInt32 offset,const Data* data) = 0;
+		virtual void GHL_CALL SetData(const Data* data) = 0;
 	};
 
 

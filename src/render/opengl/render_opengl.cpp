@@ -16,6 +16,7 @@
 
 #include "rendertarget_opengl.h"
 #include "shader_glsl.h"
+#include "buffers_opengl.h"
 
 #include "dynamic/dynamic_gl.h"
 
@@ -272,34 +273,44 @@ namespace GHL {
 	
 	/// create index buffer
 	IndexBuffer* GHL_CALL RenderOpenGLBase::CreateIndexBuffer(UInt32 size) {
-		NOT_IMPLEMENTED;
-		/// @todo
-		GHL_UNUSED(size);
-		return 0;
+		if (gl.vboapi.valid) {
+            GL::GLuint name;
+            gl.vboapi.GenBuffers(1,&name);
+            return new IndexBufferOpenGL(this,size, name);
+        }
+        return 0;
 	}
 	
 	/// set current index buffer
 	void GHL_CALL RenderOpenGLBase::SetIndexBuffer(const IndexBuffer* buf) {
         RenderImpl::SetIndexBuffer(buf);
-        if (buf) {
-            ///@todo
-            NOT_IMPLEMENTED;
+        if (gl.vboapi.valid) {
+            if (buf) {
+                reinterpret_cast<const IndexBufferOpenGL*>(buf)->bind();
+            } else {
+                gl.vboapi.BindBuffer(gl.vboapi.ELEMENT_ARRAY_BUFFER,0);
+            }
         }
 	}
 	
 	/// create vertex buffer
 	VertexBuffer* GHL_CALL RenderOpenGLBase::CreateVertexBuffer(VertexType type,UInt32 size) {
-		NOT_IMPLEMENTED;
-		/// @todo
-		GHL_UNUSED(type);
-		GHL_UNUSED(size);
+		if (gl.vboapi.valid) {
+            GL::GLuint name;
+            gl.vboapi.GenBuffers(1,&name);
+            return new VertexBufferOpenGL(this, type, size, name);
+        }
 		return 0;
 	}
 	/// set current vertex buffer
 	void GHL_CALL RenderOpenGLBase::SetVertexBuffer(const VertexBuffer* buf) {
 		RenderImpl::SetVertexBuffer(buf);
-        if (buf) {
-            NOT_IMPLEMENTED;
+        if (gl.vboapi.valid) {
+            if (buf) {
+                reinterpret_cast<const VertexBufferOpenGL*>(buf)->bind();
+            } else {
+                gl.vboapi.BindBuffer(gl.vboapi.ARRAY_BUFFER,0);
+            }
         }
 	}
 	
@@ -323,13 +334,50 @@ namespace GHL {
 	 * @par i_begin start index buffer position
 	 * @par amount drw primitives amount
 	 */
-	void GHL_CALL RenderOpenGLBase::DrawPrimitives(PrimitiveType type,UInt32 v_amount,UInt32 i_begin,UInt32 amount) {
-            /// @todo
-            GHL_UNUSED(type);
-            GHL_UNUSED(v_amount);
-            GHL_UNUSED(i_begin);
-            GHL_UNUSED(amount);
-        NOT_IMPLEMENTED;
+	void GHL_CALL RenderOpenGLBase::DrawPrimitives(PrimitiveType type,UInt32 v_amount,UInt32 i_begin,UInt32 prim_amount) {
+        const VertexBuffer* vb = GetVertexBuffer();
+        if (!vb) {
+            LOG_ERROR("DrawPrimitives without vertex buffer");
+            return;
+        }
+        const IndexBuffer* ib = GetIndexBuffer();
+        if (!ib) {
+            LOG_ERROR("DrawPrimitives without index buffer");
+            return;
+        }
+        VertexType v_type = vb->GetType();
+        /// @todo
+        GHL_UNUSED(v_amount);
+        UInt32 vertex_size = 0;
+		const Vertex* v =  reinterpret_cast<const Vertex*> (0);
+		
+		if (v_type == VERTEX_TYPE_SIMPLE) {
+			vertex_size = sizeof(Vertex);
+		} else if (v_type == VERTEX_TYPE_2_TEX ) {
+			vertex_size = sizeof(Vertex2Tex);
+			//v2 = reinterpret_cast<const Vertex2Tex*> (vertices);
+            NOT_IMPLEMENTED;
+            return;
+		}
+        GL::GLenum element =gl.TRIANGLES;
+		UInt32 indexes_amount = prim_amount * 3;
+		if (type==PRIMITIVE_TYPE_TRIANGLE_STRIP) {
+			element =gl.TRIANGLE_STRIP;
+			indexes_amount = prim_amount + 2;
+		} else if (type==PRIMITIVE_TYPE_TRIANGLE_FAN) {
+			element =gl.TRIANGLE_FAN;
+			indexes_amount = prim_amount + 2;
+		} else if (type==PRIMITIVE_TYPE_LINES) {
+			element =gl.LINES;
+			indexes_amount = prim_amount * 2;
+		} else if (type==PRIMITIVE_TYPE_LINE_STRIP) {
+			element =gl.LINE_STRIP;
+			indexes_amount = prim_amount + 1;
+		}
+		gl.TexCoordPointer(2,gl.FLOAT, vertex_size, &v->tx);
+		gl.ColorPointer(4,gl.UNSIGNED_BYTE, vertex_size, v->color);
+		gl.VertexPointer(3,gl.FLOAT, vertex_size , &v->x);
+		gl.DrawElements(element, indexes_amount,gl.UNSIGNED_SHORT, (void*)(i_begin*sizeof(UInt16)));
 	}
 	
 	/// draw primitives from memory
@@ -365,7 +413,7 @@ namespace GHL {
 		}
 		gl.TexCoordPointer(2,gl.FLOAT, vertex_size, &v->tx);
 		gl.ColorPointer(4,gl.UNSIGNED_BYTE, vertex_size, v->color);
-		gl.VertexPointer(2,gl.FLOAT, vertex_size , &v->x);
+		gl.VertexPointer(3,gl.FLOAT, vertex_size , &v->x);
 		gl.DrawElements(element, indexes_amount,gl.UNSIGNED_SHORT, indexes);
 	}
 	

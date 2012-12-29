@@ -20,6 +20,12 @@ namespace GHL {
         m_parent->BufferReleased(this);
     }
   
+    const VertexBuffer* VertexBufferImpl::GetCurrent() const {
+        return m_parent->GetVertexBuffer();
+    }
+    void VertexBufferImpl::RestoreCurrent(const VertexBuffer* vb) {
+        m_parent->SetVertexBuffer(vb);
+    }
     
     IndexBufferImpl::IndexBufferImpl(RenderImpl* parent,UInt32 size ) : m_size(size),m_parent(parent)
 	{
@@ -30,5 +36,11 @@ namespace GHL {
         m_parent->BufferReleased(this);
     }
     
+    const IndexBuffer* IndexBufferImpl::GetCurrent() const {
+        return m_parent->GetIndexBuffer();
+    }
+    void IndexBufferImpl::RestoreCurrent(const IndexBuffer* vb) {
+        m_parent->SetIndexBuffer(vb);
+    }
 }
 
