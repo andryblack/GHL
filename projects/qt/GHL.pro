@@ -60,9 +60,16 @@ HEADERS+=../../src/image/tga_image_decoder.h \
 
 #common render
 SOURCES+=../../src/render/render_impl.cpp \
+    ../../src/render/texture_impl.cpp \
+    ../../src/render/buffer_impl.cpp \
+    ../../src/render/shader_impl.cpp \
+    ../../src/render/rendertarget_impl.cpp \
     ../../src/render/lucida_console_regular_8.cpp
 HEADERS+=../../src/render/rendertarget_impl.h \
     ../../src/render/render_impl.h \
+    ../../src/render/texture_impl.h \
+    ../../src/render/buffer_impl.h \
+    ../../src/render/shader_impl.h \
     ../../src/render/lucida_console_regular_8.h
 
 #opengl render
@@ -71,17 +78,23 @@ SOURCES+=\
     ../../src/render/opengl/shader_glsl.cpp \
     ../../src/render/opengl/rendertarget_opengl.cpp \
     ../../src/render/opengl/render_opengl.cpp \
+    ../../src/render/opengl/render_opengl2.cpp \
     ../../src/render/opengl/dynamic/dynamic_gl.cpp
 HEADERS+=\
     ../../src/render/opengl/texture_opengl.h \
     ../../src/render/opengl/shader_glsl.h \
     ../../src/render/opengl/rendertarget_opengl.h \
     ../../src/render/opengl/render_opengl.h \
-    ../../src/render/opengl/refcount_opengl.h \
+    ../../src/render/opengl/render_opengl2.h \
     ../../src/render/opengl/ghl_opengl.h \
     ../../src/render/opengl/dynamic/dynamic_gl.h \
     ../../src/render/opengl/dynamic/dynamic_gl_subset.h
 
+#common decoders
+SOURCES+=\
+    ../../src/sound/sound_decoders.cpp
+HEADERS+=\
+    ../../src/sound/ghl_sound_decoder.h
 
 SOURCES += \
         ../../src/image/jpeg/jaricom.c \
