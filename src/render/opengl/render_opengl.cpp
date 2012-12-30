@@ -109,7 +109,8 @@ namespace GHL {
 	}
 	
 	RenderOpenGLBase::RenderOpenGLBase(UInt32 w,UInt32 h) : RenderImpl(w,h) {
-	}
+        m_depth_write_enabled = false;
+    }
 
 	RenderOpenGLBase::~RenderOpenGLBase() {
         LOG_VERBOSE("Destructor");
@@ -152,6 +153,7 @@ namespace GHL {
 	
     void RenderOpenGLBase::ResetRenderState() {
         RenderImpl::ResetRenderState();
+        m_depth_write_enabled = false;
         gl.EnableClientState(gl.VERTEX_ARRAY);
         gl.EnableClientState(gl.COLOR_ARRAY);
         gl.EnableClientState(gl.TEXTURE_COORD_ARRAY);
@@ -187,8 +189,14 @@ namespace GHL {
 	}
 	/// clear depth
 	void GHL_CALL RenderOpenGLBase::ClearDepth(float d) {
+        if (!m_depth_write_enabled) {
+            gl.DepthMask(gl.GL_TRUE);
+        }
         gl.ClearDepth(d);
 		gl.Clear(gl.DEPTH_BUFFER_BIT);
+        if (!m_depth_write_enabled) {
+            gl.DepthMask(gl.GL_FALSE);
+        }
 	}
 	
 	
@@ -258,7 +266,8 @@ namespace GHL {
 		} else {
 			gl.Disable(gl.DEPTH_TEST);
 		}
-		gl.DepthMask(write_enable ?gl.TRUE :gl.FALSE);
+		gl.DepthMask(write_enable ?gl.GL_TRUE :gl.GL_FALSE);
+        m_depth_write_enabled = write_enable;
 	}
 	
 	/// setup faces culling
@@ -444,7 +453,7 @@ namespace GHL {
 		gl.sdrapi.CompileShader(handle);
 		GL::GLint res;
 		gl.sdrapi.GetShaderiv(handle,gl.sdrapi.COMPILE_STATUS,&res);
-        if (res!=GL::TRUE)
+        if (res!=GL::GL_TRUE)
 		{
             GL::GLchar log[512];
             GL::GLsizei size = 0;
@@ -494,7 +503,7 @@ namespace GHL {
 		gl.sdrapi.LinkProgram(handle);
         GL::GLint res;
 		gl.sdrapi.GetProgramiv(handle,gl.sdrapi.LINK_STATUS,&res);
-        if (res!=GL::TRUE) {
+        if (res!=GL::GL_TRUE) {
             GL::GLchar log[512];
             GL::GLsizei size;
             gl.sdrapi.GetProgramInfoLog(handle,512,&size,log);

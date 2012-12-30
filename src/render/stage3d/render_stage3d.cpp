@@ -49,11 +49,11 @@ namespace GHL {
     RenderStage3d::VertexBufferStage3d::~VertexBufferStage3d() {
         
     }
-    void GHL_CALL RenderStage3d::VertexBufferStage3d::SetData(UInt32 offset,const Data* data) {
+    void GHL_CALL RenderStage3d::VertexBufferStage3d::SetData(const Data* data) {
         size_t vsize = GetType() == VERTEX_TYPE_SIMPLE ? sizeof(Vertex) : sizeof(Vertex2Tex);
         m_buffer->uploadFromByteArray(AS3::ui::internal::get_ram(),
                                       (int)data->GetData(),
-                                      offset,data->GetSize()/vsize);
+                                      0,data->GetSize()/vsize);
     }
     
     RenderStage3d::IndexBufferStage3d::IndexBufferStage3d( RenderImpl* render,
@@ -63,17 +63,25 @@ namespace GHL {
     RenderStage3d::IndexBufferStage3d::~IndexBufferStage3d() {
         
     }
-    void GHL_CALL RenderStage3d::IndexBufferStage3d::SetData(UInt32 offset,const Data* data) {
+    void GHL_CALL RenderStage3d::IndexBufferStage3d::SetData(const Data* data) {
         m_buffer->uploadFromByteArray(AS3::ui::internal::get_ram(),
-                                      (int)data->GetData(),offset,data->GetSize()/2);
+                                      (int)data->GetData(),0,data->GetSize()/2);
     }
     
     
 #define NOT_IMPLEMENTED LOG_ERROR("not implemented " << __FUNCTION__ );
 //#define NOT_IMPLEMENTED (void)0;
     
-    RenderStage3d::RenderStage3d(UInt32 w,UInt32 h) : RenderImpl(w,h) {
-        
+    RenderStage3d::RenderStage3d(UInt32 w,UInt32 h,bool depth) : RenderImpl(w,h),m_depth_support(depth) {
+        m_depth_cleared = false;
+        m_color_cleared = false;
+        for (int x=0;x<4;++x) {
+            for (int y=0;y<4;++y) {
+                m_p_matrix[x*4+y] = x==y ? 1.0f : 0.0f;
+                m_v_matrix[x*4+y] = x==y ? 1.0f : 0.0f;
+                m_pv_matrix[x*4+y] = x==y ? 1.0f : 0.0f;
+            }
+        }
     }
     
     void RenderStage3d::SetContext( const flash::display3D::Context3D& ctx ) {
@@ -85,6 +93,7 @@ namespace GHL {
         m_generator.init(this);
         m_shaders_render.init(&m_generator);
         m_color_cleared = false;
+        m_depth_cleared = false;
         return RenderImpl::RenderInit();
     }
     
@@ -103,6 +112,7 @@ namespace GHL {
         if (!target) {
             m_ctx->setRenderToBackBuffer();
             m_color_cleared = false;
+            m_depth_cleared = false;
         } else {
             
         }
@@ -127,7 +137,8 @@ namespace GHL {
     
     /// clear depth
     void GHL_CALL RenderStage3d::ClearDepth(float d) {
-         m_ctx->clear(0, 0, 0, 0, d, 0, flash::display3D::Context3DClearMask::DEPTH);
+        m_ctx->clear(0, 0, 0, 0, d, 0, flash::display3D::Context3DClearMask::DEPTH+flash::display3D::Context3DClearMask::STENCIL);
+        m_depth_cleared = true;
     }
     
     
@@ -256,9 +267,9 @@ namespace GHL {
             m_ctx->setCulling(flash::display3D::Context3DTriangleFace::NONE);
         } else {
             if (cw) {
-                m_ctx->setCulling(flash::display3D::Context3DTriangleFace::FRONT);
-            } else {
                 m_ctx->setCulling(flash::display3D::Context3DTriangleFace::BACK);
+            } else {
+                m_ctx->setCulling(flash::display3D::Context3DTriangleFace::FRONT);
             }
         }
     }
@@ -296,17 +307,29 @@ namespace GHL {
     }
     
     void GHL_CALL RenderStage3d::SetProjectionMatrix(const float *m) {
-        for (size_t x=0;x<4;++x) {
-            for (size_t y=0;y<4;++y) {
-                m_p_matrix[x+y*4] = m[y+x*4];
-            }
+        for (size_t x=0;x<16;++x) {
+            m_p_matrix[x] = m[x];
         }
+        CalcPVMatrix();
     }
     
     void GHL_CALL RenderStage3d::SetViewMatrix(const float* m) {
-        for (size_t x=0;x<4;++x) {
-            for (size_t y=0;y<4;++y) {
-                m_v_matrix[x+y*4] = m[y+x*4];
+        for (size_t x=0;x<16;++x) {
+            m_v_matrix[x] = m[x];
+        }
+        CalcPVMatrix();
+    }
+    
+    void RenderStage3d::CalcPVMatrix() {
+        for (int x=0; x<4; x++)
+        {
+            for (int y=0; y<4; y++)
+            {
+                m_pv_matrix[x*4+y] =
+                    m_p_matrix[0*4 + x]*m_v_matrix[y*4 + 0] +
+                    m_p_matrix[1*4 + x]*m_v_matrix[y*4 + 1] +
+                    m_p_matrix[2*4 + x]*m_v_matrix[y*4 + 2] +
+                    m_p_matrix[3*4 + x]*m_v_matrix[y*4 + 3];
             }
         }
     }
@@ -319,55 +342,78 @@ namespace GHL {
         }
     }
     
-    void GHL_CALL RenderStage3d::DrawPrimitives(PrimitiveType type,UInt32 v_amount,UInt32 i_begin,UInt32 amount) {
-        
-        if (type==PRIMITIVE_TYPE_TRIANGLES) {
-            const IndexBufferStage3d* ibuf = reinterpret_cast<const IndexBufferStage3d*>(GetIndexBuffer());
-            if (!ibuf) {
-                return;
-            }
-            m_ctx->drawTriangles(ibuf->buffer(),i_begin,amount);
-        } else {
-            NOT_IMPLEMENTED;
-        }
-    }
-    
-    /// draw primitives from memory
-    void GHL_CALL RenderStage3d::DrawPrimitivesFromMemory(PrimitiveType type,VertexType v_type,const void* vertices,UInt32 v_amount,const UInt16* indexes,UInt32 prim_amount) {
-        
+    void RenderStage3d::BeginDrawPrimitives(PrimitiveType type,VertexType v_type) {
         if (!m_color_cleared) {
-            m_ctx->clear(0, 0, 0, 0, 1, 0, flash::display3D::Context3DClearMask::COLOR);
+            if (!m_depth_cleared && m_depth_support) {
+                m_ctx->clear(0, 0, 0, 0, 1, 0, flash::display3D::Context3DClearMask::ALL);
+                m_depth_cleared = true;
+            } else {
+                m_ctx->clear(0, 0, 0, 0, 1, 0, flash::display3D::Context3DClearMask::COLOR);
+            }
             m_color_cleared = true;
+        } else if ( m_depth_support && !m_depth_cleared ) {
+            m_ctx->clear(0, 0, 0, 0, 1, 0, flash::display3D::Context3DClearMask::DEPTH + flash::display3D::Context3DClearMask::STENCIL);
+            m_depth_cleared = true;
         }
         ShaderProgram* prg = m_shaders_render.get_shader(m_crnt_state, v_type==VERTEX_TYPE_2_TEX);
         if (prg) {
-        
+            
             const ShaderProgramStage3d* prg3d = reinterpret_cast<const ShaderProgramStage3d*>(prg);
             m_ctx->setProgram(prg3d->program());
             
         }
         
-         m_ctx->setProgramConstantsFromByteArray(AS3::ui::flash::display3D::Context3DProgramType::VERTEX,
-                                                0,4,AS3::ui::internal::get_ram(),(int)m_p_matrix);
+        m_ctx->setProgramConstantsFromByteArray(AS3::ui::flash::display3D::Context3DProgramType::VERTEX,
+                                                0,4,AS3::ui::internal::get_ram(),(int)m_pv_matrix);
+        
         RenderImpl::SetShader(prg);
+        
+    }
+    
+    void GHL_CALL RenderStage3d::DrawPrimitives(PrimitiveType type,UInt32 v_amount,UInt32 i_begin,UInt32 amount) {
         const VertexBuffer* crntV = GetVertexBuffer();
+        if (!crntV) {
+            LOG_ERROR("Draw primitives without current vertex buffer");
+            return;
+        }
+        const IndexBufferStage3d* ibuf = reinterpret_cast<const IndexBufferStage3d*>(GetIndexBuffer());
+        if (!ibuf) {
+            LOG_ERROR("Draw primitives without current index buffer");
+            return;
+        }
+        BeginDrawPrimitives(type,crntV->GetType());
+        if (type==PRIMITIVE_TYPE_TRIANGLES) {
+            m_ctx->drawTriangles(ibuf->buffer(),i_begin,amount);
+        } else {
+            NOT_IMPLEMENTED;
+        }
+        
+    }
+    
+    /// draw primitives from memory
+    void GHL_CALL RenderStage3d::DrawPrimitivesFromMemory(PrimitiveType type,VertexType v_type,const void* vertices,UInt32 v_amount,const UInt16* indexes,UInt32 prim_amount) {
+    
+        const VertexBuffer* crntV = GetVertexBuffer();
+        
+        BeginDrawPrimitives(type,v_type);
+        
         
         if (type==PRIMITIVE_TYPE_TRIANGLES) {
             const size_t vsize = v_type == VERTEX_TYPE_SIMPLE ? sizeof(Vertex) : sizeof(Vertex2Tex);
             IndexBufferStage3d* ib = reinterpret_cast<IndexBufferStage3d*>(CreateIndexBuffer(prim_amount*3));
             ConstInlinedData ibd((const Byte*)indexes,(prim_amount*3)*2);
-            ib->SetData(0,&ibd);
+            ib->SetData(&ibd);
             VertexBufferStage3d* vb = reinterpret_cast<VertexBufferStage3d*>(CreateVertexBuffer(v_type,v_amount));
             ConstInlinedData vbd((const Byte*)vertices,v_amount*vsize);
-            vb->SetData(0,&vbd);
+            vb->SetData(&vbd);
             SetVertexBuffer(vb);
             m_ctx->drawTriangles(ib->buffer(),0,prim_amount);
-            SetVertexBuffer(crntV);
             ib->Release();
             vb->Release();
         } else {
             NOT_IMPLEMENTED;
         }
+        SetVertexBuffer(crntV);
     }
     
     RenderTarget* GHL_CALL RenderStage3d::CreateRenderTarget(UInt32 w,UInt32 h,TextureFormat fmt,bool depth) {

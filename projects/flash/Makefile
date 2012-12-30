@@ -177,13 +177,13 @@ DIRS+=$(LIBDIR)
 
 
 all: check 
-	make build_all OPT_FLAGS=-O4
+	make build_all OPT_FLAGS="-emit-llvm -O3"
 
 debug: check 
 	make build_all OPT_FLAGS="-g -O0" DEFINES=-DGHL_DEBUG POSTFIX=_d
 
 rdebug: check
-	make build_all OPT_FLAGS=-O4 DEFINES="-DGHL_DEBUG" 
+	make build_all OPT_FLAGS="-emit-llvm -O3" DEFINES="-DGHL_DEBUG" 
 
 build_all: $(DIRS) $(ARTEFACTS) Makefile
 

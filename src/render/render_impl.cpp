@@ -188,8 +188,8 @@ namespace GHL {
 	
     void RenderImpl::SetOrthoProjection() {
         float projectionOrtho[16];
-        const float w = GetWidth();
-        const float h = GetHeight();
+        const float w = float(GetWidth());
+        const float h = float(GetHeight());
         std::fill(projectionOrtho,projectionOrtho+16,0.0f);
         projectionOrtho[0+0*4] = (2.0f / (w - 0.0f));
         projectionOrtho[1+1*4] = (2.0f / (0.0f - h));

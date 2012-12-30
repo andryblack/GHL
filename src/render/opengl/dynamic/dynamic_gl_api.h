@@ -36,8 +36,8 @@ namespace GHL {
         typedef unsigned int GLhandle;
         typedef ptrdiff_t GLsizeiptr;
         
-        static const GLboolean TRUE = 1;
-        static const GLboolean FALSE = 0;
+        static const GLboolean GL_TRUE = 1;
+        static const GLboolean GL_FALSE = 0;
 #define DYNAMIC_GL_CONSTANTS_Multitexture \
         \
         DYNAMIC_GL_CONSTANT(TEXTURE0)\

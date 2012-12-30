@@ -23,6 +23,7 @@ namespace GHL {
 #elif defined( __GNUC__ )
 #	define PACK_STRUCT	__attribute__((packed))
 #else
+#   error "unknown compilator need pack structure"
 #	define PACK_STRUCT
 #endif
 
@@ -254,11 +255,10 @@ namespace GHL {
         UInt32 readed = ds->Read(data,pixels*bpp);
         return readed == pixels*bpp;
     }
-
-    bool TGAImageDecoder::LoadHeader(TGAHeader* header,DataStream* ds) {
-        const size_t len = sizeof(TGAHeader);
-        if (ds->Read(reinterpret_cast<Byte*>(header),len)!=len) return false;
+    
+    static bool check_header(const TGAHeader* header) {
         /// @todo normalize endian
+        
         if (header->colourmaptype)
             return false;
         /// support only True Color data
@@ -269,6 +269,19 @@ namespace GHL {
         if (bpp!=24 && bpp!=32 && bpp!=8)
             return false;
         return true;
+    }
+
+    bool TGAImageDecoder::LoadHeader(TGAHeader* header,DataStream* ds) {
+        const size_t len = sizeof(TGAHeader);
+        if (ds->Read(reinterpret_cast<Byte*>(header),len)!=len) return false;
+        return check_header(header);
+    }
+    
+    ImageFileFormat TGAImageDecoder::GetFileFormat( const CheckBuffer& cb) const {
+        if (check_header(reinterpret_cast<const TGAHeader*>(&cb))) {
+            return IMAGE_FILE_FORMAT_TGA;
+        }
+        return ImageFileDecoder::GetFileFormat(cb);
     }
 
     Image* TGAImageDecoder::Decode(DataStream* ds) {

@@ -57,7 +57,7 @@ namespace GHL {
             ~VertexBufferStage3d();
             AS3::ui::flash::display3D::VertexBuffer3D buffer() const { return m_buffer; }
             
-            virtual void GHL_CALL SetData(UInt32 offset,const Data* data);
+            virtual void GHL_CALL SetData(const Data* data);
         };
         class IndexBufferStage3d : public IndexBufferImpl {
         private:
@@ -69,10 +69,11 @@ namespace GHL {
             ~IndexBufferStage3d();
             AS3::ui::flash::display3D::IndexBuffer3D buffer() const { return m_buffer; }
             
-            virtual void GHL_CALL SetData(UInt32 offset,const Data* data);
+            virtual void GHL_CALL SetData(const Data* data);
         };
+        void BeginDrawPrimitives(PrimitiveType type,VertexType v_type);
     public:
-        RenderStage3d( UInt32 w, UInt32 h );
+        RenderStage3d( UInt32 w, UInt32 h, bool depth );
         
         void SetContext( const AS3::ui::flash::display3D::Context3D& ctx );
         
@@ -156,7 +157,11 @@ namespace GHL {
     private:
         float   m_p_matrix[16];
         float   m_v_matrix[16];
+        float   m_pv_matrix[16];
+        void CalcPVMatrix();
         bool    m_color_cleared;
+        bool    m_depth_cleared;
+        bool    m_depth_support;
     };
     
 }

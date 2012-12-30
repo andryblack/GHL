@@ -11,6 +11,7 @@
 		A401C68C16595E7900DF4C16 /* render_opengl2.h in Headers */ = {isa = PBXBuildFile; fileRef = A401C68A16595E7900DF4C16 /* render_opengl2.h */; };
 		A401C68F16596A2100DF4C16 /* glsl_generator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A401C68D16596A1F00DF4C16 /* glsl_generator.cpp */; };
 		A401C69016596A2100DF4C16 /* glsl_generator.h in Headers */ = {isa = PBXBuildFile; fileRef = A401C68E16596A2000DF4C16 /* glsl_generator.h */; };
+		A40734D6168FA3C7007AEAEE /* image_file_decoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A40734D5168FA3C7007AEAEE /* image_file_decoder.cpp */; };
 		A41D523014DEB75E008B50E8 /* ghl_ref_counter.h in Headers */ = {isa = PBXBuildFile; fileRef = A41D522F14DEB75E008B50E8 /* ghl_ref_counter.h */; };
 		A41D523314DEB90B008B50E8 /* ghl_ref_counter_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A41D523214DEB90B008B50E8 /* ghl_ref_counter_impl.h */; };
 		A429008A1413948E00429C47 /* ghl_api.h in Headers */ = {isa = PBXBuildFile; fileRef = A429007B1413948E00429C47 /* ghl_api.h */; };
@@ -203,6 +204,7 @@
 		A401C68A16595E7900DF4C16 /* render_opengl2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = render_opengl2.h; sourceTree = "<group>"; };
 		A401C68D16596A1F00DF4C16 /* glsl_generator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glsl_generator.cpp; sourceTree = "<group>"; };
 		A401C68E16596A2000DF4C16 /* glsl_generator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glsl_generator.h; sourceTree = "<group>"; };
+		A40734D5168FA3C7007AEAEE /* image_file_decoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = image_file_decoder.cpp; sourceTree = "<group>"; };
 		A41D522F14DEB75E008B50E8 /* ghl_ref_counter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_ref_counter.h; sourceTree = "<group>"; };
 		A41D523214DEB90B008B50E8 /* ghl_ref_counter_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_ref_counter_impl.h; sourceTree = "<group>"; };
 		A429007B1413948E00429C47 /* ghl_api.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_api.h; sourceTree = "<group>"; };
@@ -492,6 +494,7 @@
 				A42900A01413949B00429C47 /* image_impl.h */,
 				A42900A11413949B00429C47 /* tga_image_decoder.cpp */,
 				A42900A21413949B00429C47 /* tga_image_decoder.h */,
+				A40734D5168FA3C7007AEAEE /* image_file_decoder.cpp */,
 			);
 			path = image;
 			sourceTree = "<group>";
@@ -998,6 +1001,7 @@
 				A401C68F16596A2100DF4C16 /* glsl_generator.cpp in Sources */,
 				A4A398AF168E8D92005442DE /* buffers_opengl.cpp in Sources */,
 				A4A398B4168E950E005442DE /* buffer_impl.cpp in Sources */,
+				A40734D6168FA3C7007AEAEE /* image_file_decoder.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -20,7 +20,7 @@
 #include <sys/time.h>
 
 static const char* MODULE = "WinLib";
-
+static bool need_depth = true;
 class Profiler {
 public:
     explicit Profiler( const char* text ) : m_text(text) {
@@ -246,11 +246,11 @@ static var initContext3D(void *arg, var as3Args)
         ctx.ctx3d->enableErrorChecking = true;
         ctx.ctx3d->configureBackBuffer(ctx.stage->stageWidth,
                                        ctx.stage->stageHeight, 0,
-                                    false, false);
+                                    need_depth, false);
         if (!ctx.render) {
             Profiler pf("initRender");
             ctx.render = new GHL::RenderStage3d(ctx.stage->stageWidth,
-                                                ctx.stage->stageHeight);
+                                                ctx.stage->stageHeight,need_depth);
             ctx.render->SetContext(ctx.ctx3d);
             
             if (ctx.render->RenderInit()){

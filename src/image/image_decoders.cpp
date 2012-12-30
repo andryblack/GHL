@@ -92,13 +92,25 @@ namespace GHL {
 
 	Image* GHL_CALL ImageDecoderImpl::Decode(DataStream* ds) const
 	{
+        if (!ds) {
+            return 0;
+        }
+        
+        ImageFileDecoder::CheckBuffer buf;
+		GHL::Int32 size = ds->Read(buf, sizeof(buf));
+		if ( size!=sizeof(buf) ) {
+			return 0;
+		}
+		
 		Image* img = 0;
-        Byte signBuff[64];
-        UInt32 signLen = ds->Read(signBuff, sizeof(signBuff));
         ds->Seek(0, F_SEEK_BEGIN);
 		for (size_t i=0;i<m_decoders.size();i++)
 		{
-            if (!m_decoders[i]->CheckSignature(signBuff,signLen))
+            if (!m_decoders[i]) {
+                LOG_ERROR("null decoder");
+                return 0;
+            }
+            if (m_decoders[i]->GetFileFormat()==IMAGE_FILE_FORMAT_UNKNOWN)
                 continue;
 			img = m_decoders[i]->Decode(ds);
 			if (img) break;

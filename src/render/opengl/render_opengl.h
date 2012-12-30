@@ -26,6 +26,7 @@ namespace GHL
 	{
 	protected:
         GL  gl;
+        bool    m_depth_write_enabled;
 	public:
 		RenderOpenGLBase(UInt32 w,UInt32 h);
 		~RenderOpenGLBase();

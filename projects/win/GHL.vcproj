@@ -747,6 +747,14 @@
 					Name="opengl"
 					>
 					<File
+						RelativePath="..\..\src\render\opengl\buffers_opengl.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\render\opengl\buffers_opengl.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\render\opengl\ghl_opengl.h"
 						>
 					</File>
