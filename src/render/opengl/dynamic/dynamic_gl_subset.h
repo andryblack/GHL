@@ -1,6 +1,0 @@
-#ifndef DYNAMIC_GL_SUBSET_H
-#define DYNAMIC_GL_SUBSET_H
-
-
-
-#endif // DYNAMIC_GL_SUBSET_H

@@ -1,7 +1,6 @@
 #ifndef DYNAMIC_GL_H
 #define DYNAMIC_GL_H
 
-#include "dynamic_gl_subset.h"
 #include <cstddef>
 
 namespace GHL {

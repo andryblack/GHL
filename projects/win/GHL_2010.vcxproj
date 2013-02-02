@@ -43,7 +43,8 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">build/Release\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</GenerateManifest>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectName)_d</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectName)10_d</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectName)10</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -99,6 +100,16 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\ghl_data_impl.cpp" />
     <ClCompile Include="..\..\src\ghl_log_impl.cpp" />
+    <ClCompile Include="..\..\src\render\buffer_impl.cpp" />
+    <ClCompile Include="..\..\src\render\opengl\buffers_opengl.cpp" />
+    <ClCompile Include="..\..\src\render\opengl\glsl_generator.cpp" />
+    <ClCompile Include="..\..\src\render\opengl\render_opengl2.cpp" />
+    <ClCompile Include="..\..\src\render\pfpl\pfpl_cache.cpp" />
+    <ClCompile Include="..\..\src\render\pfpl\pfpl_render.cpp" />
+    <ClCompile Include="..\..\src\render\pfpl\pfpl_state.cpp" />
+    <ClCompile Include="..\..\src\render\rendertarget_impl.cpp" />
+    <ClCompile Include="..\..\src\render\shader_impl.cpp" />
+    <ClCompile Include="..\..\src\render\texture_impl.cpp" />
     <ClCompile Include="..\..\src\vfs\ghl_vfs_factory.cpp" />
     <ClCompile Include="..\..\src\vfs\memory_stream.cpp" />
     <ClCompile Include="..\..\src\vfs\vfs_win32.cpp" />
@@ -193,6 +204,15 @@
     <ClInclude Include="..\..\src\ghl_data_impl.h" />
     <ClInclude Include="..\..\src\ghl_log_impl.h" />
     <ClInclude Include="..\..\src\ghl_ref_counter_impl.h" />
+    <ClInclude Include="..\..\src\render\buffer_impl.h" />
+    <ClInclude Include="..\..\src\render\opengl\buffers_opengl.h" />
+    <ClInclude Include="..\..\src\render\opengl\glsl_generator.h" />
+    <ClInclude Include="..\..\src\render\opengl\render_opengl2.h" />
+    <ClInclude Include="..\..\src\render\pfpl\pfpl_cache.h" />
+    <ClInclude Include="..\..\src\render\pfpl\pfpl_render.h" />
+    <ClInclude Include="..\..\src\render\pfpl\pfpl_state.h" />
+    <ClInclude Include="..\..\src\render\shader_impl.h" />
+    <ClInclude Include="..\..\src\render\texture_impl.h" />
     <ClInclude Include="..\..\src\vfs\memory_stream.h" />
     <ClInclude Include="..\..\src\vfs\vfs_win32.h" />
     <ClInclude Include="..\..\src\image\image_config.h" />
