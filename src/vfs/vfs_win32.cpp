@@ -35,6 +35,8 @@ namespace GHL {
 					dwErr = 0;
 					m_eof = true;
 				}
+			} else if (bytes && (readed==0)) {
+				m_eof = true;
 			}
 			return readed; 
 		}
