@@ -11,11 +11,12 @@
 #define TEXTURE_OPENGL_H
 
 #include "../texture_impl.h"
-#include "ghl_opengl.h"
+#include "render_opengl_api.h"
 
 namespace GHL {
 
     class RenderOpenGLBase;
+    struct GL;
 
 	class TextureOpenGL : public TextureImpl {
 	private:

@@ -49,6 +49,16 @@ namespace GHL {
         RenderImpl* m_parent;
     };
     
+    class SoftVertexBuffer : public VertexBufferImpl {
+    public:
+        SoftVertexBuffer( RenderImpl* parent, VertexType type, UInt32 size );
+        ~SoftVertexBuffer();
+        virtual void GHL_CALL SetData(const Data* data);
+        const void* GetData() const;
+    private:
+        Data*   m_data;
+    };
+    
     class IndexBufferImpl : public RefCounterImpl<IndexBuffer> {
     public:
         virtual ~IndexBufferImpl();
@@ -62,6 +72,17 @@ namespace GHL {
         void RestoreCurrent(const IndexBuffer* vb);
     private:
         RenderImpl* m_parent;
+    };
+    
+    class SoftIndexBuffer : public IndexBufferImpl {
+    public:
+        SoftIndexBuffer( RenderImpl* parent, UInt32 size );
+        ~SoftIndexBuffer();
+        
+        virtual void GHL_CALL SetData(const Data* data);
+        const void* GetData() const;
+    private:
+        Data*   m_data;
     };
 }
 

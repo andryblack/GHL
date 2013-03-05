@@ -7,7 +7,7 @@
  *
  */
 
-#include "ghl_opengl.h"
+#include "render_opengl_api.h"
 
 
 #include "rendertarget_opengl.h"

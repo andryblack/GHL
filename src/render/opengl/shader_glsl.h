@@ -11,8 +11,8 @@
 #define SHADER_GLSL_H
 
 #include "ghl_shader.h"
-#include "ghl_opengl.h"
 #include "../shader_impl.h"
+#include "render_opengl_api.h"
 
 #include <map>
 #include <string>

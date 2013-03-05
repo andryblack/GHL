@@ -247,7 +247,7 @@
      */
 #  endif /* other system, !OS/2 */
 #endif /* !Windows/x86 */
-#endif /*PNG_USER_PRIVATEBUILD*.
+#endif /*PNG_USER_PRIVATEBUILD*/
 
 /* Now do all the defaulting . */
 #ifndef PNGCAPI

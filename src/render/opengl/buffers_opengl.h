@@ -10,7 +10,7 @@
 #define __GHL__buffers_opengl__
 
 #include "../buffer_impl.h"
-#include "ghl_opengl.h"
+#include "render_opengl_api.h"
 
 namespace GHL {
     

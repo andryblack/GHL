@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A401C68B16595E7900DF4C16 /* render_opengl2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A401C68916595E7800DF4C16 /* render_opengl2.cpp */; };
-		A401C68C16595E7900DF4C16 /* render_opengl2.h in Headers */ = {isa = PBXBuildFile; fileRef = A401C68A16595E7900DF4C16 /* render_opengl2.h */; };
 		A401C68F16596A2100DF4C16 /* glsl_generator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A401C68D16596A1F00DF4C16 /* glsl_generator.cpp */; };
 		A401C69016596A2100DF4C16 /* glsl_generator.h in Headers */ = {isa = PBXBuildFile; fileRef = A401C68E16596A2000DF4C16 /* glsl_generator.h */; };
 		A40734D6168FA3C7007AEAEE /* image_file_decoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A40734D5168FA3C7007AEAEE /* image_file_decoder.cpp */; };
@@ -38,7 +36,6 @@
 		A42900E21413949B00429C47 /* tga_image_decoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900A21413949B00429C47 /* tga_image_decoder.h */; };
 		A42900E31413949B00429C47 /* lucida_console_regular_8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900A41413949B00429C47 /* lucida_console_regular_8.cpp */; };
 		A42900E41413949B00429C47 /* lucida_console_regular_8.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900A51413949B00429C47 /* lucida_console_regular_8.h */; };
-		A42900EA1413949B00429C47 /* ghl_opengl.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900AD1413949B00429C47 /* ghl_opengl.h */; };
 		A42900EC1413949B00429C47 /* render_opengl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900AF1413949B00429C47 /* render_opengl.cpp */; };
 		A42900ED1413949B00429C47 /* render_opengl.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900B01413949B00429C47 /* render_opengl.h */; };
 		A42900EE1413949B00429C47 /* rendertarget_opengl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A42900B11413949B00429C47 /* rendertarget_opengl.cpp */; };
@@ -162,6 +159,8 @@
 		A48B50381651BFA40023C1F1 /* rendertarget_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A48B50371651BFA40023C1F1 /* rendertarget_impl.cpp */; };
 		A48B50491652CE890023C1F1 /* shader_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A48B50471652CE890023C1F1 /* shader_impl.cpp */; };
 		A48B504A1652CE890023C1F1 /* shader_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A48B50481652CE890023C1F1 /* shader_impl.h */; };
+		A48E3C9116E6A7C4009E2EED /* render_opengl_base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A48E3C8F16E6A7C4009E2EED /* render_opengl_base.cpp */; };
+		A48E3C9216E6A7C4009E2EED /* render_opengl_base.h in Headers */ = {isa = PBXBuildFile; fileRef = A48E3C9016E6A7C4009E2EED /* render_opengl_base.h */; };
 		A4A3561F15E93F0B00835949 /* ghl_data.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A3561E15E93F0B00835949 /* ghl_data.h */; };
 		A4A3562215E93F1700835949 /* ghl_data_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4A3562015E93F1700835949 /* ghl_data_impl.cpp */; };
 		A4A3562315E93F1700835949 /* ghl_data_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A3562115E93F1700835949 /* ghl_data_impl.h */; };
@@ -199,8 +198,6 @@
 
 /* Begin PBXFileReference section */
 		A401C6871656DA1500DF4C16 /* dynamic_gl_api.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dynamic_gl_api.h; sourceTree = "<group>"; };
-		A401C68916595E7800DF4C16 /* render_opengl2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = render_opengl2.cpp; sourceTree = "<group>"; };
-		A401C68A16595E7900DF4C16 /* render_opengl2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = render_opengl2.h; sourceTree = "<group>"; };
 		A401C68D16596A1F00DF4C16 /* glsl_generator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glsl_generator.cpp; sourceTree = "<group>"; };
 		A401C68E16596A2000DF4C16 /* glsl_generator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glsl_generator.h; sourceTree = "<group>"; };
 		A40734D5168FA3C7007AEAEE /* image_file_decoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = image_file_decoder.cpp; sourceTree = "<group>"; };
@@ -230,7 +227,6 @@
 		A42900A21413949B00429C47 /* tga_image_decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tga_image_decoder.h; sourceTree = "<group>"; };
 		A42900A41413949B00429C47 /* lucida_console_regular_8.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lucida_console_regular_8.cpp; sourceTree = "<group>"; };
 		A42900A51413949B00429C47 /* lucida_console_regular_8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lucida_console_regular_8.h; sourceTree = "<group>"; };
-		A42900AD1413949B00429C47 /* ghl_opengl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_opengl.h; sourceTree = "<group>"; };
 		A42900AF1413949B00429C47 /* render_opengl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = render_opengl.cpp; sourceTree = "<group>"; };
 		A42900B01413949B00429C47 /* render_opengl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = render_opengl.h; sourceTree = "<group>"; };
 		A42900B11413949B00429C47 /* rendertarget_opengl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rendertarget_opengl.cpp; sourceTree = "<group>"; };
@@ -355,6 +351,8 @@
 		A48B50471652CE890023C1F1 /* shader_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shader_impl.cpp; sourceTree = "<group>"; };
 		A48B50481652CE890023C1F1 /* shader_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shader_impl.h; sourceTree = "<group>"; };
 		A48B504C165306260023C1F1 /* dynamic_gl_inc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dynamic_gl_inc.h; sourceTree = "<group>"; };
+		A48E3C8F16E6A7C4009E2EED /* render_opengl_base.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = render_opengl_base.cpp; sourceTree = "<group>"; };
+		A48E3C9016E6A7C4009E2EED /* render_opengl_base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = render_opengl_base.h; sourceTree = "<group>"; };
 		A4A3561E15E93F0B00835949 /* ghl_data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_data.h; sourceTree = "<group>"; };
 		A4A3562015E93F1700835949 /* ghl_data_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ghl_data_impl.cpp; sourceTree = "<group>"; };
 		A4A3562115E93F1700835949 /* ghl_data_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_data_impl.h; sourceTree = "<group>"; };
@@ -521,8 +519,9 @@
 		A42900A61413949B00429C47 /* opengl */ = {
 			isa = PBXGroup;
 			children = (
+				A48E3C8F16E6A7C4009E2EED /* render_opengl_base.cpp */,
+				A48E3C9016E6A7C4009E2EED /* render_opengl_base.h */,
 				A47F7F5A14E6D1BB006B37E2 /* dynamic */,
-				A42900AD1413949B00429C47 /* ghl_opengl.h */,
 				A42900AF1413949B00429C47 /* render_opengl.cpp */,
 				A42900B01413949B00429C47 /* render_opengl.h */,
 				A42900B11413949B00429C47 /* rendertarget_opengl.cpp */,
@@ -531,8 +530,6 @@
 				A42900B41413949B00429C47 /* shader_glsl.h */,
 				A42900B51413949B00429C47 /* texture_opengl.cpp */,
 				A42900B61413949B00429C47 /* texture_opengl.h */,
-				A401C68916595E7800DF4C16 /* render_opengl2.cpp */,
-				A401C68A16595E7900DF4C16 /* render_opengl2.h */,
 				A401C68D16596A1F00DF4C16 /* glsl_generator.cpp */,
 				A401C68E16596A2000DF4C16 /* glsl_generator.h */,
 				A4A398AD168E8D92005442DE /* buffers_opengl.cpp */,
@@ -774,7 +771,6 @@
 				A42900E01413949B00429C47 /* image_impl.h in Headers */,
 				A42900E21413949B00429C47 /* tga_image_decoder.h in Headers */,
 				A42900E41413949B00429C47 /* lucida_console_regular_8.h in Headers */,
-				A42900EA1413949B00429C47 /* ghl_opengl.h in Headers */,
 				A42900ED1413949B00429C47 /* render_opengl.h in Headers */,
 				A42900EF1413949B00429C47 /* rendertarget_opengl.h in Headers */,
 				A42900F11413949B00429C47 /* shader_glsl.h in Headers */,
@@ -833,11 +829,11 @@
 				A48B50321651AF500023C1F1 /* pfpl_render.h in Headers */,
 				A48B50361651BCB90023C1F1 /* texture_impl.h in Headers */,
 				A48B504A1652CE890023C1F1 /* shader_impl.h in Headers */,
-				A401C68C16595E7900DF4C16 /* render_opengl2.h in Headers */,
 				A401C69016596A2100DF4C16 /* glsl_generator.h in Headers */,
 				A4A398B0168E8D92005442DE /* buffers_opengl.h in Headers */,
 				A4A398B5168E950E005442DE /* buffer_impl.h in Headers */,
 				A4A398B7168EB0C4005442DE /* ghl_image_config.h in Headers */,
+				A48E3C9216E6A7C4009E2EED /* render_opengl_base.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -993,11 +989,11 @@
 				A48B50351651BCB90023C1F1 /* texture_impl.cpp in Sources */,
 				A48B50381651BFA40023C1F1 /* rendertarget_impl.cpp in Sources */,
 				A48B50491652CE890023C1F1 /* shader_impl.cpp in Sources */,
-				A401C68B16595E7900DF4C16 /* render_opengl2.cpp in Sources */,
 				A401C68F16596A2100DF4C16 /* glsl_generator.cpp in Sources */,
 				A4A398AF168E8D92005442DE /* buffers_opengl.cpp in Sources */,
 				A4A398B4168E950E005442DE /* buffer_impl.cpp in Sources */,
 				A40734D6168FA3C7007AEAEE /* image_file_decoder.cpp in Sources */,
+				A48E3C9116E6A7C4009E2EED /* render_opengl_base.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

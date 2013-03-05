@@ -12,13 +12,12 @@
 
 #include <ghl_texture.h>
 #include "../rendertarget_impl.h"
-#include "ghl_opengl.h"
 
 namespace GHL {
 	
     class RenderOpenGLBase;
 	class TextureOpenGL;
-	
+	struct GL;
     
     
 	class RenderTargetOpenGL : public RenderTargetImpl {

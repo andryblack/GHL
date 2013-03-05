@@ -11,7 +11,7 @@
 #import <UIKit/UIKit.h>
 #include <sys/time.h>
 
-#include "../render/opengl/render_opengl.h"
+#include "../render/opengl/render_opengles.h"
 
 #include "ghl_application.h"
 #include "ghl_settings.h"
@@ -22,11 +22,9 @@
 #include "../vfs/vfs_cocoa.h"
 #include "../image/image_decoders.h"
 
-#include <OpenGLES/ES1/gl.h>
-#include <OpenGLES/ES1/glext.h>
-#import <OpenGLES/EAGL.h>
 #import <OpenGLES/EAGLDrawable.h>
-#import <QuartzCore/QuartzCore.h>
+
+#import "WinLibCocoaTouchContext2.h"
 
 static const char* MODULE = "WINLIB";
 
@@ -92,16 +90,12 @@ class SystemCocoaTouch;
 static const size_t max_touches = 10;
 
 @interface WinLibView : UIView<UITextFieldDelegate> {
-	EAGLContext*	m_context;
-	// The OpenGL ES names for the framebuffer and renderbuffer used to render to this view
-    GLuint m_defaultFramebuffer, m_colorRenderbuffer;
-	// The pixel dimensions of the CAEAGLLayer
-    GLint m_backingWidth;
-    GLint m_backingHeight;
+    WinLibCocoaTouchContext*    m_context;
+    
 	GHL::ImageDecoderImpl* m_imageDecoder;
 	GHL::SoundImpl*	m_sound;
 	NSString*	m_appName;
-	GHL::RenderOpenGL* m_render;
+	GHL::RenderImpl* m_render;
 	NSTimer*	m_timer;
 	bool	m_loaded;
 	::timeval	m_timeval;
@@ -110,8 +104,8 @@ static const size_t max_touches = 10;
 	UITouch* m_touches[max_touches];
 }
 
-- (void)prepareOpenGL;
-- (EAGLContext*) getContext;
+- (void)prepareOpenGL:(Boolean) gles2;
+- (void)makeCurrent;
 - (void)setActive:(bool) a;
 - (bool)loaded;
 - (void)showKeyboard;
@@ -196,9 +190,6 @@ public:
     return [CAEAGLLayer class];
 }
 
-- (EAGLContext*) getContext {
-	return m_context;
-}
 
 - (bool)loaded{
 	return m_loaded;
@@ -228,16 +219,30 @@ public:
         eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
                                         [NSNumber numberWithBool:FALSE], kEAGLDrawablePropertyRetainedBacking,
 										kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
-		
-		m_context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
-		
-        if (!m_context || ![EAGLContext setCurrentContext:m_context])
+        EAGLContext* context = 0;
+		Boolean gles2 = YES;
+        
+        /*
+		context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+		*/
+        
+         if (!m_context) {
+            gles2 = NO;
+            context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
+        }
+        if (!context || ![EAGLContext setCurrentContext:context])
         {
             [self release];
             return nil;
         }
 		
-
+        if (gles2) {
+            m_context = [[WinLibCocoaTouchContext2 alloc] initWithContext:context];
+        } else {
+            m_context = [[WinLibCocoaTouchContext alloc] initWithContext:context];
+        }
+        
+        
         if([self respondsToSelector:@selector(setContentScaleFactor:)]){
 			if (!g_retina_enabled)
 				self.contentScaleFactor = 1.0;
@@ -245,14 +250,10 @@ public:
         }
 		
 		
-        // Create default framebuffer object. The backing will be allocated for the current layer in -resizeFromLayer
-        glGenFramebuffersOES(1, &m_defaultFramebuffer);
-        glGenRenderbuffersOES(1, &m_colorRenderbuffer);
-        glBindFramebufferOES(GL_FRAMEBUFFER_OES, m_defaultFramebuffer);
-        glBindRenderbufferOES(GL_RENDERBUFFER_OES, m_colorRenderbuffer);
-        glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_RENDERBUFFER_OES, m_colorRenderbuffer);
+        [m_context createBuffers];
+
 		
-		GHL::g_default_renderbuffer = m_colorRenderbuffer;
+		GHL::g_default_renderbuffer = [m_context colorRenderbuffer];
 		
 		m_sound = 0;
 #ifndef GHL_NO_SOUND
@@ -283,9 +284,13 @@ public:
 			LOG_VERBOSE("contentScaleFactor:"<<self.contentScaleFactor);
 		}
 		
-		[self prepareOpenGL];
+		[self prepareOpenGL:gles2];
 	}
 	return self;
+}
+
+- (void)makeCurrent {
+    [m_context makeCurrent];
 }
 
 - (void)layoutSubviews
@@ -297,25 +302,16 @@ public:
 		LOG_VERBOSE("contentScaleFactor:"<<self.contentScaleFactor);
 	}
 
-	[EAGLContext setCurrentContext:m_context];
-	// Allocate color buffer backing based on the current layer size
-    glBindRenderbufferOES(GL_RENDERBUFFER_OES, m_colorRenderbuffer);
-    [m_context renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable:(CAEAGLLayer*)self.layer];
-    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &m_backingWidth);
-    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &m_backingHeight);
-	GHL::g_default_renderbuffer = m_colorRenderbuffer;
-	m_render->Resize(m_backingWidth, m_backingHeight);
-    if (glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES) != GL_FRAMEBUFFER_COMPLETE_OES)
-    {
-        LOG_ERROR("Failed to make complete framebuffer object " << glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES));
-    }
-	
+	[m_context onLayout:(CAEAGLLayer*)self.layer];
+    GHL::g_default_renderbuffer = [m_context colorRenderbuffer];
+	m_render->Resize([m_context backingWidth], [m_context backingHeight]);
+ 	
 }
 
-- (void)prepareOpenGL {
-	LOG_VERBOSE( "prepareOpenGL" ); 
+- (void)prepareOpenGL:(Boolean) gles2 {
+	LOG_VERBOSE( "prepareOpenGL " << (gles2 ? "GLES2" : "GLES1") );
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-	[EAGLContext setCurrentContext:m_context];
+	[self makeCurrent];
 	int w = [self bounds].size.width;
 	int h = [self bounds].size.height;
 	if([self respondsToSelector:@selector(setContentScaleFactor:)]){
@@ -328,11 +324,16 @@ public:
 		LOG_VERBOSE("contentScaleFactor:"<<self.contentScaleFactor);
 	}
 	
-	m_render = new GHL::RenderOpenGL(GHL::UInt32(w),
+    if (gles2) {
+        m_render = new GHL::RenderOpenGLES2(GHL::UInt32(w),
 									 GHL::UInt32(h));
+    } else {
+        m_render = new GHL::RenderOpenGLES(GHL::UInt32(w),
+                                            GHL::UInt32(h));
+    }
 	m_render->RenderInit();
 	g_application->SetRender(m_render);
-	GHL::g_default_renderbuffer = m_colorRenderbuffer;
+	GHL::g_default_renderbuffer = [m_context colorRenderbuffer];
 	if (g_application->Load()) {
 		m_timer = [NSTimer scheduledTimerWithTimeInterval: 1.0f/200.0f target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
 		[m_timer fire];
@@ -350,14 +351,14 @@ public:
 		::gettimeofday(&time,0);
 		GHL::UInt32 dt = static_cast<GHL::UInt32>((time.tv_sec - m_timeval.tv_sec)*1000000 + time.tv_usec - m_timeval.tv_usec);
 		m_timeval = time;
-		[EAGLContext setCurrentContext:m_context];
-		GHL::g_default_renderbuffer = m_colorRenderbuffer;
+		[self makeCurrent];
+		GHL::g_default_renderbuffer = [m_context colorRenderbuffer];
 		m_render->ResetRenderState();
 		if (g_application->OnFrame(dt)) {
 			
 		}
-        [m_context presentRenderbuffer:GL_RENDERBUFFER_OES];
-		[pool drain];
+        [m_context present];
+        [pool drain];
 	}
 }
 
@@ -474,22 +475,7 @@ public:
 		delete m_render;
 		m_render = 0;
 	}
-	// Tear down GL
-    if (m_defaultFramebuffer)
-    {
-        glDeleteFramebuffersOES(1, &m_defaultFramebuffer);
-        m_defaultFramebuffer = 0;
-    }
-	
-    if (m_colorRenderbuffer)
-    {
-        glDeleteRenderbuffersOES(1, &m_colorRenderbuffer);
-        m_colorRenderbuffer = 0;
-    }
-	
-    // Tear down context
-    if ([EAGLContext currentContext] == m_context)
-        [EAGLContext setCurrentContext:nil];
+	[m_context deleteBuffers];
 	
     [m_context release];
     m_context = nil;
@@ -624,7 +610,7 @@ public:
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-	[EAGLContext setCurrentContext:[view getContext]];
+    [view makeCurrent];
 	g_application->OnDeactivated();
 	//[view setActive:false];
 	//[view drawRect:[view bounds]];
@@ -633,7 +619,7 @@ public:
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-	[EAGLContext setCurrentContext:[view getContext]];
+    [view makeCurrent];
 	g_application->OnActivated();
 	//[view setActive:true];
 	//if ([view loaded]) [view drawRect:[view bounds]];
