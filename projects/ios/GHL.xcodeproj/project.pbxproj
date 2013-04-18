@@ -182,6 +182,8 @@
 		A4B3162016A4A00C001B6001 /* pfpl_render.h in Headers */ = {isa = PBXBuildFile; fileRef = A4B3161A16A4A00C001B6001 /* pfpl_render.h */; };
 		A4B3162116A4A00C001B6001 /* pfpl_state.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4B3161B16A4A00C001B6001 /* pfpl_state.cpp */; };
 		A4B3162216A4A00C001B6001 /* pfpl_state.h in Headers */ = {isa = PBXBuildFile; fileRef = A4B3161C16A4A00C001B6001 /* pfpl_state.h */; };
+		A4CE7D3C172077D300C54D88 /* gles2_api.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4CE7D3A172077D200C54D88 /* gles2_api.cpp */; };
+		A4CE7D3D172077D300C54D88 /* gles2_api.h in Headers */ = {isa = PBXBuildFile; fileRef = A4CE7D3B172077D300C54D88 /* gles2_api.h */; };
 		A4EDFDC714169DCD00ED0DC0 /* png_image_decoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFDC514169DCD00ED0DC0 /* png_image_decoder.cpp */; };
 		A4EDFDC814169DCD00ED0DC0 /* png_image_decoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EDFDC614169DCD00ED0DC0 /* png_image_decoder.h */; };
 		A4EDFEC91416B14B00ED0DC0 /* pngread.c in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFEC81416B14B00ED0DC0 /* pngread.c */; };
@@ -378,6 +380,8 @@
 		A4B3161A16A4A00C001B6001 /* pfpl_render.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pfpl_render.h; sourceTree = "<group>"; };
 		A4B3161B16A4A00C001B6001 /* pfpl_state.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pfpl_state.cpp; sourceTree = "<group>"; };
 		A4B3161C16A4A00C001B6001 /* pfpl_state.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pfpl_state.h; sourceTree = "<group>"; };
+		A4CE7D3A172077D200C54D88 /* gles2_api.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gles2_api.cpp; sourceTree = "<group>"; };
+		A4CE7D3B172077D300C54D88 /* gles2_api.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gles2_api.h; sourceTree = "<group>"; };
 		A4EDFDC514169DCD00ED0DC0 /* png_image_decoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = png_image_decoder.cpp; sourceTree = "<group>"; };
 		A4EDFDC614169DCD00ED0DC0 /* png_image_decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = png_image_decoder.h; sourceTree = "<group>"; };
 		A4EDFEC81416B14B00ED0DC0 /* pngread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngread.c; sourceTree = "<group>"; };
@@ -530,6 +534,8 @@
 		A42900A61413949B00429C47 /* opengl */ = {
 			isa = PBXGroup;
 			children = (
+				A4CE7D3A172077D200C54D88 /* gles2_api.cpp */,
+				A4CE7D3B172077D300C54D88 /* gles2_api.h */,
 				A4B3160C16A49FAB001B6001 /* buffers_opengl.cpp */,
 				A4B3160D16A49FAB001B6001 /* buffers_opengl.h */,
 				A4B3160E16A49FAB001B6001 /* glsl_generator.cpp */,
@@ -833,6 +839,7 @@
 				A48E3C5216E67F27009E2EED /* WinLibCocoaTouchContext2.h in Headers */,
 				A48E3C8916E6A280009E2EED /* render_opengles.h in Headers */,
 				A48E3C8D16E6A35A009E2EED /* gles1_api.h in Headers */,
+				A4CE7D3D172077D300C54D88 /* gles2_api.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -996,6 +1003,7 @@
 				A48E3C5316E67F27009E2EED /* WinLibCocoaTouchContext2.m in Sources */,
 				A48E3C8816E6A280009E2EED /* render_opengles.cpp in Sources */,
 				A48E3C8C16E6A35A009E2EED /* gles1_api.cpp in Sources */,
+				A4CE7D3C172077D300C54D88 /* gles2_api.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

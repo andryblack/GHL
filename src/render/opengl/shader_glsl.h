@@ -58,7 +58,15 @@ namespace GHL {
 		GL::GLint location() const { return m_location;}
 		virtual void GHL_CALL SetValueFloat(float v);
 		virtual void GHL_CALL SetValueInt(Int32 v);
+        virtual void GHL_CALL SetValueMatrix(const float* v);
 	};
+    
+    enum GLSLPredefinedAttribute {
+        GLSLPredefinedAttributePosition,
+        GLSLPredefinedAttributeTexCoord,
+        GLSLPredefinedAttributeColor,
+        GLSLPredefinedAttributesAmount
+    };
 	
 	class ShaderProgramGLSL : public ShaderProgramImpl {
 	public:
@@ -69,12 +77,14 @@ namespace GHL {
 		ShaderUniform* GHL_CALL GetUniform(const char* name) ;
 		
 		GL::GLhandle handle() const { return m_handle;}
+        GL::GLint   GetAttribute(GLSLPredefinedAttribute attr) const;
 	private:
         const GL& gl;
 		GL::GLhandle	m_handle;
 		VertexShaderGLSL* m_v;
 		FragmentShaderGLSL* m_f;
 		std::map<std::string,ShaderUniformGLSL> m_uniforms;
+        mutable GL::GLint m_attributes[GLSLPredefinedAttributesAmount];
 	};
 }
 

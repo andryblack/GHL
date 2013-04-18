@@ -59,6 +59,17 @@
     }
 }
 
+-(void)makeCurrent
+{
+    [EAGLContext setCurrentContext:m_context];
+    if (m_defaultFramebuffer) {
+        glBindFramebuffer(GL_FRAMEBUFFER, m_defaultFramebuffer);
+    }
+    if (m_colorRenderbuffer) {
+        glBindRenderbuffer(GL_RENDERBUFFER, m_colorRenderbuffer);
+    }
+}
+
 -(void)present
 {
     [m_context presentRenderbuffer:GL_RENDERBUFFER];

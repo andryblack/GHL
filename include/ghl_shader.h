@@ -49,6 +49,7 @@ namespace GHL
 	struct ShaderUniform {
 		virtual void GHL_CALL SetValueFloat(float v) = 0;
 		virtual void GHL_CALL SetValueInt(Int32 v) = 0;
+        virtual void GHL_CALL SetValueMatrix(const float* v) = 0;
 	};
 	
 	struct ShaderProgram : RefCounter

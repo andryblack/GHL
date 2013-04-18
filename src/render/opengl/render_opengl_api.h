@@ -71,9 +71,6 @@ DYNAMIC_GL_CONSTANT(NOTEQUAL)\
 DYNAMIC_GL_CONSTANT(GEQUAL)\
 DYNAMIC_GL_CONSTANT(ALWAYS)\
 \
-DYNAMIC_GL_CONSTANT(PRIMARY_COLOR)\
-DYNAMIC_GL_CONSTANT(PREVIOUS)\
-\
 DYNAMIC_GL_CONSTANT(TEXTURE)\
 \
 DYNAMIC_GL_CONSTANT(TEXTURE_2D)\
@@ -93,11 +90,7 @@ DYNAMIC_GL_CONSTANT(SHORT)\
 DYNAMIC_GL_CONSTANT(UNSIGNED_SHORT)\
 DYNAMIC_GL_CONSTANT(FLOAT)\
 \
-DYNAMIC_GL_CONSTANT(TEXTURE_ENV)\
-DYNAMIC_GL_CONSTANT(TEXTURE_ENV_MODE)\
-\
 DYNAMIC_GL_CONSTANT(SCISSOR_TEST)\
-DYNAMIC_GL_CONSTANT(ALPHA_TEST)\
 DYNAMIC_GL_CONSTANT(DEPTH_TEST)\
 DYNAMIC_GL_CONSTANT(BLEND)\
 \
@@ -107,9 +100,6 @@ DYNAMIC_GL_CONSTANT(DEPTH_BUFFER_BIT)\
 DYNAMIC_GL_CONSTANT(CW)\
 DYNAMIC_GL_CONSTANT(CCW)\
 DYNAMIC_GL_CONSTANT(CULL_FACE)\
-\
-DYNAMIC_GL_CONSTANT(MODELVIEW)\
-DYNAMIC_GL_CONSTANT(PROJECTION)\
 \
 DYNAMIC_GL_CONSTANT(LINES)\
 DYNAMIC_GL_CONSTANT(LINE_LOOP)\
@@ -136,14 +126,6 @@ DYNAMIC_GL_CONSTANT(LINEAR_MIPMAP_LINEAR)\
 DYNAMIC_GL_CONSTANT(UNPACK_ALIGNMENT)\
 DYNAMIC_GL_CONSTANT(UNPACK_ROW_LENGTH)\
 \
-DYNAMIC_GL_CONSTANT(MODULATE)\
-DYNAMIC_GL_CONSTANT(REPLACE)\
-DYNAMIC_GL_CONSTANT(ADD)\
-\
-DYNAMIC_GL_CONSTANT(VERTEX_ARRAY)\
-DYNAMIC_GL_CONSTANT(COLOR_ARRAY)\
-DYNAMIC_GL_CONSTANT(TEXTURE_COORD_ARRAY)\
-\
 DYNAMIC_GL_CONSTANT(NO_ERROR)\
 
 #define DYNAMIC_GL_CONSTANT(Name) GLenum Name;
@@ -153,7 +135,6 @@ DYNAMIC_GL_CONSTANT(NO_ERROR)\
         
 #define DYNAMIC_GL_FUNCTIONS_Multitexture \
 DYNAMIC_GL_FUNCTION(ActiveTexture,(GLenum))\
-DYNAMIC_GL_FUNCTION(ClientActiveTexture,(GLenum))\
 
 #define DYNAMIC_GL_FUNCTIONS \
 DYNAMIC_GL_FUNCTION(BindTexture,(GLenum,GLuint))\
@@ -161,24 +142,15 @@ DYNAMIC_GL_FUNCTION(Flush,())\
 DYNAMIC_GL_FUNCTION(ReadPixels,(GLint,GLint,GLsizei,GLsizei,GLenum,GLenum,GLvoid*))\
 DYNAMIC_GL_FUNCTION(Viewport,(GLint,GLint,GLsizei,GLsizei))\
 DYNAMIC_GL_FUNCTION(Enable,(GLenum))\
-DYNAMIC_GL_FUNCTION(EnableClientState,(GLenum))\
 DYNAMIC_GL_FUNCTION(Disable,(GLenum))\
-DYNAMIC_GL_FUNCTION(TexEnvi,(GLenum,GLenum,GLint))\
 DYNAMIC_GL_FUNCTION(Scissor,(GLint,GLint,GLsizei,GLsizei))\
 DYNAMIC_GL_FUNCTION(ClearColor,(GLclampf,GLclampf,GLclampf,GLclampf))\
 DYNAMIC_GL_FUNCTION(Clear,(GLbitfield))\
 DYNAMIC_GL_FUNCTION(ClearDepth,(GLclampd))\
 DYNAMIC_GL_FUNCTION(BlendFunc,(GLenum,GLenum))\
-DYNAMIC_GL_FUNCTION(AlphaFunc,(GLenum,GLclampf))\
 DYNAMIC_GL_FUNCTION(DepthFunc,(GLenum))\
 DYNAMIC_GL_FUNCTION(DepthMask,(GLboolean))\
 DYNAMIC_GL_FUNCTION(FrontFace,(GLenum))\
-DYNAMIC_GL_FUNCTION(MatrixMode,(GLenum))\
-DYNAMIC_GL_FUNCTION(LoadMatrixf,(const GLfloat *))\
-DYNAMIC_GL_FUNCTION(LoadIdentity,())\
-DYNAMIC_GL_FUNCTION(TexCoordPointer,(GLint,GLenum,GLsizei,const GLvoid *))\
-DYNAMIC_GL_FUNCTION(ColorPointer,(GLint,GLenum,GLsizei,const GLvoid *))\
-DYNAMIC_GL_FUNCTION(VertexPointer,(GLint,GLenum,GLsizei,const GLvoid *))\
 DYNAMIC_GL_FUNCTION(DrawElements,(GLenum,GLsizei,GLenum,const GLvoid *))\
 DYNAMIC_GL_FUNCTION(TexParameteri,(GLenum,GLenum,GLint))\
 DYNAMIC_GL_FUNCTION(GenTextures,(GLsizei,GLuint *))\
@@ -248,7 +220,9 @@ DYNAMIC_GL_FUNCTION(void,GetProgramInfoLog,(GLhandle,GLsizei,GLsizei *,GLchar *)
 DYNAMIC_GL_FUNCTION(void,DeleteProgram,(GLhandle))\
 DYNAMIC_GL_FUNCTION(void,Uniform1f,(GLint,GLfloat))\
 DYNAMIC_GL_FUNCTION(void,Uniform1i,(GLint,GLint))\
+DYNAMIC_GL_FUNCTION(void,UniformMatrix4fv,(GLint,GLsizei,GLboolean, const GLfloat * ))\
 DYNAMIC_GL_FUNCTION(GLint,GetUniformLocation,(GLhandle,const GLchar *))\
+DYNAMIC_GL_FUNCTION(GLint,GetAttribLocation,(GLhandle,const GLchar *))\
 DYNAMIC_GL_FUNCTION(GLhandle,CreateShader,(GLenum))\
 DYNAMIC_GL_FUNCTION(void,DeleteShader,(GLhandle))\
 DYNAMIC_GL_FUNCTION(void,ShaderSource,(GLhandle,GLsizei,const GLchar*const*,const GLint *))\
@@ -256,7 +230,10 @@ DYNAMIC_GL_FUNCTION(void,CompileShader,(GLhandle))\
 DYNAMIC_GL_FUNCTION(void,GetShaderiv,(GLhandle,GLenum,GLint *))\
 DYNAMIC_GL_FUNCTION(void,GetShaderInfoLog,(GLhandle,GLsizei,GLsizei *,GLchar *))\
 DYNAMIC_GL_FUNCTION(void,AttachShader,(GLhandle,GLhandle))\
+DYNAMIC_GL_FUNCTION(void,VertexAttribPointer,(GLuint,GLint,GLenum,GLboolean,GLsizei,const GLvoid *))\
+DYNAMIC_GL_FUNCTION(void,EnableVertexAttribArray,(GLuint))\
 
+            
 #define DYNAMIC_GL_FUNCTION(Res,Name,Args) Res(*Name)Args;
             DYNAMIC_GL_FUNCTIONS_ShaderObject
 #undef DYNAMIC_GL_FUNCTION
@@ -272,7 +249,9 @@ DYNAMIC_GL_FUNCTION(void,AttachShader,(GLhandle,GLhandle))\
     
     struct GLffpl {
         
-#define DYNAMIC_GL_ffpl_CONSTANTS \
+#define DYNAMIC_GL_ffpl_CONSTANTS_Combiners \
+\
+DYNAMIC_GL_ffpl_CONSTANT(PREVIOUS)\
 DYNAMIC_GL_ffpl_CONSTANT(COMBINE)\
 DYNAMIC_GL_ffpl_CONSTANT(COMBINE_RGB)\
 DYNAMIC_GL_ffpl_CONSTANT(COMBINE_ALPHA)\
@@ -288,17 +267,63 @@ DYNAMIC_GL_ffpl_CONSTANT(OPERAND2_RGB)\
 DYNAMIC_GL_ffpl_CONSTANT(OPERAND0_ALPHA)\
 DYNAMIC_GL_ffpl_CONSTANT(OPERAND1_ALPHA)\
 DYNAMIC_GL_ffpl_CONSTANT(OPERAND2_ALPHA)\
+
+#define DYNAMIC_GL_ffpl_CONSTANTS \
 \
+DYNAMIC_GL_ffpl_CONSTANT(MODULATE)\
+DYNAMIC_GL_ffpl_CONSTANT(REPLACE)\
+DYNAMIC_GL_ffpl_CONSTANT(ADD)\
+\
+DYNAMIC_GL_ffpl_CONSTANT(TEXTURE_ENV)\
+DYNAMIC_GL_ffpl_CONSTANT(TEXTURE_ENV_MODE)\
 DYNAMIC_GL_ffpl_CONSTANT(INTERPOLATE)\
+\
+DYNAMIC_GL_ffpl_CONSTANT(MODELVIEW)\
+DYNAMIC_GL_ffpl_CONSTANT(PROJECTION)\
+\
+DYNAMIC_GL_ffpl_CONSTANT(VERTEX_ARRAY)\
+DYNAMIC_GL_ffpl_CONSTANT(COLOR_ARRAY)\
+DYNAMIC_GL_ffpl_CONSTANT(TEXTURE_COORD_ARRAY)\
+
+//#define DYNAMIC_GL_ffpl_CONSTANTS_Multitexture
 
 #define DYNAMIC_GL_ffpl_CONSTANT(Name) GL::GLenum Name;
         DYNAMIC_GL_ffpl_CONSTANTS
+        DYNAMIC_GL_ffpl_CONSTANTS_Combiners
+//        DYNAMIC_GL_ffpl_CONSTANTS_Multitexture
 #undef DYNAMIC_GL_ffpl_CONSTANT
         
+        typedef GL::GLenum GLenum;
+        typedef GL::GLint GLint;
+        typedef GL::GLfloat GLfloat;
+        typedef GL::GLsizei GLsizei;
+        typedef GL::GLvoid GLvoid;
         
+#define DYNAMIC_GL_ffpl_FUNCTIONS \
+\
+DYNAMIC_GL_ffpl_FUNCTION(TexEnvi,(GLenum,GLenum,GLint))\
+DYNAMIC_GL_ffpl_FUNCTION(MatrixMode,(GLenum))\
+DYNAMIC_GL_ffpl_FUNCTION(LoadMatrixf,(const GLfloat *))\
+DYNAMIC_GL_ffpl_FUNCTION(LoadIdentity,())\
+DYNAMIC_GL_ffpl_FUNCTION(EnableClientState,(GLenum))\
+DYNAMIC_GL_ffpl_FUNCTION(TexCoordPointer,(GLint,GLenum,GLsizei,const GLvoid *))\
+DYNAMIC_GL_ffpl_FUNCTION(ColorPointer,(GLint,GLenum,GLsizei,const GLvoid *))\
+DYNAMIC_GL_ffpl_FUNCTION(VertexPointer,(GLint,GLenum,GLsizei,const GLvoid *))\
+        
+//#define DYNAMIC_GL_ffpl_FUNCTIONS_Multitexture \
+//DYNAMIC_GL_ffpl_FUNCTION(ClientActiveTexture,(GLenum))\
+
+        
+#define DYNAMIC_GL_ffpl_FUNCTION(Name,Args) void (*Name) Args;
+        DYNAMIC_GL_ffpl_FUNCTIONS
+//        DYNAMIC_GL_ffpl_FUNCTIONS_Multitexture
+#undef DYNAMIC_GL_ffpl_FUNCTION
+
     };
     
 }
+
+void gl_error_report_bp();
 
 #define CHECK_GL(Func) \
     do { \
@@ -306,6 +331,7 @@ DYNAMIC_GL_ffpl_CONSTANT(INTERPOLATE)\
         GL::GLenum err = gl.GetError(); \
         if (err!=gl.NO_ERROR) { \
             LOG_ERROR("GL error: " << err << " at " << #Func); \
+            gl_error_report_bp(); \
         }\
     } while(false)
 

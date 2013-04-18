@@ -222,11 +222,11 @@ public:
         EAGLContext* context = 0;
 		Boolean gles2 = YES;
         
-        /*
-		context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-		*/
         
-         if (!m_context) {
+		context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+		
+        
+        if (!context) {
             gles2 = NO;
             context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
         }

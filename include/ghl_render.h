@@ -124,10 +124,8 @@ namespace GHL
 	{
 		TEX_ARG_TEXTURE,		///< current texture
 		TEX_ARG_TEXTURE_INV,	///< inverse current texture
-		TEX_ARG_DIFFUSE,		///< diffuse color
-		TEX_ARG_DIFFUSE_INV,	///< inverse diffuse color
 		TEX_ARG_CURRENT,		///< prev stage value
-		TEX_ARG_CURRENT_INV,	///< inverse prev stage value
+		TEX_ARG_CURRENT_INV     ///< inverse prev stage value
 	};
 
 	/// texture stage operation
@@ -138,7 +136,6 @@ namespace GHL
 		TEX_OP_SELECT_2,		///< select arg 2
 		TEX_OP_MODULATE,		///< modulate (multiply)
 		TEX_OP_ADD,				///< add
-		TEX_OP_INT_DIFFUSE_ALPHA,///< interpolate from arg1 to arg2 by diffuse alpha value
 		TEX_OP_INT_TEXTURE_ALPHA,///< interpolate from arg1 to arg2 by texture alpha value
 		TEX_OP_INT_CURRENT_ALPHA,///< interpolate from arg1 to arg2 by current alpha value
 	};
@@ -181,8 +178,6 @@ namespace GHL
 		
 		/// set blend factors
 		virtual void GHL_CALL SetupBlend(bool enable,BlendFactor src_factor = BLEND_FACTOR_ONE,BlendFactor dst_factor=BLEND_FACTOR_ZERO) = 0;
-		/// set alpha test parameters
-		virtual void GHL_CALL SetupAlphaTest(bool enable,CompareFunc func=COMPARE_FUNC_ALWAYS,float ref=0) = 0;
 		/// set depth test
 		virtual void GHL_CALL SetupDepthTest(bool enable,CompareFunc func=COMPARE_FUNC_ALWAYS,bool write_enable=false) = 0;
 		/// setup faces culling

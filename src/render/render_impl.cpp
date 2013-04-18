@@ -126,12 +126,11 @@ namespace GHL {
         SetIndexBuffer(0);
         SetVertexBuffer(0);
         SetupBlend(true,BLEND_FACTOR_SRC_ALPHA,BLEND_FACTOR_SRC_ALPHA_INV);
-        SetupAlphaTest(true,COMPARE_FUNC_GREATER,0.01f);
         SetupDepthTest(false);
-        SetupTextureStageColorOp(TEX_OP_MODULATE,TEX_ARG_TEXTURE,TEX_ARG_DIFFUSE,0);
-        SetupTextureStageAlphaOp(TEX_OP_MODULATE,TEX_ARG_TEXTURE,TEX_ARG_DIFFUSE,0);
-        SetupTextureStageColorOp(TEX_OP_DISABLE,TEX_ARG_TEXTURE,TEX_ARG_DIFFUSE,1);
-        SetupTextureStageAlphaOp(TEX_OP_DISABLE,TEX_ARG_TEXTURE,TEX_ARG_DIFFUSE,1);
+        SetupTextureStageColorOp(TEX_OP_MODULATE,TEX_ARG_TEXTURE,TEX_ARG_CURRENT,0);
+        SetupTextureStageAlphaOp(TEX_OP_MODULATE,TEX_ARG_TEXTURE,TEX_ARG_CURRENT,0);
+        SetupTextureStageColorOp(TEX_OP_DISABLE,TEX_ARG_TEXTURE,TEX_ARG_CURRENT,1);
+        SetupTextureStageAlphaOp(TEX_OP_DISABLE,TEX_ARG_TEXTURE,TEX_ARG_CURRENT,1);
         SetupFaceCull(false);
 		SetupScisor(false);
     }
@@ -185,6 +184,14 @@ namespace GHL {
         }
 #endif
     }
+    
+    static const float identity[4][4] = {
+        { 1.0f, 0.0f, 0.0f, 0.0f },
+        { 0.0f, 1.0f, 0.0f, 0.0f },
+        { 0.0f, 0.0f, 1.0f, 0.0f },
+        { 0.0f, 0.0f, 0.0f, 1.0f }
+    };
+    
 	
     void RenderImpl::SetOrthoProjection() {
         float projectionOrtho[16];
@@ -199,12 +206,6 @@ namespace GHL {
         projectionOrtho[2+3*4] = -(1.0f + -1.0f) / (1.0f - -1.0f);
         projectionOrtho[3+3*4] = 1.0f;
         SetProjectionMatrix(&projectionOrtho[0]);
-        static const float identity[4][4] = {
-            { 1.0f, 0.0f, 0.0f, 0.0f },
-            { 0.0f, 1.0f, 0.0f, 0.0f },
-            { 0.0f, 0.0f, 1.0f, 0.0f },
-            { 0.0f, 0.0f, 0.0f, 1.0f }
-        };
         SetViewMatrix(&identity[0][0]);
     }
 	

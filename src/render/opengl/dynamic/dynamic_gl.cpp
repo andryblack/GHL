@@ -158,6 +158,7 @@ namespace GHL {
 #define USE_DYNAMIC_GL_ARB_shader_objects
 #define USE_DYNAMIC_GL_ARB_vertex_shader
 #define USE_DYNAMIC_GL_ARB_fragment_shader
+#define USE_DYNAMIC_GL_ARB_vertex_program
 #define USE_DYNAMIC_GL_ARB_shading_language_100
 #define USE_DYNAMIC_GL_VERSION_2_0
 #define USE_DYNAMIC_GL_VERSION_1_5
@@ -241,9 +242,6 @@ namespace GHL {
         static void AttachShaderARB(GLhandleARB prh,GLhandleARB sdr) {
             AttachObjectARB(prh, sdr);
         }
-        static void GetProgramivARB(GLhandleARB prg,GLenum prm,GLint* v) {
-            GetObjectParameterivARB(prg, prm, v);
-        }
         static void GetShaderivARB(GLhandleARB prg,GLenum prm,GLint* v) {
             GetObjectParameterivARB(prg, prm, v);
         }
@@ -263,6 +261,7 @@ namespace GHL {
         
         api->rtapi.valid = false;
         api->sdrapi.valid = false;
+        api->GetError = &GLApi_impl::GetError;
         
         if (!GLApi_impl::Feature_VERSION_1_2_Supported()) {
             LOG_ERROR("minimal OpenGL v1.2 notfound");
@@ -331,7 +330,8 @@ namespace GHL {
         } else if (GLApi_impl::Feature_ARB_shader_objects_Supported() &&
             GLApi_impl::Feature_ARB_vertex_shader_Supported() &&
             GLApi_impl::Feature_ARB_fragment_shader_Supported() &&
-            GLApi_impl::Feature_ARB_shading_language_100_Supported()) {
+            GLApi_impl::Feature_ARB_shading_language_100_Supported() &&
+            GLApi_impl::Feature_ARB_vertex_program_Supported()) {
             LOG_INFO("using extension ARB_shader_objects");
             api->sdrapi.valid = true;
 #define DYNAMIC_GL_FUNCTION(Res,Name,Args) api->sdrapi.Name = &GLApi_impl::Name##ARB;
@@ -353,17 +353,23 @@ namespace GHL {
     }
     
     bool GLApi::InitGLffpl(GLffpl* api) {
-        
+#define DYNAMIC_GL_ffpl_CONSTANT(Name) api->Name = GLApi_impl::GL_##Name;
+        DYNAMIC_GL_ffpl_CONSTANTS
+#undef DYNAMIC_GL_ffpl_CONSTANT
+#define DYNAMIC_GL_ffpl_FUNCTION(Name,Args) api->Name = &GLApi_impl::Name;
+        DYNAMIC_GL_ffpl_FUNCTIONS
+#undef DYNAMIC_GL_ffpl_FUNCTION
+
         if (!GLApi_impl::Feature_VERSION_1_3_Supported()) {
             if (GLApi_impl::Feature_ARB_texture_env_combine_Supported()) {
                 LOG_INFO("using extension ARB_texture_env_combine");
 #define DYNAMIC_GL_ffpl_CONSTANT(Name) api->Name = GLApi_impl::GL_##Name##_ARB;
-                DYNAMIC_GL_ffpl_CONSTANTS
+                DYNAMIC_GL_ffpl_CONSTANTS_Combiners
 #undef DYNAMIC_GL_ffpl_CONSTANT
             } else if (GLApi_impl::Feature_EXT_texture_env_combine_Supported()) {
                 LOG_INFO("using extension EXT_texture_env_combine");
 #define DYNAMIC_GL_ffpl_CONSTANT(Name) api->Name = GLApi_impl::GL_##Name##_EXT;
-                DYNAMIC_GL_ffpl_CONSTANTS
+                DYNAMIC_GL_ffpl_CONSTANTS_Combiners
 #undef DYNAMIC_GL_ffpl_CONSTANT
             } else {
                 LOG_ERROR("extensions (ARB|EXT)_texture_env_combine not found");
@@ -371,7 +377,7 @@ namespace GHL {
             }
         } else {
 #define DYNAMIC_GL_ffpl_CONSTANT(Name) api->Name = GLApi_impl::GL_##Name;
-            DYNAMIC_GL_ffpl_CONSTANTS
+            DYNAMIC_GL_ffpl_CONSTANTS_Combiners
 #undef DYNAMIC_GL_ffpl_CONSTANT
             
         }

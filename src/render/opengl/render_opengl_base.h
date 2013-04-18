@@ -41,7 +41,7 @@ namespace GHL
 		virtual bool RenderSetFullScreen(bool fs) ;
 		virtual void SetOrthoProjection();
         virtual void ResetRenderState();
-
+        virtual void SetupVertexData(const Vertex* v) = 0;
 		void RestoreTexture();
 		/// Render impl
 
@@ -58,13 +58,9 @@ namespace GHL
 		/// create empty texture
 		virtual Texture* GHL_CALL CreateTexture(UInt32 width,UInt32 height,TextureFormat fmt,const Image* data);
 		
-		/// set current texture
-		virtual void GHL_CALL SetTexture(const Texture* texture, UInt32 stage );
 			
 		/// set blend factors
 		virtual void GHL_CALL SetupBlend(bool enable,BlendFactor src_factor,BlendFactor dst_factor) ;
-		/// set alpha test parameters
-		virtual void GHL_CALL SetupAlphaTest(bool enable,CompareFunc func,float ref) ;
 		/// set depth test
 		virtual void GHL_CALL SetupDepthTest(bool enable,CompareFunc func,bool write_enable) ;
 		/// setup faces culling
@@ -79,10 +75,6 @@ namespace GHL
 		/// set current vertex buffer
 		virtual void GHL_CALL SetVertexBuffer(const VertexBuffer* buf) ;
 		
-		/// set projection matrix
-		virtual void GHL_CALL SetProjectionMatrix(const float *m) ;
-		/// set view matrix
-		virtual void GHL_CALL SetViewMatrix(const float* m) ;
 		
 		/// setup scisor test
 		virtual void GHL_CALL SetupScisor( bool enable, UInt32 x, UInt32 y, UInt32 w, UInt32 h );
@@ -106,7 +98,9 @@ namespace GHL
 		virtual VertexShader* GHL_CALL CreateVertexShader(const Data* ds) ;
 		virtual FragmentShader* GHL_CALL CreateFragmentShader(const Data* ds) ;
 		virtual ShaderProgram* GHL_CALL CreateShaderProgram(VertexShader* v,FragmentShader* f) ;
-		virtual void GHL_CALL SetShader(const ShaderProgram* shader) ;
+		virtual void GHL_CALL SetShader(const ShaderProgram* shader);
+        
+        
 	};
     
     class RenderOpenGLFFPL : public RenderOpenGLBase {
@@ -114,10 +108,22 @@ namespace GHL
         GLffpl  glffpl;
         RenderOpenGLFFPL(UInt32 w,UInt32 h);
     public:
+        virtual void ResetRenderState();
+        virtual void SetupVertexData(const Vertex* v);
+        
+        /// set current texture
+		virtual void GHL_CALL SetTexture(const Texture* texture, UInt32 stage );
+        
+        /// set projection matrix
+		virtual void GHL_CALL SetProjectionMatrix(const float *m) ;
+		/// set view matrix
+		virtual void GHL_CALL SetViewMatrix(const float* m) ;
+		
         /// set texture stage color operation
 		virtual void GHL_CALL SetupTextureStageColorOp(TextureOperation op,TextureArgument arg1,TextureArgument arg2,UInt32 stage );
 		/// set texture stage alpha operation
 		virtual void GHL_CALL SetupTextureStageAlphaOp(TextureOperation op,TextureArgument arg1,TextureArgument arg2,UInt32 stage );
+        
     };
     
     class RenderOpenGLPPL : public RenderOpenGLBase {
@@ -129,6 +135,13 @@ namespace GHL
         
         
         virtual void ResetRenderState();
+        virtual void SetupVertexData(const Vertex* v);
+        
+        /// set projection matrix
+		virtual void GHL_CALL SetProjectionMatrix(const float *m) ;
+		/// set view matrix
+		virtual void GHL_CALL SetViewMatrix(const float* m) ;
+		
         
         /// set current texture
 		virtual void GHL_CALL SetTexture(const Texture* texture, UInt32 stage );
@@ -144,10 +157,14 @@ namespace GHL
 		
 		virtual void GHL_CALL DrawPrimitivesFromMemory(PrimitiveType type,VertexType v_type,const void* vertices,UInt32 v_amount,const UInt16* indexes,UInt32 prim_amoun);
         
+    protected:
+        GLSLGenerator&  GetGenerator() { return m_generator; }
     private:
         pfpl_render         m_shaders_render;
         pfpl_state_data     m_crnt_state;
         GLSLGenerator       m_generator;
+        float               m_projection_matrix[16];
+        float               m_view_matrix[16];
         void DoDrawPrimitives(VertexType v_type);
     };
     

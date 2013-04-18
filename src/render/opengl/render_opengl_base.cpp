@@ -25,6 +25,10 @@
 #include <algorithm>
 #include <cassert>
 
+void gl_error_report_bp() {
+    (void)0;
+}
+
 namespace GHL {
 
     static const char* MODULE = "RENDER:OpenGL";
@@ -40,7 +44,7 @@ namespace GHL {
         };
         static UInt32 oldStage = 1000;
         if (oldStage!=stage) {
-            gl.ActiveTexture(texture_stages[stage]);
+            CHECK_GL(gl.ActiveTexture(texture_stages[stage]));
             oldStage=stage;
         }
 	}
@@ -85,21 +89,15 @@ namespace GHL {
 		return gl.NEVER;
 	}
 	
-	static inline void conv_texarg(const GL& gl,TextureArgument f,bool alpha,GL::GLenum& arg,GL::GLenum& op) {
+	static inline void conv_texarg(const GL& gl,const GLffpl& ffpl,TextureArgument f,bool alpha,GL::GLenum& arg,GL::GLenum& op) {
 		if (f==TEX_ARG_CURRENT) {
-			arg = gl.PREVIOUS;
-			op = alpha ? gl.SRC_ALPHA : gl.SRC_COLOR;
-		} else if (f==TEX_ARG_DIFFUSE) {
-			arg = gl.PRIMARY_COLOR;
+			arg = ffpl.PREVIOUS;
 			op = alpha ? gl.SRC_ALPHA : gl.SRC_COLOR;
 		} else if (f==TEX_ARG_TEXTURE) {
 			arg = gl.TEXTURE;
 			op = alpha ? gl.SRC_ALPHA : gl.SRC_COLOR;
 		}else if (f==TEX_ARG_CURRENT_INV) {
-			arg = gl.PREVIOUS;
-			op = alpha ? gl.ONE_MINUS_SRC_ALPHA : gl.ONE_MINUS_SRC_COLOR;
-		} else if (f==TEX_ARG_DIFFUSE_INV) {
-			arg = gl.PRIMARY_COLOR;
+			arg = ffpl.PREVIOUS;
 			op = alpha ? gl.ONE_MINUS_SRC_ALPHA : gl.ONE_MINUS_SRC_COLOR;
 		} else if (f==TEX_ARG_TEXTURE_INV) {
 			arg = gl.TEXTURE;
@@ -146,9 +144,6 @@ namespace GHL {
     void RenderOpenGLBase::ResetRenderState() {
         RenderImpl::ResetRenderState();
         m_depth_write_enabled = false;
-        gl.EnableClientState(gl.VERTEX_ARRAY);
-        gl.EnableClientState(gl.COLOR_ARRAY);
-        gl.EnableClientState(gl.TEXTURE_COORD_ARRAY);
     }
 	
     /// Begin graphics scene (frame)
@@ -158,17 +153,17 @@ namespace GHL {
     
 	void GHL_CALL RenderOpenGLBase::SetViewport(UInt32 x,UInt32 y,UInt32 w,UInt32 h) {
 		UInt32 _y = GetHeight()-h-y;
-		gl.Viewport(x,_y,w,h);
+		CHECK_GL(gl.Viewport(x,_y,w,h));
 	}
 	
 	/// setup scisor test
 	void GHL_CALL RenderOpenGLBase::SetupScisor( bool enable, UInt32 x, UInt32 y, UInt32 w, UInt32 h ) {
 		if (!enable) {
-			gl.Disable(gl.SCISSOR_TEST);
+			CHECK_GL(gl.Disable(gl.SCISSOR_TEST));
 		} else {
-			gl.Enable(gl.SCISSOR_TEST);
+			CHECK_GL(gl.Enable(gl.SCISSOR_TEST));
 			UInt32 _y = GetHeight()-h-y;
-			gl.Scissor(x, _y, w, h);
+			CHECK_GL(gl.Scissor(x, _y, w, h));
 		}
 	}
 	 
@@ -176,18 +171,18 @@ namespace GHL {
 		
 	/// clear scene
 	void GHL_CALL RenderOpenGLBase::Clear(float r,float g,float b,float a=1.0f) {
-		gl.ClearColor(r, g, b, a);
-		gl.Clear(gl.COLOR_BUFFER_BIT);
+		CHECK_GL(gl.ClearColor(r, g, b, a));
+		CHECK_GL(gl.Clear(gl.COLOR_BUFFER_BIT));
 	}
 	/// clear depth
 	void GHL_CALL RenderOpenGLBase::ClearDepth(float d) {
         if (!m_depth_write_enabled) {
-            gl.DepthMask(gl._TRUE);
+            CHECK_GL(gl.DepthMask(gl._TRUE));
         }
-        gl.ClearDepth(d);
-		gl.Clear(gl.DEPTH_BUFFER_BIT);
+        CHECK_GL(gl.ClearDepth(d));
+		CHECK_GL(gl.Clear(gl.DEPTH_BUFFER_BIT));
         if (!m_depth_write_enabled) {
-            gl.DepthMask(gl._FALSE);
+            CHECK_GL(gl.DepthMask(gl._FALSE));
         }
 	}
 	
@@ -214,61 +209,37 @@ namespace GHL {
 	void RenderOpenGLBase::RestoreTexture() {
 		SetTexture(GetTexture(0), 0);
 	}
-
-	/// set current texture
-	void GHL_CALL RenderOpenGLBase::SetTexture( const Texture* texture, UInt32 stage) {
-        RenderImpl::SetTexture(texture, stage);
-		set_texture_stage(gl,stage);
-		//glClientActiveTexture(texture_stages[stage]);
-		if (texture) {
-			const TextureOpenGL* tex = reinterpret_cast<const TextureOpenGL*>(texture);
-            gl.Enable(gl.TEXTURE_2D);
-			tex->bind();
-		} else {
-			gl.BindTexture(gl.TEXTURE_2D, 0);
-            gl.Disable(gl.TEXTURE_2D);
-		}
-		set_texture_stage(gl,0);
-	}
 		
 	/// set blend factors
 	void GHL_CALL RenderOpenGLBase::SetupBlend(bool enable,BlendFactor src_factor,BlendFactor dst_factor) {
 		if (enable) {
-			gl.Enable(gl.BLEND);
-			gl.BlendFunc(convert_blend(gl,src_factor), convert_blend(gl,dst_factor));
+			CHECK_GL(gl.Enable(gl.BLEND));
+			CHECK_GL(gl.BlendFunc(convert_blend(gl,src_factor), convert_blend(gl,dst_factor)));
 		} else {
-			gl.Disable(gl.BLEND);
+			CHECK_GL(gl.Disable(gl.BLEND));
 		}
 	}
-	/// set alpha test parameters
-	void GHL_CALL RenderOpenGLBase::SetupAlphaTest(bool enable,CompareFunc func,float ref=0) {
-		if (enable) {
-			gl.Enable(gl.ALPHA_TEST);
-			gl.AlphaFunc(conv_compare(gl,func), ref);
-		} else {
-			gl.Disable(gl.ALPHA_TEST);
-		}
-	}
+	
 	
 	/// set depth test
 	void GHL_CALL RenderOpenGLBase::SetupDepthTest(bool enable,CompareFunc func,bool write_enable) {
 		if (enable) {
-			gl.Enable(gl.DEPTH_TEST);
-			gl.DepthFunc(conv_compare(gl,func));
+			CHECK_GL(gl.Enable(gl.DEPTH_TEST));
+			CHECK_GL(gl.DepthFunc(conv_compare(gl,func)));
 		} else {
-			gl.Disable(gl.DEPTH_TEST);
+			CHECK_GL(gl.Disable(gl.DEPTH_TEST));
 		}
-		gl.DepthMask(write_enable ?gl._TRUE :gl._FALSE);
+		CHECK_GL(gl.DepthMask(write_enable ?gl._TRUE :gl._FALSE));
         m_depth_write_enabled = write_enable;
 	}
 	
 	/// setup faces culling
 	void GHL_CALL RenderOpenGLBase::SetupFaceCull(bool enable,bool cw = true) {
 		if (enable) {
-			gl.Enable(gl.CULL_FACE);
-			gl.FrontFace( cw ?gl.CW :gl.CCW );
+			CHECK_GL(gl.Enable(gl.CULL_FACE));
+			CHECK_GL(gl.FrontFace( cw ?gl.CW :gl.CCW ));
 		} else {
-			gl.Disable(gl.CULL_FACE);
+			CHECK_GL(gl.Disable(gl.CULL_FACE));
 		}
 	}
 	
@@ -276,7 +247,7 @@ namespace GHL {
 	IndexBuffer* GHL_CALL RenderOpenGLBase::CreateIndexBuffer(UInt32 size) {
 		if (gl.vboapi.valid) {
             GL::GLuint name;
-            gl.vboapi.GenBuffers(1,&name);
+            CHECK_GL(gl.vboapi.GenBuffers(1,&name));
             return new IndexBufferOpenGL(this,size, name);
         }
         return new SoftIndexBuffer(this,size);
@@ -289,7 +260,7 @@ namespace GHL {
             if (buf) {
                 reinterpret_cast<const IndexBufferOpenGL*>(buf)->bind();
             } else {
-                gl.vboapi.BindBuffer(gl.vboapi.ELEMENT_ARRAY_BUFFER,0);
+                CHECK_GL(gl.vboapi.BindBuffer(gl.vboapi.ELEMENT_ARRAY_BUFFER,0));
             }
         }
 	}
@@ -298,7 +269,7 @@ namespace GHL {
 	VertexBuffer* GHL_CALL RenderOpenGLBase::CreateVertexBuffer(VertexType type,UInt32 size) {
 		if (gl.vboapi.valid) {
             GL::GLuint name;
-            gl.vboapi.GenBuffers(1,&name);
+            CHECK_GL(gl.vboapi.GenBuffers(1,&name));
             return new VertexBufferOpenGL(this, type, size, name);
         } 
 		return new SoftVertexBuffer(this,type,size);
@@ -310,24 +281,12 @@ namespace GHL {
             if (buf) {
                 reinterpret_cast<const VertexBufferOpenGL*>(buf)->bind();
             } else {
-                gl.vboapi.BindBuffer(gl.vboapi.ARRAY_BUFFER,0);
+                CHECK_GL(gl.vboapi.BindBuffer(gl.vboapi.ARRAY_BUFFER,0));
             }
         } 
 	}
 	
-	/// set projection matrix
-	void GHL_CALL RenderOpenGLBase::SetProjectionMatrix(const float *m) {
-        gl.MatrixMode(gl.PROJECTION);
-		gl.LoadMatrixf(m);
-		gl.MatrixMode(gl.MODELVIEW);
-	}
-	
-	/// set view matrix
-	void GHL_CALL RenderOpenGLBase::SetViewMatrix(const float* m) {
-		gl.MatrixMode(gl.MODELVIEW);
-		gl.LoadMatrixf(m);
-	}
-	
+		
 	/// draw primitives
 	/**
 	 * @par type primitives type
@@ -378,19 +337,15 @@ namespace GHL {
         
         
         if (gl.vboapi.valid) {
-            gl.TexCoordPointer(2,gl.FLOAT, vertex_size, &v->tx);
-            gl.ColorPointer(4,gl.UNSIGNED_BYTE, vertex_size, v->color);
-            gl.VertexPointer(3,gl.FLOAT, vertex_size , &v->x);
-            gl.DrawElements(element, indexes_amount,gl.UNSIGNED_SHORT, (void*)(i_begin*sizeof(UInt16)));
+            SetupVertexData(v);
+            CHECK_GL(gl.DrawElements(element, indexes_amount,gl.UNSIGNED_SHORT, (void*)(i_begin*sizeof(UInt16))));
         } else {
             const SoftVertexBuffer* sv = static_cast<const SoftVertexBuffer*>(vb);
             const SoftIndexBuffer* si = static_cast<const SoftIndexBuffer*>(ib);
             const Vertex* v =  reinterpret_cast<const Vertex*> (sv->GetData());
-            gl.TexCoordPointer(2,gl.FLOAT, vertex_size, &v->tx);
-            gl.ColorPointer(4,gl.UNSIGNED_BYTE, vertex_size, v->color);
-            gl.VertexPointer(3,gl.FLOAT, vertex_size , &v->x);
+            SetupVertexData(v);
             const UInt16* bi = reinterpret_cast<const UInt16*>(si->GetData());
-            gl.DrawElements(element, indexes_amount,gl.UNSIGNED_SHORT, bi+i_begin);
+            CHECK_GL(gl.DrawElements(element, indexes_amount,gl.UNSIGNED_SHORT, bi+i_begin));
         }
         
 		
@@ -427,10 +382,8 @@ namespace GHL {
 			element =gl.LINE_STRIP;
 			indexes_amount = prim_amount + 1;
 		}
-        gl.TexCoordPointer(2,gl.FLOAT, vertex_size, &v->tx);
-        gl.ColorPointer(4,gl.UNSIGNED_BYTE, vertex_size, v->color);
-        gl.VertexPointer(3,gl.FLOAT, vertex_size , &v->x);
-        gl.DrawElements(element, indexes_amount,gl.UNSIGNED_SHORT, indexes);
+        SetupVertexData(v);
+        CHECK_GL(gl.DrawElements(element, indexes_amount,gl.UNSIGNED_SHORT, indexes));
 	}
 	
 	
@@ -456,8 +409,8 @@ namespace GHL {
 			reinterpret_cast<const GL::GLchar*>(ds->GetData())
 		};
         GL::GLint len[] = {ds->GetSize()};
-		gl.sdrapi.ShaderSource(handle,1,source,len);
-		gl.sdrapi.CompileShader(handle);
+		CHECK_GL(gl.sdrapi.ShaderSource(handle,1,source,len));
+		CHECK_GL(gl.sdrapi.CompileShader(handle));
 		GL::GLint res;
 		gl.sdrapi.GetShaderiv(handle,gl.sdrapi.COMPILE_STATUS,&res);
         if (res!=GL::_TRUE)
@@ -476,11 +429,12 @@ namespace GHL {
 	VertexShader* GHL_CALL RenderOpenGLBase::CreateVertexShader(const Data* ds) {
         if (!gl.sdrapi.valid) return 0;
 		 GL::GLhandle handle = gl.sdrapi.CreateShader(gl.sdrapi.VERTEX_SHADER);
+        CHECK_GL();
 		if (LoadShaderGLSL(gl,handle,ds)) {
 			VertexShaderGLSL* fs = new VertexShaderGLSL(this,handle);
 			return fs;
 		}
-		gl.sdrapi.DeleteShader(handle);
+		CHECK_GL(gl.sdrapi.DeleteShader(handle));
 		return 0;
 	}
 
@@ -489,11 +443,12 @@ namespace GHL {
 	FragmentShader* GHL_CALL RenderOpenGLBase::CreateFragmentShader(const Data* ds) {
         if (!gl.sdrapi.valid) return 0;
 		 GL::GLhandle handle = gl.sdrapi.CreateShader(gl.sdrapi.FRAGMENT_SHADER);
+        CHECK_GL();
 		if (LoadShaderGLSL(gl,handle,ds)) {
 			FragmentShaderGLSL* fs = new FragmentShaderGLSL(this,handle);
 			return fs;
 		}
-		gl.sdrapi.DeleteShader(handle);
+		CHECK_GL(gl.sdrapi.DeleteShader(handle));
 		return 0;
 	}
 
@@ -502,12 +457,13 @@ namespace GHL {
         if (!gl.sdrapi.valid) return 0;
         if (!v || !f) return 0;
         GL::GLhandle handle = gl.sdrapi.CreateProgram();
+        CHECK_GL();
 		VertexShaderGLSL* vs = reinterpret_cast<VertexShaderGLSL*> (v);
 		FragmentShaderGLSL* fs = reinterpret_cast<FragmentShaderGLSL*> (f);
 		// @todo check vs ans fs
-		gl.sdrapi.AttachShader(handle, vs->handle());
-		gl.sdrapi.AttachShader(handle, fs->handle());
-		gl.sdrapi.LinkProgram(handle);
+		CHECK_GL(gl.sdrapi.AttachShader(handle, vs->handle()));
+		CHECK_GL(gl.sdrapi.AttachShader(handle, fs->handle()));
+		CHECK_GL(gl.sdrapi.LinkProgram(handle));
         GL::GLint res;
 		gl.sdrapi.GetProgramiv(handle,gl.sdrapi.LINK_STATUS,&res);
         if (res!=GL::_TRUE) {
@@ -517,7 +473,7 @@ namespace GHL {
             log[size]=0;
             LOG_VERBOSE( "Shader link result : " << log );
             
-            gl.sdrapi.DeleteProgram(handle);
+            CHECK_GL(gl.sdrapi.DeleteProgram(handle));
 			return 0;
 		}
 		ShaderProgramGLSL* prg = new ShaderProgramGLSL(this,handle,vs,fs);
@@ -530,9 +486,9 @@ namespace GHL {
         if (!gl.sdrapi.valid) return;
 		if (shader) {
 			const ShaderProgramGLSL* sp = reinterpret_cast<const ShaderProgramGLSL*>(shader);
-			gl.sdrapi.UseProgram(sp->handle());
+			CHECK_GL(gl.sdrapi.UseProgram(sp->handle()));
 		} else {
-			gl.sdrapi.UseProgram(0);
+			CHECK_GL(gl.sdrapi.UseProgram(0));
 		}
 	}
 
@@ -541,63 +497,103 @@ namespace GHL {
         
     }
     
+    void RenderOpenGLFFPL::ResetRenderState() {
+        RenderOpenGLBase::ResetRenderState();
+        CHECK_GL(glffpl.EnableClientState(glffpl.VERTEX_ARRAY));
+        CHECK_GL(glffpl.EnableClientState(glffpl.COLOR_ARRAY));
+        CHECK_GL(glffpl.EnableClientState(glffpl.TEXTURE_COORD_ARRAY));
+    }
+    
+    /// set projection matrix
+	void GHL_CALL RenderOpenGLFFPL::SetProjectionMatrix(const float *m) {
+        CHECK_GL(glffpl.MatrixMode(glffpl.PROJECTION));
+		CHECK_GL(glffpl.LoadMatrixf(m));
+		CHECK_GL(glffpl.MatrixMode(glffpl.MODELVIEW));
+	}
+	
+	/// set view matrix
+	void GHL_CALL RenderOpenGLFFPL::SetViewMatrix(const float* m) {
+		CHECK_GL(glffpl.MatrixMode(glffpl.MODELVIEW));
+		CHECK_GL(glffpl.LoadMatrixf(m));
+	}
+    
+    void RenderOpenGLFFPL::SetupVertexData(const Vertex* v) {
+        CHECK_GL(glffpl.TexCoordPointer(2,gl.FLOAT, sizeof(*v), &v->tx));
+        CHECK_GL(glffpl.ColorPointer(4,gl.UNSIGNED_BYTE, sizeof(*v), v->color));
+        CHECK_GL(glffpl.VertexPointer(3,gl.FLOAT, sizeof(*v) , &v->x));
+    }
+
+    void GHL_CALL RenderOpenGLFFPL::SetTexture(const Texture* texture, UInt32 stage ) {
+        RenderOpenGLBase::SetTexture(texture, stage);
+        RenderImpl::SetTexture(texture, stage);
+		set_texture_stage(gl,stage);
+		//glClientActiveTexture(texture_stages[stage]);
+		if (texture) {
+			const TextureOpenGL* tex = reinterpret_cast<const TextureOpenGL*>(texture);
+            CHECK_GL(gl.Enable(gl.TEXTURE_2D));
+			tex->bind();
+		} else {
+			CHECK_GL(gl.BindTexture(gl.TEXTURE_2D, 0));
+            CHECK_GL(gl.Disable(gl.TEXTURE_2D));
+		}
+		set_texture_stage(gl,0);
+    }
+    
     /// set texture stage color operation
 	void GHL_CALL RenderOpenGLFFPL::SetupTextureStageColorOp(TextureOperation op,TextureArgument arg1,TextureArgument arg2,UInt32 stage ) {
 		set_texture_stage(gl,stage);
 		
 		if (op==TEX_OP_DISABLE) {
-			gl.Disable(gl.TEXTURE_2D);
+			CHECK_GL(gl.Disable(gl.TEXTURE_2D));
 		} else {
-			gl.Enable(gl.TEXTURE_2D);
-			gl.TexEnvi(gl.TEXTURE_ENV,gl.TEXTURE_ENV_MODE,glffpl.COMBINE);
-			GL::GLenum src0 = gl.PREVIOUS;
+			CHECK_GL(gl.Enable(gl.TEXTURE_2D));
+			CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.TEXTURE_ENV_MODE,glffpl.COMBINE));
+			GL::GLenum src0 = glffpl.PREVIOUS;
 			GL::GLenum op0 = gl.SRC_COLOR;
-			conv_texarg(gl,arg1,false,src0,op0);
+			conv_texarg(gl,glffpl,arg1,false,src0,op0);
 			GL::GLenum src1 = gl.TEXTURE;
 			GL::GLenum op1 = gl.SRC_COLOR;
-			conv_texarg(gl,arg2,false,src1,op1);
+			conv_texarg(gl,glffpl,arg2,false,src1,op1);
 			if (op==TEX_OP_SELECT_1)
 			{
-				gl.TexEnvi(gl.TEXTURE_ENV, glffpl.COMBINE_RGB,gl.REPLACE);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE0_RGB,src0);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND0_RGB,op0);
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.COMBINE_RGB,glffpl.REPLACE));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.SOURCE0_RGB,src0));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.OPERAND0_RGB,op0));
 				
 			} else if (op==TEX_OP_SELECT_2)
 			{
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.COMBINE_RGB,gl.REPLACE);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE0_RGB,src1);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND0_RGB,op1);
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.COMBINE_RGB,glffpl.REPLACE));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.SOURCE0_RGB,src1));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.OPERAND0_RGB,op1));
 				
 			} else if (op==TEX_OP_ADD) {
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.COMBINE_RGB,gl.ADD);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE0_RGB,src0);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND0_RGB,op0);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE1_RGB,src1);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND1_RGB,op1);
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.COMBINE_RGB,glffpl.ADD));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.SOURCE0_RGB,src0));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.OPERAND0_RGB,op0));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.SOURCE1_RGB,src1));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.OPERAND1_RGB,op1));
 			} else if (op==TEX_OP_MODULATE) {
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.COMBINE_RGB,gl.MODULATE);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE0_RGB,src0);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND0_RGB,op0);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE1_RGB,src1);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND1_RGB,op1);
-			} else if (op==TEX_OP_INT_DIFFUSE_ALPHA) {
-				NOT_IMPLEMENTED;
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.COMBINE_RGB,glffpl.MODULATE));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.SOURCE0_RGB,src0));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.OPERAND0_RGB,op0));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.SOURCE1_RGB,src1));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.OPERAND1_RGB,op1));
 			} else if (op==TEX_OP_INT_TEXTURE_ALPHA) {
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.COMBINE_RGB,glffpl.INTERPOLATE);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE0_RGB,src0);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND0_RGB,op0);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE1_RGB,src1);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND1_RGB,op1);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE2_RGB,gl.TEXTURE);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND2_RGB,gl.SRC_ALPHA);
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.COMBINE_RGB,glffpl.INTERPOLATE));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.SOURCE0_RGB,src1));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.OPERAND0_RGB,op1));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.SOURCE1_RGB,src0));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.OPERAND1_RGB,op0));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.SOURCE2_RGB,gl.TEXTURE));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.OPERAND2_RGB,gl.SRC_ALPHA));
 			} else if (op==TEX_OP_INT_CURRENT_ALPHA) {
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.COMBINE_RGB,glffpl.INTERPOLATE);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE0_RGB,src0);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND0_RGB,op0);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE1_RGB,src1);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND1_RGB,op1);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE2_RGB,gl.PREVIOUS);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND2_RGB,gl.SRC_ALPHA);
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.COMBINE_RGB,glffpl.INTERPOLATE));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.SOURCE0_RGB,src1));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.OPERAND0_RGB,op1));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.SOURCE1_RGB,src0));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.OPERAND1_RGB,op0));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.SOURCE2_RGB,glffpl.PREVIOUS));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.OPERAND2_RGB,gl.SRC_ALPHA));
 			}
 		}
 		set_texture_stage(gl,0);
@@ -608,41 +604,39 @@ namespace GHL {
 		
 		set_texture_stage(gl,stage);
 		if (op==TEX_OP_DISABLE) {
-			gl.Disable(gl.TEXTURE_2D);
+			CHECK_GL(gl.Disable(gl.TEXTURE_2D));
 		} else {
-			gl.Enable(gl.TEXTURE_2D);
-            GL::GLenum _arg1 =gl.PREVIOUS;
+			CHECK_GL(gl.Enable(gl.TEXTURE_2D));
+            GL::GLenum _arg1 =glffpl.PREVIOUS;
             GL::GLenum _op1 =gl.SRC_ALPHA;
-			conv_texarg(gl,arg1,true,_arg1,_op1);
+			conv_texarg(gl,glffpl,arg1,true,_arg1,_op1);
 			GL::GLenum _arg2 =gl.TEXTURE;
 			GL::GLenum _op2 =gl.SRC_ALPHA;
-			conv_texarg(gl,arg2,true,_arg2,_op2);
+			conv_texarg(gl,glffpl,arg2,true,_arg2,_op2);
 			if (op==TEX_OP_SELECT_1)
 			{
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE0_ALPHA,_arg1);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND0_ALPHA,_op1);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.COMBINE_ALPHA,gl.REPLACE);
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.SOURCE0_ALPHA,_arg1));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.OPERAND0_ALPHA,_op1));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.COMBINE_ALPHA,glffpl.REPLACE));
 			} else if (op==TEX_OP_SELECT_2)
 			{
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE0_ALPHA,_arg2);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND0_ALPHA,_op2);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.COMBINE_ALPHA,gl.REPLACE);
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.SOURCE0_ALPHA,_arg2));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.OPERAND0_ALPHA,_op2));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.COMBINE_ALPHA,glffpl.REPLACE));
 			} else {
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE0_ALPHA,_arg1);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND0_ALPHA,_op1);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.SOURCE1_ALPHA,_arg2);
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.OPERAND1_ALPHA,_op2);
-                GL::GLenum mode =gl.MODULATE;
-				if (op==TEX_OP_ADD)
-					mode =gl.ADD;
-				else if (op==TEX_OP_INT_DIFFUSE_ALPHA) {
-					NOT_IMPLEMENTED;
-				} else if (op==TEX_OP_INT_TEXTURE_ALPHA) {
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.SOURCE0_ALPHA,_arg1));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.OPERAND0_ALPHA,_op1));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.SOURCE1_ALPHA,_arg2));
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.OPERAND1_ALPHA,_op2));
+                GL::GLenum mode =glffpl.MODULATE;
+				if (op==TEX_OP_ADD) {
+					mode =glffpl.ADD;
+                } else if (op==TEX_OP_INT_TEXTURE_ALPHA) {
 					NOT_IMPLEMENTED;
 				} else if (op==TEX_OP_INT_CURRENT_ALPHA) {
 					NOT_IMPLEMENTED;
 				}
-				gl.TexEnvi(gl.TEXTURE_ENV,glffpl.COMBINE_ALPHA, mode);
+				CHECK_GL(glffpl.TexEnvi(glffpl.TEXTURE_ENV,glffpl.COMBINE_ALPHA, mode));
 			}
 		}
 		set_texture_stage(gl,0);
@@ -675,11 +669,51 @@ namespace GHL {
     
     void RenderOpenGLPPL::ResetRenderState() {
         RenderOpenGLBase::ResetRenderState();
-        
     }
+    
+    void RenderOpenGLPPL::SetupVertexData(const Vertex* v) {
+        const ShaderProgramGLSL* prg = static_cast<const ShaderProgramGLSL*>(GetShader());
+        if (!prg) {
+            LOG_ERROR("not have current shader");
+            return;
+        }
+        GL::GLint pLoc = prg->GetAttribute(GLSLPredefinedAttributePosition);
+        if (pLoc>=0) {
+            CHECK_GL(gl.sdrapi.VertexAttribPointer(pLoc,3,gl.FLOAT,gl._FALSE,sizeof(*v),&v->x));
+        }
+        GL::GLint tLoc = prg->GetAttribute(GLSLPredefinedAttributeTexCoord);
+        if (tLoc>=0) {
+            CHECK_GL(gl.sdrapi.VertexAttribPointer(tLoc,2,gl.FLOAT,gl._FALSE,sizeof(*v),&v->tx));
+        }
+        GL::GLint cLoc = prg->GetAttribute(GLSLPredefinedAttributeColor);
+        if (cLoc>=0) {
+            CHECK_GL(gl.sdrapi.VertexAttribPointer(cLoc,4,gl.UNSIGNED_BYTE,gl._TRUE,sizeof(*v),v->color));
+        }
+    }
+    
+    /// set projection matrix
+	void GHL_CALL RenderOpenGLPPL::SetProjectionMatrix(const float *m) {
+        std::copy(m, m+16, m_projection_matrix);
+	}
+	
+	/// set view matrix
+	void GHL_CALL RenderOpenGLPPL::SetViewMatrix(const float* m) {
+		std::copy(m, m+16, m_view_matrix);
+	}
+
     
     void GHL_CALL RenderOpenGLPPL::SetTexture(const Texture* texture, UInt32 stage ) {
         RenderOpenGLBase::SetTexture(texture, stage);
+        set_texture_stage(gl,stage);
+		//glClientActiveTexture(texture_stages[stage]);
+		if (texture) {
+			const TextureOpenGL* tex = reinterpret_cast<const TextureOpenGL*>(texture);
+        	tex->bind();
+		} else {
+			CHECK_GL(gl.BindTexture(gl.TEXTURE_2D, 0));
+        }
+		set_texture_stage(gl,0);
+        
         if (texture) {
             m_crnt_state.texture_stages[stage].rgb.c.texture = true;
             m_crnt_state.texture_stages[stage].alpha.c.texture = HaveAlpha(texture);
@@ -711,11 +745,19 @@ namespace GHL {
         ShaderProgram* prg = m_shaders_render.get_shader(m_crnt_state, v_type==VERTEX_TYPE_2_TEX);
         if (prg) {
             RenderOpenGLBase::SetShader(prg);
+            ShaderUniform* uniform = prg->GetUniform("mProjection");
+            if (uniform) {
+                uniform->SetValueMatrix(m_projection_matrix);
+            }
+            uniform = prg->GetUniform("mModelView");
+            if (uniform) {
+                uniform->SetValueMatrix(m_view_matrix);
+            }
             for (size_t i=0;i<MAX_TEXTURE_STAGES;++i) {
                 if (m_crnt_state.texture_stages[i].rgb.c.texture) {
                     char uf[64];
                     ::snprintf(uf, 64, "texture_%d",int(i));
-                    ShaderUniform* uniform = prg->GetUniform(uf);
+                    uniform = prg->GetUniform(uf);
                     if (uniform) {
                         uniform->SetValueInt(i);
                     }

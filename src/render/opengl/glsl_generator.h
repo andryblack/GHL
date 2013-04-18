@@ -11,6 +11,7 @@
 
 #include "../pfpl/pfpl_cache.h"
 #include "ghl_render.h"
+#include <string>
 
 namespace GHL {
     
@@ -19,9 +20,14 @@ namespace GHL {
         GLSLGenerator();
         void init(GHL::Render* render);
         virtual ShaderProgram* generate( const pfpl_state_data& entry, bool tex2 );
+        
+        void set_fshader_header( const char* v) { m_fshader_header = v; }
+    protected:
+        
     private:
         GHL::Render*    m_render;
-        VertexShader* m_simple_v;
+        VertexShader*   m_simple_v;
+        std::string     m_fshader_header;
     };
     
 }

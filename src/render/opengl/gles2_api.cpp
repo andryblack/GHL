@@ -1,16 +1,16 @@
 //
-//  gles1_api.cpp
+//  gles2_api.cpp
 //  GHL
 //
 //  Created by Andrey Kunitsyn on 3/6/13.
 //  Copyright (c) 2013 AndryBlack. All rights reserved.
 //
 
-#include "gles1_api.h"
+#include "gles2_api.h"
 
 #if defined ( GHL_PLATFORM_IOS )
-#include <OpenGLES/ES1/gl.h>
-#include <OpenGLES/ES1/glext.h>
+#include <OpenGLES/ES2/gl.h>
+#include <OpenGLES/ES2/glext.h>
 #else
 #error "usupported platform"
 #endif
@@ -25,7 +25,7 @@ namespace GHL {
     
     
     
-    struct GLES1Api_impl {
+    struct GLES2Api_impl {
         
         static const char* all_extensions;
         static int gl_v1;
@@ -86,23 +86,24 @@ namespace GHL {
         }
         
     };
-    const char* GLES1Api_impl::all_extensions = 0;
+    const char* GLES2Api_impl::all_extensions = 0;
     
-    int GLES1Api_impl::gl_v1 = 0;
-    int GLES1Api_impl::gl_v2 = 0;
+    int GLES2Api_impl::gl_v1 = 0;
+    int GLES2Api_impl::gl_v2 = 0;
     
     static void glClearDepth(double v) { glClearDepthf(v);}
     
     
-    
-    
+    static void glShaderSource(GL::GLhandle s,GLsizei count,const GLchar*const* string,const GLint * length) {
+            ::glShaderSource(s, count, const_cast<const char**>(string), length);
+    }
     
 #define GL_RGB8 GL_RGB
 #define GL_RGBA8 GL_RGBA
 #define GL_UNPACK_ROW_LENGTH 0
     
-    bool GLES1Api::InitGL(GL* api) {
-        GLES1Api_impl::Init();
+    bool GLES2Api::InitGL(GL* api) {
+        GLES2Api_impl::Init();
         
         
         api->rtapi.valid = false;
@@ -111,24 +112,56 @@ namespace GHL {
         
 #define DYNAMIC_GL_CONSTANT(Name) api->Name = GL_##Name;
         DYNAMIC_GL_CONSTANTS
-        DYNAMIC_GL_CONSTANTS_Multitexture
 #undef DYNAMIC_GL_CONSTANT
 #define DYNAMIC_GL_FUNCTION(Name,Args) api->Name = &gl##Name;
         DYNAMIC_GL_FUNCTIONS
-        DYNAMIC_GL_FUNCTIONS_Multitexture
 #undef DYNAMIC_GL_FUNCTION
         
         api->GetError = &glGetError;
         
-        if (GLES1Api_impl::CheckExtensionSupported("GL_OES_rgb8_rgba8")) {
+        if (GLES2Api_impl::CheckExtensionSupported("GL_OES_rgb8_rgba8")) {
             api->RGB8 = GL_RGB8_OES;
             api->RGBA8 = GL_RGBA8_OES;
         }
         
         
+#define DYNAMIC_GL_CONSTANT(Name) api->Name = GL_##Name;
+        DYNAMIC_GL_CONSTANTS_Multitexture
+#undef DYNAMIC_GL_CONSTANT
+#define DYNAMIC_GL_FUNCTION(Name,Args) api->Name = &gl##Name;
+        DYNAMIC_GL_FUNCTIONS_Multitexture
+#undef DYNAMIC_GL_FUNCTION
+        
+        
+        api->sdrapi.valid = true;
+        {
+#define DYNAMIC_GL_FUNCTION(Res,Name,Args) api->sdrapi.Name = &gl##Name;
+            DYNAMIC_GL_FUNCTIONS_ShaderObject
+#undef DYNAMIC_GL_FUNCTION
+            
+            api->sdrapi.COMPILE_STATUS = GL_COMPILE_STATUS;
+            api->sdrapi.LINK_STATUS = GL_LINK_STATUS;
+            api->sdrapi.VERTEX_SHADER = GL_VERTEX_SHADER;
+            api->sdrapi.FRAGMENT_SHADER = GL_FRAGMENT_SHADER;
+            
+            LOG_INFO("GLSL: " << (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION));
+        }
+        
         //        }
         
         api->vboapi.valid = false;
+        //        if (GLApi_impl::CheckExtensionSupported("")()) {
+        //#define DYNAMIC_GL_FUNCTION(Res,Name,Args) api->vboapi.Name = &GLApi_impl::Name;
+        //            DYNAMIC_GL_FUNCTIONS_VBO
+        //#undef DYNAMIC_GL_FUNCTION
+        //            api->vboapi.ARRAY_BUFFER = GLApi_impl::GL_ARRAY_BUFFER;
+        //            api->vboapi.ELEMENT_ARRAY_BUFFER = GLApi_impl::GL_ELEMENT_ARRAY_BUFFER;
+        //            api->vboapi.STATIC_DRAW = GLApi_impl::GL_STATIC_DRAW;
+        //            api->vboapi.valid = true;
+        //        } else {
+        //
+        //        }
+        
         
         
         api->Release = 0;
@@ -146,18 +179,5 @@ namespace GHL {
     
     
     
-    bool GLES1Api::InitGLffpl(GLffpl* api) {
-        
-#define DYNAMIC_GL_ffpl_CONSTANT(Name) api->Name = GL_##Name;
-        DYNAMIC_GL_ffpl_CONSTANTS
-        DYNAMIC_GL_ffpl_CONSTANTS_Combiners
-#undef DYNAMIC_GL_ffpl_CONSTANT
-        
-#define DYNAMIC_GL_ffpl_FUNCTION(Name,Args) api->Name = &gl##Name;
-        DYNAMIC_GL_ffpl_FUNCTIONS
-#undef DYNAMIC_GL_ffpl_FUNCTION
-        
-        return true;
-    }
 
 }

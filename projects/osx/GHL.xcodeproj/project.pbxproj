@@ -177,6 +177,7 @@
 		A4A398B4168E950E005442DE /* buffer_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4A398B2168E950D005442DE /* buffer_impl.cpp */; };
 		A4A398B5168E950E005442DE /* buffer_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A398B3168E950D005442DE /* buffer_impl.h */; };
 		A4A398B7168EB0C4005442DE /* ghl_image_config.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A398B6168EB0C4005442DE /* ghl_image_config.h */; };
+		A4E68B7E17173A910098D931 /* render_opengl_api.h in Headers */ = {isa = PBXBuildFile; fileRef = A4E68B7D17173A910098D931 /* render_opengl_api.h */; };
 		A4EDFDC714169DCD00ED0DC0 /* png_image_decoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFDC514169DCD00ED0DC0 /* png_image_decoder.cpp */; };
 		A4EDFDC814169DCD00ED0DC0 /* png_image_decoder.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EDFDC614169DCD00ED0DC0 /* png_image_decoder.h */; };
 		A4EDFEC91416B14B00ED0DC0 /* pngread.c in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFEC81416B14B00ED0DC0 /* pngread.c */; };
@@ -197,7 +198,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		A401C6871656DA1500DF4C16 /* dynamic_gl_api.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dynamic_gl_api.h; sourceTree = "<group>"; };
 		A401C68D16596A1F00DF4C16 /* glsl_generator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glsl_generator.cpp; sourceTree = "<group>"; };
 		A401C68E16596A2000DF4C16 /* glsl_generator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glsl_generator.h; sourceTree = "<group>"; };
 		A40734D5168FA3C7007AEAEE /* image_file_decoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = image_file_decoder.cpp; sourceTree = "<group>"; };
@@ -369,6 +369,7 @@
 		A4A398B2168E950D005442DE /* buffer_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = buffer_impl.cpp; sourceTree = "<group>"; };
 		A4A398B3168E950D005442DE /* buffer_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = buffer_impl.h; sourceTree = "<group>"; };
 		A4A398B6168EB0C4005442DE /* ghl_image_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_image_config.h; sourceTree = "<group>"; };
+		A4E68B7D17173A910098D931 /* render_opengl_api.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = render_opengl_api.h; sourceTree = "<group>"; };
 		A4EDFDC514169DCD00ED0DC0 /* png_image_decoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = png_image_decoder.cpp; sourceTree = "<group>"; };
 		A4EDFDC614169DCD00ED0DC0 /* png_image_decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = png_image_decoder.h; sourceTree = "<group>"; };
 		A4EDFEC81416B14B00ED0DC0 /* pngread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngread.c; sourceTree = "<group>"; };
@@ -521,6 +522,7 @@
 			children = (
 				A48E3C8F16E6A7C4009E2EED /* render_opengl_base.cpp */,
 				A48E3C9016E6A7C4009E2EED /* render_opengl_base.h */,
+				A4E68B7D17173A910098D931 /* render_opengl_api.h */,
 				A47F7F5A14E6D1BB006B37E2 /* dynamic */,
 				A42900AF1413949B00429C47 /* render_opengl.cpp */,
 				A42900B01413949B00429C47 /* render_opengl.h */,
@@ -700,7 +702,6 @@
 				A48B504C165306260023C1F1 /* dynamic_gl_inc.h */,
 				A47F7F5B14E6D1BB006B37E2 /* dynamic_gl.cpp */,
 				A47F7F5C14E6D1BB006B37E2 /* dynamic_gl.h */,
-				A401C6871656DA1500DF4C16 /* dynamic_gl_api.h */,
 			);
 			path = dynamic;
 			sourceTree = "<group>";
@@ -834,6 +835,7 @@
 				A4A398B5168E950E005442DE /* buffer_impl.h in Headers */,
 				A4A398B7168EB0C4005442DE /* ghl_image_config.h in Headers */,
 				A48E3C9216E6A7C4009E2EED /* render_opengl_base.h in Headers */,
+				A4E68B7E17173A910098D931 /* render_opengl_api.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

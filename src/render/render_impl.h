@@ -84,6 +84,7 @@ namespace GHL {
         bool  IsSceneStarted() const { return m_scene_started; }
         const IndexBuffer* GetIndexBuffer() const { return m_current_i_buffer; }
         const VertexBuffer* GetVertexBuffer() const { return m_current_v_buffer; }
+        const ShaderProgram* GetShader() const { return m_current_shader; }
 	private:
         UInt32 	m_width;
 		UInt32	m_height;

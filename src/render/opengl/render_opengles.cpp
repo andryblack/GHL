@@ -8,6 +8,7 @@
 
 #include "render_opengles.h"
 #include "gles1_api.h"
+#include "gles2_api.h"
 #include "../../ghl_log_impl.h"
 
 namespace GHL {
@@ -39,11 +40,11 @@ namespace GHL {
     }
     
     RenderOpenGLES2::RenderOpenGLES2(UInt32 w,UInt32 h) : RenderOpenGLPPL(w,h) {
-        
+        GetGenerator().set_fshader_header("precision mediump float;\n");
     }
     
     bool RenderOpenGLES2::RenderInit() {
-        if (!GLES1Api::InitGL(&gl)) {
+        if (!GLES2Api::InitGL(&gl)) {
             return false;
         }
         return RenderOpenGLPPL::RenderInit();
