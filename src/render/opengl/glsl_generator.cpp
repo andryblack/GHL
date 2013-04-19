@@ -36,6 +36,50 @@ namespace GHL {
     " varColor = vColor;\n"
     "}\n";
     
+    static void append_tex_stage( std::stringstream& ss,
+                                 const pfpl_state_data::texture_stage::state& state,
+                                 const char* dst, const char* src, const char* tex) {
+        if (state.c.operation == TEX_OP_DISABLE)
+            return;
+        const char* op1 = src;
+        if (state.c.arg_1 == TEX_ARG_TEXTURE) {
+            op1  = tex;
+        } else if (state.c.arg_1 == TEX_ARG_TEXTURE_INV) {
+            LOG_ERROR("unimplemented texture stage argument");
+            return;
+        } else if (state.c.arg_1 == TEX_ARG_CURRENT_INV) {
+            LOG_ERROR("unimplemented texture stage argument");
+            return;
+        }
+        const char* op2 = tex;
+        if (state.c.arg_2 == TEX_ARG_CURRENT) {
+            op2  = src;
+        } else if (state.c.arg_2 == TEX_ARG_TEXTURE_INV) {
+            LOG_ERROR("unimplemented texture stage argument");
+            return;
+        } else if (state.c.arg_2 == TEX_ARG_CURRENT_INV) {
+            LOG_ERROR("unimplemented texture stage argument");
+            return;
+        }
+        if (state.c.operation == TEX_OP_SELECT_1) {
+            if (state.c.arg_1!=TEX_ARG_CURRENT) {
+                ss << "    "<<dst<<"="<<op1<<";\n";
+            }
+        } else if (state.c.operation == TEX_OP_SELECT_2) {
+            if (state.c.arg_2!=TEX_ARG_CURRENT) {
+                ss << "    "<<dst<<"="<<op2<<";\n";
+            }
+        } else if (state.c.operation == TEX_OP_MODULATE) {
+            ss << "    "<<dst<<"="<<op1<<"*"<<op2<<";\n";
+        } else if (state.c.operation == TEX_OP_ADD) {
+            ss << "    "<<dst<<"="<<op1<<"+"<<op2<<";\n";
+        } else if (state.c.operation == TEX_OP_INT_TEXTURE_ALPHA) {
+            ss << "    "<<dst<<"=mix("<<op1<<","<<op2<<",tex.a);\n";
+        } else if (state.c.operation == TEX_OP_INT_CURRENT_ALPHA) {
+            ss << "    "<<dst<<"=mix("<<op1<<","<<op2<<",clr.a);\n";
+        }
+
+    }
     
     ShaderProgram* GLSLGenerator::generate(const pfpl_state_data& entry, bool tex2 ) {
         if (!m_simple_v) {
@@ -61,84 +105,25 @@ namespace GHL {
         ss << "varying vec4 varColor;\n";
         
         ss << "void main(void) {\n";
-        ss << "  vec3 clr = varColor.rgb;\n";
-        ss << "  float alpha = varColor.a;\n";
+        ss << "  vec4 clr = varColor;\n";
         size_t texCoordIdx = 0;
         //char buf[128];
         for (size_t i=0;i<MAX_TEXTURE_STAGES;++i) {
             if (entry.texture_stages[i].rgb.c.texture) {
                 std::stringstream stage;
-                stage << "    vec4 tex = texture2D(texture_" << i << ",varTexCoord_"<<texCoordIdx<<");\n";
-                stage << "    vec3 tclr = tex.rgb;\n";
-                if (entry.texture_stages[i].alpha.c.texture) {
-                    stage << "    float talpha = tex.a;\n";
-                } else {
-                    stage << "    float talpha = 1.0;\n";
-                }
                 if (entry.texture_stages[i].rgb.c.operation != TEX_OP_DISABLE) {
-                    const char* arg1 = "clr";
-                    const char* arg2 = "tclr";
-                    const char* op = "*";
-                
-                    if (entry.texture_stages[i].rgb.c.arg_1==TEX_ARG_TEXTURE) {
-                        arg1 = "tclr";
-                    } else if (entry.texture_stages[i].rgb.c.arg_1==TEX_ARG_TEXTURE_INV){
-                        arg1 = "vec3(1.0-tclr.r,1.0-tclr.g,1.0-tclr.b)";
-                    }
-                    if (entry.texture_stages[i].rgb.c.arg_2==TEX_ARG_CURRENT) {
-                        arg2 = "clr";
-                    } else if (entry.texture_stages[i].rgb.c.arg_2==TEX_ARG_TEXTURE_INV) {
-                        arg2 = "vec3(1.0-tclr.r,1.0-tclr.g,1.0-tclr.b)";
-                    }
-                    
-                    if (entry.texture_stages[i].rgb.c.operation==TEX_OP_ADD) {
-                        op = "+";
-                    } else if (entry.texture_stages[i].rgb.c.operation==TEX_OP_SELECT_1) {
-                        op = "";
-                        arg2= "";
-                    } else if (entry.texture_stages[i].rgb.c.operation==TEX_OP_SELECT_2) {
-                        op = "";
-                        arg1 = "";
-                    }
-                    if (entry.texture_stages[i].rgb.c.operation==TEX_OP_INT_CURRENT_ALPHA) {
-                        stage << "    clr = mix(" << arg1 << "," << arg2 << ",alpha);\n";
+                    stage << "    vec4 tex = texture2D(texture_" << i << ",varTexCoord_"<<texCoordIdx<<");\n";
+                    if (operation_equal(entry.texture_stages[i].alpha,entry.texture_stages[i].rgb)) {
+                        append_tex_stage(stage,entry.texture_stages[i].rgb,"clr","clr","tex");
                     } else {
-                        stage << "    clr = " << arg1 << op << arg2 << ";\n";
+                        append_tex_stage(stage,entry.texture_stages[i].rgb,"clr.rgb","clr.rgb","tex.rgb");
+                        append_tex_stage(stage,entry.texture_stages[i].alpha,"clr.a","clr.a","tex.a");
                     }
-                }
-                if (entry.texture_stages[i].alpha.c.operation != TEX_OP_DISABLE) {
-                    const char* arg1 = "alpha";
-                    const char* arg2 = "talpha";
-                    const char* op = "*";
-                    if (entry.texture_stages[i].alpha.c.arg_1 == TEX_ARG_TEXTURE) {
-                        arg1 = "talpha";
-                    }
-                    if (entry.texture_stages[i].alpha.c.arg_2 == TEX_ARG_CURRENT) {
-                        arg2 = "alpha";
-                    }
-                    if (entry.texture_stages[i].alpha.c.operation==TEX_OP_ADD) {
-                        op = "+";
-                    } else if (entry.texture_stages[i].alpha.c.operation==TEX_OP_SELECT_1) {
-                        op = "";
-                        arg2= "";
-                        if (entry.texture_stages[i].alpha.c.arg_1 == TEX_ARG_CURRENT) {
-                            arg1 = 0;
-                        }
-                    } else if (entry.texture_stages[i].alpha.c.operation==TEX_OP_SELECT_2) {
-                        op = "";
-                        arg1 = "";
-                        if (entry.texture_stages[i].alpha.c.arg_2 == TEX_ARG_CURRENT) {
-                            arg1 = 0;
-                        }
-                    }
-                    if (arg1) {
-                        stage << "    alpha = " << arg1 << op << arg2 << ";\n";
-                    }
-                }
+                }                
                 ss << "  {\n" << stage.str() << "  }\n";
             }
         }
-        ss << "  gl_FragColor = vec4(clr,alpha); \n";
+        ss << "  gl_FragColor = clr; \n";
         ss << "}\n";
         std::string s = ss.str();
         ConstInlinedData data((const Byte*)s.c_str(),s.length());

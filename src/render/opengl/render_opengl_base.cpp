@@ -716,7 +716,7 @@ namespace GHL {
         
         if (texture) {
             m_crnt_state.texture_stages[stage].rgb.c.texture = true;
-            m_crnt_state.texture_stages[stage].alpha.c.texture = HaveAlpha(texture);
+            m_crnt_state.texture_stages[stage].alpha.c.texture = true;
         } else {
             m_crnt_state.texture_stages[stage].rgb.c.texture = false;
             m_crnt_state.texture_stages[stage].alpha.c.texture = false;
