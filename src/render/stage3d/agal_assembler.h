@@ -117,6 +117,11 @@ namespace GHL {
             const Byte indextype() const { return m_indextype; }
             const Byte indexselect() const { return m_indexselect; }
             std::string name_full() const;
+            Register r() const { Register r(m_def,m_index); r.m_writemask = 0x1; r.m_swizzle = 0x00|(0x00<<2)|(0x00<<4)|(0x00<<6); return r; }
+            Register g() const { Register r(m_def,m_index); r.m_writemask = 0x2; r.m_swizzle = 0x01|(0x01<<2)|(0x01<<4)|(0x01<<6); return r; }
+            Register b() const { Register r(m_def,m_index); r.m_writemask = 0x4; r.m_swizzle = 0x02|(0x02<<2)|(0x02<<4)|(0x03<<6); return r; }
+            Register a() const { Register r(m_def,m_index); r.m_writemask = 0x8; r.m_swizzle = 0x03|(0x03<<2)|(0x03<<4)|(0x03<<6); return r; }
+            Register rgb() const { Register r(m_def,m_index); r.m_writemask = 0x7; r.m_swizzle = 0x00|(0x01<<2)|(0x02<<4)|(0x02<<6); return r; }
         };
         
         
