@@ -103,6 +103,7 @@ namespace GHL {
         LOG_VERBOSE("try open file '" << _file << "'");
         if (!_file) return 0;
         if (_file[0]==0) return 0;
+        if (ot==FILE_READ && !IsFileExists(_file)) return 0;
         FILE* f = fopen(_file,ot==FILE_READ ? "rb" : "rwb" );
         if (f)
             return new PosixFileStream(f);
