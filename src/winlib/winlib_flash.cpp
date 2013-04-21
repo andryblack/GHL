@@ -20,7 +20,7 @@
 #include <sys/time.h>
 
 static const char* MODULE = "WinLib";
-static bool need_depth = true;
+static bool need_depth = false;
 class Profiler {
 public:
     explicit Profiler( const char* text ) : m_text(text) {
@@ -289,11 +289,13 @@ static void startApplication() {
         settings.width = ctx.stage->stageWidth;
         settings.height = ctx.stage->stageHeight;
         settings.fullscreen = false;
+        settings.depth = false;
         {
             Profiler pf("FillSettings");
             ctx.application->FillSettings(&settings);
         }
         
+        need_depth = settings.depth;
         
         ctx.stage->addEventListener(flash::events::KeyboardEvent::KEY_DOWN, Function::_new(handleKeyDown, NULL));
         ctx.stage->addEventListener(flash::events::KeyboardEvent::KEY_UP, Function::_new(handleKeyUp, NULL));

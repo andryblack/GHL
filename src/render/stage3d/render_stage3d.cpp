@@ -1,6 +1,7 @@
 #include "render_stage3d.h"
 #include "../../ghl_log_impl.h"
 #include "../../ghl_data_impl.h"
+#include "../rendertarget_impl.h"
 #include "texture_stage3d.h"
 
 namespace GHL {
@@ -72,9 +73,8 @@ namespace GHL {
 #define NOT_IMPLEMENTED LOG_ERROR("not implemented " << __FUNCTION__ );
 //#define NOT_IMPLEMENTED (void)0;
     
-    RenderStage3d::RenderStage3d(UInt32 w,UInt32 h,bool depth) : RenderImpl(w,h),m_depth_support(depth) {
-        m_depth_cleared = false;
-        m_color_cleared = false;
+    RenderStage3d::RenderStage3d(UInt32 w,UInt32 h,bool depth) : RenderImpl(w,h,depth) {
+        m_scene_cleared = false;
         for (int x=0;x<4;++x) {
             for (int y=0;y<4;++y) {
                 m_p_matrix[x*4+y] = x==y ? 1.0f : 0.0f;
@@ -92,8 +92,7 @@ namespace GHL {
     bool RenderStage3d::RenderInit() {
         m_generator.init(this);
         m_shaders_render.init(&m_generator);
-        m_color_cleared = false;
-        m_depth_cleared = false;
+        m_scene_cleared = false;
         return RenderImpl::RenderInit();
     }
     
@@ -111,8 +110,7 @@ namespace GHL {
         RenderImpl::BeginScene(target);
         if (!target) {
             m_ctx->setRenderToBackBuffer();
-            m_color_cleared = false;
-            m_depth_cleared = false;
+            m_scene_cleared = false;
         } else {
             
         }
@@ -130,16 +128,16 @@ namespace GHL {
     }
     
     /// clear scene
-    void GHL_CALL RenderStage3d::Clear(float r,float g,float b,float a) {
-        m_ctx->clear(r, g, b, a, 1, 0, flash::display3D::Context3DClearMask::COLOR);
-        m_color_cleared = true;
+    void GHL_CALL RenderStage3d::Clear(float r,float g,float b,float a,float depth) {
+        bool depth_support = GetTarget() ? GetTarget()->GetHaveDepth() : GetHaveDepth();
+        if (depth_support) {
+            m_ctx->clear(r, g, b, a, depth, 0, flash::display3D::Context3DClearMask::ALL);
+        } else {
+            m_ctx->clear(r, g, b, a, depth, 0, flash::display3D::Context3DClearMask::COLOR);
+        }
+        m_scene_cleared = true;
     }
     
-    /// clear depth
-    void GHL_CALL RenderStage3d::ClearDepth(float d) {
-        m_ctx->clear(0, 0, 0, 0, d, 0, flash::display3D::Context3DClearMask::DEPTH+flash::display3D::Context3DClearMask::STENCIL);
-        m_depth_cleared = true;
-    }
     
     
     /// create empty texture
@@ -343,17 +341,14 @@ namespace GHL {
     }
     
     void RenderStage3d::BeginDrawPrimitives(PrimitiveType type,VertexType v_type) {
-        if (!m_color_cleared) {
-            if (!m_depth_cleared && m_depth_support) {
+        if (!m_scene_cleared) {
+            bool depth_support = GetTarget() ? GetTarget()->GetHaveDepth() : GetHaveDepth();
+            if (depth_support) {
                 m_ctx->clear(0, 0, 0, 0, 1, 0, flash::display3D::Context3DClearMask::ALL);
-                m_depth_cleared = true;
             } else {
                 m_ctx->clear(0, 0, 0, 0, 1, 0, flash::display3D::Context3DClearMask::COLOR);
             }
-            m_color_cleared = true;
-        } else if ( m_depth_support && !m_depth_cleared ) {
-            m_ctx->clear(0, 0, 0, 0, 1, 0, flash::display3D::Context3DClearMask::DEPTH + flash::display3D::Context3DClearMask::STENCIL);
-            m_depth_cleared = true;
+            m_scene_cleared = true;
         }
         ShaderProgram* prg = m_shaders_render.get_shader(m_crnt_state, v_type==VERTEX_TYPE_2_TEX);
         if (prg) {

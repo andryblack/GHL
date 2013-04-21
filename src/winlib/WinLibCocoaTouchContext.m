@@ -19,6 +19,7 @@
         m_context = context;
         m_colorRenderbuffer = 0;
         m_defaultFramebuffer = 0;
+        m_depthRenderbuffer = 0;
     }
     return self;
 }
@@ -34,7 +35,7 @@
     [super dealloc];
 }
 
--(void)createBuffers
+-(void)createBuffers:(bool) depth;
 {
     // Create default framebuffer object. The backing will be allocated for the current layer in -resizeFromLayer
     glGenFramebuffersOES(1, &m_defaultFramebuffer);
@@ -42,6 +43,11 @@
     glBindFramebufferOES(GL_FRAMEBUFFER_OES, m_defaultFramebuffer);
     glBindRenderbufferOES(GL_RENDERBUFFER_OES, m_colorRenderbuffer);
     glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_RENDERBUFFER_OES, m_colorRenderbuffer);
+    if (depth) {
+        glGenRenderbuffersOES(1, &m_depthRenderbuffer);
+        glBindRenderbufferOES(GL_RENDERBUFFER_OES, m_depthRenderbuffer);
+        glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, m_depthRenderbuffer);
+    }
 }
 
 -(void)deleteBuffers
@@ -58,11 +64,17 @@
         glDeleteRenderbuffersOES(1, &m_colorRenderbuffer);
         m_colorRenderbuffer = 0;
     }
+    
+    if (m_depthRenderbuffer)
+    {
+        glDeleteRenderbuffersOES(1, &m_depthRenderbuffer);
+        m_depthRenderbuffer = 0;
+    }
 }
 
--(unsigned int)colorRenderbuffer
+-(unsigned int)defaultFramebuffer
 {
-    return m_colorRenderbuffer;
+    return m_defaultFramebuffer;
 }
 
 -(int)backingWidth
@@ -83,6 +95,11 @@
     [m_context renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable:layer];
     glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &m_backingWidth);
     glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &m_backingHeight);
+    if (m_depthRenderbuffer) {
+        glBindRenderbufferOES(GL_RENDERBUFFER_OES, m_depthRenderbuffer);
+        glRenderbufferStorageOES(GL_RENDERBUFFER_OES, GL_DEPTH_COMPONENT16_OES, m_backingWidth, m_backingHeight);
+    }
+    
 	if (glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES) != GL_FRAMEBUFFER_COMPLETE_OES)
     {
         NSLog(@"Failed to make complete framebuffer object %d" , glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES));
@@ -98,6 +115,9 @@
     if (m_colorRenderbuffer) {
         glBindRenderbufferOES(GL_RENDERBUFFER_OES, m_colorRenderbuffer);
     }
+    if (m_depthRenderbuffer) {
+        glBindRenderbufferOES(GL_RENDERBUFFER_OES, m_depthRenderbuffer);
+    }
 }
 
 -(void)present
@@ -106,6 +126,11 @@
         glBindFramebufferOES(GL_FRAMEBUFFER_OES, m_defaultFramebuffer);
     }
     [m_context presentRenderbuffer:GL_RENDERBUFFER_OES];
+}
+
+-(bool)haveDepth
+{
+    return m_depthRenderbuffer!=0;
 }
 
 @end

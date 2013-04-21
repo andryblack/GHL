@@ -14,7 +14,7 @@
 
     EAGLContext*	m_context;
     // The OpenGL ES names for the framebuffer and renderbuffer used to render to this view
-    unsigned int m_defaultFramebuffer, m_colorRenderbuffer;
+    unsigned int m_defaultFramebuffer, m_colorRenderbuffer,m_depthRenderbuffer;
     // The pixel dimensions of the CAEAGLLayer
     int m_backingWidth;
     int m_backingHeight;
@@ -22,14 +22,14 @@
 }
 
 -(id)initWithContext:(EAGLContext*)context;
--(void)createBuffers;
+-(void)createBuffers:(bool) depth;
 -(void)onLayout:(CAEAGLLayer*)layer;
 -(void)makeCurrent;
 -(void)present;
 -(void)deleteBuffers;
 
--(unsigned int)colorRenderbuffer;
+-(unsigned int)defaultFramebuffer;
 -(int)backingWidth;
 -(int)backingHeight;
-
+-(bool)haveDepth;
 @end

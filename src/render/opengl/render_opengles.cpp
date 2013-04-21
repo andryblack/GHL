@@ -13,19 +13,19 @@
 
 namespace GHL {
     
-    UInt32 g_default_renderbuffer = 0;
+    UInt32 g_default_framebuffer = 0;
     
     
     
          
     static const char* MODULE = "RENDER:OpenGLES";
     
-    RenderOpenGLES::RenderOpenGLES(UInt32 w,UInt32 h) : RenderOpenGLFFPL(w,h) {
+    RenderOpenGLES::RenderOpenGLES(UInt32 w,UInt32 h,bool depth) : RenderOpenGLFFPL(w,h,depth) {
         
     }
     
     void GHL_CALL RenderOpenGLES::BeginScene(RenderTarget* target) {
-        gl.rtapi.default_renderbuffer = g_default_renderbuffer;
+        gl.rtapi.default_framebuffer = g_default_framebuffer;
         RenderOpenGLFFPL::BeginScene(target);
     }
     
@@ -39,7 +39,7 @@ namespace GHL {
         return GLES1Api::InitGLffpl(&glffpl);
     }
     
-    RenderOpenGLES2::RenderOpenGLES2(UInt32 w,UInt32 h) : RenderOpenGLPPL(w,h) {
+    RenderOpenGLES2::RenderOpenGLES2(UInt32 w,UInt32 h,bool depth) : RenderOpenGLPPL(w,h,depth) {
         GetGenerator().set_fshader_header("precision mediump float;\n");
     }
     

@@ -23,10 +23,12 @@ namespace GHL {
 		virtual ~RenderTargetImpl();
 		virtual void BeginScene( RenderImpl* render ) = 0;
 		virtual void EndScene( RenderImpl* render ) = 0;
+        bool GetHaveDepth() const { return m_have_depth; }
     protected:
         RenderImpl* GetParent();
     private:
         RenderImpl* m_parent;
+        bool    m_have_depth;
 	};
 	
 }

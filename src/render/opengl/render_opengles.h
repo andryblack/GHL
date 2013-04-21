@@ -16,7 +16,7 @@ namespace GHL {
     private:
         
     public:
-        RenderOpenGLES(UInt32 w,UInt32 h);
+        RenderOpenGLES(UInt32 w,UInt32 h,bool haveDepth);
         
         void GHL_CALL BeginScene(RenderTarget* target);
         bool RenderInit();
@@ -25,7 +25,7 @@ namespace GHL {
     
     class RenderOpenGLES2 : public RenderOpenGLPPL {
     public:
-        RenderOpenGLES2(UInt32 w,UInt32 h);
+        RenderOpenGLES2(UInt32 w,UInt32 h,bool haveDepth);
         
         bool RenderInit();
     };

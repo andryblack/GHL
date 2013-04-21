@@ -31,7 +31,7 @@ namespace GHL
         GL  gl;
         bool    m_depth_write_enabled;
 	public:
-		RenderOpenGLBase(UInt32 w,UInt32 h);
+		RenderOpenGLBase(UInt32 w,UInt32 h,bool haveDepth);
 		~RenderOpenGLBase();
 		
         const GL& get_api() const { return gl;}
@@ -49,9 +49,7 @@ namespace GHL
 		virtual void GHL_CALL BeginScene(RenderTarget* target);
         
 		/// clear scene
-		virtual void GHL_CALL Clear(float r,float g,float b,float a) ;
-		/// clear depth
-		virtual void GHL_CALL ClearDepth(float d) ;
+		virtual void GHL_CALL Clear(float r,float g,float b,float a, float depth) ;
 		
 		virtual void GHL_CALL SetViewport(UInt32 x,UInt32 y,UInt32 w,UInt32 h);
 		
@@ -106,7 +104,7 @@ namespace GHL
     class RenderOpenGLFFPL : public RenderOpenGLBase {
     protected:
         GLffpl  glffpl;
-        RenderOpenGLFFPL(UInt32 w,UInt32 h);
+        RenderOpenGLFFPL(UInt32 w,UInt32 h,bool haveDepth);
     public:
         virtual void ResetRenderState();
         virtual void SetupVertexData(const Vertex* v);
@@ -128,7 +126,7 @@ namespace GHL
     
     class RenderOpenGLPPL : public RenderOpenGLBase {
     public:
-        RenderOpenGLPPL(UInt32 w,UInt32 h);
+        RenderOpenGLPPL(UInt32 w,UInt32 h,bool haveDepth);
         
         bool RenderInit();
         void RenderDone();

@@ -20,7 +20,7 @@ namespace GHL {
     private:
         
     public:
-        RenderOpenGL(UInt32 w,UInt32 h);
+        RenderOpenGL(UInt32 w,UInt32 h,bool depth);
         
         bool RenderInit();
         
@@ -28,7 +28,7 @@ namespace GHL {
     
     class RenderOpenGL2 : public RenderOpenGLPPL {
     public:
-        RenderOpenGL2(UInt32 w,UInt32 h);
+        RenderOpenGL2(UInt32 w,UInt32 h, bool depth);
         
         bool RenderInit();
     };

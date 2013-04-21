@@ -30,6 +30,7 @@ static bool g_fullscreen = false;
 static bool g_need_fullscreen = false;
 static std::string g_title = "GHL";
 static NSRect g_rect;
+static bool g_need_depth = false;
 
 static const char* MODULE = "WINLIB";
 
@@ -318,7 +319,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	
 	m_render = GHL_CreateRenderOpenGL(GHL::UInt32(self.bounds.size.width),
-									 GHL::UInt32(self.bounds.size.height));
+									 GHL::UInt32(self.bounds.size.height),g_need_depth);
 	if (m_render) {
         LOG_VERBOSE( "WinLibOpenGLView::prepareOpenGL render created" );
         [m_application getApplication]->SetRender(m_render);
@@ -613,10 +614,13 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 	settings.height = 600;
 	settings.fullscreen = g_fullscreen;
     settings.title = 0;
+    settings.depth = false;
     
 	m_application->FillSettings(&settings);
 	if (settings.title)
         g_title = settings.title;
+    
+    g_need_depth = settings.depth;
 	
 	[self initSound];
 #ifndef GHL_NOSOUND
@@ -632,6 +636,9 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 		NSOpenGLPFADepthSize, 24,
         0
 	};
+    if (!g_need_depth) {
+        attrs[sizeof(attrs)/sizeof(attrs[0])-1-2]=0;
+    }
 	
 	NSScreen* screen = [NSScreen mainScreen];
 	NSRect rect = NSMakeRect((screen.frame.size.width-settings.width)/2 ,

@@ -50,10 +50,11 @@ namespace GHL {
 	
     static const char* MODULE = "RENDER";
     
-    RenderImpl::RenderImpl(UInt32 w,UInt32 h) :
+    RenderImpl::RenderImpl(UInt32 w,UInt32 h,bool haveDepth) :
 	m_width(w),m_height(h),m_sfont_texture(0)
     {
         m_scene_target = 0;
+        m_have_depth = haveDepth;
         for (UInt32 i=0;i<MAX_TEXTURE_STAGES;++i)
             m_current_texture[i]=0;
         m_current_shader = 0;

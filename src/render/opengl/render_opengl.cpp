@@ -22,7 +22,7 @@ namespace GHL {
     
     
     
-    RenderOpenGL::RenderOpenGL(UInt32 w,UInt32 h) : RenderOpenGLFFPL(w,h){
+    RenderOpenGL::RenderOpenGL(UInt32 w,UInt32 h,bool depth) : RenderOpenGLFFPL(w,h,depth){
         
     }
     
@@ -36,7 +36,7 @@ namespace GHL {
         return GLApi::InitGLffpl(&glffpl);
     }
     
-    RenderOpenGL2::RenderOpenGL2(UInt32 w,UInt32 h) : RenderOpenGLPPL(w,h) {
+    RenderOpenGL2::RenderOpenGL2(UInt32 w,UInt32 h,bool depth) : RenderOpenGLPPL(w,h,depth) {
         
     }
         
@@ -49,8 +49,8 @@ namespace GHL {
     
 }
 
-GHL_API GHL::RenderImpl* GHL_CALL GHL_CreateRenderOpenGL(GHL::UInt32 w,GHL::UInt32 h) {
-    GHL::RenderOpenGLBase* render = new GHL::RenderOpenGL2(w,h);
+GHL_API GHL::RenderImpl* GHL_CALL GHL_CreateRenderOpenGL(GHL::UInt32 w,GHL::UInt32 h,bool depth) {
+    GHL::RenderOpenGLBase* render = new GHL::RenderOpenGL2(w,h,depth);
 	if (!render->RenderInit()) {
         render->RenderDone();
 		delete render;
@@ -58,7 +58,7 @@ GHL_API GHL::RenderImpl* GHL_CALL GHL_CreateRenderOpenGL(GHL::UInt32 w,GHL::UInt
 	} else {
         return render;
     }
-	render = new GHL::RenderOpenGL(w,h);
+	render = new GHL::RenderOpenGL(w,h,depth);
 	if (!render->RenderInit()) {
 		render->RenderDone();
 		delete render;

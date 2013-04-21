@@ -64,7 +64,7 @@ namespace GHL {
 	
 	void RenderTargetOpenGL::unbind() const {
         if (!gl.rtapi.valid) return;
-		gl.rtapi.BindFramebuffer(gl.rtapi.FRAMEBUFFER,gl.rtapi.default_renderbuffer);
+		gl.rtapi.BindFramebuffer(gl.rtapi.FRAMEBUFFER,gl.rtapi.default_framebuffer);
 	}
 		
 		

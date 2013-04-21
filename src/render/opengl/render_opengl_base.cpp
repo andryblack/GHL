@@ -105,7 +105,7 @@ namespace GHL {
 		}
 	}
 	
-	RenderOpenGLBase::RenderOpenGLBase(UInt32 w,UInt32 h) : RenderImpl(w,h) {
+	RenderOpenGLBase::RenderOpenGLBase(UInt32 w,UInt32 h,bool haveDepth) : RenderImpl(w,h,haveDepth) {
         m_depth_write_enabled = false;
     }
 
@@ -170,18 +170,18 @@ namespace GHL {
 	
 		
 	/// clear scene
-	void GHL_CALL RenderOpenGLBase::Clear(float r,float g,float b,float a=1.0f) {
+	void GHL_CALL RenderOpenGLBase::Clear(float r,float g,float b,float a,float depth) {
+        bool have_depth = GetTarget() ? GetTarget()->GetHaveDepth() : GetHaveDepth();
 		CHECK_GL(gl.ClearColor(r, g, b, a));
-		CHECK_GL(gl.Clear(gl.COLOR_BUFFER_BIT));
-	}
-	/// clear depth
-	void GHL_CALL RenderOpenGLBase::ClearDepth(float d) {
-        if (!m_depth_write_enabled) {
-            CHECK_GL(gl.DepthMask(gl._TRUE));
+        GL::GLuint mask = gl.COLOR_BUFFER_BIT;
+        if (have_depth) {
+            mask |= gl.DEPTH_BUFFER_BIT;
+            if (!m_depth_write_enabled) {
+                CHECK_GL(gl.DepthMask(gl._TRUE));
+            }
         }
-        CHECK_GL(gl.ClearDepth(d));
-		CHECK_GL(gl.Clear(gl.DEPTH_BUFFER_BIT));
-        if (!m_depth_write_enabled) {
+		CHECK_GL(gl.Clear(mask));
+        if (have_depth && !m_depth_write_enabled) {
             CHECK_GL(gl.DepthMask(gl._FALSE));
         }
 	}
@@ -493,7 +493,7 @@ namespace GHL {
 	}
 
     
-    RenderOpenGLFFPL::RenderOpenGLFFPL(UInt32 w,UInt32 h) : RenderOpenGLBase(w,h) {
+    RenderOpenGLFFPL::RenderOpenGLFFPL(UInt32 w,UInt32 h,bool haveDepth) : RenderOpenGLBase(w,h,haveDepth) {
         
     }
     
@@ -644,7 +644,7 @@ namespace GHL {
     
     
     
-    RenderOpenGLPPL::RenderOpenGLPPL(UInt32 w,UInt32 h) : RenderOpenGLBase(w,h) {
+    RenderOpenGLPPL::RenderOpenGLPPL(UInt32 w,UInt32 h,bool haveDepth) : RenderOpenGLBase(w,h,haveDepth) {
         
     }
     

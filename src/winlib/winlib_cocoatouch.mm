@@ -32,13 +32,14 @@ static GHL::Application* g_application = 0;
 static UIInterfaceOrientation g_orientation = UIInterfaceOrientationLandscapeLeft;
 static bool g_orientationLocked = false;
 static bool g_retina_enabled = false;
+static bool g_need_depth = false;
 
 #ifndef GHL_NOSOUND
 extern GHL::SoundImpl* GHL_CreateSoundCocoa();
 #endif
 
 namespace GHL {
-	extern UInt32 g_default_renderbuffer;
+	extern UInt32 g_default_framebuffer;
 }
 
 @class WinLibView;
@@ -250,10 +251,10 @@ public:
         }
 		
 		
-        [m_context createBuffers];
+        [m_context createBuffers:g_need_depth];
 
 		
-		GHL::g_default_renderbuffer = [m_context colorRenderbuffer];
+		GHL::g_default_framebuffer = [m_context defaultFramebuffer];
 		
 		m_sound = 0;
 #ifndef GHL_NO_SOUND
@@ -303,7 +304,7 @@ public:
 	}
 
 	[m_context onLayout:(CAEAGLLayer*)self.layer];
-    GHL::g_default_renderbuffer = [m_context colorRenderbuffer];
+    GHL::g_default_framebuffer = [m_context defaultFramebuffer];
 	m_render->Resize([m_context backingWidth], [m_context backingHeight]);
  	
 }
@@ -326,14 +327,14 @@ public:
 	
     if (gles2) {
         m_render = new GHL::RenderOpenGLES2(GHL::UInt32(w),
-									 GHL::UInt32(h));
+									 GHL::UInt32(h),[m_context haveDepth]);
     } else {
         m_render = new GHL::RenderOpenGLES(GHL::UInt32(w),
-                                            GHL::UInt32(h));
+                                            GHL::UInt32(h), [m_context haveDepth]);
     }
 	m_render->RenderInit();
 	g_application->SetRender(m_render);
-	GHL::g_default_renderbuffer = [m_context colorRenderbuffer];
+	GHL::g_default_framebuffer = [m_context defaultFramebuffer];
 	if (g_application->Load()) {
 		m_timer = [NSTimer scheduledTimerWithTimeInterval: 1.0f/200.0f target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
 		[m_timer fire];
@@ -352,7 +353,7 @@ public:
 		GHL::UInt32 dt = static_cast<GHL::UInt32>((time.tv_sec - m_timeval.tv_sec)*1000000 + time.tv_usec - m_timeval.tv_usec);
 		m_timeval = time;
 		[self makeCurrent];
-		GHL::g_default_renderbuffer = [m_context colorRenderbuffer];
+		GHL::g_default_framebuffer = [m_context defaultFramebuffer];
 		m_render->ResetRenderState();
 		if (g_application->OnFrame(dt)) {
 			
@@ -540,7 +541,7 @@ public:
 	settings.width = rect.size.width;
 	settings.height = rect.size.height;
 	settings.fullscreen = true;
-	
+	settings.depth = false;
 	
 	
 	g_application->FillSettings(&settings);
@@ -555,7 +556,7 @@ public:
 		}
 	}
 	
-	
+	g_need_depth = settings.depth;
 	
 	if (settings.width > settings.height) {
 		g_orientation = UIInterfaceOrientationLandscapeRight;

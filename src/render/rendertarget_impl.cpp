@@ -11,7 +11,7 @@
 
 namespace GHL {
 
-    RenderTargetImpl::RenderTargetImpl(RenderImpl* parent) : m_parent(parent) {
+    RenderTargetImpl::RenderTargetImpl(RenderImpl* parent) : m_parent(parent),m_have_depth(false){
         parent->RenderTargetCreated(this);
     }
     

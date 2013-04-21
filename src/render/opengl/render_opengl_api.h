@@ -188,7 +188,7 @@ DYNAMIC_GL_FUNCTION(PixelStorei,(GLenum,GLint))\
             GLenum DEPTH_COMPONENT16;
             GLenum FRAMEBUFFER_COMPLETE;
             
-            GLuint default_renderbuffer;
+            GLuint default_framebuffer;
         } rtapi;
         
         struct VBOAPI {
@@ -325,6 +325,7 @@ DYNAMIC_GL_ffpl_FUNCTION(VertexPointer,(GLint,GLenum,GLsizei,const GLvoid *))\
 
 void gl_error_report_bp();
 
+#ifdef GHL_DEBUG
 #define CHECK_GL(Func) \
     do { \
         Func; \
@@ -334,6 +335,9 @@ void gl_error_report_bp();
             gl_error_report_bp(); \
         }\
     } while(false)
+#else
+#define CHECK_GL(Func) Func
+#endif
 
 
 #endif

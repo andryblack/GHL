@@ -43,7 +43,7 @@ namespace GHL {
 	class RenderImpl : public Render
 	{
 	public:
-		RenderImpl(UInt32 w,UInt32 h);
+		RenderImpl(UInt32 w,UInt32 h,bool haveDepth);
 		virtual ~RenderImpl();
 
 		void Resize(UInt32 w,UInt32 h);
@@ -85,9 +85,12 @@ namespace GHL {
         const IndexBuffer* GetIndexBuffer() const { return m_current_i_buffer; }
         const VertexBuffer* GetVertexBuffer() const { return m_current_v_buffer; }
         const ShaderProgram* GetShader() const { return m_current_shader; }
+        RenderTargetImpl* GetTarget() { return m_scene_target; }
+        bool GetHaveDepth() const { return m_have_depth; }
 	private:
         UInt32 	m_width;
 		UInt32	m_height;
+        bool    m_have_depth;
 		RenderTargetImpl* m_scene_target;
 		bool	m_scene_started;
 		const Texture*	m_current_texture[MAX_TEXTURE_STAGES];
@@ -130,7 +133,7 @@ namespace GHL {
 }
 
 
-GHL_API GHL::RenderImpl* GHL_CALL GHL_CreateRenderOpenGL(GHL::UInt32 w,GHL::UInt32 h);
+GHL_API GHL::RenderImpl* GHL_CALL GHL_CreateRenderOpenGL(GHL::UInt32 w,GHL::UInt32 h,bool depth);
 GHL_API void GHL_DestroyRenderOpenGL(GHL::RenderImpl* render);
 
 
