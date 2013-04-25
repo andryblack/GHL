@@ -30,7 +30,7 @@ namespace GHL {
     
         TextureStage3d(const AS3::ui::flash::display3D::textures::Texture& tex,RenderStage3d* parent,UInt32 w,UInt32 h);
         
-        AS3::ui::flash::display3D::textures::Texture texture() const { return m_tex;}
+        const AS3::ui::flash::display3D::textures::Texture& texture() const { return m_tex;}
 		/// get texture format
 		virtual TextureFormat GHL_CALL GetFormat() const { return TEXTURE_FORMAT_RGBA;}
 		/// get texture is have mipmaps

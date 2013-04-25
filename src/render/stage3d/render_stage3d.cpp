@@ -44,7 +44,8 @@ namespace GHL {
     
     
     RenderStage3d::VertexBufferStage3d::VertexBufferStage3d( RenderImpl* render,
-                            VertexType type, UInt32 size,AS3::ui::flash::display3D::VertexBuffer3D data) : VertexBufferImpl( render,type, size),m_buffer(data) {
+                            VertexType type, UInt32 size,
+                                                            const AS3::ui::flash::display3D::VertexBuffer3D& data) : VertexBufferImpl( render,type, size),m_buffer(data) {
         
     }
     RenderStage3d::VertexBufferStage3d::~VertexBufferStage3d() {
@@ -58,7 +59,8 @@ namespace GHL {
     }
     
     RenderStage3d::IndexBufferStage3d::IndexBufferStage3d( RenderImpl* render,
-                                                          UInt32 size,AS3::ui::flash::display3D::IndexBuffer3D data) : IndexBufferImpl(render,size),m_buffer(data) {
+                                                          UInt32 size,
+                                                          const AS3::ui::flash::display3D::IndexBuffer3D& data) : IndexBufferImpl(render,size),m_buffer(data) {
         
     }
     RenderStage3d::IndexBufferStage3d::~IndexBufferStage3d() {
@@ -82,6 +84,7 @@ namespace GHL {
                 m_pv_matrix[x*4+y] = x==y ? 1.0f : 0.0f;
             }
         }
+        m_ring_pos = 0;
     }
     
     void RenderStage3d::SetContext( const flash::display3D::Context3D& ctx ) {
@@ -168,11 +171,11 @@ namespace GHL {
             m_crnt_state.texture_stages[stage].tex.c.min_filter = texture->GetMinFilter();
             m_crnt_state.texture_stages[stage].tex.c.mip_filter = texture->GetMipFilter();
             m_crnt_state.texture_stages[stage].tex.c.wrap_u = texture->GetWrapModeU();
-            m_ctx->setTextureAt(stage,reinterpret_cast<const TextureStage3d*>(texture)->texture());
+            m_ctx->setTextureAt(stage,AS3::ui::var(reinterpret_cast<const TextureStage3d*>(texture)->texture()));
         } else {
             m_crnt_state.texture_stages[stage].rgb.c.texture = false;
             m_crnt_state.texture_stages[stage].alpha.c.texture = false;
-            m_ctx->setTextureAt(stage,flash::display3D::textures::Texture(internal::_null));
+            m_ctx->setTextureAt(stage,flash::display3D::textures::TextureBase(internal::_null));
         }
         
     }
@@ -394,17 +397,34 @@ namespace GHL {
         
         
         if (type==PRIMITIVE_TYPE_TRIANGLES) {
-            const size_t vsize = v_type == VERTEX_TYPE_SIMPLE ? sizeof(Vertex) : sizeof(Vertex2Tex);
-            IndexBufferStage3d* ib = reinterpret_cast<IndexBufferStage3d*>(CreateIndexBuffer(prim_amount*3));
-            ConstInlinedData ibd((const Byte*)indexes,(prim_amount*3)*2);
-            ib->SetData(&ibd);
-            VertexBufferStage3d* vb = reinterpret_cast<VertexBufferStage3d*>(CreateVertexBuffer(v_type,v_amount));
-            ConstInlinedData vbd((const Byte*)vertices,v_amount*vsize);
-            vb->SetData(&vbd);
-            SetVertexBuffer(vb);
-            m_ctx->drawTriangles(ib->buffer(),0,prim_amount);
-            ib->Release();
-            vb->Release();
+            if (v_type == VERTEX_TYPE_SIMPLE) {
+                size_t indexes_amount = prim_amount*3;
+                if (m_ring[m_ring_pos].isize<indexes_amount) {
+                    m_ring[m_ring_pos].isize = indexes_amount;
+                    m_ring[m_ring_pos].ibuffer = m_ctx->createIndexBuffer(indexes_amount);
+                }
+                m_ring[m_ring_pos].ibuffer->uploadFromByteArray(AS3::ui::internal::get_ram(),
+                                              (int)indexes,0,indexes_amount);
+                if (m_ring[m_ring_pos].vsize<v_amount) {
+                    m_ring[m_ring_pos].vsize = v_amount;
+                    m_ring[m_ring_pos].vbuffer = m_ctx->createVertexBuffer(v_amount, 3+1+2 );
+                }
+                m_ring[m_ring_pos].vbuffer->uploadFromByteArray(AS3::ui::internal::get_ram(),
+                                              (int)vertices,
+                                              0,v_amount);
+                
+                m_ctx->setVertexBufferAt(0,m_ring[m_ring_pos].vbuffer,0,AS3::ui::flash::display3D::Context3DVertexBufferFormat::FLOAT_3);
+                m_ctx->setVertexBufferAt(1,m_ring[m_ring_pos].vbuffer,3,AS3::ui::flash::display3D::Context3DVertexBufferFormat::BYTES_4);
+                m_ctx->setVertexBufferAt(2,m_ring[m_ring_pos].vbuffer,4,AS3::ui::flash::display3D::Context3DVertexBufferFormat::FLOAT_2);
+               
+                m_ctx->drawTriangles(m_ring[m_ring_pos].ibuffer,0,prim_amount);
+                ++m_ring_pos;
+                if (m_ring_pos>=RING_BUFFERS_AMOUNT)
+                    m_ring_pos = 0;
+            } else {
+                NOT_IMPLEMENTED;
+            }
+            
         } else {
             NOT_IMPLEMENTED;
         }

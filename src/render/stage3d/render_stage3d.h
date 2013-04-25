@@ -27,7 +27,7 @@ namespace GHL {
         public:
             VertexShaderStage3d( RenderImpl* render, const Data* data);
             ~VertexShaderStage3d();
-            AS3::ui::flash::utils::ByteArray data() { return m_data; }
+            const AS3::ui::flash::utils::ByteArray& data() { return m_data; }
         };
         class FragmentShaderStage3d : public FragmentShaderImpl {
         private:
@@ -35,7 +35,7 @@ namespace GHL {
         public:
             FragmentShaderStage3d( RenderImpl* render, const Data* data);
             ~FragmentShaderStage3d();
-            AS3::ui::flash::utils::ByteArray data() { return m_data; }
+            const AS3::ui::flash::utils::ByteArray& data() { return m_data; }
         };
         class ShaderProgramStage3d : public ShaderProgramImpl {
         private:
@@ -43,7 +43,7 @@ namespace GHL {
         public:
             ShaderProgramStage3d(RenderImpl* render, const AS3::ui::flash::display3D::Program3D& p );
             ~ShaderProgramStage3d();
-            AS3::ui::flash::display3D::Program3D program() const { return m_program; }
+            const AS3::ui::flash::display3D::Program3D& program() const { return m_program; }
             virtual ShaderUniform* GHL_CALL GetUniform(const char* name);
         };
         class VertexBufferStage3d : public VertexBufferImpl {
@@ -53,9 +53,9 @@ namespace GHL {
             VertexBufferStage3d( RenderImpl* render,
                                 VertexType type,
                                 UInt32 size,
-                                AS3::ui::flash::display3D::VertexBuffer3D data);
+                                const AS3::ui::flash::display3D::VertexBuffer3D& data);
             ~VertexBufferStage3d();
-            AS3::ui::flash::display3D::VertexBuffer3D buffer() const { return m_buffer; }
+            const AS3::ui::flash::display3D::VertexBuffer3D& buffer() const { return m_buffer; }
             
             virtual void GHL_CALL SetData(const Data* data);
         };
@@ -65,13 +65,23 @@ namespace GHL {
         public:
             IndexBufferStage3d( RenderImpl* render,
                                 UInt32 size,
-                                AS3::ui::flash::display3D::IndexBuffer3D data);
+                                const AS3::ui::flash::display3D::IndexBuffer3D& data);
             ~IndexBufferStage3d();
-            AS3::ui::flash::display3D::IndexBuffer3D buffer() const { return m_buffer; }
+            const AS3::ui::flash::display3D::IndexBuffer3D& buffer() const { return m_buffer; }
             
             virtual void GHL_CALL SetData(const Data* data);
         };
         void BeginDrawPrimitives(PrimitiveType type,VertexType v_type);
+        static const size_t RING_BUFFERS_AMOUNT = 128;
+        struct RingElement {
+            AS3::ui::flash::display3D::VertexBuffer3D   vbuffer;
+            AS3::ui::flash::display3D::IndexBuffer3D    ibuffer;
+            size_t vsize;
+            size_t isize;
+            RingElement() : vsize(0),isize(0) {}
+        };
+        RingElement   m_ring[RING_BUFFERS_AMOUNT];
+        size_t  m_ring_pos;
     public:
         RenderStage3d( UInt32 w, UInt32 h, bool depth );
         
