@@ -354,7 +354,6 @@ public:
 		m_timeval = time;
 		[self makeCurrent];
 		GHL::g_default_framebuffer = [m_context defaultFramebuffer];
-		m_render->ResetRenderState();
 		if (g_application->OnFrame(dt)) {
 			
 		}
@@ -613,7 +612,7 @@ public:
 {
     [view makeCurrent];
 	g_application->OnDeactivated();
-	//[view setActive:false];
+	[view setActive:false];
 	//[view drawRect:[view bounds]];
 	LOG_INFO("Deactivated");
 }
@@ -622,7 +621,7 @@ public:
 {
     [view makeCurrent];
 	g_application->OnActivated();
-	//[view setActive:true];
+	[view setActive:true];
 	//if ([view loaded]) [view drawRect:[view bounds]];
 	LOG_INFO("Activated");
 }
