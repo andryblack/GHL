@@ -283,6 +283,22 @@ namespace GHL {
         }
         return ImageFileDecoder::GetFileFormat(cb);
     }
+    
+    bool TGAImageDecoder::GetFileInfo(DataStream* ds, ImageInfo* info) {
+        TGAHeader header;
+        if (!LoadHeader(&header, ds)) return false;
+        if (header.bitsperpixel==32)
+            info->image_format = IMAGE_FORMAT_RGBA;
+        else if(header.bitsperpixel==24)
+            info->image_format = IMAGE_FORMAT_RGB;
+        else if (header.bitsperpixel==8)
+            info->image_format = IMAGE_FORMAT_GRAY;
+        else
+            return false;
+        info->width = header.width;
+        info->height = header.height;
+        return true;
+    }
 
     Image* TGAImageDecoder::Decode(DataStream* ds) {
         TGAHeader header;

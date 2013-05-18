@@ -61,6 +61,29 @@ namespace GHL {
 		
 	}
 	
+    bool PVRTCDecoder::GetFileInfo(DataStream* ds, ImageInfo* info) {
+        PVRTexHeader header;
+		if ( ds->Read((Byte*)&header, sizeof(header))!=sizeof(header) )
+			return false;
+        if ( header.pvrTag[0] != gPVRTexIdentifier[0] ||
+			header.pvrTag[1] != gPVRTexIdentifier[1] ||
+			header.pvrTag[2] != gPVRTexIdentifier[2] ||
+			header.pvrTag[3] != gPVRTexIdentifier[3] )
+			return false;
+        
+        UInt32 formatFlags = SwapLittleToHost(header.flags) & PVR_TEXTURE_FLAG_TYPE_MASK;
+		if ( formatFlags == kPVRTextureFlagTypePVRTC_2 ) {
+            info->image_format = IMAGE_FORMAT_PVRTC_4;
+        } else if ( formatFlags == kPVRTextureFlagTypePVRTC_4 ) {
+			info->image_format = IMAGE_FORMAT_PVRTC_4;
+		} else
+            return false;
+        
+        info->width = header.width;
+        info->height = header.height;
+        return true;
+    }
+    
 	Image* PVRTCDecoder::Decode(DataStream* ds) {
 		PVRTexHeader header;
 		if (!ds) return 0;

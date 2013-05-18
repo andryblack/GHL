@@ -126,20 +126,24 @@ namespace GHL {
 	
 	
 	
-	ImageFileFormat GHL_CALL ImageDecoderImpl::GetFileFormat( DataStream* stream ) const {
-		ImageFileFormat format = IMAGE_FILE_FORMAT_UNKNOWN;
+	bool GHL_CALL ImageDecoderImpl::GetFileInfo( DataStream* stream , ImageInfo* info ) const {
+        if (!stream) return false;
+        if (!info) return false;
+        info->file_format = IMAGE_FILE_FORMAT_UNKNOWN;
 		ImageFileDecoder::CheckBuffer buf;
 		GHL::Int32 size = stream->Read(buf, sizeof(buf));
 		stream->Seek(-size, F_SEEK_CURRENT);
 		if ( size!=sizeof(buf) ) {
-			return format;
+			return false;
 		}
 			
 		for (size_t i=0;i<m_decoders.size();++i) {
-			format = m_decoders[i]->GetFileFormat( buf );
-			if (format!=IMAGE_FILE_FORMAT_UNKNOWN) break;
+			info->file_format = m_decoders[i]->GetFileFormat( buf );
+			if (info->file_format!=IMAGE_FILE_FORMAT_UNKNOWN) {
+                return m_decoders[i]->GetFileInfo(stream,info);
+            }
 		}
-		return format;
+		return false;
 	}
 	
 	bool GHL_CALL ImageDecoderImpl::Encode( const Image* image, DataStream* to, ImageFileFormat fmt) const {

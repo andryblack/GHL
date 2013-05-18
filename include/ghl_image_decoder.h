@@ -38,12 +38,19 @@ namespace GHL
 		IMAGE_FILE_FORMAT_TGA,
 		IMAGE_FILE_FORMAT_PVRTC,
 	};
+    
+    struct ImageInfo {
+        ImageFileFormat file_format;
+        ImageFormat     image_format;
+        GHL::UInt32     width;
+        GHL::UInt32     height;
+    };
 	
 	
 	struct ImageDecoder 
 	{
 		/// get image file format
-		virtual ImageFileFormat GHL_CALL GetFileFormat( DataStream* stream ) const = 0;
+		virtual bool GHL_CALL GetFileInfo( DataStream* stream , ImageInfo* info ) const = 0;
 		/// decode
 		virtual Image* GHL_CALL Decode( DataStream* stream ) const = 0;
 		/// encode

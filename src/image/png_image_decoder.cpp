@@ -52,39 +52,113 @@ namespace GHL {
         LOG_WARNING( err );
 	}
 
-// PNG function for file reading
-static void PNGAPI read_data_fcn(png_structp png_ptr, png_bytep data, png_size_t length)
-{
-	png_size_t check;
+    // PNG function for file reading
+    static void PNGAPI read_data_fcn(png_structp png_ptr, png_bytep data, png_size_t length)
+    {
+        png_size_t check;
 
-	DataStream* file=(DataStream*)png_get_io_ptr(png_ptr);
-	check=(png_size_t) file->Read((Byte*)data,UInt32(length));
+        DataStream* file=(DataStream*)png_get_io_ptr(png_ptr);
+        check=(png_size_t) file->Read((Byte*)data,UInt32(length));
 
-	if (check != length)
-		png_error(png_ptr, "Read Error");
-		
-}
+        if (check != length)
+            png_error(png_ptr, "Read Error");
+            
+    }
 
-ImageFileFormat PngDecoder::GetFileFormat(const CheckBuffer& buf) const {
-	if (png_sig_cmp(buf, 0, 8)==0)
-		return IMAGE_FILE_FORMAT_PNG;
-	return ImageFileDecoder::GetFileFormat(buf);
-}
+    ImageFileFormat PngDecoder::GetFileFormat(const CheckBuffer& buf) const {
+        if (png_sig_cmp(buf, 0, 8)==0)
+            return IMAGE_FILE_FORMAT_PNG;
+        return ImageFileDecoder::GetFileFormat(buf);
+    }
 
-bool PngDecoder::CheckSignature(const Byte* data,UInt32 len) {
-    if (len<8) return false;
-    if ( png_sig_cmp(data, 0, 8)!=0 )
-	{
-		return false;
-	}
-    return true;
-}
+    bool PngDecoder::CheckSignature(const Byte* data,UInt32 len) {
+        if (len<8) return false;
+        if ( png_sig_cmp(data, 0, 8)!=0 )
+        {
+            return false;
+        }
+        return true;
+    }
+
+    bool PngDecoder::GetFileInfo(DataStream* file, ImageInfo* info) {
+        png_byte buffer[8];
+        // Read the first few bytes of the PNG file
+        if (file->Read(buffer, 8) != 8) {
+            LOG_VERBOSE("error reading signature");
+            return false;
+        }
+        
+        // Check if it really is a PNG file
+        if ( png_sig_cmp(buffer, 0, 8)!=0 )
+        {
+            LOG_VERBOSE("is not a png file");
+            return false;
+        }
+        
+        png_structp png_ptr = png_create_read_struct
+        (PNG_LIBPNG_VER_STRING, (png_voidp)this,
+         &error_func, &warning_func);
+        
+        if (!png_ptr) {
+            LOG_ERROR("png_create_read_struct");
+            return false;
+        }
+        
+        // Allocate the png info struct
+        png_infop info_ptr = png_create_info_struct(png_ptr);
+        if (!info_ptr)
+        {
+            LOG_ERROR(" Internal PNG create info struct failure");
+            png_destroy_read_struct(&png_ptr, NULL, NULL);
+            return false;
+        }
+        
+        // for proper error handling
+        if (setjmp(png_jmpbuf(png_ptr)))
+        {
+            png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+            LOG_ERROR(" error");
+            return false;
+        }
+        
+        png_set_read_fn(png_ptr, file, read_data_fcn);
+        
+        png_set_sig_bytes(png_ptr, 8); // Tell png that we read the signature
+        
+        png_read_info(png_ptr, info_ptr); // Read the info section of the png file
+        
+        info->width = png_get_image_width(png_ptr, info_ptr);
+        info->height = png_get_image_height(png_ptr, info_ptr);
+        
+        int ColorType = png_get_color_type(png_ptr,info_ptr);
+        //int BitDepth = png_get_bit_depth(png_ptr,info_ptr);
+
+        if (ColorType == PNG_COLOR_TYPE_PALETTE) {
+            if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS))
+                info->image_format = IMAGE_FORMAT_RGBA;
+            else
+                info->image_format = IMAGE_FORMAT_RGB;
+        } else if (ColorType == PNG_COLOR_TYPE_GRAY_ALPHA) {
+            info->image_format = IMAGE_FORMAT_RGBA;
+        } else if (ColorType == PNG_COLOR_TYPE_RGB_ALPHA ) {
+            info->image_format = IMAGE_FORMAT_RGBA;
+        } else if ( ColorType == PNG_COLOR_TYPE_GRAY ) {
+            info->image_format = IMAGE_FORMAT_GRAY;
+        } else {
+            info->image_format = IMAGE_FORMAT_RGB;
+        }
+        
+        png_destroy_read_struct(&png_ptr,&info_ptr, 0); // Clean up memory
+        
+        return true;
+    }
+    
 Image* PngDecoder::Decode(DataStream* file)
 {
 	if (!file)
 		return 0;
     
-    LOG_VERBOSE("try decode png");
+    //LOG_VERBOSE("try decode png");
 
 	ImageImpl* image = 0;
 	//Used to point to image rows

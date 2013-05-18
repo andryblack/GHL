@@ -46,6 +46,7 @@ namespace GHL {
 		virtual bool Encode( const Image* /*image*/, DataStream* /*ds*/) {
 			return false;
 		}
+        virtual bool GetFileInfo(DataStream* ds, ImageInfo* info) = 0;
 	};
 	
 	inline static UInt32 SwapLittleToHost( UInt32 data ) {

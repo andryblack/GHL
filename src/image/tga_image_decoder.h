@@ -30,6 +30,7 @@ namespace GHL {
 		virtual Image* Decode(DataStream* ds) ;
 		virtual bool Encode( const Image* image, DataStream* ds);
         virtual ImageFileFormat GetFileFormat( const CheckBuffer& ) const;
+        virtual bool GetFileInfo(DataStream* ds, ImageInfo* info);
 	};
 	
 }

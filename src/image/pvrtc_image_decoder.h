@@ -34,6 +34,7 @@ namespace GHL {
 		~PVRTCDecoder();
 		Image* Decode(DataStream* ds);
 		virtual ImageFileFormat GetFileFormat(const CheckBuffer&) const;
+        virtual bool GetFileInfo(DataStream* ds, ImageInfo* info);
 	};
 	
 }

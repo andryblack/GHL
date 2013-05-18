@@ -38,7 +38,7 @@ namespace GHL {
 			ImageDecoderImpl();
 			virtual ~ImageDecoderImpl();
 			/// get image file format
-			virtual ImageFileFormat GHL_CALL GetFileFormat( DataStream* stream ) const;
+			virtual bool GHL_CALL GetFileInfo( DataStream* stream, ImageInfo* info ) const;
 			virtual Image* GHL_CALL Decode(DataStream* ds) const;
 			virtual bool GHL_CALL Encode( const Image* image, DataStream* to, ImageFileFormat fmt) const;
 	};
