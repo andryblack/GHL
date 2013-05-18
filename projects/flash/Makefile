@@ -72,10 +72,11 @@ DIRS+=$(BUILD)/image
 
 # Sound
 SOUND_SOURCES=sound_decoders.cpp\
-	wav_decoder.cpp
+	wav_decoder.cpp\
+	flash/ghl_sound_flash.cpp
     
 SOUND_OBJECTS=$(patsubst %.cpp,$(BUILD)/sound/%.cpp.o,$(SOUND_SOURCES))
-DIRS+=$(BUILD)/sound    
+DIRS+=$(BUILD)/sound/flash  
 
 # WinLib
 WINLIB_SOURCES=winlib_flash.cpp
@@ -106,7 +107,6 @@ JPEG_SRC := \
 	src/image/jpeg/jdapistd.c \
 	src/image/jpeg/jdarith.c \
 	src/image/jpeg/jdatadst.c \
-	src/image/jpeg/jdatasrc.c \
 	src/image/jpeg/jdcoefct.c \
 	src/image/jpeg/jdcolor.c \
 	src/image/jpeg/jddctmgr.c \
@@ -177,7 +177,7 @@ DIRS+=$(LIBDIR)
 
 
 all: check 
-	make build_all OPT_FLAGS="-emit-llvm -O3"
+	make build_all OPT_FLAGS="-emit-llvm -O3 -disable-telemetry"
 
 debug: check 
 	make build_all OPT_FLAGS="-g -O0" DEFINES=-DGHL_DEBUG POSTFIX=_d
@@ -208,7 +208,7 @@ $(BUILD)/zlib:
 $(BUILD)/vfs:
 	$(MKDIR) $@
 
-$(BUILD)/sound:
+$(BUILD)/sound/flash:
 	$(MKDIR) $@
 
 $(BUILD)/render:
@@ -237,6 +237,9 @@ clean:
 	$(RM) $(BUILD)
 
 check:
+	@if [[ "x$(FLASCC)" == "x" ]] ; then \
+		echo "empty FLASCC env, please invoke make with \"make FLASCC=/path/to/FLASCC/sdk ...\"" ; exit 1 ;  \
+	fi; 
 	@if [ -d $(FLASCC)/usr/bin ] ; then true ; \
 	else echo "Couldn't locate FLASCC sdk directory, please invoke make with \"make FLASCC=/path/to/FLASCC/sdk ...\"" ; exit 1 ; \
 	fi

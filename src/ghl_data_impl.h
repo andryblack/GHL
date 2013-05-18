@@ -137,7 +137,8 @@ namespace GHL {
         }
 		/// set data
 		virtual void GHL_CALL	SetData( UInt32 offset, const Byte* data, UInt32 size ) {
-            ::memcpy(&(m_data[offset]),data,size);
+            if (offset+size<=m_data.size())
+                ::memcpy(&(m_data[offset]),data,size);
         }
         
         void append( const Byte* data, UInt32 size ) {

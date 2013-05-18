@@ -94,6 +94,7 @@ GHL_API GHL::Data* GHL_CALL GHL_ReadAllData( GHL::DataStream* ds ) {
     GHL::Byte buf[1024*8];
     while (!ds->Eof()) {
         GHL::UInt32 readed = ds->Read(buf,sizeof(buf));
+        if( readed == 0 ) break;
         data->append(buf,readed);
     }
     return data;

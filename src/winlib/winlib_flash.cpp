@@ -15,6 +15,7 @@
 #include "../image/image_decoders.h"
 #include "../vfs/vfs_posix.h"
 #include "../render/stage3d/render_stage3d.h"
+#include "../sound/flash/ghl_sound_flash.h"
 #include <cstdio>
 
 #include <sys/time.h>
@@ -42,12 +43,13 @@ using namespace AS3::ui;
 
 class FlashSystem : public GHL::System {
 public:
-    FlashSystem() : vfs("","/local"), imageDecoder(0),render(0) {
+    FlashSystem() : vfs("","/local"), sound(0),imageDecoder(0),render(0) {
         started = false;
         valid = false;
         loaded = false;
     }
     ~FlashSystem() {
+        delete sound;
         delete render;
         delete imageDecoder;
     }
@@ -96,6 +98,7 @@ public:
     bool loaded;
     timeval lastTime;
     GHL::VFSPosixImpl   vfs;
+    GHL::SoundFlash* sound;
     GHL::ImageDecoderImpl* imageDecoder;
     GHL::RenderStage3d* render;
 };
@@ -225,6 +228,7 @@ static var context3DError(void *arg, var as3Args)
     "gets set correctly to 'direct'.";
     
     ctx.stage->addChild(tf);
+    return internal::_undefined;
 }
 
 // After a Context3D is created this function will be called.
@@ -283,6 +287,11 @@ static void startApplication() {
         ctx.imageDecoder = new GHL::ImageDecoderImpl();
         ctx.application->SetImageDecoder(ctx.imageDecoder);
         ctx.application->SetVFS(&ctx.vfs);
+        
+        ctx.sound = new GHL::SoundFlash(4);
+        ctx.application->SetSound(ctx.sound);
+        
+        ctx.sound->SoundInit();
         
         GHL::Settings settings;
         /// default settings

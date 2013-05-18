@@ -320,8 +320,9 @@ namespace GHL {
             channel = m_channels.front();
             m_channels.pop_front();
             m_channels.push_back(channel);
+        } else {
+            channel = CreateChannel();
         }
-        channel = CreateChannel();
         return channel;
     }
         
