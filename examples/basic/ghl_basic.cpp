@@ -101,7 +101,7 @@ public:
     }
 
     void DrawScene() {
-        m_render->Clear( 0.25f, 0.25f, 0.35f, 0);
+        m_render->Clear( 0.25f, 0.25f, 0.35f, 0.0f, 0.0f);
 
         if (m_tex_star && !m_stars.empty() ) {
             std::vector<GHL::Vertex>    vertexes;

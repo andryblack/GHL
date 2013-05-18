@@ -75,7 +75,7 @@ namespace GHL {
 		m_fmt(fmt),
 		m_have_mipmaps(false)
 	{
-		
+        (void)MODULE;
 	}
 	
 	TextureOpenGL* TextureOpenGL::Create( RenderOpenGLBase* parent,TextureFormat fmt,UInt32 w,UInt32 h, const Image* data) {

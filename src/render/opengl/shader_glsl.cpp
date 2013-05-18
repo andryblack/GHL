@@ -18,7 +18,7 @@ namespace GHL {
 
 	VertexShaderGLSL::VertexShaderGLSL(RenderOpenGLBase* parent,GL::GLhandle handle_)
     : VertexShaderImpl(parent),gl(parent->get_api()),m_handle(handle_) {
-	
+        (void)MODULE;
 	}
 	
 	VertexShaderGLSL::~VertexShaderGLSL() {

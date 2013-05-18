@@ -111,7 +111,6 @@
 		A47F7F3714E6D175006B37E2 /* jdapistd.c in Sources */ = {isa = PBXBuildFile; fileRef = A47F7F0114E6D175006B37E2 /* jdapistd.c */; };
 		A47F7F3814E6D175006B37E2 /* jdarith.c in Sources */ = {isa = PBXBuildFile; fileRef = A47F7F0214E6D175006B37E2 /* jdarith.c */; };
 		A47F7F3914E6D175006B37E2 /* jdatadst.c in Sources */ = {isa = PBXBuildFile; fileRef = A47F7F0314E6D175006B37E2 /* jdatadst.c */; };
-		A47F7F3A14E6D175006B37E2 /* jdatasrc.c in Sources */ = {isa = PBXBuildFile; fileRef = A47F7F0414E6D175006B37E2 /* jdatasrc.c */; };
 		A47F7F3B14E6D175006B37E2 /* jdcoefct.c in Sources */ = {isa = PBXBuildFile; fileRef = A47F7F0514E6D175006B37E2 /* jdcoefct.c */; };
 		A47F7F3C14E6D175006B37E2 /* jdcolor.c in Sources */ = {isa = PBXBuildFile; fileRef = A47F7F0614E6D175006B37E2 /* jdcolor.c */; };
 		A47F7F3D14E6D175006B37E2 /* jddctmgr.c in Sources */ = {isa = PBXBuildFile; fileRef = A47F7F0714E6D175006B37E2 /* jddctmgr.c */; };
@@ -302,7 +301,6 @@
 		A47F7F0114E6D175006B37E2 /* jdapistd.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdapistd.c; path = jpeg/jdapistd.c; sourceTree = "<group>"; };
 		A47F7F0214E6D175006B37E2 /* jdarith.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdarith.c; path = jpeg/jdarith.c; sourceTree = "<group>"; };
 		A47F7F0314E6D175006B37E2 /* jdatadst.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdatadst.c; path = jpeg/jdatadst.c; sourceTree = "<group>"; };
-		A47F7F0414E6D175006B37E2 /* jdatasrc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdatasrc.c; path = jpeg/jdatasrc.c; sourceTree = "<group>"; };
 		A47F7F0514E6D175006B37E2 /* jdcoefct.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdcoefct.c; path = jpeg/jdcoefct.c; sourceTree = "<group>"; };
 		A47F7F0614E6D175006B37E2 /* jdcolor.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdcolor.c; path = jpeg/jdcolor.c; sourceTree = "<group>"; };
 		A47F7F0714E6D175006B37E2 /* jddctmgr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jddctmgr.c; path = jpeg/jddctmgr.c; sourceTree = "<group>"; };
@@ -660,7 +658,6 @@
 				A47F7F0114E6D175006B37E2 /* jdapistd.c */,
 				A47F7F0214E6D175006B37E2 /* jdarith.c */,
 				A47F7F0314E6D175006B37E2 /* jdatadst.c */,
-				A47F7F0414E6D175006B37E2 /* jdatasrc.c */,
 				A47F7F0514E6D175006B37E2 /* jdcoefct.c */,
 				A47F7F0614E6D175006B37E2 /* jdcolor.c */,
 				A47F7F0714E6D175006B37E2 /* jddctmgr.c */,
@@ -953,7 +950,6 @@
 				A47F7F3714E6D175006B37E2 /* jdapistd.c in Sources */,
 				A47F7F3814E6D175006B37E2 /* jdarith.c in Sources */,
 				A47F7F3914E6D175006B37E2 /* jdatadst.c in Sources */,
-				A47F7F3A14E6D175006B37E2 /* jdatasrc.c in Sources */,
 				A47F7F3B14E6D175006B37E2 /* jdcoefct.c in Sources */,
 				A47F7F3C14E6D175006B37E2 /* jdcolor.c in Sources */,
 				A47F7F3D14E6D175006B37E2 /* jddctmgr.c in Sources */,

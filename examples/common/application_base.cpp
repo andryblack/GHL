@@ -87,7 +87,7 @@ void GHL_CALL ApplicationBase::Release(  ) {
 }
 
 void ApplicationBase::DrawScene() {
-    m_render->Clear( 0.0f, 0.0f, 0.0f, 0);
+    m_render->Clear( 0.0f, 0.0f, 0.0f, 0.0f, 0.0f );
 }
 
 void ApplicationBase::OnTimer(GHL::UInt32 usecs) {
