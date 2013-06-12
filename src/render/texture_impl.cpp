@@ -19,6 +19,10 @@ namespace GHL {
         m_wrap_v(TEX_WRAP_CLAMP)
 	{
         parent->TextureCreated(this);
+#ifdef GHL_DEBUG
+        m_is_valid = false;
+        m_data_setted = false;
+#endif
     }
     
     TextureImpl::~TextureImpl() {

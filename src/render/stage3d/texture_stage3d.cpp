@@ -19,23 +19,31 @@ namespace GHL {
         if (data && (x==0) && (y==0) &&
             (data->GetWidth()==GetWidth()) &&
             (data->GetHeight()==GetHeight())) {
+            
+            
             Image* img = data->Clone();
             img->Convert(IMAGE_FORMAT_RGBA);
             img->SwapRB();
-            const Data* dt = img->GetData();
             
-            m_tex->uploadFromByteArray( AS3::ui::internal::get_ram(), (int)dt->GetData(),0 );
-            img->Release();
+            if (m_internal_data) {
+                m_internal_data->Release();
+            }
+            
+            m_internal_data = img;
+            
         } else {
             if (!m_internal_data) {
                 m_internal_data = GHL_CreateImage(GetWidth(),GetHeight(),IMAGE_FORMAT_RGBA);
-                Image* img = data->Clone();
-                img->Convert(IMAGE_FORMAT_RGBA);
-                img->SwapRB();
-                m_internal_data->Draw(x,y,img);
-                img->Release();
             }
+            
+            Image* img = data->Clone();
+            img->Convert(IMAGE_FORMAT_RGBA);
+            img->SwapRB();
+            m_internal_data->Draw(x,y,img);
+            img->Release();
+
         }
+        NotifySetData();
     }
     
     void GHL_CALL TextureStage3d::GenerateMipmaps() {
@@ -48,6 +56,7 @@ namespace GHL {
             const Data* dt = m_internal_data->GetData();
             m_tex->uploadFromByteArray( AS3::ui::internal::get_ram(), (int)dt->GetData(),0 );
         }
+        TextureImpl::FlushInternal();
     }
     /// discard internal data (flush if needed)
     void GHL_CALL TextureStage3d::DiscardInternal() {

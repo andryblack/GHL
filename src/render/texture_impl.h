@@ -62,14 +62,41 @@ namespace GHL {
 		/// get texture wrap mode V
 		
         /// flush internal data to texture
-        virtual void GHL_CALL FlushInternal() { /* do nothing*/ }
+        virtual void GHL_CALL FlushInternal() {
+#ifdef GHL_DEBUG
+            if (m_data_setted) {
+                m_is_valid = true;
+            }
+#endif
+        }
+        
         /// discard internal data
-        virtual void GHL_CALL DiscardInternal() { /* do nothing*/ }
+        virtual void GHL_CALL DiscardInternal() {
+            FlushInternal();
+        }
+#ifdef GHL_DEBUG
+        bool IsValid() const { return m_is_valid; }
+#endif
+        void NotifySetData() {
+#ifdef GHL_DEBUG
+            m_data_setted = true;
+#endif
+        }
+        void MarkAsValid() {
+#ifdef GHL_DEBUG
+            m_is_valid = true;
+#endif
+        }
 
     private:
         RenderImpl* m_parent;
-
+#ifdef GHL_DEBUG
+        bool    m_data_setted;
+        bool    m_is_valid;
+#endif
     protected:
+
+        
         explicit TextureImpl( RenderImpl* parent, UInt32 w,UInt32 h );
         void RestoreTexture(UInt32 stage);
         UInt32	m_width;

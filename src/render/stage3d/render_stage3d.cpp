@@ -150,30 +150,25 @@ namespace GHL {
         flash::display3D::textures::Texture tex =
             m_ctx->createTexture(width,height,
                                  flash::display3D::Context3DTextureFormat::BGRA,false,0);
+        TextureStage3d* res = new TextureStage3d(tex,this,width,height);
+        if (data) res->NotifySetData();
         if (data) {
-            Image* img = data->Clone();
-            img->Convert(IMAGE_FORMAT_RGBA);
-            img->SwapRB();
-            const Data* dt = img->GetData();
-            
-            //, (int)data->GetData(), data->GetSize(), (void*)data->GetData()
-            
-            tex->uploadFromByteArray( AS3::ui::internal::get_ram(), (int)dt->GetData(),0 );
-            img->Release();
+            res->SetData(0,0,data,0);
         }
-        return new TextureStage3d(tex,this,width,height);
+        return res;
     }
     
     /// set current texture
     void GHL_CALL RenderStage3d::SetTexture(const Texture* texture, UInt32 stage) {
         RenderImpl::SetTexture(texture,stage);
-        if (texture) {
+        const TextureStage3d* stex = reinterpret_cast<const TextureStage3d*>(texture);
+        if (stex) {
             m_crnt_state.texture_stages[stage].rgb.c.texture = true;
             m_crnt_state.texture_stages[stage].alpha.c.texture = true;
             m_crnt_state.texture_stages[stage].tex.c.min_filter = texture->GetMinFilter();
             m_crnt_state.texture_stages[stage].tex.c.mip_filter = texture->GetMipFilter();
             m_crnt_state.texture_stages[stage].tex.c.wrap_u = texture->GetWrapModeU();
-            m_ctx->setTextureAt(stage,AS3::ui::var(reinterpret_cast<const TextureStage3d*>(texture)->texture()));
+            m_ctx->setTextureAt(stage,AS3::ui::var(stex->texture()));
         } else {
             m_crnt_state.texture_stages[stage].rgb.c.texture = false;
             m_crnt_state.texture_stages[stage].alpha.c.texture = false;

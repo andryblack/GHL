@@ -151,6 +151,7 @@ namespace GHL {
                                         lucida_console_regular_8_height,
                                         TEXTURE_FORMAT_RGBA,img);
         img->Release();
+        m_sfont_texture->DiscardInternal();
         return m_sfont_texture != 0;
     }
 	
@@ -487,6 +488,16 @@ namespace GHL {
             LOG_FATAL( "bind unknown texture" );
             assert(false && "bind unknown texture");
             return;
+        }
+        if (m_scene_target) {
+            if (m_scene_target->GetTexture()==texture) {
+                LOG_FATAL( "bind texture from active target");
+                assert(false && "bind unknown texture");
+                return;
+            }
+        }
+        if (texture && !static_cast<const TextureImpl*>(texture)->IsValid()) {
+            LOG_ERROR("bind invalid texture");
         }
 #endif
         if (texture) {

@@ -109,12 +109,15 @@ namespace GHL {
                 ImageFormat ifmt = GHL_TextureFormatToImageFormat(fmt);
                 if (ifmt!=data->GetFormat()) {
                     Image* cpy = data->Clone();
-                    cpy->Convert(ifmt);
-                    tdata = cpy->GetData();
-                    CHECK_GL(gl.TexImage2D  (gl.TEXTURE_2D, 0,
+                    if (cpy->Convert(ifmt)) {
+                        tdata = cpy->GetData();
+                        CHECK_GL(gl.TexImage2D  (gl.TEXTURE_2D, 0,
                                     convert_int_format(gl,fmt), w, h, 0,
                                     convert_format(gl,fmt), convert_storage(gl,fmt),
                                     tdata->GetData() ));
+                    } else {
+                        LOG_ERROR("Failed convert image");
+                    }
                     cpy->Release();
                 } else {
                     CHECK_GL(gl.TexImage2D  (gl.TEXTURE_2D, 0,
@@ -132,7 +135,9 @@ namespace GHL {
 			
 		}
 		
-		return new TextureOpenGL( name, parent, fmt, w,h );
+		TextureOpenGL* res = new TextureOpenGL( name, parent, fmt, w,h );
+        if (data) res->NotifySetData();
+        return res;
 	}
     
     TextureOpenGL::~TextureOpenGL() {
@@ -230,10 +235,13 @@ namespace GHL {
             ImageFormat ifmt = GHL_TextureFormatToImageFormat(GetFormat());
             if (ifmt!=data->GetFormat()) {
                 Image* cpy = data->Clone();
-                cpy->Convert(ifmt);
-                const Data* tdata = cpy->GetData();
-                CHECK_GL(gl.TexSubImage2D  (gl.TEXTURE_2D, level, x, y, w, h,
+                if (cpy->Convert(ifmt)) {
+                    const Data* tdata = cpy->GetData();
+                    CHECK_GL(gl.TexSubImage2D  (gl.TEXTURE_2D, level, x, y, w, h,
                                    convert_format(gl,m_fmt), convert_storage(gl,m_fmt), tdata->GetData()));
+                } else {
+                    LOG_ERROR("Failed convert image");
+                }
                 cpy->Release();
             } else {
                 CHECK_GL(gl.TexSubImage2D  (gl.TEXTURE_2D, level, x, y, w, h,
@@ -244,6 +252,7 @@ namespace GHL {
             CHECK_GL(gl.PixelStorei  (gl.UNPACK_ALIGNMENT,4));
 		if (gl.UNPACK_ROW_LENGTH)
             CHECK_GL(gl.PixelStorei  (gl.UNPACK_ROW_LENGTH,0));
+        NotifySetData();
 		RestoreTexture(0);
 	}
 	/// generate mipmaps
