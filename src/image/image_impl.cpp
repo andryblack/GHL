@@ -37,6 +37,8 @@ namespace GHL
 			size = w * h * 4;
 		else if (fmt==IMAGE_FORMAT_GRAY)
 			size = w * h;
+        else if (fmt==IMAGE_FORMAT_565 || fmt==IMAGE_FORMAT_4444)
+			size = w * h * 2;
 		if ( size ) {
 			m_data = new DataImpl( size );
 		}
@@ -183,6 +185,8 @@ namespace GHL
 		if (m_fmt==IMAGE_FORMAT_RGB) return 3;
 		if (m_fmt==IMAGE_FORMAT_RGBA) return 4;
 		if (m_fmt==IMAGE_FORMAT_GRAY) return 1;
+        if (m_fmt==IMAGE_FORMAT_565) return 2;
+        if (m_fmt==IMAGE_FORMAT_4444) return 2;
 		return 0;
 	}
 	
