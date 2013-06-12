@@ -147,6 +147,10 @@ namespace GHL {
             SetData(pos,data,size);
         }
         
+        void reserve( UInt32 size ) {
+            m_data.reserve(size);
+        }
+        
     private:
         std::vector<Byte>   m_data;
 	};

@@ -47,6 +47,7 @@ public:
         started = false;
         valid = false;
         loaded = false;
+        fullscreen = false;
     }
     ~FlashSystem() {
         delete sound;
@@ -59,11 +60,24 @@ public:
 	}
 	///
 	virtual bool GHL_CALL IsFullscreen() const {
-		return false;
+		return fullscreen;
 	}
     ///
 	virtual void GHL_CALL SwitchFullscreen(bool fs) {
-		/// @todo
+        if (fs==fullscreen) return;
+		if (fs && stage->allowsFullScreen) {
+            stage->displayState = flash::display::StageDisplayState::FULL_SCREEN;
+            fullscreen = true;
+            render->Resize(stage->fullScreenWidth,stage->fullScreenHeight);
+        } else {
+            fullscreen = false;
+            stage->displayState = flash::display::StageDisplayState::NORMAL;
+            render->Resize(stage->width,stage->height);
+        }
+        render->RenderSetFullScreen(fullscreen);
+        ctx3d->configureBackBuffer(render->GetWidth(),
+                                    render->GetHeight(), 0,
+                                    need_depth, false);
 	}
     ///
 	virtual void GHL_CALL ShowKeyboard() {
@@ -101,6 +115,7 @@ public:
     GHL::SoundFlash* sound;
     GHL::ImageDecoderImpl* imageDecoder;
     GHL::RenderStage3d* render;
+    bool fullscreen;
 };
 
 
@@ -201,7 +216,7 @@ static var enterFrame(void *arg, var as3Args)
         char *err = internal::utf8_toString(e);
         LOG_ERROR(  "enterFrame Exception: " << err );
         free(err);
-        ctx.valid = false;
+        ctx.valid = ctx.loaded;
     }
     return internal::_undefined;
 }
@@ -247,7 +262,9 @@ static var initContext3D(void *arg, var as3Args)
             LOG_INFO(  "driverInfo: " << driverInfo );
             free(driverInfo);
         }
+#ifdef GHL_DEBUG
         ctx.ctx3d->enableErrorChecking = true;
+#endif
         ctx.ctx3d->configureBackBuffer(ctx.stage->stageWidth,
                                        ctx.stage->stageHeight, 0,
                                     need_depth, false);
@@ -295,8 +312,8 @@ static void startApplication() {
         
         GHL::Settings settings;
         /// default settings
-        settings.width = ctx.stage->stageWidth;
-        settings.height = ctx.stage->stageHeight;
+        settings.width = ctx.stage->fullScreenWidth;
+        settings.height = ctx.stage->fullScreenHeight;
         settings.fullscreen = false;
         settings.depth = false;
         {
@@ -342,7 +359,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
         flash::display::Stage stage = internal::get_Stage();
         stage->scaleMode = flash::display::StageScaleMode::NO_SCALE;
         stage->align = flash::display::StageAlign::TOP_LEFT;
-        stage->frameRate = 60;
+        stage->frameRate = 30;
         ctx.started = false;
         startApplication();
         stage->addEventListener(flash::events::Event::ENTER_FRAME, Function::_new(&enterFrame, NULL));

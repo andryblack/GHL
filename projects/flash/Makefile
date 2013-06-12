@@ -179,10 +179,10 @@ DIRS+=$(LIBDIR)
 
 
 all: check 
-	make build_all OPT_FLAGS="-emit-llvm -O3 -disable-telemetry"
+	make build_all OPT_FLAGS="-emit-llvm -Os -disable-telemetry -fllvm-opt-opt=-strip"
 
 debug: check 
-	make build_all OPT_FLAGS="-g -O0" DEFINES=-DGHL_DEBUG POSTFIX=_d
+	make build_all OPT_FLAGS="-g -O0 " DEFINES=-DGHL_DEBUG POSTFIX=_d
 
 rdebug: check
 	make build_all OPT_FLAGS="-emit-llvm -O3" DEFINES="-DGHL_DEBUG" 

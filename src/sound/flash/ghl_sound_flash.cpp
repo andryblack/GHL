@@ -227,7 +227,7 @@ namespace GHL {
         AS3::ui::flash::media::SoundChannel m_channel;
         AS3::ui::flash::media::SoundTransform m_transform;
         size_t  m_position;
-        AS3::ui::flash::utils::ByteArray    m_buffer;
+        //AS3::ui::flash::utils::ByteArray    m_buffer;
         bool    m_played;
         bool    m_paused;
         bool    m_loop;
@@ -235,20 +235,19 @@ namespace GHL {
     public:
         
         void SetData( GHL::DataStream* file ) {
-            GHL::Data* data = GHL_ReadAllData(file);
-            if (data) {
-                LOG_INFO("set music data: " << (int)data->GetData() << " " << data->GetSize());
-                AS3::ui::flash::utils::ByteArray ba = AS3::ui::flash::utils::ByteArray::_new();
-                AS3::ui::flash::utils::ByteArray mem = AS3::ui::internal::get_ram();
-                ba->writeBytes(mem,(int)data->GetData(),data->GetSize());
-                ba->position = 0;
-                m_sound->loadCompressedDataFromByteArray(ba,data->GetSize());
-                LOG_INFO("loaded " << int(ba->length) << " bytes to music");
-                m_buffer = ba;
-                data->Release();
-            } else {
-                LOG_ERROR("failed read music file");
+            if (!file) return;
+            GHL::Byte buf[1024*16];
+            AS3::ui::flash::utils::ByteArray ba = AS3::ui::flash::utils::ByteArray::_new();
+            AS3::ui::flash::utils::ByteArray mem = AS3::ui::internal::get_ram();
+            while (!file->Eof()) {
+                GHL::UInt32 readed = file->Read(buf,sizeof(buf));
+                if( readed == 0 ) break;
+                ba->writeBytes(mem,(int)&buf[0],readed);
             }
+            ba->position = 0;
+            m_sound->loadCompressedDataFromByteArray(ba,ba->length);
+            LOG_INFO("loaded " << int(ba->length) << " bytes to music");
+            //m_buffer = ba;
         }
         
         static AS3::ui::var endPlayHandler(void *arg, AS3::ui::var as3Args) {

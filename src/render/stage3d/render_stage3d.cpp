@@ -105,7 +105,7 @@ namespace GHL {
         RenderImpl::RenderDone();
     }
     bool RenderStage3d::RenderSetFullScreen(bool fs) {
-        NOT_IMPLEMENTED;
+        m_scene_cleared = false;
     }
     
     
