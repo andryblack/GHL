@@ -33,8 +33,13 @@ namespace GHL {
 
     static const char* MODULE = "RENDER:OpenGL";
 	
-	
-	
+	static const float sm[16] = {
+        1.0f, 0.0f, 0.0f, 0.0f,
+        0.0f,-1.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f
+    };
+    
 	static void set_texture_stage(const GL& gl,UInt32 stage) {
         GL::GLenum texture_stages[] = {
             gl.TEXTURE0,
@@ -396,7 +401,7 @@ namespace GHL {
 		RenderTargetOpenGL* rt = new RenderTargetOpenGL(this,w,h,fmt,depth);
 		if (!rt->check()) {
 			LOG_ERROR( "rendertarget check failed" );
-			delete rt;
+            rt->Release();
 			rt = 0;
 		}
 		return rt;
@@ -507,8 +512,14 @@ namespace GHL {
     /// set projection matrix
 	void GHL_CALL RenderOpenGLFFPL::SetProjectionMatrix(const float *m) {
         CHECK_GL(glffpl.MatrixMode(glffpl.PROJECTION));
-		CHECK_GL(glffpl.LoadMatrixf(m));
-		CHECK_GL(glffpl.MatrixMode(glffpl.MODELVIEW));
+        if (GetTarget()) {
+            float matrix[16];
+            MatrixMul(sm, m, matrix);
+            CHECK_GL(glffpl.LoadMatrixf(matrix));
+        } else {
+            CHECK_GL(glffpl.LoadMatrixf(m));
+        }
+        CHECK_GL(glffpl.MatrixMode(glffpl.MODELVIEW));
 	}
 	
 	/// set view matrix
@@ -693,8 +704,12 @@ namespace GHL {
     
     /// set projection matrix
 	void GHL_CALL RenderOpenGLPPL::SetProjectionMatrix(const float *m) {
-        std::copy(m, m+16, m_projection_matrix);
-	}
+        if (GetTarget()) {
+            MatrixMul(sm, m, m_projection_matrix);
+        } else {
+            std::copy(m, m+16, m_projection_matrix);
+        }
+    }
 	
 	/// set view matrix
 	void GHL_CALL RenderOpenGLPPL::SetViewMatrix(const float* m) {

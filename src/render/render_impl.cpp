@@ -560,6 +560,42 @@ namespace GHL {
         m_current_v_buffer = buf;
     }
     
+    void RenderImpl::MatrixMul(const float* a,const float* b,float* r) {
+        for (int x=0; x<4; x++)
+        {
+            for (int y=0; y<4; y++)
+            {
+                r[x+y*4] =
+                a[0*4 + x]*b[y*4 + 0] +
+                a[1*4 + x]*b[y*4 + 1] +
+                a[2*4 + x]*b[y*4 + 2] +
+                a[3*4 + x]*b[y*4 + 3];
+            }
+        }
+    }
+    
+    void RenderImpl::MatrixTranspose(float* matrix) {
+        float original[16];
+        for (int cnt=0; cnt<16; cnt++)
+            original[cnt] = matrix[cnt];
+        
+        matrix[0] = original[0];
+        matrix[1] = original[4];
+        matrix[2] = original[8];
+        matrix[3] = original[12];
+        matrix[4] = original[1];
+        matrix[5] = original[5];
+        matrix[6] = original[9];
+        matrix[7] = original[13];
+        matrix[8] = original[2];
+        matrix[9] = original[6];
+        matrix[10] = original[10];
+        matrix[11] = original[14];
+        matrix[12] = original[3];
+        matrix[13] = original[7];
+        matrix[14] = original[11];
+        matrix[15] = original[13];
+    }
 }
 
 

@@ -41,7 +41,12 @@ BASIC_SOURCES=ghl_basic.cpp
 BASIC_OBJECTS= $(patsubst %.cpp,$(BUILD)/basic/%.o,$(BASIC_SOURCES))
 DIRS+=$(BUILD)/basic
 
-ARTEFACTS=$(BASIC)
+RT=$(BUILD)/rt.swf
+RT_SOURCES=ghl_rt.cpp
+RT_OBJECTS= $(patsubst %.cpp,$(BUILD)/rt/%.o,$(RT_SOURCES))
+DIRS+=$(BUILD)/rt
+
+ARTEFACTS=$(BASIC) $(RT)
 
 all: check 
 	make build_all OPT_FLAGS=-O4
@@ -57,6 +62,9 @@ $(BUILD)/common:
 	$(MKDIR) $@
 
 $(BUILD)/basic:
+	$(MKDIR) $@
+
+$(BUILD)/rt:
 	$(MKDIR) $@
 
 $(BUILD)/data.abc: $(BUILD)
@@ -90,6 +98,9 @@ $(BUILD)/Console.abc: $(BUILD)/data.abc
 				$(GHLROOT)/src/flash/Console$(POSTFIX).as -outdir $(BUILD) -out Console
 
 $(BASIC) : $(COMMON_OBJECTS) $(BASIC_OBJECTS) $(GHL_LIB) 
+	$(CXX)  $^  $(LINK_FLAGS) $(BUILD)/data.abc $(FLASCC)/usr/lib/AlcVFSZip.abc -symbol-abc=$(BUILD)/Console.abc -o $@ 
+
+$(RT) : $(COMMON_OBJECTS) $(RT_OBJECTS) $(GHL_LIB) 
 	$(CXX)  $^  $(LINK_FLAGS) $(BUILD)/data.abc $(FLASCC)/usr/lib/AlcVFSZip.abc -symbol-abc=$(BUILD)/Console.abc -o $@ 
 
 $(BUILD)/%.o : $(GHLSRC)/%.cpp Makefile

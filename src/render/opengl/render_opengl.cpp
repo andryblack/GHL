@@ -50,12 +50,13 @@ namespace GHL {
 }
 
 GHL_API GHL::RenderImpl* GHL_CALL GHL_CreateRenderOpenGL(GHL::UInt32 w,GHL::UInt32 h,bool depth) {
-    GHL::RenderOpenGLBase* render = new GHL::RenderOpenGL2(w,h,depth);
-	if (!render->RenderInit()) {
+    GHL::RenderOpenGLBase* render = 0;
+    render = new GHL::RenderOpenGL2(w,h,depth);
+    if (!render->RenderInit()) {
         render->RenderDone();
-		delete render;
-		render = 0;
-	} else {
+        delete render;
+        render = 0;
+    } else {
         return render;
     }
 	render = new GHL::RenderOpenGL(w,h,depth);

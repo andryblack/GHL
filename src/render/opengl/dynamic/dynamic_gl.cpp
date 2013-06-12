@@ -162,6 +162,9 @@ namespace GHL {
 #define USE_DYNAMIC_GL_ARB_shading_language_100
 #define USE_DYNAMIC_GL_VERSION_2_0
 #define USE_DYNAMIC_GL_VERSION_1_5
+#define USE_DYNAMIC_GL_ARB_framebuffer_object
+#define USE_DYNAMIC_GL_EXT_framebuffer_object
+#define USE_DYNAMIC_GL_VERSION_1_4
         
 //#define USE_DYNAMIC_GL_VERSION_1_3_DEPRECATED
 //#define USE_DYNAMIC_GL_VERSION_1_4
@@ -346,6 +349,58 @@ namespace GHL {
             LOG_INFO("using extension ARB_shading_language_100");
             LOG_INFO("GLSL: " << (const char*)GLApi_impl::GetString(GLApi_impl::GL_SHADING_LANGUAGE_VERSION_ARB));
             
+        }
+        
+        if (GLApi_impl::Feature_ARB_framebuffer_object_Supported()) {
+            api->rtapi.valid = true;
+            api->rtapi.GenFramebuffers = &GLApi_impl::GenFramebuffers;
+            api->rtapi.BindFramebuffer = &GLApi_impl::BindFramebuffer;
+            api->rtapi.DeleteFramebuffers = &GLApi_impl::DeleteFramebuffers;
+            api->rtapi.FramebufferTexture2D = &GLApi_impl::FramebufferTexture2D;
+            api->rtapi.BindRenderbuffer = &GLApi_impl::BindRenderbuffer;
+            api->rtapi.DeleteRenderbuffers = &GLApi_impl::DeleteRenderbuffers;
+            api->rtapi.GenRenderbuffers = &GLApi_impl::GenRenderbuffers;
+            api->rtapi.RenderbufferStorage = &GLApi_impl::RenderbufferStorage;
+            api->rtapi.FramebufferRenderbuffer = &GLApi_impl::FramebufferRenderbuffer;
+            api->rtapi.CheckFramebufferStatus = &GLApi_impl::CheckFramebufferStatus;
+            
+            api->rtapi.FRAMEBUFFER = GLApi_impl::GL_FRAMEBUFFER;
+            api->rtapi.COLOR_ATTACHMENT0 = GLApi_impl::GL_COLOR_ATTACHMENT0;
+            api->rtapi.RENDERBUFFER = GLApi_impl::GL_RENDERBUFFER;
+            api->rtapi.DEPTH_ATTACHMENT = GLApi_impl::GL_DEPTH_ATTACHMENT;
+            if (GLApi_impl::Feature_VERSION_1_4_Supported()) {
+                api->rtapi.DEPTH_COMPONENT16 = GLApi_impl::GL_DEPTH_COMPONENT16;
+            } else {
+                api->rtapi.DEPTH_COMPONENT16 = GLApi_impl::GL_DEPTH_COMPONENT;
+            }
+            api->rtapi.FRAMEBUFFER_COMPLETE = GLApi_impl::GL_FRAMEBUFFER_COMPLETE;
+            
+            api->rtapi.default_framebuffer = 0;
+        } else if (GLApi_impl::Feature_EXT_framebuffer_object_Supported()) {
+            api->rtapi.valid = true;
+            api->rtapi.GenFramebuffers = &GLApi_impl::GenFramebuffersEXT;
+            api->rtapi.BindFramebuffer = &GLApi_impl::BindFramebufferEXT;
+            api->rtapi.DeleteFramebuffers = &GLApi_impl::DeleteFramebuffersEXT;
+            api->rtapi.FramebufferTexture2D = &GLApi_impl::FramebufferTexture2DEXT;
+            api->rtapi.BindRenderbuffer = &GLApi_impl::BindRenderbufferEXT;
+            api->rtapi.DeleteRenderbuffers = &GLApi_impl::DeleteRenderbuffersEXT;
+            api->rtapi.GenRenderbuffers = &GLApi_impl::GenRenderbuffersEXT;
+            api->rtapi.RenderbufferStorage = &GLApi_impl::RenderbufferStorageEXT;
+            api->rtapi.FramebufferRenderbuffer = &GLApi_impl::FramebufferRenderbufferEXT;
+            api->rtapi.CheckFramebufferStatus = &GLApi_impl::CheckFramebufferStatusEXT;
+            
+            api->rtapi.FRAMEBUFFER = GLApi_impl::GL_FRAMEBUFFER_EXT;
+            api->rtapi.COLOR_ATTACHMENT0 = GLApi_impl::GL_COLOR_ATTACHMENT0_EXT;
+            api->rtapi.RENDERBUFFER = GLApi_impl::GL_RENDERBUFFER_EXT;
+            api->rtapi.DEPTH_ATTACHMENT = GLApi_impl::GL_DEPTH_ATTACHMENT_EXT;
+            if (GLApi_impl::Feature_VERSION_1_4_Supported()) {
+                api->rtapi.DEPTH_COMPONENT16 = GLApi_impl::GL_DEPTH_COMPONENT16;
+            } else {
+                api->rtapi.DEPTH_COMPONENT16 = GLApi_impl::GL_DEPTH_COMPONENT;
+            }
+            api->rtapi.FRAMEBUFFER_COMPLETE = GLApi_impl::GL_FRAMEBUFFER_COMPLETE_EXT;
+            
+            api->rtapi.default_framebuffer = 0;
         }
         
         api->Release = &GLApi_impl::DynamicGLFinish;

@@ -28,7 +28,9 @@ namespace GHL {
         gl.rtapi.GenFramebuffers(1, &m_framebuffer);
 		gl.rtapi.BindFramebuffer(gl.rtapi.FRAMEBUFFER,m_framebuffer);
 		m_texture = reinterpret_cast<TextureOpenGL*>(GetParent()->CreateTexture(w, h, fmt, 0));
-		gl.rtapi.FramebufferTexture2D(gl.rtapi.FRAMEBUFFER, gl.rtapi.COLOR_ATTACHMENT0, gl.TEXTURE_2D, m_texture->name(), 0);
+		if (!m_texture) return;
+        m_texture->MarkAsValid();
+        gl.rtapi.FramebufferTexture2D(gl.rtapi.FRAMEBUFFER, gl.rtapi.COLOR_ATTACHMENT0, gl.TEXTURE_2D, m_texture->name(), 0);
 		gl.BindTexture(gl.TEXTURE_2D,0);
 		if (depth) {
             gl.rtapi.GenRenderbuffers(1, &m_depth_renderbuffer);
@@ -40,6 +42,7 @@ namespace GHL {
 	}
 	
 	bool RenderTargetOpenGL::check() const {
+        if (!m_texture) return false;
 		if (!gl.rtapi.valid) return false;
 		bind();
         GL::GLenum status = gl.rtapi.CheckFramebufferStatus(gl.rtapi.FRAMEBUFFER) ;

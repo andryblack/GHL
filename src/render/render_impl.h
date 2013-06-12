@@ -87,6 +87,8 @@ namespace GHL {
         const ShaderProgram* GetShader() const { return m_current_shader; }
         RenderTargetImpl* GetTarget() { return m_scene_target; }
         bool GetHaveDepth() const { return m_have_depth; }
+        static void MatrixMul(const float* a,const float* b,float* r);
+        static void MatrixTranspose(float* m);
 	private:
         UInt32 	m_width;
 		UInt32	m_height;

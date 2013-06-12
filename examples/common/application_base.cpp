@@ -201,3 +201,38 @@ GHL::SoundEffect*   ApplicationBase::LoadEffect( const char* fn) {
     }
     return effect;
 }
+
+
+void ApplicationBase::DrawImage(GHL::Texture* tex,int x,int y) {
+    GHL::Vertex v[4];
+    m_render->SetTexture(tex,0);
+    v[0].x = x;
+    v[0].y = y;
+    v[0].tx = 0;
+    v[0].ty = 0;
+    
+    v[1].x = x+tex->GetWidth();
+    v[1].y = y;
+    v[1].tx = 1;
+    v[1].ty = 0;
+    
+    v[2].x = x+tex->GetWidth();
+    v[2].y = y+tex->GetHeight();
+    v[2].tx = 1;
+    v[2].ty = 1;
+    
+    v[3].x = x;
+    v[3].y = y+tex->GetHeight();
+    v[3].tx = 0;
+    v[3].ty = 1;
+    
+    for (size_t i=0;i<4;++i) {
+        v[i].z = 0.0f;
+        for (size_t j=0;j<4;++j) {
+            v[i].color[j]=0xff;
+        }
+    }
+    
+    GHL::UInt16 idx[] = {0,1,2,2,3,0};
+    m_render->DrawPrimitivesFromMemory(GHL::PRIMITIVE_TYPE_TRIANGLES,GHL::VERTEX_TYPE_SIMPLE,v,4,idx,2);
+}

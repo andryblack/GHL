@@ -3,6 +3,7 @@
 #include "../../ghl_data_impl.h"
 #include "../rendertarget_impl.h"
 #include "texture_stage3d.h"
+#include "rendertarget_stage3d.h"
 
 namespace GHL {
 
@@ -113,10 +114,11 @@ namespace GHL {
         RenderImpl::BeginScene(target);
         if (!target) {
             m_ctx->setRenderToBackBuffer();
-            m_scene_cleared = false;
         } else {
-            
+            RenderTargetStage3d* rt = static_cast<RenderTargetStage3d*>(target);
+            m_ctx->setRenderToTexture(AS3::ui::var(rt->texture()),rt->HaveDepth(),0,0);
         }
+        m_scene_cleared = false;
     }
     
     /// End graphics scene (frame)
@@ -322,17 +324,8 @@ namespace GHL {
     }
     
     void RenderStage3d::CalcPVMatrix() {
-        for (int x=0; x<4; x++)
-        {
-            for (int y=0; y<4; y++)
-            {
-                m_pv_matrix[x*4+y] =
-                    m_p_matrix[0*4 + x]*m_v_matrix[y*4 + 0] +
-                    m_p_matrix[1*4 + x]*m_v_matrix[y*4 + 1] +
-                    m_p_matrix[2*4 + x]*m_v_matrix[y*4 + 2] +
-                    m_p_matrix[3*4 + x]*m_v_matrix[y*4 + 3];
-            }
-        }
+        MatrixMul(m_v_matrix,m_p_matrix,m_pv_matrix);
+        MatrixTranspose(m_pv_matrix);
     }
     
     void GHL_CALL RenderStage3d::SetupScisor( bool enable, UInt32 x, UInt32 y, UInt32 w, UInt32 h ) {
@@ -432,8 +425,28 @@ namespace GHL {
     }
     
     RenderTarget* GHL_CALL RenderStage3d::CreateRenderTarget(UInt32 w,UInt32 h,TextureFormat fmt,bool depth) {
-        NOT_IMPLEMENTED;
-        return 0;
+        flash::display3D::textures::Texture tex =
+        m_ctx->createTexture(w,h,
+                             flash::display3D::Context3DTextureFormat::BGRA,true,0);
+        
+        m_ctx->setRenderToTexture(AS3::ui::var(tex),depth,0,0);
+        
+        if (depth) {
+            m_ctx->clear(0, 0, 0, 0, 1, 0, flash::display3D::Context3DClearMask::ALL);
+        } else {
+            m_ctx->clear(0, 0, 0, 0, 1, 0, flash::display3D::Context3DClearMask::COLOR);
+        }
+        
+        if (!GetTarget()) {
+            m_ctx->setRenderToBackBuffer();
+        } else {
+            RenderTargetStage3d* rt = static_cast<RenderTargetStage3d*>(GetTarget());
+            m_ctx->setRenderToTexture(AS3::ui::var(rt->texture()),rt->HaveDepth(),0,0);
+        }
+
+        TextureStage3d* stex = new TextureStage3d(tex,this,w,h);
+        stex->MarkAsValid();
+        return new RenderTargetStage3d(stex,this,depth);
     }
     
     VertexShader* GHL_CALL RenderStage3d::CreateVertexShader(const Data* ds) {

@@ -46,11 +46,13 @@ RENDER_SOURCES=lucida_console_regular_8.cpp\
     shader_impl.cpp\
     texture_impl.cpp\
     buffer_impl.cpp\
+    rendertarget_impl.cpp\
     pfpl/pfpl_cache.cpp\
     pfpl/pfpl_render.cpp\
     pfpl/pfpl_state.cpp\
     stage3d/render_stage3d.cpp\
     stage3d/texture_stage3d.cpp\
+    stage3d/rendertarget_stage3d.cpp\
     stage3d/agal_assembler.cpp\
     stage3d/agal_generator.cpp
 

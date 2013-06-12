@@ -13,6 +13,15 @@
 		A4215CA3160517B100003B42 /* data in Resources */ = {isa = PBXBuildFile; fileRef = A4215CA2160517B100003B42 /* data */; };
 		A4215CA41605194400003B42 /* libGHL-OSX_d.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4215C921605173D00003B42 /* libGHL-OSX_d.a */; };
 		A4215CA816051B9E00003B42 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4215CA716051B9E00003B42 /* OpenAL.framework */; };
+		A4EA115F175A49250084D6CE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4215C681605165300003B42 /* Cocoa.framework */; };
+		A4EA117B175A497F0084D6CE /* application_base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4215C991605179D00003B42 /* application_base.cpp */; };
+		A4EA117C175A49920084D6CE /* data in Resources */ = {isa = PBXBuildFile; fileRef = A4215CA2160517B100003B42 /* data */; };
+		A4EA1183175A4AF60084D6CE /* ghl_rt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4EA1182175A4AF60084D6CE /* ghl_rt.cpp */; };
+		A4EA1184175A4B0C0084D6CE /* libGHL-OSX_d.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4215C921605173D00003B42 /* libGHL-OSX_d.a */; };
+		A4EA1185175A4B230084D6CE /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4215CA716051B9E00003B42 /* OpenAL.framework */; };
+		A4EA1187175A4B230084D6CE /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4EA1186175A4B230084D6CE /* OpenGL.framework */; };
+		A4EA1188175A4B390084D6CE /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4EA1186175A4B230084D6CE /* OpenGL.framework */; };
+		A4EA1189175A4B3E0084D6CE /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4FAE27E1613A0F900D7E055 /* AudioToolbox.framework */; };
 		A4FAE27F1613A0F900D7E055 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4FAE27E1613A0F900D7E055 /* AudioToolbox.framework */; };
 /* End PBXBuildFile section */
 
@@ -31,21 +40,28 @@
 			remoteGlobalIDString = D2AAC07D0554694100DB518D;
 			remoteInfo = GHL;
 		};
+		A42E0CD8175A5219000ED3DA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A4215C8A1605173D00003B42 /* GHL.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D;
+			remoteInfo = GHL;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		A4215C641605165300003B42 /* basic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = basic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4215C681605165300003B42 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
-		A4215C6B1605165300003B42 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
-		A4215C6C1605165300003B42 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		A4215C6D1605165300003B42 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		A4215C701605165300003B42 /* basic-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "basic-Info.plist"; sourceTree = "<group>"; };
 		A4215C8A1605173D00003B42 /* GHL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GHL.xcodeproj; path = ../../projects/osx/GHL.xcodeproj; sourceTree = "<group>"; };
-		A4215C971605179D00003B42 /* ghl_basic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ghl_basic.cpp; sourceTree = "<group>"; };
+		A4215C971605179D00003B42 /* ghl_basic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ghl_basic.cpp; path = ../../basic/ghl_basic.cpp; sourceTree = "<group>"; };
 		A4215C991605179D00003B42 /* application_base.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = application_base.cpp; sourceTree = "<group>"; };
 		A4215C9A1605179D00003B42 /* application_base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = application_base.h; sourceTree = "<group>"; };
-		A4215CA2160517B100003B42 /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = data; path = ../../data; sourceTree = "<group>"; };
+		A4215CA2160517B100003B42 /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = data; path = ../data; sourceTree = "<group>"; };
 		A4215CA716051B9E00003B42 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		A4EA115E175A49250084D6CE /* rt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = rt.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4EA117D175A49EF0084D6CE /* examples-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "examples-Info.plist"; sourceTree = SOURCE_ROOT; };
+		A4EA1182175A4AF60084D6CE /* ghl_rt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ghl_rt.cpp; sourceTree = "<group>"; };
+		A4EA1186175A4B230084D6CE /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		A4FAE27E1613A0F900D7E055 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -58,6 +74,19 @@
 				A4215CA816051B9E00003B42 /* OpenAL.framework in Frameworks */,
 				A4215CA41605194400003B42 /* libGHL-OSX_d.a in Frameworks */,
 				A4215C691605165300003B42 /* Cocoa.framework in Frameworks */,
+				A4EA1188175A4B390084D6CE /* OpenGL.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A4EA115B175A49250084D6CE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A4EA1187175A4B230084D6CE /* OpenGL.framework in Frameworks */,
+				A4EA1185175A4B230084D6CE /* OpenAL.framework in Frameworks */,
+				A4EA1184175A4B0C0084D6CE /* libGHL-OSX_d.a in Frameworks */,
+				A4EA115F175A49250084D6CE /* Cocoa.framework in Frameworks */,
+				A4EA1189175A4B3E0084D6CE /* AudioToolbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,7 +97,11 @@
 			isa = PBXGroup;
 			children = (
 				A4215C8A1605173D00003B42 /* GHL.xcodeproj */,
+				A4215C6F1605165300003B42 /* Supporting Files */,
+				A4215CA2160517B100003B42 /* data */,
+				A4215C981605179D00003B42 /* common */,
 				A4215C6E1605165300003B42 /* basic */,
+				A4EA1160175A49250084D6CE /* rt */,
 				A4215C671605165300003B42 /* Frameworks */,
 				A4215C651605165300003B42 /* Products */,
 			);
@@ -78,6 +111,7 @@
 			isa = PBXGroup;
 			children = (
 				A4215C641605165300003B42 /* basic.app */,
+				A4EA115E175A49250084D6CE /* rt.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,10 +129,8 @@
 		A4215C6A1605165300003B42 /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A4EA1186175A4B230084D6CE /* OpenGL.framework */,
 				A4FAE27E1613A0F900D7E055 /* AudioToolbox.framework */,
-				A4215C6B1605165300003B42 /* AppKit.framework */,
-				A4215C6C1605165300003B42 /* CoreData.framework */,
-				A4215C6D1605165300003B42 /* Foundation.framework */,
 			);
 			name = "Other Frameworks";
 			sourceTree = "<group>";
@@ -106,10 +138,7 @@
 		A4215C6E1605165300003B42 /* basic */ = {
 			isa = PBXGroup;
 			children = (
-				A4215CA2160517B100003B42 /* data */,
-				A4215C931605179D00003B42 /* basic */,
-				A4215C981605179D00003B42 /* common */,
-				A4215C6F1605165300003B42 /* Supporting Files */,
+				A4215C971605179D00003B42 /* ghl_basic.cpp */,
 			);
 			path = basic;
 			sourceTree = "<group>";
@@ -117,9 +146,10 @@
 		A4215C6F1605165300003B42 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				A4215C701605165300003B42 /* basic-Info.plist */,
+				A4EA117D175A49EF0084D6CE /* examples-Info.plist */,
 			);
 			name = "Supporting Files";
+			path = basic;
 			sourceTree = "<group>";
 		};
 		A4215C8B1605173D00003B42 /* Products */ = {
@@ -130,15 +160,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A4215C931605179D00003B42 /* basic */ = {
-			isa = PBXGroup;
-			children = (
-				A4215C971605179D00003B42 /* ghl_basic.cpp */,
-			);
-			name = basic;
-			path = ../../basic;
-			sourceTree = "<group>";
-		};
 		A4215C981605179D00003B42 /* common */ = {
 			isa = PBXGroup;
 			children = (
@@ -146,7 +167,16 @@
 				A4215C9A1605179D00003B42 /* application_base.h */,
 			);
 			name = common;
-			path = ../../common;
+			path = ../common;
+			sourceTree = "<group>";
+		};
+		A4EA1160175A49250084D6CE /* rt */ = {
+			isa = PBXGroup;
+			children = (
+				A4EA1182175A4AF60084D6CE /* ghl_rt.cpp */,
+			);
+			name = rt;
+			path = ../rt;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -170,6 +200,24 @@
 			productReference = A4215C641605165300003B42 /* basic.app */;
 			productType = "com.apple.product-type.application";
 		};
+		A4EA115D175A49250084D6CE /* rt */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A4EA1174175A49260084D6CE /* Build configuration list for PBXNativeTarget "rt" */;
+			buildPhases = (
+				A4EA115A175A49250084D6CE /* Sources */,
+				A4EA115B175A49250084D6CE /* Frameworks */,
+				A4EA115C175A49250084D6CE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A42E0CD9175A5219000ED3DA /* PBXTargetDependency */,
+			);
+			name = rt;
+			productName = rt;
+			productReference = A4EA115E175A49250084D6CE /* rt.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -179,7 +227,7 @@
 				LastUpgradeCheck = 0440;
 				ORGANIZATIONNAME = "Andrey Kunitsyn";
 			};
-			buildConfigurationList = A4215C5E1605165300003B42 /* Build configuration list for PBXProject "basic" */;
+			buildConfigurationList = A4215C5E1605165300003B42 /* Build configuration list for PBXProject "examples" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -198,6 +246,7 @@
 			projectRoot = "";
 			targets = (
 				A4215C631605165300003B42 /* basic */,
+				A4EA115D175A49250084D6CE /* rt */,
 			);
 		};
 /* End PBXProject section */
@@ -221,6 +270,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A4EA115C175A49250084D6CE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A4EA117C175A49920084D6CE /* data in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -233,6 +290,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A4EA115A175A49250084D6CE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A4EA117B175A497F0084D6CE /* application_base.cpp in Sources */,
+				A4EA1183175A4AF60084D6CE /* ghl_rt.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -240,6 +306,11 @@
 			isa = PBXTargetDependency;
 			name = GHL;
 			targetProxy = A4215CA5160519D400003B42 /* PBXContainerItemProxy */;
+		};
+		A42E0CD9175A5219000ED3DA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = GHL;
+			targetProxy = A42E0CD8175A5219000ED3DA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -297,7 +368,7 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				INFOPLIST_FILE = "basic/basic-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/examples-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -308,7 +379,40 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				INFOPLIST_FILE = "basic/basic-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/examples-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		A4EA1172175A49260084D6CE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INFOPLIST_FILE = "$(SRCROOT)/examples-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		A4EA1173175A49260084D6CE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				INFOPLIST_FILE = "$(SRCROOT)/examples-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -317,7 +421,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A4215C5E1605165300003B42 /* Build configuration list for PBXProject "basic" */ = {
+		A4215C5E1605165300003B42 /* Build configuration list for PBXProject "examples" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A4215C801605165300003B42 /* Debug */,
@@ -331,6 +435,15 @@
 			buildConfigurations = (
 				A4215C831605165300003B42 /* Debug */,
 				A4215C841605165300003B42 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A4EA1174175A49260084D6CE /* Build configuration list for PBXNativeTarget "rt" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A4EA1172175A49260084D6CE /* Debug */,
+				A4EA1173175A49260084D6CE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

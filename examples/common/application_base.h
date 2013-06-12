@@ -27,6 +27,8 @@ protected:
 
     GHL::Texture* LoadTexture(const char* fn);
     GHL::SoundEffect*   LoadEffect( const char* fn);
+    
+    void DrawImage(GHL::Texture* tex,int x,int y);
 public:
     	///
 	virtual void GHL_CALL SetSystem( GHL::System* sys ) ;
