@@ -138,6 +138,27 @@ namespace GHL {
 			m_data_dir = [res UTF8String];
             LOG_VERBOSE("data_dir: " << m_data_dir);
 		}
+        NSArray* paths = NSSearchPathForDirectoriesInDomains(
+                                                             NSApplicationSupportDirectory,
+                                                             NSUserDomainMask,
+                                                            YES);
+        if ( paths.count == 0 ) {
+            LOG_ERROR("not found any application support directory");
+            m_profile_dir = "/Library/Application Support/";
+            return;
+        }
+        NSError* error = nil;
+        NSString* path = [paths objectAtIndex:0];
+        NSFileManager* fm = [[NSFileManager alloc] init];
+        [fm createDirectoryAtPath:path
+                        withIntermediateDirectories:YES
+                        attributes:nil
+                        error:&error];
+        if (error) {
+            LOG_ERROR("create directory: " << [[error description] UTF8String]);
+        }
+        m_profile_dir = [path UTF8String];
+        [fm release];
 	}
 
 	VFSCocoaImpl::~VFSCocoaImpl() {
@@ -147,6 +168,9 @@ namespace GHL {
 	const char* GHL_CALL VFSCocoaImpl::GetDir(DirType dt) const {
 		if (dt == DIR_TYPE_DATA) {
 			return m_data_dir.c_str();
+		}
+        if (dt == DIR_TYPE_USER_PROFILE) {
+			return m_profile_dir.c_str();
 		}
 		return 0;
 	}
@@ -185,6 +209,14 @@ namespace GHL {
 			}
 		} else if (ot==FILE_WRITE) {
 			NSString* path = [NSString stringWithUTF8String:filename.c_str()];
+            NSFileManager* fm = [[NSFileManager alloc] init];
+            [fm
+             createDirectoryAtPath:[path stringByDeletingLastPathComponent]
+             withIntermediateDirectories:YES
+             attributes:nil
+             error:nil];
+            [fm release];
+            
 			NSFileHandle* handle = [NSFileHandle fileHandleForWritingAtPath:path];
 			if (handle) {
 				return new CocoaWriteFileStream(handle);

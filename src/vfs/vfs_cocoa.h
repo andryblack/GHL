@@ -33,6 +33,7 @@ namespace GHL  {
 		virtual DataStream* GHL_CALL CreateStreamFromMemory(Byte* data,UInt32 size) ;
 	private:
 		std::string m_data_dir;
+        std::string m_profile_dir;
 	};
 }
 

@@ -608,10 +608,12 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     LOG_INFO( "WinLibAppDelegate::applicationDidFinishLaunching" );
     (void)aNotification;
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-	// Insert code here to initialize your application 
-	GHL::Settings settings;
-	settings.width = 800;
-	settings.height = 600;
+	
+    NSScreen* screen = [NSScreen mainScreen];
+	 
+    GHL::Settings settings;
+	settings.width = screen.frame.size.width;
+	settings.height = screen.frame.size.height;
 	settings.fullscreen = g_fullscreen;
     settings.title = 0;
     settings.depth = false;
@@ -640,7 +642,6 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
         attrs[sizeof(attrs)/sizeof(attrs[0])-1-2]=0;
     }
 	
-	NSScreen* screen = [NSScreen mainScreen];
 	NSRect rect = NSMakeRect((screen.frame.size.width-settings.width)/2 ,
                              (screen.frame.size.height-settings.height)/2,
                              settings.width,settings.height);
