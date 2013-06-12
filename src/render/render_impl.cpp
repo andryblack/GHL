@@ -82,7 +82,6 @@ namespace GHL {
             m_scene_target->AddRef();
 			m_scene_target->BeginScene(this);
 		}
-        SetViewport(0,0,GetWidth(),GetHeight());
         SetOrthoProjection();
 		ResetRenderState();
         m_scene_started = true;

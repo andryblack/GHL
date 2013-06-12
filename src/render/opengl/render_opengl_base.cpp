@@ -154,12 +154,9 @@ namespace GHL {
     /// Begin graphics scene (frame)
     void GHL_CALL RenderOpenGLBase::BeginScene(RenderTarget* target) {
         RenderImpl::BeginScene(target);
+        CHECK_GL(gl.Viewport(0,0,GetWidth(),GetHeight()));
     }
     
-	void GHL_CALL RenderOpenGLBase::SetViewport(UInt32 x,UInt32 y,UInt32 w,UInt32 h) {
-		UInt32 _y = GetHeight()-h-y;
-		CHECK_GL(gl.Viewport(x,_y,w,h));
-	}
 	
 	/// setup scisor test
 	void GHL_CALL RenderOpenGLBase::SetupScisor( bool enable, UInt32 x, UInt32 y, UInt32 w, UInt32 h ) {

@@ -99,10 +99,6 @@ namespace GHL {
 		/// End graphics scene (frame)
 		virtual void GHL_CALL EndScene();
 		
-		
-		/// set viewport
-		virtual void GHL_CALL SetViewport(UInt32 x,UInt32 y,UInt32 w,UInt32 h);
-		
 		/// clear scene
 		virtual void GHL_CALL Clear(float r,float g,float b,float a,float depth);
 		

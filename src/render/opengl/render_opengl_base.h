@@ -51,7 +51,6 @@ namespace GHL
 		/// clear scene
 		virtual void GHL_CALL Clear(float r,float g,float b,float a, float depth) ;
 		
-		virtual void GHL_CALL SetViewport(UInt32 x,UInt32 y,UInt32 w,UInt32 h);
 		
 		/// create empty texture
 		virtual Texture* GHL_CALL CreateTexture(UInt32 width,UInt32 height,TextureFormat fmt,const Image* data);

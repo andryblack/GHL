@@ -157,9 +157,6 @@ namespace GHL
 		/// Get render height
 		virtual UInt32 GHL_CALL GetHeight() const = 0;
 		
-		/// set viewport
-		virtual void GHL_CALL SetViewport(UInt32 x,UInt32 y,UInt32 w,UInt32 h) = 0;
-		
 		/// clear scene
 		virtual void GHL_CALL Clear(float r,float g,float b,float a, float depth) = 0;
 		

@@ -127,10 +127,6 @@ namespace GHL {
     }
     
     
-    /// set viewport
-    void GHL_CALL RenderStage3d::SetViewport(UInt32 x,UInt32 y,UInt32 w,UInt32 h) {
-        
-    }
     
     /// clear scene
     void GHL_CALL RenderStage3d::Clear(float r,float g,float b,float a,float depth) {
