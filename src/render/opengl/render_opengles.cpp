@@ -50,6 +50,10 @@ namespace GHL {
         return RenderOpenGLPPL::RenderInit();
     }
     
+    void GHL_CALL RenderOpenGLES2::BeginScene(RenderTarget* target) {
+        gl.rtapi.default_framebuffer = g_default_framebuffer;
+        RenderOpenGLPPL::BeginScene(target);
+    }
     
     
     

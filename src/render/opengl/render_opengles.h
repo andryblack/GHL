@@ -27,6 +27,7 @@ namespace GHL {
     public:
         RenderOpenGLES2(UInt32 w,UInt32 h,bool haveDepth);
         
+        void GHL_CALL BeginScene(RenderTarget* target);
         bool RenderInit();
     };
 }

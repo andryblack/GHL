@@ -66,7 +66,7 @@ namespace GHL {
     void GHL_CALL ShaderUniformGLSL::SetValueMatrix(const float* v) {
         CHECK_GL(gl.sdrapi.UniformMatrix4fv(m_location,1,gl._FALSE,v));
     }
-	ShaderUniform* GHL_CALL ShaderProgramGLSL::GetUniform(const char* name) {
+	ShaderUniform* GHL_CALL ShaderProgramGLSL::GetUniform(const char* name) const {
 		std::string sname(name);
 		std::map<std::string,ShaderUniformGLSL>::iterator it = m_uniforms.find(sname);
 		if (it!=m_uniforms.end())

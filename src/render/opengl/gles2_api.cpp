@@ -102,6 +102,10 @@ namespace GHL {
 #define GL_RGBA8 GL_RGBA
 #define GL_UNPACK_ROW_LENGTH 0
     
+    static void _glBufferData (GLenum target, GL::GLsizeiptr size, const GLvoid *data, GLenum usage) {
+        glBufferData(target, size, data, usage);
+    }
+    
     bool GLES2Api::InitGL(GL* api) {
         GLES2Api_impl::Init();
         
@@ -149,19 +153,32 @@ namespace GHL {
         
         //        }
         
-        api->vboapi.valid = false;
-        //        if (GLApi_impl::CheckExtensionSupported("")()) {
-        //#define DYNAMIC_GL_FUNCTION(Res,Name,Args) api->vboapi.Name = &GLApi_impl::Name;
-        //            DYNAMIC_GL_FUNCTIONS_VBO
-        //#undef DYNAMIC_GL_FUNCTION
-        //            api->vboapi.ARRAY_BUFFER = GLApi_impl::GL_ARRAY_BUFFER;
-        //            api->vboapi.ELEMENT_ARRAY_BUFFER = GLApi_impl::GL_ELEMENT_ARRAY_BUFFER;
-        //            api->vboapi.STATIC_DRAW = GLApi_impl::GL_STATIC_DRAW;
-        //            api->vboapi.valid = true;
-        //        } else {
-        //
-        //        }
+        api->vboapi.valid = true;
+        api->vboapi.STATIC_DRAW = GL_STATIC_DRAW;
+        api->vboapi.ELEMENT_ARRAY_BUFFER = GL_ELEMENT_ARRAY_BUFFER;
+        api->vboapi.ARRAY_BUFFER = GL_ARRAY_BUFFER;
+        api->vboapi.BindBuffer = glBindBuffer;
+        api->vboapi.BufferData = _glBufferData;
+        api->vboapi.DeleteBuffers = glDeleteBuffers;
+        api->vboapi.GenBuffers = glGenBuffers;
         
+        api->rtapi.valid = true;
+        api->rtapi.FRAMEBUFFER = GL_FRAMEBUFFER;
+        api->rtapi.COLOR_ATTACHMENT0 = GL_COLOR_ATTACHMENT0;
+        api->rtapi.RENDERBUFFER = GL_RENDERBUFFER;
+        api->rtapi.DEPTH_ATTACHMENT = GL_DEPTH_ATTACHMENT;
+        api->rtapi.DEPTH_COMPONENT16 = GL_DEPTH_COMPONENT16;
+        api->rtapi.FRAMEBUFFER_COMPLETE = GL_FRAMEBUFFER_COMPLETE;
+        api->rtapi.GenFramebuffers = glGenFramebuffers;
+        api->rtapi.BindFramebuffer = glBindFramebuffer;
+        api->rtapi.DeleteFramebuffers = glDeleteFramebuffers;
+        api->rtapi.FramebufferTexture2D = glFramebufferTexture2D;
+        api->rtapi.BindRenderbuffer = glBindRenderbuffer;
+        api->rtapi.DeleteRenderbuffers = glDeleteRenderbuffers;
+        api->rtapi.GenRenderbuffers = glGenRenderbuffers;
+        api->rtapi.RenderbufferStorage = glRenderbufferStorage;
+        api->rtapi.FramebufferRenderbuffer = glFramebufferRenderbuffer;
+        api->rtapi.CheckFramebufferStatus = glCheckFramebufferStatus;
         
         
         api->Release = 0;

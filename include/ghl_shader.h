@@ -55,7 +55,7 @@ namespace GHL
 	struct ShaderProgram : RefCounter
 	{
 		/// get uniform
-		virtual ShaderUniform* GHL_CALL GetUniform(const char* name) = 0;
+		virtual ShaderUniform* GHL_CALL GetUniform(const char* name) const = 0;
 	};
 	
 }

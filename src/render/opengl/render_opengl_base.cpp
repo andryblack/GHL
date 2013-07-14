@@ -154,6 +154,8 @@ namespace GHL {
     /// Begin graphics scene (frame)
     void GHL_CALL RenderOpenGLBase::BeginScene(RenderTarget* target) {
         RenderImpl::BeginScene(target);
+        if (!target && gl.rtapi.valid)
+            CHECK_GL(gl.rtapi.BindFramebuffer(gl.rtapi.FRAMEBUFFER,gl.rtapi.default_framebuffer));
         CHECK_GL(gl.Viewport(0,0,GetWidth(),GetHeight()));
     }
     
@@ -653,7 +655,7 @@ namespace GHL {
     
     
     RenderOpenGLPPL::RenderOpenGLPPL(UInt32 w,UInt32 h,bool haveDepth) : RenderOpenGLBase(w,h,haveDepth) {
-        
+        m_reset_uniforms = true;
     }
     
     bool RenderOpenGLPPL::RenderInit() {
@@ -706,11 +708,13 @@ namespace GHL {
         } else {
             std::copy(m, m+16, m_projection_matrix);
         }
+        m_reset_uniforms = true;
     }
 	
 	/// set view matrix
 	void GHL_CALL RenderOpenGLPPL::SetViewMatrix(const float* m) {
 		std::copy(m, m+16, m_view_matrix);
+        m_reset_uniforms = true;
 	}
 
     
@@ -754,9 +758,13 @@ namespace GHL {
         m_shaders_render.set_shader(shader);
     }
     void RenderOpenGLPPL::DoDrawPrimitives(VertexType v_type) {
-        ShaderProgram* prg = m_shaders_render.get_shader(m_crnt_state, v_type==VERTEX_TYPE_2_TEX);
+        const ShaderProgram* prg = m_shaders_render.get_shader(m_crnt_state, v_type==VERTEX_TYPE_2_TEX);
         if (prg) {
             RenderOpenGLBase::SetShader(prg);
+        } else if (m_reset_uniforms) {
+            prg = GetShader();
+        }
+        if (prg) {
             ShaderUniform* uniform = prg->GetUniform("mProjection");
             if (uniform) {
                 uniform->SetValueMatrix(m_projection_matrix);
@@ -776,6 +784,7 @@ namespace GHL {
                 }
             }
         }
+        m_reset_uniforms = false;
     }
     void GHL_CALL RenderOpenGLPPL::DrawPrimitives(PrimitiveType type,UInt32 v_amount,UInt32 i_begin,UInt32 amount) {
         const VertexBuffer* vb = GetVertexBuffer();

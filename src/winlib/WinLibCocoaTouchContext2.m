@@ -61,6 +61,7 @@
 {
     [EAGLContext setCurrentContext:m_context];
 	// Allocate color buffer backing based on the current layer size
+    glBindFramebuffer(GL_FRAMEBUFFER, m_defaultFramebuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, m_colorRenderbuffer);
     [m_context renderbufferStorage:GL_RENDERBUFFER fromDrawable:layer];
     glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &m_backingWidth);
@@ -82,16 +83,22 @@
     if (m_defaultFramebuffer) {
         glBindFramebuffer(GL_FRAMEBUFFER, m_defaultFramebuffer);
     }
-    if (m_colorRenderbuffer) {
-        glBindRenderbuffer(GL_RENDERBUFFER, m_colorRenderbuffer);
-    }
-    if (m_depthRenderbuffer) {
-        glBindRenderbuffer(GL_RENDERBUFFER, m_depthRenderbuffer);
-    }
+//    if (m_colorRenderbuffer) {
+//        glBindRenderbuffer(GL_RENDERBUFFER, m_colorRenderbuffer);
+//    }
+//    if (m_depthRenderbuffer) {
+//        glBindRenderbuffer(GL_RENDERBUFFER, m_depthRenderbuffer);
+//    }
 }
 
 -(void)present
 {
+    if (m_defaultFramebuffer) {
+        glBindFramebuffer(GL_FRAMEBUFFER, m_defaultFramebuffer);
+    }
+    if (m_colorRenderbuffer) {
+        glBindRenderbuffer(GL_RENDERBUFFER, m_colorRenderbuffer);
+    }
     [m_context presentRenderbuffer:GL_RENDERBUFFER];
 }
 

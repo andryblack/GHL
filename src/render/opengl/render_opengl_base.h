@@ -163,6 +163,7 @@ namespace GHL
         float               m_projection_matrix[16];
         float               m_view_matrix[16];
         void DoDrawPrimitives(VertexType v_type);
+        bool    m_reset_uniforms;
     };
     
 }

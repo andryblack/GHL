@@ -74,7 +74,7 @@ namespace GHL {
 		virtual ~ShaderProgramGLSL();
 		
 		/// get uniform
-		ShaderUniform* GHL_CALL GetUniform(const char* name) ;
+		ShaderUniform* GHL_CALL GetUniform(const char* name) const;
 		
 		GL::GLhandle handle() const { return m_handle;}
         GL::GLint   GetAttribute(GLSLPredefinedAttribute attr) const;
@@ -83,7 +83,7 @@ namespace GHL {
 		GL::GLhandle	m_handle;
 		VertexShaderGLSL* m_v;
 		FragmentShaderGLSL* m_f;
-		std::map<std::string,ShaderUniformGLSL> m_uniforms;
+		mutable std::map<std::string,ShaderUniformGLSL> m_uniforms;
         mutable GL::GLint m_attributes[GLSLPredefinedAttributesAmount];
 	};
 }
