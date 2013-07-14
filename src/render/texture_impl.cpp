@@ -32,6 +32,23 @@ namespace GHL {
     void TextureImpl::RestoreTexture(UInt32 stage) {
         m_parent->SetTexture(m_parent->GetTexture(stage), stage);
     }
+    
+    UInt32 GHL_CALL TextureImpl::GetMemoryUsage() const {
+        UInt32 res = m_width * m_height;
+        switch (GetFormat()) {
+            case GHL::TEXTURE_FORMAT_ALPHA:     res *= 1; break;
+            case GHL::TEXTURE_FORMAT_RGB:       res *= 3; break;
+            case GHL::TEXTURE_FORMAT_RGBA:      res *= 4; break;
+            case GHL::TEXTURE_FORMAT_565:       res *= 2; break;
+            case GHL::TEXTURE_FORMAT_4444:      res *= 2; break;
+            case GHL::TEXTURE_FORMAT_PVRTC_2BPPV1: res = (res * 2 + 7)/8; break;
+            case GHL::TEXTURE_FORMAT_PVRTC_4BPPV1: res = (res * 4 + 7)/8; break;
+            default: break;
+        }
+        if (HeveMipmaps())
+            res *= 2;
+        return res;
+    }
 }
 
 GHL_API GHL::TextureFormat GHL_CALL GHL_ImageFormatToTextureFormat( GHL::ImageFormat fmt ) {

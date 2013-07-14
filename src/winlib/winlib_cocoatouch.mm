@@ -535,12 +535,13 @@ public:
 	g_application->SetVFS(m_vfs);
 
 	CGRect rect = [[UIScreen mainScreen] bounds];
+    float scale = [[UIScreen mainScreen] scale];
 	
 	GHL::Settings settings;
-	settings.width = rect.size.width;
-	settings.height = rect.size.height;
+	settings.width = rect.size.width * scale;
+	settings.height = rect.size.height * scale;
 	settings.fullscreen = true;
-	settings.depth = false;
+	settings.depth = g_need_depth;
 	
 	
 	g_application->FillSettings(&settings);
@@ -665,7 +666,7 @@ bool GHL_CALL SystemCocoaTouch::SetDeviceState( GHL::DeviceState name, void* dat
 		bool* state = (bool*)data;
 		m_controller.view.multipleTouchEnabled = *state ? YES : NO;
 		return true;
-	} else if (name==GHL::DEVICE_STATR_RETINA_ENABLED) {
+	} else if (name==GHL::DEVICE_STATE_RETINA_ENABLED) {
 		bool* state = (bool*)data;
 		g_retina_enabled = *state;
 		return true;

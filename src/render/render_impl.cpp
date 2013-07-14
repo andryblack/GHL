@@ -445,30 +445,17 @@ namespace GHL {
 #endif
     }
 	
-    UInt32 GHL_CALL RenderImpl::GetTexturesMemory() const {
+    UInt32 GHL_CALL RenderImpl::GetMemoryUsage() const {
         UInt32 res = 0;
 #ifdef GHL_DEBUG
         for (size_t i=0;i<m_textures.size();i++) {
-            UInt32 size = m_textures[i]->GetWidth() * m_textures[i]->GetHeight();
-            if (m_textures[i]->GetFormat()==TEXTURE_FORMAT_RGBA)
-                size*=4;
-            else
-                size*=3;
-            if (m_textures[i]->HeveMipmaps())
-                size*=2;
-            res+=size;
+            res += m_textures[i]->GetMemoryUsage();
         }
         for (size_t i=0;i<m_targets.size();i++) {
-            UInt32 size = m_targets[i]->GetTexture()->GetWidth() * m_targets[i]->GetTexture()->GetHeight();
-            if (m_targets[i]->GetTexture()->GetFormat()==TEXTURE_FORMAT_RGBA)
-                size*=4;
-            else
-                size*=3;
-            if (m_targets[i]->GetTexture()->HeveMipmaps())
-                size*=2;
-            if (m_targets[i]->HaveDepth())
-                size+=m_targets[i]->GetWidth() * m_targets[i]->GetHeight()*4;
-            res+=size;
+            res += m_targets[i]->GetTexture()->GetMemoryUsage();
+            if (m_targets[i]->HaveDepth()) {
+                res += m_targets[i]->GetWidth() * m_targets[i]->GetHeight() * 2;
+            }
         }
 #endif
         return res;

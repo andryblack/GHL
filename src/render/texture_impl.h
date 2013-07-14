@@ -61,6 +61,7 @@ namespace GHL {
 		virtual void GHL_CALL SetWrapModeV(TextureWrapMode wm) { m_wrap_v = wm; }
 		/// get texture wrap mode V
 		
+        virtual UInt32 GHL_CALL GetMemoryUsage() const;
         /// flush internal data to texture
         virtual void GHL_CALL FlushInternal() {
 #ifdef GHL_DEBUG

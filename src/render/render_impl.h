@@ -72,7 +72,7 @@ namespace GHL {
 
 		virtual void GHL_CALL DebugDrawText( Int32 x,Int32 y,const char* text );
 	
-		virtual UInt32 GHL_CALL GetTexturesMemory() const;
+		virtual UInt32 GHL_CALL GetMemoryUsage() const;
     protected:
 #ifdef GHL_DEBUG
 		bool CheckTexture(const Texture*);

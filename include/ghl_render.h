@@ -215,8 +215,8 @@ namespace GHL
 		
 		/// draw debug text
 		virtual void GHL_CALL DebugDrawText( Int32 x,Int32 y,const char* text ) = 0;
-		/// get textures memory
-		virtual UInt32 GHL_CALL GetTexturesMemory() const = 0;
+		/// get data memory usage
+		virtual UInt32 GHL_CALL GetMemoryUsage() const = 0;
 	};
 	
 	

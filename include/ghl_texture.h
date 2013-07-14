@@ -103,6 +103,8 @@ namespace GHL
         virtual void GHL_CALL FlushInternal() = 0;
         /// discard internal data (flush if needed)
         virtual void GHL_CALL DiscardInternal() = 0;
+        /// texture memory usage
+        virtual UInt32 GHL_CALL GetMemoryUsage() const = 0;
 	};
 
 
