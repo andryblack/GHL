@@ -59,6 +59,8 @@ namespace GHL {
 		bool SwapChannelsRB();
 		/// swap RB channels
 		virtual bool GHL_CALL SwapRB() { return SwapChannelsRB() ; }
+        /// Premultiply alpha
+        virtual void GHL_CALL PremultiplyAlpha();
 		UInt32 GetBpp() const;
 		void FlipV();
 		DataImpl*	GetRawData() { return m_data; }

@@ -262,6 +262,24 @@ namespace GHL
             simg->Release();
         }
     }
+    
+    /// Premultiply alpha
+    void GHL_CALL ImageImpl::PremultiplyAlpha() {
+        if (!m_data) return;
+        Byte* data = m_data->GetDataPtr();
+        if (GetFormat()==IMAGE_FORMAT_RGBA) {
+            const size_t len = m_width*m_height;
+			for (size_t i=0;i<len;i++) {
+				UInt16 a = data[3];
+                data[0] = UInt16(data[0]) * a / 255;
+                data[1] = UInt16(data[1]) * a / 255;
+                data[2] = UInt16(data[2]) * a / 255;
+                data+=4;
+			}
+        } else if (GetFormat()==IMAGE_FORMAT_4444) {
+            LOG_ERROR("PremultiplyAlpha for IMAGE_FORMAT_4444 not implemented");
+        }
+    }
 
     /// clone image
     Image* GHL_CALL ImageImpl::Clone() const {

@@ -72,6 +72,8 @@ namespace GHL
         virtual Image* GHL_CALL Clone() const = 0;
         /// Draw other image
         virtual void GHL_CALL Draw(UInt32 x,UInt32 y,const Image* src) = 0;
+        /// Premultiply alpha
+        virtual void GHL_CALL PremultiplyAlpha() = 0;
     };
 
 } /*namespace*/
