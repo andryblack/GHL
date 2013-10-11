@@ -83,7 +83,7 @@ namespace GHL {
     
     ShaderProgram* GLSLGenerator::generate(const pfpl_state_data& entry, bool tex2 ) {
         if (!m_simple_v) {
-            ConstInlinedData data((const Byte*)simple_v,strlen(simple_v));
+            ConstInlinedData data((const Byte*)simple_v,UInt32(strlen(simple_v)));
             m_simple_v = m_render->CreateVertexShader(&data);
             if (!m_simple_v) {
                 LOG_ERROR("create vertex shader");
@@ -126,7 +126,7 @@ namespace GHL {
         ss << "  gl_FragColor = clr; \n";
         ss << "}\n";
         std::string s = ss.str();
-        ConstInlinedData data((const Byte*)s.c_str(),s.length());
+        ConstInlinedData data((const Byte*)s.c_str(),UInt32(s.length()));
         FragmentShader* fs = m_render->CreateFragmentShader(&data);
         if (!fs) {
             LOG_ERROR("create fragment shader:\n");

@@ -31,7 +31,7 @@ static const char* MODULE = "WINLIB";
 static GHL::Application* g_application = 0;
 static UIInterfaceOrientation g_orientation = UIInterfaceOrientationLandscapeLeft;
 static bool g_orientationLocked = false;
-static bool g_retina_enabled = false;
+static bool g_retina_enabled = true;
 static bool g_need_depth = false;
 
 #ifndef GHL_NOSOUND
@@ -365,7 +365,7 @@ public:
 - (int)touchNum:(UITouch*)touch {
 	for (size_t i=0;i<max_touches;i++) {
 		if (m_touches[i]==touch)
-			return i;
+			return int(i);
 	}
 	return -1;
 }
@@ -374,10 +374,12 @@ public:
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
 	for (UITouch* touch in touches) {
 		CGPoint pos = [touch locationInView:self];
+        pos.x*=self.contentScaleFactor;
+		pos.y*=self.contentScaleFactor;
 		int touch_num = -1;
 		for (size_t i=0;i<max_touches;i++) {
 			if (m_touches[i]==0) {
-				touch_num = i;
+				touch_num = int(i);
 				break;
 			}
 		}
@@ -396,6 +398,8 @@ public:
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
 	for (UITouch* touch in touches) {
 		CGPoint pos = [touch locationInView:self];
+        pos.x*=self.contentScaleFactor;
+		pos.y*=self.contentScaleFactor;
 		int touch_num = [self touchNum:touch];
 		if (touch_num<0) {
 			continue;
@@ -417,6 +421,8 @@ public:
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
 	for (UITouch* touch in touches) {
 		CGPoint pos = [touch locationInView:self];
+        pos.x*=self.contentScaleFactor;
+		pos.y*=self.contentScaleFactor;
 		int touch_num = [self touchNum:touch];
 		if (touch_num<0) {
 			continue;

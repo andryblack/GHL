@@ -32,7 +32,7 @@ namespace GHL {
 		if ( end > ( m_buffer + m_size ) ) {
 			end = m_buffer + m_size;
 		}
-		size = end - begin;
+		size = UInt32(end - begin);
 		::memcpy(m_buffer, data, size);
 	}
 	

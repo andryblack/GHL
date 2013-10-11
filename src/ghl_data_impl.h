@@ -128,7 +128,7 @@ namespace GHL {
         }
         /// Data size
 		virtual UInt32 GHL_CALL	GetSize() const {
-            return m_data.size();
+            return UInt32(m_data.size());
         }
 		
         /// Const data ptr
@@ -144,7 +144,7 @@ namespace GHL {
         void append( const Byte* data, UInt32 size ) {
             size_t pos = m_data.size();
             m_data.resize(m_data.size()+size);
-            SetData(pos,data,size);
+            SetData(UInt32(pos),data,size);
         }
         
         void reserve( UInt32 size ) {

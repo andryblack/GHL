@@ -779,7 +779,7 @@ namespace GHL {
                     ::snprintf(uf, 64, "texture_%d",int(i));
                     uniform = prg->GetUniform(uf);
                     if (uniform) {
-                        uniform->SetValueInt(i);
+                        uniform->SetValueInt(Int32(i));
                     }
                 }
             }

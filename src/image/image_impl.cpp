@@ -83,7 +83,7 @@ namespace GHL
 		if (fmt==IMAGE_FORMAT_RGB)
 		{
 			size_t len = m_width*m_height;
-			DataImpl* buffer = new DataImpl( len * 3 );
+			DataImpl* buffer = new DataImpl( UInt32(len * 3) );
 			Byte* data = buffer->GetDataPtr();
 			if (m_fmt==IMAGE_FORMAT_RGBA) {
 				for (size_t i=0;i<len;i++) {
@@ -105,7 +105,7 @@ namespace GHL
 		else if (fmt==IMAGE_FORMAT_RGBA)
 		{
 			size_t len = m_width*m_height;
-			DataImpl* buffer = new DataImpl( len * 4 );
+			DataImpl* buffer = new DataImpl( UInt32(len * 4) );
 			Byte* data = buffer->GetDataPtr();
 			if (m_fmt==IMAGE_FORMAT_RGB) {
 				for (size_t i=0;i<len;i++) {
