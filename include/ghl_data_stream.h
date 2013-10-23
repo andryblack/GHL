@@ -36,7 +36,7 @@ namespace GHL
 	enum FileOperation
 	{
 		FILE_READ,		///< read
-		FILE_WRITE,		///< write
+        FILE_WRITE		///< write
 	};
 
 	/// file seek type
@@ -44,7 +44,7 @@ namespace GHL
 	{
 		F_SEEK_BEGIN,	///< seek from begin of stream
 		F_SEEK_CURRENT,	///< seek from current position
-		F_SEEK_END,		///< seek from end of stream
+        F_SEEK_END		///< seek from end of stream
 	};
 
 	/// data stream interfacce

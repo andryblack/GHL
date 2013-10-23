@@ -88,18 +88,3 @@ namespace GHL
 	
 }
 
-GHL_API GHL::Data* GHL_CALL GHL_ReadAllData( GHL::DataStream* ds ) {
-    if (!ds) return 0;
-    GHL::DataArrayImpl* data = new GHL::DataArrayImpl();
-    GHL::Byte buf[1024*8];
-    ds->Seek(0, GHL::F_SEEK_END);
-    GHL::UInt32 size = ds->Tell();
-    ds->Seek(0, GHL::F_SEEK_BEGIN);
-    data->reserve(size);
-    while (!ds->Eof()) {
-        GHL::UInt32 readed = ds->Read(buf,sizeof(buf));
-        if( readed == 0 ) break;
-        data->append(buf,readed);
-    }
-    return data;
-}
