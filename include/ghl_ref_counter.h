@@ -24,6 +24,8 @@
 #ifndef GHL_REF_COUNTER_H
 #define GHL_REF_COUNTER_H
 
+#include "ghl_api.h"
+
 namespace GHL {
     
     /** Reference counter interface
