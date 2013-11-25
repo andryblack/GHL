@@ -152,6 +152,7 @@ DYNAMIC_GL_FUNCTION(DepthFunc,(GLenum))\
 DYNAMIC_GL_FUNCTION(DepthMask,(GLboolean))\
 DYNAMIC_GL_FUNCTION(FrontFace,(GLenum))\
 DYNAMIC_GL_FUNCTION(DrawElements,(GLenum,GLsizei,GLenum,const GLvoid *))\
+DYNAMIC_GL_FUNCTION(DrawArrays,(GLenum,GLint,GLsizei))\
 DYNAMIC_GL_FUNCTION(TexParameteri,(GLenum,GLenum,GLint))\
 DYNAMIC_GL_FUNCTION(GenTextures,(GLsizei,GLuint *))\
 DYNAMIC_GL_FUNCTION(DeleteTextures,(GLsizei,const GLuint *))\

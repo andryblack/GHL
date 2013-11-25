@@ -387,7 +387,11 @@ namespace GHL {
 			indexes_amount = prim_amount + 1;
 		}
         SetupVertexData(v);
-        CHECK_GL(gl.DrawElements(element, indexes_amount,gl.UNSIGNED_SHORT, indexes));
+        if (indexes) {
+            CHECK_GL(gl.DrawElements(element, indexes_amount,gl.UNSIGNED_SHORT, indexes));
+        } else {
+            CHECK_GL(gl.DrawArrays(element,0,indexes_amount));
+        }
 	}
 	
 	
