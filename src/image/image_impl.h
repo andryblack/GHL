@@ -64,6 +64,8 @@ namespace GHL {
 		UInt32 GetBpp() const;
 		void FlipV();
 		DataImpl*	GetRawData() { return m_data; }
+        /// data ptr
+        virtual Byte* GetDataPtr() { return m_data->GetDataPtr(); }
     };
 
 }/*namespace*/

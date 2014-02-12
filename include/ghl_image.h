@@ -74,6 +74,8 @@ namespace GHL
         virtual void GHL_CALL Draw(UInt32 x,UInt32 y,const Image* src) = 0;
         /// Premultiply alpha
         virtual void GHL_CALL PremultiplyAlpha() = 0;
+        /// data ptr
+        virtual Byte* GetDataPtr() = 0;
     };
 
 } /*namespace*/
