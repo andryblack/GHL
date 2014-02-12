@@ -24,6 +24,8 @@
 
 #import <OpenGLES/EAGLDrawable.h>
 
+#import <CoreMotion/CoreMotion.h>
+
 #import "WinLibCocoaTouchContext2.h"
 
 static const char* MODULE = "WINLIB";
@@ -44,13 +46,12 @@ namespace GHL {
 
 @class WinLibView;
 
-@interface AccelerometerDelegate : NSObject<UIAccelerometerDelegate>
+@interface AccelerometerDelegate : NSObject
 {
-	UIAccelerometer* accelerometer;
+	CMMotionManager* manager;
 	float data[3];
 }
 - (id)init;
-- (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration;
 @end
 
 @implementation AccelerometerDelegate
@@ -58,30 +59,31 @@ namespace GHL {
 - (id)init
 {
 	if (self = [super init]) {
-		accelerometer = [UIAccelerometer sharedAccelerometer];
-		accelerometer.updateInterval = 0.1;
-		accelerometer.delegate = self;
+		manager = [[CMMotionManager alloc] init];
+        [manager startDeviceMotionUpdates];
+        data[0]=data[1]=data[2]=0;
 	}
 	return self;
 }
 
 - (float*)get_data
 {
+    CMDeviceMotion* g = manager.deviceMotion;
+    if (g) {
+        data[0] = g.gravity.x;
+        data[1] = g.gravity.y;
+        data[2] = g.gravity.z;
+    }
 	return data;
 }
 
 - (void)dealloc
 {
-	accelerometer.delegate = nil;
+    [manager stopDeviceMotionUpdates];
+	[manager release];
 	[super dealloc];
 }
 
-- (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration
-{
-	data[0]=acceleration.x;
-	data[1]=acceleration.y;
-	data[2]=acceleration.y;
-}
 
 
 @end
