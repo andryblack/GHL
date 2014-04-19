@@ -60,6 +60,10 @@ namespace GHL {
 		CHECK_GL(gl.sdrapi.Uniform1f(m_location,v));
 	}
 	
+    void GHL_CALL ShaderUniformGLSL::SetValueFloat2(float x, float y) {
+        CHECK_GL(gl.sdrapi.Uniform2f(m_location,x,y));
+    }
+    
 	void GHL_CALL ShaderUniformGLSL::SetValueInt(Int32 v) {
 		CHECK_GL(gl.sdrapi.Uniform1i(m_location,v));
 	}

@@ -57,6 +57,7 @@ namespace GHL {
 		virtual ~ShaderUniformGLSL() {}
 		GL::GLint location() const { return m_location;}
 		virtual void GHL_CALL SetValueFloat(float v);
+        virtual void GHL_CALL SetValueFloat2(float x,float y);
 		virtual void GHL_CALL SetValueInt(Int32 v);
         virtual void GHL_CALL SetValueMatrix(const float* v);
 	};
