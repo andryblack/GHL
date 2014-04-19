@@ -192,6 +192,8 @@ namespace GHL {
         jsrc.resync_to_restart = &jpeg_resync_to_restart;
         jsrc.term_source = &ghl_jpeg_source_mgr::ghl_jpeg_term_source;
         
+        cinfo.src = &jsrc;
+        
         // Decodes JPG input from whatever source
         // Does everything AFTER jpeg_create_decompress
         // and BEFORE jpeg_destroy_decompress
