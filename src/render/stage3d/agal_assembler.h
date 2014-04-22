@@ -6,10 +6,12 @@
 #include <vector>
 #include <list>
 #include <string>
+#include <map>
+#include "ghl_data.h"
 
 namespace GHL {
 
-    
+    class DataImpl;
     
 #define OPCODES_LIST \
     OPCODE( MOV, 2, 0x00, 0 )\
@@ -72,7 +74,8 @@ namespace GHL {
 #define OPCODE(name,args,val,flags) extern const Opcode name;
         OPCODES_LIST
 #undef OPCODE
-        
+        const Opcode* get_opcode(const char* name);
+
         class Register;
         
         struct RegisterDef {
@@ -84,6 +87,30 @@ namespace GHL {
             Register operator [] (UInt16 idx) const;
         };
         
+        struct RegisterName {
+            const AGAL::RegisterDef* def;
+            size_t idx;
+            RegisterName() : def(0),idx(0) {}
+            RegisterName(const AGAL::RegisterDef& def,size_t idx) : def(&def),idx(idx) {}
+            bool operator < (const RegisterName& other) const {
+                if (def == other.def)
+                    return idx < other.idx;
+                return def < other.def;
+            }
+            bool parse(const char* str);
+            bool operator == (const RegisterName& name) const {
+                return def == name.def && idx == name.idx;
+            }
+            bool operator != (const RegisterName& name) const {
+                return def != name.def || idx != name.idx;
+            }
+        };
+
+        static inline std::ostream& operator << (std::ostream& os, const RegisterName& name) {
+            if (!name.def) return os << "nil";
+            return os << name.def->name << name.idx;
+        }
+
         class Register {
         private:
             const RegisterDef& m_def;
@@ -105,18 +132,30 @@ namespace GHL {
                 m_indexselect(0){
                 
             }
-            const UInt16 index() const { return m_index; }
-            const UInt16 flags() const { return m_def.flags; }
-            const UInt16 range() const { return m_def.range; }
+            explicit Register(const RegisterName& name) : m_def(*name.def),
+                m_relative(false),
+                m_index(name.idx),
+                m_writemask(0xf),
+                m_indirect(0),
+                m_swizzle(0x00|(0x01<<2)|(0x02<<4)|(0x03<<6)),
+                m_indextype(0),
+                m_indexselect(0){
+
+            }
+            UInt16 index() const { return m_index; }
+            UInt16 flags() const { return m_def.flags; }
+            UInt16 range() const { return m_def.range; }
             const char* name() const { return m_def.name; }
-            const bool relative() const { return m_relative; }
-            const Byte writemask() const { return m_writemask; }
-            const Byte type() const { return m_def.value; }
-            const Byte indirect() const { return m_indirect; }
-            const Byte swizzle() const { return m_swizzle; }
-            const Byte indextype() const { return m_indextype; }
-            const Byte indexselect() const { return m_indexselect; }
+            bool relative() const { return m_relative; }
+            Byte writemask() const { return m_writemask; }
+            Byte type() const { return m_def.value; }
+            Byte indirect() const { return m_indirect; }
+            Byte swizzle() const { return m_swizzle; }
+            Byte indextype() const { return m_indextype; }
+            Byte indexselect() const { return m_indexselect; }
             std::string name_full() const;
+            Register& swizzle(const char* swizzle);
+
             Register r() const { Register r(m_def,m_index); r.m_writemask = 0x1; r.m_swizzle = 0x00|(0x00<<2)|(0x00<<4)|(0x00<<6); return r; }
             Register g() const { Register r(m_def,m_index); r.m_writemask = 0x2; r.m_swizzle = 0x01|(0x01<<2)|(0x01<<4)|(0x01<<6); return r; }
             Register b() const { Register r(m_def,m_index); r.m_writemask = 0x4; r.m_swizzle = 0x02|(0x02<<2)|(0x02<<4)|(0x03<<6); return r; }
@@ -129,21 +168,21 @@ namespace GHL {
         
        
 #define REGISTERS_LIST \
-        REGISTER(VA,/* vertex attribute     */  0x0,	8,		REG_VERT | REG_READ )\
-        REGISTER(VC,/* vertex constant      */  0x1,	128,	REG_VERT | REG_READ )\
-        REGISTER(VT,/* vertex temporary     */	0x2,	8,		REG_VERT | REG_WRITE | REG_READ )\
-        REGISTER(VO,/* vertex output        */  0x3,	1,		REG_VERT | REG_WRITE )\
-        REGISTER(I,/*  varying              */  0x4,	8,		REG_VERT | REG_FRAG | REG_READ | REG_WRITE )\
-        REGISTER(FC,/* fragment constant    */  0x1,	28,		REG_FRAG | REG_READ )\
-        REGISTER(FT,/* fragment temporary   */  0x2,	8,		REG_FRAG | REG_WRITE | REG_READ )\
-        REGISTER(FO,/* fragment output      */  0x3,	1,		REG_FRAG | REG_WRITE )
+        REGISTER(VA,/* vertex attribute     */  0x0,	8,		REG_VERT | REG_READ , 0)\
+        REGISTER(VC,/* vertex constant      */  0x1,	128,	REG_VERT | REG_READ , 0)\
+        REGISTER(VT,/* vertex temporary     */	0x2,	8,		REG_VERT | REG_WRITE | REG_READ , 0)\
+        REGISTER(VO,/* vertex output        */  0x3,	1,		REG_VERT | REG_WRITE , "op")\
+        REGISTER(I,/*  varying              */  0x4,	8,		REG_VERT | REG_FRAG | REG_READ | REG_WRITE , "v")\
+        REGISTER(FC,/* fragment constant    */  0x1,	28,		REG_FRAG | REG_READ , 0)\
+        REGISTER(FT,/* fragment temporary   */  0x2,	8,		REG_FRAG | REG_WRITE | REG_READ , 0)\
+        REGISTER(FO,/* fragment output      */  0x3,	1,		REG_FRAG | REG_WRITE , "oc") \
+        REGISTER(FS,/* sampler              */  0x5,	8,		REG_FRAG | REG_READ , 0 )
   
-#define REGISTER(name,val,range,flags) extern const RegisterDef name;
+#define REGISTER(name,val,range,flags,altname) extern const RegisterDef name;
         REGISTERS_LIST
 #undef REGISTER
 
-        //REGISTER(FS,/* texture sampler      */  0x5,	8,		REG_FRAG | REG_READ )\
-        
+
         // texture sampler register: always 64 bits
         // 63.............................................................0
         // FFFFMMMMWWWWSSSSDDDD--------TTTT--------BBBBBBBBNNNNNNNNNNNNNNNN
@@ -156,16 +195,9 @@ namespace GHL {
         // S = Special flag bits (bit 0=centroid sampling, bit 1=single component read)
         // D = Dimension (0=2D,1=Cube,2=3D)
         
-        class Sampler;
-        struct SamplerDef {
-            const char* const name;
-            const UInt16 range;
-            const Byte  value;
-            Sampler operator [] (UInt16 idx) const;
-        };
         class Sampler {
         private:
-            const SamplerDef& m_def;
+            const RegisterDef& m_def;
             UInt32  m_index;
             Int8    m_lodbias;
             Byte    m_dimension;
@@ -174,7 +206,7 @@ namespace GHL {
             Byte    m_mipmap;
             Byte    m_filter;
         public:
-            explicit Sampler( const SamplerDef& def, UInt16 idx )
+            explicit Sampler( const RegisterDef& def, UInt16 idx )
             : m_def(def)
             , m_index(idx)
             , m_lodbias(0)
@@ -185,22 +217,23 @@ namespace GHL {
             , m_filter(0) {
                 
             }
-            const UInt16 range() const { return m_def.range; }
-            const Byte type() const { return m_def.value; }
-            const UInt16 index() const { return m_index; }
-            const Int8 lodbias() const { return m_lodbias; }
-            const Byte dimension() const { return m_dimension; }
-            const Byte special() const { return m_special; }
-            const Byte wrapping() const { return m_wrapping; }
-            const Byte mipmap() const { return m_mipmap; }
-            const Byte filter() const { return m_filter; }
+            UInt16 range() const { return m_def.range; }
+            Byte type() const { return m_def.value; }
+            UInt16 index() const { return m_index; }
+            Int8 lodbias() const { return m_lodbias; }
+            Byte dimension() const { return m_dimension; }
+            Byte special() const { return m_special; }
+            Byte wrapping() const { return m_wrapping; }
+            Byte mipmap() const { return m_mipmap; }
+            Byte filter() const { return m_filter; }
             std::string name_full() const;
             Sampler& nearest() { m_filter = 0; return *this; }
             Sampler& linear() { m_filter = 1; return *this; }
             Sampler& clamp() { m_wrapping = 0; return *this; }
             Sampler& repeat() { m_wrapping = 1; return *this; }
         };
-        extern const SamplerDef FS;
+
+
     }
     
     class AGALCodeGen {
@@ -226,7 +259,7 @@ namespace GHL {
         
         void add_error( const std::string& str );
         
-        void dump();
+        bool dump();
     protected:
         void write8( Byte v ) {
             m_data.push_back( v );
@@ -270,13 +303,35 @@ namespace GHL {
         size_t m_nest;
         
     };
+
+
+
+    struct AGALData {
+        DataImpl* codev;
+        DataImpl* codef;
+
+        typedef std::vector<size_t> offsets_t;
+        typedef std::map<AGAL::RegisterName,offsets_t> offsets_map;
+        struct ConstantData {
+            float x; float y; float z; float w;
+        };
+        typedef std::map<AGAL::RegisterName,ConstantData> constants_map;
+        typedef std::map<std::string,AGAL::RegisterName>  name_to_register_map;
+        offsets_map samplers;
+        constants_map constants;
+        name_to_register_map uniforms;
+    };
     
+    class DataImpl;
     class AGALAssembler {
     public:
-        //explicit AGALAssembler( ProgramType prg );
+        explicit AGALAssembler(AGALData* data);
+        ~AGALAssembler();
+
+        bool parse(const Data* srcv,const Data* srcf);
         
     private:
-        
+        AGALData*   m_data;
     };
     
 }
