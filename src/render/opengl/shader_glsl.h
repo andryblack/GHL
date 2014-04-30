@@ -47,19 +47,21 @@ namespace GHL {
 		GL::GLhandle	m_handle;
 	};
 	
+    class ShaderProgramGLSL;
 	class ShaderUniformGLSL : public ShaderUniform {
 	private:
-        const GL& gl;
+        const ShaderProgramGLSL* m_program;
 		GL::GLint m_location;
-	public:
-		explicit ShaderUniformGLSL(const GL& gl,GL::GLint location_) : gl(gl),
+  	public:
+		explicit ShaderUniformGLSL(const ShaderProgramGLSL* prog,GL::GLint location_ ) : m_program(prog),
             m_location(location_) {}
 		virtual ~ShaderUniformGLSL() {}
 		GL::GLint location() const { return m_location;}
 		virtual void GHL_CALL SetValueFloat(float v);
         virtual void GHL_CALL SetValueFloat2(float x,float y);
-		virtual void GHL_CALL SetValueInt(Int32 v);
-        virtual void GHL_CALL SetValueMatrix(const float* v);
+        virtual void GHL_CALL SetValueFloat3(float x, float y, float z);
+        virtual void GHL_CALL SetValueFloat4(float x, float y, float z, float w);
+		virtual void GHL_CALL SetValueMatrix(const float* v);
 	};
     
     enum GLSLPredefinedAttribute {
@@ -79,13 +81,17 @@ namespace GHL {
 		
 		GL::GLhandle handle() const { return m_handle;}
         GL::GLint   GetAttribute(GLSLPredefinedAttribute attr) const;
+        void  SetTextureSlot(const char* name, Int32 slot ) const;
 	private:
+        friend class ShaderUniformGLSL;
         const GL& gl;
 		GL::GLhandle	m_handle;
 		VertexShaderGLSL* m_v;
 		FragmentShaderGLSL* m_f;
 		mutable std::map<std::string,ShaderUniformGLSL> m_uniforms;
         mutable GL::GLint m_attributes[GLSLPredefinedAttributesAmount];
+        const ShaderProgram* GetCurrent() const;
+        void SetCurrent(const ShaderProgram* prg) const;
 	};
 }
 

@@ -163,7 +163,7 @@ static var handleMouseMove(void *arg, var as3Args)
     flash::events::MouseEvent me = var(as3Args[0]);
     //thegame.handleKeyDown(ke->keyCode);
     if (ctx.valid) {
-        ctx.application->OnMouseMove( GHL::MOUSE_BUTTON_LEFT, me->stageX , me->stageY );
+        ctx.application->OnMouseMove( me->buttonDown ? GHL::MOUSE_BUTTON_LEFT : GHL::MOUSE_BUTTON_NONE, me->stageX , me->stageY );
     }
     me->stopPropagation();
     return internal::_undefined;
@@ -341,8 +341,10 @@ static void startApplication() {
         ctx.s3d = var(var(ctx.stage->stage3Ds)[0]);
         ctx.s3d->addEventListener(flash::events::Event::CONTEXT3D_CREATE, Function::_new(initContext3D, NULL));
         ctx.s3d->addEventListener(flash::events::ErrorEvent::ERROR, Function::_new(context3DError, NULL));
+//        ctx.s3d->requestContext3D(flash::display3D::Context3DRenderMode::AUTO,
+//                                  flash::display3D::Context3DProfile::BASELINE_CONSTRAINED);
         ctx.s3d->requestContext3D(flash::display3D::Context3DRenderMode::AUTO,
-                                  flash::display3D::Context3DProfile::BASELINE_CONSTRAINED);
+                                  flash::display3D::Context3DProfile::BASELINE);
         ctx.started = true;
         LOG_INFO( "StartApplication ok" );
     } catch (var e) {

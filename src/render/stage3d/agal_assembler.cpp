@@ -346,6 +346,7 @@ namespace GHL {
             }
             LOG_INFO(ss.str());
         }
+        LOG_INFO("instructions: " << m_nops);
         return true;
     }
 
@@ -410,6 +411,9 @@ namespace GHL {
             for (AGALData::name_to_register_map::const_iterator it = parser.m_uniform_map.begin();it!=parser.m_uniform_map.end();++it) {
                 m_data->uniforms.insert(*it);
             }
+            for (AGALData::constants_map::const_iterator it = parser.m_constants.begin();it!=parser.m_constants.end();++it) {
+                m_data->constants.insert(*it);
+            }
         }
         {
             /// parse fragment
@@ -435,6 +439,19 @@ namespace GHL {
             for (AGALData::name_to_register_map::const_iterator it = parser.m_uniform_map.begin();it!=parser.m_uniform_map.end();++it) {
                 m_data->uniforms.insert(*it);
             }
+            for (AGALData::constants_map::const_iterator it = parser.m_constants.begin();it!=parser.m_constants.end();++it) {
+                m_data->constants.insert(*it);
+            }
+        }
+        for (AGALData::constants_map::const_iterator it = m_data->constants.begin();it!=m_data->constants.end();++it) {
+            LOG_INFO("set constant " << it->first << " to { "
+                     << it->second.data[0] << ";"
+                     << it->second.data[1] << ";"
+                     << it->second.data[2] << ";"
+                     << it->second.data[3] << "}" );
+        }
+        for (AGALData::name_to_register_map::const_iterator it = m_data->uniforms.begin();it!=m_data->uniforms.end();++it) {
+            LOG_INFO("bind uniform  " << it->first << " to " << it->second);
         }
         return true;
     }

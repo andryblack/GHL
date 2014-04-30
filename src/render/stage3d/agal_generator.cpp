@@ -10,17 +10,28 @@
 #include "agal_assembler.h"
 #include "../../ghl_data_impl.h"
 #include "../../ghl_log_impl.h"
+#include "shader_stage3d.h"
+#include "render_stage3d.h"
 
 namespace GHL {
     
     const char* MODULE = "AGALGenerator";
     
-    AGALGenerator::AGALGenerator() : m_render(0), m_simple_v(0) {
+    AGALGenerator::AGALGenerator() : m_render(0) {
         
     }
     
-    void AGALGenerator::init(GHL::Render *render) {
+    void AGALGenerator::init(GHL::RenderStage3d *render) {
         m_render = render;
+        
+        AGALCodeGen codegen(AGALCodeGen::VERTEX_PROGRAM);
+        codegen.add(AGAL::MOV,AGAL::I[0],AGAL::VA[1]);
+        codegen.add(AGAL::MOV,AGAL::I[1],AGAL::VA[2]);
+        codegen.add(AGAL::M44,AGAL::VO,AGAL::VA[0],AGAL::VC[0]);
+        codegen.dump();
+        ConstInlinedData data(codegen.data(),codegen.size());
+        m_simple_v = ShaderProgramStage3d::byteArrayFromData(&data);
+        
     }
     
     void append_texture_operation(AGALCodeGen& codegen,
@@ -80,27 +91,21 @@ namespace GHL {
     
     
     ShaderProgram* AGALGenerator::generate(const pfpl_state_data& entry, bool tex2 ) {
-        if (!m_simple_v) {
-            AGALCodeGen codegen(AGALCodeGen::VERTEX_PROGRAM);
-            codegen.add(AGAL::MOV,AGAL::I[0],AGAL::VA[1]);
-            codegen.add(AGAL::MOV,AGAL::I[1],AGAL::VA[2]);
-            codegen.add(AGAL::M44,AGAL::VO,AGAL::VA[0],AGAL::VC[0]);
-            codegen.dump();
-            ConstInlinedData data(codegen.data(),codegen.size());
-            m_simple_v = m_render->CreateVertexShader(&data);
-            if (!m_simple_v) {
-                LOG_ERROR("create vertex shader");
-                return 0;
-            }
-        }
+//        if (AS3::ui::internal::is(m_simple_v,AS3::ui::internal::_null)) {
+//            
+////            if (AS3::ui::internal::is(m_simple_v,AS3::ui::internal::_null)) {
+////                LOG_ERROR("create vertex shader");
+////                return 0;
+////            }
+//        }
 
-        FragmentShader* fs = 0;
+        AS3::ui::flash::utils::ByteArray fs;
         {
             AGALCodeGen codegen(AGALCodeGen::FRAGMENT_PROGRAM);
             codegen.add(AGAL::MOV,AGAL::FT[0],AGAL::I[0]);      /// FT0 - clr
             for (UInt32 i=0;i<MAX_TEXTURE_STAGES;++i) {
                 if (entry.texture_stages[i].rgb.c.texture) {
-                    AGAL::Sampler s = AGAL::FS[i];
+                    AGAL::Sampler s(AGAL::FS,i);
                     if (entry.texture_stages[i].tex.c.wrap_u == TEX_WRAP_REPEAT) {
                         s.repeat();
                     }
@@ -121,13 +126,13 @@ namespace GHL {
             codegen.add(AGAL::MOV,AGAL::FO,AGAL::FT[0]);
             codegen.dump();
             ConstInlinedData data(codegen.data(),codegen.size());
-            fs = m_render->CreateFragmentShader(&data);
+            fs = ShaderProgramStage3d::byteArrayFromData(&data);
         }
-        if (!fs) {
-            LOG_ERROR("create fragment shader");
-            return 0;
-        }
-        return m_render->CreateShaderProgram(m_simple_v, fs);
+//        if (AS3::ui::internal::is(fs,AS3::ui::internal::_null)) {
+//            LOG_ERROR("create fragment shader");
+//            return 0;
+//        }
+        return m_render->CreateBuiltInShader(m_simple_v, fs);
     }
     
 }

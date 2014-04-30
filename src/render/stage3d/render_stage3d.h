@@ -21,31 +21,6 @@ namespace GHL {
         pfpl_render         m_shaders_render;
         pfpl_state_data     m_crnt_state;
         
-        class VertexShaderStage3d : public VertexShaderImpl {
-        private:
-            AS3::ui::flash::utils::ByteArray   m_data;
-        public:
-            VertexShaderStage3d( RenderImpl* render, const Data* data);
-            ~VertexShaderStage3d();
-            const AS3::ui::flash::utils::ByteArray& data() { return m_data; }
-        };
-        class FragmentShaderStage3d : public FragmentShaderImpl {
-        private:
-            AS3::ui::flash::utils::ByteArray   m_data;
-        public:
-            FragmentShaderStage3d( RenderImpl* render, const Data* data);
-            ~FragmentShaderStage3d();
-            const AS3::ui::flash::utils::ByteArray& data() { return m_data; }
-        };
-        class ShaderProgramStage3d : public ShaderProgramImpl {
-        private:
-            AS3::ui::flash::display3D::Program3D m_program;
-        public:
-            ShaderProgramStage3d(RenderImpl* render, const AS3::ui::flash::display3D::Program3D& p );
-            ~ShaderProgramStage3d();
-            const AS3::ui::flash::display3D::Program3D& program() const { return m_program; }
-            virtual ShaderUniform* GHL_CALL GetUniform(const char* name);
-        };
         class VertexBufferStage3d : public VertexBufferImpl {
         private:
             AS3::ui::flash::display3D::VertexBuffer3D m_buffer;
@@ -157,6 +132,8 @@ namespace GHL {
 		
 		virtual void GHL_CALL SetShader(const ShaderProgram* shader);
         
+        ShaderProgram* CreateBuiltInShader(const AS3::ui::flash::utils::ByteArray& v,
+                                                const AS3::ui::flash::utils::ByteArray& f);
     private:
         float   m_p_matrix[16];
         float   m_v_matrix[16];

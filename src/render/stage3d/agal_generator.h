@@ -11,17 +11,21 @@
 
 #include "../pfpl/pfpl_cache.h"
 #include "ghl_render.h"
+#include <AS3/AS3.h>
+#include <Flash++.h>
 
 namespace GHL {
+    
+    class RenderStage3d;
     
     class AGALGenerator : public pfpl_shader_generator_base {
     public:
         AGALGenerator();
-        void init(GHL::Render* render);
+        void init(GHL::RenderStage3d* render);
         virtual ShaderProgram* generate( const pfpl_state_data& entry, bool tex2 );
     private:
-        GHL::Render*    m_render;
-        VertexShader*   m_simple_v;
+        GHL::RenderStage3d*    m_render;
+        AS3::ui::flash::utils::ByteArray   m_simple_v;
     };
     
 }

@@ -57,20 +57,46 @@ namespace GHL {
 	
 	
 	void GHL_CALL ShaderUniformGLSL::SetValueFloat(float v) {
+        const ShaderProgram* prg = m_program->GetCurrent();
+        if (prg!=m_program) m_program->SetCurrent(m_program);
+        const GL& gl = m_program->gl;
 		CHECK_GL(gl.sdrapi.Uniform1f(m_location,v));
+        if (prg!=m_program) m_program->SetCurrent(prg);
 	}
 	
     void GHL_CALL ShaderUniformGLSL::SetValueFloat2(float x, float y) {
+        const ShaderProgram* prg = m_program->GetCurrent();
+        if (prg!=m_program) m_program->SetCurrent(m_program);
+        const GL& gl = m_program->gl;
         CHECK_GL(gl.sdrapi.Uniform2f(m_location,x,y));
+        if (prg!=m_program) m_program->SetCurrent(prg);
     }
     
-	void GHL_CALL ShaderUniformGLSL::SetValueInt(Int32 v) {
-		CHECK_GL(gl.sdrapi.Uniform1i(m_location,v));
-	}
-    void GHL_CALL ShaderUniformGLSL::SetValueMatrix(const float* v) {
-        CHECK_GL(gl.sdrapi.UniformMatrix4fv(m_location,1,gl._FALSE,v));
+    void GHL_CALL ShaderUniformGLSL::SetValueFloat3(float x, float y, float z) {
+        const ShaderProgram* prg = m_program->GetCurrent();
+        if (prg!=m_program) m_program->SetCurrent(m_program);
+        const GL& gl = m_program->gl;
+        CHECK_GL(gl.sdrapi.Uniform3f(m_location,x,y,z));
+        if (prg!=m_program) m_program->SetCurrent(prg);
     }
-	ShaderUniform* GHL_CALL ShaderProgramGLSL::GetUniform(const char* name) const {
+    
+    void GHL_CALL ShaderUniformGLSL::SetValueFloat4(float x, float y, float z, float w) {
+        const ShaderProgram* prg = m_program->GetCurrent();
+        if (prg!=m_program) m_program->SetCurrent(m_program);
+        const GL& gl = m_program->gl;
+        CHECK_GL(gl.sdrapi.Uniform4f(m_location,x,y,z,w));
+        if (prg!=m_program) m_program->SetCurrent(prg);
+    }
+   
+    void GHL_CALL ShaderUniformGLSL::SetValueMatrix(const float* v) {
+        const ShaderProgram* prg = m_program->GetCurrent();
+        if (prg!=m_program) m_program->SetCurrent(m_program);
+        const GL& gl = m_program->gl;
+        CHECK_GL(gl.sdrapi.UniformMatrix4fv(m_location,1,gl._FALSE,v));
+        if (prg!=m_program) m_program->SetCurrent(prg);
+    }
+	
+    ShaderUniform* GHL_CALL ShaderProgramGLSL::GetUniform(const char* name) const {
 		std::string sname(name);
 		std::map<std::string,ShaderUniformGLSL>::iterator it = m_uniforms.find(sname);
 		if (it!=m_uniforms.end())
@@ -79,10 +105,17 @@ namespace GHL {
         CHECK_GL();
 		if (location<0)
 			return 0;
-		m_uniforms.insert(std::make_pair(sname,ShaderUniformGLSL(gl,location)));
+		m_uniforms.insert(std::make_pair(sname,ShaderUniformGLSL(this,location)));
 		it = m_uniforms.find(sname);
 		return &it->second;
 	}
+    void GHL_CALL ShaderProgramGLSL::SetTextureSlot(const char* name, Int32 slot ) const {
+        GL::GLint location = gl.sdrapi.GetUniformLocation(m_handle,name);
+        CHECK_GL();
+		if (location<0)
+            return;
+        gl.sdrapi.Uniform1i(location,slot);
+    }
     
     static const char* predefinedAttributeNames[GLSLPredefinedAttributesAmount] = {
         "vPosition",
@@ -95,6 +128,12 @@ namespace GHL {
             CHECK_GL(gl.sdrapi.EnableVertexAttribArray(m_attributes[attr]));
         }
         return m_attributes[attr];
+    }
+    const ShaderProgram* ShaderProgramGLSL::GetCurrent() const {
+        return GetParent()->GetShader();
+    }
+    void ShaderProgramGLSL::SetCurrent(const ShaderProgram* prg) const {
+        GetParent()->SetShader(prg);
     }
 	
     

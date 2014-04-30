@@ -15,6 +15,7 @@ COMPILER agal
 	AGALData::name_to_register_map m_varying_map;
 	AGALData::name_to_register_map m_uniform_map;
 	AGALData::name_to_register_map m_attributes_map;
+	AGALData::constants_map m_constants;
 	bool m_is_vertex;
 
 	std::map<RegisterName,RegisterName> m_registers_remap;
@@ -52,7 +53,7 @@ PRODUCTIONS
 	directive = vertex | fragment | attribute | var | uniform | constset | sampler_def.
 	vertex = token_vertex (.m_codegen = new AGALCodeGen(AGALCodeGen::VERTEX_PROGRAM); m_is_vertex = true; .).
 	fragment = token_fragment (.m_codegen = new AGALCodeGen(AGALCodeGen::FRAGMENT_PROGRAM); m_is_vertex = false; .).
-	attribute = (. RegisterName reg_name; std::string name; .) token_attribute directive_name<name> '=' reg<reg_name> (.
+	attribute = (. RegisterName reg_name; std::string name; .) token_attribute directive_name<name> '=' reg<reg_name> (. 
 		if (m_is_vertex) {
 			AGALData::name_to_register_map::iterator it = m_attributes_map.find(name);
 			if (it==m_attributes_map.end()) {
@@ -79,7 +80,7 @@ PRODUCTIONS
 		} .).
 	uniform = (. RegisterName reg_name; std::string name; .) token_uniform directive_name<name> '=' reg<reg_name> (.
 		m_uniform_map[name] = reg_name; .).
-	constset =  (. RegisterName reg_name; .) token_const reg<reg_name> '=' vec4.
+	constset =  (. RegisterName reg_name; AGALData::ConstantData data;.) token_const reg<reg_name> '=' vec4<data> (. m_constants[reg_name] = data; .).
 	sampler_def = (. RegisterName reg_name; std::string name; .) token_sampler directive_name<name> '=' reg<reg_name> (.
 		if (reg_name.def!=&FS) {
 			SemErr( "sampler register must be FS" );
@@ -107,8 +108,19 @@ PRODUCTIONS
 			return;
 		}
 	.).
-	vec4 = '{' float_value ';' float_value ';' float_value ';' float_value '}'.
-	float_value = number | floatNumber.
+	vec4<AGALData::ConstantData& data> = '{' float_value<data.data[0]> ';' float_value<data.data[1]> ';' float_value<data.data[2]> ';' float_value<data.data[3]> '}'.
+	float_value<float& ret_val> = 
+		  number (. 
+		  	if (strlen(t->val)==10 && t->val[0]=='0' && t->val[1]=='x') {
+		  		unsigned int tmp = 0;
+		  		sscanf(t->val,"0x%08x",&tmp);
+		  		uint32_t t32 = tmp;
+		  		ret_val = *reinterpret_cast<float*>(&t32);
+		  	} else {
+		  		ret_val = atoi(t->val);
+		  	}
+		  .)
+		| floatNumber (. ret_val = atof(t->val);.).
 	
 	expression  (. 
 		if (!m_codegen) {
@@ -157,6 +169,7 @@ PRODUCTIONS
 									SemErr("swizzle not supported on sampler");
 									return;
 								}
+								src2.linear();
 								m_codegen->add(*opcode,dst,src1,src2);
 							} else {
 								Register src2(src2_reg);

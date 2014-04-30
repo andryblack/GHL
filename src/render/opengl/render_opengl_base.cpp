@@ -712,12 +712,14 @@ namespace GHL {
         } else {
             std::copy(m, m+16, m_projection_matrix);
         }
+        MatrixMul(m_projection_matrix, m_view_matrix, m_projection_view_matrix);
         m_reset_uniforms = true;
     }
 	
 	/// set view matrix
 	void GHL_CALL RenderOpenGLPPL::SetViewMatrix(const float* m) {
 		std::copy(m, m+16, m_view_matrix);
+        MatrixMul(m_projection_matrix, m_view_matrix, m_projection_view_matrix);
         m_reset_uniforms = true;
 	}
 
@@ -769,22 +771,16 @@ namespace GHL {
             prg = GetShader();
         }
         if (prg) {
-            ShaderUniform* uniform = prg->GetUniform("mProjection");
+            ShaderUniform* uniform = prg->GetUniform("mProjectionModelView");
             if (uniform) {
-                uniform->SetValueMatrix(m_projection_matrix);
+                uniform->SetValueMatrix(m_projection_view_matrix);
             }
-            uniform = prg->GetUniform("mModelView");
-            if (uniform) {
-                uniform->SetValueMatrix(m_view_matrix);
-            }
+            
             for (size_t i=0;i<MAX_TEXTURE_STAGES;++i) {
                 if (m_crnt_state.texture_stages[i].rgb.c.texture) {
                     char uf[64];
                     ::snprintf(uf, 64, "texture_%d",int(i));
-                    uniform = prg->GetUniform(uf);
-                    if (uniform) {
-                        uniform->SetValueInt(Int32(i));
-                    }
+                    static_cast<const ShaderProgramGLSL*>(prg)->SetTextureSlot(uf,Int32(i));
                 }
             }
         }

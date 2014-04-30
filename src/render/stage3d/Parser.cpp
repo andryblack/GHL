@@ -179,6 +179,7 @@ void Parser::expression() {
 						SemErr("swizzle not supported on sampler");
 						return;
 					}
+					src2.linear();
 					m_codegen->add(*opcode,dst,src1,src2);
 				} else {
 					Register src2(src2_reg);
@@ -256,11 +257,12 @@ void Parser::uniform() {
 }
 
 void Parser::constset() {
-		RegisterName reg_name; 
+		RegisterName reg_name; AGALData::ConstantData data;
 		Expect(_token_const);
 		reg(reg_name);
 		Expect(16 /* "=" */);
-		vec4();
+		vec4(data);
+		m_constants[reg_name] = data; 
 }
 
 void Parser::sampler_def() {
@@ -304,23 +306,33 @@ void Parser::reg(RegisterName& reg_name) {
 		
 }
 
-void Parser::vec4() {
+void Parser::vec4(AGALData::ConstantData& data) {
 		Expect(17 /* "{" */);
-		float_value();
+		float_value(data.data[0]);
 		Expect(18 /* ";" */);
-		float_value();
+		float_value(data.data[1]);
 		Expect(18 /* ";" */);
-		float_value();
+		float_value(data.data[2]);
 		Expect(18 /* ";" */);
-		float_value();
+		float_value(data.data[3]);
 		Expect(19 /* "}" */);
 }
 
-void Parser::float_value() {
+void Parser::float_value(float& ret_val) {
 		if (la->kind == _number) {
 			Get();
+			if (strlen(t->val)==10 && t->val[0]=='0' && t->val[1]=='x') {
+			unsigned int tmp = 0;
+			sscanf(t->val,"0x%08x",&tmp);
+			uint32_t t32 = tmp;
+			ret_val = *reinterpret_cast<float*>(&t32);
+			} else {
+			ret_val = atoi(t->val);
+			}
+			
 		} else if (la->kind == _floatNumber) {
 			Get();
+			ret_val = atof(t->val);
 		} else SynErr(27);
 }
 

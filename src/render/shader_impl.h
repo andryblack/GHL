@@ -53,6 +53,7 @@ namespace GHL {
         virtual ~ShaderProgramImpl();
     protected:
         explicit ShaderProgramImpl( RenderImpl* parent );
+        RenderImpl* GetParent() const { return m_parent; }
     private:
         RenderImpl* m_parent;
     };

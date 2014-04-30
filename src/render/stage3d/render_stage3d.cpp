@@ -4,6 +4,7 @@
 #include "../rendertarget_impl.h"
 #include "texture_stage3d.h"
 #include "rendertarget_stage3d.h"
+#include "shader_stage3d.h"
 
 namespace GHL {
 
@@ -11,37 +12,18 @@ namespace GHL {
     
     static const char* MODULE = "RENDER";
     
-    
-    RenderStage3d::VertexShaderStage3d::VertexShaderStage3d(RenderImpl* render,const Data* data)
-    : VertexShaderImpl(render) {
-        m_data = AS3::ui::flash::utils::ByteArray::_new();
-        m_data->endian = AS3::ui::flash::utils::Endian::__LITTLE_ENDIAN;
-        m_data->writeBytes(
-                           AS3::ui::internal::get_ram(), (int)data->GetData(), data->GetSize(), (void*)data->GetData());
-    }
-    RenderStage3d::VertexShaderStage3d::~VertexShaderStage3d() {
-    }
-    RenderStage3d::FragmentShaderStage3d::FragmentShaderStage3d(RenderImpl* render,const Data* data)
-    : FragmentShaderImpl(render) {
-        m_data = AS3::ui::flash::utils::ByteArray::_new();
-        m_data->endian = AS3::ui::flash::utils::Endian::__LITTLE_ENDIAN;
-        m_data->writeBytes(
-                           AS3::ui::internal::get_ram(), (int)data->GetData(), data->GetSize(), (void*)data->GetData());
+    static inline UInt32 next_pot(UInt32 val) {
+        val--;
+        val = (val >> 1) | val;
+        val = (val >> 2) | val;
+        val = (val >> 4) | val;
+        val = (val >> 8) | val;
+        val = (val >> 16) | val;
+        val++;
+        return val;
     }
     
-    RenderStage3d::FragmentShaderStage3d::~FragmentShaderStage3d() {
-    }
     
-    RenderStage3d::ShaderProgramStage3d::ShaderProgramStage3d(RenderImpl* render,const AS3::ui::flash::display3D::Program3D& p) : ShaderProgramImpl(render),m_program(p) {
-        
-    }
-    RenderStage3d::ShaderProgramStage3d::~ShaderProgramStage3d() {
-        
-    }
-    
-    ShaderUniform* GHL_CALL RenderStage3d::ShaderProgramStage3d::GetUniform(const char* name) {
-        return 0;
-    }
     
     
     RenderStage3d::VertexBufferStage3d::VertexBufferStage3d( RenderImpl* render,
@@ -143,6 +125,8 @@ namespace GHL {
     
     /// create empty texture
     Texture* GHL_CALL RenderStage3d::CreateTexture(UInt32 width,UInt32 height,TextureFormat fmt,const Image* data) {
+        width = next_pot(width);
+        height = next_pot(height);
         flash::display3D::textures::Texture tex =
             m_ctx->createTexture(width,height,
                                  flash::display3D::Context3DTextureFormat::BGRA,false,0);
@@ -337,16 +321,18 @@ namespace GHL {
             }
             m_scene_cleared = true;
         }
-        ShaderProgram* prg = m_shaders_render.get_shader(m_crnt_state, v_type==VERTEX_TYPE_2_TEX);
+        const ShaderProgram* prg = m_shaders_render.get_shader(m_crnt_state, v_type==VERTEX_TYPE_2_TEX);
+        if (!prg) {
+            prg = GetShader();
+        }
         if (prg) {
             
             const ShaderProgramStage3d* prg3d = reinterpret_cast<const ShaderProgramStage3d*>(prg);
             m_ctx->setProgram(prg3d->program());
-            
+            prg3d->ApplyConstants(m_ctx,m_pv_matrix);
         }
         
-        m_ctx->setProgramConstantsFromByteArray(AS3::ui::flash::display3D::Context3DProgramType::VERTEX,
-                                                0,4,AS3::ui::internal::get_ram(),(int)m_pv_matrix);
+        
         
         RenderImpl::SetShader(prg);
         
@@ -416,6 +402,8 @@ namespace GHL {
     }
     
     RenderTarget* GHL_CALL RenderStage3d::CreateRenderTarget(UInt32 w,UInt32 h,TextureFormat fmt,bool depth) {
+        w = next_pot(w);
+        h = next_pot(h);
         flash::display3D::textures::Texture tex =
         m_ctx->createTexture(w,h,
                              flash::display3D::Context3DTextureFormat::BGRA,true,0);
@@ -448,11 +436,21 @@ namespace GHL {
         return new FragmentShaderStage3d(this,ds);
     }
     ShaderProgram* GHL_CALL RenderStage3d::CreateShaderProgram(VertexShader* v,FragmentShader* f) {
-        AS3::ui::flash::utils::ByteArray vdata = reinterpret_cast<VertexShaderStage3d*>(v)->data();
-        AS3::ui::flash::utils::ByteArray fdata = reinterpret_cast<FragmentShaderStage3d*>(f)->data();
+        const Data* vdata = reinterpret_cast<VertexShaderStage3d*>(v)->data();
+        const Data* fdata = reinterpret_cast<FragmentShaderStage3d*>(f)->data();
         AS3::ui::flash::display3D::Program3D program = m_ctx->createProgram();
-        program->upload(vdata, fdata);
         
+        ShaderProgramUserStage3d* res = new ShaderProgramUserStage3d(this,program);
+        if (!res->load(vdata,fdata)) {
+            delete res;
+            return 0;
+        }
+        return res;
+    }
+    ShaderProgram* RenderStage3d::CreateBuiltInShader(const AS3::ui::flash::utils::ByteArray& v,
+                                            const AS3::ui::flash::utils::ByteArray& f) {
+        AS3::ui::flash::display3D::Program3D program = m_ctx->createProgram();
+        program->upload(v, f);
         return new ShaderProgramStage3d(this,program);
     }
     void GHL_CALL RenderStage3d::SetShader(const ShaderProgram* shader) {

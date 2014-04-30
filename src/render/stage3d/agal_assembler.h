@@ -309,11 +309,11 @@ namespace GHL {
     struct AGALData {
         DataImpl* codev;
         DataImpl* codef;
-
+        AGALData() : codev(0) , codef(0) {}
         typedef std::vector<size_t> offsets_t;
         typedef std::map<AGAL::RegisterName,offsets_t> offsets_map;
         struct ConstantData {
-            float x; float y; float z; float w;
+            float data[4];
         };
         typedef std::map<AGAL::RegisterName,ConstantData> constants_map;
         typedef std::map<std::string,AGAL::RegisterName>  name_to_register_map;

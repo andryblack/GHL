@@ -130,6 +130,7 @@ namespace GHL {
         friend class IndexBufferImpl;
         void BufferCreated( const IndexBufferImpl* b );
         void BufferReleased( const IndexBufferImpl* b );
+        friend class ShaderProgramGLSL;
 	};
 
 }

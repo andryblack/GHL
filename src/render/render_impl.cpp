@@ -76,7 +76,10 @@ namespace GHL {
 	
     /// Begin graphics scene (frame)
     void GHL_CALL RenderImpl::BeginScene(RenderTarget* target) {
-        assert(!m_scene_started);
+        if (m_scene_started) {
+            m_scene_started = false;
+            assert(false && "scene already started");
+        }
         m_scene_target = static_cast<RenderTargetImpl*>(target);
         if (m_scene_target) {
             m_scene_target->AddRef();

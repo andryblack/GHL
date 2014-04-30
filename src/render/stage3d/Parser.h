@@ -76,6 +76,7 @@ AGALCodeGen* m_codegen;
 	AGALData::name_to_register_map m_varying_map;
 	AGALData::name_to_register_map m_uniform_map;
 	AGALData::name_to_register_map m_attributes_map;
+	AGALData::constants_map m_constants;
 	bool m_is_vertex;
 
 	std::map<RegisterName,RegisterName> m_registers_remap;
@@ -99,8 +100,8 @@ AGALCodeGen* m_codegen;
 	void sampler_def();
 	void directive_name(std::string& name);
 	void reg(RegisterName& reg_name);
-	void vec4();
-	void float_value();
+	void vec4(AGALData::ConstantData& data);
+	void float_value(float& ret_val);
 	void code(std::string& name);
 	void dst(RegisterName &reg_name,std::string& swizz);
 	void src(RegisterName &reg_name,std::string& swizz);

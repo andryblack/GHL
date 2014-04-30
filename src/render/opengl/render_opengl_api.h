@@ -221,6 +221,8 @@ DYNAMIC_GL_FUNCTION(void,GetProgramInfoLog,(GLhandle,GLsizei,GLsizei *,GLchar *)
 DYNAMIC_GL_FUNCTION(void,DeleteProgram,(GLhandle))\
 DYNAMIC_GL_FUNCTION(void,Uniform1f,(GLint,GLfloat))\
 DYNAMIC_GL_FUNCTION(void,Uniform2f,(GLint,GLfloat,GLfloat))\
+DYNAMIC_GL_FUNCTION(void,Uniform3f,(GLint,GLfloat,GLfloat,GLfloat))\
+DYNAMIC_GL_FUNCTION(void,Uniform4f,(GLint,GLfloat,GLfloat,GLfloat,GLfloat))\
 DYNAMIC_GL_FUNCTION(void,Uniform1i,(GLint,GLint))\
 DYNAMIC_GL_FUNCTION(void,UniformMatrix4fv,(GLint,GLsizei,GLboolean, const GLfloat * ))\
 DYNAMIC_GL_FUNCTION(GLint,GetUniformLocation,(GLhandle,const GLchar *))\
