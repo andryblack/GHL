@@ -803,8 +803,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
         [NSApp setMainMenu:mainMenu];
         //[NSApp setServicesMenu:[[[NSMenu alloc] initWithTitle:@"Services"] autorelease]];
 	}
-    
-	[NSApp setDelegate:delegate];
+    [[NSApplication sharedApplication] setDelegate:delegate];
 	
 	[pool release];
 	[NSApp run];
