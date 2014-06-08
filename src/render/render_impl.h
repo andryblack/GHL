@@ -89,6 +89,7 @@ namespace GHL {
         bool GetHaveDepth() const { return m_have_depth; }
         static void MatrixMul(const float* a,const float* b,float* r);
         static void MatrixTranspose(float* m);
+        static void MatrixTranspose(const float* from,float* to);
 	private:
         UInt32 	m_width;
 		UInt32	m_height;

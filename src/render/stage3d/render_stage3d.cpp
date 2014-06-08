@@ -299,7 +299,7 @@ namespace GHL {
     }
     
     void RenderStage3d::CalcPVMatrix() {
-        MatrixMul(m_v_matrix,m_p_matrix,m_pv_matrix);
+        MatrixMul(m_p_matrix,m_v_matrix,m_pv_matrix);
         MatrixTranspose(m_pv_matrix);
     }
     

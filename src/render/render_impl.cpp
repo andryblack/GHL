@@ -574,27 +574,34 @@ namespace GHL {
         }
     }
     
+    void RenderImpl::MatrixTranspose(const float* original,float* matrix) {
+        matrix[0] = original[0*4+0];
+        matrix[1] = original[1*4+0];
+        matrix[2] = original[2*4+0];
+        matrix[3] = original[3*4+0];
+        
+        matrix[1*4+0] = original[0*4+1];
+        matrix[1*4+1] = original[1*4+1];
+        matrix[1*4+2] = original[2*4+1];
+        matrix[1*4+3] = original[3*4+1];
+        
+        matrix[2*4+0] = original[0*4+2];
+        matrix[2*4+1] = original[1*4+2];
+        matrix[2*4+2] = original[2*4+2];
+        matrix[2*4+3] = original[3*4+2];
+        
+        matrix[3*4+0] = original[0*4+3];
+        matrix[3*4+1] = original[1*4+3];
+        matrix[3*4+2] = original[2*4+3];
+        matrix[3*4+3] = original[3*4+3];
+    }
+    
     void RenderImpl::MatrixTranspose(float* matrix) {
         float original[16];
         for (int cnt=0; cnt<16; cnt++)
             original[cnt] = matrix[cnt];
+        MatrixTranspose(original, matrix);
         
-        matrix[0] = original[0];
-        matrix[1] = original[4];
-        matrix[2] = original[8];
-        matrix[3] = original[12];
-        matrix[4] = original[1];
-        matrix[5] = original[5];
-        matrix[6] = original[9];
-        matrix[7] = original[13];
-        matrix[8] = original[2];
-        matrix[9] = original[6];
-        matrix[10] = original[10];
-        matrix[11] = original[14];
-        matrix[12] = original[3];
-        matrix[13] = original[7];
-        matrix[14] = original[11];
-        matrix[15] = original[13];
     }
 }
 
