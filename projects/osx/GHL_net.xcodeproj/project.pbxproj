@@ -1,0 +1,316 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A4045BD919AD445A00D2C5A4 /* ghl_net.h in Headers */ = {isa = PBXBuildFile; fileRef = A4045BD819AD445A00D2C5A4 /* ghl_net.h */; };
+		A4045BDD19AD486D00D2C5A4 /* ghl_net_common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4045BDB19AD486D00D2C5A4 /* ghl_net_common.cpp */; };
+		A4045BDE19AD486D00D2C5A4 /* ghl_net_common.h in Headers */ = {isa = PBXBuildFile; fileRef = A4045BDC19AD486D00D2C5A4 /* ghl_net_common.h */; };
+		A4045BE119AD4AF400D2C5A4 /* ghl_net_cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = A4045BE019AD4AF400D2C5A4 /* ghl_net_cocoa.mm */; };
+		A41D523014DEB75E008B50E8 /* ghl_ref_counter.h in Headers */ = {isa = PBXBuildFile; fileRef = A41D522F14DEB75E008B50E8 /* ghl_ref_counter.h */; };
+		A41D523314DEB90B008B50E8 /* ghl_ref_counter_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A41D523214DEB90B008B50E8 /* ghl_ref_counter_impl.h */; };
+		A429008A1413948E00429C47 /* ghl_api.h in Headers */ = {isa = PBXBuildFile; fileRef = A429007B1413948E00429C47 /* ghl_api.h */; };
+		A429008C1413948E00429C47 /* ghl_data_stream.h in Headers */ = {isa = PBXBuildFile; fileRef = A429007D1413948E00429C47 /* ghl_data_stream.h */; };
+		A42900971413948E00429C47 /* ghl_types.h in Headers */ = {isa = PBXBuildFile; fileRef = A42900881413948E00429C47 /* ghl_types.h */; };
+		A436FC5314AE6D2800D53CE4 /* ghl_log.h in Headers */ = {isa = PBXBuildFile; fileRef = A436FC5214AE6D2800D53CE4 /* ghl_log.h */; };
+		A436FC5714AE6D3800D53CE4 /* ghl_log_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A436FC5514AE6D3800D53CE4 /* ghl_log_impl.cpp */; };
+		A436FC5814AE6D3800D53CE4 /* ghl_log_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A436FC5614AE6D3800D53CE4 /* ghl_log_impl.h */; };
+		A4A3561F15E93F0B00835949 /* ghl_data.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A3561E15E93F0B00835949 /* ghl_data.h */; };
+		A4A3562215E93F1700835949 /* ghl_data_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4A3562015E93F1700835949 /* ghl_data_impl.cpp */; };
+		A4A3562315E93F1700835949 /* ghl_data_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A3562115E93F1700835949 /* ghl_data_impl.h */; };
+		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A4045BD819AD445A00D2C5A4 /* ghl_net.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_net.h; sourceTree = "<group>"; };
+		A4045BDB19AD486D00D2C5A4 /* ghl_net_common.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ghl_net_common.cpp; sourceTree = "<group>"; };
+		A4045BDC19AD486D00D2C5A4 /* ghl_net_common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_net_common.h; sourceTree = "<group>"; };
+		A4045BE019AD4AF400D2C5A4 /* ghl_net_cocoa.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ghl_net_cocoa.mm; sourceTree = "<group>"; };
+		A41D522F14DEB75E008B50E8 /* ghl_ref_counter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_ref_counter.h; sourceTree = "<group>"; };
+		A41D523214DEB90B008B50E8 /* ghl_ref_counter_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_ref_counter_impl.h; sourceTree = "<group>"; };
+		A429007B1413948E00429C47 /* ghl_api.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_api.h; sourceTree = "<group>"; };
+		A429007D1413948E00429C47 /* ghl_data_stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_data_stream.h; sourceTree = "<group>"; };
+		A42900881413948E00429C47 /* ghl_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_types.h; sourceTree = "<group>"; };
+		A436FC5214AE6D2800D53CE4 /* ghl_log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_log.h; sourceTree = "<group>"; };
+		A436FC5514AE6D3800D53CE4 /* ghl_log_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ghl_log_impl.cpp; sourceTree = "<group>"; };
+		A436FC5614AE6D3800D53CE4 /* ghl_log_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_log_impl.h; sourceTree = "<group>"; };
+		A4A3561E15E93F0B00835949 /* ghl_data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_data.h; sourceTree = "<group>"; };
+		A4A3562015E93F1700835949 /* ghl_data_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ghl_data_impl.cpp; sourceTree = "<group>"; };
+		A4A3562115E93F1700835949 /* ghl_data_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghl_data_impl.h; sourceTree = "<group>"; };
+		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		D2AAC07E0554694100DB518D /* libGHL_net-OSX_d.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libGHL_net-OSX_d.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D2AAC07C0554694100DB518D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		034768DFFF38A50411DB9C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2AAC07E0554694100DB518D /* libGHL_net-OSX_d.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0867D691FE84028FC02AAC07 /* GHL */ = {
+			isa = PBXGroup;
+			children = (
+				A42900991413949B00429C47 /* src */,
+				A429007A1413948E00429C47 /* include */,
+				0867D69AFE84028FC02AAC07 /* Frameworks */,
+				034768DFFF38A50411DB9C8B /* Products */,
+			);
+			name = GHL;
+			sourceTree = "<group>";
+		};
+		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AACBBE490F95108600F1A2B1 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A4045BDA19AD486D00D2C5A4 /* net */ = {
+			isa = PBXGroup;
+			children = (
+				A4045BDF19AD4AF400D2C5A4 /* cocoa */,
+				A4045BDB19AD486D00D2C5A4 /* ghl_net_common.cpp */,
+				A4045BDC19AD486D00D2C5A4 /* ghl_net_common.h */,
+			);
+			path = net;
+			sourceTree = "<group>";
+		};
+		A4045BDF19AD4AF400D2C5A4 /* cocoa */ = {
+			isa = PBXGroup;
+			children = (
+				A4045BE019AD4AF400D2C5A4 /* ghl_net_cocoa.mm */,
+			);
+			path = cocoa;
+			sourceTree = "<group>";
+		};
+		A429007A1413948E00429C47 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				A4045BD819AD445A00D2C5A4 /* ghl_net.h */,
+				A4A3561E15E93F0B00835949 /* ghl_data.h */,
+				A436FC5214AE6D2800D53CE4 /* ghl_log.h */,
+				A429007B1413948E00429C47 /* ghl_api.h */,
+				A429007D1413948E00429C47 /* ghl_data_stream.h */,
+				A42900881413948E00429C47 /* ghl_types.h */,
+				A41D522F14DEB75E008B50E8 /* ghl_ref_counter.h */,
+			);
+			name = include;
+			path = ../../include;
+			sourceTree = SOURCE_ROOT;
+		};
+		A42900991413949B00429C47 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				A4045BDA19AD486D00D2C5A4 /* net */,
+				A4A3562015E93F1700835949 /* ghl_data_impl.cpp */,
+				A4A3562115E93F1700835949 /* ghl_data_impl.h */,
+				A436FC5514AE6D3800D53CE4 /* ghl_log_impl.cpp */,
+				A436FC5614AE6D3800D53CE4 /* ghl_log_impl.h */,
+				A41D523214DEB90B008B50E8 /* ghl_ref_counter_impl.h */,
+			);
+			name = src;
+			path = ../../src;
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC07A0554694100DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A4045BD919AD445A00D2C5A4 /* ghl_net.h in Headers */,
+				A429008A1413948E00429C47 /* ghl_api.h in Headers */,
+				A429008C1413948E00429C47 /* ghl_data_stream.h in Headers */,
+				A42900971413948E00429C47 /* ghl_types.h in Headers */,
+				A4045BDE19AD486D00D2C5A4 /* ghl_net_common.h in Headers */,
+				A436FC5314AE6D2800D53CE4 /* ghl_log.h in Headers */,
+				A436FC5814AE6D3800D53CE4 /* ghl_log_impl.h in Headers */,
+				A41D523014DEB75E008B50E8 /* ghl_ref_counter.h in Headers */,
+				A41D523314DEB90B008B50E8 /* ghl_ref_counter_impl.h in Headers */,
+				A4A3561F15E93F0B00835949 /* ghl_data.h in Headers */,
+				A4A3562315E93F1700835949 /* ghl_data_impl.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D2AAC07D0554694100DB518D /* GHL_net */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "GHL_net" */;
+			buildPhases = (
+				D2AAC07A0554694100DB518D /* Headers */,
+				D2AAC07B0554694100DB518D /* Sources */,
+				D2AAC07C0554694100DB518D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GHL_net;
+			productName = GHL;
+			productReference = D2AAC07E0554694100DB518D /* libGHL_net-OSX_d.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0867D690FE84028FC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0450;
+				ORGANIZATIONNAME = AndryBlack;
+			};
+			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "GHL_net" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 0867D691FE84028FC02AAC07 /* GHL */;
+			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D2AAC07D0554694100DB518D /* GHL_net */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2AAC07B0554694100DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A436FC5714AE6D3800D53CE4 /* ghl_log_impl.cpp in Sources */,
+				A4045BE119AD4AF400D2C5A4 /* ghl_net_cocoa.mm in Sources */,
+				A4045BDD19AD486D00D2C5A4 /* ghl_net_common.cpp in Sources */,
+				A4A3562215E93F1700835949 /* ghl_data_impl.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB921F08733DC00010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DSTROOT = /tmp/GHL_net.dst;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = "GHL_net-OSX_d";
+			};
+			name = Debug;
+		};
+		1DEB922008733DC00010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				DSTROOT = /tmp/GHL_net.dst;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = "GHL_net-OSX";
+			};
+			name = Release;
+		};
+		1DEB922308733DC00010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					GHL_DEBUG,
+					GHL_PLATFORM_MAC,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				OBJROOT = build;
+				SDKROOT = macosx;
+				SYMROOT = ../../lib;
+			};
+			name = Debug;
+		};
+		1DEB922408733DC00010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = GHL_PLATFORM_MAC;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				OBJROOT = build;
+				SDKROOT = macosx;
+				SYMROOT = ../../lib;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "GHL_net" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB921F08733DC00010E9CD /* Debug */,
+				1DEB922008733DC00010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "GHL_net" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB922308733DC00010E9CD /* Debug */,
+				1DEB922408733DC00010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+}
