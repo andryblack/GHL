@@ -48,6 +48,6 @@ namespace GHL {
 GHL_API GHL::Data* GHL_CALL GHL_CreateData( GHL::UInt32 size , 
                                            bool fill = false , 
                                            GHL::Byte filler = 0 );
-GHL_API GHL::Data* GHL_CALL GHL_HoldData( GHL::Byte* data, GHL::UInt32 size  );
+GHL_API GHL::Data* GHL_CALL GHL_HoldData( const GHL::Byte* data, GHL::UInt32 size  );
 
 #endif /*GHL_DATA_H*/
