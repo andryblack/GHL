@@ -96,11 +96,6 @@ namespace GHL {
             return 0;
         }
         
-        ImageFileDecoder::CheckBuffer buf;
-		GHL::Int32 size = ds->Read(buf, sizeof(buf));
-		if ( size!=sizeof(buf) ) {
-			return 0;
-		}
 		
 		Image* img = 0;
         ds->Seek(0, F_SEEK_BEGIN);
@@ -131,9 +126,12 @@ namespace GHL {
         if (!info) return false;
         info->file_format = IMAGE_FILE_FORMAT_UNKNOWN;
 		ImageFileDecoder::CheckBuffer buf;
+        std::fill(buf,buf+sizeof(buf),0);
 		GHL::Int32 size = stream->Read(buf, sizeof(buf));
 		stream->Seek(-size, F_SEEK_CURRENT);
-		if ( size!=sizeof(buf) ) {
+        
+        /// min size
+		if ( size<4 ) {
 			return false;
 		}
 			
