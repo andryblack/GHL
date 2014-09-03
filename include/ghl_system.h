@@ -50,6 +50,9 @@ namespace GHL {
         ///
         virtual void GHL_CALL SetTitle( const char* title ) = 0;
     };
+    
 }
+
+GHL_API GHL::UInt32 GHL_CALL GHL_SystemGetTime();
 
 #endif /*GHL_SYSTEM_H*/

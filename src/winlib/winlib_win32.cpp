@@ -433,4 +433,8 @@ GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {
 	OutputDebugStringW( buf );
 	OutputDebugStringW( L"\n" );
 }
+
+GHL_API GHL::UInt32 GHL_CALL GHL_SystemGetTime() {
+    return ::time(0);
+}
  
