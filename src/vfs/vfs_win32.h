@@ -22,8 +22,7 @@ namespace GHL {
 		virtual bool GHL_CALL DoCopyFile(const char* from,const char* to) ;
 		/// open file
 		virtual DataStream* GHL_CALL OpenFile(const char* file,FileOperation ot);
-		/// get stream from memory
-		virtual DataStream* GHL_CALL CreateStreamFromMemory(Byte* data,UInt32 size) ;
+		
 	private:
 		std::string m_data_dir;
 	};

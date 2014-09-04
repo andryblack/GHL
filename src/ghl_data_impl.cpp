@@ -37,64 +37,9 @@ namespace GHL {
 		::memcpy(m_buffer, data, size);
 	}
     
-    class MemoryDataStream : public RefCounterImpl<GHL::DataStream> {
-    private:
-        const GHL::Data*  m_data;
-        GHL::UInt32 m_pointer;
-    public:
-        explicit MemoryDataStream(const GHL::Data* data) : m_data(data),m_pointer(0) {}
-        
-        /// read data
-		virtual GHL::UInt32 GHL_CALL Read(GHL::Byte* dest,GHL::UInt32 bytes) {
-            GHL::UInt32 size = std::max(bytes,m_data->GetSize() - m_pointer);
-            ::memcpy(dest, m_data->GetData()+m_pointer, size);
-            return size;
-        }
-		/// write data
-		virtual GHL::UInt32 GHL_CALL Write(const GHL::Byte* src,GHL::UInt32 bytes) {
-            return 0;
-        }
-		/// tell
-		virtual GHL::UInt32 GHL_CALL Tell() const { return m_pointer; }
-		/// seek
-		virtual	bool GHL_CALL Seek(GHL::Int32 offset,GHL::FileSeekType st) {
-            if (st == F_SEEK_BEGIN) {
-                m_pointer = std::max(UInt32(offset > 0 ? offset : 0) , m_data->GetSize());
-            } else if (st == F_SEEK_CURRENT) {
-                if (offset > 0) {
-                    m_pointer = std::max(UInt32(m_pointer+offset) , m_data->GetSize());
-                } else {
-                    if (m_pointer < (-offset)) {
-                        m_pointer = 0;
-                    } else {
-                        m_pointer = m_pointer + offset;
-                    }
-                }
-            } else if (st == F_SEEK_END) {
-                if (offset < 0) m_pointer = m_data->GetSize();
-                else {
-                    if (m_data->GetSize() < offset) {
-                        m_pointer = 0;
-                    } else {
-                        m_pointer = m_data->GetSize() - offset;
-                    }
-                }
-            }
-            return true;
-        }
-		/// End of file
-		virtual bool GHL_CALL Eof() const {
-            return m_pointer >= m_data->GetSize();
-        }
-    };
-	
 }
 
-GHL_API GHL::DataStream* GHL_CALL GHL_CreateMemoryStream( const GHL::Data* ds ) {
-    return new GHL::MemoryDataStream(ds);
-}
-
-GHL_API GHL::Data* GHL_CALL GHL_CreateData( GHL::UInt32 size , 
+GHL_API GHL::Data* GHL_CALL GHL_CreateData( GHL::UInt32 size ,
                                            bool fill  , 
                                            GHL::Byte filler ) {
     GHL::DataImpl* data = new GHL::DataImpl( size );

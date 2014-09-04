@@ -51,8 +51,6 @@ namespace GHL
 		virtual bool GHL_CALL DoCopyFile(const char* from,const char* to) = 0;
 		/// open file
 		virtual DataStream* GHL_CALL OpenFile(const char* file,FileOperation ot=FILE_READ) = 0;
-		/// get stream from memory
-		virtual DataStream* GHL_CALL CreateStreamFromMemory(Byte* data,UInt32 size) = 0;
 	};
 	
 	

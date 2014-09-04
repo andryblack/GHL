@@ -26,65 +26,62 @@
 
 namespace GHL
 {
-
-	MemoryStream::MemoryStream(Byte* data,UInt32 size) : m_data(data),m_size(size),m_pos(0)
-	{
-	}
-	
-	MemoryStream::~MemoryStream()
-	{
-	}
-
-	static inline UInt32 m_min(UInt32 x,UInt32 y) {
-		return x<y ? x : y;
-	}
-	
-	UInt32 GHL_CALL MemoryStream::Read(Byte* dest,UInt32 bytes) 
-	{
-		UInt32 res = m_min(bytes,m_size-m_pos);
-		if (!res) return 0;
-		::memcpy(dest,&m_data[m_pos],res);
-		m_pos+=res;
-		return res;
-	}
-	UInt32 GHL_CALL MemoryStream::Write(const Byte* src,UInt32 bytes) 
-	{
-		UInt32 res = m_min(bytes,m_size-m_pos);
-		if (!res) return 0;
-		::memcpy(&m_data[m_pos],src,res);
-		m_pos+=res;
-		return res;
-	}
-	UInt32 GHL_CALL MemoryStream::Tell() const
-	{
-		return m_pos;
-	}
-	bool GHL_CALL MemoryStream::Eof() const
-	{
-		return m_pos==m_size;
-	}
-	
-	bool GHL_CALL MemoryStream::Seek(Int32 offset,FileSeekType st) 
-	{
-		if (st==F_SEEK_BEGIN) {
-			if (offset<0) return false;
-			if (offset>static_cast<Int32>(m_size)) return false;
-			m_pos = offset;
-			return true;
-		} else
-		if (st==F_SEEK_CURRENT) {
-			if ((m_pos+offset)>m_size) return false;
-			m_pos = m_pos+offset;
-			return true;
-		} else
-		if (st==F_SEEK_END) {
-			if (offset<0) return false;
-			if (offset>static_cast<Int32>(m_size)) return false;
-			m_pos = m_size-offset;
-			return true;
-		} 
-		return false;
-	}
+    static inline UInt32 u_min( UInt32 a, UInt32 b) {
+        return a < b ? a : b;
+    }
+    class MemoryDataStream : public RefCounterImpl<GHL::DataStream> {
+    private:
+        const GHL::Data*  m_data;
+        GHL::UInt32 m_pointer;
+    public:
+        explicit MemoryDataStream(const GHL::Data* data) : m_data(data),m_pointer(0) {}
+        
+        /// read data
+		virtual GHL::UInt32 GHL_CALL Read(GHL::Byte* dest,GHL::UInt32 bytes) {
+            GHL::UInt32 size = u_min(bytes,m_data->GetSize() - m_pointer);
+            ::memcpy(dest, m_data->GetData()+m_pointer, size);
+            return size;
+        }
+		/// write data
+		virtual GHL::UInt32 GHL_CALL Write(const GHL::Byte* src,GHL::UInt32 bytes) {
+            return 0;
+        }
+		/// tell
+		virtual GHL::UInt32 GHL_CALL Tell() const { return m_pointer; }
+		/// seek
+		virtual	bool GHL_CALL Seek(GHL::Int32 offset,GHL::FileSeekType st) {
+            if (st == F_SEEK_BEGIN) {
+                m_pointer = u_min(UInt32(offset > 0 ? offset : 0) , m_data->GetSize());
+            } else if (st == F_SEEK_CURRENT) {
+                if (offset > 0) {
+                    m_pointer = u_min(UInt32(m_pointer+offset) , m_data->GetSize());
+                } else {
+                    if (m_pointer < (-offset)) {
+                        m_pointer = 0;
+                    } else {
+                        m_pointer = m_pointer + offset;
+                    }
+                }
+            } else if (st == F_SEEK_END) {
+                if (offset < 0) m_pointer = m_data->GetSize();
+                else {
+                    if (m_data->GetSize() < offset) {
+                        m_pointer = 0;
+                    } else {
+                        m_pointer = m_data->GetSize() - offset;
+                    }
+                }
+            }
+            return true;
+        }
+		/// End of file
+		virtual bool GHL_CALL Eof() const {
+            return m_pointer >= m_data->GetSize();
+        }
+    };
 	
 }
 
+GHL_API GHL::DataStream* GHL_CALL GHL_CreateMemoryStream( const GHL::Data* ds ) {
+    return new GHL::MemoryDataStream(ds);
+}

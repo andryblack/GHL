@@ -183,8 +183,4 @@ namespace GHL {
 		}
 		return new FileStream(f); 
 	}
-	/// get stream from memory
-	DataStream* GHL_CALL VFSWin32Impl::CreateStreamFromMemory(Byte* data,UInt32 size) {
-		return new MemoryStream(data,size);
-	}
 }

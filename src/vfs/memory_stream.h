@@ -29,26 +29,6 @@
 namespace GHL
 {
 
-    class MemoryStream : public RefCounterImpl<DataStream>
-    {
-        protected:
-            Byte*	m_data;
-            UInt32	m_size;
-            UInt32	m_pos;
-        public:
-            MemoryStream(Byte* data,UInt32 size);
-            virtual ~MemoryStream();
-
-            Byte* GetData() { return m_data;}
-
-            virtual UInt32 GHL_CALL Read(Byte* dest,UInt32 bytes) ;
-            virtual UInt32 GHL_CALL Write(const Byte* src,UInt32 bytes) ;
-            virtual UInt32 GHL_CALL Tell() const;
-            virtual	bool GHL_CALL Seek(Int32 offset,FileSeekType st) ;
-            virtual bool GHL_CALL Eof() const;
-     
-    };
-
 
 }
 

@@ -137,10 +137,6 @@ namespace GHL {
         if (!asset) return 0;
         return new AssetFileStream(asset);
     }
-    /// get stream from memory
-    DataStream* GHL_CALL VFSAndroidImpl::CreateStreamFromMemory(Byte* data,UInt32 size) {
-        return new MemoryStream(data,size);
-    }
 }
 
 

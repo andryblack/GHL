@@ -109,10 +109,6 @@ namespace GHL {
             return new PosixFileStream(f);
         return 0;
     }
-    /// get stream from memory
-    DataStream* GHL_CALL VFSPosixImpl::CreateStreamFromMemory(Byte* data,UInt32 size) {
-        return new MemoryStream(data,size);
-    }
 }
 
 

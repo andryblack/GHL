@@ -231,9 +231,5 @@ namespace GHL {
 		}
 		return 0;
 	}
-	/// get stream from memory
-	DataStream* GHL_CALL VFSCocoaImpl::CreateStreamFromMemory(Byte* data,UInt32 size) {
-		return new MemoryStream(data,size);
-	}
 }
 
