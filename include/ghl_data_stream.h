@@ -65,5 +65,7 @@ namespace GHL
 } /* namespace */
 
 GHL_API GHL::Data* GHL_CALL GHL_ReadAllData( GHL::DataStream* ds );
+GHL_API GHL::DataStream* GHL_CALL GHL_CreateMemoryStream( const GHL::Data* ds );
+
 
 #endif /*GHL_DATA_STREAM_H*/
