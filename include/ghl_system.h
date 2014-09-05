@@ -26,8 +26,9 @@ namespace GHL {
 	
 	/// device data
 	enum DeviceData {
-		DEVICE_DATA_ACCELEROMETER,	///< 3floats
-		DEVICE_DATA_VIEW_CONTROLLER	///< UIViewController*
+		DEVICE_DATA_ACCELEROMETER,      ///< 3floats
+		DEVICE_DATA_VIEW_CONTROLLER,	///< UIViewController*
+        DEVICE_DATA_FLASH_VAR,          /// const char**, in name, out value
 	};
 
     struct System {
@@ -44,7 +45,7 @@ namespace GHL {
         ///
         virtual UInt32  GHL_CALL GetKeyMods() const = 0;
 		///
-		virtual bool GHL_CALL SetDeviceState( DeviceState name, void* data) = 0;
+		virtual bool GHL_CALL SetDeviceState( DeviceState name, const void* data) = 0;
 		///
 		virtual bool GHL_CALL GetDeviceData( DeviceData name, void* data) = 0;
         ///

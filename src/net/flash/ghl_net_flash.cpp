@@ -21,7 +21,7 @@ static var completeHandler(void *arg, var as3Args) {
     AS3::ui::flash::utils::ByteArray ba = var(loader->data);
     GHL::NetworkRequest* handler = (GHL::NetworkRequest*)arg;
     int size = ba->bytesAvailable;
-    LOG_INFO(  "completeEvent: " << size << "bytes" );
+    //LOG_INFO(  "completeEvent: " << size << "bytes" );
     
     GHL::Byte* d = (GHL::Byte*)::malloc(size);
     ba->position = 0;
@@ -31,6 +31,7 @@ static var completeHandler(void *arg, var as3Args) {
     
     handler->OnComplete();
     handler->Release();
+    return internal::_undefined;
 }
 
 static var errorHandler(void *arg, var as3Args) {
@@ -39,6 +40,7 @@ static var errorHandler(void *arg, var as3Args) {
     
     handler->OnError("IO");
     handler->Release();
+    return internal::_undefined;
 }
 
 

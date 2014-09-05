@@ -76,7 +76,7 @@ package com.adobe.flascc
       // PlayerKernel will delegate read/write requests to the "/dev/tty"
       // file to the object specified with this API.
       CModule.vfs.console = this
-       CModule.vfs.addDirectory("/data")
+      CModule.vfs.addDirectory("/data")
       CModule.vfs.addBackingStore(new RootFSBackingStore(), "/data")
       CModule.vfs.addDirectory("/local")
       CModule.vfs.addBackingStore(

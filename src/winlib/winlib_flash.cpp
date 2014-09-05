@@ -43,7 +43,7 @@ using namespace AS3::ui;
 
 class FlashSystem : public GHL::System {
 public:
-    FlashSystem() : vfs("","/local"), sound(0),imageDecoder(0),render(0) {
+    FlashSystem() : vfs("/","/local"), sound(0),imageDecoder(0),render(0) {
         started = false;
         valid = false;
         loaded = false;
@@ -91,17 +91,29 @@ public:
 		return 0;
 	}
     ///
-	virtual bool GHL_CALL SetDeviceState( GHL::DeviceState name, void* data) {
+	virtual bool GHL_CALL SetDeviceState( GHL::DeviceState name, const void* data) {
 		return false;
 	}
     ///
 	virtual bool GHL_CALL GetDeviceData( GHL::DeviceData name, void* data) {
+        if (name == GHL::DEVICE_DATA_FLASH_VAR) {
+            flash::display::LoaderInfo loaderInfo = stage->loaderInfo;
+            if (loaderInfo != internal::_undefined && loaderInfo != internal::_null) {
+                Object flashVars = loaderInfo->parameters;
+                const char** name = reinterpret_cast<const char**>(data);
+                m_flash_var = AS3::sz2stringAndFree(internal::utf8_toString(flashVars[*name]));
+                LOG_INFO(  "flashVar: " << *name << ":" << m_flash_var );
+                *name = m_flash_var.c_str();
+                return true;
+            }
+        }
 		return false;
 	}
     ///
 	virtual void GHL_CALL SetTitle( const char* title ) {
 		/// @todo
 	}
+    void addStartupParam(const char* val);
 public:
     GHL::Application* application;
     flash::display::Stage stage;
@@ -116,6 +128,7 @@ public:
     GHL::ImageDecoderImpl* imageDecoder;
     GHL::RenderStage3d* render;
     bool fullscreen;
+    std::string m_flash_var;
 };
 
 
@@ -351,6 +364,7 @@ static void startApplication() {
         LOG_ERROR( "startApplication exception" );
     }
 }
+
 
 GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/, char** /*argv*/) {
     

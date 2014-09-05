@@ -65,7 +65,7 @@ public:
         return 0;
     }
     ///
-    virtual bool GHL_CALL SetDeviceState( GHL::DeviceState /*name*/, void* /*data*/);
+    virtual bool GHL_CALL SetDeviceState( GHL::DeviceState /*name*/, const void* /*data*/);
     ///
     virtual bool GHL_CALL GetDeviceData( GHL::DeviceData /*name*/, void* /*data*/) {
         return false;
@@ -745,11 +745,11 @@ void GHL_CALL SystemCocoa::SetTitle( const char* title ) {
     }
 }
 
-bool GHL_CALL SystemCocoa::SetDeviceState(GHL::DeviceState name, void *data) {
+bool GHL_CALL SystemCocoa::SetDeviceState(GHL::DeviceState name, const void *data) {
     WinLibAppDelegate* delegate = (WinLibAppDelegate*)[NSApplication sharedApplication].delegate;
   
     if ( name == GHL::DEVICE_STATE_SYSTEM_CURSOR_ENABLED && data ) {
-        BOOL enabled = *(bool*)data;
+        BOOL enabled = *(const bool*)data;
         if (delegate) {
             [delegate setCursorVisible:enabled];
         }
