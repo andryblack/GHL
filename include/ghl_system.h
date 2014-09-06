@@ -28,6 +28,7 @@ namespace GHL {
 	enum DeviceData {
 		DEVICE_DATA_ACCELEROMETER,      ///< 3floats
 		DEVICE_DATA_VIEW_CONTROLLER,	///< UIViewController*
+        DEVICE_DATA_VIEW,               ///< NSView** /UIView**
         DEVICE_DATA_FLASH_VAR,          /// const char**, in name, out value
 	};
 

@@ -35,10 +35,15 @@ static bool g_need_depth = false;
 static const char* MODULE = "WINLIB";
 
 class SystemCocoa : public GHL::System {
+private:
+    NSView* m_view;
 public:
+    SystemCocoa() : m_view(0) {}
     virtual ~SystemCocoa() {
 
     }
+    
+    void setView(NSView* v) { m_view = v; }
 
 	virtual void GHL_CALL Exit() {
 		[[NSApplication sharedApplication] terminate:nil];
@@ -67,7 +72,14 @@ public:
     ///
     virtual bool GHL_CALL SetDeviceState( GHL::DeviceState /*name*/, const void* /*data*/);
     ///
-    virtual bool GHL_CALL GetDeviceData( GHL::DeviceData /*name*/, void* /*data*/) {
+    virtual bool GHL_CALL GetDeviceData( GHL::DeviceData name, void* data) {
+        if (name == GHL::DEVICE_DATA_VIEW) {
+            if (data) {
+                NSView** output = static_cast<NSView**>(data);
+                *output = m_view;
+                return m_view;
+            }
+        }
         return false;
     }
     ///
@@ -348,6 +360,8 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 
 - (void)drawRect:(NSRect)dirtyRect {
     (void)dirtyRect;
+    if ([self isHidden])
+        return;
     static bool in_draw = false;
     if (in_draw) return;
     if (g_need_fullscreen!=g_fullscreen)  {
@@ -667,6 +681,8 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     g_fullscreen = g_need_fullscreen = settings.fullscreen;
     
     m_gl_view = gl;
+    
+    m_system->setView(gl);
 	
     [self switchFullscreen];
     
