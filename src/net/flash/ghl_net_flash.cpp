@@ -47,7 +47,29 @@ static var errorHandler(void *arg, var as3Args) {
 class NetworkFlash : public GHL::Network {
     /// GET request
     virtual bool GHL_CALL Get(GHL::NetworkRequest* handler) {
-        return false;
+        if (!handler)
+            return false;
+        flash::net::URLRequest urlRequest = flash::net::URLRequest::_new(handler->GetURL());
+        urlRequest->method = flash::net::URLRequestMethod::GET;
+        flash::net::URLLoader loader = flash::net::URLLoader::_new();
+        loader->dataFormat = flash::net::URLLoaderDataFormat::BINARY;
+        loader->addEventListener(flash::events::Event::COMPLETE, Function::_new(&completeHandler, handler));
+        loader->addEventListener(flash::events::IOErrorEvent::IO_ERROR, Function::_new(&errorHandler, handler));
+        handler->AddRef();
+        try
+        {
+            loader->load(urlRequest);
+        }
+        catch (var e)
+        {
+            char *err = internal::utf8_toString(e);
+            LOG_ERROR(  "failed load url: " << err );
+            handler->OnError(err);
+            free(err);
+            handler->Release();
+            return false;
+        }
+        return true;
     }
     /// POST request
     virtual bool GHL_CALL Post(GHL::NetworkRequest* handler,const GHL::Data* data) {
