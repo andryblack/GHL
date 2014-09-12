@@ -23,14 +23,25 @@ namespace GHL {
     
     void AGALGenerator::init(GHL::RenderStage3d *render) {
         m_render = render;
-        
-        AGALCodeGen codegen(AGALCodeGen::VERTEX_PROGRAM);
-        codegen.add(AGAL::MOV,AGAL::I[0],AGAL::VA[1]);
-        codegen.add(AGAL::MOV,AGAL::I[1],AGAL::VA[2]);
-        codegen.add(AGAL::M44,AGAL::VO,AGAL::VA[0],AGAL::VC[0]);
-        codegen.dump();
-        ConstInlinedData data(codegen.data(),codegen.size());
-        m_simple_v = ShaderProgramStage3d::byteArrayFromData(&data);
+        {
+            AGALCodeGen codegen(AGALCodeGen::VERTEX_PROGRAM);
+            codegen.add(AGAL::MOV,AGAL::I[0],AGAL::VA[1]);
+            codegen.add(AGAL::MOV,AGAL::I[1],AGAL::VA[2]);
+            codegen.add(AGAL::M44,AGAL::VO,AGAL::VA[0],AGAL::VC[0]);
+            codegen.dump();
+            ConstInlinedData data(codegen.data(),codegen.size());
+            m_simple_v = ShaderProgramStage3d::byteArrayFromData(&data);
+        }
+        {
+            AGALCodeGen codegen(AGALCodeGen::VERTEX_PROGRAM);
+            codegen.add(AGAL::MOV,AGAL::I[0],AGAL::VA[1]);
+            codegen.add(AGAL::MOV,AGAL::I[1],AGAL::VA[2]);
+            codegen.add(AGAL::MOV,AGAL::I[2],AGAL::VA[3]);
+            codegen.add(AGAL::M44,AGAL::VO,AGAL::VA[0],AGAL::VC[0]);
+            codegen.dump();
+            ConstInlinedData data(codegen.data(),codegen.size());
+            m_simple_v2 = ShaderProgramStage3d::byteArrayFromData(&data);
+        }
         
     }
     
@@ -112,7 +123,7 @@ namespace GHL {
                     if (entry.texture_stages[i].tex.c.min_filter == TEX_FILTER_LINEAR) {
                         s.linear();
                     }
-                    codegen.add(AGAL::TEX,AGAL::FT[1],AGAL::I[1],s);    /// FT1 - tex
+                    codegen.add(AGAL::TEX,AGAL::FT[1],AGAL::I[(tex2&&i==1)?2:1],s);    /// FT1 - tex
                     if (operation_equal(entry.texture_stages[i].alpha,entry.texture_stages[i].rgb)) {
                         append_texture_operation(codegen,entry.texture_stages[i].rgb,AGAL::FT[0],AGAL::FT[0],AGAL::FT[1]);
                     } else {
@@ -132,7 +143,7 @@ namespace GHL {
 //            LOG_ERROR("create fragment shader");
 //            return 0;
 //        }
-        return m_render->CreateBuiltInShader(m_simple_v, fs);
+        return m_render->CreateBuiltInShader(tex2?m_simple_v2:m_simple_v, fs);
     }
     
 }

@@ -41,7 +41,7 @@ namespace GHL
 		virtual bool RenderSetFullScreen(bool fs) ;
 		virtual void SetOrthoProjection();
         virtual void ResetRenderState();
-        virtual void SetupVertexData(const Vertex* v) = 0;
+        virtual void SetupVertexData(const Vertex* v,VertexType vt) = 0;
 		void RestoreTexture();
 		/// Render impl
 
@@ -106,7 +106,7 @@ namespace GHL
         RenderOpenGLFFPL(UInt32 w,UInt32 h,bool haveDepth);
     public:
         virtual void ResetRenderState();
-        virtual void SetupVertexData(const Vertex* v);
+        virtual void SetupVertexData(const Vertex* v,VertexType vt);
         
         /// set current texture
 		virtual void GHL_CALL SetTexture(const Texture* texture, UInt32 stage );
@@ -132,7 +132,7 @@ namespace GHL
         
         
         virtual void ResetRenderState();
-        virtual void SetupVertexData(const Vertex* v);
+        virtual void SetupVertexData(const Vertex* v,VertexType vt);
         
         /// set projection matrix
 		virtual void GHL_CALL SetProjectionMatrix(const float *m) ;

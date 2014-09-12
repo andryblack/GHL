@@ -159,7 +159,7 @@ public:
 		return 0;
 	}
 	///
-	virtual bool GHL_CALL SetDeviceState( GHL::DeviceState name, void* data); 
+	virtual bool GHL_CALL SetDeviceState( GHL::DeviceState name, const void* data);
 	///
 	virtual bool GHL_CALL GetDeviceData( GHL::DeviceData name, void* data) {
 		if (name==GHL::DEVICE_DATA_ACCELEROMETER) {
@@ -656,10 +656,10 @@ void GHL_CALL SystemCocoaTouch::HideKeyboard() {
 	[(WinLibView*)m_controller.view hideKeyboard];
 }
 
-bool GHL_CALL SystemCocoaTouch::SetDeviceState( GHL::DeviceState name, void* data) {
+bool GHL_CALL SystemCocoaTouch::SetDeviceState( GHL::DeviceState name, const void* data) {
 	if (!data) return false;
 	if (name==GHL::DEVICE_STATE_ACCELEROMETER_ENABLED) {
-		bool* state = (bool*)data;
+		const bool* state = (const bool*)data;
 		if (*state && !m_accelerometer) {
 			m_accelerometer = [[AccelerometerDelegate alloc] init];
 		} else if (!*state && m_accelerometer) {
@@ -668,14 +668,14 @@ bool GHL_CALL SystemCocoaTouch::SetDeviceState( GHL::DeviceState name, void* dat
 		}
 		return true;
 	} else if (name==GHL::DEVICE_STATE_ORIENTATION_LOCKED) {
-		g_orientationLocked = *(bool*)data;
+		g_orientationLocked = *(const bool*)data;
 		return true;
 	} else if (name==GHL::DEVICE_STATE_MULTITOUCH_ENABLED) {
-		bool* state = (bool*)data;
+		const bool* state = (const bool*)data;
 		m_controller.view.multipleTouchEnabled = *state ? YES : NO;
 		return true;
 	} else if (name==GHL::DEVICE_STATE_RETINA_ENABLED) {
-		bool* state = (bool*)data;
+		const bool* state = (const bool*)data;
 		g_retina_enabled = *state;
 		return true;
 	}

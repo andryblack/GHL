@@ -289,14 +289,17 @@ static var initContext3D(void *arg, var as3Args)
             
             if (ctx.render->RenderInit()){
                 ctx.application->SetRender(ctx.render);
+                ctx.valid = true;
+                enterFrame(arg,as3Args);
             } else {
                 LOG_ERROR("RenderInit failed");
             }
         } else {
             ctx.render->SetContext(ctx.ctx3d);
+            ctx.valid = true;
         }
         gettimeofday(&ctx.lastTime,0);
-        ctx.valid = true;
+        
         
     } catch(var e) {
         char *err = internal::utf8_toString(e);
@@ -356,9 +359,11 @@ static void startApplication() {
         ctx.s3d->addEventListener(flash::events::ErrorEvent::ERROR, Function::_new(context3DError, NULL));
 //        ctx.s3d->requestContext3D(flash::display3D::Context3DRenderMode::AUTO,
 //                                  flash::display3D::Context3DProfile::BASELINE_CONSTRAINED);
+        ctx.started = true;
+        ctx.stage->addEventListener(flash::events::Event::ENTER_FRAME, Function::_new(&enterFrame, NULL));
         ctx.s3d->requestContext3D(flash::display3D::Context3DRenderMode::AUTO,
                                   flash::display3D::Context3DProfile::BASELINE);
-        ctx.started = true;
+        
         LOG_INFO( "StartApplication ok" );
     } catch (var e) {
         LOG_ERROR( "startApplication exception" );
@@ -378,7 +383,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
         stage->frameRate = 30;
         ctx.started = false;
         startApplication();
-        stage->addEventListener(flash::events::Event::ENTER_FRAME, Function::_new(&enterFrame, NULL));
+        
     } catch (var e) {
         LOG_ERROR( "GHL_StartApplication exception" );
     }

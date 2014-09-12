@@ -50,10 +50,12 @@ namespace GHL {
         static const size_t RING_BUFFERS_AMOUNT = 128;
         struct RingElement {
             AS3::ui::flash::display3D::VertexBuffer3D   vbuffer;
+            AS3::ui::flash::display3D::VertexBuffer3D   vbuffer2;
             AS3::ui::flash::display3D::IndexBuffer3D    ibuffer;
             size_t vsize;
+            size_t vsize2;
             size_t isize;
-            RingElement() : vsize(0),isize(0) {}
+            RingElement() : vsize(0),vsize2(0),isize(0) {}
         };
         RingElement   m_ring[RING_BUFFERS_AMOUNT];
         size_t  m_ring_pos;

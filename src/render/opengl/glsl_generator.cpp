@@ -35,6 +35,22 @@ namespace GHL {
     " varColor = vColor;\n"
     "}\n";
     
+    static const char* simple_v2 =
+    "attribute vec3 vPosition;\n"
+    "attribute vec2 vTexCoord;\n"
+    "attribute vec2 vTex2Coord;\n"
+    "attribute vec4 vColor;\n"
+    "uniform mat4 mProjectionModelView;\n"
+    "varying vec2 varTexCoord_0;\n"
+    "varying vec2 varTexCoord_1;\n"
+    "varying vec4 varColor;\n"
+    "void main(void) {\n"
+    " gl_Position = mProjectionModelView * vec4(vPosition,1.0);\n"
+    " varTexCoord_0 = vTexCoord;\n"
+    " varTexCoord_1 = vTex2Coord;\n"
+    " varColor = vColor;\n"
+    "}\n";
+    
     static void append_tex_stage( std::stringstream& ss,
                                  const pfpl_state_data::texture_stage::state& state,
                                  const char* dst, const char* src, const char* tex) {
@@ -81,14 +97,15 @@ namespace GHL {
     }
     
     ShaderProgram* GLSLGenerator::generate(const pfpl_state_data& entry, bool tex2 ) {
-        if (!m_simple_v) {
-            ConstInlinedData data((const Byte*)simple_v,UInt32(strlen(simple_v)));
-            m_simple_v = m_render->CreateVertexShader(&data);
-            if (!m_simple_v) {
+        
+        if ((!tex2 && !m_simple_v) || (tex2 && !m_simple_v2)) {
+            ConstInlinedData data((const Byte*)(tex2 ? simple_v2 : simple_v),UInt32(strlen((tex2 ? simple_v2 : simple_v))));
+            (tex2 ? m_simple_v2 : m_simple_v) = m_render->CreateVertexShader(&data);
+            if (!(tex2 ? simple_v2 : simple_v)) {
                 LOG_ERROR("create vertex shader");
                 return 0;
             } else {
-                LOG_VERBOSE("created vertex shader:\n" << simple_v);
+                LOG_VERBOSE("created vertex shader:\n" << (tex2 ? simple_v2 : simple_v));
             }
         }
         std::stringstream ss;
@@ -101,6 +118,9 @@ namespace GHL {
             }
         }
         ss << "varying vec2 varTexCoord_0;\n";
+        if (tex2) {
+            ss << "varying vec2 varTexCoord_1;\n";
+        }
         ss << "varying vec4 varColor;\n";
         
         ss << "void main(void) {\n";
@@ -108,6 +128,9 @@ namespace GHL {
         size_t texCoordIdx = 0;
         //char buf[128];
         for (size_t i=0;i<MAX_TEXTURE_STAGES;++i) {
+            texCoordIdx = 0;
+            if (tex2 && i==1)
+                texCoordIdx = 1;
             if (entry.texture_stages[i].rgb.c.texture) {
                 std::stringstream stage;
                 if (entry.texture_stages[i].rgb.c.operation != TEX_OP_DISABLE) {
@@ -134,7 +157,7 @@ namespace GHL {
         } else {
             LOG_VERBOSE("created fragment shader:\n" << s);
         }
-        return m_render->CreateShaderProgram(m_simple_v, fs);
+        return m_render->CreateShaderProgram(tex2 ? m_simple_v2 : m_simple_v, fs);
     }
     
 }

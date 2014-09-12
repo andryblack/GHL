@@ -120,7 +120,8 @@ namespace GHL {
     static const char* predefinedAttributeNames[GLSLPredefinedAttributesAmount] = {
         "vPosition",
         "vTexCoord",
-        "vColor"
+        "vColor",
+        "vTex2Coord",
     };
     GL::GLint   ShaderProgramGLSL::GetAttribute(GLSLPredefinedAttribute attr) const {
         if (m_attributes[attr]<0) {

@@ -27,6 +27,7 @@ namespace GHL {
     private:
         GHL::Render*    m_render;
         VertexShader*   m_simple_v;
+        VertexShader*   m_simple_v2;
         std::string     m_fshader_header;
     };
     

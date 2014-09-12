@@ -68,6 +68,7 @@ namespace GHL {
         GLSLPredefinedAttributePosition,
         GLSLPredefinedAttributeTexCoord,
         GLSLPredefinedAttributeColor,
+        GLSLPredefinedAttributeTex2Coord,
         GLSLPredefinedAttributesAmount
     };
 	

@@ -26,6 +26,7 @@ namespace GHL {
     private:
         GHL::RenderStage3d*    m_render;
         AS3::ui::flash::utils::ByteArray   m_simple_v;
+        AS3::ui::flash::utils::ByteArray   m_simple_v2;
     };
     
 }
