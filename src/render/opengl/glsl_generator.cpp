@@ -14,7 +14,7 @@ namespace GHL {
     
     static const char* MODULE = "GLSLGenerator";
     
-    GLSLGenerator::GLSLGenerator() : m_render(0), m_simple_v(0) {
+    GLSLGenerator::GLSLGenerator() : m_render(0), m_simple_v(0),m_simple_v2(0) {
         
     }
     

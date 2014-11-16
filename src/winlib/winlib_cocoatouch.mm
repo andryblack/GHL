@@ -597,7 +597,6 @@ public:
 	
 	g_application->Initialize();
 	
-	
 	NSString *reqSysVer = @"4.0";
 	NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
 	if ([currSysVer compare:reqSysVer options:NSNumericSearch] != NSOrderedAscending) {
@@ -699,5 +698,5 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int argc, cha
 }
 
 GHL_API GHL::UInt32 GHL_CALL GHL_SystemGetTime() {
-    return ::time(0);
+    return GHL::UInt32(::time(0));
 }
