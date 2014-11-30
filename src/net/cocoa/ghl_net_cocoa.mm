@@ -35,7 +35,7 @@
 {
     if ([response isKindOfClass:[NSHTTPURLResponse class]] ) {
         NSInteger code = ((NSHTTPURLResponse*)response).statusCode;
-        m_handler->OnResponse(code);
+        m_handler->OnResponse(GHL::UInt32(code));
         NSDictionary* headers = ((NSHTTPURLResponse*)response).allHeaderFields;
         for (NSString* key in headers.allKeys) {
             NSString* val = [headers objectForKey:key];
@@ -46,7 +46,7 @@
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-    m_handler->OnData(static_cast<const GHL::Byte*>(data.bytes), data.length);
+    m_handler->OnData(static_cast<const GHL::Byte*>(data.bytes), GHL::UInt32(data.length));
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
@@ -58,7 +58,12 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-    m_handler->OnError("unknown");
+    if (error) {
+        const char* err = error.description.UTF8String;
+        m_handler->OnError(err);
+    } else {
+        m_handler->OnError("unknown");
+    }
     [connection release];
     m_handler->Release();
     m_handler = 0;
@@ -133,6 +138,7 @@ public:
         NSURLConnection* conn = [[NSURLConnection alloc] initWithRequest:req
                                                        delegate:request startImmediately:NO];
         if ( !conn ) {
+            [request release];
             return false;
         }
         
@@ -158,6 +164,7 @@ public:
         NSURLConnection* conn = [[NSURLConnection alloc] initWithRequest:req
                                                                 delegate:request startImmediately:NO];
         if ( !conn ) {
+            [request release];
             return false;
         }
         
