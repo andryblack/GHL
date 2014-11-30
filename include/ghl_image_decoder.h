@@ -54,7 +54,7 @@ namespace GHL
 		/// decode
 		virtual Image* GHL_CALL Decode( DataStream* stream ) const = 0;
 		/// encode
-		virtual bool GHL_CALL Encode( const Image* image, DataStream* to, ImageFileFormat fmt) const = 0;
+		virtual const Data* GHL_CALL Encode( const Image* image, ImageFileFormat fmt) const = 0;
 	};
     
     

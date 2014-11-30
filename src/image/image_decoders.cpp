@@ -144,11 +144,11 @@ namespace GHL {
 		return false;
 	}
 	
-	bool GHL_CALL ImageDecoderImpl::Encode( const Image* image, DataStream* to, ImageFileFormat fmt) const {
+	const Data* GHL_CALL ImageDecoderImpl::Encode( const Image* image, ImageFileFormat fmt) const {
 		for (size_t i=0;i<m_decoders.size();i++)
 		{
 			if (m_decoders[i]->GetFileFormat()==fmt) {
-				return m_decoders[i]->Encode(image,to);
+				return m_decoders[i]->Encode(image);
 			}
 		}
 		return false;

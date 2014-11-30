@@ -314,8 +314,8 @@ namespace GHL {
         return img;
     }
     
-    bool JpegDecoder::Encode( const Image* /*image*/, DataStream* /*ds*/) {
-        return false;
+    const Data* JpegDecoder::Encode( const Image* /*image*/) {
+        return 0;
     }
     
 } /*namespace*/

@@ -114,10 +114,10 @@ namespace GHL {
 
     struct BufferedWriter {
         Byte* buffer;
-        DataStream* strm;
+        DataArrayImpl* strm;
         UInt32 size;
         UInt32 bufSize;
-        BufferedWriter(DataStream* ds,UInt32 sz) {
+        BufferedWriter(DataArrayImpl* ds,UInt32 sz) {
             buffer = new Byte[sz];
             this->strm = ds;
             this->bufSize = 0;
@@ -128,7 +128,7 @@ namespace GHL {
             delete [] buffer;
         }
         void FlushBuffer() {
-            strm->Write(buffer,bufSize);
+            strm->append(buffer,bufSize);
             bufSize = 0;
         }
         UInt32 Write(const Byte* to,UInt32 s) {
@@ -175,7 +175,7 @@ namespace GHL {
         }
         return pixels == 0;
     }
-    bool TGAImageDecoder::SaveRAW32(DataStream* _ds,const Image* img) {
+    bool TGAImageDecoder::SaveRAW32(DataArrayImpl* _ds,const Image* img) {
 		const Data* buffer = img->GetData();
 		if (!buffer) return false;
         const Byte* data = buffer->GetData();
@@ -190,7 +190,7 @@ namespace GHL {
         }
         return true;
     }
-    bool TGAImageDecoder::SaveRLE32(DataStream* _ds,const Image* img) {
+    bool TGAImageDecoder::SaveRLE32(DataArrayImpl* _ds,const Image* img) {
         const Data* buffer = img->GetData();
 		if (!buffer) return false;
         const Byte* data = buffer->GetData();
@@ -328,9 +328,9 @@ namespace GHL {
         return img;
     }
 
-    bool TGAImageDecoder::Encode( const Image* image, DataStream* ds) {
-        if (!image) return false;
-        if (!ds) return false;
+    const Data* TGAImageDecoder::Encode( const Image* image) {
+        if (!image) return 0;
+        
         if (image->GetFormat()==IMAGE_FORMAT_GRAY)
             return false;
         TGAHeader header;
@@ -348,17 +348,21 @@ namespace GHL {
             header.bitsperpixel = 24;
             header.imagedescriptor = 0;
             /// @todo uniplemented
-            return false;
+            return 0;
         } else if (image->GetFormat()==IMAGE_FORMAT_RGBA) {
             header.bitsperpixel = 32;
             header.imagedescriptor = 8 | 0x20;
         }
-        ds->Write(reinterpret_cast<const Byte*> (&header),sizeof(header));
+        DataArrayImpl* ds = new DataArrayImpl();
+        ds->append(reinterpret_cast<const Byte*> (&header),sizeof(header));
 
         if (image->GetFormat()==IMAGE_FORMAT_RGBA) {
             //return SaveRAW32(ds,image);
-            return SaveRLE32(ds,image);
+            if (!SaveRLE32(ds,image)) {
+                delete ds;
+                return 0;
+            }
         }
-        return true;
+        return ds;
     }
 }

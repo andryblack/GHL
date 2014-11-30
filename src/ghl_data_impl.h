@@ -147,6 +147,7 @@ namespace GHL {
             SetData(UInt32(pos),data,size);
         }
         
+        
         void reserve( UInt32 size ) {
             m_data.reserve(size);
         }

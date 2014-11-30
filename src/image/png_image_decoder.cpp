@@ -336,8 +336,8 @@ Image* PngDecoder::Decode(DataStream* file)
 	return image;
 }
 	
-    bool PngDecoder::Encode( const Image* /*image*/, DataStream* /*ds*/) {
-		return false;
+    const Data* PngDecoder::Encode( const Image* /*image*/) {
+		return 0;
 	}
 
 }/*namespace*/
