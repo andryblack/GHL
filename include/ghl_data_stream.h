@@ -32,13 +32,6 @@ namespace GHL
     
     struct Data;
 
-	/// file operation
-	enum FileOperation
-	{
-		FILE_READ,		///< read
-        FILE_WRITE		///< write
-	};
-
 	/// file seek type
 	enum FileSeekType
 	{
@@ -47,13 +40,11 @@ namespace GHL
         F_SEEK_END		///< seek from end of stream
 	};
 
-	/// data stream interfacce
-	struct DataStream : RefCounter
+	/// data stream interface
+    struct DataStream : RefCounter
 	{
 		/// read data
 		virtual UInt32 GHL_CALL Read(Byte* dest,UInt32 bytes) = 0;
-		/// write data
-		virtual UInt32 GHL_CALL Write(const Byte* src,UInt32 bytes) = 0;
 		/// tell
 		virtual UInt32 GHL_CALL Tell() const = 0;
 		/// seek
@@ -61,7 +52,7 @@ namespace GHL
 		/// End of file
 		virtual bool GHL_CALL Eof() const = 0;
 	};
-
+    
 } /* namespace */
 
 GHL_API GHL::Data* GHL_CALL GHL_ReadAllData( GHL::DataStream* ds );

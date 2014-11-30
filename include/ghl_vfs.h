@@ -32,7 +32,8 @@ namespace GHL
 	enum DirType
 	{
 		DIR_TYPE_DATA,			///< current application dara dir
-        DIR_TYPE_USER_PROFILE	///< writable user profile dir
+        DIR_TYPE_USER_PROFILE,	///< writable user profile dir
+        DIR_TYPE_CACHE          ///< writable temp dir
 	};
 
 
@@ -49,8 +50,12 @@ namespace GHL
 		virtual bool GHL_CALL DoRemoveFile(const char* file) = 0;
 		/// copy file
 		virtual bool GHL_CALL DoCopyFile(const char* from,const char* to) = 0;
+        /// create dir
+        virtual bool GHL_CALL DoCreateDir(const char* path) = 0;
 		/// open file
-		virtual DataStream* GHL_CALL OpenFile(const char* file,FileOperation ot=FILE_READ) = 0;
+		virtual DataStream* GHL_CALL OpenFile(const char* file) = 0;
+        /// write file
+        virtual bool GHL_CALL WriteFile(const char* file, const Data* data ) = 0;
 	};
 	
 	

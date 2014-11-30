@@ -12,6 +12,7 @@
 #include "memory_stream.h"
 #include "../ghl_log_impl.h"
 #include "../ghl_ref_counter_impl.h"
+#include <ghl_data.h>
 
 
 
@@ -142,23 +143,27 @@ namespace GHL {
                                                              NSApplicationSupportDirectory,
                                                              NSUserDomainMask,
                                                             YES);
-        if ( paths.count == 0 ) {
+        if ( !paths || paths.count == 0 ) {
             LOG_ERROR("not found any application support directory");
             m_profile_dir = "/Library/Application Support/";
-            return;
+        } else {
+            NSString* path = [paths objectAtIndex:0];
+            m_profile_dir = [path UTF8String];
+            DoCreateDir(m_profile_dir.c_str());
         }
-        NSError* error = nil;
-        NSString* path = [paths objectAtIndex:0];
-        NSFileManager* fm = [[NSFileManager alloc] init];
-        [fm createDirectoryAtPath:path
-                        withIntermediateDirectories:YES
-                        attributes:nil
-                        error:&error];
-        if (error) {
-            LOG_ERROR("create directory: " << [[error description] UTF8String]);
+        
+        paths = NSSearchPathForDirectoriesInDomains(
+                                                    NSCachesDirectory,
+                                                    NSUserDomainMask,
+                                                    YES);
+        if (!paths || paths.count == 0) {
+            LOG_ERROR("not found any cache directory");
+            m_cache_dir = "/Library/Caches/";
+        } else {
+            NSString* path = [paths objectAtIndex:0];
+            m_cache_dir = [path UTF8String];
+            DoCreateDir(m_cache_dir.c_str());
         }
-        m_profile_dir = [path UTF8String];
-        [fm release];
 	}
 
 	VFSCocoaImpl::~VFSCocoaImpl() {
@@ -172,6 +177,9 @@ namespace GHL {
         if (dt == DIR_TYPE_USER_PROFILE) {
 			return m_profile_dir.c_str();
 		}
+        if (dt == DIR_TYPE_CACHE) {
+            return m_cache_dir.c_str();
+        }
 		return 0;
 	}
 	/// attach package
@@ -196,40 +204,48 @@ namespace GHL {
         LOG_ERROR("VFSCocoaImpl::DoCopyFile unimplemented");
 		return false;
 	}
+    /// create dir
+    bool GHL_CALL VFSCocoaImpl::DoCreateDir(const char* fpath) {
+        std::string filename = fpath;
+        for (size_t i=0;i<filename.length();i++) {
+            if (filename[i]=='\\') filename[i]='/';
+        }
+        NSString* path = [NSString stringWithUTF8String:filename.c_str()];
+        return [[NSFileManager defaultManager] createDirectoryAtPath:path
+                                  withIntermediateDirectories:YES
+                                                   attributes:nil error:nil];
+    }
 	/// open file
-	DataStream* GHL_CALL VFSCocoaImpl::OpenFile(const char* file,FileOperation ot) {
+	DataStream* GHL_CALL VFSCocoaImpl::OpenFile(const char* file) {
 		std::string filename = file;
 		for (size_t i=0;i<filename.length();i++) {
 			if (filename[i]=='\\') filename[i]='/';
 		}
-		if (ot == FILE_READ) {
-			NSFileHandle* handle = [NSFileHandle fileHandleForReadingAtPath:[NSString stringWithUTF8String:filename.c_str()]];
-			if (handle) {
-				return new CocoaReadFileStream(handle);
-			}
-		} else if (ot==FILE_WRITE) {
-			NSString* path = [NSString stringWithUTF8String:filename.c_str()];
-            NSFileManager* fm = [[NSFileManager alloc] init];
-            [fm
-             createDirectoryAtPath:[path stringByDeletingLastPathComponent]
-             withIntermediateDirectories:YES
-             attributes:nil
-             error:nil];
-            [fm release];
-            
-			NSFileHandle* handle = [NSFileHandle fileHandleForWritingAtPath:path];
-			if (handle) {
-				return new CocoaWriteFileStream(handle);
-			} else {
-				if ([[NSFileManager defaultManager] createFileAtPath:path contents:nil attributes:nil]) {
-					handle = [NSFileHandle fileHandleForWritingAtPath:path];
-					if (handle) {
-						return new CocoaWriteFileStream(handle);
-					}
-				}
-			}
-		}
-		return 0;
+        NSFileHandle* handle = [NSFileHandle fileHandleForReadingAtPath:[NSString stringWithUTF8String:filename.c_str()]];
+        if (handle) {
+            return new CocoaReadFileStream(handle);
+        }
+        return 0;
 	}
+    
+    /// write file
+    bool GHL_CALL VFSCocoaImpl::WriteFile(const char* file, const Data* data ) {
+        std::string filename = file;
+        for (size_t i=0;i<filename.length();i++) {
+            if (filename[i]=='\\') filename[i]='/';
+        }
+
+        NSString* path = [NSString stringWithUTF8String:filename.c_str()];
+        
+        NSFileManager* fm = [NSFileManager defaultManager];
+        [fm
+         createDirectoryAtPath:[path stringByDeletingLastPathComponent]
+         withIntermediateDirectories:YES
+         attributes:nil
+         error:nil];
+        [fm removeItemAtPath:path error:nil];
+        NSData* data_ = [NSData dataWithBytesNoCopy:const_cast<Byte*>(data->GetData()) length:data->GetSize() freeWhenDone:NO];
+        return [data_ writeToFile:path options:NSDataWritingAtomic error:nil];
+    }
 }
 
