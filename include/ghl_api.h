@@ -31,7 +31,7 @@
 #define GHL_PLATFORM_MAC
 #endif
 #endif
-#elif defined( WIN32 )
+#elif defined( WIN32 ) || defined( _WIN32 )
 #define GHL_PLATFORM_WIN
 #elif defined( ANDROID )
 #define GHL_PLATFORM_ANDROID
@@ -54,7 +54,7 @@
 
 
 /// dll configuration
-#ifdef GHL_PLATFORM_WIN
+#if defined( GHL_PLATFORM_WIN ) && !defined( GHL_STATIC_LIB )
 #define GHL_CALL	__stdcall
 #if defined(GHL_DLL_SOURCE)
 #define GHL_API extern "C" __declspec(dllexport)

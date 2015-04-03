@@ -56,7 +56,7 @@ namespace GHL
                 if (offset > 0) {
                     m_pointer = u_min(UInt32(m_pointer+offset) , m_data->GetSize());
                 } else {
-                    if (m_pointer < (-offset)) {
+                    if (GHL::Int32(m_pointer) < (-offset)) {
                         m_pointer = 0;
                     } else {
                         m_pointer = m_pointer + offset;
@@ -65,7 +65,7 @@ namespace GHL
             } else if (st == F_SEEK_END) {
                 if (offset < 0) m_pointer = m_data->GetSize();
                 else {
-                    if (m_data->GetSize() < offset) {
+					if (m_data->GetSize() < GHL::UInt32(offset)) {
                         m_pointer = 0;
                     } else {
                         m_pointer = m_data->GetSize() - offset;

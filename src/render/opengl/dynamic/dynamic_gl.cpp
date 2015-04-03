@@ -3,10 +3,18 @@
 #include "../render_opengl_api.h"
 
 #if defined ( GHL_PLATFORM_WIN )
-#include <windows.h>
+//#include <windows.h>
+#define APIENTRY __stdcall
+#define PROC void*
+#define HMODULE void*
+#define LPCSTR const char*
+#define BOOL int
 typedef PROC  (__stdcall *wglGetProcAddressProc)(LPCSTR);
 static wglGetProcAddressProc DYNAMIC_GL_GetProcAddress = 0;
 static HMODULE gl_library = 0;
+extern "C" HMODULE __stdcall LoadLibraryA(const char*);
+extern "C" PROC __stdcall GetProcAddress(HMODULE, const char*);
+extern "C" BOOL __stdcall FreeLibrary(HMODULE);
 #define DYNAMIC_GL_PLATFORM_WIN
 #define DYNAMIC_GL_PROTO PROC
 #elif defined ( GHL_PLATFORM_LINUX )

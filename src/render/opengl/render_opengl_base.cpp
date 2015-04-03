@@ -25,6 +25,10 @@
 #include <algorithm>
 #include <cassert>
 
+#ifdef _MSC_VER
+#define snprintf _snprintf
+#endif
+
 void gl_error_report_bp() {
     (void)0;
 }
@@ -443,7 +447,7 @@ namespace GHL {
 	VertexShader* GHL_CALL RenderOpenGLBase::CreateVertexShader(const Data* ds) {
         if (!gl.sdrapi.valid) return 0;
 		 GL::GLhandle handle = gl.sdrapi.CreateShader(gl.sdrapi.VERTEX_SHADER);
-        CHECK_GL();
+		 CHECK_GL(void);
 		if (LoadShaderGLSL(gl,handle,ds)) {
 			VertexShaderGLSL* fs = new VertexShaderGLSL(this,handle);
 			return fs;
@@ -457,7 +461,7 @@ namespace GHL {
 	FragmentShader* GHL_CALL RenderOpenGLBase::CreateFragmentShader(const Data* ds) {
         if (!gl.sdrapi.valid) return 0;
 		 GL::GLhandle handle = gl.sdrapi.CreateShader(gl.sdrapi.FRAGMENT_SHADER);
-        CHECK_GL();
+		 CHECK_GL(void);
 		if (LoadShaderGLSL(gl,handle,ds)) {
 			FragmentShaderGLSL* fs = new FragmentShaderGLSL(this,handle);
 			return fs;
@@ -471,7 +475,7 @@ namespace GHL {
         if (!gl.sdrapi.valid) return 0;
         if (!v || !f) return 0;
         GL::GLhandle handle = gl.sdrapi.CreateProgram();
-        CHECK_GL();
+		CHECK_GL(void);
 		VertexShaderGLSL* vs = reinterpret_cast<VertexShaderGLSL*> (v);
 		FragmentShaderGLSL* fs = reinterpret_cast<FragmentShaderGLSL*> (f);
 		// @todo check vs ans fs

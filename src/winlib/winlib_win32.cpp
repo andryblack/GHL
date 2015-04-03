@@ -12,8 +12,15 @@
 #include <windows.h>
 #include <mmsystem.h>
 #include <cstdio>
+#include <time.h>
 
 #include <ghl_system.h>
+#include <Windowsx.h>
+
+
+#ifdef _MSC_VER
+#define snprintf _snprintf
+#endif
 
 static const char* MODULE="WinLib";
 
@@ -76,19 +83,19 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
 		case WM_MOUSEMOVE: {
 			if ( wparam & MK_LBUTTON ) {
-				if (appl) appl->OnMouseMove(GHL::MOUSE_BUTTON_LEFT,LOWORD(lparam),HIWORD(lparam));
+				if (appl) appl->OnMouseMove(GHL::MOUSE_BUTTON_LEFT, GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
 			}
 		} break;
 
 		case WM_LBUTTONDOWN: {
 			{
-				if (appl) appl->OnMouseDown(GHL::MOUSE_BUTTON_LEFT,LOWORD(lparam),HIWORD(lparam));
+				if (appl) appl->OnMouseDown(GHL::MOUSE_BUTTON_LEFT, GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
 			}
 		} break;
 
 		case WM_LBUTTONUP: {
 			{
-				if (appl) appl->OnMouseUp(GHL::MOUSE_BUTTON_LEFT,LOWORD(lparam),HIWORD(lparam));
+				if (appl) appl->OnMouseUp(GHL::MOUSE_BUTTON_LEFT, GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
 			}
 		} break;
 
@@ -178,10 +185,10 @@ public:
 		return 0;
 	}
 		///
-	virtual bool GHL_CALL SetDeviceState( GHL::DeviceState name, void* data) {
+	virtual bool GHL_CALL SetDeviceState( GHL::DeviceState name, const void* data) {
 		return false;
 	}
-		///
+	///
 	virtual bool GHL_CALL GetDeviceData( GHL::DeviceData name, void* data) {
 		return false;
 	}
@@ -202,15 +209,15 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 
 	GetLocalTime(&tm);
 	char buf[256];
-	sprintf(buf,"Date: %02d.%02d.%d, %02d:%02d:%02d",tm.wDay, tm.wMonth, tm.wYear, tm.wHour, tm.wMinute, tm.wSecond);
+	snprintf(buf,256,"Date: %02d.%02d.%d, %02d:%02d:%02d",tm.wDay, tm.wMonth, tm.wYear, tm.wHour, tm.wMinute, tm.wSecond);
 	LOG_INFO( buf );
 
 	os_ver.dwOSVersionInfoSize=sizeof(os_ver);
 	GetVersionEx(&os_ver);
-	sprintf(buf,"OS: Windows %ld.%ld.%ld",os_ver.dwMajorVersion,os_ver.dwMinorVersion,os_ver.dwBuildNumber);
+	snprintf(buf,256,"OS: Windows %ld.%ld.%ld",os_ver.dwMajorVersion,os_ver.dwMinorVersion,os_ver.dwBuildNumber);
 	LOG_INFO( buf );
 	GlobalMemoryStatus(&mem_st);
-	sprintf(buf,"Memory: %ldK total, %ldK free",mem_st.dwTotalPhys/1024L,mem_st.dwAvailPhys/1024L);
+	snprintf(buf,256,"Memory: %ldK total, %ldK free",mem_st.dwTotalPhys/1024L,mem_st.dwAvailPhys/1024L);
 	LOG_INFO( buf );
 
 
@@ -372,7 +379,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 
 	wglMakeCurrent (hDC, hRC);
 
-	GHL::RenderOpenGL render(settings.width,settings.height);
+	GHL::RenderOpenGL render(settings.width, settings.height, settings.depth);
 	render.RenderInit();
 	app->SetRender(&render);
 

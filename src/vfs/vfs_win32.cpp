@@ -155,8 +155,23 @@ namespace GHL {
 	bool GHL_CALL VFSWin32Impl::DoCopyFile(const char* from,const char* to) {
 		return false;
 	}
+
+	/// create dir
+	bool GHL_CALL VFSWin32Impl::DoCreateDir(const char* path) {
+		WCHAR tfilename[MAX_PATH];
+		if (!get_fs_path(path, tfilename)) return false;
+		if (::CreateDirectoryW(tfilename, 0) == 0) {
+			return ::GetLastError() != ERROR_ALREADY_EXISTS;
+		}
+		return true;
+	}
+	/// write file
+	bool GHL_CALL VFSWin32Impl::WriteFile(const char* file, const Data* data) {
+		return false;
+	}
+
 	/// open file
-	DataStream* GHL_CALL VFSWin32Impl::OpenFile(const char* file,FileOperation ot) {
+	DataStream* GHL_CALL VFSWin32Impl::OpenFile(const char* file) {
 		if (!file) return 0;
 		if (file[0]==0) return 0;
 		HANDLE f = 0;
@@ -164,18 +179,10 @@ namespace GHL {
         dwDesiredAccess = dwShareMode = dwFlagsAndAttributes = 0;
         WCHAR tfilename[MAX_PATH];
         if (!get_fs_path(file,tfilename)) return 0;
+		dwDesiredAccess = GENERIC_READ;
+		dwCreationDisposition = OPEN_EXISTING;
+		dwShareMode = FILE_SHARE_READ;
 
-		if (ot==FILE_READ)
-        {
-            dwDesiredAccess = GENERIC_READ;
-            dwCreationDisposition = OPEN_EXISTING;
-            dwShareMode = FILE_SHARE_READ;
-        }
-        else
-        {
-            dwDesiredAccess = GENERIC_WRITE | GENERIC_READ;
-            dwCreationDisposition = CREATE_ALWAYS;
-        }
         f = CreateFileW(tfilename,dwDesiredAccess, dwShareMode, NULL, dwCreationDisposition, dwFlagsAndAttributes, NULL); 
 		if (f==INVALID_HANDLE_VALUE) {
 			LOG_ERROR( "opening file : " << file );
