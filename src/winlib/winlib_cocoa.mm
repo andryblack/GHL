@@ -791,9 +791,9 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
 	NSMenu * mainMenu = [[[NSMenu alloc] initWithTitle:@"MainMenu"] autorelease];
 	
     
-    if ([[NSBundle mainBundle] loadNibFile:@"MainMenu" externalNameTable:nil withZone:nil])
+    if ([NSApp mainMenu]!=nil)
     {
-        LOG_INFO( "GHL_StartApplication: loaded MainMenu from bundle" );
+        LOG_INFO( "GHL_StartApplication: application already have menu" );
     } else {
     
         LOG_INFO( "GHL_StartApplication: create menu" );

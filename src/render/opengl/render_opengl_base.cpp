@@ -446,8 +446,8 @@ namespace GHL {
 	
 	VertexShader* GHL_CALL RenderOpenGLBase::CreateVertexShader(const Data* ds) {
         if (!gl.sdrapi.valid) return 0;
-		 GL::GLhandle handle = gl.sdrapi.CreateShader(gl.sdrapi.VERTEX_SHADER);
-		 CHECK_GL(void);
+        GL::GLhandle handle = 0;
+        CHECK_GL(handle = gl.sdrapi.CreateShader(gl.sdrapi.VERTEX_SHADER));
 		if (LoadShaderGLSL(gl,handle,ds)) {
 			VertexShaderGLSL* fs = new VertexShaderGLSL(this,handle);
 			return fs;
@@ -460,8 +460,8 @@ namespace GHL {
 	 
 	FragmentShader* GHL_CALL RenderOpenGLBase::CreateFragmentShader(const Data* ds) {
         if (!gl.sdrapi.valid) return 0;
-		 GL::GLhandle handle = gl.sdrapi.CreateShader(gl.sdrapi.FRAGMENT_SHADER);
-		 CHECK_GL(void);
+        GL::GLhandle handle = 0;
+        CHECK_GL(handle = gl.sdrapi.CreateShader(gl.sdrapi.FRAGMENT_SHADER));
 		if (LoadShaderGLSL(gl,handle,ds)) {
 			FragmentShaderGLSL* fs = new FragmentShaderGLSL(this,handle);
 			return fs;
@@ -474,8 +474,8 @@ namespace GHL {
 	ShaderProgram* GHL_CALL RenderOpenGLBase::CreateShaderProgram(VertexShader* v,FragmentShader* f) {
         if (!gl.sdrapi.valid) return 0;
         if (!v || !f) return 0;
-        GL::GLhandle handle = gl.sdrapi.CreateProgram();
-		CHECK_GL(void);
+        GL::GLhandle handle = 0;
+        CHECK_GL(handle=gl.sdrapi.CreateProgram());
 		VertexShaderGLSL* vs = reinterpret_cast<VertexShaderGLSL*> (v);
 		FragmentShaderGLSL* fs = reinterpret_cast<FragmentShaderGLSL*> (f);
 		// @todo check vs ans fs
@@ -542,7 +542,7 @@ namespace GHL {
 	}
     
     void RenderOpenGLFFPL::SetupVertexData(const Vertex* v,VertexType vt) {
-        size_t vs = sizeof(*v);
+        GL::GLsizei vs = sizeof(*v);
         if (vt == VERTEX_TYPE_2_TEX) {
             const Vertex2Tex* v2 = static_cast<const Vertex2Tex*>(v);
             vs = sizeof(*v2);
@@ -707,7 +707,7 @@ namespace GHL {
             LOG_ERROR("not have current shader");
             return;
         }
-        size_t vs = sizeof(*v);
+        GL::GLsizei vs = sizeof(*v);
         const Vertex2Tex* v2 = static_cast<const Vertex2Tex*>(v);
         GL::GLint t2Loc = -1;
         if (vt == VERTEX_TYPE_2_TEX) {

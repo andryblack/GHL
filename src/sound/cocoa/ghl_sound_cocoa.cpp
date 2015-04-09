@@ -73,10 +73,10 @@ namespace GHL {
             MusicInstanceCocoa * myInfo = reinterpret_cast<MusicInstanceCocoa*> (inUserData);
             if (myInfo->m_done) return;
             
-            ::UInt32 numBytes;
+            ::UInt32 numBytes = inCompleteAQBuffer->mAudioDataBytesCapacity;
             ::UInt32 nPackets = myInfo->m_num_packets_to_read;
             
-            OSStatus result = AudioFileReadPackets(myInfo->m_audio_file,
+            OSStatus result = AudioFileReadPacketData(myInfo->m_audio_file,
                                                    false, &numBytes,
                                                    myInfo->m_packet_description,
                                                    myInfo->m_current_packet,

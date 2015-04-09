@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include "../ghl_ref_counter_impl.h"
 #include "../ghl_log_impl.h"
+#include <ghl_data.h>
 #ifdef _MSC_VER
 #define snprintf _snprintf
 #endif
@@ -98,16 +99,30 @@ namespace GHL {
     bool GHL_CALL VFSPosixImpl::DoCopyFile(const char* /*from*/,const char* /*to*/) {
         return false;
     }
+    /// create dir
+    bool GHL_CALL VFSPosixImpl::DoCreateDir(const char* path) {
+        return mkdir(path, 0777) == 0;
+    }
     /// open file
-    DataStream* GHL_CALL VFSPosixImpl::OpenFile(const char* _file,FileOperation ot){
+    DataStream* GHL_CALL VFSPosixImpl::OpenFile(const char* _file){
         LOG_VERBOSE("try open file '" << _file << "'");
         if (!_file) return 0;
         if (_file[0]==0) return 0;
-        if (ot==FILE_READ && !IsFileExists(_file)) return 0;
-        FILE* f = fopen(_file,ot==FILE_READ ? "rb" : "rwb" );
+        if (!IsFileExists(_file)) return 0;
+        FILE* f = fopen(_file, "rb"  );
         if (f)
             return new PosixFileStream(f);
         return 0;
+    }
+    
+    /// write file
+    bool GHL_CALL VFSPosixImpl::WriteFile(const char* file, const Data* data) {
+        FILE* f = fopen(file, "wb" );
+        if (f)
+            return false;
+        bool res = fwrite(data->GetData(),data->GetSize(),1,f)==data->GetSize();
+        fclose(f);
+        return res;
     }
 }
 

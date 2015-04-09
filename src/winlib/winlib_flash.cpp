@@ -280,7 +280,7 @@ static var initContext3D(void *arg, var as3Args)
 #endif
         ctx.ctx3d->configureBackBuffer(ctx.stage->stageWidth,
                                        ctx.stage->stageHeight, 0,
-                                    need_depth, false);
+                                    need_depth, false, false);
         if (!ctx.render) {
             Profiler pf("initRender");
             ctx.render = new GHL::RenderStage3d(ctx.stage->stageWidth,
@@ -380,7 +380,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
         flash::display::Stage stage = internal::get_Stage();
         stage->scaleMode = flash::display::StageScaleMode::NO_SCALE;
         stage->align = flash::display::StageAlign::TOP_LEFT;
-        stage->frameRate = 30;
+        stage->frameRate = 60;
         ctx.started = false;
         startApplication();
         

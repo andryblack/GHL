@@ -101,8 +101,8 @@ namespace GHL {
 		std::map<std::string,ShaderUniformGLSL>::iterator it = m_uniforms.find(sname);
 		if (it!=m_uniforms.end())
 			return &it->second;
-        GL::GLint location = gl.sdrapi.GetUniformLocation(m_handle,name);
-        CHECK_GL(void);
+        GL::GLint location = -1;
+        CHECK_GL(location=gl.sdrapi.GetUniformLocation(m_handle,name));
 		if (location<0)
 			return 0;
 		m_uniforms.insert(std::make_pair(sname,ShaderUniformGLSL(this,location)));
@@ -110,8 +110,8 @@ namespace GHL {
 		return &it->second;
 	}
     void GHL_CALL ShaderProgramGLSL::SetTextureSlot(const char* name, Int32 slot ) const {
-        GL::GLint location = gl.sdrapi.GetUniformLocation(m_handle,name);
-        CHECK_GL(void);
+        GL::GLint location = -1;
+        CHECK_GL(location = gl.sdrapi.GetUniformLocation(m_handle,name));
 		if (location<0)
             return;
         gl.sdrapi.Uniform1i(location,slot);
