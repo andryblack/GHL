@@ -37,6 +37,9 @@ namespace GHL {
 
     static const char* MODULE = "RENDER:OpenGL";
 	
+    const GL::GLboolean GL::_TRUE = 1;
+    const GL::GLboolean GL::_FALSE = 0;
+    
 	static const float sm[16] = {
         1.0f, 0.0f, 0.0f, 0.0f,
         0.0f,-1.0f, 0.0f, 0.0f,
@@ -134,7 +137,7 @@ namespace GHL {
 	}
 	
 	void RenderOpenGLBase::RenderDone() {
-        gl.Release();
+        if (gl.Release) gl.Release();
 		RenderImpl::RenderDone();
 	}
 	

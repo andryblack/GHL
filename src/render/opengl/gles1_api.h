@@ -9,6 +9,8 @@
 #ifndef __GHL__gles1_api__
 #define __GHL__gles1_api__
 
+#include <ghl_api.h>
+
 #include <cstddef>
 
 namespace GHL {

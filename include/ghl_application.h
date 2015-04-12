@@ -39,9 +39,7 @@ namespace GHL {
         ///
         virtual void GHL_CALL FillSettings( Settings* settings ) = 0;
 		/// called after window created, before first rendered
-		virtual void GHL_CALL Initialize() = 0;
-        ///
-        virtual bool GHL_CALL Load() = 0;
+		virtual bool GHL_CALL Load() = 0;
         ///
         virtual bool GHL_CALL OnFrame( UInt32 usecs ) = 0;
         ///

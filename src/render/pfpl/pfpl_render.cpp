@@ -34,6 +34,8 @@ namespace GHL {
     }
     
     void pfpl_render::done() {
+        m_extern = 0;
+        m_prev = 0;
         m_cache.clear();
     }
 }

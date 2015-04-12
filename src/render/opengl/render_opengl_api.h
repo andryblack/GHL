@@ -12,7 +12,7 @@
 #include "ghl_api.h"
 #include <stddef.h>
 
-#ifdef GHL_PLATFORM_IOS
+#if defined(GHL_PLATFORM_IOS) || defined(GHL_PLATFORM_ANDROID)
 #define GHL_OPENGLES
 #endif
 
@@ -39,8 +39,8 @@ namespace GHL {
         typedef unsigned int GLhandle;
         typedef ptrdiff_t GLsizeiptr;
         
-        static const GLboolean _TRUE = 1;
-        static const GLboolean _FALSE = 0;
+        static const GLboolean _TRUE;
+        static const GLboolean _FALSE;
 #define DYNAMIC_GL_CONSTANTS_Multitexture \
 \
 DYNAMIC_GL_CONSTANT(TEXTURE0)\

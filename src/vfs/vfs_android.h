@@ -11,8 +11,6 @@ namespace GHL {
 	public:
 		explicit VFSAndroidImpl(AAssetManager* assetManager,const char* dataDir);
 		virtual ~VFSAndroidImpl();
-		/// get dir
-		virtual const char* GHL_CALL GetDir(DirType dt) const ;
 		/// attach package
 		virtual void GHL_CALL AttachPack(DataStream* ds) ;
 		/// file is exists
@@ -22,11 +20,10 @@ namespace GHL {
 		/// copy file
 		virtual bool GHL_CALL DoCopyFile(const char* from,const char* to) ;
 		/// open file
-		virtual DataStream* GHL_CALL OpenFile(const char* file,FileOperation ot);
+		virtual DataStream* GHL_CALL OpenFile(const char* file);
 		
 	private:
         AAssetManager*  m_asset_manager;
-		std::string m_data_dir;
 	};
 
 }

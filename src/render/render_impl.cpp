@@ -164,6 +164,7 @@ namespace GHL {
             m_sfont_texture->Release();
             m_sfont_texture = 0;
         }
+        this->RenderImpl::SetShader(0);
 #ifdef GHL_DEBUG
         if (!m_textures.empty()) {
             LOG_ERROR("unreleased " << m_textures.size() << " textures");

@@ -10,31 +10,34 @@
 #include "../ghl_log_impl.h"
 #include "../vfs/vfs_android.h"
 #include "../image/image_decoders.h"
+#include "../sound/android/ghl_sound_android.h"
+
 #include <sys/time.h>
 #include <pthread.h>
 #include <errno.h>
+#include "ghl_settings.h"
 
 static const char* MODULE = "WinLib";
 
 GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {
 	 switch ( level ) {
         case GHL::LOG_LEVEL_FATAL:
-            __android_log_print(ANDROID_LOG_FATAL,"GHL",message);
+            __android_log_write(ANDROID_LOG_FATAL,"GHL",message);
             break;
         case GHL::LOG_LEVEL_ERROR:
-            __android_log_print(ANDROID_LOG_ERROR,"GHL",message);
+            __android_log_write(ANDROID_LOG_ERROR,"GHL",message);
             break;
         case GHL::LOG_LEVEL_WARNING:
-            __android_log_print(ANDROID_LOG_WARN,"GHL",message);
+            __android_log_write(ANDROID_LOG_WARN,"GHL",message);
             break;
         case GHL::LOG_LEVEL_INFO:
-            __android_log_print(ANDROID_LOG_INFO,"GHL",message);
+            __android_log_write(ANDROID_LOG_INFO,"GHL",message);
             break;
         case GHL::LOG_LEVEL_VERBOSE:
-            __android_log_print(ANDROID_LOG_VERBOSE,"GHL",message);
+            __android_log_write(ANDROID_LOG_VERBOSE,"GHL",message);
             break;
         default:
-            __android_log_print(ANDROID_LOG_DEBUG,"GHL",message);
+            __android_log_write(ANDROID_LOG_DEBUG,"GHL",message);
             break;
     };
 }
@@ -76,17 +79,6 @@ namespace GHL {
             pthread_mutex_destroy(&m_mutex);
         }
         void OnCreate() {
-            m_app = android_app_create();
-            gettimeofday(&m_last_time,0);
-            if (!m_vfs) {
-                m_vfs = new VFSAndroidImpl(m_activity->assetManager,m_activity->internalDataPath);
-                if (m_app) {
-                    m_app->SetVFS(m_vfs);
-                }
-            }
-            if (m_app) {
-                m_app->SetImageDecoder(&m_image_decoder);
-            }
             LOG_INFO("OnCreate");
         }
         void OnStart() {
@@ -95,12 +87,18 @@ namespace GHL {
         }
         void OnResume() {
             LOG_INFO("OnResume");
+            if (m_app) {
+                m_app->OnActivated();
+            }
         }
         void* onSaveInstanceState(size_t* outSize) {
             return 0;
         }
         void OnPause() {
             LOG_INFO("OnPause");
+            if (m_app) {
+                m_app->OnDeactivated();
+            }
         }
         void OnStop() {
             LOG_INFO("OnStop");
@@ -108,10 +106,6 @@ namespace GHL {
         }
         void OnDestroy() {
             LOG_INFO("OnDestroy");
-            if (m_app) {
-                m_app->Release();
-                m_app = 0;
-            }
         }
         void OnWindowFocusChanged(int hasFocus) {
             LOG_VERBOSE("OnWindowFocusChanged:" << hasFocus);
@@ -119,6 +113,22 @@ namespace GHL {
         void OnNativeWindowCreated(ANativeWindow* window) {
             LOG_INFO("OnNativeWindowCreated");
             if (m_window==0) {
+                
+                m_app = android_app_create();
+                
+                gettimeofday(&m_last_time,0);
+                if (!m_vfs) {
+                    m_vfs = new VFSAndroidImpl(m_activity->assetManager,m_activity->internalDataPath);
+                }
+                if (m_app) {
+                    m_app->SetVFS(m_vfs);
+                    m_app->SetImageDecoder(&m_image_decoder);
+                }
+                if (m_app && m_sound.SoundInit()) {
+                    m_app->SetSound(&m_sound);
+                }
+                
+                
                 m_window = window;
                 // initialize OpenGL ES and EGL
                 
@@ -136,10 +146,17 @@ namespace GHL {
                 };
                 EGLint w, h, dummy, format;
                 EGLint numConfigs;
-                EGLConfig config;
+                EGLConfig config = 0;
                 m_display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
                 
-                eglInitialize(m_display, 0, 0);
+                EGLint major=0;
+                EGLint minor=0;
+                if (eglInitialize(m_display, &major, &minor)!=EGL_TRUE) {
+                    LOG_ERROR("Unable to eglInitialize");
+                    return;
+                } else {
+                    LOG_INFO("EGL: " << major << "." << minor);
+                }
                 
                 /* Here, the application chooses the configuration it desires. In this
                  * sample, we have a very simplified selection process, where we pick
@@ -155,7 +172,12 @@ namespace GHL {
                 ANativeWindow_setBuffersGeometry(m_window, 0, 0, format);
                 
                 m_surface = eglCreateWindowSurface(m_display, config, m_window, NULL);
-                m_context = eglCreateContext(m_display, config, NULL, NULL);
+                const EGLint ctx_attribs[] = {
+                    EGL_CONTEXT_CLIENT_VERSION,
+                    2,
+                    EGL_NONE
+                };
+                m_context = eglCreateContext(m_display, config, NULL, ctx_attribs);
                 
                 if (eglMakeCurrent(m_display, m_surface, m_surface, m_context) == EGL_FALSE) {
                     GHL_Log(GHL::LOG_LEVEL_ERROR,"Unable to eglMakeCurrent");
@@ -165,12 +187,25 @@ namespace GHL {
                 eglQuerySurface(m_display, m_surface, EGL_WIDTH, &w);
                 eglQuerySurface(m_display, m_surface, EGL_HEIGHT, &h);
                 
-                m_render = GHL_CreateRenderOpenGL(w,h);
+                GHL::Settings settings;
+                /// default settings
+                settings.width = w;
+                settings.height = h;
+                settings.fullscreen = true;
+                settings.depth = false;
+                {
+                    m_app->FillSettings(&settings);
+                }
+
+                
+                m_render = GHL_CreateRenderOpenGL(w,h,settings.depth);
                 if ( m_render && m_app ) {
                     m_app->SetRender(m_render);
                     m_app->Load();
                 }
                 Render();
+            } else {
+                LOG_INFO("skip another window");
             }
         }
         void OnNativeWindowResized(ANativeWindow* window) {
@@ -187,6 +222,8 @@ namespace GHL {
                     m_render->Resize(w,h);
                     Render();
                 }
+            } else {
+                LOG_INFO("skip another window");
             }
         }
         void OnNativeWindowRedrawNeeded(ANativeWindow* window) {
@@ -195,6 +232,14 @@ namespace GHL {
         void OnNativeWindowDestroyed(ANativeWindow* window) {
             LOG_INFO("OnNativeWindowDestroyed");
             if (m_window==window) {
+                
+                if (m_app) {
+                    m_app->Release();
+                    m_app = 0;
+                }
+                
+                m_sound.SoundDone();
+                
                 if (m_render) {
                     GHL_DestroyRenderOpenGL(m_render);
                     m_render = 0;
@@ -213,6 +258,8 @@ namespace GHL {
                 m_context = EGL_NO_CONTEXT;
                 m_surface = EGL_NO_SURFACE;
                 m_window = 0;
+            } else {
+                LOG_INFO("skip another window");
             }
         }
         void OnInputQueueCreated(AInputQueue* queue) {
@@ -238,7 +285,9 @@ namespace GHL {
             }
         }
         void OnContentRectChanged(const ARect* rect) {
-            
+            if (m_render) {
+                m_render->Resize(rect->right - rect->left, rect->bottom - rect->top );
+            }
         }
         void OnConfigurationChanged() {
             
@@ -318,6 +367,7 @@ namespace GHL {
         void StopTimerThread();
     private:
         GHL::ImageDecoderImpl   m_image_decoder;
+        GHL::SoundAndroid   m_sound;
         Application*        m_app;
         ANativeActivity*    m_activity;
         ANativeWindow*      m_window;

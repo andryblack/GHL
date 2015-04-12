@@ -25,6 +25,7 @@
 
 #include "pfpl_state.h"
 #include <vector>
+#include <cstring>
 
 namespace GHL {
     

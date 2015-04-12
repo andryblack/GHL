@@ -332,7 +332,7 @@ namespace GHL {
         if (!image) return 0;
         
         if (image->GetFormat()==IMAGE_FORMAT_GRAY)
-            return false;
+            return 0;
         TGAHeader header;
         header.idlength = 0;
         header.colourmaptype = 0;

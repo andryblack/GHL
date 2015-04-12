@@ -32,6 +32,8 @@
 #define GHL_USE_WAV_DECODER
 #elif defined( GHL_PLATFORM_IOS )
 #define GHL_USE_WAV_DECODER
+#elif defined( GHL_PLATFORM_ANDROID )
+#define GHL_USE_WAV_DECODER
 #else
 #define GHL_USE_WAV_DECODER
 #define GHL_USE_VORBIS_DECODER

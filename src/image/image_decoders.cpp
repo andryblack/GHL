@@ -151,7 +151,7 @@ namespace GHL {
 				return m_decoders[i]->Encode(image);
 			}
 		}
-		return false;
+		return 0;
 	}
 
 }/*namespace*/
