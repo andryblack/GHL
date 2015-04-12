@@ -4,7 +4,7 @@
 #include <SLES/OpenSLES.h>
 #include <SLES/OpenSLES_Android.h>
 
-#include <time.h>
+#include <string.h>
 
 namespace GHL {
     
@@ -15,6 +15,7 @@ namespace GHL {
         SLVolumeItf m_volume_i;
         OpenSLAudioChannelBase(SLObjectItf player_obj);
         virtual ~OpenSLAudioChannelBase();
+        float   m_pan_value;
     public:
         void Play();
         void Stop();
@@ -33,18 +34,18 @@ namespace GHL {
         SLBufferQueueItf    m_buffer_queue;
         Holder*     m_holder;
         void Clear();
-        time_t  m_last_used;
+        size_t  m_last_used;
     public:
         OpenSLAudioChannel(SLObjectItf player_obj,const SLDataFormat_PCM& format);
         ~OpenSLAudioChannel();
         
         const SLDataFormat_PCM& GetFormat() const { return m_format; }
-        time_t GetLastUsed() const { return m_last_used; }
+        size_t GetLastUsed() const { return m_last_used; }
         void UpdateLastUsed();
         bool IsStopped();
         void PutData(const void* data,size_t size);
         
-        
+        void ResetHolder(Holder* holder);
         void SetHolder(Holder* holder);
     };
 }

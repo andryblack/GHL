@@ -10,6 +10,7 @@ namespace GHL {
     OpenSLAudioChannelBase::OpenSLAudioChannelBase( SLObjectItf player_obj ) : m_player_obj(player_obj)
     , m_play_i(0)
     , m_volume_i(0)
+    , m_pan_value(0.0f)
     {
         SLresult result;
         
@@ -60,7 +61,18 @@ namespace GHL {
         }
     }
     void OpenSLAudioChannelBase::SetPan(float pan) {
-        
+        if (m_volume_i) {
+            if ( m_pan_value != pan ) {
+                if (m_pan_value == 0.0f) {
+                    (*m_volume_i)->EnableStereoPosition(m_volume_i, SL_BOOLEAN_TRUE);
+                } else if ( pan == 0.0f ) {
+                    (*m_volume_i)->EnableStereoPosition(m_volume_i, SL_BOOLEAN_FALSE);
+                }
+                m_pan_value = pan;
+                SLmillibel pv = pan / 100.0f * 1000.0f;
+                (*m_volume_i)->SetStereoPosition(m_volume_i, pv);
+            }
+        }
     }
     
     OpenSLAudioChannel::OpenSLAudioChannel( SLObjectItf player_obj ,const SLDataFormat_PCM& format) : OpenSLAudioChannelBase( player_obj ),
@@ -80,15 +92,22 @@ namespace GHL {
         }
     }
     
+    void OpenSLAudioChannel::ResetHolder(Holder* h) {
+        if (h == m_holder) {
+            m_holder = 0;
+        }
+    }
+    
     void OpenSLAudioChannel::SetHolder(Holder* h) {
         if (m_holder) {
             m_holder->ResetChannel();
         }
         m_holder = h;
     }
+    static size_t last_used = 0;
     
     void OpenSLAudioChannel::UpdateLastUsed() {
-        m_last_used = time(0);
+        m_last_used = last_used++;
     }
     bool OpenSLAudioChannel::IsStopped() {
         if (m_play_i) {

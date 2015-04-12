@@ -49,6 +49,11 @@ namespace GHL {
         explicit SoundInstanceOpenSL(OpenSLAudioChannel* channel) : m_channel(channel) {
             
         }
+        ~SoundInstanceOpenSL() {
+            if (m_channel) {
+                m_channel->ResetHolder(this);
+            }
+        }
         /// set volume (0-100)
         virtual void GHL_CALL SetVolume( float vol ) {
             if (m_channel) {
@@ -95,6 +100,8 @@ namespace GHL {
         OpenSLAudioChannel* channel = m_opensl_engine->GetChannel(sl_effect->GetFrequency(),
                                                                  sl_effect->GetChannels(),
                                                                  sl_effect->GetBits());
+        if (!channel)
+            return;
         channel->SetHolder(0);
         channel->PutData(sl_effect->GetData()->GetData(),sl_effect->GetData()->GetSize());
         channel->SetVolume(vol);

@@ -127,26 +127,26 @@ namespace GHL {
     
     static bool CompareFormat(const SLDataFormat_PCM& a,const SLDataFormat_PCM& b) {
         return a.numChannels == b.numChannels &&
-            a.samplesPerSec == b.numChannels &&
-            a.bitsPerSample == b.numChannels;
+            a.samplesPerSec == b.samplesPerSec &&
+            a.bitsPerSample == b.bitsPerSample;
     }
     
     OpenSLAudioChannel* OpenSLAudioEngine::find_channel( SLDataFormat_PCM& format) {
         OpenSLAudioChannel* best = 0;
-        time_t last_used = 0;
+        size_t last_used = 0;
         for (std::vector<OpenSLAudioChannel*>::iterator it = m_channels.begin();it!=m_channels.end();++it) {
             if (CompareFormat((*it)->GetFormat(),format)) {
                 if ((*it)->IsStopped()) {
                     return *it;
                 }
-                if (!best || (*it)->GetLastUsed() < last_used) {
+                if (!best || ((*it)->GetLastUsed() < last_used)) {
                     best = *it;
                     last_used = (*it)->GetLastUsed();
                 }
             }
         }
         if (m_channels.size() < max_channels || !best) {
-            LOG_DEBUG("allocate new channel");
+            LOG_DEBUG("allocate new channel fmt: " << format.numChannels << " " << format.bitsPerSample << " " << format.samplesPerSec);
             SLDataLocator_AndroidSimpleBufferQueue locatorBufferQueue;
             locatorBufferQueue.locatorType = SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE;
             locatorBufferQueue.numBuffers = 2;
