@@ -78,16 +78,22 @@ namespace GHL {
 		m_IDSBuffer->Stop();
 		m_started = false;
 	}
+    static void SetVolumeImpl(LPDIRECTSOUNDBUFFER buffer, float vol) {
+        if (buffer==0) return;
+        LONG val = static_cast<LONG>(DSBVOLUME_MIN + vol * (DSBVOLUME_MAX - DSBVOLUME_MIN) / 100.0f);
+        buffer->SetVolume(val);
+    }
 	void SoundChannelDSound::SetVolume(float vol) {
-		if (m_IDSBuffer==0) return;
-		LONG val = static_cast<LONG>(DSBVOLUME_MIN + vol * (DSBVOLUME_MAX - DSBVOLUME_MIN));
-		m_IDSBuffer->SetVolume(val);
+		SetVolumeImpl(m_IDSBuffer,vol);
 	}
 
+    static void SetPanImpl(LPDIRECTSOUNDBUFFER buffer, float pan) {
+        if (buffer==0) return;
+        LONG val = static_cast<LONG>( pan * DSBPAN_RIGHT / 100.0f );
+        buffer->SetPan( val );
+    }
 	void SoundChannelDSound::SetPan(float pan) {
-		if (m_IDSBuffer==0) return;
-		LONG val = static_cast<LONG>( pan * DSBPAN_RIGHT );
-		m_IDSBuffer->SetPan( val );
+        SetPanImpl(m_IDSBuffer,pan);
 	}
 
 	void SoundChannelDSound::Clear() {
@@ -165,6 +171,7 @@ namespace GHL {
 	}
 
 	SoundDSound::~SoundDSound() {
+		SoundDone();
 	}
 
 	typedef HRESULT ( WINAPI * DirectSoundCreate8_Func ) (LPCGUID pcGuidDevice, LPDIRECTSOUND8 *ppDS8, LPUNKNOWN pUnkOuter );
@@ -278,6 +285,11 @@ namespace GHL {
 	}
 
 	bool SoundDSound::SoundDone() {
+        for (std::list<MusicInstanceDSound*>::iterator it = m_music_streams.begin();it!=m_music_streams.end();++it) {
+            (*it)->ResetParent();
+        }
+        m_music_streams.clear();
+        
 		for (std::list<SoundChannelDSound*>::iterator it = m_channels.begin();it!=m_channels.end();++it) {
 			delete (*it);
 		}
@@ -297,27 +309,29 @@ namespace GHL {
 		return SoundImpl::SoundDone();
 	}
 
+    static void fill_WAVEFORMATEX( WAVEFORMATEX& waveFormat, SampleType type, UInt32 freq ) {
+        ZeroMemory(&waveFormat, sizeof(WAVEFORMATEX));
+        waveFormat.cbSize           = 0;
+        waveFormat.wFormatTag       = WAVE_FORMAT_PCM;
+        waveFormat.nChannels        = SoundDecoderBase::GetChannels(type);
+        const UInt32 sampleSize     = SoundDecoderBase::GetBps(type);
+        waveFormat.nSamplesPerSec   = freq;
+        waveFormat.wBitsPerSample   = sampleSize*8/waveFormat.nChannels;
+        waveFormat.nBlockAlign      = waveFormat.nChannels * waveFormat.wBitsPerSample/8;
+        waveFormat.nAvgBytesPerSec  = waveFormat.nSamplesPerSec * waveFormat.nBlockAlign;
+    }
 
 	/// create sound effect from data
 	SoundEffect* GHL_CALL SoundDSound::CreateEffect( SampleType type, UInt32 freq, Data* data ) {
 		if (!m_IDS) return 0;
         WAVEFORMATEX waveFormat;
+        fill_WAVEFORMATEX( waveFormat, type, freq );
+       
         DSBUFFERDESC bufferDesc;
-        ZeroMemory(&waveFormat, sizeof(WAVEFORMATEX));
         ZeroMemory(&bufferDesc, sizeof(DSBUFFERDESC));
 
-        waveFormat.cbSize           = 0;
-        waveFormat.wFormatTag       = WAVE_FORMAT_PCM;
-		if (type==SAMPLE_TYPE_MONO_8  || type==SAMPLE_TYPE_MONO_16)
-			waveFormat.nChannels        = 1;
-		if (type==SAMPLE_TYPE_STEREO_8  || type==SAMPLE_TYPE_STEREO_16)
-			waveFormat.nChannels        = 2;
-		const UInt32 sampleSize = SoundDecoderBase::GetBps(type);
-        waveFormat.nSamplesPerSec   = freq;
-        waveFormat.wBitsPerSample   = sampleSize*8/waveFormat.nChannels;
-        waveFormat.nBlockAlign      = waveFormat.nChannels * waveFormat.wBitsPerSample/8;
-        waveFormat.nAvgBytesPerSec  = waveFormat.nSamplesPerSec * waveFormat.nBlockAlign;
-		const UInt32 samples = data ? data->GetSize()/sampleSize : 0;
+        const UInt32 sampleSize     = SoundDecoderBase::GetBps(type);
+      	const UInt32 samples = data ? data->GetSize()/sampleSize : 0;
         const UInt32 nSoundLen         = samples * waveFormat.nBlockAlign;
         bufferDesc.dwSize           = sizeof(DSBUFFERDESC);
         bufferDesc.dwFlags          = DSBCAPS_CTRLPAN | DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY |DSBCAPS_STICKYFOCUS ;
@@ -391,12 +405,212 @@ namespace GHL {
 			*instance = inst;
 		}
 	}
+    
+    
+    MusicInstanceDSound::MusicInstanceDSound(  SoundDSound* parent, SoundDecoder* decoder , LPDIRECTSOUNDBUFFER buffer , DWORD buffer_size ) : m_parent(parent),
+		m_decoder(decoder), m_IDSBuffer(buffer),m_buffer_byte_size(buffer_size)  {
+        m_loop = false;
+        m_paused = false;
+        m_started = false;
+        m_cbBufOffset = 0;
+		m_buffer_byte_size = buffer_size;
+    }
+    MusicInstanceDSound::~MusicInstanceDSound() {
+        m_decoder->Release();
+        if (m_parent)
+            m_parent->ReleaseMusicStream(this);
+        if (m_IDSBuffer) {
+            m_IDSBuffer->Release();
+            m_IDSBuffer = 0;
+        }
+    }
+    void MusicInstanceDSound::ResetParent() {
+        m_parent = 0;
+        Stop();
+    }
+    
+    DWORD MusicInstanceDSound::GetMaxWriteSize (void)
+    {
+        DWORD  dwPlayCursor, dwMaxSize;
+        
+        // Get current play position
+        if (m_IDSBuffer->GetCurrentPosition (&dwPlayCursor, 0) == DS_OK)
+        {
+            if (m_cbBufOffset <= dwPlayCursor)
+            {
+                // Our write position trails play cursor
+                dwMaxSize = dwPlayCursor - m_cbBufOffset;
+            }
+            
+            else // (dwWriteCursor > dwPlayCursor)
+            {
+                // Play cursor has wrapped
+                dwMaxSize = m_buffer_byte_size - m_cbBufOffset + dwPlayCursor;
+            }
+        }
+        else
+        {
+            // GetCurrentPosition call failed
+            //ASSERT (0);
+            dwMaxSize = 0;
+        }
+        return (dwMaxSize);
+    }
+    
+    DWORD   MusicInstanceDSound::WriteData(LPVOID data,DWORD size) {
+        DWORD sampleSize = SoundDecoderBase::GetBps(m_decoder->GetSampleType());
+        DWORD samples = (size / sampleSize);
+        DWORD rsamples = 0;
+        while (m_loop && samples!=0) {
+			DWORD readed = m_decoder->ReadSamples(samples, static_cast<Byte*>(data));
+            samples-=readed;
+            rsamples+=readed;
+            data = static_cast<char*>(data)+readed*sampleSize;
+            if (readed < samples) {
+                m_decoder->Reset();
+            }
+        }
+        return rsamples * sampleSize;
+    }
+    
+    void MusicInstanceDSound::Process() {
+        if (!m_started)
+            return;
+        if (m_paused)
+            return;
+        DWORD size = GetMaxWriteSize();
+        if (size < 16)
+            return;
+
+		LPVOID lpbuf1 = NULL;
+		LPVOID lpbuf2 = NULL;
+		DWORD dwsize1 = 0;
+		DWORD dwsize2 = 0;
+
+        HRESULT hr = m_IDSBuffer->Lock(m_cbBufOffset, size, &lpbuf1, &dwsize1, &lpbuf2, &dwsize2, 0);
+        if (hr == DS_OK)
+        {
+            // Write data to sound buffer. Because the sound buffer is circular,
+            // we may have to do two write operations if locked portion of buffer
+            // wraps around to start of buffer.
+            //ASSERT (lpbuf1);
+            DWORD writen = WriteData(lpbuf1,dwsize1);
+            if (writen == 0) {
+                Stop();
+            }
+            m_cbBufOffset += writen;
+            if (writen == dwsize1) {
+                if (lpbuf2) {
+                    writen = WriteData(lpbuf2,dwsize2);
+                    m_cbBufOffset += writen;
+                    if (writen != dwsize2) {
+                        ::memset(static_cast<char*>(lpbuf2)+writen,dwsize2-writen,0);
+                    }
+                }
+            } else {
+                ::memset(static_cast<char*>(lpbuf1)+writen,dwsize1-writen,0);
+            }
+            
+            // Update our buffer offset and unlock sound buffer
+            m_cbBufOffset = m_cbBufOffset % m_buffer_byte_size;
+			m_IDSBuffer->Unlock(lpbuf1, dwsize1, lpbuf2, dwsize2);
+        }
+    }
+    
+    /// set volume (0-100)
+    void GHL_CALL MusicInstanceDSound::SetVolume( float vol ) {
+        SetVolumeImpl(m_IDSBuffer,vol);
+    }
+    /// set pan (-100..0..+100)
+    void GHL_CALL MusicInstanceDSound::SetPan( float pan ) {
+		SetPanImpl(m_IDSBuffer,pan);
+    }
+    /// stop
+    void GHL_CALL MusicInstanceDSound::Stop() {
+        if (m_IDSBuffer==0) return;
+        if (!m_started) return;
+        m_paused = false;
+        m_IDSBuffer->Stop();
+        m_started = false;
+        m_IDSBuffer->SetCurrentPosition(0);
+        m_cbBufOffset = 0;
+    }
+    /// pause
+    void GHL_CALL MusicInstanceDSound::Pause() {
+        if (m_IDSBuffer==0) return;
+        if (!m_started) return;
+        m_paused = true;
+        m_IDSBuffer->Stop();
+    }
+    /// resume
+    void GHL_CALL MusicInstanceDSound::Resume() {
+        m_paused = false;
+        Play(m_loop);
+    }
+    /// play
+    void GHL_CALL MusicInstanceDSound::Play( bool loop ) {
+        if (m_IDSBuffer==0) return;
+        m_paused = false;
+        m_started = true;
+		Process();
+        HRESULT hr = m_IDSBuffer->Play(0, 0,  DSBPLAY_LOOPING);
+        if (DSERR_BUFFERLOST == hr)
+        {
+            m_IDSBuffer->Restore();
+            hr = m_IDSBuffer->Play(0, 0, DSBPLAY_LOOPING );
+        }
+        m_loop = loop;
+        m_started = SUCCEEDED(hr);
+    }
+
+    
+    void SoundDSound::ReleaseMusicStream(MusicInstanceDSound* music) {
+        std::list<MusicInstanceDSound*>::iterator it = std::find(m_music_streams.begin(),m_music_streams.end(),music);
+        if (it!=m_music_streams.end()) {
+            m_music_streams.erase(it);
+        }
+    }
+
+
 	/// open music
 	MusicInstance* GHL_CALL SoundDSound::OpenMusic( GHL::DataStream* file ) {
-		return 0;
+        SoundDecoder* decoder = GHL_CreateSoundDecoder( file );
+        if (!decoder)
+            return 0;
+        
+        WAVEFORMATEX waveFormat;
+        fill_WAVEFORMATEX( waveFormat, decoder->GetSampleType(), decoder->GetFrequency() );
+        
+        DSBUFFERDESC bufferDesc;
+        ZeroMemory(&bufferDesc, sizeof(DSBUFFERDESC));
+        
+        const UInt32 BUFFER_SIZE = decoder->GetFrequency()/2; /// samples (0.5sec)
+        
+		const UInt32 sampleSize = SoundDecoderBase::GetBps(decoder->GetSampleType());
+        const UInt32 nSoundLen       = BUFFER_SIZE * waveFormat.nBlockAlign;
+        
+        bufferDesc.dwSize           = sizeof(DSBUFFERDESC);
+        bufferDesc.dwFlags          = DSBCAPS_CTRLPAN | DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY |DSBCAPS_STICKYFOCUS ;
+        bufferDesc.dwBufferBytes    = nSoundLen;
+        bufferDesc.lpwfxFormat      = &waveFormat;
+        
+        HRESULT hr;
+        IDirectSoundBuffer *pdsBuffer = 0;
+        if (SUCCEEDED(hr = m_IDS->CreateSoundBuffer(&bufferDesc, &pdsBuffer, 0)))
+        {
+            MusicInstanceDSound * res =  new MusicInstanceDSound( this, decoder , pdsBuffer, nSoundLen );
+            m_music_streams.push_back(res);
+            return res;
+        }
+
+        decoder->Release();
+        return 0;
 	}
 	
 	void SoundDSound::Process() {
+        for (std::list<MusicInstanceDSound*>::iterator it = m_music_streams.begin();it!=m_music_streams.end();++it) {
+            (*it)->Process();
+        }
 	}
 }
 #endif

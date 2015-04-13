@@ -11,6 +11,7 @@
 
 #include <ghl_sound.h>
 #include "../ghl_ref_counter_impl.h"
+#include "ghl_sound_decoder.h"
 
 namespace GHL {
     
@@ -35,18 +36,10 @@ namespace GHL {
         virtual UInt32 GHL_CALL GetSamplesAmount() const { return m_capacity; }
         
         UInt32 GetChannels() const {
-            if (m_type == SAMPLE_TYPE_MONO_8) return 1;
-            if (m_type == SAMPLE_TYPE_MONO_16) return 1;
-            if (m_type == SAMPLE_TYPE_STEREO_8) return 2;
-            if (m_type == SAMPLE_TYPE_STEREO_16) return 2;
-            return 0;
+            return SoundDecoderBase::GetChannels(m_type);
         }
         UInt32 GetBits() const {
-            if (m_type == SAMPLE_TYPE_MONO_8) return 8;
-            if (m_type == SAMPLE_TYPE_MONO_16) return 16;
-            if (m_type == SAMPLE_TYPE_STEREO_8) return 8;
-            if (m_type == SAMPLE_TYPE_STEREO_16) return 16;
-            return 0;
+            return SoundDecoderBase::GetBps(m_type);
         }
     };
     

@@ -75,9 +75,15 @@ static GHL::Key convert_key( DWORD code ) {
 	return GHL::KEY_NONE;
 }
 
+struct AppContext {
+	GHL::Application* app;
+	BOOL active;
+};
+
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
-	GHL::Application* appl = reinterpret_cast<GHL::Application*>(GetWindowLongPtr(hwnd,GWLP_USERDATA));
+	AppContext* ctx = reinterpret_cast<AppContext*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+	GHL::Application* appl = ctx ? ctx->app : 0;
 	switch(msg)
 	{
 
@@ -126,20 +132,15 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 			break;
 
 		case WM_ACTIVATE: 
-			if (appl) {
-				/*
-				// tricky: we should catch WA_ACTIVE and WA_CLICKACTIVE,
-				// but only if HIWORD(wParam) (fMinimized) == FALSE (0)
-				bool bActivating = (LOWORD(wparam) != WA_INACTIVE) && (HIWORD(wparam) == 0);
-				if(impl->m_window_active != bActivating) {
-					impl->m_window_active = bActivating;
-					if (impl->m_controller) {
-						if (bActivating) impl->m_controller->OnFocusGain(impl);
-						else impl->m_controller->OnFocusLost(impl);
-					}
+			if (ctx) {
+				if (!HIWORD(wparam))                    // Check Minimization State
+				{
+					ctx->active = TRUE;                    // Program Is Active
 				}
-				return FALSE;
-				*/
+				else
+				{
+					ctx->active = FALSE;                   // Program Is No Longer Active
+				}
 			}
 			break;
 		case WM_SYSCOMMAND:
@@ -202,6 +203,10 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 {
 	(void)argc;
 	(void)argv;
+
+	AppContext ctx;
+	ctx.active = TRUE;
+	ctx.app = app;
 
 	OSVERSIONINFO	os_ver;
 	SYSTEMTIME		tm;
@@ -286,6 +291,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 		LOG_ERROR( "Can't create window" );
 		return 1;
 	}
+	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)&ctx);
 
 #ifndef GHL_NO_SOUND
 	GHL::SoundDSound sound(8);
@@ -360,8 +366,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 		hwnd = 0;												// Zero The Window Handle
 		return 1;													// Return False
 	}
-	SetWindowLongPtr(hwnd,GWLP_USERDATA,(LONG_PTR)app);
-
+	
 	if (wglMakeCurrent (hDC, hRC) == FALSE)
 	{
 		// Failed
@@ -417,13 +422,14 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 				DispatchMessage(&msg);
 		}
 		if (app) {	
-			wglMakeCurrent (hDC, hRC);
-			DWORD now = timeGetTime();
-			DWORD dt = now - ms;
-			ms = now;
-			if (dt>1000)
-				dt = 1000;
-			app->OnFrame(dt*1000);
+			if (ctx.active && wglMakeCurrent(hDC, hRC)) {
+				DWORD now = timeGetTime();
+				DWORD dt = now - ms;
+				ms = now;
+				if (dt>1000)
+					dt = 1000;
+				app->OnFrame(dt * 1000);
+			}
 			SwapBuffers (hDC);
 			Sleep(1);
 		}

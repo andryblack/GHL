@@ -7,11 +7,12 @@
 #include <list>
 
 namespace GHL {
+    
 
-	const UInt32 BUFFER_SIZE = 44100/2; /// samples (0.5sec)
 	
 	class SoundDSound;
-
+    class SoundDecoderBase;
+    
 	class SoundEffectDSound : public SoundEffectImpl {
 	private:
 		LPDIRECTSOUNDBUFFER		m_IDSBuffer;
@@ -60,6 +61,43 @@ namespace GHL {
         /// stop
         virtual void GHL_CALL Stop();
 	};
+    
+	class MusicInstanceDSound : public RefCounterImpl<MusicInstance> {
+    private:
+        SoundDSound*    m_parent;
+        SoundDecoder*   m_decoder;
+        LPDIRECTSOUNDBUFFER m_IDSBuffer;
+        bool    m_loop;
+        bool    m_paused;
+        bool    m_started;
+        DWORD   m_buffer_byte_size;
+        DWORD   m_cbBufOffset;
+        DWORD   GetMaxWriteSize (void);
+        DWORD   WriteData(LPVOID data,DWORD size);
+    public:
+        explicit MusicInstanceDSound( SoundDSound* parent,
+                                     SoundDecoder* decoder ,
+                                     LPDIRECTSOUNDBUFFER buffer,
+                                     DWORD buffer_size);
+        ~MusicInstanceDSound();
+    
+        void ResetParent();
+        void Process();
+    
+        /// set volume (0-100)
+        virtual void GHL_CALL SetVolume( float vol );
+        /// set pan (-100..0..+100)
+        virtual void GHL_CALL SetPan( float pan );
+        /// stop
+        virtual void GHL_CALL Stop();
+        /// pause
+        virtual void GHL_CALL Pause();
+        /// resume
+        virtual void GHL_CALL Resume();
+        /// play
+        virtual void GHL_CALL Play( bool loop );
+    
+    };
 
 	class SoundDSound : public SoundImpl {
 	private:
@@ -70,9 +108,12 @@ namespace GHL {
 		std::list<SoundChannelDSound*> m_channels;
 		size_t	m_max_channels;
 		SoundChannelDSound* GetChannel( SoundEffectDSound* effect );
+        std::list<MusicInstanceDSound*> m_music_streams;
 	public:
 		explicit SoundDSound(size_t max_channels);
 		~SoundDSound();
+        
+        void ReleaseMusicStream(MusicInstanceDSound*);
 
 		bool SoundInit(HWND hwnd);
 		virtual bool SoundDone();

@@ -51,6 +51,13 @@ namespace GHL
                 if (type == SAMPLE_TYPE_STEREO_16) return 4;
                 return 0;
             }
+            static UInt32 GetChannels(SampleType type) {
+                if (type == SAMPLE_TYPE_MONO_8) return 1;
+                if (type == SAMPLE_TYPE_MONO_16) return 1;
+                if (type == SAMPLE_TYPE_STEREO_8) return 2;
+                if (type == SAMPLE_TYPE_STEREO_16) return 2;
+                return 0;
+            }
             /// sample type
             virtual SampleType GHL_CALL GetSampleType() const { return m_type; }
             /// samples rate
