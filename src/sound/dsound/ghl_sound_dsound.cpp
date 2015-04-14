@@ -6,6 +6,8 @@
 #include <iostream>
 #include <cassert>
 #include <algorithm>
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 namespace GHL {
 
@@ -80,7 +82,11 @@ namespace GHL {
 	}
     static void SetVolumeImpl(LPDIRECTSOUNDBUFFER buffer, float vol) {
         if (buffer==0) return;
-        LONG val = static_cast<LONG>(DSBVOLUME_MIN + vol * (DSBVOLUME_MAX - DSBVOLUME_MIN) / 100.0f);
+		LONG val =log10(100.0f / vol) * -2000;
+		if (val < DSBVOLUME_MIN)
+			val = DSBVOLUME_MIN;
+		if (val > DSBVOLUME_MAX)
+			val = DSBVOLUME_MIN;
         buffer->SetVolume(val);
     }
 	void SoundChannelDSound::SetVolume(float vol) {
@@ -514,7 +520,10 @@ namespace GHL {
             // Update our buffer offset and unlock sound buffer
             m_cbBufOffset = m_cbBufOffset % m_buffer_byte_size;
 			m_IDSBuffer->Unlock(lpbuf1, dwsize1, lpbuf2, dwsize2);
-        }
+		}
+		else {
+			LOG_DEBUG("failed lock music buffer");
+		}
     }
     
     /// set volume (0-100)
@@ -590,7 +599,7 @@ namespace GHL {
         const UInt32 nSoundLen       = BUFFER_SIZE * waveFormat.nBlockAlign;
         
         bufferDesc.dwSize           = sizeof(DSBUFFERDESC);
-        bufferDesc.dwFlags          = DSBCAPS_CTRLPAN | DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY |DSBCAPS_STICKYFOCUS ;
+        bufferDesc.dwFlags          = DSBCAPS_CTRLPAN | DSBCAPS_CTRLVOLUME |DSBCAPS_STICKYFOCUS ;
         bufferDesc.dwBufferBytes    = nSoundLen;
         bufferDesc.lpwfxFormat      = &waveFormat;
         
