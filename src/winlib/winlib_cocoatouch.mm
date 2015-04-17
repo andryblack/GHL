@@ -595,8 +595,6 @@ public:
 	view = [[WinLibView alloc] initWithFrame:CGRectMake(0, 0, settings.width, settings.height)];
 	controller.view = view;
 	
-	g_application->Initialize();
-	
 	NSString *reqSysVer = @"4.0";
 	NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
 	if ([currSysVer compare:reqSysVer options:NSNumericSearch] != NSOrderedAscending) {
