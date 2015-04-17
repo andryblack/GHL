@@ -23,6 +23,8 @@
 
 #include "ghl_data_impl.h"
 #include <ghl_data_stream.h>
+#include "zlib/zlib.h"
+#undef Byte
 
 namespace GHL {
  
@@ -69,4 +71,87 @@ GHL_API GHL::Data* GHL_CALL GHL_ReadAllData( GHL::DataStream* ds ) {
         data->append(buf,readed);
     }
     return data;
+}
+
+GHL_API bool GHL_CALL GHL_UnpackZlib(const GHL::Data* src, GHL::Byte* dst,GHL::UInt32* dst_size) {
+    if (!src || !dst || !dst_size)
+        return false;
+    
+    z_stream stream;
+    int err;
+    
+    stream.next_in = (Bytef*)src->GetData();
+    stream.avail_in = src->GetSize();
+    
+    stream.next_out = dst;
+    stream.avail_out = (uInt)*dst_size;
+    
+    stream.zalloc = (alloc_func)0;
+    stream.zfree = (free_func)0;
+    
+    err = inflateInit(&stream);
+    if (err != Z_OK) return false;
+    
+    err = inflate(&stream, Z_FINISH);
+    if (err != Z_STREAM_END) {
+        inflateEnd(&stream);
+        return false;
+    }
+    *dst_size = stream.total_out;
+    
+    err = inflateEnd(&stream);
+    
+    return true;
+}
+
+GHL_API GHL::Data* GHL_CALL GHL_PackZlib(const GHL::Data* src) {
+    if (!src) {
+        return 0;
+    }
+    int level = Z_DEFAULT_COMPRESSION;
+    GHL::DataArrayImpl* data = new GHL::DataArrayImpl();
+    z_stream stream;
+    int err;
+    
+    stream.next_in = (z_const Bytef *)src->GetData();
+    stream.avail_in = (uInt)src->GetSize();
+
+    GHL::Byte buf[1024*8];
+    
+    stream.next_out = buf;
+    stream.avail_out = sizeof(buf);
+    
+    stream.zalloc = (alloc_func)0;
+    stream.zfree = (free_func)0;
+    stream.opaque = (voidpf)0;
+    
+    err = deflateInit(&stream, level);
+    if (err != Z_OK)
+    {
+        delete data;
+        return 0;
+    }
+    while (true) {
+        err = deflate(&stream, Z_FINISH);
+        data->append(buf, sizeof(buf)-stream.avail_out);
+        if (err == Z_OK) {
+            if (stream.avail_out==0) {
+                stream.next_out = buf;
+                stream.avail_out = sizeof(buf);
+                continue;
+            }
+        }
+        if (err == Z_STREAM_END) {
+            break;
+        }
+        delete data;
+        deflateEnd(&stream);
+        return 0;
+    }
+    err = deflateEnd(&stream);
+    return data;
+}
+
+GHL_API GHL::UInt32 GHL_CALL GHL_DataCRC32(const GHL::Data* data ) {
+    return crc32(0,data->GetData(),data->GetSize());
 }
