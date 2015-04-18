@@ -23,11 +23,16 @@
 
 #include "ghl_data_impl.h"
 #include <ghl_data_stream.h>
+#include "ghl_log_impl.h"
 #include "zlib/zlib.h"
 #undef Byte
 
+static const char* MODULE = "Data";
+
 namespace GHL {
  
+    
+    
 	void GHL_CALL	InlinedData::SetData( UInt32 offset, const Byte* data, UInt32 size ) {
 		if (offset>=m_size) return;
 		Byte* begin = m_buffer + offset;
@@ -73,11 +78,20 @@ GHL_API GHL::Data* GHL_CALL GHL_ReadAllData( GHL::DataStream* ds ) {
     return data;
 }
 
+static voidpf z__alloc_func (voidpf opaque, uInt items, uInt size) {
+    (void)opaque;
+    return ::calloc(items, size);
+}
+static void   z__free_func  (voidpf opaque, voidpf address) {
+    ::free(address);
+    (void)opaque;
+}
+
 GHL_API bool GHL_CALL GHL_UnpackZlib(const GHL::Data* src, GHL::Byte* dst,GHL::UInt32* dst_size) {
     if (!src || !dst || !dst_size)
         return false;
     
-    z_stream stream;
+    z_stream stream = {0};
     int err;
     
     stream.next_in = (Bytef*)src->GetData();
@@ -86,8 +100,8 @@ GHL_API bool GHL_CALL GHL_UnpackZlib(const GHL::Data* src, GHL::Byte* dst,GHL::U
     stream.next_out = dst;
     stream.avail_out = (uInt)*dst_size;
     
-    stream.zalloc = (alloc_func)0;
-    stream.zfree = (free_func)0;
+    stream.zalloc = &z__alloc_func;
+    stream.zfree = &z__free_func;
     
     err = inflateInit(&stream);
     if (err != Z_OK) return false;
@@ -95,6 +109,9 @@ GHL_API bool GHL_CALL GHL_UnpackZlib(const GHL::Data* src, GHL::Byte* dst,GHL::U
     err = inflate(&stream, Z_FINISH);
     if (err != Z_STREAM_END) {
         inflateEnd(&stream);
+        if (stream.msg) {
+            LOG_ERROR("UnpackZlib " << stream.msg);
+        }
         return false;
     }
     *dst_size = stream.total_out;
@@ -121,8 +138,8 @@ GHL_API GHL::Data* GHL_CALL GHL_PackZlib(const GHL::Data* src) {
     stream.next_out = buf;
     stream.avail_out = sizeof(buf);
     
-    stream.zalloc = (alloc_func)0;
-    stream.zfree = (free_func)0;
+    stream.zalloc = &z__alloc_func;
+    stream.zfree = &z__free_func;
     stream.opaque = (voidpf)0;
     
     err = deflateInit(&stream, level);

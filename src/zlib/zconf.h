@@ -10,7 +10,7 @@
 
 #define Z_PREFIX
 #define Z_SOLO
-#define NO_GZIP
+//#define NO_GZIP
 
 #include <stdint.h>
 #define Z_U4 uint32_t
