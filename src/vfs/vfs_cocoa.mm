@@ -148,12 +148,14 @@ namespace GHL {
             m_profile_dir = "/Library/Application Support/sandbox";
         } else {
             NSString* path = [paths objectAtIndex:0];
+#ifndef GHL_PLATFORM_IOS
             NSString* bundleid = [bundle bundleIdentifier];
             if (bundleid) {
                 path = [path stringByAppendingPathComponent:bundleid];
             } else {
                 path = [path stringByAppendingPathComponent:@"sandbox"];
             }
+#endif
             m_profile_dir = [path UTF8String];
         }
         DoCreateDir(m_profile_dir.c_str());
@@ -167,12 +169,14 @@ namespace GHL {
             m_cache_dir = "/Library/Caches/sandbox";
         } else {
             NSString* path = [paths objectAtIndex:0];
+#ifndef GHL_PLATFORM_IOS
             NSString* bundleid = [bundle bundleIdentifier];
             if (bundleid) {
                 path = [path stringByAppendingPathComponent:bundleid];
             } else {
                 path = [path stringByAppendingPathComponent:@"sandbox"];
             }
+#endif
             m_cache_dir = [path UTF8String];
         }
         DoCreateDir(m_cache_dir.c_str());
