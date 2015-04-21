@@ -98,7 +98,9 @@ namespace GHL
 					data[i*3+1]=original[i];
 					data[i*3+2]=original[i];
 				}
-			}
+            } else {
+                LOG_ERROR("not implemented conversion");
+            }
 			m_data->Release();
 			m_data = buffer;
 		}
@@ -121,7 +123,16 @@ namespace GHL
 					data[i*4+2]=original[i];
 					data[i*4+3]=0xff;
 				}
-			}
+            } else if (m_fmt==IMAGE_FORMAT_4444) {
+                for (size_t i=0;i<len;i++) {
+                    data[i*4+0]=(original[i*2]&0x0F)<<4;
+                    data[i*4+1]=(original[i*2]&0xF0);
+                    data[i*4+2]=(original[i*2+1]&0x0F)<<4;
+                    data[i*4+3]=(original[i*2+1]&0xF0);
+                }
+            } else {
+                LOG_ERROR("not implemented conversion");
+            }
 			m_data->Release();
 			m_data = buffer;
 		} else {

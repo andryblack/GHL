@@ -62,7 +62,7 @@ namespace GHL {
 #define LOG_WARNING( MSG ) do { ::GHL::Logger(::GHL::LOG_LEVEL_WARNING,MODULE) << MSG ; } while (false)
 #define LOG_INFO( MSG ) do { ::GHL::Logger(::GHL::LOG_LEVEL_INFO,MODULE) << MSG ; } while (false)
 
-#ifdef GHL_DEBUG
+#if defined( GHL_DEBUG ) && !defined( GHL_SILENT )
 #define LOG_VERBOSE( MSG ) do { ::GHL::Logger(::GHL::LOG_LEVEL_VERBOSE,MODULE) << MSG ; } while (false)
 #define LOG_DEBUG( MSG ) do { ::GHL::Logger(::GHL::LOG_LEVEL_DEBUG,MODULE) << MSG ; } while (false)
 #else 

@@ -105,6 +105,7 @@ namespace GHL {
     }
     /// open file
     DataStream* GHL_CALL VFSPosixImpl::OpenFile(const char* _file){
+        (void)MODULE;
         LOG_VERBOSE("try open file '" << _file << "'");
         if (!_file) return 0;
         if (_file[0]==0) return 0;
@@ -118,11 +119,11 @@ namespace GHL {
     /// write file
     bool GHL_CALL VFSPosixImpl::WriteFile(const char* file, const Data* data) {
         FILE* f = fopen(file, "wb" );
-        if (f)
+        if (!f)
             return false;
-        bool res = fwrite(data->GetData(),data->GetSize(),1,f)==data->GetSize();
+        size_t writen = fwrite(data->GetData(), data->GetSize(),1,  f);
         fclose(f);
-        return res;
+        return writen == 1;
     }
 }
 

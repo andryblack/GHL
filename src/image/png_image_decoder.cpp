@@ -335,9 +335,82 @@ Image* PngDecoder::Decode(DataStream* file)
 
 	return image;
 }
+    
+    static void write_png_func(png_structp p, png_bytep d, png_size_t s) {
+        DataArrayImpl* res = reinterpret_cast<DataArrayImpl*>(png_get_io_ptr(p));
+        res->append(d, s);
+    }
+    static void flush_png_func (png_structp p) {
+        
+    }
+
 	
-    const Data* PngDecoder::Encode( const Image* /*image*/) {
-		return 0;
+    const Data* PngDecoder::Encode( const Image* image) {
+        int bit_depth = 0;
+        int color_type = 0;
+        int bpp = 0;
+        if (image->GetFormat()==IMAGE_FORMAT_RGBA) {
+            bit_depth = 8;
+            color_type = PNG_COLOR_TYPE_RGB_ALPHA;
+            bpp = 4;
+        } else if (image->GetFormat() == IMAGE_FORMAT_RGB) {
+            bit_depth = 8;
+            color_type = PNG_COLOR_TYPE_RGB;
+            bpp = 3;
+        } else {
+            return 0;
+        }
+        
+        size_t line_bytes = image->GetWidth() * bpp;
+
+        /* prepare the standard PNG structures */
+        png_structp png_ptr = png_create_write_struct (png_get_libpng_ver(NULL), NULL, NULL,
+                                           NULL);
+        if (!png_ptr)
+        {
+            return 0;
+        }
+        png_infop info_ptr = png_create_info_struct (png_ptr);
+        if (!info_ptr)
+        {
+            png_destroy_write_struct (&png_ptr, (png_infopp) NULL);
+            return 0;
+        }
+        
+        DataArrayImpl* res = new DataArrayImpl();
+        std::vector<const Byte*> row_ptrs;
+        
+        /* setjmp() must be called in every function that calls a PNG-reading libpng function */
+        if (setjmp (png_jmpbuf(png_ptr)))
+        {
+            png_destroy_write_struct (&png_ptr, &info_ptr);
+            res->Release();
+            return 0;
+        }
+        
+        png_set_write_fn(png_ptr, res, &write_png_func, &flush_png_func);
+        
+        png_set_IHDR (png_ptr, info_ptr, image->GetWidth(), image->GetHeight(), bit_depth, color_type,
+                      PNG_INTERLACE_NONE,
+                      PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
+        
+        /* write the file header information */
+        png_write_info (png_ptr, info_ptr);
+        row_ptrs.resize(image->GetHeight());
+        
+        /* set the individual row_pointers to point at the correct offsets */
+        for (UInt32 i = 0; i < image->GetHeight(); i++)
+            row_ptrs[i] = image->GetData()->GetData() + i * line_bytes;
+        
+        
+        png_write_image (png_ptr, const_cast<png_bytepp>(&row_ptrs[0]));
+        
+        /* write the additional chunks to the PNG file (not really needed) */
+        png_write_end (png_ptr, info_ptr);
+        
+        /* clean up after the write, and free any memory allocated */
+        png_destroy_write_struct (&png_ptr, &info_ptr);
+        return res;
 	}
 
 }/*namespace*/
