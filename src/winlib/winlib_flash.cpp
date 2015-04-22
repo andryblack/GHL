@@ -134,10 +134,127 @@ public:
 
 static FlashSystem ctx;
 
+static GHL::Key convert_key( GHL::UInt32 code ) {
+    switch (code) {
+        case 8:     return GHL::KEY_BACKSPACE;
+        case 9:     return GHL::KEY_TAB;
+        case 13:    return GHL::KEY_ENTER;
+        case 27:    return GHL::KEY_ESCAPE;
+            
+        case 32:    return GHL::KEY_SPACE;
+        case 33:    return GHL::KEY_PGUP;
+        case 34:    return GHL::KEY_PGDN;
+        case 35:    return GHL::KEY_END;
+        case 36:    return GHL::KEY_HOME;
+            
+        case 37:    return GHL::KEY_LEFT;
+        case 38:    return GHL::KEY_UP;
+        case 39:    return GHL::KEY_RIGHT;
+        case 40:    return GHL::KEY_DOWN;
+            
+        case 45:    return GHL::KEY_INSERT;
+        case 46:    return GHL::KEY_DELETE;
+        case 19:    return GHL::KEY_PAUSE;
+            
+        case 65:    return GHL::KEY_A;
+        case 66:    return GHL::KEY_B;
+        case 67:    return GHL::KEY_C;
+        case 68:    return GHL::KEY_D;
+        case 69:    return GHL::KEY_E;
+        case 70:    return GHL::KEY_F;
+        case 71:    return GHL::KEY_G;
+        case 72:    return GHL::KEY_H;
+        case 73:    return GHL::KEY_I;
+        case 74:    return GHL::KEY_J;
+        case 75:    return GHL::KEY_K;
+        case 76:    return GHL::KEY_L;
+        case 77:    return GHL::KEY_M;
+        case 78:    return GHL::KEY_N;
+        case 79:    return GHL::KEY_O;
+        case 80:    return GHL::KEY_P;
+        case 81:    return GHL::KEY_Q;
+        case 82:    return GHL::KEY_R;
+        case 83:    return GHL::KEY_S;
+        case 84:    return GHL::KEY_T;
+        case 85:    return GHL::KEY_U;
+        case 86:    return GHL::KEY_V;
+        case 87:    return GHL::KEY_W;
+        case 88:    return GHL::KEY_X;
+        case 89:    return GHL::KEY_Y;
+        case 90:    return GHL::KEY_Z;
+            
+        case 48:    return GHL::KEY_0;
+        case 49:    return GHL::KEY_1;
+        case 50:    return GHL::KEY_2;
+        case 51:    return GHL::KEY_3;
+        case 52:    return GHL::KEY_4;
+        case 53:    return GHL::KEY_5;
+        case 54:    return GHL::KEY_6;
+        case 55:    return GHL::KEY_7;
+        case 56:    return GHL::KEY_8;
+        case 57:    return GHL::KEY_9;
+            
+        case 186:    return GHL::KEY_COMMA;
+        //case 187:    return GHL::KEY_PLUS;
+        case 189:    return GHL::KEY_MINUS;
+            
+        case 96:    return GHL::KEY_NUMPAD0;
+        case 97:    return GHL::KEY_NUMPAD1;
+        case 98:    return GHL::KEY_NUMPAD2;
+        case 99:    return GHL::KEY_NUMPAD3;
+        case 100:    return GHL::KEY_NUMPAD4;
+        case 101:    return GHL::KEY_NUMPAD5;
+        case 102:    return GHL::KEY_NUMPAD6;
+        case 103:    return GHL::KEY_NUMPAD7;
+        case 104:    return GHL::KEY_NUMPAD8;
+        case 105:    return GHL::KEY_NUMPAD9;
+            
+        case 106:   return GHL::KEY_MULTIPLY;
+        case 107:   return GHL::KEY_ADD;
+        case 109:   return GHL::KEY_SUBTRACT;
+        case 111:   return GHL::KEY_DIVIDE;
+        case 110:   return GHL::KEY_DECIMAL;
+            
+        case 112:   return GHL::KEY_F1;
+        case 113:   return GHL::KEY_F2;
+        case 114:   return GHL::KEY_F3;
+        case 115:   return GHL::KEY_F4;
+        case 116:   return GHL::KEY_F5;
+        case 117:   return GHL::KEY_F6;
+        case 118:   return GHL::KEY_F7;
+        case 119:   return GHL::KEY_F8;
+        case 120:   return GHL::KEY_F9;
+        //case 121:   return GHL::KEY_F10;
+        case 122:   return GHL::KEY_F11;
+        case 123:   return GHL::KEY_F12;
+    }
+    
+   
+    
+//    ;: = 186
+//    =+ = 187
+//    -_ = 189
+//    /? = 191
+//    `~ = 192
+//    [{ = 219
+//     \| = 220
+//     ]} = 221
+//"' = 222
+//, = 188
+//. = 190
+/// = 191
+    return GHL::KEY_NONE;
+
+}
+
 static var handleKeyUp(void *arg, var as3Args)
 {
     flash::events::KeyboardEvent ke = var(as3Args[0]);
-    //thegame.handleKeyUp(ke->keyCode);
+    if (ctx.valid) {
+        GHL::Key key = convert_key(ke->keyCode);
+        if (key != GHL::KEY_NONE)
+            ctx.application->OnKeyUp( key  );
+    }
     ke->stopPropagation();
     return internal::_undefined;
 }
@@ -145,7 +262,11 @@ static var handleKeyUp(void *arg, var as3Args)
 static var handleKeyDown(void *arg, var as3Args)
 {
     flash::events::KeyboardEvent ke = var(as3Args[0]);
-    //thegame.handleKeyDown(ke->keyCode);
+    if (ctx.valid) {
+        GHL::Key key = convert_key(ke->keyCode);
+        if (key != GHL::KEY_NONE)
+            ctx.application->OnKeyDown( key  );
+    }
     ke->stopPropagation();
     return internal::_undefined;
 }
@@ -166,7 +287,6 @@ static var handleMouseDown(void *arg, var as3Args)
     if (ctx.valid) {
         ctx.application->OnMouseDown( GHL::MOUSE_BUTTON_LEFT, me->stageX , me->stageY );
     }
-    //thegame.handleKeyDown(ke->keyCode);
     me->stopPropagation();
     return internal::_undefined;
 }
