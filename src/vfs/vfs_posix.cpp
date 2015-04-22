@@ -4,12 +4,17 @@
 #include <cstdio>
 #include <sys/stat.h>
 #include <sys/types.h>
+#ifndef _MSC_VER
 #include <unistd.h>
+#else
+#include <sys/stat.h>
+#endif
 #include "../ghl_ref_counter_impl.h"
 #include "../ghl_log_impl.h"
 #include <ghl_data.h>
 #ifdef _MSC_VER
 #define snprintf _snprintf
+#include <windows.h>
 #endif
 namespace GHL {
     
@@ -58,7 +63,7 @@ namespace GHL {
         }
         /// End of file
         virtual bool GHL_CALL Eof() const {
-                return feof(m_file);
+                return feof(m_file) != 0;
         }
     };
 
@@ -85,9 +90,10 @@ namespace GHL {
     }
     /// file is exists
     bool GHL_CALL VFSPosixImpl::IsFileExists(const char* file) const {
-        struct stat s;
-        if (stat(file,&s)==0) {
-            return S_ISREG(s.st_mode);
+		typedef struct stat stat_t;
+		stat_t s;
+		if (::stat(file, (stat_t*)(&s)) == 0) {
+			return (s.st_mode&S_IFREG)!=0;
         }
         return false;
     }
@@ -101,7 +107,11 @@ namespace GHL {
     }
     /// create dir
     bool GHL_CALL VFSPosixImpl::DoCreateDir(const char* path) {
-        return mkdir(path, 0777) == 0;
+#ifdef _MSC_VER
+		return CreateDirectory(path, NULL) == 0;
+#else
+		return mkdir(path, 0777) == 0;
+#endif
     }
     /// open file
     DataStream* GHL_CALL VFSPosixImpl::OpenFile(const char* _file){
