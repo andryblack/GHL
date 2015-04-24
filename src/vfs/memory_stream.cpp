@@ -42,10 +42,6 @@ namespace GHL
             ::memcpy(dest, m_data->GetData()+m_pointer, size);
             return size;
         }
-		/// write data
-		virtual GHL::UInt32 GHL_CALL Write(const GHL::Byte* src,GHL::UInt32 bytes) {
-            return 0;
-        }
 		/// tell
 		virtual GHL::UInt32 GHL_CALL Tell() const { return m_pointer; }
 		/// seek

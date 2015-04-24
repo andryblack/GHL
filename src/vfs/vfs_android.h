@@ -11,8 +11,6 @@ namespace GHL {
 	public:
 		explicit VFSAndroidImpl(AAssetManager* assetManager,const char* dataDir);
 		virtual ~VFSAndroidImpl();
-		/// attach package
-		virtual void GHL_CALL AttachPack(DataStream* ds) ;
 		/// file is exists
 		virtual bool GHL_CALL IsFileExists(const char* file) const;
 		/// remove file

@@ -43,10 +43,6 @@ namespace GHL {
             m_position+=readed;
             return readed;
         }
-        /// write data
-        virtual UInt32 GHL_CALL Write(const Byte* src,UInt32 bytes) {
-            return 0;
-        }
         /// tell
         virtual UInt32 GHL_CALL Tell() const {
             return m_position;
@@ -95,9 +91,6 @@ namespace GHL {
     VFSAndroidImpl::~VFSAndroidImpl() {
     }
 
-    /// attach package
-    void GHL_CALL VFSAndroidImpl::AttachPack(DataStream* /*ds*/) {
-    }
     /// file is exists
     bool GHL_CALL VFSAndroidImpl::IsFileExists(const char* file) const {
         if (is_asset_file(file)) {

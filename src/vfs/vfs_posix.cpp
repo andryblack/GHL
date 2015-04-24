@@ -4,18 +4,10 @@
 #include <cstdio>
 #include <sys/stat.h>
 #include <sys/types.h>
-#ifndef _MSC_VER
 #include <unistd.h>
-#else
-#include <sys/stat.h>
-#endif
 #include "../ghl_ref_counter_impl.h"
 #include "../ghl_log_impl.h"
 #include <ghl_data.h>
-#ifdef _MSC_VER
-#define snprintf _snprintf
-#include <windows.h>
-#endif
 namespace GHL {
     
     static const char* MODULE = "VFS";
@@ -34,10 +26,6 @@ namespace GHL {
         /// read data
         virtual UInt32 GHL_CALL Read(Byte* dest,UInt32 bytes) {
             return fread(dest,1,bytes,m_file);
-        }
-        /// write data
-        virtual UInt32 GHL_CALL Write(const Byte* src,UInt32 bytes) {
-            return fwrite(src,1,bytes,m_file);
         }
         /// tell
         virtual UInt32 GHL_CALL Tell() const {
@@ -85,9 +73,6 @@ namespace GHL {
         }
         return "/";
     }
-    /// attach package
-    void GHL_CALL VFSPosixImpl::AttachPack(DataStream* /*ds*/) {
-    }
     /// file is exists
     bool GHL_CALL VFSPosixImpl::IsFileExists(const char* file) const {
 		typedef struct stat stat_t;
@@ -98,7 +83,8 @@ namespace GHL {
         return false;
     }
     /// remove file
-    bool GHL_CALL VFSPosixImpl::DoRemoveFile(const char* /*file*/) {
+    bool GHL_CALL VFSPosixImpl::DoRemoveFile(const char* file) {
+        ::remove(file);
         return false;
     }
     /// copy file
@@ -107,11 +93,7 @@ namespace GHL {
     }
     /// create dir
     bool GHL_CALL VFSPosixImpl::DoCreateDir(const char* path) {
-#ifdef _MSC_VER
-		return CreateDirectory(path, NULL) == 0;
-#else
-		return mkdir(path, 0777) == 0;
-#endif
+        return ::mkdir(path, 0777) == 0;
     }
     /// open file
     DataStream* GHL_CALL VFSPosixImpl::OpenFile(const char* _file){

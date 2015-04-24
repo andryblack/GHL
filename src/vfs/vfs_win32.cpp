@@ -40,13 +40,6 @@ namespace GHL {
 			}
 			return readed; 
 		}
-		/// write data
-		virtual UInt32 GHL_CALL Write(const Byte* src,UInt32 bytes) {
-		    DWORD writed = 0;
-			if (::WriteFile(m_file,src,bytes,&writed,0))
-				return writed;
-			return 0; 
-		}
 		/// tell
 		virtual UInt32 GHL_CALL Tell() const {
 		        DWORD dwSet = SetFilePointer(m_file, 0, NULL, FILE_CURRENT);
@@ -137,23 +130,30 @@ namespace GHL {
 		return ".";
 	}
 
-	/// attach package
-	void GHL_CALL VFSWin32Impl::AttachPack(DataStream* ds) {
-	}
 	/// file is exists
 	bool GHL_CALL VFSWin32Impl::IsFileExists(const char* file) const {
 		WCHAR tfilename[MAX_PATH];
         if (!get_fs_path(file,tfilename)) return false;
+        WIN32_FILE_ATTRIBUTE_DATA attributes = {0};
+        if (!GetFileAttributesExW(tfilename,GetFileExInfoStandard,
+                                  &attributes))
+            return false;
 		
 		return true;
 	}
 	/// remove file
 	bool GHL_CALL VFSWin32Impl::DoRemoveFile(const char* file) {
-		return false;
+        WCHAR tfilename[MAX_PATH];
+        if (!get_fs_path(file,tfilename)) return false;
+		return DeleteFileW(tfilename);
 	}
 	/// copy file
 	bool GHL_CALL VFSWin32Impl::DoCopyFile(const char* from,const char* to) {
-		return false;
+        WCHAR tfilename_from[MAX_PATH];
+        if (!get_fs_path(from,tfilename_from)) return false;
+        WCHAR tfilename_to[MAX_PATH];
+        if (!get_fs_path(to,tfilename_to)) return false;
+		return CopyFileW(tfilename_from,tfilename_to,FALSE);
 	}
 
 	/// create dir
@@ -167,7 +167,29 @@ namespace GHL {
 	}
 	/// write file
 	bool GHL_CALL VFSWin32Impl::WriteFile(const char* file, const Data* data) {
-		return false;
+        HANDLE f = 0;
+        DWORD dwDesiredAccess,dwCreationDisposition,dwShareMode,dwFlagsAndAttributes ;
+        dwDesiredAccess = dwShareMode = dwFlagsAndAttributes = 0;
+        WCHAR tfilename[MAX_PATH];
+        if (!get_fs_path(file,tfilename)) return 0;
+        dwDesiredAccess = GENERIC_WRITE;
+        dwCreationDisposition = CREATE_ALWAYS;
+        dwShareMode = FILE_SHARE_READ;
+        
+        f = CreateFileW(tfilename,dwDesiredAccess, dwShareMode, NULL, dwCreationDisposition, dwFlagsAndAttributes, NULL);
+        if (f==INVALID_HANDLE_VALUE) {
+            LOG_ERROR( "creating file : " << file );
+            return false;
+        }
+        if (!WriteFileEx(f,data->GetData(),data->GetSize(),NULL,NULL)) {
+            LOG_ERROR( "writing file : " << file );
+            CloseHandle(f);
+            return false;
+        }
+        
+        CloseHandle(f);
+
+		return true;
 	}
 
 	/// open file

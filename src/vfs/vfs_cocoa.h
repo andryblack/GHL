@@ -19,8 +19,6 @@ namespace GHL  {
         virtual ~VFSCocoaImpl();
 		/// get dir
 		virtual const char* GHL_CALL GetDir(DirType dt) const ;
-		/// attach package
-		virtual void GHL_CALL AttachPack(DataStream* ds) ;
 		/// file is exists
 		virtual bool GHL_CALL IsFileExists(const char* file) const;
 		/// remove file

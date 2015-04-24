@@ -42,8 +42,6 @@ namespace GHL
 	{
 		/// get dir
 		virtual const char* GHL_CALL GetDir(DirType dt) const = 0;
-		/// attach package
-		virtual void GHL_CALL AttachPack(DataStream* ds) = 0;
 		/// file is exists
 		virtual bool GHL_CALL IsFileExists(const char* file) const = 0;
 		/// remove file

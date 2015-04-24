@@ -49,11 +49,6 @@ namespace GHL {
 			[pool release];
 			return len;
 		}
-		/// write data
-		virtual UInt32 GHL_CALL Write(const Byte* /*src*/,UInt32 /*bytes*/) {
-            LOG_ERROR("CocoaReadFileStream::Write unimplemented");
-			return 0;
-		}
 		/// tell
 		virtual UInt32 GHL_CALL Tell() const {
 			return UInt32([m_file offsetInFile]);
@@ -75,58 +70,6 @@ namespace GHL {
 		/// End of file
 		virtual bool GHL_CALL Eof() const {
 			return [m_file offsetInFile] == m_size;
-		}
-	};
-	
-	class CocoaWriteFileStream : public RefCounterImpl<DataStream> {
-	private:
-		NSFileHandle* m_file;
-		size_t m_size;
-		~CocoaWriteFileStream() {
-			if (m_file) {
-				[m_file closeFile];
-				[m_file release];
-			}
-		}
-	public:
-		explicit CocoaWriteFileStream(NSFileHandle* file) : m_file(file) {
-			[m_file retain];
-			m_size = 0;
-		}
-		/// read data
-		virtual UInt32 GHL_CALL Read(Byte* /*dest*/,UInt32 /*bytes*/) {
-            LOG_ERROR("CocoaWriteFileStream::Read unimplemented");
-			return 0;
-		}
-		/// write data
-		virtual UInt32 GHL_CALL Write(const Byte* src,UInt32 bytes) {
-			NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-			[m_file writeData:[NSData dataWithBytes:src length:bytes]];
-			[pool release];
-			m_size+=bytes;
-			return bytes;
-		}
-		/// tell
-		virtual UInt32 GHL_CALL Tell() const {
-			return UInt32([m_file offsetInFile]);
-		}
-		/// seek
-		virtual	bool GHL_CALL Seek(Int32 offset,FileSeekType st) {
-			if (st == F_SEEK_BEGIN) {
-				[m_file seekToFileOffset:offset];
-				return true;
-			} else if (st == F_SEEK_END) {
-				[m_file seekToFileOffset:(m_size-offset)];
-				return true;
-			} else if (st == F_SEEK_CURRENT) {
-				[m_file seekToFileOffset:([m_file offsetInFile] + offset)];
-				return true;
-			}
-			return false;
-		}
-		/// End of file
-		virtual bool GHL_CALL Eof() const {
-			return false;
 		}
 	};
 	
@@ -198,9 +141,6 @@ namespace GHL {
         }
 		return 0;
 	}
-	/// attach package
-	void GHL_CALL VFSCocoaImpl::AttachPack(DataStream* /*ds*/) {
-	}
 	/// file is exists
 	bool GHL_CALL VFSCocoaImpl::IsFileExists(const char* file) const {
 		std::string filename = file;
@@ -211,14 +151,27 @@ namespace GHL {
 		return [[NSFileManager defaultManager] fileExistsAtPath:path] == YES;
 	}
 	/// remove file
-	bool GHL_CALL VFSCocoaImpl::DoRemoveFile(const char* /*file*/) {
-        LOG_ERROR("VFSCocoaImpl::DoRemoveFile unimplemented");
-		return false;
+	bool GHL_CALL VFSCocoaImpl::DoRemoveFile(const char* file) {
+        std::string filename = file;
+        for (size_t i=0;i<filename.length();i++) {
+            if (filename[i]=='\\') filename[i]='/';
+        }
+        NSString* path = [NSString stringWithUTF8String:filename.c_str()];
+        return [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
 	}
 	/// copy file
-	bool GHL_CALL VFSCocoaImpl::DoCopyFile(const char* /*from*/,const char* /*to*/) {
-        LOG_ERROR("VFSCocoaImpl::DoCopyFile unimplemented");
-		return false;
+	bool GHL_CALL VFSCocoaImpl::DoCopyFile(const char* from,const char* to) {
+        std::string filename = from;
+        for (size_t i=0;i<filename.length();i++) {
+            if (filename[i]=='\\') filename[i]='/';
+        }
+        NSString* path_from = [NSString stringWithUTF8String:filename.c_str()];
+        filename = to;
+        for (size_t i=0;i<filename.length();i++) {
+            if (filename[i]=='\\') filename[i]='/';
+        }
+        NSString* path_to = [NSString stringWithUTF8String:filename.c_str()];
+        return [[NSFileManager defaultManager] copyItemAtPath:path_from toPath:path_to error:nil];
 	}
     /// create dir
     bool GHL_CALL VFSCocoaImpl::DoCreateDir(const char* fpath) {

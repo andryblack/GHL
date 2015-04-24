@@ -16,6 +16,8 @@
 #include <pthread.h>
 #include <errno.h>
 #include "ghl_settings.h"
+#include <unistd.h>
+#include <sys/uio.h>
 
 static const char* MODULE = "WinLib";
 
