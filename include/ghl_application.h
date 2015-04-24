@@ -26,39 +26,39 @@ namespace GHL {
 
     /// base application interface
     struct Application {
-        ///
+        /// Set system interface
         virtual void GHL_CALL SetSystem( System* sys ) = 0;
-        ///
+        /// Set VFS interface
         virtual void GHL_CALL SetVFS( VFS* vfs ) = 0;
-        ///
+        /// Set renderer interface
         virtual void GHL_CALL SetRender( Render* render ) = 0;
-        ///
+        /// Set image decoder interface
         virtual void GHL_CALL SetImageDecoder( ImageDecoder* decoder ) = 0;
-        ///
+        /// Set sound interface
         virtual void GHL_CALL SetSound( Sound* sound) = 0;
-        ///
+        /// Get game settings
         virtual void GHL_CALL FillSettings( Settings* settings ) = 0;
-		/// called after window created, before first rendered
+		/// Load game. called after window created, before first rendered
 		virtual bool GHL_CALL Load() = 0;
-        ///
+        /// Frame event
         virtual bool GHL_CALL OnFrame( UInt32 usecs ) = 0;
-        ///
+        /// Key down event
         virtual void GHL_CALL OnKeyDown( Key key ) = 0;
-        ///
+        /// Key up event
         virtual void GHL_CALL OnKeyUp( Key key ) = 0;
-        ///
+        /// Char event
         virtual void GHL_CALL OnChar( UInt32 ch ) = 0;
-        ///
+        /// Mouse down event
         virtual void GHL_CALL OnMouseDown( MouseButton btn, Int32 x, Int32 y) = 0;
-        ///
+        /// Mouse move event
         virtual void GHL_CALL OnMouseMove( MouseButton btn, Int32 x, Int32 y) = 0;
-        ///
+        /// Mouse up event
         virtual void GHL_CALL OnMouseUp( MouseButton btn, Int32 x, Int32 y) = 0;
-        ///
+        /// Deactivation event
         virtual void GHL_CALL OnDeactivated() = 0;
-        ///
+        /// Activation event
         virtual void GHL_CALL OnActivated() = 0;
-        ///
+        /// Release (destroy) application
         virtual void GHL_CALL Release(  ) = 0;
     };
 
@@ -66,6 +66,7 @@ namespace GHL {
 
 }
 
+/// Entry point
 GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char** argv);
 
-#endif /*WINLIB_APPLICATION_H*/
+#endif /*GHL_APPLICATION_H*/

@@ -205,12 +205,15 @@ namespace GHL
 		/// draw primitives from memory
 		virtual void GHL_CALL DrawPrimitivesFromMemory(PrimitiveType type,VertexType v_type,const void* vertices,UInt32 v_amount,const UInt16* indexes,UInt32 prim_amount) = 0;
 		
+		/// create render target interface
 		virtual RenderTarget* GHL_CALL CreateRenderTarget(UInt32 w,UInt32 h,TextureFormat fmt,bool depth) = 0;
-		
+		/// create vertex shader interface
 		virtual VertexShader* GHL_CALL CreateVertexShader(const Data* ds) = 0;
+		/// create fragment shader interface
 		virtual FragmentShader* GHL_CALL CreateFragmentShader(const Data* ds) = 0;
+		/// create shader program interface
 		virtual ShaderProgram* GHL_CALL CreateShaderProgram(VertexShader* v,FragmentShader* f) = 0;
-		
+		/// set current shader
 		virtual void GHL_CALL SetShader(const ShaderProgram* shader) = 0;
 		
 		/// draw debug text

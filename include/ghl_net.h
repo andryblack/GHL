@@ -40,7 +40,9 @@ namespace GHL
         virtual const char* GHL_CALL GetURL() const = 0;
         /// headers
         virtual UInt32 GHL_CALL GetHeadersCount() const = 0;
+        /// header name
         virtual const char* GHL_CALL GetHeaderName(UInt32 idx) const = 0;
+        /// header value
         virtual const char* GHL_CALL GetHeaderValue(UInt32 idx) const = 0;
         
         /// received response
@@ -66,7 +68,9 @@ namespace GHL
 
 } /* namespace */
 
+/// create network interface
 GHL_API GHL::Network* GHL_CALL GHL_CreateNetwork();
+/// destroy network interface
 GHL_API void GHL_CALL GHL_DestroyNetwork(GHL::Network* vfs);
 
 #endif /*GHL_NET_H*/

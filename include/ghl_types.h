@@ -40,15 +40,24 @@ namespace GHL
 	/// int 16
 	typedef short Int16;
     
+    /// concat 2 names
 #define GHL_CONCAT(x, y) GHL_CONCAT1 (x, y)
+    /// @internal
 #define GHL_CONCAT1(x, y) x##y
+    /// compile time checks
 #define GHL_STATIC_ASSERT(expr) typedef char GHL_CONCAT(ghl_static_assert_failed_at_line_, __LINE__) [(expr) ? 1 : -1]
     
+    /// ensure Byte is 1 byte size
     GHL_STATIC_ASSERT(sizeof(Byte) == 1);
+    /// ensure Int8 is 1 byte size
     GHL_STATIC_ASSERT(sizeof(Int8) == 1);
+    /// ensure UInt32 is 4 bytes size
     GHL_STATIC_ASSERT(sizeof(UInt32) == 4);
+    /// ensure Int32 is 4 bytes size
     GHL_STATIC_ASSERT(sizeof(Int32) == 4);
+    /// ensure UInt16 is 2 bytes size
     GHL_STATIC_ASSERT(sizeof(UInt16) == 2);
+    /// ensure Int16 is 2 bytes size
     GHL_STATIC_ASSERT(sizeof(Int16) == 2);
     
 }

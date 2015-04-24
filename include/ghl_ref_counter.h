@@ -28,8 +28,7 @@
 
 namespace GHL {
     
-    /** Reference counter interface
-     */
+    /// Reference counter interface
     struct RefCounter {
         /// add reference
         virtual void GHL_CALL AddRef() const = 0;

@@ -27,7 +27,8 @@
 
 namespace GHL
 {
-    
+ 
+ 	/// Logging level   
     enum LogLevel {
         LOG_LEVEL_FATAL,
         LOG_LEVEL_ERROR,
@@ -39,6 +40,7 @@ namespace GHL
 
 } /*namespace*/
 
+/// Put message to platform log
 GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message);
 
 #endif /*GHL_LOG_H*/

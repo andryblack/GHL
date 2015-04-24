@@ -19,14 +19,16 @@ namespace GHL {
 	struct DataStream;
     struct Data;
 	
+    /// Sample format
 	enum SampleType {
 		SAMPLE_TYPE_UNKNOWN,
-		SAMPLE_TYPE_MONO_8,
-		SAMPLE_TYPE_MONO_16,
-		SAMPLE_TYPE_STEREO_8,
-		SAMPLE_TYPE_STEREO_16
+		SAMPLE_TYPE_MONO_8,       ///< mono, 8 bit unsigned
+		SAMPLE_TYPE_MONO_16,      ///< mono, 16 bit signed
+		SAMPLE_TYPE_STEREO_8,     ///< stereo, 8 bit per channel unsigned
+		SAMPLE_TYPE_STEREO_16     ///< stereo, 16 but per channel signed
 	};
     
+    /// Decoder sound data
     struct SoundDecoder : RefCounter {
         /// sample type
         virtual SampleType GHL_CALL GetSampleType() const = 0;
@@ -42,6 +44,7 @@ namespace GHL {
         virtual Data* GHL_CALL GetAllSamples() = 0;
     };
 	
+    /// Sound effect
     struct SoundEffect : RefCounter {
         /// sample type
         virtual SampleType GHL_CALL GetSampleType() const = 0;
@@ -51,6 +54,7 @@ namespace GHL {
         virtual UInt32 GHL_CALL GetSamplesAmount() const = 0;
     };
     
+    /// Sound instance
     struct SoundInstance : RefCounter {
         /// set volume (0-100)
         virtual void GHL_CALL SetVolume( float vol ) = 0;
@@ -60,6 +64,7 @@ namespace GHL {
         virtual void GHL_CALL Stop() = 0;
     };
     
+    /// Music instance
     struct MusicInstance : SoundInstance {
         /// pause
         virtual void GHL_CALL Pause() = 0;
@@ -69,6 +74,7 @@ namespace GHL {
         virtual void GHL_CALL Play( bool loop ) = 0;
     };
 	
+    /// Sound interface
 	struct Sound {
         /// create sound effect from data
         virtual SoundEffect* GHL_CALL CreateEffect( SampleType type, UInt32 freq, Data* data ) = 0;
@@ -80,6 +86,7 @@ namespace GHL {
 	
 }
 
+/// Create sound decoder for file
 GHL_API GHL::SoundDecoder* GHL_CALL GHL_CreateSoundDecoder( GHL::DataStream* file );
 
 

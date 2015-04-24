@@ -11,12 +11,13 @@
 
 namespace GHL {
 
+	/// Application settings structure
 	struct Settings {
-		UInt32 width;
-		UInt32 height;
-		bool fullscreen;
-        const char* title;
-        bool depth;
+		UInt32 width;		///< width
+		UInt32 height;		///< height
+		bool fullscreen;	///< fullscreen/windowed state
+        const char* title;	///< window title
+        bool depth;			///< use depth buffer for rendering
 	};
 	
 }

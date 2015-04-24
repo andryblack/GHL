@@ -13,3 +13,4 @@ bin
 projects/win/*.ncb
 projects/win/*.suo
 projects/win/build
+docs/doxygen/

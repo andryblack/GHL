@@ -47,13 +47,19 @@ namespace GHL
 	
 	/// Uniform
 	struct ShaderUniform {
+		/// Set float value
 		virtual void GHL_CALL SetValueFloat(float v) = 0;
+		/// Set 2 floats value
         virtual void GHL_CALL SetValueFloat2(float x, float y) = 0;
+        /// Set 3 floats value
         virtual void GHL_CALL SetValueFloat3(float x, float y, float z) = 0;
+        /// Set 4 floats value
         virtual void GHL_CALL SetValueFloat4(float x, float y, float z, float w) = 0;
+        /// Set matrix value (16 floats)
 		virtual void GHL_CALL SetValueMatrix(const float* v) = 0;
 	};
 	
+	/// Shader program interface
 	struct ShaderProgram : RefCounter
 	{
 		/// get uniform

@@ -31,25 +31,27 @@ namespace GHL
 	
 	struct DataStream;
 	
+	/// Image file format
 	enum ImageFileFormat {
 		IMAGE_FILE_FORMAT_UNKNOWN,
-		IMAGE_FILE_FORMAT_PNG,
-		IMAGE_FILE_FORMAT_JPEG,
-		IMAGE_FILE_FORMAT_TGA,
-		IMAGE_FILE_FORMAT_PVRTC,
+		IMAGE_FILE_FORMAT_PNG,		///< png
+		IMAGE_FILE_FORMAT_JPEG,		///< jpeg
+		IMAGE_FILE_FORMAT_TGA,		///< targa
+		IMAGE_FILE_FORMAT_PVRTC,	///< pvrtc
 	};
     
+    /// Image information
     struct ImageInfo {
-        ImageFileFormat file_format;
-        ImageFormat     image_format;
-        GHL::UInt32     width;
-        GHL::UInt32     height;
+        ImageFileFormat file_format;	///< file format
+        ImageFormat     image_format;	///< image data format
+        GHL::UInt32     width;			///< image width
+        GHL::UInt32     height;			///< image height
     };
 	
-	
+	/// Image file decoder
 	struct ImageDecoder 
 	{
-		/// get image file format
+		/// get image file info
 		virtual bool GHL_CALL GetFileInfo( DataStream* stream , ImageInfo* info ) const = 0;
 		/// decode
 		virtual Image* GHL_CALL Decode( DataStream* stream ) const = 0;
@@ -61,7 +63,9 @@ namespace GHL
 	
 } /*namespace*/
 
+/// Create image decoder
 GHL_API GHL::ImageDecoder* GHL_CALL GHL_CreateImageDecoder();
+/// Destroy image decoder
 GHL_API void GHL_CALL GHL_DestroyImageDecoder(GHL::ImageDecoder* decoder);
 
 #endif /*GHL_IMAGE_DECODER_H*/

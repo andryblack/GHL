@@ -26,6 +26,7 @@
 namespace GHL
 {
 
+    /// Key modificators
     enum KeyMod
     {
         KEYMOD_SHIFT = 1,
@@ -34,6 +35,7 @@ namespace GHL
         KEYMOD_COMMAND = 8
     };
 
+    /// Moude button
     enum MouseButton
     {
         MOUSE_BUTTON_NONE,
@@ -44,6 +46,7 @@ namespace GHL
 		MUTITOUCH_1 = MOUSE_BUTTON_MIDDLE+1
     };
 
+    /// Key
     enum Key
     {
         KEY_NONE,		///< none
