@@ -96,18 +96,7 @@ public:
 	}
     ///
 	virtual bool GHL_CALL GetDeviceData( GHL::DeviceData name, void* data) {
-        if (name == GHL::DEVICE_DATA_FLASH_VAR) {
-            flash::display::LoaderInfo loaderInfo = stage->loaderInfo;
-            if (loaderInfo != internal::_undefined && loaderInfo != internal::_null) {
-                Object flashVars = loaderInfo->parameters;
-                const char** name = reinterpret_cast<const char**>(data);
-                m_flash_var = AS3::sz2stringAndFree(internal::utf8_toString(flashVars[*name]));
-                LOG_INFO(  "flashVar: " << *name << ":" << m_flash_var );
-                *name = m_flash_var.c_str();
-                return true;
-            }
-        }
-		return false;
+        return false;
 	}
     ///
 	virtual void GHL_CALL SetTitle( const char* title ) {

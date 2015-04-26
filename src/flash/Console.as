@@ -55,6 +55,8 @@ package com.adobe.flascc
     */
     protected function init(e:Event):void
     {
+      flash.system.Security.allowDomain(sourceDomain)
+      
       inputContainer = new Sprite()
       addChild(inputContainer)
 
@@ -100,8 +102,15 @@ package com.adobe.flascc
     */
     public function write(fd:int, bufPtr:int, nbyte:int, errnoPtr:int):int
     {
-	  var str:String = CModule.readString(bufPtr, nbyte)
-	  trace(str)
+	     var str:String = CModule.readString(bufPtr, nbyte)
+	     trace(str)
+       if (ExternalInterface.available) 
+       { 
+          try 
+          {
+            ExternalInterface.call("logMessage",str); 
+          }
+       } 
       return nbyte
     }
 
