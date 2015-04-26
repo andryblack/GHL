@@ -29,8 +29,8 @@ namespace GHL {
 		DEVICE_DATA_ACCELEROMETER,      ///< 3floats
 		DEVICE_DATA_VIEW_CONTROLLER,	///< UIViewController*
         DEVICE_DATA_VIEW,               ///< NSView** /UIView**
-        DEVICE_DATA_FLASH_VAR,          /// const char**, in name, out value
-	};
+        DEVICE_DATA_APPLICATION,        ///< ANativeActivity**
+   };
 
     /// system interface
     struct System {

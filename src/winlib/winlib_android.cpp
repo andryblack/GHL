@@ -4,6 +4,7 @@
 #include <android/native_activity.h>
 #include <android/looper.h>
 #include <ghl_log.h>
+#include <ghl_system.h>
 #include <EGL/egl.h>
 #include "../render/render_impl.h"
 #include "ghl_application.h"
@@ -55,7 +56,7 @@ static GHL::Application* android_app_create() {
 
 namespace GHL {
 
-    class GHLActivity {
+    class GHLActivity  : public System {
       
     public:
         explicit GHLActivity( ANativeActivity* activity,
@@ -80,6 +81,52 @@ namespace GHL {
             pthread_cond_destroy(&m_cond);
             pthread_mutex_destroy(&m_mutex);
         }
+        
+        /// GHL::System impl
+        /// Exit from application
+        virtual void GHL_CALL Exit() {
+            
+        }
+        /// Current fullscreen / windowed state
+        virtual bool GHL_CALL IsFullscreen() const {
+            return true;
+        }
+        /// Switch fullscreen / windowed state
+        virtual void GHL_CALL SwitchFullscreen(bool fs) {
+            
+        }
+        /// Show soft keyboard
+        virtual void GHL_CALL ShowKeyboard() {
+            
+        }
+        /// Hide soft keyboard
+        virtual void GHL_CALL HideKeyboard() {
+            
+        }
+        /// Get current key modifiers state
+        virtual UInt32  GHL_CALL GetKeyMods() const {
+            return 0;
+        }
+        /// Set device specific state
+        virtual bool GHL_CALL SetDeviceState( DeviceState name, const void* data) {
+            return false;
+        }
+        /// Get device specific data
+        virtual bool GHL_CALL GetDeviceData( DeviceData name, void* data) {
+            if (name == DEVICE_DATA_APPLICATION ) {
+                ANativeActivity** na = reinterpret_cast<ANativeActivity**>(data);
+                if (na) {
+                    *na = m_activity;
+                    return true;
+                }
+            }
+            return false;
+        }
+        /// Set window title
+        virtual void GHL_CALL SetTitle( const char* title ) {
+            
+        }
+        
         void OnCreate() {
             LOG_INFO("OnCreate");
         }
@@ -117,6 +164,9 @@ namespace GHL {
             if (m_window==0) {
                 
                 m_app = android_app_create();
+                if (m_app) {
+                    m_app->SetSystem(this);
+                }
                 
                 gettimeofday(&m_last_time,0);
                 if (!m_vfs) {

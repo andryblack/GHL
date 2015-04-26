@@ -147,7 +147,7 @@ namespace GHL {
         }
         if (m_channels.size() < max_channels || !best) {
             LOG_DEBUG("allocate new channel fmt: " << format.numChannels << " " << format.bitsPerSample << " " << format.samplesPerSec);
-            SLDataLocator_AndroidSimpleBufferQueue locatorBufferQueue;
+            SLDataLocator_AndroidSimpleBufferQueue locatorBufferQueue = {0};
             locatorBufferQueue.locatorType = SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE;
             locatorBufferQueue.numBuffers = 2;
             SLDataSource audio_src = {&locatorBufferQueue, &format};
@@ -166,8 +166,10 @@ namespace GHL {
             SLresult result = (*m_engine)->CreateAudioPlayer(m_engine, &player_obj, &audio_src, &audio_snk,
                                                     ids_count, ids, req);
             
-            if (result != SL_RESULT_SUCCESS)
+            if (result != SL_RESULT_SUCCESS) {
+                LOG_ERROR("CreateAudioPlayer failed " << result);
                 return 0;
+            }
             
             // realize the player
             result = (*player_obj)->Realize(player_obj, SL_BOOLEAN_FALSE);
@@ -192,7 +194,7 @@ namespace GHL {
         formatPCM.samplesPerSec = freq*1000;
         formatPCM.bitsPerSample = bits ;//header.bitsPerSample;
         formatPCM.containerSize = bits;// header.fmtSize;
-        formatPCM.channelMask = (channels==2) ? (SL_SPEAKER_FRONT_LEFT|SL_SPEAKER_FRONT_RIGHT)  :SL_SPEAKER_FRONT_CENTER ;
+        formatPCM.channelMask = channels == 2 ? (SL_SPEAKER_FRONT_LEFT|SL_SPEAKER_FRONT_RIGHT) : SL_SPEAKER_FRONT_CENTER;
         formatPCM.endianness = SL_BYTEORDER_LITTLEENDIAN;
         return find_channel(formatPCM);
     }
