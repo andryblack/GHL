@@ -393,9 +393,11 @@ namespace GHL {
 			indexes_amount = prim_amount + 1;
 		}
 #ifdef GHL_DEBUG
-        for (UInt32 i=0;i<indexes_amount;++i) {
-            if (indexes[i]>=v_amount) {
-                LOG_ERROR("DrawPrimitivesFromMemory invalid index " << indexes[i]);
+        if (indexes) {
+            for (UInt32 i=0;i<indexes_amount;++i) {
+                if (indexes[i]>=v_amount) {
+                    LOG_ERROR("DrawPrimitivesFromMemory invalid index " << indexes[i]);
+                }
             }
         }
 #endif
