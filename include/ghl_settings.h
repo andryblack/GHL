@@ -18,6 +18,7 @@ namespace GHL {
 		bool fullscreen;	///< fullscreen/windowed state
         const char* title;	///< window title
         bool depth;			///< use depth buffer for rendering
+        float   screen_dpi;   ///< indicate dpi
 	};
 	
 }

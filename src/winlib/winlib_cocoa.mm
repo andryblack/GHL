@@ -655,6 +655,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
         settings.width *= screen.backingScaleFactor;
         settings.height *= screen.backingScaleFactor;
     }
+    settings.screen_dpi = 72.0 * screen.backingScaleFactor;
 	settings.fullscreen = g_fullscreen;
     settings.title = 0;
     settings.depth = false;

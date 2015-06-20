@@ -550,7 +550,7 @@ public:
 	settings.height = rect.size.height * scale;
 	settings.fullscreen = true;
 	settings.depth = g_need_depth;
-	
+    settings.screen_dpi = 72.0 * scale;
 	
 	g_application->FillSettings(&settings);
 	LOG_INFO("application require " << settings.width << "x" << settings.height);
