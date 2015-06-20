@@ -31,6 +31,7 @@ static bool g_need_fullscreen = false;
 static std::string g_title = "GHL";
 static NSRect g_rect;
 static bool g_need_depth = false;
+static bool g_need_retina = true;
 
 static const char* MODULE = "WINLIB";
 
@@ -132,6 +133,11 @@ public:
         m_loaded = false;
         m_null_cursor = nil;
         m_cursor_visible = YES;
+        if (g_need_retina) {
+            [self  setWantsBestResolutionOpenGLSurface:YES];
+        } else {
+            [self  setWantsBestResolutionOpenGLSurface:NO];
+        }
         LOG_INFO( "WinLibOpenGLView::initWithFrame ok" ); 
  	} else {
         LOG_ERROR("WinLibOpenGLView::initWithFrame failed");
@@ -269,6 +275,10 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 - (NSPoint) scale_point:(NSPoint)point {
     NSPoint res = point;
     res.y = self.frame.size.height - res.y;
+    if (g_need_retina) {
+        res.x *= self.window.backingScaleFactor;
+        res.y *= self.window.backingScaleFactor;
+    }
     return res;
 }
 - (void)mouseDown:(NSEvent *)theEvent {
@@ -329,9 +339,15 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 	LOG_INFO( "WinLibOpenGLView::prepareOpenGL" ); 
    
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+    
+    NSSize size = self.bounds.size;
+    if (g_need_retina) {
+        size.width *= self.window.backingScaleFactor;
+        size.height *= self.window.backingScaleFactor;
+    }
 	
-	m_render = GHL_CreateRenderOpenGL(GHL::UInt32(self.bounds.size.width),
-									 GHL::UInt32(self.bounds.size.height),g_need_depth);
+	m_render = GHL_CreateRenderOpenGL(GHL::UInt32(size.width),
+									 GHL::UInt32(size.height),g_need_depth);
 	if (m_render) {
         LOG_VERBOSE( "WinLibOpenGLView::prepareOpenGL render created" );
         [m_application getApplication]->SetRender(m_render);
@@ -354,7 +370,12 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 - (void)reshape {
     if ( m_render ) {
         LOG_VERBOSE( "WinLibOpenGLView::reshape" );
-        m_render->Resize( self.bounds.size.width, self.bounds.size.height );
+        NSSize size = self.bounds.size;
+        if (g_need_retina) {
+            size.width *= self.window.backingScaleFactor;
+            size.height *= self.window.backingScaleFactor;
+        }
+        m_render->Resize( size.width, size.height );
     }
 }
 
@@ -624,10 +645,16 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	
     NSScreen* screen = [NSScreen mainScreen];
+    
+    g_need_retina = [screen respondsToSelector:@selector(backingScaleFactor)];
 	 
     GHL::Settings settings;
 	settings.width = screen.frame.size.width;
 	settings.height = screen.frame.size.height;
+    if (g_need_retina) {
+        settings.width *= screen.backingScaleFactor;
+        settings.height *= screen.backingScaleFactor;
+    }
 	settings.fullscreen = g_fullscreen;
     settings.title = 0;
     settings.depth = false;
@@ -656,9 +683,16 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
         attrs[sizeof(attrs)/sizeof(attrs[0])-1-2]=0;
     }
 	
-	NSRect rect = NSMakeRect((screen.frame.size.width-settings.width)/2 ,
-                             (screen.frame.size.height-settings.height)/2,
+	NSRect rect = NSMakeRect(0,
+                             0,
                              settings.width,settings.height);
+    if (g_need_retina) {
+        rect.size.width /= screen.backingScaleFactor;
+        rect.size.height /= screen.backingScaleFactor;
+    }
+    rect.origin.x = (screen.frame.size.width-rect.size.width)/2;
+    rect.origin.y = (screen.frame.size.height-rect.size.height)/2;
+    
 	m_rect = rect;
     g_rect = rect;
     
