@@ -247,8 +247,11 @@ public:
         
         
         if([self respondsToSelector:@selector(setContentScaleFactor:)]){
-			if (!g_retina_enabled)
+            if (!g_retina_enabled) {
 				self.contentScaleFactor = 1.0;
+            } else {
+                self.contentScaleFactor = [[UIScreen mainScreen] scale];
+            }
             LOG_VERBOSE("contentScaleFactor:"<<self.contentScaleFactor);
         }
 		
@@ -282,8 +285,11 @@ public:
         [self setAutoresizesSubviews:YES];
         
 		if([self respondsToSelector:@selector(setContentScaleFactor:)]){
-			if (!g_retina_enabled)
+            if (!g_retina_enabled) {
 				self.contentScaleFactor = 1.0;
+            } else {
+                self.contentScaleFactor = [[UIScreen mainScreen] scale];
+            }
 			LOG_VERBOSE("contentScaleFactor:"<<self.contentScaleFactor);
 		}
 		
@@ -300,8 +306,11 @@ public:
 {
     LOG_VERBOSE( "layoutSubviews" ); 
 	if([self respondsToSelector:@selector(setContentScaleFactor:)]){
-		if (!g_retina_enabled)
+        if (!g_retina_enabled) {
 			self.contentScaleFactor = 1.0;
+        } else {
+            self.contentScaleFactor = [[UIScreen mainScreen] scale];
+        }
 		LOG_VERBOSE("contentScaleFactor:"<<self.contentScaleFactor);
 	}
 
@@ -318,9 +327,10 @@ public:
 	int w = [self bounds].size.width;
 	int h = [self bounds].size.height;
 	if([self respondsToSelector:@selector(setContentScaleFactor:)]){
-		if (!g_retina_enabled)
+        if (!g_retina_enabled) {
 			self.contentScaleFactor = 1.0;
-		else {
+        } else {
+            self.contentScaleFactor = [[UIScreen mainScreen] scale];
 			w *= self.contentScaleFactor;
 			h *= self.contentScaleFactor;
 		}
