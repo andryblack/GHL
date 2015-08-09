@@ -104,6 +104,8 @@ class NetworkFlash : public GHL::Network {
         }
         return true;
     }
+
+    virtual void GHL_CALL Process() {}
 };
 
 GHL_API GHL::Network* GHL_CALL GHL_CreateNetwork() {

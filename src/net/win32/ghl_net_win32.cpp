@@ -25,6 +25,8 @@ class NetworkWin32 : public GHL::Network {
             return false;
         return true;
     }
+
+    virtual void GHL_CALL Process() {}
 };
 
 GHL_API GHL::Network* GHL_CALL GHL_CreateNetwork() {

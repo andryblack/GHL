@@ -173,6 +173,8 @@ public:
         
         return true;
     }
+    
+    virtual void GHL_CALL Process() {}
 
 };
 

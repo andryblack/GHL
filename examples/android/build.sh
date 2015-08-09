@@ -46,6 +46,6 @@ export NDK_PROJECT_PATH="$GHL_ROOT/examples/android"
 
 $NDK_BUILD NDK_DEBUG=1 V=1 NDK_DEBUG_IMPORTS=1 NDK_TRACE=1 NDK_LOG=1 || exit 1
 
-$ANDROID_SDK_ROOT/tools/android update project --name GHL-example --path . --target android-10
+$ANDROID_SDK_ROOT/tools/android update project --name GHL-example --path . --target android-14
 
-ant debug
+$ANT debug

@@ -56,6 +56,8 @@ static GHL::Application* android_app_create() {
 
 namespace GHL {
 
+    ANativeActivity* g_native_activity = 0;
+
     class GHLActivity  : public System {
       
     public:
@@ -129,13 +131,16 @@ namespace GHL {
         
         void OnCreate() {
             LOG_INFO("OnCreate");
+            g_native_activity = m_activity;
         }
         void OnStart() {
             LOG_INFO("OnStart");
+            g_native_activity = m_activity;
             StartTimerThread();
         }
         void OnResume() {
             LOG_INFO("OnResume");
+            g_native_activity = m_activity;
             if (m_app) {
                 m_app->OnActivated();
             }
@@ -145,12 +150,14 @@ namespace GHL {
         }
         void OnPause() {
             LOG_INFO("OnPause");
+            g_native_activity = m_activity;
             if (m_app) {
                 m_app->OnDeactivated();
             }
         }
         void OnStop() {
             LOG_INFO("OnStop");
+            g_native_activity = m_activity;
             StopTimerThread();
         }
         void OnDestroy() {
@@ -161,6 +168,7 @@ namespace GHL {
         }
         void OnNativeWindowCreated(ANativeWindow* window) {
             LOG_INFO("OnNativeWindowCreated");
+            g_native_activity = m_activity;
             if (m_window==0) {
                 
                 m_app = android_app_create();
@@ -262,6 +270,7 @@ namespace GHL {
         }
         void OnNativeWindowResized(ANativeWindow* window) {
             LOG_INFO("OnNativeWindowResized");
+            g_native_activity = m_activity;
             if (window==m_window) {
                 if ( m_render && m_context!=EGL_NO_CONTEXT ) {
                     if (eglMakeCurrent(m_display, m_surface, m_surface, m_context) == EGL_FALSE) {
@@ -283,6 +292,7 @@ namespace GHL {
         }
         void OnNativeWindowDestroyed(ANativeWindow* window) {
             LOG_INFO("OnNativeWindowDestroyed");
+            g_native_activity = m_activity;
             if (m_window==window) {
                 
                 if (m_app) {
@@ -349,6 +359,7 @@ namespace GHL {
         }
     protected:
         bool HandleEvent(const AInputEvent* event) {
+            g_native_activity = m_activity;
             if (AINPUT_EVENT_TYPE_MOTION==AInputEvent_getType(event)) {
                 int x = int( AMotionEvent_getX(event,0) );
                 int y = int( AMotionEvent_getY(event,0) );
@@ -374,6 +385,7 @@ namespace GHL {
             return false;
         }
         void OnInputCallback() {
+            g_native_activity = m_activity;
             if (m_input_queue) {
                 AInputEvent* event = 0;
                 if ( AInputQueue_getEvent(m_input_queue,&event)>=0 ) {
@@ -383,6 +395,7 @@ namespace GHL {
             }
         }
         void OnTimerCallback() {
+            g_native_activity = m_activity;
             //LOG_DEBUG("OnTimerCallback");
             Render();
         }

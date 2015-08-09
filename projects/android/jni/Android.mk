@@ -85,16 +85,57 @@ ZLIB_SRC := \
 	src/zlib/trees.c \
 	src/zlib/zutil.c 
 
+OGG_SRC := \
+	src/sound/libogg/src/bitwise.c \
+	src/sound/libogg/src/framing.c \
+
+
+VORBIS_SRC := \
+	src/sound/libvorbis/lib/bitrate.c \
+	src/sound/libvorbis/lib/block.c \
+	src/sound/libvorbis/lib/codebook.c \
+	src/sound/libvorbis/lib/envelope.c \
+	src/sound/libvorbis/lib/floor0.c \
+	src/sound/libvorbis/lib/floor1.c \
+	src/sound/libvorbis/lib/info.c \
+	src/sound/libvorbis/lib/lookup.c \
+	src/sound/libvorbis/lib/lpc.c \
+	src/sound/libvorbis/lib/lsp.c \
+	src/sound/libvorbis/lib/mapping0.c \
+	src/sound/libvorbis/lib/mdct.c \
+	src/sound/libvorbis/lib/psy.c \
+	src/sound/libvorbis/lib/registry.c \
+	src/sound/libvorbis/lib/res0.c \
+	src/sound/libvorbis/lib/sharedbook.c \
+	src/sound/libvorbis/lib/smallft.c \
+	src/sound/libvorbis/lib/synthesis.c \
+	src/sound/libvorbis/lib/vorbisfile.c \
+	src/sound/libvorbis/lib/window.c \
+	
+
+
 LOCAL_SRC_FILES := \
 	src/ghl_log_impl.cpp \
 	src/ghl_data_impl.cpp \
 	src/winlib/winlib_android.cpp \
 	src/render/lucida_console_regular_8.cpp \
 	src/render/render_impl.cpp \
-	src/render/opengl/render_opengl.cpp \
+	src/render/buffer_impl.cpp \
+	src/render/rendertarget_impl.cpp \
+	src/render/texture_impl.cpp \
+	src/render/shader_impl.cpp \
+	src/render/opengl/render_opengl_base.cpp \
+	src/render/opengl/render_opengles.cpp \
 	src/render/opengl/rendertarget_opengl.cpp \
 	src/render/opengl/texture_opengl.cpp \
-	src/render/opengl/dynamic/dynamic_gles.cpp \
+	src/render/opengl/buffers_opengl.cpp \
+	src/render/opengl/shader_glsl.cpp \
+	src/render/opengl/gles1_api.cpp \
+	src/render/opengl/gles2_api.cpp \
+	src/render/opengl/glsl_generator.cpp \
+	src/render/pfpl/pfpl_cache.cpp \
+	src/render/pfpl/pfpl_render.cpp \
+	src/render/pfpl/pfpl_state.cpp \
 	src/image/image_decoders.cpp \
 	src/image/image_impl.cpp \
 	src/image/jpeg_image_decoder.cpp \
@@ -104,15 +145,29 @@ LOCAL_SRC_FILES := \
 	src/vfs/memory_stream.cpp \
 	src/vfs/vfs_posix.cpp \
 	src/vfs/vfs_android.cpp \
+	src/sound/android/ghl_sound_android.cpp \
+	src/sound/android/opensl_audio_channel.cpp \
+	src/sound/android/opensl_audio_engine.cpp \
+	src/sound/android/opensl_audio_stream.cpp \
+	src/sound/sound_decoders.cpp \
+	src/sound/wav_decoder.cpp \
+	src/sound/vorbis_decoder.cpp \
+	src/net/ghl_net_android.cpp \
+	$(OGG_SRC) \
+	$(VORBIS_SRC) \
 	$(JPEG_SRC) \
 	$(PNG_SRC) \
-	$(ZLIB_SRC)
+	$(ZLIB_SRC) \
+	
 	
 ifeq ($(NDK_DEBUG),1)
 	LOCAL_CFLAGS+=-DGHL_DEBUG
 endif
 
-LOCAL_C_INCLUDES := $(GHL_ROOT)/include
-LOCAL_LDLIBS := -llog -lGLESv1_CM
+
+
+LOCAL_C_INCLUDES := $(GHL_ROOT)/include 
+LOCAL_LDLIBS := -llog -lGLESv1_CM -lGLESv2
+
 
 include $(BUILD_STATIC_LIBRARY)

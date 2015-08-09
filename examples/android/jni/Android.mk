@@ -21,7 +21,7 @@ LOCAL_SRC_FILES := \
 	
 LOCAL_STATIC_LIBRARIES := GHL
 LOCAL_MODULE    := GHL-sample
-LOCAL_LDFLAGS:= -llog -lGLESv1_CM -lEGL -landroid
+LOCAL_LDFLAGS:= -llog -lGLESv1_CM -lGLESv2 -lOpenSLES -lEGL -landroid
 
 include $(BUILD_SHARED_LIBRARY)
 
