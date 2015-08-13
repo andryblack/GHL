@@ -9,5 +9,5 @@ GHL_API GHL::UInt32 GHL_CALL GHL_SystemGetTime(GHL::TimeValue* ret) {
         ret->secs = tv.tv_sec;
         ret->usecs = tv.tv_usec;
     }
-    return tv.tv_usec;
+    return tv.tv_sec;
 }
