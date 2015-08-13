@@ -447,7 +447,13 @@ GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {
 	OutputDebugStringW( L"\n" );
 }
 
-GHL_API GHL::UInt32 GHL_CALL GHL_SystemGetTime() {
-    return ::time(0);
+
+/// Get system time (secs returned)
+GHL_API GHL::UInt32 GHL_CALL GHL_SystemGetTime(GHL::TimeValue* ret) {
+    DWORD now = timeGetTime();
+    if (ret) {
+        ret->secs = now / 1000;
+        ret->usecs = (now % 1000) * 1000;
+    }
+    return now / 1000;
 }
- 

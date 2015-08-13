@@ -53,10 +53,14 @@ namespace GHL {
         /// Set window title
         virtual void GHL_CALL SetTitle( const char* title ) = 0;
     };
-    
+ 
+    struct TimeValue {
+        UInt32 secs;
+        UInt32 usecs;
+    };
 }
 
-/// Get system time (secs)
-GHL_API GHL::UInt32 GHL_CALL GHL_SystemGetTime();
+/// Get system time (secs returned)
+GHL_API GHL::UInt32 GHL_CALL GHL_SystemGetTime(GHL::TimeValue* tv);
 
 #endif /*GHL_SYSTEM_H*/

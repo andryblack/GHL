@@ -587,8 +587,4 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
     (void)&ANativeActivity_onCreate;
     return 0;
 }
-
-GHL_API GHL::UInt32 GHL_CALL GHL_SystemGetTime() {
-    return ::time(0);
-}
     
