@@ -173,16 +173,19 @@ namespace GHL
 		const Data* data = img->GetData();
 		if (!data) return false;
 		const Byte* source = data->GetData();
-		Byte* dst = m_data->GetDataPtr();
 		if (img->GetFormat()==IMAGE_FORMAT_GRAY)
 		{
-			Convert(IMAGE_FORMAT_RGBA);
-			size_t len = m_width*m_height;
+			if (!Convert(IMAGE_FORMAT_RGBA))
+                return false;
+            Byte* dst = m_data->GetDataPtr();
+            size_t len = m_width*m_height;
 			for (size_t i=0;i<len;i++)
 				dst[i*4+3]=source[i];
 		} else if (img->GetFormat()==IMAGE_FORMAT_RGBA)
 		{
-			Convert(IMAGE_FORMAT_RGBA);
+            if (!Convert(IMAGE_FORMAT_RGBA))
+                return false;
+            Byte* dst = m_data->GetDataPtr();
 			size_t len = m_width*m_height;
 			for (size_t i=0;i<len;i++)
 				dst[i*4+3]=source[i*4+3];
