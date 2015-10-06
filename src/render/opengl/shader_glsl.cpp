@@ -126,7 +126,9 @@ namespace GHL {
     GL::GLint   ShaderProgramGLSL::GetAttribute(GLSLPredefinedAttribute attr) const {
         if (m_attributes[attr]<0) {
             m_attributes[attr] = gl.sdrapi.GetAttribLocation(m_handle,predefinedAttributeNames[attr]);
-            CHECK_GL(gl.sdrapi.EnableVertexAttribArray(m_attributes[attr]));
+            if (m_attributes[attr]>=0) {
+                CHECK_GL(gl.sdrapi.EnableVertexAttribArray(m_attributes[attr]));
+            }
         }
         return m_attributes[attr];
     }

@@ -775,6 +775,7 @@ namespace GHL {
             m_crnt_state.texture_stages[stage].rgb.c.texture = false;
             m_crnt_state.texture_stages[stage].alpha.c.texture = false;
         }
+        m_reset_uniforms = true;
     }
     
     /// set texture stage color operation
@@ -792,6 +793,7 @@ namespace GHL {
     }
     
     void GHL_CALL RenderOpenGLPPL::SetShader(const ShaderProgram* shader)  {
+        m_reset_uniforms = true;
         RenderOpenGLBase::SetShader(shader);
         m_shaders_render.set_shader(shader);
     }
