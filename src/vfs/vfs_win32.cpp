@@ -6,6 +6,7 @@
 #include <cstdio>
 #include "../ghl_log_impl.h"
 #include "../ghl_ref_counter_impl.h"
+#include <ghl_data.h>
 
 #ifdef _MSC_VER
 #define snprintf _snprintf
@@ -118,6 +119,7 @@ namespace GHL {
 			if (!buf[i]) break;
 			if (buf[i]==L'/') buf[i]=L'\\';
 		}
+		buf[i] = 0;
         
 		return true;
 	}
@@ -181,7 +183,8 @@ namespace GHL {
             LOG_ERROR( "creating file : " << file );
             return false;
         }
-        if (!WriteFileEx(f,data->GetData(),data->GetSize(),NULL,NULL)) {
+		DWORD written = 0;
+		if (!::WriteFile(f, data->GetData(), data->GetSize(), &written, NULL) || written!=data->GetSize()) {
             LOG_ERROR( "writing file : " << file );
             CloseHandle(f);
             return false;

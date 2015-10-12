@@ -17,6 +17,8 @@
 #include <ghl_system.h>
 #include <Windowsx.h>
 
+GHL_API GHL::RenderImpl* GHL_CALL GHL_CreateRenderOpenGL(GHL::UInt32 w, GHL::UInt32 h, bool depth);
+GHL_API void GHL_DestroyRenderOpenGL(GHL::RenderImpl* render_);
 
 #ifdef _MSC_VER
 #define snprintf _snprintf
@@ -257,11 +259,11 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 	settings.fullscreen = false;
 	app->FillSettings(&settings);
 
-	size_t width=settings.width + GetSystemMetrics(SM_CXFIXEDFRAME)*2;
-	size_t height=settings.height + GetSystemMetrics(SM_CYFIXEDFRAME)*2 + GetSystemMetrics(SM_CYCAPTION);
+	size_t width = settings.width;// +GetSystemMetrics(SM_CXFIXEDFRAME) * 2;
+	size_t height = settings.height;// +GetSystemMetrics(SM_CYFIXEDFRAME) * 2 + GetSystemMetrics(SM_CYCAPTION);
 
 	RECT rect_w;
-	rect_w.left=(GetSystemMetrics(SM_CXSCREEN)-static_cast<int>(width))/2;
+	rect_w.left =(GetSystemMetrics(SM_CXSCREEN) - static_cast<int>(width)) / 2;
 	rect_w.top=(GetSystemMetrics(SM_CYSCREEN)-static_cast<int>(height))/2;
 	rect_w.right=rect_w.left+width;
 	rect_w.bottom=rect_w.top+height;
@@ -278,6 +280,8 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 	HWND hwnd = 0;
 	//if(!settings.fullscreen)
 
+	AdjustWindowRect( &rect_w, style_w, FALSE);
+
 		hwnd = CreateWindowEx(0, WINDOW_CLASS_NAME, TEXT("Test"), style_w,
 				rect_w.left, rect_w.top, rect_w.right-rect_w.left, 
 				rect_w.bottom-rect_w.top,
@@ -292,6 +296,8 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 		return 1;
 	}
 	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)&ctx);
+
+	
 
 #ifndef GHL_NO_SOUND
 	GHL::SoundDSound sound(8);
@@ -384,9 +390,9 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 
 	wglMakeCurrent (hDC, hRC);
 
-	GHL::RenderOpenGL render(settings.width, settings.height, settings.depth);
-	render.RenderInit();
-	app->SetRender(&render);
+	GHL::RenderImpl* render = GHL_CreateRenderOpenGL(settings.width, settings.height, settings.depth);
+	
+	app->SetRender(render);
 
 	if (!app->Load())
 		return 1;
@@ -412,7 +418,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 					app->Release();
 					app = 0;
 				}
-				render.RenderDone();
+				
 #ifndef GHL_NO_SOUND
 				sound.SoundDone();
 #endif
@@ -434,6 +440,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 			Sleep(1);
 		}
 	}
+	GHL_DestroyRenderOpenGL(render);
 	timeEndPeriod(1);
 	
 	return 0;
@@ -441,8 +448,8 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 
 GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {
 	/// @todo
-	WCHAR buf[512];
-	MultiByteToWideChar(CP_UTF8, 0, message, -1, buf, 512);
+	WCHAR buf[2048];
+	MultiByteToWideChar(CP_UTF8, 0, message, -1, buf, 2048);
 	OutputDebugStringW( buf );
 	OutputDebugStringW( L"\n" );
 }
