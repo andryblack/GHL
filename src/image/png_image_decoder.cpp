@@ -91,7 +91,7 @@ namespace GHL {
         // Check if it really is a PNG file
         if ( png_sig_cmp(buffer, 0, 8)!=0 )
         {
-            LOG_VERBOSE("is not a png file");
+            //LOG_VERBOSE("is not a png file");
             return false;
         }
         
@@ -174,7 +174,7 @@ Image* PngDecoder::Decode(DataStream* file)
 	// Check if it really is a PNG file
 	if ( png_sig_cmp(buffer, 0, 8)!=0 )
 	{
-		LOG_VERBOSE("is not a png file");
+		//LOG_VERBOSE("is not a png file");
 		return 0;
 	}
 
