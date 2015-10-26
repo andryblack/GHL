@@ -247,6 +247,8 @@ namespace GHL {
 	/// setup faces culling
 	void GHL_CALL RenderOpenGLBase::SetupFaceCull(bool enable,bool cw = true) {
 		if (enable) {
+            if (GetTarget())
+                cw = !cw;
 			CHECK_GL(gl.Enable(gl.CULL_FACE));
 			CHECK_GL(gl.FrontFace( cw ?gl.CW :gl.CCW ));
 		} else {
