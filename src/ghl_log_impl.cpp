@@ -25,6 +25,8 @@
 
 namespace GHL{
     
+    static Logger*  g_external_logger = 0;
+    
     static const char* level_descr[] = {
         ": FATAL :",
         ": ERROR :",
@@ -34,12 +36,20 @@ namespace GHL{
         ": DEBUG :"
     };
     
-    Logger::Logger( LogLevel level , const char* module) : m_level( level ), m_module(module){
+    LoggerImpl::LoggerImpl( LogLevel level , const char* module) : m_level( level ), m_module(module){
         m_stream << "GHL:[" << m_module << "]" << level_descr[m_level];
     }
     
-    Logger::~Logger() {
-        GHL_Log(m_level, m_stream.str().c_str());
+    LoggerImpl::~LoggerImpl() {
+        if (g_external_logger) {
+            g_external_logger->AddMessage(m_level,m_stream.str().c_str());
+        } else {
+            GHL_Log(m_level, m_stream.str().c_str());
+        }
     }
     
+}
+
+GHL_API void GHL_CALL GHL_SetLogger( GHL::Logger* logger ) {
+    GHL::g_external_logger = logger;
 }

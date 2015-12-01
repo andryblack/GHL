@@ -37,9 +37,15 @@ namespace GHL
         LOG_LEVEL_VERBOSE,
         LOG_LEVEL_DEBUG
     };
+    
+    /// Logger interface
+    struct Logger {
+        virtual void GHL_CALL AddMessage( GHL::LogLevel level, const char* message) = 0;
+    };
 
 } /*namespace*/
-
+/// Set external logger
+GHL_API void GHL_CALL GHL_SetLogger( GHL::Logger* logger );
 /// Put message to platform log
 GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message);
 

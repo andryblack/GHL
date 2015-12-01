@@ -41,7 +41,7 @@ namespace GHL {
         }
         virtual ~RefCounterImpl() {
             if (m_refs!=0) {
-                ::GHL::Logger(::GHL::LOG_LEVEL_ERROR,"REFS") << "too many refs on destructor" ;
+                ::GHL::LoggerImpl(::GHL::LOG_LEVEL_ERROR,"REFS") << "too many refs on destructor" ;
             }
         }
         
@@ -51,7 +51,7 @@ namespace GHL {
         
         virtual void GHL_CALL Release() const {
             if (m_refs==0) {
-                ::GHL::Logger(::GHL::LOG_LEVEL_ERROR,"REFS") << "release released object" ;
+                ::GHL::LoggerImpl(::GHL::LOG_LEVEL_ERROR,"REFS") << "release released object" ;
             } else {
                 m_refs--;
                 if (m_refs==0) {

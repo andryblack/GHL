@@ -30,41 +30,41 @@
 namespace GHL {
     
     
-    class Logger {
+    class LoggerImpl {
     public:
-        explicit Logger( LogLevel level , const char* module = "COMMON" );
-        ~Logger();
+        explicit LoggerImpl( LogLevel level , const char* module = "COMMON" );
+        ~LoggerImpl();
         
         template <class T>
-        Logger& operator << (const T& v) {
+        LoggerImpl& operator << (const T& v) {
             m_stream << v;
             return *this;
         }
         template <class T>
-        Logger& operator << (const T* v) {
+        LoggerImpl& operator << (const T* v) {
             m_stream << v;
             return *this;
         }
-        Logger& operator << (const std::string& v) {
+        LoggerImpl& operator << (const std::string& v) {
             m_stream << v.c_str();
             return *this;
         }
     private:
-        Logger( const Logger& );
-        Logger& operator = (const Logger&);
+        LoggerImpl( const LoggerImpl& );
+        LoggerImpl& operator = (const LoggerImpl&);
         LogLevel    m_level;
         std::stringstream   m_stream;
         const char*         m_module;
     };
     
-#define LOG_FATAL( MSG ) do { ::GHL::Logger(::GHL::LOG_LEVEL_FATAL,MODULE) << MSG ; } while (false)
-#define LOG_ERROR( MSG ) do { ::GHL::Logger(::GHL::LOG_LEVEL_ERROR,MODULE) << MSG ; } while (false)
-#define LOG_WARNING( MSG ) do { ::GHL::Logger(::GHL::LOG_LEVEL_WARNING,MODULE) << MSG ; } while (false)
-#define LOG_INFO( MSG ) do { ::GHL::Logger(::GHL::LOG_LEVEL_INFO,MODULE) << MSG ; } while (false)
+#define LOG_FATAL( MSG ) do { ::GHL::LoggerImpl(::GHL::LOG_LEVEL_FATAL,MODULE) << MSG ; } while (false)
+#define LOG_ERROR( MSG ) do { ::GHL::LoggerImpl(::GHL::LOG_LEVEL_ERROR,MODULE) << MSG ; } while (false)
+#define LOG_WARNING( MSG ) do { ::GHL::LoggerImpl(::GHL::LOG_LEVEL_WARNING,MODULE) << MSG ; } while (false)
+#define LOG_INFO( MSG ) do { ::GHL::LoggerImpl(::GHL::LOG_LEVEL_INFO,MODULE) << MSG ; } while (false)
 
 #if defined( GHL_DEBUG ) && !defined( GHL_SILENT )
-#define LOG_VERBOSE( MSG ) do { ::GHL::Logger(::GHL::LOG_LEVEL_VERBOSE,MODULE) << MSG ; } while (false)
-#define LOG_DEBUG( MSG ) do { ::GHL::Logger(::GHL::LOG_LEVEL_DEBUG,MODULE) << MSG ; } while (false)
+#define LOG_VERBOSE( MSG ) do { ::GHL::LoggerImpl(::GHL::LOG_LEVEL_VERBOSE,MODULE) << MSG ; } while (false)
+#define LOG_DEBUG( MSG ) do { ::GHL::LoggerImpl(::GHL::LOG_LEVEL_DEBUG,MODULE) << MSG ; } while (false)
 #else 
 #define LOG_VERBOSE( MSG ) do {  } while (false)
 #define LOG_DEBUG( MSG ) do {  } while (false)
