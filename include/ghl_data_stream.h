@@ -53,6 +53,17 @@ namespace GHL
 		virtual bool GHL_CALL Eof() const = 0;
 	};
     
+    /// write stream interface
+    struct WriteStream : RefCounter
+    {
+        /// flush data
+        virtual void GHL_CALL Flush() = 0;
+        /// close stream
+        virtual void GHL_CALL Close() = 0;
+        /// write data
+        virtual UInt32 GHL_CALL Write( const Byte* source,UInt32 bytes) = 0;
+    };
+    
 } /* namespace */
 
 GHL_API GHL::Data* GHL_CALL GHL_ReadAllData( GHL::DataStream* ds );

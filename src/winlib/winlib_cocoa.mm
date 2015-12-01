@@ -816,9 +816,9 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	[NSApplication sharedApplication];
 	WinLibAppDelegate* delegate = [[WinLibAppDelegate alloc] init];
-	[delegate setApplication:app];
+    app->SetVFS([delegate getVFS]);
+    [delegate setApplication:app];
 	app->SetSystem([delegate getSystem]);
-	app->SetVFS([delegate getVFS]);
 	app->SetImageDecoder([delegate getImageDecoder]);
 	
 	/// create menu

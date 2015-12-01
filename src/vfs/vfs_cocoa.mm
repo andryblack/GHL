@@ -72,6 +72,46 @@ namespace GHL {
 			return [m_file offsetInFile] == m_size;
 		}
 	};
+    
+    
+    class CocoaWriteFileStream : public RefCounterImpl<WriteStream> {
+    private:
+        NSFileHandle* m_file;
+        ~CocoaWriteFileStream() {
+            Close();
+        }
+    public:
+        explicit CocoaWriteFileStream(NSFileHandle* file) : m_file(file) {
+            [m_file retain];
+        }
+        virtual void GHL_CALL Flush() {
+            if (m_file) {
+                [m_file synchronizeFile];
+            }
+        }
+        virtual void GHL_CALL Close() {
+            if (m_file) {
+                [m_file closeFile];
+                [m_file release];
+                m_file = 0;
+            }
+        }
+        /// read data
+        virtual UInt32 GHL_CALL Write(const Byte* src,UInt32 bytes) {
+            if (!m_file) return 0;
+            NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+            UInt32 len = 0;
+            NSData* data = [NSData dataWithBytesNoCopy:const_cast<Byte*>(src) length:bytes freeWhenDone:NO];
+            if (data) @try {
+                [m_file writeData:data];
+                len = [data length];
+            } @catch ( NSException* e) {
+                len = 0;
+            }
+            [pool release];
+            return len;
+        }
+    };
 	
 	
 	
@@ -173,6 +213,20 @@ namespace GHL {
         NSString* path_to = [NSString stringWithUTF8String:filename.c_str()];
         return [[NSFileManager defaultManager] copyItemAtPath:path_from toPath:path_to error:nil];
 	}
+    /// rename file
+    bool GHL_CALL VFSCocoaImpl::DoRenameFile(const char* from,const char* to) {
+        std::string filename = from;
+        for (size_t i=0;i<filename.length();i++) {
+            if (filename[i]=='\\') filename[i]='/';
+        }
+        NSString* path_from = [NSString stringWithUTF8String:filename.c_str()];
+        filename = to;
+        for (size_t i=0;i<filename.length();i++) {
+            if (filename[i]=='\\') filename[i]='/';
+        }
+        NSString* path_to = [NSString stringWithUTF8String:filename.c_str()];
+        return [[NSFileManager defaultManager] moveItemAtPath:path_from toPath:path_to error:nil];
+    }
     /// create dir
     bool GHL_CALL VFSCocoaImpl::DoCreateDir(const char* fpath) {
         std::string filename = fpath;
@@ -196,6 +250,21 @@ namespace GHL {
         }
         return 0;
 	}
+    
+    /// open file
+    WriteStream* GHL_CALL VFSCocoaImpl::OpenFileWrite(const char* file) {
+        std::string filename = file;
+        for (size_t i=0;i<filename.length();i++) {
+            if (filename[i]=='\\') filename[i]='/';
+        }
+        NSString* fileName = [NSString stringWithUTF8String:filename.c_str()];
+        [[NSFileManager defaultManager] createFileAtPath:fileName contents:nil attributes:nil];
+        NSFileHandle* handle = [NSFileHandle fileHandleForWritingAtPath:fileName];
+        if (handle) {
+            return new CocoaWriteFileStream(handle);
+        }
+        return 0;
+    }
     
     /// write file
     bool GHL_CALL VFSCocoaImpl::WriteFile(const char* file, const Data* data ) {

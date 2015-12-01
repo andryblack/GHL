@@ -48,10 +48,14 @@ namespace GHL
 		virtual bool GHL_CALL DoRemoveFile(const char* file) = 0;
 		/// copy file
 		virtual bool GHL_CALL DoCopyFile(const char* from,const char* to) = 0;
+        /// rename file
+        virtual bool GHL_CALL DoRenameFile(const char* from,const char* to) = 0;
         /// create dir
         virtual bool GHL_CALL DoCreateDir(const char* path) = 0;
 		/// open file
 		virtual DataStream* GHL_CALL OpenFile(const char* file) = 0;
+        /// open write file
+        virtual WriteStream* GHL_CALL OpenFileWrite(const char* file) = 0;
         /// write file
         virtual bool GHL_CALL WriteFile(const char* file, const Data* data ) = 0;
 	};

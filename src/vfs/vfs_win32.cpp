@@ -87,6 +87,39 @@ namespace GHL {
 
 
 	};
+    
+    
+    class FileWriteStream : public RefCounterImpl<WriteStream> {
+    private:
+        HANDLE m_file;
+        bool m_eof;
+    public:
+        explicit FileWriteStream(HANDLE file) {
+            m_file = file;
+        }
+        ~FileWriteStream() {
+            Close();
+        }
+        virtual void GHL_CALL Close() {
+            if (m_file) {
+                CloseHandle(m_file);
+                m_file = 0;
+            }
+        }
+        virtual void GHL_CALL Flush() {
+            if (m_file) FlushFileBuffers(m_file);
+        }
+        /// read data
+        virtual UInt32 GHL_CALL Write(const Byte* src,UInt32 bytes) {
+            if (!m_file) return 0;
+            DWORD writed = 0;
+            if (!::WriteFile(m_file,src,bytes,&writed,0)) {
+                return 0;
+            }
+            return writed;
+        }
+        
+    };
 
 	VFSWin32Impl::VFSWin32Impl() {
 		if (m_data_dir.empty()) {
@@ -157,7 +190,21 @@ namespace GHL {
         if (!get_fs_path(to,tfilename_to)) return false;
 		return CopyFileW(tfilename_from,tfilename_to,FALSE);
 	}
-
+    
+    /// rename file
+    bool GHL_CALL VFSWin32Impl::DoRenameFile(const char* from,const char* to) {
+        WCHAR tfilename_from[MAX_PATH];
+        if (!get_fs_path(from,tfilename_from)) return false;
+        WCHAR tfilename_to[MAX_PATH];
+        if (!get_fs_path(to,tfilename_to)) return false;
+        WIN32_FILE_ATTRIBUTE_DATA attributes = {0};
+        if (GetFileAttributesExW(tfilename_to,GetFileExInfoStandard,
+                                 &attributes)!=0) {
+            DeleteFileW(tfilename_to);
+        }
+        return MoveFileW(tfilename_from,tfilename_to);
+    }
+   
 	/// create dir
 	bool GHL_CALL VFSWin32Impl::DoCreateDir(const char* path) {
 		WCHAR tfilename[MAX_PATH];
@@ -215,4 +262,24 @@ namespace GHL {
 		}
 		return new FileStream(f); 
 	}
+    
+    WriteStream* GHL_CALL VFSWin32Impl::OpenFileWrite(const char* file) {
+        if (!file) return 0;
+        if (file[0]==0) return 0;
+        HANDLE f = 0;
+        DWORD dwDesiredAccess,dwCreationDisposition,dwShareMode,dwFlagsAndAttributes ;
+        dwDesiredAccess = dwShareMode = dwFlagsAndAttributes = 0;
+        WCHAR tfilename[MAX_PATH];
+        if (!get_fs_path(file,tfilename)) return 0;
+        dwDesiredAccess = GENERIC_WRITE;
+        dwCreationDisposition = CREATE_ALWAYS;
+        dwShareMode = FILE_SHARE_READ;
+        
+        f = CreateFileW(tfilename,dwDesiredAccess, dwShareMode, NULL, dwCreationDisposition, dwFlagsAndAttributes, NULL);
+        if (f==INVALID_HANDLE_VALUE) {
+            LOG_ERROR( "opening file : " << file );
+            return 0;
+        }
+        return new FileWriteStream(f);
+    }
 }

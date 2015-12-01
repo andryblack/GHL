@@ -54,6 +54,35 @@ namespace GHL {
                 return feof(m_file) != 0;
         }
     };
+    
+    class PosixWriteFileStream : public RefCounterImpl<WriteStream> {
+    private:
+        FILE* m_file;
+    public:
+        explicit PosixWriteFileStream(FILE* file) {
+            m_file = file;
+        }
+        virtual ~PosixFileStream() {
+            Close();
+        }
+        virtual void GHL_CALL Flush() {
+            if (m_file) {
+                fflush(m_file);
+            }
+        }
+        virtual void GHL_CALL Close() {
+            if (m_file) {
+                fclose(m_file);
+                m_file = 0;
+            }
+        }
+        /// write data
+        virtual UInt32 GHL_CALL Write(const Byte* src,UInt32 bytes) {
+            if (!m_file) return 0;
+            return fwrite(src,bytes,1,m_file);
+        }
+    };
+
 
     VFSPosixImpl::VFSPosixImpl(const char* dat,const char* docs) {
         m_data_dir = dat;
@@ -91,6 +120,10 @@ namespace GHL {
     bool GHL_CALL VFSPosixImpl::DoCopyFile(const char* /*from*/,const char* /*to*/) {
         return false;
     }
+    /// rename file
+    bool GHL_CALL VFSPosixImpl::DoRenameFile(const char* from,const char* to) {
+        return ::rename(from,to) == 0;
+    }
     /// create dir
     bool GHL_CALL VFSPosixImpl::DoCreateDir(const char* path) {
         return ::mkdir(path, 0777) == 0;
@@ -105,6 +138,17 @@ namespace GHL {
         FILE* f = fopen(_file, "rb"  );
         if (f)
             return new PosixFileStream(f);
+        return 0;
+    }
+    
+    WriteStream* GHL_CALL VFSPosixImpl::OpenFileWrite(const char* _file){
+        (void)MODULE;
+        LOG_VERBOSE("try open write file '" << _file << "'");
+        if (!_file) return 0;
+        if (_file[0]==0) return 0;
+        FILE* f = fopen(_file, "wb"  );
+        if (f)
+            return new PosixWriteFileStream(f);
         return 0;
     }
     
