@@ -62,7 +62,7 @@ namespace GHL {
         explicit PosixWriteFileStream(FILE* file) {
             m_file = file;
         }
-        virtual ~PosixFileStream() {
+        virtual ~PosixWriteFileStream() {
             Close();
         }
         virtual void GHL_CALL Flush() {

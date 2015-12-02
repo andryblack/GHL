@@ -359,6 +359,25 @@ namespace GHL {
         
     }
     
+    AS3::ui::flash::display3D::IndexBuffer3D RenderStage3d::get_triangle_indexes(size_t amount) {
+        if (m_triangle_indexes_size < amount) {
+            m_triangle_indexes = m_ctx->createIndexBuffer(amount * 3);
+            UInt16* data = new UInt16[amount*3];
+            UInt16* p = data;
+            for (size_t i=0;i<amount;++i) {
+                p[0] = (i*3 + 0);
+                p[1] = (i*3 + 1);
+                p[2] = (i*3 + 2);
+                p+=3;
+            }
+            m_triangle_indexes->uploadFromByteArray(AS3::ui::internal::get_ram(),
+                                                    (int)data,0,amount*3);
+            delete [] data;
+            m_triangle_indexes_size = amount;
+        }
+        return m_triangle_indexes;
+    }
+    
     /// draw primitives from memory
     void GHL_CALL RenderStage3d::DrawPrimitivesFromMemory(PrimitiveType type,VertexType v_type,const void* vertices,UInt32 v_amount,const UInt16* indexes,UInt32 prim_amount) {
     
@@ -373,8 +392,14 @@ namespace GHL {
                 m_ring[m_ring_pos].isize = indexes_amount;
                 m_ring[m_ring_pos].ibuffer = m_ctx->createIndexBuffer(indexes_amount);
             }
-            m_ring[m_ring_pos].ibuffer->uploadFromByteArray(AS3::ui::internal::get_ram(),
+            AS3::ui::flash::display3D::IndexBuffer3D ibuffer;
+            if (indexes) {
+                m_ring[m_ring_pos].ibuffer->uploadFromByteArray(AS3::ui::internal::get_ram(),
                                                             (int)indexes,0,indexes_amount);
+                ibuffer = m_ring[m_ring_pos].ibuffer;
+            } else {
+                ibuffer = get_triangle_indexes(prim_amount);
+            }
             
             if (v_type == VERTEX_TYPE_SIMPLE) {
                 if (m_ring[m_ring_pos].vsize<v_amount) {
@@ -406,7 +431,7 @@ namespace GHL {
                 
             }
             
-            m_ctx->drawTriangles(m_ring[m_ring_pos].ibuffer,0,prim_amount);
+            m_ctx->drawTriangles(ibuffer,0,prim_amount);
             ++m_ring_pos;
             if (m_ring_pos>=RING_BUFFERS_AMOUNT)
                 m_ring_pos = 0;

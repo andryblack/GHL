@@ -59,6 +59,9 @@ namespace GHL {
         };
         RingElement   m_ring[RING_BUFFERS_AMOUNT];
         size_t  m_ring_pos;
+        AS3::ui::flash::display3D::IndexBuffer3D m_triangle_indexes;
+        size_t  m_triangle_indexes_size;
+        AS3::ui::flash::display3D::IndexBuffer3D get_triangle_indexes(size_t amount);
     public:
         RenderStage3d( UInt32 w, UInt32 h, bool depth );
         
