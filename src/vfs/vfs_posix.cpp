@@ -4,7 +4,14 @@
 #include <cstdio>
 #include <sys/stat.h>
 #include <sys/types.h>
+#ifndef _MSC_VER
 #include <unistd.h>
+#else
+#include <direct.h>
+static const int mkdir(const char* path, int mode) {
+	return _mkdir(path);
+}
+#endif
 #include "../ghl_ref_counter_impl.h"
 #include "../ghl_log_impl.h"
 #include <ghl_data.h>

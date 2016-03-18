@@ -26,7 +26,7 @@
 
 
 #if defined( __APPLE__ )
-#ifndef GHL_PLATFORM_IOS
+#if !defined(GHL_PLATFORM_IOS) && !defined(GHL_PLATFORM_TVOS)
 #ifndef GHL_PLATFORM_MAC
 #define GHL_PLATFORM_MAC
 #endif

@@ -9,7 +9,7 @@
 
 #include <ghl_api.h>
 
-#if defined(GHL_PLATFORM_MAC) || defined(GHL_PLATFORM_IOS)
+#if defined(GHL_PLATFORM_MAC) || defined(GHL_PLATFORM_IOS) || defined(GHL_PLATFORM_TVOS)
 #include "vfs_cocoa.h"
 GHL_API GHL::VFS* GHL_CALL GHL_CreateVFS() {
 	return new GHL::VFSCocoaImpl();

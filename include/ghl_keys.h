@@ -160,7 +160,12 @@ namespace GHL
         KEY_F9,	///< functional key 9
         KEY_F10,	///< functional key 10
         KEY_F11,	///< functional key 11
-        KEY_F12	///< functional key 12
+        KEY_F12,	///< functional key 12
+        
+        /// media keys
+        KEY_SELECT,
+        KEY_MENU,
+        KEY_PLAY
     };
 
 }

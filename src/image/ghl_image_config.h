@@ -29,7 +29,7 @@
 
 #if defined( GHL_QT )
 #define USE_QT_IMAGE_DECODER
-#elif defined( GHL_PLATFORM_IOS )
+#elif defined( GHL_PLATFORM_IOS ) || defined( GHL_PLATFORM_TVOS )
 //#define USE_IPHONE_IMAGE_DECODER
 #define USE_PNG_DECODER
 #define USE_JPEG_DECODER

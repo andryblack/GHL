@@ -8,7 +8,7 @@
 
 #include "gles2_api.h"
 
-#if defined ( GHL_PLATFORM_IOS )
+#if defined ( GHL_PLATFORM_IOS ) || defined ( GHL_PLATFORM_TVOS )
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
 #elif defined ( GHL_PLATFORM_ANDROID )

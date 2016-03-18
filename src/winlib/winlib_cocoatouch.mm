@@ -23,17 +23,19 @@
 #include "../image/image_decoders.h"
 
 #import <OpenGLES/EAGLDrawable.h>
-
+#ifndef GHL_PLATFORM_TVOS
 #import <CoreMotion/CoreMotion.h>
-
+#endif
 #import "WinLibCocoaTouchContext2.h"
 
 static const char* MODULE = "WINLIB";
 
 static GHL::Application* g_application = 0;
+#ifndef GHL_PLATFORM_TVOS
 static UIInterfaceOrientation g_orientation = UIInterfaceOrientationLandscapeLeft;
 static bool g_orientationLocked = false;
 static bool g_retina_enabled = true;
+#endif
 static bool g_need_depth = false;
 
 #ifndef GHL_NOSOUND
@@ -45,7 +47,7 @@ namespace GHL {
 }
 
 @class WinLibView;
-
+#ifndef GHL_PLATFORM_TVOS
 @interface AccelerometerDelegate : NSObject
 {
 	CMMotionManager* manager;
@@ -65,7 +67,6 @@ namespace GHL {
 	}
 	return self;
 }
-
 - (float*)get_data
 {
     CMDeviceMotion* g = manager.deviceMotion;
@@ -84,9 +85,8 @@ namespace GHL {
 	[super dealloc];
 }
 
-
-
 @end
+#endif
 
 class SystemCocoaTouch;
 
@@ -126,13 +126,19 @@ static const size_t max_touches = 10;
 class SystemCocoaTouch : public GHL::System {
 private:
 	WinLibViewController* m_controller;
+#ifndef GHL_PLATFORM_TVOS
 	AccelerometerDelegate* m_accelerometer;
+#endif
 public:
 	explicit SystemCocoaTouch(WinLibViewController* controller) : m_controller(controller) {
+#ifndef GHL_PLATFORM_TVOS
 		m_accelerometer = 0;
+#endif
 	}
 	~SystemCocoaTouch() {
-		[m_accelerometer release]; 
+#ifndef GHL_PLATFORM_TVOS
+		[m_accelerometer release];
+#endif
 	}
 	virtual void GHL_CALL Exit() {
 		///
@@ -162,12 +168,15 @@ public:
 	virtual bool GHL_CALL SetDeviceState( GHL::DeviceState name, const void* data);
 	///
 	virtual bool GHL_CALL GetDeviceData( GHL::DeviceData name, void* data) {
+#ifndef GHL_PLATFORM_TVOS
 		if (name==GHL::DEVICE_DATA_ACCELEROMETER) {
 			if (!m_accelerometer)
 				return false;
 			memcpy(data, [m_accelerometer get_data], sizeof(float)*3);
 			return true;
-		} else if (name==GHL::DEVICE_DATA_VIEW_CONTROLLER) {
+		} else
+#endif
+        if (name==GHL::DEVICE_DATA_VIEW_CONTROLLER) {
 			if (data) {
 				*((UIViewController**)data) = m_controller;
 			}
@@ -245,7 +254,7 @@ public:
             m_context = [[WinLibCocoaTouchContext alloc] initWithContext:context];
         }
         
-        
+#ifndef GHL_PLATFORM_TVOS
         if([self respondsToSelector:@selector(setContentScaleFactor:)]){
             if (!g_retina_enabled) {
 				self.contentScaleFactor = 1.0;
@@ -254,7 +263,7 @@ public:
             }
             LOG_VERBOSE("contentScaleFactor:"<<self.contentScaleFactor);
         }
-		
+#endif
 		
         [m_context createBuffers:g_need_depth];
 
@@ -284,6 +293,7 @@ public:
 		
         [self setAutoresizesSubviews:YES];
         
+#ifndef GHL_PLATFORM_TVOS
 		if([self respondsToSelector:@selector(setContentScaleFactor:)]){
             if (!g_retina_enabled) {
 				self.contentScaleFactor = 1.0;
@@ -292,7 +302,7 @@ public:
             }
 			LOG_VERBOSE("contentScaleFactor:"<<self.contentScaleFactor);
 		}
-		
+#endif
 		[self prepareOpenGL:gles2];
 	}
 	return self;
@@ -304,7 +314,8 @@ public:
 
 - (void)layoutSubviews
 {
-    LOG_VERBOSE( "layoutSubviews" ); 
+    LOG_VERBOSE( "layoutSubviews" );
+#ifndef GHL_PLATFORM_TVOS
 	if([self respondsToSelector:@selector(setContentScaleFactor:)]){
         if (!g_retina_enabled) {
 			self.contentScaleFactor = 1.0;
@@ -313,7 +324,7 @@ public:
         }
 		LOG_VERBOSE("contentScaleFactor:"<<self.contentScaleFactor);
 	}
-
+#endif
 	[m_context onLayout:(CAEAGLLayer*)self.layer];
     GHL::g_default_framebuffer = [m_context defaultFramebuffer];
 	m_render->Resize([m_context backingWidth], [m_context backingHeight]);
@@ -326,6 +337,7 @@ public:
 	[self makeCurrent];
 	int w = [self bounds].size.width;
 	int h = [self bounds].size.height;
+#ifndef GHL_PLATFORM_TVOS
 	if([self respondsToSelector:@selector(setContentScaleFactor:)]){
         if (!g_retina_enabled) {
 			self.contentScaleFactor = 1.0;
@@ -336,6 +348,7 @@ public:
 		}
 		LOG_VERBOSE("contentScaleFactor:"<<self.contentScaleFactor);
 	}
+#endif
 	
     if (gles2) {
         m_render = new GHL::RenderOpenGLES2(GHL::UInt32(w),
@@ -448,6 +461,49 @@ public:
 	}
 }
 
+#ifdef GHL_PLATFORM_TVOS
+- (GHL::Key)convertKey:(UIPressType) key {
+    switch (key) {
+        case UIPressTypeUpArrow:    return GHL::KEY_UP;
+        case UIPressTypeDownArrow:    return GHL::KEY_DOWN;
+        case UIPressTypeLeftArrow:    return GHL::KEY_LEFT;
+        case UIPressTypeRightArrow:    return GHL::KEY_RIGHT;
+            
+        case UIPressTypeSelect:     return GHL::KEY_SELECT;
+        case UIPressTypeMenu:       return GHL::KEY_MENU;
+        case UIPressTypePlayPause:  return GHL::KEY_PLAY;
+    }
+    return GHL::KEY_NONE;
+}
+- (void)pressesBegan:(NSSet<UIPress *> *)presses withEvent:(nullable UIPressesEvent *)event {
+    for (UIPress* press in presses) {
+        GHL::Key key = [self convertKey:press.type];
+        if (key != GHL::KEY_NONE) {
+            g_application->OnKeyDown(key);
+        }
+    }
+}
+- (void)pressesChanged:(NSSet<UIPress *> *)presses withEvent:(nullable UIPressesEvent *)event {
+    
+}
+- (void)pressesEnded:(NSSet<UIPress *> *)presses withEvent:(nullable UIPressesEvent *)event {
+    for (UIPress* press in presses) {
+        GHL::Key key = [self convertKey:press.type];
+        if (key != GHL::KEY_NONE) {
+            g_application->OnKeyUp(key);
+        }
+    }
+}
+- (void)pressesCancelled:(NSSet<UIPress *> *)presses withEvent:(nullable UIPressesEvent *)event {
+    for (UIPress* press in presses) {
+        GHL::Key key = [self convertKey:press.type];
+        if (key != GHL::KEY_NONE) {
+            g_application->OnKeyUp(key);
+        }
+    }
+
+}
+#endif
 
 - (void)timerFireMethod:(NSTimer*)theTimer {
     (void)theTimer;
@@ -506,7 +562,7 @@ public:
 @end
 
 @implementation WinLibViewController
-
+#ifndef GHL_PLATFORM_TVOS
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation {
 	if (g_orientation==UIInterfaceOrientationLandscapeRight && !g_orientationLocked) {
 		if (orientation==UIInterfaceOrientationLandscapeLeft)
@@ -514,6 +570,7 @@ public:
 	}
     return orientation == g_orientation ? YES : NO; 
 }
+#endif
 
 - (void)viewWillAppear:(BOOL)animated    // Called when the view is about to made visible. Default does nothing
 {
@@ -565,7 +622,7 @@ public:
 	g_application->FillSettings(&settings);
 	LOG_INFO("application require " << settings.width << "x" << settings.height);
     settings.fullscreen = true;
-	
+#ifndef GHL_PLATFORM_TVOS
 	if ( rect.size.width==320 && rect.size.height==480 ) {
 		if (( settings.width >= 480*2 && settings.height >= 320*2 ) ||
 			 ( settings.height >= 480*2 && settings.width >= 320*2 ) ) {
@@ -573,9 +630,6 @@ public:
 			g_retina_enabled = true;
 		}
 	}
-	
-	g_need_depth = settings.depth;
-	
 	if (settings.width > settings.height) {
 		g_orientation = UIInterfaceOrientationLandscapeRight;
 		settings.width = rect.size.height;
@@ -587,7 +641,8 @@ public:
 		settings.height = rect.size.height;
         LOG_VERBOSE("UIInterfaceOrientationPortrait");
 	}
-	
+#endif
+    g_need_depth = settings.depth;
 	
 	/// setup audio session
 	AVAudioSession *session = [AVAudioSession sharedInstance];
@@ -665,6 +720,7 @@ void GHL_CALL SystemCocoaTouch::HideKeyboard() {
 
 bool GHL_CALL SystemCocoaTouch::SetDeviceState( GHL::DeviceState name, const void* data) {
 	if (!data) return false;
+#ifndef GHL_PLATFORM_TVOS
 	if (name==GHL::DEVICE_STATE_ACCELEROMETER_ENABLED) {
 		const bool* state = (const bool*)data;
 		if (*state && !m_accelerometer) {
@@ -674,7 +730,8 @@ bool GHL_CALL SystemCocoaTouch::SetDeviceState( GHL::DeviceState name, const voi
 			m_accelerometer = nil;
 		}
 		return true;
-	} else if (name==GHL::DEVICE_STATE_ORIENTATION_LOCKED) {
+	} else
+    if (name==GHL::DEVICE_STATE_ORIENTATION_LOCKED) {
 		g_orientationLocked = *(const bool*)data;
 		return true;
 	} else if (name==GHL::DEVICE_STATE_MULTITOUCH_ENABLED) {
@@ -686,7 +743,8 @@ bool GHL_CALL SystemCocoaTouch::SetDeviceState( GHL::DeviceState name, const voi
 		g_retina_enabled = *state;
 		return true;
 	}
-	return false;
+#endif
+    return false;
 }
 
 GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {

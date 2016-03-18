@@ -19,7 +19,7 @@
 
 #endif
 
-#ifdef GHL_PLATFORM_IOS
+#if defined( GHL_PLATFORM_IOS) || defined( GHL_PLATFORM_TVOS )
 
 #include <OpenAL/al.h>
 #include <OpenAL/alc.h>

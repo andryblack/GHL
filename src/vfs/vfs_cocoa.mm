@@ -131,7 +131,7 @@ namespace GHL {
             m_profile_dir = "/Library/Application Support/sandbox";
         } else {
             NSString* path = [paths objectAtIndex:0];
-#ifndef GHL_PLATFORM_IOS
+#if defined(GHL_PLATFORM_MAC)
             NSString* bundleid = [bundle bundleIdentifier];
             if (bundleid) {
                 path = [path stringByAppendingPathComponent:bundleid];
@@ -152,7 +152,7 @@ namespace GHL {
             m_cache_dir = "/Library/Caches/sandbox";
         } else {
             NSString* path = [paths objectAtIndex:0];
-#ifndef GHL_PLATFORM_IOS
+#if defined( GHL_PLATFORM_MAC )
             NSString* bundleid = [bundle bundleIdentifier];
             if (bundleid) {
                 path = [path stringByAppendingPathComponent:bundleid];
