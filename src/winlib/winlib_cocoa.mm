@@ -18,6 +18,7 @@
 
 #include <ghl_system.h>
 #include <ghl_log.h>
+#include <ghl_event.h>
 
 #include "../vfs/vfs_cocoa.h"
 #include "../image/image_decoders.h"
@@ -255,12 +256,12 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 	GHL::Key key = translate_key(c,kk);
 	if (key==GHL::KEY_NONE) {
 		[super keyDown:event];
-	} else {
-		[m_application getApplication]->OnKeyDown(key);
 	}
-    [m_application getApplication]->OnChar( [[event characters] characterAtIndex:0] );
-    
-   
+    GHL::Event e;
+    e.type = GHL::EVENT_TYPE_KEY_PRESS;
+    e.data.key_press.key = key;
+    e.data.key_press.charcode = [[event characters] characterAtIndex:0];
+    [m_application getApplication]->OnEvent(&e);
 }
 - (void)keyUp:(NSEvent *)event {
 	unichar c = [[event charactersIgnoringModifiers] characterAtIndex:0];
@@ -268,9 +269,11 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 	GHL::Key key = translate_key(c,kk);
 	if (key==GHL::KEY_NONE) {
 		[super keyDown:event];
-	} else {
-		[m_application getApplication]->OnKeyUp(key);
 	}
+    GHL::Event e;
+    e.type = GHL::EVENT_TYPE_KEY_RELEASE;
+    e.data.key_release.key = key;
+    [m_application getApplication]->OnEvent(&e);
 }
 - (NSPoint) scale_point:(NSPoint)point {
     NSPoint res = point;
@@ -285,44 +288,78 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     NSPoint event_location = [theEvent locationInWindow];
     NSPoint local_point = [self convertPoint:event_location fromView:nil];
     local_point = [self scale_point: local_point ];
-    [m_application getApplication]->OnMouseDown(GHL::MOUSE_BUTTON_LEFT, local_point.x, local_point.y);
+    GHL::Event e;
+    e.type = GHL::EVENT_TYPE_MOUSE_PRESS;
+    e.data.mouse_press.button = GHL::MOUSE_BUTTON_LEFT;
+    e.data.mouse_press.x = local_point.x;
+    e.data.mouse_press.y = local_point.y;
+    [m_application getApplication]->OnEvent(&e);
 }
 - (void)mouseUp:(NSEvent *)theEvent {
     NSPoint event_location = [theEvent locationInWindow];
     NSPoint local_point = [self convertPoint:event_location fromView:nil];
     local_point = [self scale_point: local_point ];
-    [m_application getApplication]->OnMouseUp(GHL::MOUSE_BUTTON_LEFT, local_point.x, local_point.y);
+    GHL::Event e;
+    e.type = GHL::EVENT_TYPE_MOUSE_RELEASE;
+    e.data.mouse_release.button = GHL::MOUSE_BUTTON_LEFT;
+    e.data.mouse_release.x = local_point.x;
+    e.data.mouse_release.y = local_point.y;
+    [m_application getApplication]->OnEvent(&e);
 }
 - (void)mouseMoved:(NSEvent *)theEvent {
     NSPoint event_location = [theEvent locationInWindow];
     NSPoint local_point = [self convertPoint:event_location fromView:nil];
     local_point = [self scale_point: local_point ];
-    //LOG_DEBUG("mouseMoved: " << local_point.x << "x" << local_point.y);
-    [m_application getApplication]->OnMouseMove(GHL::MOUSE_BUTTON_NONE, local_point.x, local_point.y);
+    GHL::Event e;
+    e.type = GHL::EVENT_TYPE_MOUSE_MOVE;
+    e.data.mouse_move.button = GHL::MOUSE_BUTTON_NONE;
+    e.data.mouse_move.x = local_point.x;
+    e.data.mouse_move.y = local_point.y;
+    [m_application getApplication]->OnEvent(&e);
 }
 - (void)mouseDragged:(NSEvent *)theEvent {
     NSPoint event_location = [theEvent locationInWindow];
     NSPoint local_point = [self convertPoint:event_location fromView:nil];
     local_point = [self scale_point: local_point ];
-    [m_application getApplication]->OnMouseMove(GHL::MOUSE_BUTTON_LEFT, local_point.x, local_point.y);
+    GHL::Event e;
+    e.type = GHL::EVENT_TYPE_MOUSE_MOVE;
+    e.data.mouse_move.button = GHL::MOUSE_BUTTON_LEFT;
+    e.data.mouse_move.x = local_point.x;
+    e.data.mouse_move.y = local_point.y;
+    [m_application getApplication]->OnEvent(&e);
 }
 - (void)rightMouseDown:(NSEvent *)theEvent {
     NSPoint event_location = [theEvent locationInWindow];
     NSPoint local_point = [self convertPoint:event_location fromView:nil];
     local_point = [self scale_point: local_point ];
-    [m_application getApplication]->OnMouseDown(GHL::MOUSE_BUTTON_RIGHT, local_point.x, local_point.y);
+    GHL::Event e;
+    e.type = GHL::EVENT_TYPE_MOUSE_PRESS;
+    e.data.mouse_press.button = GHL::MOUSE_BUTTON_RIGHT;
+    e.data.mouse_press.x = local_point.x;
+    e.data.mouse_press.y = local_point.y;
+    [m_application getApplication]->OnEvent(&e);
 }
 - (void)rightMouseUp:(NSEvent *)theEvent {
     NSPoint event_location = [theEvent locationInWindow];
     NSPoint local_point = [self convertPoint:event_location fromView:nil];
     local_point = [self scale_point: local_point ];
-    [m_application getApplication]->OnMouseUp(GHL::MOUSE_BUTTON_RIGHT, local_point.x, local_point.y);
+    GHL::Event e;
+    e.type = GHL::EVENT_TYPE_MOUSE_RELEASE;
+    e.data.mouse_release.button = GHL::MOUSE_BUTTON_RIGHT;
+    e.data.mouse_release.x = local_point.x;
+    e.data.mouse_release.y = local_point.y;
+    [m_application getApplication]->OnEvent(&e);
 }
 - (void)rightMouseDragged:(NSEvent *)theEvent {
     NSPoint event_location = [theEvent locationInWindow];
     NSPoint local_point = [self convertPoint:event_location fromView:nil];
     local_point = [self scale_point: local_point ];
-    [m_application getApplication]->OnMouseMove(GHL::MOUSE_BUTTON_RIGHT, local_point.x, local_point.y);
+    GHL::Event e;
+    e.type = GHL::EVENT_TYPE_MOUSE_MOVE;
+    e.data.mouse_move.button = GHL::MOUSE_BUTTON_RIGHT;
+    e.data.mouse_move.x = local_point.x;
+    e.data.mouse_move.y = local_point.y;
+    [m_application getApplication]->OnEvent(&e);
 }
 
 - (BOOL) acceptsFirstResponder
@@ -536,7 +573,9 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	
 	if (m_application) {
-        m_application->OnDeactivated();
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_DEACTIVATE;
+        m_application->OnEvent(&e);
     }
     
     NSInteger style = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
@@ -627,7 +666,9 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     [m_window makeFirstResponder:m_gl_view];
 
     if (m_application) {
-        m_application->OnActivated();
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_ACTIVATE;
+        m_application->OnEvent(&e);
     }
     
     [pool release];
@@ -758,7 +799,9 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     }
 	LOG_VERBOSE("Activated");
     if (m_application) {
-        m_application->OnActivated();
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_ACTIVATE;
+        m_application->OnEvent(&e);
     }
 }
 
@@ -770,7 +813,9 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     }
 	LOG_VERBOSE("Deactivated");
     if (m_application) {
-        m_application->OnDeactivated();
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_DEACTIVATE;
+        m_application->OnEvent(&e);
     }
 }
 

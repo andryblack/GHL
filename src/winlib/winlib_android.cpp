@@ -5,6 +5,7 @@
 #include <android/looper.h>
 #include <ghl_log.h>
 #include <ghl_system.h>
+#include <ghl_event.h>
 #include <EGL/egl.h>
 #include "../render/render_impl.h"
 #include "ghl_application.h"
@@ -142,7 +143,9 @@ namespace GHL {
             LOG_INFO("OnResume");
             g_native_activity = m_activity;
             if (m_app) {
-                m_app->OnActivated();
+                GHL::Event e;
+                e.type = GHL::EVENT_TYPE_ACTIVATE;
+                m_app->OnEvent(&e);
             }
         }
         void* onSaveInstanceState(size_t* outSize) {
@@ -152,7 +155,9 @@ namespace GHL {
             LOG_INFO("OnPause");
             g_native_activity = m_activity;
             if (m_app) {
-                m_app->OnDeactivated();
+                GHL::Event e;
+                e.type = GHL::EVENT_TYPE_DEACTIVATE;
+                m_app->OnEvent(&e);
             }
         }
         void OnStop() {
@@ -372,13 +377,26 @@ namespace GHL {
                     /// support multitouch
                 }
                 if (m_app) {
+                    GHL::Event e;
                     if ( action == AMOTION_EVENT_ACTION_DOWN ) {
-                        m_app->OnMouseDown(btn,x,y);
+                        e.type = GHL::EVENT_TYPE_MOUSE_PRESS;
+                        e.data.mouse_press.button = btn;
+                        e.data.mouse_press.x = x;
+                        e.data.mouse_press.y = y;
                     } else if (action == AMOTION_EVENT_ACTION_UP) {
-                        m_app->OnMouseUp(btn,x,y);
+                        e.type = GHL::EVENT_TYPE_MOUSE_RELEASE;
+                        e.data.mouse_release.button = btn;
+                        e.data.mouse_release.x = x;
+                        e.data.mouse_release.y = y;
                     } else if (action == AMOTION_EVENT_ACTION_MOVE) {
-                        m_app->OnMouseMove(btn,x,y);
+                        e.type = GHL::EVENT_TYPE_MOUSE_MOVE;
+                        e.data.mouse_move.button = btn;
+                        e.data.mouse_move.x = x;
+                        e.data.mouse_move.y = y;
+                    } else {
+                        return false;
                     }
+                    m_app->OnEvent(&e);
                 }
                 return true;
             }

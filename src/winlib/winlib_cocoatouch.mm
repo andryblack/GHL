@@ -16,6 +16,7 @@
 #include "ghl_application.h"
 #include "ghl_settings.h"
 #include "ghl_system.h"
+#include "ghl_event.h"
 #include "../ghl_log_impl.h"
 
 #include "../sound/ghl_sound_impl.h"
@@ -402,7 +403,12 @@ public:
 		if (touch_num>0) {
 			btn = GHL::MouseButton(GHL::MUTITOUCH_1+touch_num-1);
 		}
-		g_application->OnMouseDown(btn,pos.x,pos.y);
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_MOUSE_PRESS;
+        e.data.mouse_press.button = btn;
+        e.data.mouse_press.x = pos.x;
+        e.data.mouse_press.y = pos.y;
+        g_application->OnEvent(&e);
         //LOG_DEBUG("touchBegan " << touch_num << " : " << pos.x << pos.y );
 	}
 }
@@ -421,7 +427,12 @@ public:
 		if (touch_num>0) {
 			btn = GHL::MouseButton(GHL::MUTITOUCH_1+touch_num-1);
 		}
-		g_application->OnMouseUp(btn,pos.x,pos.y);
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_MOUSE_RELEASE;
+        e.data.mouse_release.button = btn;
+        e.data.mouse_release.x = pos.x;
+        e.data.mouse_release.y = pos.y;
+        g_application->OnEvent(&e);
         //LOG_DEBUG("touchesEnded " << touch_num << " : " << pos.x << pos.y );
 	}
 }
@@ -443,7 +454,12 @@ public:
 		if (touch_num>0) {
 			btn = GHL::MouseButton(GHL::MUTITOUCH_1+touch_num-1);
 		}
-		g_application->OnMouseMove(btn,pos.x,pos.y);
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_MOUSE_MOVE;
+        e.data.mouse_move.button = btn;
+        e.data.mouse_move.x = pos.x;
+        e.data.mouse_move.y = pos.y;
+        g_application->OnEvent(&e);
         //LOG_DEBUG("touchesMoved " << touch_num << " : " << pos.x << pos.y );
 	}
 }
@@ -467,20 +483,34 @@ public:
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
 	//use string here for the text input
 	if (string!=nil && [string length]>0) {
-		wchar_t wc = [string characterAtIndex:0];
-		g_application->OnChar(wc);
-	} else {
-		g_application->OnKeyDown(GHL::KEY_BACKSPACE);
-		g_application->OnKeyUp(GHL::KEY_BACKSPACE);
-	}
+		unichar wc = [string characterAtIndex:0];
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_KEY_PRESS;
+        e.data.key_press.key = GHL::KEY_NONE;
+        e.data.key_press.charcode = wc;
+        g_application->OnEvent(&e);
+    } else {
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_KEY_PRESS;
+        e.data.key_press.key = GHL::KEY_BACKSPACE;
+        e.data.key_press.charcode = 0;
+        g_application->OnEvent(&e);
+        e.type = GHL::EVENT_TYPE_KEY_RELEASE;
+        g_application->OnEvent(&e);
+   }
 	/// always have one char
 	textField.text = @"*";
 	return NO;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-	g_application->OnKeyDown(GHL::KEY_ENTER);
-	g_application->OnKeyUp(GHL::KEY_ENTER);
+    GHL::Event e;
+    e.type = GHL::EVENT_TYPE_KEY_PRESS;
+    e.data.key_press.key = GHL::KEY_ENTER;
+    e.data.key_press.charcode = 0;
+    g_application->OnEvent(&e);
+    e.type = GHL::EVENT_TYPE_KEY_RELEASE;
+    g_application->OnEvent(&e);
 	return NO;
 }
 
@@ -627,7 +657,9 @@ public:
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     [view makeCurrent];
-	g_application->OnDeactivated();
+    GHL::Event e;
+    e.type = GHL::EVENT_TYPE_DEACTIVATE;
+    g_application->OnEvent(&e);
 	[view setActive:false];
 	//[view drawRect:[view bounds]];
 	LOG_INFO("Deactivated");
@@ -636,7 +668,9 @@ public:
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     [view makeCurrent];
-	g_application->OnActivated();
+    GHL::Event e;
+    e.type = GHL::EVENT_TYPE_ACTIVATE;
+    g_application->OnEvent(&e);
 	[view setActive:true];
 	//if ([view loaded]) [view drawRect:[view bounds]];
 	LOG_INFO("Activated");
