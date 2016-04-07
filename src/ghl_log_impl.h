@@ -32,7 +32,7 @@ namespace GHL {
     
     class LoggerImpl {
     public:
-        explicit LoggerImpl( LogLevel level , const char* module = "COMMON" );
+        explicit LoggerImpl( LogLevel level , const char* module = "COMMON" ,bool native = false);
         ~LoggerImpl();
         
         template <class T>
@@ -55,12 +55,20 @@ namespace GHL {
         LogLevel    m_level;
         std::stringstream   m_stream;
         const char*         m_module;
+        bool    m_native;
     };
     
 #define LOG_FATAL( MSG ) do { ::GHL::LoggerImpl(::GHL::LOG_LEVEL_FATAL,MODULE) << MSG ; } while (false)
 #define LOG_ERROR( MSG ) do { ::GHL::LoggerImpl(::GHL::LOG_LEVEL_ERROR,MODULE) << MSG ; } while (false)
 #define LOG_WARNING( MSG ) do { ::GHL::LoggerImpl(::GHL::LOG_LEVEL_WARNING,MODULE) << MSG ; } while (false)
 #define LOG_INFO( MSG ) do { ::GHL::LoggerImpl(::GHL::LOG_LEVEL_INFO,MODULE) << MSG ; } while (false)
+
+#define ILOG_FATAL( MSG ) do { ::GHL::LoggerImpl(::GHL::LOG_LEVEL_FATAL,MODULE,true) << MSG ; } while (false)
+#define ILOG_ERROR( MSG ) do { ::GHL::LoggerImpl(::GHL::LOG_LEVEL_ERROR,MODULE,true) << MSG ; } while (false)
+#define ILOG_WARNING( MSG ) do { ::GHL::LoggerImpl(::GHL::LOG_LEVEL_WARNING,MODULE,true) << MSG ; } while (false)
+#define ILOG_INFO( MSG ) do { ::GHL::LoggerImpl(::GHL::LOG_LEVEL_INFO,MODULE,true) << MSG ; } while (false)
+#define ILOG_VERBOSE( MSG ) do { ::GHL::LoggerImpl(::GHL::LOG_LEVEL_VERBOSE,MODULE,true) << MSG ; } while (false)
+#define ILOG_DEBUG( MSG ) do { ::GHL::LoggerImpl(::GHL::LOG_LEVEL_DEBUG,MODULE,true) << MSG ; } while (false)
 
 #if defined( GHL_DEBUG ) && !defined( GHL_SILENT )
 #define LOG_VERBOSE( MSG ) do { ::GHL::LoggerImpl(::GHL::LOG_LEVEL_VERBOSE,MODULE) << MSG ; } while (false)

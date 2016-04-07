@@ -64,6 +64,10 @@ namespace GHL {
     bool OpenSLAudioEngine::IsValid() const {
         return m_engine_obj && m_engine_obj && m_output_mix_obj;
     }
+
+    void OpenSLAudioEngine::SetFocus(bool focus) {
+
+    }
     
     OpenSLAudioEngine::~OpenSLAudioEngine() {
         for (std::vector<OpenSLAudioChannel*>::const_iterator it = m_channels.begin();it!=m_channels.end();++it) {

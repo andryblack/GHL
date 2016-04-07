@@ -3,6 +3,7 @@
 #include <android/input.h>
 #include <android/native_activity.h>
 #include <android/looper.h>
+#include <android/keycodes.h>
 #include <ghl_log.h>
 #include <ghl_system.h>
 #include <ghl_event.h>
@@ -53,6 +54,13 @@ static GHL::Application* android_app_create() {
     return temp_app;
 }
 
+static GHL::Key convert_key(uint32_t k) {
+    switch (k) {
+        case AKEYCODE_ENTER: return GHL::KEY_ENTER;
+        case AKEYCODE_DEL: return GHL::KEY_BACKSPACE;
+    }
+    return GHL::KEY_NONE;
+}
 
 
 namespace GHL {
@@ -98,13 +106,29 @@ namespace GHL {
         virtual void GHL_CALL SwitchFullscreen(bool fs) {
             
         }
+        bool set_keyboard_visible(bool visible) {
+            
+            jclass ActivityClass = m_activity->env->GetObjectClass(m_activity->clazz);
+            jmethodID method = m_activity->env->GetMethodID(ActivityClass,visible ? "showSoftKeyboard" : "hideSoftKeyboard","()V");
+            if (m_activity->env->ExceptionCheck()) {
+                m_activity->env->ExceptionDescribe();
+                m_activity->env->ExceptionClear();
+                ILOG_INFO("[native] not found method");
+                return false;
+            }
+            m_activity->env->CallVoidMethod(m_activity->clazz,method);
+            m_activity->env->DeleteLocalRef(ActivityClass);
+            return true;
+        }
         /// Show soft keyboard
         virtual void GHL_CALL ShowKeyboard() {
-            
+            if (!set_keyboard_visible(true))
+                ANativeActivity_showSoftInput(m_activity,ANATIVEACTIVITY_SHOW_SOFT_INPUT_FORCED);
         }
         /// Hide soft keyboard
         virtual void GHL_CALL HideKeyboard() {
-            
+            if (!set_keyboard_visible(false))
+                ANativeActivity_hideSoftInput(m_activity,0);
         }
         /// Get current key modifiers state
         virtual UInt32  GHL_CALL GetKeyMods() const {
@@ -129,10 +153,11 @@ namespace GHL {
         virtual void GHL_CALL SetTitle( const char* title ) {
             
         }
-        
+        static const unsigned int AWINDOW_FLAG_KEEP_SCREEN_ON = 0x00000080;
         void OnCreate() {
             LOG_INFO("OnCreate");
             g_native_activity = m_activity;
+            ANativeActivity_setWindowFlags(m_activity, AWINDOW_FLAG_KEEP_SCREEN_ON, 0);
         }
         void OnStart() {
             LOG_INFO("OnStart");
@@ -170,6 +195,7 @@ namespace GHL {
         }
         void OnWindowFocusChanged(int hasFocus) {
             LOG_VERBOSE("OnWindowFocusChanged:" << hasFocus);
+            m_sound.SetFocus(hasFocus);
         }
         void OnNativeWindowCreated(ANativeWindow* window) {
             LOG_INFO("OnNativeWindowCreated");
@@ -362,6 +388,28 @@ namespace GHL {
         void OnLowMemory() {
             LOG_WARNING("OnLowMemory");
         }
+
+        void onKey(int key_code,uint32_t unicode,int action) {
+            if (!m_app) 
+                return;
+            if (AKEY_EVENT_ACTION_DOWN == action) {
+                //ILOG_INFO("AKEY_EVENT_ACTION_DOWN " << key_code << " " << unicode);
+                GHL::Event e;
+                e.type = GHL::EVENT_TYPE_KEY_PRESS;
+                e.data.key_press.key = convert_key(key_code);
+                e.data.key_press.charcode = unicode;
+                m_app->OnEvent(&e);
+            } else if (AKEY_EVENT_ACTION_UP == action) {
+                //ILOG_INFO("AKEY_EVENT_ACTION_UP " << key_code << " " << unicode);
+                GHL::Event e;
+                e.type = GHL::EVENT_TYPE_KEY_RELEASE;
+                e.data.key_release.key = convert_key(key_code);
+                m_app->OnEvent(&e);
+            } else {
+                ILOG_INFO("unknown key event " << action);
+            }
+        }
+
     protected:
         bool HandleEvent(const AInputEvent* event) {
             g_native_activity = m_activity;
@@ -399,14 +447,23 @@ namespace GHL {
                     m_app->OnEvent(&e);
                 }
                 return true;
+            } else if (AINPUT_EVENT_TYPE_KEY == AInputEvent_getType(event)) {
+                int32_t key_code = AKeyEvent_getKeyCode(event);
+                onKey(key_code,0,AKeyEvent_getAction(event));
+            } else {
+                LOG_INFO("unknown event type " << AInputEvent_getType(event));
             }
             return false;
         }
+        
         void OnInputCallback() {
             g_native_activity = m_activity;
             if (m_input_queue) {
                 AInputEvent* event = 0;
-                if ( AInputQueue_getEvent(m_input_queue,&event)>=0 ) {
+                while ( AInputQueue_getEvent(m_input_queue,&event)>=0 ) {
+                    if (AInputQueue_preDispatchEvent(m_input_queue, event)) {
+                       continue;
+                    }
                     bool handled = HandleEvent(event);
                     AInputQueue_finishEvent(m_input_queue,event,handled?0:1);
                 }
@@ -526,6 +583,19 @@ namespace GHL {
     }
     
     void GHLActivity::StartTimerThread() {
+
+        jclass ActivityClass = m_activity->env->GetObjectClass(m_activity->clazz);
+        jmethodID method = m_activity->env->GetMethodID(ActivityClass, "reportRenderThread","()V");
+        if (m_activity->env->ExceptionCheck()) {
+            m_activity->env->ExceptionDescribe();
+            m_activity->env->ExceptionClear();
+            LOG_INFO("[native] not found method reportRenderThread");
+        } else {
+            m_activity->env->CallVoidMethod(m_activity->clazz,method);
+        }
+        m_activity->env->DeleteLocalRef(ActivityClass);
+
+
         int msgpipe[2];
         if (pipe(msgpipe)) {
             LOG_ERROR("could not create pipe: " << strerror(errno));
@@ -572,6 +642,15 @@ namespace GHL {
         m_timer_state = TS_NONE;
     }
 }
+
+extern "C" JNIEXPORT jboolean JNICALL Java_com_GHL_Activity_nativeOnKey
+  (JNIEnv *, jclass, jint key_code, jlong unicode, jlong action) {
+    if (GHL::g_native_activity) {
+        static_cast<GHL::GHLActivity*>(GHL::g_native_activity->instance)->onKey(key_code,unicode,action);
+        return true;
+    }
+    return false;
+  }
 
 extern "C" __attribute__ ((visibility ("default"))) void ANativeActivity_onCreate(ANativeActivity* activity,
                                                                                   void* savedState, size_t savedStateSize);

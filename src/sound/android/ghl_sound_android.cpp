@@ -28,6 +28,12 @@ namespace GHL {
         m_opensl_engine = 0;
         return true;
     }
+
+    void SoundAndroid::SetFocus(bool focus) {
+        if (m_opensl_engine) {
+            m_opensl_engine->SetFocus(focus);
+        }
+    }
     
     class SoundEffectOpenSL : public SoundEffectImpl {
     private:

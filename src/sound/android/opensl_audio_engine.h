@@ -23,6 +23,7 @@ namespace GHL {
         ~OpenSLAudioEngine();
         
         bool IsValid() const;
+        void SetFocus(bool focus);
         
         OpenSLAudioStream* CreateStream(AAsset* asset);
         OpenSLAudioChannel* GetChannel(int freq,int channels,int bits);

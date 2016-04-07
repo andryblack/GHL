@@ -36,12 +36,12 @@ namespace GHL{
         ": DEBUG :"
     };
     
-    LoggerImpl::LoggerImpl( LogLevel level , const char* module) : m_level( level ), m_module(module){
+    LoggerImpl::LoggerImpl( LogLevel level , const char* module, bool native) : m_level( level ), m_module(module),m_native(native){
         m_stream << "GHL:[" << m_module << "]" << level_descr[m_level];
     }
     
     LoggerImpl::~LoggerImpl() {
-        if (g_external_logger) {
+        if (g_external_logger && !m_native) {
             g_external_logger->AddMessage(m_level,m_stream.str().c_str());
         } else {
             GHL_Log(m_level, m_stream.str().c_str());
