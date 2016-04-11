@@ -36,7 +36,9 @@ namespace GHL
         EVENT_TYPE_MOUSE_MOVE,
         EVENT_TYPE_MOUSE_RELEASE,
         EVENT_TYPE_ACTIVATE,
-        EVENT_TYPE_DEACTIVATE
+        EVENT_TYPE_DEACTIVATE,
+        EVENT_TYPE_SOFT_KEYBOARD_SHOW,
+        EVENT_TYPE_SOFT_KEYBOARD_HIDE,
     };
 
     /// Key press
@@ -71,6 +73,14 @@ namespace GHL
     struct MouseReleaseEvent : MouseEvent {
         MouseButton button;
     };
+    
+    // Soft Keyboard show
+    struct SoftKeyboardShowEvent {
+        Int32 x;
+        Int32 y;
+        Int32 w;
+        Int32 h;
+    };
 
     /// Event uninon
     struct Event {
@@ -81,6 +91,7 @@ namespace GHL
             MousePressEvent     mouse_press;
             MouseMoveEvent      mouse_move;
             MouseReleaseEvent   mouse_release;
+            SoftKeyboardShowEvent soft_keyboard_show;
         } data;
     };
     

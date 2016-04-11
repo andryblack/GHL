@@ -281,6 +281,7 @@ public:
 		m_hiddenInput.keyboardType = UIKeyboardTypeASCIICapable;
 		m_hiddenInput.returnKeyType = UIReturnKeyDone;
 		m_hiddenInput.text = @"*";
+        m_hiddenInput.autocorrectionType = UITextAutocorrectionTypeNo;
 		[self addSubview:m_hiddenInput];
 		
         [self setAutoresizesSubviews:YES];
@@ -547,7 +548,8 @@ public:
 
 - (void)viewWillAppear:(BOOL)animated    // Called when the view is about to made visible. Default does nothing
 {
-	
+    [super viewWillAppear:animated];
+    [self registerForKeyboardNotifications];
 }
 - (void)viewDidAppear:(BOOL)animated     // Called when the view has been fully transitioned onto the screen. Default does nothing
 {
@@ -555,12 +557,66 @@ public:
 }
 - (void)viewWillDisappear:(BOOL)animated // Called when the view is dismissed, covered or otherwise hidden. Default does nothing
 {
+    [super viewWillDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardWillHideNotification
+                                                  object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardDidShowNotification
+                                                  object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardDidChangeFrameNotification
+                                                  object:nil];
 	[(WinLibView*)self.view setActive: false];
 }
 - (void)viewDidDisappear:(BOOL)animated  // Called after the view was dismissed, covered or otherwise hidden. Default does 
 {
 	
 }
+
+- (void)registerForKeyboardNotifications {
+    
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardDidHide:)
+                                                 name:UIKeyboardWillHideNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardDidShow:)
+                                                 name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardDidChangeFrame:)
+                                                 name:UIKeyboardDidChangeFrameNotification object:nil];
+}
+
+- (void)keyboardDidShow:(NSNotification *)note {
+    [self keyboardDidChangeFrame:note];
+    
+}
+
+- (void)keyboardDidHide:(NSNotification *)note {
+    GHL::Event event;
+    event.type = GHL::EVENT_TYPE_SOFT_KEYBOARD_HIDE;
+    g_application->OnEvent(&event);
+}
+
+- (void)keyboardDidChangeFrame:(NSNotification *)note {
+    CGRect keyboardRect = [note.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGRect localRect = [self.view convertRect:keyboardRect fromView:nil];
+    if (localRect.origin.y>=(self.view.bounds.origin.y + self.view.bounds.size.height - 5)) {
+        return;
+    }
+    GHL::Event event;
+    event.type = GHL::EVENT_TYPE_SOFT_KEYBOARD_SHOW;
+    event.data.soft_keyboard_show.x = localRect.origin.x * self.view.contentScaleFactor;
+    event.data.soft_keyboard_show.y = localRect.origin.y * self.view.contentScaleFactor;
+    event.data.soft_keyboard_show.w = localRect.size.width * self.view.contentScaleFactor;
+    event.data.soft_keyboard_show.h = localRect.size.height * self.view.contentScaleFactor;
+    g_application->OnEvent(&event);
+}
+
 @end
 
 @interface WinLibAppDelegate : NSObject<UIApplicationDelegate> {
