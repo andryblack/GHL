@@ -397,6 +397,7 @@ namespace GHL {
                 GHL::Event e;
                 e.type = GHL::EVENT_TYPE_KEY_PRESS;
                 e.data.key_press.key = convert_key(key_code);
+                e.data.key_press.modificators = 0;
                 e.data.key_press.charcode = unicode;
                 m_app->OnEvent(&e);
             } else if (AKEY_EVENT_ACTION_UP == action) {
@@ -429,16 +430,19 @@ namespace GHL {
                     if ( action == AMOTION_EVENT_ACTION_DOWN ) {
                         e.type = GHL::EVENT_TYPE_MOUSE_PRESS;
                         e.data.mouse_press.button = btn;
+                        e.data.mouse_press.modificators = 0;
                         e.data.mouse_press.x = x;
                         e.data.mouse_press.y = y;
                     } else if (action == AMOTION_EVENT_ACTION_UP) {
                         e.type = GHL::EVENT_TYPE_MOUSE_RELEASE;
                         e.data.mouse_release.button = btn;
+                        e.data.mouse_release.modificators = 0;
                         e.data.mouse_release.x = x;
                         e.data.mouse_release.y = y;
                     } else if (action == AMOTION_EVENT_ACTION_MOVE) {
                         e.type = GHL::EVENT_TYPE_MOUSE_MOVE;
                         e.data.mouse_move.button = btn;
+                        e.data.mouse_move.modificators = 0;
                         e.data.mouse_move.x = x;
                         e.data.mouse_move.y = y;
                     } else {

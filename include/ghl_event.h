@@ -45,6 +45,7 @@ namespace GHL
     struct KeyPressEvent {
         Key     key;
         UInt32  charcode;
+        UInt32  modificators;
     };
 
     /// Key release
@@ -55,6 +56,7 @@ namespace GHL
     /// Base mouse event
     struct MouseEvent {
         MouseButton button;
+        UInt32  modificators;
         Int32   x;
         Int32   y;
     };

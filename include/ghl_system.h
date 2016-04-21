@@ -44,9 +44,7 @@ namespace GHL {
         virtual void GHL_CALL ShowKeyboard() = 0;
         /// Hide soft keyboard
         virtual void GHL_CALL HideKeyboard() = 0;
-        /// Get current key modifiers state
-        virtual UInt32  GHL_CALL GetKeyMods() const = 0;
-		/// Set device specific state
+        /// Set device specific state
 		virtual bool GHL_CALL SetDeviceState( DeviceState name, const void* data) = 0;
 		/// Get device specific data
 		virtual bool GHL_CALL GetDeviceData( DeviceData name, void* data) = 0;

@@ -67,11 +67,6 @@ public:
         /// do nothing
     }
     ///
-    virtual GHL::UInt32  GHL_CALL GetKeyMods() const {
-        /// @todo stub
-        return 0;
-    }
-    ///
     virtual bool GHL_CALL SetDeviceState( GHL::DeviceState /*name*/, const void* /*data*/);
     ///
     virtual bool GHL_CALL GetDeviceData( GHL::DeviceData name, void* data) {
@@ -250,6 +245,24 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 	return key;
 }
 
+- (GHL::UInt32) convertModificators:(NSEvent*) event {
+    GHL::UInt32 res = 0;
+    NSEventModifierFlags flags = event.modifierFlags;
+    if (flags & (NSAlphaShiftKeyMask|NSShiftKeyMask)) {
+        res |= GHL::KEYMOD_SHIFT;
+    }
+    if (flags & (NSControlKeyMask)) {
+        res |= GHL::KEYMOD_CTRL;
+    }
+    if (flags & (NSAlternateKeyMask)) {
+        res |= GHL::KEYMOD_ALT;
+    }
+    if (flags & (NSCommandKeyMask)) {
+        res |= GHL::KEYMOD_COMMAND;
+    }
+    return res;
+}
+
 - (void)keyDown:(NSEvent *)event {
 	unichar c = [[event charactersIgnoringModifiers] characterAtIndex:0];
 	unsigned short kk = [event keyCode];
@@ -261,6 +274,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     e.type = GHL::EVENT_TYPE_KEY_PRESS;
     e.data.key_press.key = key;
     e.data.key_press.charcode = [[event characters] characterAtIndex:0];
+    e.data.key_press.modificators = [self convertModificators:event];
     [m_application getApplication]->OnEvent(&e);
 }
 - (void)keyUp:(NSEvent *)event {
@@ -291,6 +305,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     GHL::Event e;
     e.type = GHL::EVENT_TYPE_MOUSE_PRESS;
     e.data.mouse_press.button = GHL::MOUSE_BUTTON_LEFT;
+    e.data.mouse_press.modificators = [self convertModificators:theEvent];
     e.data.mouse_press.x = local_point.x;
     e.data.mouse_press.y = local_point.y;
     [m_application getApplication]->OnEvent(&e);
@@ -302,6 +317,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     GHL::Event e;
     e.type = GHL::EVENT_TYPE_MOUSE_RELEASE;
     e.data.mouse_release.button = GHL::MOUSE_BUTTON_LEFT;
+    e.data.mouse_release.modificators = [self convertModificators:theEvent];
     e.data.mouse_release.x = local_point.x;
     e.data.mouse_release.y = local_point.y;
     [m_application getApplication]->OnEvent(&e);
@@ -313,6 +329,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     GHL::Event e;
     e.type = GHL::EVENT_TYPE_MOUSE_MOVE;
     e.data.mouse_move.button = GHL::MOUSE_BUTTON_NONE;
+    e.data.mouse_move.modificators = [self convertModificators:theEvent];
     e.data.mouse_move.x = local_point.x;
     e.data.mouse_move.y = local_point.y;
     [m_application getApplication]->OnEvent(&e);
@@ -324,6 +341,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     GHL::Event e;
     e.type = GHL::EVENT_TYPE_MOUSE_MOVE;
     e.data.mouse_move.button = GHL::MOUSE_BUTTON_LEFT;
+    e.data.mouse_move.modificators = [self convertModificators:theEvent];
     e.data.mouse_move.x = local_point.x;
     e.data.mouse_move.y = local_point.y;
     [m_application getApplication]->OnEvent(&e);
@@ -335,6 +353,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     GHL::Event e;
     e.type = GHL::EVENT_TYPE_MOUSE_PRESS;
     e.data.mouse_press.button = GHL::MOUSE_BUTTON_RIGHT;
+    e.data.mouse_press.modificators = [self convertModificators:theEvent];
     e.data.mouse_press.x = local_point.x;
     e.data.mouse_press.y = local_point.y;
     [m_application getApplication]->OnEvent(&e);
@@ -346,6 +365,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     GHL::Event e;
     e.type = GHL::EVENT_TYPE_MOUSE_RELEASE;
     e.data.mouse_release.button = GHL::MOUSE_BUTTON_RIGHT;
+    e.data.mouse_release.modificators = [self convertModificators:theEvent];
     e.data.mouse_release.x = local_point.x;
     e.data.mouse_release.y = local_point.y;
     [m_application getApplication]->OnEvent(&e);
@@ -357,6 +377,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     GHL::Event e;
     e.type = GHL::EVENT_TYPE_MOUSE_MOVE;
     e.data.mouse_move.button = GHL::MOUSE_BUTTON_RIGHT;
+    e.data.mouse_move.modificators = [self convertModificators:theEvent];
     e.data.mouse_move.x = local_point.x;
     e.data.mouse_move.y = local_point.y;
     [m_application getApplication]->OnEvent(&e);

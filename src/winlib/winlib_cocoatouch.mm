@@ -407,6 +407,7 @@ public:
         GHL::Event e;
         e.type = GHL::EVENT_TYPE_MOUSE_PRESS;
         e.data.mouse_press.button = btn;
+        e.data.mouse_press.modificators = 0;
         e.data.mouse_press.x = pos.x;
         e.data.mouse_press.y = pos.y;
         g_application->OnEvent(&e);
@@ -431,6 +432,7 @@ public:
         GHL::Event e;
         e.type = GHL::EVENT_TYPE_MOUSE_RELEASE;
         e.data.mouse_release.button = btn;
+        e.data.mouse_release.modificators = 0;
         e.data.mouse_release.x = pos.x;
         e.data.mouse_release.y = pos.y;
         g_application->OnEvent(&e);
@@ -458,6 +460,7 @@ public:
         GHL::Event e;
         e.type = GHL::EVENT_TYPE_MOUSE_MOVE;
         e.data.mouse_move.button = btn;
+        e.data.mouse_move.modificators = 0;
         e.data.mouse_move.x = pos.x;
         e.data.mouse_move.y = pos.y;
         g_application->OnEvent(&e);
@@ -488,12 +491,14 @@ public:
         GHL::Event e;
         e.type = GHL::EVENT_TYPE_KEY_PRESS;
         e.data.key_press.key = GHL::KEY_NONE;
+        e.data.key_press.modificators = 0;
         e.data.key_press.charcode = wc;
         g_application->OnEvent(&e);
     } else {
         GHL::Event e;
         e.type = GHL::EVENT_TYPE_KEY_PRESS;
         e.data.key_press.key = GHL::KEY_BACKSPACE;
+        e.data.key_press.modificators = 0;
         e.data.key_press.charcode = 0;
         g_application->OnEvent(&e);
         e.type = GHL::EVENT_TYPE_KEY_RELEASE;
@@ -508,6 +513,7 @@ public:
     GHL::Event e;
     e.type = GHL::EVENT_TYPE_KEY_PRESS;
     e.data.key_press.key = GHL::KEY_ENTER;
+    e.data.key_press.modificators = 0;
     e.data.key_press.charcode = 0;
     g_application->OnEvent(&e);
     e.type = GHL::EVENT_TYPE_KEY_RELEASE;
