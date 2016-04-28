@@ -411,7 +411,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
         [m_application getApplication]->SetRender(m_render);
         if ([m_application getApplication]->Load()) {
             LOG_VERBOSE( "WinLibOpenGLView::prepareOpenGL application loaded" );
-            m_timer = [NSTimer scheduledTimerWithTimeInterval: 1.0f/200.0f target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
+            m_timer = [NSTimer scheduledTimerWithTimeInterval: 1.0f/60.0f target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
             m_loaded = true;
         }
     
@@ -492,8 +492,8 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
         }
     }
     
-    if ([self window] && [self.window isVisible]) {
-        [self setNeedsDisplay:YES];
+    if ([self window] && [self.window isVisible] && self.canDraw) {
+        [self drawRect:self.bounds];
     }
 }
 
