@@ -636,84 +636,92 @@ public:
 
 @implementation WinLibAppDelegate
 
-- (void)applicationDidFinishLaunching:(UIApplication *)application {
-	
-	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-	LOG_INFO("applicationDidFinishLaunching");
+- (void)doStartup {
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+    LOG_INFO("applicationDidFinishLaunching");
     
-	m_vfs = new GHL::VFSCocoaImpl();
-	g_application->SetVFS(m_vfs);
-
-	CGRect rect = [[UIScreen mainScreen] bounds];
+    m_vfs = new GHL::VFSCocoaImpl();
+    g_application->SetVFS(m_vfs);
+    
+    CGRect rect = [[UIScreen mainScreen] bounds];
     float scale = [[UIScreen mainScreen] scale];
-	
-	GHL::Settings settings;
-	settings.width = rect.size.width * scale;
-	settings.height = rect.size.height * scale;
-	settings.fullscreen = true;
-	settings.depth = g_need_depth;
-    settings.screen_dpi = 72.0 * scale;
-	
-	g_application->FillSettings(&settings);
-	LOG_INFO("application require " << settings.width << "x" << settings.height);
+    
+    GHL::Settings settings;
+    settings.width = rect.size.width * scale;
+    settings.height = rect.size.height * scale;
     settings.fullscreen = true;
-	
-	if ( rect.size.width==320 && rect.size.height==480 ) {
-		if (( settings.width >= 480*2 && settings.height >= 320*2 ) ||
-			 ( settings.height >= 480*2 && settings.width >= 320*2 ) ) {
-			LOG_VERBOSE("Enable retina");
-			g_retina_enabled = true;
-		}
-	}
-	
-	g_need_depth = settings.depth;
-	
-	if (settings.width > settings.height) {
-		g_orientation = UIInterfaceOrientationLandscapeRight;
-		settings.width = rect.size.height;
-		settings.height = rect.size.width;
+    settings.depth = g_need_depth;
+    settings.screen_dpi = 72.0 * scale;
+    
+    g_application->FillSettings(&settings);
+    LOG_INFO("application require " << settings.width << "x" << settings.height);
+    settings.fullscreen = true;
+    
+    if ( rect.size.width==320 && rect.size.height==480 ) {
+        if (( settings.width >= 480*2 && settings.height >= 320*2 ) ||
+            ( settings.height >= 480*2 && settings.width >= 320*2 ) ) {
+            LOG_VERBOSE("Enable retina");
+            g_retina_enabled = true;
+        }
+    }
+    
+    g_need_depth = settings.depth;
+    
+    if (settings.width > settings.height) {
+        g_orientation = UIInterfaceOrientationLandscapeRight;
+        settings.width = rect.size.height;
+        settings.height = rect.size.width;
         LOG_VERBOSE("UIInterfaceOrientationLandscapeRight");
     } else {
-		g_orientation = UIInterfaceOrientationPortrait;
-		settings.width = rect.size.width;
-		settings.height = rect.size.height;
+        g_orientation = UIInterfaceOrientationPortrait;
+        settings.width = rect.size.width;
+        settings.height = rect.size.height;
         LOG_VERBOSE("UIInterfaceOrientationPortrait");
-	}
-	
-	
-	/// setup audio session
-	AVAudioSession *session = [AVAudioSession sharedInstance];
-	[session setCategory:AVAudioSessionCategoryAmbient error:nil];
-	
-	
-	
-	controller = [[WinLibViewController alloc] init];
-	m_system = new SystemCocoaTouch(controller);
-	g_application->SetSystem(m_system);
-
-	window = [[UIWindow alloc] initWithFrame:rect];
+    }
+    
+    
+    /// setup audio session
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    [session setCategory:AVAudioSessionCategoryAmbient error:nil];
+    
+    
+    
+    controller = [[WinLibViewController alloc] init];
+    m_system = new SystemCocoaTouch(controller);
+    g_application->SetSystem(m_system);
+    
+    window = [[UIWindow alloc] initWithFrame:rect];
     [window setAutoresizesSubviews:YES];
-	
-	view = [[WinLibView alloc] initWithFrame:CGRectMake(0, 0, settings.width, settings.height)];
-	controller.view = view;
-	
-	NSString *reqSysVer = @"4.0";
-	NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
-	if ([currSysVer compare:reqSysVer options:NSNumericSearch] != NSOrderedAscending) {
+    
+    view = [[WinLibView alloc] initWithFrame:CGRectMake(0, 0, settings.width, settings.height)];
+    controller.view = view;
+    
+    NSString *reqSysVer = @"4.0";
+    NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
+    if ([currSysVer compare:reqSysVer options:NSNumericSearch] != NSOrderedAscending) {
         LOG_INFO("setRootViewController");
-		[window setRootViewController:controller];
-	} else
-	{
-		while(window.subviews.count > 0)
-			[[window.subviews objectAtIndex:0] removeFromSuperview];
-		[window addSubview:controller.view];
-	}
-	[window setOpaque:YES];
-	
-	
-	[window makeKeyAndVisible];
-	
-	[pool drain];
+        [window setRootViewController:controller];
+    } else
+    {
+        while(window.subviews.count > 0)
+            [[window.subviews objectAtIndex:0] removeFromSuperview];
+        [window addSubview:controller.view];
+    }
+    [window setOpaque:YES];
+    
+    
+    [window makeKeyAndVisible];
+    
+    GHL::Event e;
+    e.type = GHL::EVENT_TYPE_APP_STARTED;
+    g_application->OnEvent(&e);
+    
+    [pool drain];
+}
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(nullable NSDictionary *)launchOptions {
+    [self doStartup];
+    return YES;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

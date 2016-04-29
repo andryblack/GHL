@@ -39,6 +39,7 @@ namespace GHL
         EVENT_TYPE_DEACTIVATE,
         EVENT_TYPE_SOFT_KEYBOARD_SHOW,
         EVENT_TYPE_SOFT_KEYBOARD_HIDE,
+        EVENT_TYPE_APP_STARTED,
     };
 
     /// Key press
@@ -83,6 +84,11 @@ namespace GHL
         Int32 w;
         Int32 h;
     };
+    
+    // Application Started
+    struct AppStartedEvent {
+        
+    };
 
     /// Event uninon
     struct Event {
@@ -94,6 +100,7 @@ namespace GHL
             MouseMoveEvent      mouse_move;
             MouseReleaseEvent   mouse_release;
             SoftKeyboardShowEvent soft_keyboard_show;
+            AppStartedEvent     app_started;
         } data;
     };
     
