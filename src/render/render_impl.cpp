@@ -561,6 +561,10 @@ namespace GHL {
         m_current_v_buffer = buf;
     }
     
+    bool GHL_CALL RenderImpl::IsFeatureSupported(RenderFeature /*feature*/) {
+        return false;
+    }
+    
     void RenderImpl::MatrixMul(const float* a,const float* b,float* r) {
         for (int x=0; x<4; x++)
         {

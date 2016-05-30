@@ -31,6 +31,8 @@ namespace GHL {
         RenderOpenGL2(UInt32 w,UInt32 h, bool depth);
         
         bool RenderInit();
+        
+        virtual bool GHL_CALL IsFeatureSupported(RenderFeature feature);
     };
 }
 

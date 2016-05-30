@@ -29,6 +29,8 @@ namespace GHL {
         
         void GHL_CALL BeginScene(RenderTarget* target);
         bool RenderInit();
+        
+        virtual bool GHL_CALL IsFeatureSupported(RenderFeature feature);
     };
 }
 

@@ -212,6 +212,12 @@ namespace GHL {
 			return 0;
 #endif
 		}
+        if (data) {
+            if (data->GetWidth() != width || data->GetHeight() != height) {
+                LOG_ERROR("CreateTexture with invalid data size");
+                return 0;
+            }
+        }
 		TextureOpenGL* tex = TextureOpenGL::Create(this,fmt,width,height,data);
 		if (!tex) return tex;
 		return tex;

@@ -70,6 +70,8 @@ namespace GHL {
         virtual void GHL_CALL SetIndexBuffer(const IndexBuffer* buf);
 		virtual void GHL_CALL SetVertexBuffer(const VertexBuffer* buf);
 
+        virtual bool GHL_CALL IsFeatureSupported(RenderFeature feature);
+        
 		virtual void GHL_CALL DebugDrawText( Int32 x,Int32 y,const char* text );
 	
 		virtual UInt32 GHL_CALL GetMemoryUsage() const;

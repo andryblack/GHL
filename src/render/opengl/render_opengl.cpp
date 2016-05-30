@@ -47,6 +47,12 @@ namespace GHL {
         return RenderOpenGLPPL::RenderInit();
     }
     
+    bool GHL_CALL RenderOpenGL2::IsFeatureSupported(RenderFeature feature) {
+        if (feature == RENDER_FEATURE_NPOT_TEXTURES) {
+            return gl.npot_textures;
+        }
+        return RenderOpenGLPPL::IsFeatureSupported(feature);
+    }
 }
 
 GHL_API GHL::RenderImpl* GHL_CALL GHL_CreateRenderOpenGL(GHL::UInt32 w,GHL::UInt32 h,bool depth) {

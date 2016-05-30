@@ -105,6 +105,12 @@ namespace GHL {
 			}
 		} else {
             if (data) {
+                if (gl.UNPACK_ALIGNMENT)
+                    CHECK_GL(gl.PixelStorei(gl.UNPACK_ALIGNMENT,1));
+                UInt32 iw = data->GetWidth();
+                if (gl.UNPACK_ROW_LENGTH)
+                    CHECK_GL(gl.PixelStorei(gl.UNPACK_ROW_LENGTH,iw));
+                
                 const Data* tdata = data->GetData();
                 ImageFormat ifmt = GHL_TextureFormatToImageFormat(fmt);
                 if (ifmt!=data->GetFormat()) {
@@ -125,6 +131,11 @@ namespace GHL {
                                 convert_format(gl,fmt), convert_storage(gl,fmt),
                                 tdata->GetData() ));
                 }
+                
+                if (gl.UNPACK_ALIGNMENT)
+                    CHECK_GL(gl.PixelStorei  (gl.UNPACK_ALIGNMENT,4));
+                if (gl.UNPACK_ROW_LENGTH)
+                    CHECK_GL(gl.PixelStorei  (gl.UNPACK_ROW_LENGTH,0));
             } else {
                 CHECK_GL(gl.TexImage2D  (gl.TEXTURE_2D, 0,
                                 convert_int_format(gl,fmt), w, h, 0,

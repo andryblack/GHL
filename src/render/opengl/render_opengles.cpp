@@ -50,6 +50,13 @@ namespace GHL {
         return RenderOpenGLPPL::RenderInit();
     }
     
+    bool GHL_CALL RenderOpenGLES2::IsFeatureSupported(RenderFeature feature) {
+        if (feature == RENDER_FEATURE_NPOT_TEXTURES) {
+            return true;
+        }
+        return RenderOpenGLPPL::IsFeatureSupported(feature);
+    }
+    
     void GHL_CALL RenderOpenGLES2::BeginScene(RenderTarget* target) {
         gl.rtapi.default_framebuffer = g_default_framebuffer;
         RenderOpenGLPPL::BeginScene(target);

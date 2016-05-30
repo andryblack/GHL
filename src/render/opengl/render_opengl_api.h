@@ -248,6 +248,9 @@ DYNAMIC_GL_FUNCTION(void,EnableVertexAttribArray,(GLuint))\
             GLenum FRAGMENT_SHADER;
         } sdrapi;
         
+        
+        bool npot_textures;
+        
         void (*Release)();
     };
     

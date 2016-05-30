@@ -172,6 +172,7 @@ namespace GHL {
 #define USE_DYNAMIC_GL_VERSION_1_5
 #define USE_DYNAMIC_GL_ARB_framebuffer_object
 #define USE_DYNAMIC_GL_EXT_framebuffer_object
+#define USE_DYNAMIC_GL_ARB_texture_non_power_of_two
 #define USE_DYNAMIC_GL_VERSION_1_4
         
 //#define USE_DYNAMIC_GL_VERSION_1_3_DEPRECATED
@@ -278,6 +279,8 @@ namespace GHL {
             LOG_ERROR("minimal OpenGL v1.2 notfound");
             return false;
         }
+        
+        api->npot_textures = GLApi_impl::Feature_ARB_texture_non_power_of_two_Supported();
         
 #define DYNAMIC_GL_CONSTANT(Name) api->Name = GLApi_impl::GL_##Name;
         DYNAMIC_GL_CONSTANTS

@@ -140,6 +140,13 @@ namespace GHL
 		TEX_OP_INT_CURRENT_ALPHA,///< interpolate from arg1 to arg2 by current alpha value
 	};
     
+    /// render feature
+    enum RenderFeature
+    {
+        RENDER_FEATURE_NPOT_TEXTURES,   ///< NPOT textures support
+        RENDER_FEATURE_NPOT_TARGET,     ///< NPOT Render target
+    };
+    
     static const UInt32 MAX_TEXTURE_STAGES = 2;
     
     struct Image;
@@ -215,6 +222,9 @@ namespace GHL
 		virtual ShaderProgram* GHL_CALL CreateShaderProgram(VertexShader* v,FragmentShader* f) = 0;
 		/// set current shader
 		virtual void GHL_CALL SetShader(const ShaderProgram* shader) = 0;
+        
+        /// feature is supported
+        virtual bool GHL_CALL IsFeatureSupported(RenderFeature feature) = 0;
 		
 		/// draw debug text
 		virtual void GHL_CALL DebugDrawText( Int32 x,Int32 y,const char* text ) = 0;
