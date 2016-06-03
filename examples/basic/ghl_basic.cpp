@@ -6,6 +6,7 @@
 #include <ghl_log.h>
 #include <ghl_vfs.h>
 #include <ghl_sound.h>
+#include <ghl_event.h>
 #include "../common/application_base.h"
 #include <sstream>
 #include <list>
@@ -186,18 +187,20 @@ public:
         return y;
     }
     
-    virtual void GHL_CALL OnMouseDown( GHL::MouseButton btn, GHL::Int32 x, GHL::Int32 y)  {
-        ApplicationBase::OnMouseDown(btn,x,y);
-        StarState star;
-        star.x = float(x);
-        star.y = float(y);
-        star.size = 10;
-        star.angle = 0;
-        star.alpha = 1;
-        m_stars.push_back(star);
-        if (m_effect && m_sound) {
-            m_sound->PlayEffect(m_effect);
+    virtual void GHL_CALL OnEvent(const GHL::Event* e) {
+        if (e->type == GHL::EVENT_TYPE_MOUSE_PRESS) {
+            StarState star;
+            star.x = float(e->data.mouse_press.x);
+            star.y = float(e->data.mouse_press.y);
+            star.size = 10;
+            star.angle = 0;
+            star.alpha = 1;
+            m_stars.push_back(star);
+            if (m_effect && m_sound) {
+                m_sound->PlayEffect(m_effect);
+            }
         }
+        ApplicationBase::OnEvent(e);
     }
 };
 

@@ -39,3 +39,13 @@ GHL_API void GHL_CALL GHL_DestroyVFS(GHL::VFS* vfs) {
 }
 #endif
 
+#ifdef GHL_PLATFORM_EMSCRIPTEN
+#include "vfs_emscripten.h"
+GHL_API GHL::VFS* GHL_CALL GHL_CreateVFS() {
+    return new GHL::VFSEmscriptenImpl();
+}
+GHL_API void GHL_CALL GHL_DestroyVFS(GHL::VFS* vfs) {
+    delete reinterpret_cast<GHL::VFSEmscriptenImpl*>(vfs);
+}
+#endif
+

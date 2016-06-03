@@ -49,21 +49,7 @@ public:
 	///
     virtual bool GHL_CALL OnFrame( GHL::UInt32 usecs );
 	///
-	virtual void GHL_CALL OnKeyDown( GHL::Key key ) ;
-	///
-	virtual void GHL_CALL OnKeyUp( GHL::Key key ) ;
-	///
-	virtual void GHL_CALL OnChar( GHL::UInt32 ch ) ;
-	///
-	virtual void GHL_CALL OnMouseDown( GHL::MouseButton btn, GHL::Int32 x, GHL::Int32 y) ;
-	///
-	virtual void GHL_CALL OnMouseMove( GHL::MouseButton btn, GHL::Int32 x, GHL::Int32 y) ;
-	///
-	virtual void GHL_CALL OnMouseUp( GHL::MouseButton btn, GHL::Int32 x, GHL::Int32 y) ;
-	///
-	virtual void GHL_CALL OnDeactivated() ;
-	///
-	virtual void GHL_CALL OnActivated() ;
+	virtual void GHL_CALL OnEvent( const GHL::Event* event ) ;
 	///
 	virtual void GHL_CALL Release(  ) ;
 };

@@ -12,7 +12,7 @@
 #include "ghl_api.h"
 #include <stddef.h>
 
-#if defined(GHL_PLATFORM_IOS) || defined(GHL_PLATFORM_ANDROID)
+#if defined(GHL_PLATFORM_IOS) || defined(GHL_PLATFORM_ANDROID) || defined(GHL_PLATFORM_EMSCRIPTEN)
 #define GHL_OPENGLES
 #endif
 

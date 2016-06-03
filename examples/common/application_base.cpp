@@ -7,6 +7,7 @@
 #include <ghl_image_decoder.h>
 #include <ghl_image.h>
 #include <ghl_log.h>
+#include <ghl_event.h>
 #include <algorithm>
 #include <sstream>
 
@@ -43,44 +44,27 @@ void GHL_CALL ApplicationBase::SetSound( GHL::Sound* sound) {
     m_sound = sound;
 }
 ///
-void GHL_CALL ApplicationBase::OnKeyDown( GHL::Key key ) {
-    if (key==GHL::KEY_ESCAPE) {
-        m_system->Exit();
-    } else if (key==GHL::KEY_ENTER) {
-        if (m_system->GetKeyMods()&GHL::KEYMOD_ALT) {
-            m_system->SwitchFullscreen(!m_system->IsFullscreen());
+void GHL_CALL ApplicationBase::OnEvent( const GHL::Event* event ) {
+    if (event->type == GHL::EVENT_TYPE_KEY_PRESS) {
+        if (event->data.key_press.key == GHL::KEY_ESCAPE) {
+            m_system->Exit();
+        } else if (event->data.key_press.key == GHL::KEY_ENTER) {
+            if (event->data.key_press.modificators & GHL::KEYMOD_ALT) {
+                m_system->SwitchFullscreen(!m_system->IsFullscreen());
+            }
         }
+    } else if (event->type == GHL::EVENT_TYPE_MOUSE_PRESS) {
+        m_mouse_pos_x = event->data.mouse_press.x;
+        m_mouse_pos_y = event->data.mouse_press.y;
+    } else if (event->type == GHL::EVENT_TYPE_MOUSE_MOVE) {
+        m_mouse_pos_x = event->data.mouse_move.x;
+        m_mouse_pos_y = event->data.mouse_move.y;
+    } else if (event->type == GHL::EVENT_TYPE_MOUSE_RELEASE) {
+        m_mouse_pos_x = event->data.mouse_release.x;
+        m_mouse_pos_y = event->data.mouse_release.y;
     }
 }
-///
-void GHL_CALL ApplicationBase::OnKeyUp( GHL::Key /*key*/ ) {
-}
-///
-void GHL_CALL ApplicationBase::OnChar( GHL::UInt32 /*ch*/ ) {
-}
-///
-void GHL_CALL ApplicationBase::OnMouseDown( GHL::MouseButton /*btn*/, GHL::Int32 x, GHL::Int32 y) {
-    m_mouse_pos_x = x;
-    m_mouse_pos_y = y;
-}
-///
-void GHL_CALL ApplicationBase::OnMouseMove( GHL::MouseButton /*btn*/, GHL::Int32 x, GHL::Int32 y) {
-    m_mouse_pos_x = x;
-    m_mouse_pos_y = y;
-}
-///
-void GHL_CALL ApplicationBase::OnMouseUp( GHL::MouseButton /*btn*/, GHL::Int32 x, GHL::Int32 y) {
-    m_mouse_pos_x = x;
-    m_mouse_pos_y = y;
-}
-///
-void GHL_CALL ApplicationBase::OnDeactivated() {
 
-}
-///
-void GHL_CALL ApplicationBase::OnActivated() {
-
-}
 ///
 void GHL_CALL ApplicationBase::Release(  ) {
     delete this;
@@ -155,6 +139,8 @@ GHL::Texture* ApplicationBase::LoadTexture(const char* fn) {
                                       img);
         if (!tex) {
             GHL_Log(GHL::LOG_LEVEL_ERROR,"LoadTexture error CreateTexture");
+        } else {
+            tex->DiscardInternal();
         }
     } else {
         GHL_Log(GHL::LOG_LEVEL_ERROR,"LoadTexture no render");

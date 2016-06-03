@@ -86,9 +86,6 @@ public:
         return y;
     }
     
-    virtual void GHL_CALL OnMouseDown( GHL::MouseButton btn, GHL::Int32 x, GHL::Int32 y)  {
-        ApplicationBase::OnMouseDown(btn,x,y);
-    }
 };
 
 

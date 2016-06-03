@@ -11,7 +11,7 @@
 #if defined ( GHL_PLATFORM_IOS )
 #include <OpenGLES/ES1/gl.h>
 #include <OpenGLES/ES1/glext.h>
-#elif defined ( GHL_PLATFORM_ANDROID )
+#elif defined ( GHL_PLATFORM_ANDROID ) || defined ( GHL_PLATFORM_EMSCRIPTEN )
 #include <GLES/gl.h>
 #include <GLES/glext.h>
 #else

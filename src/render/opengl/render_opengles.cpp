@@ -20,6 +20,7 @@ namespace GHL {
          
     static const char* MODULE = "RENDER:OpenGLES";
     
+    #ifndef GHL_NO_ES1
     RenderOpenGLES::RenderOpenGLES(UInt32 w,UInt32 h,bool depth) : RenderOpenGLFFPL(w,h,depth) {
         
     }
@@ -38,6 +39,7 @@ namespace GHL {
             return false;
         return GLES1Api::InitGLffpl(&glffpl);
     }
+    #endif
     
     RenderOpenGLES2::RenderOpenGLES2(UInt32 w,UInt32 h,bool depth) : RenderOpenGLPPL(w,h,depth) {
         GetGenerator().set_fshader_header("precision mediump float;\n");
@@ -77,12 +79,14 @@ GHL_API GHL::RenderImpl* GHL_CALL GHL_CreateRenderOpenGL(GHL::UInt32 w,GHL::UInt
     } else {
         return render;
     }
+#ifndef GHL_NO_ES1
     render = new GHL::RenderOpenGLES(w,h,depth);
     if (!render->RenderInit()) {
         render->RenderDone();
         delete render;
         render = 0;
     }
+#endif
     return render;
 }
 

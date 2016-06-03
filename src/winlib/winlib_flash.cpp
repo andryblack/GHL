@@ -4,6 +4,7 @@
 #include <ghl_settings.h>
 #include <ghl_log.h>
 #include <ghl_system.h>
+#include <ghl_event.h>
 
 
 #include <AS3/AS3.h>
@@ -241,8 +242,14 @@ static var handleKeyUp(void *arg, var as3Args)
     flash::events::KeyboardEvent ke = var(as3Args[0]);
     if (ctx.valid) {
         GHL::Key key = convert_key(ke->keyCode);
-        if (key != GHL::KEY_NONE)
-            ctx.application->OnKeyUp( key  );
+        if (key != GHL::KEY_NONE) {
+            GHL::Event e;
+            e.type = GHL::EVENT_TYPE_KEY_RELEASE;
+            e.data.key_press.key = key;
+            e.data.key_press.charcode = 0;
+            e.data.key_press.modificators = 0;
+            ctx.application->OnEvent(&e);
+        }
     }
     ke->stopPropagation();
     return internal::_undefined;
@@ -252,9 +259,17 @@ static var handleKeyDown(void *arg, var as3Args)
 {
     flash::events::KeyboardEvent ke = var(as3Args[0]);
     if (ctx.valid) {
+        
+
         GHL::Key key = convert_key(ke->keyCode);
-        if (key != GHL::KEY_NONE)
-            ctx.application->OnKeyDown( key  );
+        if (key != GHL::KEY_NONE) {
+            GHL::Event e;
+            e.type = GHL::EVENT_TYPE_KEY_PRESS;
+            e.data.key_press.key = key;
+            e.data.key_press.charcode = 0;
+            e.data.key_press.modificators = 0;
+            ctx.application->OnEvent(&e);
+        }
     }
     ke->stopPropagation();
     return internal::_undefined;
@@ -274,7 +289,13 @@ static var handleMouseDown(void *arg, var as3Args)
 {
     flash::events::MouseEvent me = var(as3Args[0]);
     if (ctx.valid) {
-        ctx.application->OnMouseDown( GHL::MOUSE_BUTTON_LEFT, me->stageX , me->stageY );
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_MOUSE_PRESS;
+        e.data.mouse_press.button =  GHL::MOUSE_BUTTON_LEFT;
+        e.data.mouse_press.modificators = 0;
+        e.data.mouse_press.x = me->stageX;
+        e.data.mouse_press.y = me->stageY;
+        ctx.application->OnEvent(&e);
     }
     me->stopPropagation();
     return internal::_undefined;
@@ -285,7 +306,13 @@ static var handleMouseMove(void *arg, var as3Args)
     flash::events::MouseEvent me = var(as3Args[0]);
     //thegame.handleKeyDown(ke->keyCode);
     if (ctx.valid) {
-        ctx.application->OnMouseMove( me->buttonDown ? GHL::MOUSE_BUTTON_LEFT : GHL::MOUSE_BUTTON_NONE, me->stageX , me->stageY );
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_MOUSE_MOVE;
+        e.data.mouse_press.button =  me->buttonDown ? GHL::MOUSE_BUTTON_LEFT : GHL::MOUSE_BUTTON_NONE;
+        e.data.mouse_press.modificators = 0;
+        e.data.mouse_press.x = me->stageX;
+        e.data.mouse_press.y = me->stageY;
+        ctx.application->OnEvent(&e);
     }
     me->stopPropagation();
     return internal::_undefined;
@@ -296,7 +323,13 @@ static var handleMouseUp(void *arg, var as3Args)
     flash::events::MouseEvent me = var(as3Args[0]);
     //thegame.handleKeyDown(ke->keyCode);
     if (ctx.valid) {
-        ctx.application->OnMouseUp( GHL::MOUSE_BUTTON_LEFT, me->stageX , me->stageY );
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_MOUSE_RELEASE;
+        e.data.mouse_press.button =  GHL::MOUSE_BUTTON_LEFT;
+        e.data.mouse_press.modificators = 0;
+        e.data.mouse_press.x = me->stageX;
+        e.data.mouse_press.y = me->stageY;
+        ctx.application->OnEvent(&e);
     }
     me->stopPropagation();
     return internal::_undefined;
@@ -484,7 +517,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
     
     ctx.application = app;
     
-    LOG_INFO(  "listen frames" );
+    LOG_INFO(  "GHL_StartApplication" );
     try {
         flash::display::Stage stage = internal::get_Stage();
         stage->scaleMode = flash::display::StageScaleMode::NO_SCALE;
@@ -497,6 +530,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
         LOG_ERROR( "GHL_StartApplication exception" );
     }
     LOG_INFO(  "go async" );
+  
     AS3_GoAsync();
     
     LOG_INFO( "end background" );

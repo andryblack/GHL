@@ -39,6 +39,8 @@
 #define GHL_PLATFORM_LINUX
 #elif defined( __FLASHPLAYER__ )
 #define GHL_PLATFORM_FLASH
+#elif defined(__EMSCRIPTEN__)
+#define GHL_PLATFORM_EMSCRIPTEN
 #else 
 #error "unknown platform"
 #endif
