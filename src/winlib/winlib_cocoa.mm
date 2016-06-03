@@ -928,10 +928,19 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
 	return 0;
 }
 
+static const char* level_descr[] = {
+    "F:",
+    "E:",
+    "W:",
+    "I:",
+    "V:",
+    "D:"
+};
+
 GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {
     (void)level;
    	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-    NSLog( @"%@",[NSString stringWithUTF8String:message] );
+    NSLog( @"%s%s",level_descr[level],message );
     [pool release];
 }
 

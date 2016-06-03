@@ -26,18 +26,9 @@
 namespace GHL{
     
     static Logger*  g_external_logger = 0;
-    
-    static const char* level_descr[] = {
-        ": FATAL :",
-        ": ERROR :",
-        ":WARNING:",
-        ": INFO  :",
-        ":VERBOSE:",
-        ": DEBUG :"
-    };
-    
+        
     LoggerImpl::LoggerImpl( LogLevel level , const char* module, bool native) : m_level( level ), m_module(module),m_native(native){
-        m_stream << "GHL:[" << m_module << "]" << level_descr[m_level];
+        m_stream << "GHL:[" << m_module << "]";
     }
     
     LoggerImpl::~LoggerImpl() {

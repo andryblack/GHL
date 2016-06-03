@@ -446,10 +446,21 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 	return 0;
 }
 
+static const WCHAR* level_descr[] = {
+    L"F:",
+    L"E:",
+    L"W:",
+    L"I:",
+    L"V:",
+    L"D:"
+};
+
+
 GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {
 	/// @todo
 	WCHAR buf[2048];
 	MultiByteToWideChar(CP_UTF8, 0, message, -1, buf, 2048);
+	OutputDebugStringW( level_descr[level] );
 	OutputDebugStringW( buf );
 	OutputDebugStringW( L"\n" );
 }
