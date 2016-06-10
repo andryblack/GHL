@@ -805,7 +805,7 @@ static const char* level_descr[] = {
 GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {
     (void)level;
    	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-    NSLog( @"%s%s",level_descr[level],message );
+    NSLog( @"%s%@",level_descr[level],[NSString stringWithUTF8String:message] );
     [pool release];
 }
 
