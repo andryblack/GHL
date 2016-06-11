@@ -701,6 +701,28 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     }
 }
 
+- (void)handleURLEvent:(NSAppleEventDescriptor*)event
+        withReplyEvent:(NSAppleEventDescriptor*)replyEvent
+{
+    NSString* url = [[event paramDescriptorForKeyword:keyDirectObject]
+                     stringValue];
+    if (m_application) {
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_HANDLE_URL;
+        e.data.handle_url.url = [url UTF8String];
+        m_application->OnEvent(&e);
+    }
+}
+
+- (void)applicationWillFinishLaunching:(NSNotification *)aNotification
+{
+    [[NSAppleEventManager sharedAppleEventManager]
+     setEventHandler:self
+     andSelector:@selector(handleURLEvent:withReplyEvent:)
+     forEventClass:kInternetEventClass
+     andEventID:kAEGetURL];
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     LOG_INFO( "WinLibAppDelegate::applicationDidFinishLaunching" );
     (void)aNotification;

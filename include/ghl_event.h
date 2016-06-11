@@ -40,6 +40,7 @@ namespace GHL
         EVENT_TYPE_SOFT_KEYBOARD_SHOW,
         EVENT_TYPE_SOFT_KEYBOARD_HIDE,
         EVENT_TYPE_APP_STARTED,
+        EVENT_TYPE_HANDLE_URL
     };
 
     /// Key press
@@ -87,7 +88,11 @@ namespace GHL
     
     // Application Started
     struct AppStartedEvent {
-        
+    };
+   
+    // handle url
+    struct HandleUrlEvent {
+        const char* url;
     };
 
     /// Event uninon
@@ -101,6 +106,7 @@ namespace GHL
             MouseReleaseEvent   mouse_release;
             SoftKeyboardShowEvent soft_keyboard_show;
             AppStartedEvent     app_started;
+            HandleUrlEvent      handle_url;
         } data;
     };
     
