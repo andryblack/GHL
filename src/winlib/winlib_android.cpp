@@ -48,7 +48,8 @@ GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {
 }
 
 static GHL::Application* temp_app = 0;
-extern "C" int ghl_android_app_main(int argc,char** argv);
+
+int ghl_android_app_main(int argc,char** argv);
 static GHL::Application* android_app_create() {
     ghl_android_app_main(0,0);
     return temp_app;
