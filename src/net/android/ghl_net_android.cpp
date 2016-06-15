@@ -132,7 +132,7 @@ static bool check_exception( JNIEnv* env ) {
     }
     return false;
 } 
-static const size_t BUFFER_SIZE = 256;
+static const size_t BUFFER_SIZE = 1024*8;
 
 class NetworkTask {
 public:
@@ -272,7 +272,7 @@ public:
                     return true;
                 } 
                 int readed = env->CallIntMethod(read_stream.jobj,m_InputStream_read,m_buffer.jobj,m_buffer_size,BUFFER_SIZE-m_buffer_size);
-                //LOG_INFO("readed " << readed);
+                //ILOG_INFO("readed " << readed);
                 if (check_exception(env)) {
                     m_state = S_ERROR;
                     m_error = "read failed";
@@ -285,7 +285,7 @@ public:
                 } else {
                     m_buffer_size += readed;
                     if (m_buffer_size>=BUFFER_SIZE) {
-                        //LOG_INFO("buffer full");
+                        //ILOG_INFO("buffer full");
                         return true;
                     }
                 }
@@ -296,7 +296,7 @@ public:
 
     void FlushData(JNIEnv* env) {
         if (m_buffer_size) {
-            //LOG_INFO("flush " << m_buffer_size);
+            //ILOG_INFO("flush " << m_buffer_size);
             //PROFILE(FlushData);
             jboolean is_copy = JNI_FALSE;
             jbyte* data = (env->GetByteArrayElements((jbyteArray)m_buffer.jobj,&is_copy));
@@ -341,7 +341,7 @@ public:
                     m_handler->OnHeader(key.str().c_str(),value.str().c_str());
                 }  // end for
                 m_state = S_READ;
-                //ILOG_INFO("S_RESPONSE->S_READ");
+                ILOG_INFO("S_RESPONSE->S_READ");
                 return true;
             } break;
             case S_READ: {
