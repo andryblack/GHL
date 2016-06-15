@@ -92,6 +92,10 @@ namespace GHL {
     VFSPosixImpl::~VFSPosixImpl() {
     }
 
+    void VFSPosixImpl::SetCacheDir(const std::string& dir) {
+        m_cache_dir = dir;
+    }
+
     /// get dir
     const char* GHL_CALL VFSPosixImpl::GetDir(DirType dt) const {
         if (dt==DIR_TYPE_DATA) {
@@ -99,6 +103,9 @@ namespace GHL {
         }
         if (dt==DIR_TYPE_USER_PROFILE) {
             return m_docs_dir.c_str();
+        }
+        if (dt==DIR_TYPE_CACHE) {
+            return m_cache_dir.c_str();
         }
         return "/";
     }

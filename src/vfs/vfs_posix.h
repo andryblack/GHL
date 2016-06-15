@@ -26,6 +26,10 @@ namespace GHL {
         virtual WriteStream* GHL_CALL OpenFileWrite(const char* file);
         /// write file
         virtual bool GHL_CALL WriteFile(const char* file, const Data* data);
+
+        void SetCacheDir(const std::string& dir);
+    protected:
+    	std::string m_cache_dir;
 	private:
 		std::string m_data_dir;
         std::string m_docs_dir;

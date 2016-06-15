@@ -66,6 +66,7 @@ static GHL::Key convert_key(uint32_t k) {
 
 namespace GHL {
 
+
     ANativeActivity* g_native_activity = 0;
 
     class GHLActivity  : public System {
@@ -254,6 +255,7 @@ namespace GHL {
                 gettimeofday(&m_last_time,0);
                 if (!m_vfs) {
                     m_vfs = new VFSAndroidImpl(m_activity->assetManager,m_activity->internalDataPath);
+                    m_vfs->SetCacheDir(android_temp_folder());
                 }
                 if (m_app) {
                     m_app->SetVFS(m_vfs);
@@ -536,6 +538,33 @@ namespace GHL {
         }
         void StartTimerThread();
         void StopTimerThread();
+
+         std::string android_temp_folder(  ) {
+
+            jclass ActivityClass = m_activity->env->GetObjectClass(m_activity->clazz);
+            jmethodID method = m_activity->env->GetMethodID(ActivityClass,"getCacheDir", "()Ljava/io/File;");
+            if (m_activity->env->ExceptionCheck()) {
+                m_activity->env->ExceptionDescribe();
+                m_activity->env->ExceptionClear();
+                ILOG_INFO("[native] not found method");
+                return "";
+            }
+            jobject cache_dir = m_activity->env->CallObjectMethod(m_activity->clazz,method);
+            m_activity->env->DeleteLocalRef(ActivityClass);
+
+            jclass fileClass = m_activity->env->GetObjectClass( cache_dir );
+            jmethodID getPath = m_activity->env->GetMethodID( fileClass, "getPath", "()Ljava/lang/String;" );
+            jstring path_string = (jstring)m_activity->env->CallObjectMethod( cache_dir, getPath );
+            m_activity->env->DeleteLocalRef(fileClass);
+
+            const char *path_chars = m_activity->env->GetStringUTFChars( path_string, NULL );
+            std::string temp_folder( path_chars );
+
+            m_activity->env->ReleaseStringUTFChars( path_string, path_chars );
+            
+            return temp_folder;
+        }
+
     private:
         GHL::ImageDecoderImpl   m_image_decoder;
         GHL::SoundAndroid   m_sound;
