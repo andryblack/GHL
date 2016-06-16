@@ -205,46 +205,53 @@ public class Activity  extends android.app.NativeActivity  {
         });
     }
 
-    
-    
 
+
+    @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         ensureLoadLibrary();
         m_layout = new AbsoluteLayout(this);
         setContentView(m_layout);
     }
-    
+
+    @Override
     protected void onDestroy(){
         super.onDestroy();
         ensureLoadLibrary();
     }
-    
+
+    @Override
     protected void onPause(){
         super.onPause();
         ensureLoadLibrary();
     }
-    
+
+    @Override
     protected void onResume(){
         super.onResume();
         ensureLoadLibrary();
     }
-    
+
+    @Override
     protected void onStart(){
         super.onStart();
         ensureLoadLibrary();
     }
-    
+
+    @Override
     protected void onStop(){
         super.onStop();
         ensureLoadLibrary();
     }
-    
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         ensureLoadLibrary();
     }
-    
+
+    @Override
     protected void onActivityResult(int requestCode,
                                         int resultCode,
                                         Intent data) {
