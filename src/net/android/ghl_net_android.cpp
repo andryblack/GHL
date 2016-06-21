@@ -178,8 +178,10 @@ public:
         m_state = S_INIT;
         
         m_buffer_size = 0;
-        m_buffer.jobj = env->NewGlobalRef(env->NewByteArray(BUFFER_SIZE));
+        jobject buf_loc = env->NewByteArray(BUFFER_SIZE);
+        m_buffer.jobj = env->NewGlobalRef(buf_loc);
         m_url = handler->GetURL();
+        env->DeleteLocalRef(buf_loc);
     }
     bool IsComplete() {
         return m_state == S_COMPLETE || m_state == S_ERROR;
