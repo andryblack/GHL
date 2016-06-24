@@ -116,9 +116,18 @@ public:
         
         NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:urlObject];
         GHL::UInt32 heades = handler->GetHeadersCount();
+        bool has_encoding = false;
         for (GHL::UInt32 i=0;i<heades;++i) {
+            NSString* name = [NSString stringWithUTF8String:handler->GetHeaderName(i)];
+            if ([name isEqualToString:@"Accept-Encoding"]) {
+                has_encoding = true;
+            }
             [request addValue:[NSString stringWithUTF8String:handler->GetHeaderValue(i)]
-                forHTTPHeaderField:[NSString stringWithUTF8String:handler->GetHeaderName(i)]];
+                forHTTPHeaderField:name];
+        }
+        if (!has_encoding) {
+            [request setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
+
         }
         return request;
     }
