@@ -55,6 +55,7 @@ namespace GHL {
     struct TimeValue {
         UInt32 secs;
         UInt32 usecs;
+        Int32 tzoffset;
     };
 }
 
