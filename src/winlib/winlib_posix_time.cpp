@@ -30,17 +30,24 @@ static int gettimeofday(struct timeval * tp, struct timezone * tzp)
 
 	tp->tv_sec = (long)((time - EPOCH) / 10000000L);
 	tp->tv_usec = (long)(system_time.wMilliseconds * 1000);
+	if (tzp) {
+		TIME_ZONE_INFORMATION tz_info;
+		GetTimeZoneInformation(&tz_info);
+		tzp->tz_minuteswest = tz_info.Bias;
+	}
 	return 0;
 }
 #endif
 
 /// Get system time (secs returned)
 GHL_API GHL::UInt32 GHL_CALL GHL_SystemGetTime(GHL::TimeValue* ret) {
-    struct ::timeval tv;
-    ::gettimeofday(&tv, 0);
+    struct ::timeval tv = {0,0};
+    struct ::timezone tz = {0,0};
+    ::gettimeofday(&tv, &tz);
     if (ret) {
         ret->secs = tv.tv_sec;
         ret->usecs = tv.tv_usec;
+        ret->tzoffset = - tz.tz_minuteswest * 60;
     }
     return tv.tv_sec;
 }
