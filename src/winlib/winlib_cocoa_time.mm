@@ -1,4 +1,3 @@
-#import <Cocoa/Cocoa.h>
 #import <Foundation/Foundation.h>
 
 #include "ghl_system.h"
