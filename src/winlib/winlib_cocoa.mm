@@ -727,6 +727,10 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     LOG_INFO( "WinLibAppDelegate::applicationDidFinishLaunching" );
     (void)aNotification;
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+    
+    GHL::Event e;
+    e.type = GHL::EVENT_TYPE_APP_STARTED;
+    m_application->OnEvent(&e);
 	
     NSScreen* screen = [NSScreen mainScreen];
     
