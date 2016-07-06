@@ -173,7 +173,7 @@ namespace GHL {
 			CHECK_GL(gl.Disable(gl.SCISSOR_TEST));
 		} else {
 			CHECK_GL(gl.Enable(gl.SCISSOR_TEST));
-			UInt32 _y = GetHeight()-h-y;
+            UInt32 _y = GetTarget() ? y : (GetHeight()-h-y);
 			CHECK_GL(gl.Scissor(x, _y, w, h));
 		}
 	}
