@@ -160,6 +160,34 @@ namespace GHL {
             LOG_INFO("OnCreate");
             g_native_activity = m_activity;
             ANativeActivity_setWindowFlags(m_activity, AWINDOW_FLAG_KEEP_SCREEN_ON, 0);
+
+            m_app = android_app_create();
+
+            if (m_app) {
+                m_app->SetSystem(this);
+            }
+            
+            gettimeofday(&m_last_time,0);
+            if (!m_vfs) {
+                m_vfs = new VFSAndroidImpl(m_activity->assetManager,m_activity->internalDataPath);
+                m_vfs->SetCacheDir(android_temp_folder());
+            }
+            if (m_app) {
+                m_app->SetVFS(m_vfs);
+                m_app->SetImageDecoder(&m_image_decoder);
+            }
+            if (m_app && m_sound.SoundInit()) {
+                m_app->SetSound(&m_sound);
+            }
+                
+                
+            if (m_app) {
+                GHL::Event e;
+                e.type = GHL::EVENT_TYPE_APP_STARTED;
+                m_app->OnEvent(&e);
+            }
+
+
         }
         void OnStart() {
             LOG_INFO("OnStart");
@@ -194,6 +222,10 @@ namespace GHL {
         }
         void OnDestroy() {
             LOG_INFO("OnDestroy");
+            if (m_app) {
+                m_app->Release();
+                m_app = 0;
+            }
         }
         void OnWindowFocusChanged(int hasFocus) {
             LOG_VERBOSE("OnWindowFocusChanged:" << hasFocus);
@@ -247,23 +279,7 @@ namespace GHL {
             g_native_activity = m_activity;
             if (m_window==0) {
                 
-                m_app = android_app_create();
-                if (m_app) {
-                    m_app->SetSystem(this);
-                }
                 
-                gettimeofday(&m_last_time,0);
-                if (!m_vfs) {
-                    m_vfs = new VFSAndroidImpl(m_activity->assetManager,m_activity->internalDataPath);
-                    m_vfs->SetCacheDir(android_temp_folder());
-                }
-                if (m_app) {
-                    m_app->SetVFS(m_vfs);
-                    m_app->SetImageDecoder(&m_image_decoder);
-                }
-                if (m_app && m_sound.SoundInit()) {
-                    m_app->SetSound(&m_sound);
-                }
                 
                 
                 m_window = window;
@@ -306,6 +322,7 @@ namespace GHL {
                 settings.height = h;
                 settings.fullscreen = true;
                 settings.depth = false;
+                if (m_app)
                 {
                     m_app->FillSettings(&settings);
                 }
@@ -361,10 +378,7 @@ namespace GHL {
             g_native_activity = m_activity;
             if (m_window==window) {
                 
-                if (m_app) {
-                    m_app->Release();
-                    m_app = 0;
-                }
+                
                 
                 m_sound.SoundDone();
                 

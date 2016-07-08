@@ -343,7 +343,7 @@ public:
                     m_handler->OnHeader(key.str().c_str(),value.str().c_str());
                 }  // end for
                 m_state = S_READ;
-                ILOG_INFO("S_RESPONSE->S_READ");
+                //ILOG_INFO("S_RESPONSE->S_READ");
                 return true;
             } break;
             case S_READ: {
