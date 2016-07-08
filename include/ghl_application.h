@@ -41,6 +41,8 @@ namespace GHL {
         virtual void GHL_CALL FillSettings( Settings* settings ) = 0;
 		/// Load game. called after window created, before first rendered
 		virtual bool GHL_CALL Load() = 0;
+        /// Unload game, ready for load again
+        virtual void GHL_CALL Unload() = 0;
         /// Frame event
         virtual bool GHL_CALL OnFrame( UInt32 usecs ) = 0;
         /// Notify event

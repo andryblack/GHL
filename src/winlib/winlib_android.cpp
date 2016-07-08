@@ -176,11 +176,9 @@ namespace GHL {
                 m_app->SetVFS(m_vfs);
                 m_app->SetImageDecoder(&m_image_decoder);
             }
-            if (m_app && m_sound.SoundInit()) {
-                m_app->SetSound(&m_sound);
-            }
+           
                 
-                
+
             if (m_app) {
                 GHL::Event e;
                 e.type = GHL::EVENT_TYPE_APP_STARTED;
@@ -280,7 +278,9 @@ namespace GHL {
             if (m_window==0) {
                 
                 
-                
+                 if (m_app && m_sound.SoundInit()) {
+                     m_app->SetSound(&m_sound);
+                 }
                 
                 m_window = window;
                 // initialize OpenGL ES and EGL
@@ -325,6 +325,9 @@ namespace GHL {
                 if (m_app)
                 {
                     m_app->FillSettings(&settings);
+                    if (m_activity->env->ExceptionCheck()) {
+                        return;
+                    }
                 }
 
                 if (settings.depth) {
@@ -345,6 +348,9 @@ namespace GHL {
                 if ( m_render && m_app ) {
                     m_app->SetRender(m_render);
                     m_app->Load();
+                    if (m_activity->env->ExceptionCheck()) {
+                        return;
+                    }
                 }
                 Render();
             } else {
@@ -379,13 +385,16 @@ namespace GHL {
             if (m_window==window) {
                 
                 
-                
-                m_sound.SoundDone();
-                
                 if (m_render) {
+                    if (m_app) {
+                        m_app->Unload();
+                    }
                     GHL_DestroyRenderOpenGL(m_render);
                     m_render = 0;
                 }
+
+                 m_sound.SoundDone();
+               
                 if (m_display != EGL_NO_DISPLAY) {
                     DestroyContext();
                     eglTerminate(m_display);
