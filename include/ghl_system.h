@@ -30,6 +30,8 @@ namespace GHL {
 		DEVICE_DATA_VIEW_CONTROLLER,	///< UIViewController*
         DEVICE_DATA_VIEW,               ///< NSView** /UIView**
         DEVICE_DATA_APPLICATION,        ///< ANativeActivity**
+        DEVICE_DATA_LANGUAGE,           ///< char[32]
+        DEVICE_DATA_UTC_OFFSET          ///< Int32*
    };
 
     /// system interface
@@ -55,7 +57,6 @@ namespace GHL {
     struct TimeValue {
         UInt32 secs;
         UInt32 usecs;
-        Int32 tzoffset;
     };
 }
 

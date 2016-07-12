@@ -148,6 +148,23 @@ namespace GHL {
                     *na = m_activity;
                     return true;
                 }
+            } else if (name == GHL::DEVICE_DATA_UTC_OFFSET) {
+                if (data) {
+                    GHL::Int32* output = static_cast<GHL::Int32*>(data);
+
+                    struct ::timeval tv = {0,0};
+                    struct ::timezone tz = {0,0};
+                    ::gettimeofday(&tv, &tz);
+                    *output = - tz.tz_minuteswest * 60;
+                    return true;
+                }
+            } else if (name == GHL::DEVICE_DATA_LANGUAGE) {
+                std::string language = android_language_name();
+                if (!language.empty() && data) {
+                    char* dest = static_cast<char*>(data);
+                    ::strncpy(dest, language.c_str(), 32);
+                    return true;
+                }
             }
             return false;
         }
@@ -586,6 +603,37 @@ namespace GHL {
             m_activity->env->ReleaseStringUTFChars( path_string, path_chars );
             
             return temp_folder;
+        }
+
+        std::string android_language_name() {
+            std::string result;
+            jclass LocaleClass = m_activity->env->FindClass("java/util/Locale");
+            if (m_activity->env->ExceptionCheck()) {
+                ILOG_INFO("[native] not found class java/util/Locale");
+                m_activity->env->ExceptionDescribe();
+                m_activity->env->ExceptionClear();
+                ILOG_INFO("[native] not found method");
+                return result;
+            }
+            jmethodID getDefault = m_activity->env->GetStaticMethodID(LocaleClass,"getDefault","()Ljava/util/Locale;");
+            if (getDefault) {
+                jobject obj = m_activity->env->CallStaticObjectMethod(LocaleClass,getDefault);
+                jmethodID getLanguage = m_activity->env->GetMethodID(LocaleClass,"getLanguage","()Ljava/lang/String;");
+                if (getLanguage) {
+                    jstring language = (jstring)m_activity->env->CallObjectMethod(obj,getLanguage);
+                    if (language) {
+                        const char *language_chars = m_activity->env->GetStringUTFChars( language, NULL );
+                        if (language_chars) {
+                            result = language_chars;
+                            m_activity->env->ReleaseStringUTFChars( language, language_chars );
+                        }
+                        m_activity->env->DeleteLocalRef(language);
+                    }
+                }
+                m_activity->env->DeleteLocalRef(obj);
+            }
+            m_activity->env->DeleteLocalRef(LocaleClass);
+            return result;
         }
 
     private:

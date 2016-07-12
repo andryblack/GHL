@@ -10,7 +10,6 @@ GHL_API GHL::UInt32 GHL_CALL GHL_SystemGetTime(GHL::TimeValue* tv) {
     if (tv) {
         tv->secs = d;
         tv->usecs = (ti - d) * 1000000;
-        tv->tzoffset = [[NSTimeZone localTimeZone] secondsFromGMT];
     }
     return d;
 }

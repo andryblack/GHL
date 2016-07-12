@@ -76,6 +76,19 @@ public:
                 *output = m_view;
                 return m_view;
             }
+        } else if (name == GHL::DEVICE_DATA_UTC_OFFSET) {
+            if (data) {
+                GHL::Int32* output = static_cast<GHL::Int32*>(data);
+                *output = [[NSTimeZone localTimeZone] secondsFromGMT];
+                return true;
+            }
+        } else if (name == GHL::DEVICE_DATA_LANGUAGE) {
+            NSString* language = [[NSLocale preferredLanguages] objectAtIndex:0];
+            if (language && data) {
+                char* dest = static_cast<char*>(data);
+                ::strncpy(dest, [language UTF8String], 32);
+                return true;
+            }
         }
         return false;
     }

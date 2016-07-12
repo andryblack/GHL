@@ -162,7 +162,7 @@ public:
 	///
 	virtual bool GHL_CALL SetDeviceState( GHL::DeviceState name, const void* data);
 	///
-	virtual bool GHL_CALL GetDeviceData( GHL::DeviceData name, void* data) {
+    virtual bool GHL_CALL GetDeviceData( GHL::DeviceData name, void* data) {
 		if (name==GHL::DEVICE_DATA_ACCELEROMETER) {
 			if (!m_accelerometer)
 				return false;
@@ -172,7 +172,20 @@ public:
 			if (data) {
 				*((UIViewController**)data) = m_controller;
 			}
-		}
+        } else if (name == GHL::DEVICE_DATA_UTC_OFFSET) {
+            if (data) {
+                GHL::Int32* output = static_cast<GHL::Int32*>(data);
+                *output = static_cast<GHL::Int32>([[NSTimeZone localTimeZone] secondsFromGMT]);
+                return true;
+            }
+        } else if (name == GHL::DEVICE_DATA_LANGUAGE) {
+            NSString* language = [[NSLocale preferredLanguages] objectAtIndex:0];
+            if (language && data) {
+                char* dest = static_cast<char*>(data);
+                ::strncpy(dest, [language UTF8String], 32);
+                return true;
+            }
+        }
 		return false;
 	}
     ///
@@ -789,7 +802,7 @@ bool GHL_CALL SystemCocoaTouch::SetDeviceState( GHL::DeviceState name, const voi
 		const bool* state = (const bool*)data;
 		g_retina_enabled = *state;
 		return true;
-	}
+    }
 	return false;
 }
 
