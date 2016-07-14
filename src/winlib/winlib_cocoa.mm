@@ -281,7 +281,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 	unsigned short kk = [event keyCode];
 	GHL::Key key = translate_key(c,kk);
 	if (key==GHL::KEY_NONE) {
-		[super keyDown:event];
+		//l[super keyDown:event];
 	}
     GHL::Event e;
     e.type = GHL::EVENT_TYPE_KEY_PRESS;
@@ -295,11 +295,24 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 	unsigned short kk = [event keyCode];
 	GHL::Key key = translate_key(c,kk);
 	if (key==GHL::KEY_NONE) {
-		[super keyDown:event];
+		//[super keyUp:event];
 	}
     GHL::Event e;
     e.type = GHL::EVENT_TYPE_KEY_RELEASE;
     e.data.key_release.key = key;
+    e.data.key_release.modificators = [self convertModificators:event];
+    [m_application getApplication]->OnEvent(&e);
+}
+-(void)flagsChanged:(NSEvent *)theEvent {
+    unsigned short kk = [theEvent keyCode];
+    GHL::Key key = translate_key(0,kk);
+    if (key==GHL::KEY_NONE) {
+        //[super keyUp:event];
+    }
+    GHL::Event e;
+    e.type = GHL::EVENT_TYPE_KEY_RELEASE;
+    e.data.key_release.key = key;
+    e.data.key_release.modificators = [self convertModificators:theEvent];
     [m_application getApplication]->OnEvent(&e);
 }
 - (NSPoint) scale_point:(NSPoint)point {

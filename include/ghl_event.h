@@ -53,6 +53,7 @@ namespace GHL
     /// Key release
     struct KeyReleaseEvent {
         Key     key;
+        UInt32  modificators;
     };
 
     /// Base mouse event
