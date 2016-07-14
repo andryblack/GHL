@@ -24,7 +24,15 @@
 
 static const char* MODULE = "WinLib";
 
+char message_buffer[256];
+
 GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {
+    if (::strlen(message)>=sizeof(message_buffer)) {
+        // truncate
+        ::strncpy(message_buffer,message,sizeof(message_buffer)-1);
+        GHL_Log(level,message_buffer);
+        return;
+    }
 	 switch ( level ) {
         case GHL::LOG_LEVEL_FATAL:
             __android_log_write(ANDROID_LOG_FATAL,"GHL",message);
