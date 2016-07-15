@@ -634,7 +634,7 @@ public:
     event.data.visible_rect_changed.x = 0;
     event.data.visible_rect_changed.y = 0;
     event.data.visible_rect_changed.w = self.view.bounds.size.width * self.view.contentScaleFactor;
-    event.data.visible_rect_changed.h = (self.view.bounds.size.height-localRect.origin.y-localRect.size.height) * self.view.contentScaleFactor;
+    event.data.visible_rect_changed.h = (self.view.bounds.size.height-localRect.origin.y) * self.view.contentScaleFactor;
 	g_application->OnEvent(&event);
 }
 
