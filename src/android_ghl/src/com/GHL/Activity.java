@@ -16,6 +16,7 @@ import android.view.KeyEvent;
 import android.view.ViewGroup;
 
 import android.widget.AbsoluteLayout;
+import android.widget.RelativeLayout;
 import android.widget.EditText;
 
 import android.text.InputType;
@@ -25,9 +26,17 @@ import android.R;
 import android.os.Looper;
 import android.os.Handler;
 
+import android.graphics.Canvas;
+import android.graphics.*;
+
+import android.util.Log;
+
 public class Activity  extends android.app.NativeActivity  {
 
+    private static final String TAG = "GHL";
+
     static native boolean nativeOnKey(int keycode,long unicode,long action);
+    static native void nativeOnScreenRectChanged(int left, int top, int width, int height);
     class InvisibleEdit extends View {
         GHLInputConnection ic;
         
@@ -129,10 +138,20 @@ public class Activity  extends android.app.NativeActivity  {
 
             return ic;
         }
+        
+        @Override
+        protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+            super.onSizeChanged(w, h, oldw, oldh);
+            Log.v(TAG, "onSizeChanged " + oldw + "x" + oldh+"->"+w+"x"+h);
+        }
+
+        @Override
+        protected void onDraw(Canvas canvas) {
+               
+        }
     }
 
     private InvisibleEdit m_text_edit;
-    private ViewGroup m_layout;
     private Handler m_render_thread_handler;
 
 	private static boolean libloaded = false;
@@ -171,20 +190,38 @@ public class Activity  extends android.app.NativeActivity  {
     }
 
     public void showSoftKeyboard() {
+        final Activity self = this;
         runOnUiThread(new Runnable(){
              //@override
              public void run() {
-                AbsoluteLayout.LayoutParams params = new AbsoluteLayout.LayoutParams(
-                    10, 10, 0, 0);
+                
 
                 if (m_text_edit == null) {
+                    ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                     m_text_edit = new InvisibleEdit(Activity.this);
-                    m_layout.addView(m_text_edit, params);
-                } else {
-                    m_text_edit.setLayoutParams(params);
-                }
+                    m_text_edit.setId(100500);
+                    self.addContentView(m_text_edit,params);
+                    m_text_edit.getViewTreeObserver().addOnGlobalLayoutListener(new android.view.ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override 
+                        public void onGlobalLayout() {
+                            Rect r = new Rect();
+                            m_text_edit.getWindowVisibleDisplayFrame(r);
+                            final Rect fr = r;
+                            runOnRenderThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    nativeOnScreenRectChanged(fr.left,fr.top,fr.width(),fr.height());
+                                }
+                            });
+                        }
+                    });
+                } 
                 m_text_edit.setVisibility(View.VISIBLE);
                 m_text_edit.requestFocus();
+                
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE|
+                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
                 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(m_text_edit, 0);
@@ -197,7 +234,6 @@ public class Activity  extends android.app.NativeActivity  {
              //@override
              public void run() {
                 if (m_text_edit != null) {
-                    m_text_edit.setVisibility(View.GONE);
                     InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(m_text_edit.getWindowToken(), 0);
                 }
@@ -211,8 +247,6 @@ public class Activity  extends android.app.NativeActivity  {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         ensureLoadLibrary();
-        m_layout = new AbsoluteLayout(this);
-        setContentView(m_layout);
     }
 
     @Override

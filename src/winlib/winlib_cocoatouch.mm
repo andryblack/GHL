@@ -616,24 +616,26 @@ public:
 }
 
 - (void)keyboardDidHide:(NSNotification *)note {
-    GHL::Event event;
-    event.type = GHL::EVENT_TYPE_SOFT_KEYBOARD_HIDE;
-    g_application->OnEvent(&event);
+	GHL::Event event;
+    event.type = GHL::EVENT_TYPE_VISIBLE_RECT_CHANGED;
+    event.data.visible_rect_changed.x = 0;
+    event.data.visible_rect_changed.y = 0;
+    event.data.visible_rect_changed.w = self.view.bounds.size.width * self.view.contentScaleFactor;
+    event.data.visible_rect_changed.h = self.view.bounds.size.height * self.view.contentScaleFactor;
+	g_application->OnEvent(&event);
 }
 
 - (void)keyboardDidChangeFrame:(NSNotification *)note {
     CGRect keyboardRect = [note.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
     CGRect localRect = [self.view convertRect:keyboardRect fromView:nil];
-    if (localRect.origin.y>=(self.view.bounds.origin.y + self.view.bounds.size.height - 5)) {
-        return;
-    }
+    
     GHL::Event event;
-    event.type = GHL::EVENT_TYPE_SOFT_KEYBOARD_SHOW;
-    event.data.soft_keyboard_show.x = localRect.origin.x * self.view.contentScaleFactor;
-    event.data.soft_keyboard_show.y = localRect.origin.y * self.view.contentScaleFactor;
-    event.data.soft_keyboard_show.w = localRect.size.width * self.view.contentScaleFactor;
-    event.data.soft_keyboard_show.h = localRect.size.height * self.view.contentScaleFactor;
-    g_application->OnEvent(&event);
+    event.type = GHL::EVENT_TYPE_VISIBLE_RECT_CHANGED;
+    event.data.visible_rect_changed.x = 0;
+    event.data.visible_rect_changed.y = 0;
+    event.data.visible_rect_changed.w = self.view.bounds.size.width * self.view.contentScaleFactor;
+    event.data.visible_rect_changed.h = (self.view.bounds.size.height-localRect.origin.y-localRect.size.height) * self.view.contentScaleFactor;
+	g_application->OnEvent(&event);
 }
 
 @end

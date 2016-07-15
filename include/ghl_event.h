@@ -37,8 +37,7 @@ namespace GHL
         EVENT_TYPE_MOUSE_RELEASE,
         EVENT_TYPE_ACTIVATE,
         EVENT_TYPE_DEACTIVATE,
-        EVENT_TYPE_SOFT_KEYBOARD_SHOW,
-        EVENT_TYPE_SOFT_KEYBOARD_HIDE,
+        EVENT_TYPE_VISIBLE_RECT_CHANGED,
         EVENT_TYPE_APP_STARTED,
         EVENT_TYPE_HANDLE_URL
     };
@@ -80,7 +79,7 @@ namespace GHL
     };
     
     // Soft Keyboard show
-    struct SoftKeyboardShowEvent {
+    struct VisibleRectChanged {
         Int32 x;
         Int32 y;
         Int32 w;
@@ -105,7 +104,7 @@ namespace GHL
             MousePressEvent     mouse_press;
             MouseMoveEvent      mouse_move;
             MouseReleaseEvent   mouse_release;
-            SoftKeyboardShowEvent soft_keyboard_show;
+            VisibleRectChanged  visible_rect_changed;
             AppStartedEvent     app_started;
             HandleUrlEvent      handle_url;
         } data;

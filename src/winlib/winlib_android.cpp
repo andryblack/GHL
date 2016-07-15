@@ -456,8 +456,19 @@ namespace GHL {
         }
         void OnContentRectChanged(const ARect* rect) {
             if (m_render) {
-                m_render->Resize(rect->right - rect->left, rect->bottom - rect->top );
+                //m_render->Resize(rect->right - rect->left, rect->bottom - rect->top );
+                ILOG_INFO("OnContentRectChanged " << rect->left << "," << rect->top << "," << rect->right << "," << rect->bottom);
             }
+        }
+        void OnVisibleRectChanged(int x,int y,int w,int h) {
+             if (!m_app) return;
+             GHL::Event event;
+             event.type = GHL::EVENT_TYPE_VISIBLE_RECT_CHANGED;
+             event.data.visible_rect_changed.x = x;
+             event.data.visible_rect_changed.y = y;
+             event.data.visible_rect_changed.w = w;
+             event.data.visible_rect_changed.h = h;
+             m_app->OnEvent(&event);
         }
         void OnConfigurationChanged() {
             
@@ -791,6 +802,17 @@ extern "C" JNIEXPORT jboolean JNICALL Java_com_GHL_Activity_nativeOnKey
     return false;
   }
 
+extern "C" JNIEXPORT void JNICALL Java_com_GHL_Activity_nativeOnScreenRectChanged
+  (JNIEnv *, jclass, jint left, jint top, jint width, jint height) {
+    if (GHL::g_native_activity) {
+       ILOG_INFO("nativeOnScreenRectChanged " << left << "," << top << "," << width << "," << height);
+       if (GHL::g_native_activity) {
+            static_cast<GHL::GHLActivity*>(GHL::g_native_activity->instance)->OnVisibleRectChanged(left,top,width,height);
+       }
+       
+    };
+  }
+
 extern "C" __attribute__ ((visibility ("default"))) void ANativeActivity_onCreate(ANativeActivity* activity,
                                                                                   void* savedState, size_t savedStateSize);
 extern "C" {
@@ -810,6 +832,8 @@ extern "C" {
         activity->callbacks->onNativeWindowDestroyed = &GHL::proxy_func_1<ANativeWindow*,&GHL::GHLActivity::OnNativeWindowDestroyed>;
         activity->callbacks->onInputQueueCreated = &GHL::proxy_func_1<AInputQueue*,&GHL::GHLActivity::OnInputQueueCreated>;
         activity->callbacks->onInputQueueDestroyed = &GHL::proxy_func_1<AInputQueue*,&GHL::GHLActivity::OnInputQueueDestroyed>;
+        activity->callbacks->onContentRectChanged = &GHL::proxy_func_1<const ARect*,&GHL::GHLActivity::OnContentRectChanged>;
+        
         GHL::GHLActivity* ghl_activity = new GHL::GHLActivity(activity, savedState, savedStateSize);
         activity->instance = ghl_activity;
         ghl_activity->OnCreate();
