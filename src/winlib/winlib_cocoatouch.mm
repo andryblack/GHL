@@ -171,6 +171,7 @@ public:
 		} else if (name==GHL::DEVICE_DATA_VIEW_CONTROLLER) {
 			if (data) {
 				*((UIViewController**)data) = m_controller;
+                return true;
 			}
         } else if (name == GHL::DEVICE_DATA_UTC_OFFSET) {
             if (data) {
