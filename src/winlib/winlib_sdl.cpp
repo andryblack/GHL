@@ -217,6 +217,10 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
     return 0;
 }
 
+GHL_API GHL::UInt32 GHL_CALL GHL_GetCurrentThreadId() {
+    return 1;
+}
+
 GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {
     static const char* levelName[] = {
         "F:",

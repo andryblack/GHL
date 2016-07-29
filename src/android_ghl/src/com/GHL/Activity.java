@@ -49,7 +49,7 @@ public class Activity  extends android.app.NativeActivity  {
             @Override
             public boolean sendKeyEvent(KeyEvent event) {
                 final KeyEvent finalEvent = event;
-                runOnRenderThread(new Runnable(){
+                Activity.this.runOnUiThread(new Runnable(){
                      @Override
                      public void run() {
                         nativeOnKey(finalEvent.getKeyCode(),finalEvent.getUnicodeChar(),finalEvent.getAction());
@@ -60,7 +60,7 @@ public class Activity  extends android.app.NativeActivity  {
             @Override
             public boolean commitText(CharSequence text, int newCursorPosition) {
                 final CharSequence finalText = text;
-                runOnRenderThread(new Runnable(){
+                Activity.this.runOnUiThread(new Runnable(){
                      @Override
                      public void run() {
                         for (int i=0;i<finalText.length();i++) {
@@ -75,7 +75,7 @@ public class Activity  extends android.app.NativeActivity  {
             @Override
             public boolean setComposingText (CharSequence text, int newCursorPosition) {
                 final CharSequence finalText = text;
-                runOnRenderThread(new Runnable(){
+                Activity.this.runOnUiThread(new Runnable(){
                      @Override
                      public void run() {
                         for (int i=0;i<finalText.length();i++) {
@@ -101,7 +101,7 @@ public class Activity  extends android.app.NativeActivity  {
 
         @Override public boolean dispatchKeyEvent (KeyEvent event) {
             final KeyEvent finalEvent = event;
-            runOnRenderThread( new Runnable() {
+            runOnUiThread( new Runnable() {
                 @Override
                 public void run() {
                     nativeOnKey(finalEvent.getKeyCode(), finalEvent.getUnicodeChar(), finalEvent.getAction() );
@@ -113,7 +113,7 @@ public class Activity  extends android.app.NativeActivity  {
         @Override
         public boolean dispatchKeyEventPreIme ( KeyEvent event) {
             final KeyEvent finalEvent = event;
-            runOnRenderThread( new Runnable() {
+            runOnUiThread( new Runnable() {
                 @Override
                 public void run() {
                     nativeOnKey(finalEvent.getKeyCode(), finalEvent.getUnicodeChar(), finalEvent.getAction() );
@@ -152,8 +152,7 @@ public class Activity  extends android.app.NativeActivity  {
     }
 
     private InvisibleEdit m_text_edit;
-    private Handler m_render_thread_handler;
-
+    
 	private static boolean libloaded = false;
     private void ensureLoadLibrary() {
         if (libloaded) {
@@ -175,70 +174,43 @@ public class Activity  extends android.app.NativeActivity  {
     }
 
 
-    public void reportRenderThread() {
-        m_render_thread_handler = new Handler(Looper.myLooper());
-    }
-
-    public void runOnRenderThread(Runnable r) {
-        if (m_render_thread_handler != null) {
-            if (!m_render_thread_handler.post(r)) {
-                r.run();
-            }
-        } else {
-            r.run();
-        }
-    }
-
     public void showSoftKeyboard() {
-        final Activity self = this;
-        runOnUiThread(new Runnable(){
-             //@override
-             public void run() {
-                
-
-                if (m_text_edit == null) {
-                    ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                    m_text_edit = new InvisibleEdit(Activity.this);
-                    m_text_edit.setId(100500);
-                    self.addContentView(m_text_edit,params);
-                    m_text_edit.getViewTreeObserver().addOnGlobalLayoutListener(new android.view.ViewTreeObserver.OnGlobalLayoutListener() {
-                        @Override 
-                        public void onGlobalLayout() {
-                            Rect r = new Rect();
-                            m_text_edit.getWindowVisibleDisplayFrame(r);
-                            final Rect fr = r;
-                            runOnRenderThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    nativeOnScreenRectChanged(fr.left,fr.top,fr.width(),fr.height());
-                                }
-                            });
+        if (m_text_edit == null) {
+            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            m_text_edit = new InvisibleEdit(Activity.this);
+            m_text_edit.setId(100500);
+            addContentView(m_text_edit,params);
+            m_text_edit.getViewTreeObserver().addOnGlobalLayoutListener(new android.view.ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override 
+                public void onGlobalLayout() {
+                    Rect r = new Rect();
+                    m_text_edit.getWindowVisibleDisplayFrame(r);
+                    final Rect fr = r;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            nativeOnScreenRectChanged(fr.left,fr.top,fr.width(),fr.height());
                         }
                     });
-                } 
-                m_text_edit.setVisibility(View.VISIBLE);
-                m_text_edit.requestFocus();
-                
-                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE|
-                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+                }
+            });
+        } 
+        m_text_edit.setVisibility(View.VISIBLE);
+        m_text_edit.requestFocus();
+        
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE|
+            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(m_text_edit, 0);
-            }
-        });
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(m_text_edit, 0);
     }
 
     public void hideSoftKeyboard() {
-        runOnUiThread(new Runnable(){
-             //@override
-             public void run() {
-                if (m_text_edit != null) {
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(m_text_edit.getWindowToken(), 0);
-                }
-            }
-        });
+        if (m_text_edit != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(m_text_edit.getWindowToken(), 0);
+        }
     }
 
 

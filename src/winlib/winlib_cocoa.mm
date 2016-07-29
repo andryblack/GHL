@@ -20,6 +20,8 @@
 #include <ghl_log.h>
 #include <ghl_event.h>
 
+#include <pthread.h>
+
 #include "../vfs/vfs_cocoa.h"
 #include "../image/image_decoders.h"
 #include "../sound/ghl_sound_impl.h"
@@ -989,6 +991,11 @@ static const char* level_descr[] = {
     "D:"
 };
 
+GHL_API GHL::UInt32 GHL_CALL GHL_GetCurrentThreadId() {
+    __uint64_t thread_id;
+    pthread_threadid_np(pthread_self(),&thread_id);
+    return (GHL::UInt32)(thread_id ^ (thread_id>>32));
+}
 GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {
     (void)level;
    	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];

@@ -22,8 +22,16 @@
 #include <unistd.h>
 #include <sys/uio.h>
 
+static GHL::UInt32 g_main_thread_id = 0;
+
+
 static const char* MODULE = "WinLib";
 
+static void check_main_thread() {
+    if (g_main_thread_id != GHL_GetCurrentThreadId()) {
+        LOG_ERROR("main thread expected");
+    }
+}
 char message_buffer[256];
 
 GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {
@@ -214,11 +222,13 @@ namespace GHL {
         }
         void OnStart() {
             LOG_INFO("OnStart");
+            check_main_thread();
             g_native_activity = m_activity;
             StartTimerThread();
         }
         void OnResume() {
             LOG_INFO("OnResume");
+            check_main_thread();
             g_native_activity = m_activity;
             if (m_app) {
                 GHL::Event e;
@@ -231,6 +241,7 @@ namespace GHL {
         }
         void OnPause() {
             LOG_INFO("OnPause");
+            check_main_thread();
             g_native_activity = m_activity;
             if (m_app) {
                 GHL::Event e;
@@ -240,11 +251,13 @@ namespace GHL {
         }
         void OnStop() {
             LOG_INFO("OnStop");
+            check_main_thread();
             g_native_activity = m_activity;
             StopTimerThread();
         }
         void OnDestroy() {
             LOG_INFO("OnDestroy");
+            check_main_thread();
             if (m_app) {
                 m_app->Release();
                 m_app = 0;
@@ -252,6 +265,7 @@ namespace GHL {
         }
         void OnWindowFocusChanged(int hasFocus) {
             LOG_VERBOSE("OnWindowFocusChanged:" << hasFocus);
+            check_main_thread();
             m_sound.SetFocus(hasFocus);
         }
         void DestroyContext() {
@@ -299,6 +313,7 @@ namespace GHL {
         }
         void OnNativeWindowCreated(ANativeWindow* window) {
             LOG_INFO("OnNativeWindowCreated");
+            check_main_thread();
             g_native_activity = m_activity;
             if (m_window==0) {
                 
@@ -384,6 +399,7 @@ namespace GHL {
         }
         void OnNativeWindowResized(ANativeWindow* window) {
             LOG_INFO("OnNativeWindowResized");
+            check_main_thread();
             g_native_activity = m_activity;
             if (window==m_window) {
                 if ( m_render && m_context!=EGL_NO_CONTEXT ) {
@@ -406,6 +422,7 @@ namespace GHL {
         }
         void OnNativeWindowDestroyed(ANativeWindow* window) {
             LOG_INFO("OnNativeWindowDestroyed");
+            check_main_thread();
             g_native_activity = m_activity;
             if (m_window==window) {
                 
@@ -434,6 +451,7 @@ namespace GHL {
         }
         void OnInputQueueCreated(AInputQueue* queue) {
             LOG_INFO("OnInputQueueCreated");
+            check_main_thread();
             if (m_input_queue) {
                 OnInputQueueDestroyed(m_input_queue);
                 m_input_queue = 0;
@@ -449,12 +467,14 @@ namespace GHL {
         }
         void OnInputQueueDestroyed(AInputQueue* queue) {
             LOG_INFO("OnInputQueueCreated");
+            check_main_thread();
             if (m_input_queue==queue) {
                 AInputQueue_detachLooper(queue);
                 m_input_queue = 0;
             }
         }
         void OnContentRectChanged(const ARect* rect) {
+            check_main_thread();
             if (m_render) {
                 //m_render->Resize(rect->right - rect->left, rect->bottom - rect->top );
                 ILOG_INFO("OnContentRectChanged " << rect->left << "," << rect->top << "," << rect->right << "," << rect->bottom);
@@ -462,6 +482,7 @@ namespace GHL {
         }
         void OnVisibleRectChanged(int x,int y,int w,int h) {
              if (!m_app) return;
+             check_main_thread();
              GHL::Event event;
              event.type = GHL::EVENT_TYPE_VISIBLE_RECT_CHANGED;
              event.data.visible_rect_changed.x = x;
@@ -502,6 +523,7 @@ namespace GHL {
     protected:
         bool HandleEvent(const AInputEvent* event) {
             g_native_activity = m_activity;
+            check_main_thread();
             if (AINPUT_EVENT_TYPE_MOTION==AInputEvent_getType(event)) {
                 int x = int( AMotionEvent_getX(event,0) );
                 int y = int( AMotionEvent_getY(event,0) );
@@ -585,6 +607,7 @@ namespace GHL {
         }
         void Render() {
             //LOG_DEBUG("Render ->");
+            check_main_thread();
             if (m_app && m_surface!=EGL_NO_SURFACE) {
                 timeval now;
                 gettimeofday(&now,0);
@@ -734,18 +757,7 @@ namespace GHL {
     
     void GHLActivity::StartTimerThread() {
 
-        jclass ActivityClass = m_activity->env->GetObjectClass(m_activity->clazz);
-        jmethodID method = m_activity->env->GetMethodID(ActivityClass, "reportRenderThread","()V");
-        if (m_activity->env->ExceptionCheck()) {
-            m_activity->env->ExceptionDescribe();
-            m_activity->env->ExceptionClear();
-            LOG_INFO("[native] not found method reportRenderThread");
-        } else {
-            m_activity->env->CallVoidMethod(m_activity->clazz,method);
-        }
-        m_activity->env->DeleteLocalRef(ActivityClass);
-
-
+        
         int msgpipe[2];
         if (pipe(msgpipe)) {
             LOG_ERROR("could not create pipe: " << strerror(errno));
@@ -819,6 +831,9 @@ extern "C" {
     __attribute__ ((visibility ("default"))) void ANativeActivity_onCreate(ANativeActivity* activity,
                                   void* savedState, size_t savedStateSize) {
         GHL_Log(GHL::LOG_LEVEL_INFO,"Create\n");
+
+        g_main_thread_id = GHL_GetCurrentThreadId();
+
         activity->callbacks->onDestroy = &GHL::proxy_func<&GHL::GHLActivity::OnDestroy>;
         activity->callbacks->onStart = &GHL::proxy_func<&GHL::GHLActivity::OnStart>;
         activity->callbacks->onResume = &GHL::proxy_func<&GHL::GHLActivity::OnResume>;
@@ -840,7 +855,9 @@ extern "C" {
     }
 }
 
-
+GHL_API GHL::UInt32 GHL_CALL GHL_GetCurrentThreadId() {
+    return (GHL::UInt32) pthread_self();
+}
 GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char** argv) {
     temp_app = app;
     GHL_Log(GHL::LOG_LEVEL_INFO,"GHL_StartApplication\n");

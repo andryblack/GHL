@@ -29,6 +29,8 @@
 
 #import "WinLibCocoaTouchContext2.h"
 
+#include <phtread.h>
+
 static const char* MODULE = "WINLIB";
 
 static GHL::Application* g_application = 0;
@@ -825,7 +827,11 @@ GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {
     [pool release];
 }
 
-
+GHL_API GHL::UInt32 GHL_CALL GHL_GetCurrentThreadId() {
+    __uint64_t thread_id;
+    pthread_threadid_np(pthread_self(),&thread_id);
+    return (GHL::UInt32)(thread_id ^ (thread_id>>32));
+}
 
 GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int argc, char** argv) {
     (void)MODULE;

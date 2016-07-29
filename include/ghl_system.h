@@ -62,5 +62,7 @@ namespace GHL {
 
 /// Get system time (secs returned)
 GHL_API GHL::UInt32 GHL_CALL GHL_SystemGetTime(GHL::TimeValue* tv);
+/// Get opaque thread id
+GHL_API GHL::UInt32 GHL_CALL GHL_GetCurrentThreadId();
 
 #endif /*GHL_SYSTEM_H*/
