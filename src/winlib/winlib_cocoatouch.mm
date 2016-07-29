@@ -29,7 +29,7 @@
 
 #import "WinLibCocoaTouchContext2.h"
 
-#include <phtread.h>
+#include <pthread.h>
 
 static const char* MODULE = "WINLIB";
 
