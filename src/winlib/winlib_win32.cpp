@@ -8,6 +8,7 @@
 #include "../sound/dsound/ghl_sound_dsound.h"
 #endif
 #include "../ghl_log_impl.h"
+#include <ghl_event.h>
 
 #include <windows.h>
 #include <mmsystem.h>
@@ -91,32 +92,59 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
 		case WM_MOUSEMOVE: {
 			if ( wparam & MK_LBUTTON ) {
-				if (appl) appl->OnMouseMove(GHL::MOUSE_BUTTON_LEFT, GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
+				GHL::Event e;
+				e.type = GHL::EVENT_TYPE_MOUSE_MOVE;
+				e.data.mouse_move.button = GHL::MOUSE_BUTTON_LEFT;
+				e.data.mouse_move.x = GET_X_LPARAM(lparam);
+				e.data.mouse_move.y = GET_Y_LPARAM(lparam);
+				e.data.mouse_move.modificators = 0;
+				if (appl) appl->OnEvent(&e);
 			}
 		} break;
 
 		case WM_LBUTTONDOWN: {
 			{
-				if (appl) appl->OnMouseDown(GHL::MOUSE_BUTTON_LEFT, GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
+				GHL::Event e;
+				e.type = GHL::EVENT_TYPE_MOUSE_PRESS;
+				e.data.mouse_press.button = GHL::MOUSE_BUTTON_LEFT;
+				e.data.mouse_press.x = GET_X_LPARAM(lparam);
+				e.data.mouse_press.y = GET_Y_LPARAM(lparam);
+				e.data.mouse_press.modificators = 0;
+				if (appl) appl->OnEvent(&e);
 			}
 		} break;
 
 		case WM_LBUTTONUP: {
 			{
-				if (appl) appl->OnMouseUp(GHL::MOUSE_BUTTON_LEFT, GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
+				GHL::Event e;
+				e.type = GHL::EVENT_TYPE_MOUSE_RELEASE;
+				e.data.mouse_release.button = GHL::MOUSE_BUTTON_LEFT;
+				e.data.mouse_release.x = GET_X_LPARAM(lparam);
+				e.data.mouse_release.y = GET_Y_LPARAM(lparam);
+				e.data.mouse_release.modificators = 0;
+				if (appl) appl->OnEvent(&e);
 			}
 		} break;
 
 		case WM_KEYDOWN: {
 			GHL::Key key = convert_key(wparam);
 			if (key!=GHL::KEY_NONE) {
-				if (appl) appl->OnKeyDown(key);
+				GHL::Event e;
+				e.type = GHL::EVENT_TYPE_KEY_PRESS;
+				e.data.key_press.key = key;
+				e.data.key_press.charcode = 0;
+				e.data.key_press.modificators = 0;
+				if (appl) appl->OnEvent(&e);
 			}
 			} break;
 		case WM_KEYUP: {
 			GHL::Key key = convert_key(wparam);
 			if (key!=GHL::KEY_NONE) {
-				if (appl) appl->OnKeyUp(key);
+				GHL::Event e;
+				e.type = GHL::EVENT_TYPE_KEY_RELEASE;
+				e.data.key_release.key = key;
+				e.data.key_release.modificators = 0;
+				if (appl) appl->OnEvent(&e);
 			}
 			} break;
 		case WM_CLOSE:
