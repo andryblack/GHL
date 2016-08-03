@@ -22,7 +22,7 @@
 
 #include "ghl_data_impl.h"
 #include <ghl_data_stream.h>
-#include "zlib/zlib.h"
+#include "../zlib/zlib.h"
 #undef Byte
 
 //static const char* MODULE = "VFS";
