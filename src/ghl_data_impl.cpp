@@ -62,21 +62,6 @@ GHL_API GHL::Data* GHL_CALL GHL_HoldData( const GHL::Byte* data_ptr, GHL::UInt32
     return data;
 }
 
-GHL_API GHL::Data* GHL_CALL GHL_ReadAllData( GHL::DataStream* ds ) {
-    if (!ds) return 0;
-    GHL::DataArrayImpl* data = new GHL::DataArrayImpl();
-    GHL::Byte buf[1024*8];
-    ds->Seek(0, GHL::F_SEEK_END);
-    GHL::UInt32 size = ds->Tell();
-    ds->Seek(0, GHL::F_SEEK_BEGIN);
-    data->reserve(size);
-    while (!ds->Eof()) {
-        GHL::UInt32 readed = ds->Read(buf,sizeof(buf));
-        if( readed == 0 ) break;
-        data->append(buf,readed);
-    }
-    return data;
-}
 
 static voidpf z__alloc_func (voidpf opaque, uInt items, uInt size) {
     (void)opaque;
@@ -103,7 +88,7 @@ GHL_API bool GHL_CALL GHL_UnpackZlib(const GHL::Data* src, GHL::Byte* dst,GHL::U
     stream.zalloc = &z__alloc_func;
     stream.zfree = &z__free_func;
     
-    err = inflateInit(&stream);
+    err = inflateInit2(&stream,32+15);
     if (err != Z_OK) return false;
     
     err = inflate(&stream, Z_FINISH);
