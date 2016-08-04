@@ -40,6 +40,7 @@ namespace GHL
 		virtual GHL::UInt32 GHL_CALL Read(GHL::Byte* dest,GHL::UInt32 bytes) {
             GHL::UInt32 size = u_min(bytes,m_data->GetSize() - m_pointer);
             ::memcpy(dest, m_data->GetData()+m_pointer, size);
+            m_pointer += size;
             return size;
         }
 		/// tell

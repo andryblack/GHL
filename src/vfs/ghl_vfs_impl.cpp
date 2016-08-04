@@ -69,6 +69,7 @@ namespace GHL {
         /// read data
         virtual GHL::UInt32 GHL_CALL Read(GHL::Byte* dest,GHL::UInt32 bytes) {
             UInt32 readed = 0;
+           
             while (m_error == Z_OK) {
                
                 if (m_z.avail_in==0) {
@@ -87,7 +88,9 @@ namespace GHL {
                     break;
                 //if (m_error == Z_)
             }
-            
+            if (m_error == Z_BUF_ERROR) {
+                m_error = Z_OK;
+            }
             return readed;
         }
         /// tell
