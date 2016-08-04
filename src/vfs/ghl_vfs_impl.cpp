@@ -75,9 +75,11 @@ namespace GHL {
                 if (m_z.avail_in==0) {
                     FillBuffer();
                 }
+                bool all_data_complete = (m_z.avail_in == 0) && m_ds->Eof();
+                
                 m_z.next_out = dest;
                 m_z.avail_out = bytes;
-                m_error = inflate(&m_z,m_ds->Eof() ? Z_FINISH : 0);
+                m_error = inflate(&m_z,all_data_complete ? Z_FINISH : 0);
                 
                 UInt32 decompressed = bytes - m_z.avail_out;
                 dest += decompressed;
@@ -86,7 +88,9 @@ namespace GHL {
                 m_pos += decompressed;
                 if (bytes == 0)
                     break;
-                //if (m_error == Z_)
+                if ((m_error == Z_OK || m_error == Z_BUF_ERROR) && all_data_complete && m_z.avail_out) {
+                    m_error = Z_STREAM_END;
+                }
             }
             if (m_error == Z_BUF_ERROR) {
                 m_error = Z_OK;
