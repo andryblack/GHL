@@ -20,7 +20,7 @@
  blackicebox (at) gmail (dot) com
  */
 
-#include "ghl_data_impl.h"
+#include "../ghl_data_impl.h"
 #include <ghl_data_stream.h>
 #include "../zlib/zlib.h"
 #undef Byte
