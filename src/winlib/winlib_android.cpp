@@ -103,13 +103,26 @@ namespace GHL {
             
             pthread_mutex_init(&m_mutex, NULL);
             pthread_cond_init(&m_cond, NULL);
+            pthread_mutex_init(&m_events_mutex,NULL);
 
         }
         ~GHLActivity() {
             delete m_vfs;
             pthread_cond_destroy(&m_cond);
             pthread_mutex_destroy(&m_mutex);
+            pthread_mutex_destroy(&m_events_mutex);
         }
+
+        struct event_scoped_lock {
+            pthread_mutex_t* m;
+            event_scoped_lock(pthread_mutex_t* m) : m(m) {
+                pthread_mutex_lock(m);
+            }
+            ~event_scoped_lock() {
+                pthread_mutex_unlock(m);
+            }
+        };
+        #define EVENT_SCOPE_LOCK() event_scoped_lock _event_lock_(&m_events_mutex)
         
         /// GHL::System impl
         /// Exit from application
@@ -191,6 +204,7 @@ namespace GHL {
         static const unsigned int AWINDOW_FLAG_KEEP_SCREEN_ON = 0x00000080;
         void OnCreate() {
             LOG_INFO("OnCreate");
+            EVENT_SCOPE_LOCK();
             g_native_activity = m_activity;
             ANativeActivity_setWindowFlags(m_activity, AWINDOW_FLAG_KEEP_SCREEN_ON, 0);
 
@@ -222,19 +236,24 @@ namespace GHL {
         }
         void OnStart() {
             LOG_INFO("OnStart");
+            EVENT_SCOPE_LOCK();
+
             check_main_thread();
             g_native_activity = m_activity;
-            StartTimerThread();
+            
         }
         void OnResume() {
             LOG_INFO("OnResume");
             check_main_thread();
+            EVENT_SCOPE_LOCK();
+
             g_native_activity = m_activity;
             if (m_app) {
                 GHL::Event e;
                 e.type = GHL::EVENT_TYPE_ACTIVATE;
                 m_app->OnEvent(&e);
             }
+            StartTimerThread();
         }
         void* onSaveInstanceState(size_t* outSize) {
             return 0;
@@ -242,22 +261,28 @@ namespace GHL {
         void OnPause() {
             LOG_INFO("OnPause");
             check_main_thread();
+            EVENT_SCOPE_LOCK();
+
             g_native_activity = m_activity;
             if (m_app) {
                 GHL::Event e;
                 e.type = GHL::EVENT_TYPE_DEACTIVATE;
                 m_app->OnEvent(&e);
             }
+            StopTimerThread();
         }
         void OnStop() {
             LOG_INFO("OnStop");
             check_main_thread();
+            EVENT_SCOPE_LOCK();
+
             g_native_activity = m_activity;
-            StopTimerThread();
         }
         void OnDestroy() {
             LOG_INFO("OnDestroy");
             check_main_thread();
+            EVENT_SCOPE_LOCK();
+
             if (m_app) {
                 m_app->Release();
                 m_app = 0;
@@ -266,6 +291,7 @@ namespace GHL {
         void OnWindowFocusChanged(int hasFocus) {
             LOG_VERBOSE("OnWindowFocusChanged:" << hasFocus);
             check_main_thread();
+            EVENT_SCOPE_LOCK();
             m_sound.SetFocus(hasFocus);
         }
         void DestroyContext() {
@@ -314,6 +340,8 @@ namespace GHL {
         void OnNativeWindowCreated(ANativeWindow* window) {
             LOG_INFO("OnNativeWindowCreated");
             check_main_thread();
+            EVENT_SCOPE_LOCK();
+
             g_native_activity = m_activity;
             if (m_window==0) {
                 
@@ -400,6 +428,8 @@ namespace GHL {
         void OnNativeWindowResized(ANativeWindow* window) {
             LOG_INFO("OnNativeWindowResized");
             check_main_thread();
+            EVENT_SCOPE_LOCK();
+
             g_native_activity = m_activity;
             if (window==m_window) {
                 if ( m_render && m_context!=EGL_NO_CONTEXT ) {
@@ -423,6 +453,8 @@ namespace GHL {
         void OnNativeWindowDestroyed(ANativeWindow* window) {
             LOG_INFO("OnNativeWindowDestroyed");
             check_main_thread();
+            EVENT_SCOPE_LOCK();
+
             g_native_activity = m_activity;
             if (m_window==window) {
                 
@@ -452,6 +484,8 @@ namespace GHL {
         void OnInputQueueCreated(AInputQueue* queue) {
             LOG_INFO("OnInputQueueCreated");
             check_main_thread();
+            EVENT_SCOPE_LOCK();
+
             if (m_input_queue) {
                 OnInputQueueDestroyed(m_input_queue);
                 m_input_queue = 0;
@@ -468,6 +502,8 @@ namespace GHL {
         void OnInputQueueDestroyed(AInputQueue* queue) {
             LOG_INFO("OnInputQueueCreated");
             check_main_thread();
+            EVENT_SCOPE_LOCK();
+
             if (m_input_queue==queue) {
                 AInputQueue_detachLooper(queue);
                 m_input_queue = 0;
@@ -475,6 +511,8 @@ namespace GHL {
         }
         void OnContentRectChanged(const ARect* rect) {
             check_main_thread();
+            EVENT_SCOPE_LOCK();
+
             if (m_render) {
                 //m_render->Resize(rect->right - rect->left, rect->bottom - rect->top );
                 ILOG_INFO("OnContentRectChanged " << rect->left << "," << rect->top << "," << rect->right << "," << rect->bottom);
@@ -483,6 +521,8 @@ namespace GHL {
         void OnVisibleRectChanged(int x,int y,int w,int h) {
              if (!m_app) return;
              check_main_thread();
+             EVENT_SCOPE_LOCK();
+
              GHL::Event event;
              event.type = GHL::EVENT_TYPE_VISIBLE_RECT_CHANGED;
              event.data.visible_rect_changed.x = x;
@@ -501,6 +541,8 @@ namespace GHL {
         void onKey(int key_code,uint32_t unicode,int action) {
             if (!m_app) 
                 return;
+            
+
             if (AKEY_EVENT_ACTION_DOWN == action) {
                 //ILOG_INFO("AKEY_EVENT_ACTION_DOWN " << key_code << " " << unicode);
                 GHL::Event e;
@@ -524,6 +566,8 @@ namespace GHL {
         bool HandleEvent(const AInputEvent* event) {
             g_native_activity = m_activity;
             check_main_thread();
+            EVENT_SCOPE_LOCK();
+
             if (AINPUT_EVENT_TYPE_MOTION==AInputEvent_getType(event)) {
                 int x = int( AMotionEvent_getX(event,0) );
                 int y = int( AMotionEvent_getY(event,0) );
@@ -585,7 +629,10 @@ namespace GHL {
         }
         void OnTimerCallback() {
             g_native_activity = m_activity;
+            check_main_thread();
             //LOG_DEBUG("OnTimerCallback");
+            EVENT_SCOPE_LOCK();
+
             Render();
         }
         static int ALooper_InputCallback(int fd, int events, void* data) {
@@ -607,7 +654,7 @@ namespace GHL {
         }
         void Render() {
             //LOG_DEBUG("Render ->");
-            check_main_thread();
+            
             if (m_app && m_surface!=EGL_NO_SURFACE) {
                 timeval now;
                 gettimeofday(&now,0);
@@ -697,13 +744,14 @@ namespace GHL {
         pthread_t   m_thread;
         pthread_mutex_t m_mutex;
         pthread_cond_t m_cond;
-        enum {
+        volatile enum {
             TS_NONE,
             TS_START,
             TS_RUNNING,
             TS_STOP,
             TS_STOPPED
         } m_timer_state;
+        pthread_mutex_t m_events_mutex;
     };
     template <void(GHLActivity::*func)()> static inline void proxy_func(ANativeActivity* activity) {
         if ( activity && activity->instance ) {
