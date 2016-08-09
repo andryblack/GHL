@@ -258,7 +258,13 @@ namespace GHL {
             if (filename[i]=='\\') filename[i]='/';
         }
         NSString* fileName = [NSString stringWithUTF8String:filename.c_str()];
-        [[NSFileManager defaultManager] createFileAtPath:fileName contents:nil attributes:nil];
+        NSString* folder = [fileName stringByDeletingLastPathComponent];
+        NSFileManager* mgr = [NSFileManager defaultManager];
+        BOOL dir = true;
+        if (folder && ![mgr fileExistsAtPath:folder isDirectory:&dir]) {
+            [mgr createDirectoryAtPath:folder withIntermediateDirectories:YES attributes:nil error:nil];
+        }
+        [mgr createFileAtPath:fileName contents:nil attributes:nil];
         NSFileHandle* handle = [NSFileHandle fileHandleForWritingAtPath:fileName];
         if (handle) {
             return new CocoaWriteFileStream(handle);
