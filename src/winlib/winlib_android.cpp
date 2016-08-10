@@ -207,6 +207,9 @@ namespace GHL {
             EVENT_SCOPE_LOCK();
             g_native_activity = m_activity;
             ANativeActivity_setWindowFlags(m_activity, AWINDOW_FLAG_KEEP_SCREEN_ON, 0);
+              /* Set the window color depth to 24bpp, since the default is
+                * ugly-looking 16bpp. */
+            ANativeActivity_setWindowFormat(m_activity, WINDOW_FORMAT_RGBX_8888);
 
             m_app = android_app_create();
 
@@ -314,6 +317,10 @@ namespace GHL {
              * sample, we have a very simplified selection process, where we pick
              * the first EGLConfig that matches our criteria */
             eglChooseConfig(m_display, attribs, &config, 1, &numConfigs);
+            if (numConfigs <= 0) {
+                GHL_Log(GHL::LOG_LEVEL_ERROR,"Unable to eglChooseConfig");
+                return false ;
+            }
             
             /* EGL_NATIVE_VISUAL_ID is an attribute of the EGLConfig that is
              * guaranteed to be accepted by ANativeWindow_setBuffersGeometry().
@@ -324,12 +331,20 @@ namespace GHL {
             ANativeWindow_setBuffersGeometry(m_window, 0, 0, format);
             
             m_surface = eglCreateWindowSurface(m_display, config, m_window, NULL);
+            if (!m_surface) {
+                GHL_Log(GHL::LOG_LEVEL_ERROR,"Unable to eglCreateWindowSurface");
+                return false ;
+            }
             const EGLint ctx_attribs[] = {
                 EGL_CONTEXT_CLIENT_VERSION,
                 2,
                 EGL_NONE
             };
             m_context = eglCreateContext(m_display, config, NULL, ctx_attribs);
+            if (m_context == EGL_NO_CONTEXT) {
+                GHL_Log(GHL::LOG_LEVEL_ERROR,"Unable to eglCreateContext");
+                return false ;
+            }
             
             if (eglMakeCurrent(m_display, m_surface, m_surface, m_context) == EGL_FALSE) {
                 GHL_Log(GHL::LOG_LEVEL_ERROR,"Unable to eglMakeCurrent");
@@ -360,9 +375,13 @@ namespace GHL {
                  */
                 const EGLint attribs[] = {
                     EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+                    EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
                     EGL_BLUE_SIZE, 8,
                     EGL_GREEN_SIZE, 8,
                     EGL_RED_SIZE, 8,
+                    EGL_DEPTH_SIZE, 0,
+                    EGL_SAMPLE_BUFFERS, 0,
+                    EGL_SAMPLES, 0,
                     EGL_NONE
                 };
                 EGLint w, h, dummy;
@@ -379,7 +398,10 @@ namespace GHL {
                     LOG_INFO("EGL: " << major << "." << minor);
                 }
                 
-                CreateContext(attribs);
+                if (!CreateContext(attribs)) {
+                    LOG_ERROR("Unable to CreateContext");
+                    return;
+                }
                 
                 eglQuerySurface(m_display, m_surface, EGL_WIDTH, &w);
                 eglQuerySurface(m_display, m_surface, EGL_HEIGHT, &h);
@@ -402,13 +424,19 @@ namespace GHL {
                     DestroyContext();
                      const EGLint depth_attribs[] = {
                         EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+                        EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
                         EGL_BLUE_SIZE, 8,
                         EGL_GREEN_SIZE, 8,
                         EGL_RED_SIZE, 8,
                         EGL_DEPTH_SIZE, 16,
+                        EGL_SAMPLE_BUFFERS, 0,
+                        EGL_SAMPLES, 0,
                         EGL_NONE
                     };
-                    CreateContext(depth_attribs);
+                    if (!CreateContext(depth_attribs)) {
+                        LOG_ERROR("Unable to CreateContext with depth");
+                        return;
+                    }
                 }
 
                 
@@ -900,6 +928,8 @@ extern "C" {
         GHL::GHLActivity* ghl_activity = new GHL::GHLActivity(activity, savedState, savedStateSize);
         activity->instance = ghl_activity;
         ghl_activity->OnCreate();
+
+
     }
 }
 
