@@ -2,6 +2,7 @@
 #include "memory_stream.h"
 #include <iostream>
 #include <cstdio>
+#include <cstring>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -83,6 +84,17 @@ namespace GHL {
         }
     };
 
+    static void create_dir(const char* filename) {
+        std::string dir;
+        const char* pos = strchr(filename,'/');
+        while (pos) {
+            dir.append(filename,pos-filename);
+            mkdir(dir.c_str(),0777);
+            filename = pos;
+            pos = strchr(pos+1,'/');
+        }
+    }
+
 
     VFSPosixImpl::VFSPosixImpl(const char* dat,const char* docs) {
         m_data_dir = dat;
@@ -153,6 +165,7 @@ namespace GHL {
         LOG_VERBOSE("try open write file '" << _file << "'");
         if (!_file) return 0;
         if (_file[0]==0) return 0;
+        create_dir(_file);
         FILE* f = fopen(_file, "wb"  );
         if (f)
             return new PosixWriteFileStream(f);
@@ -161,6 +174,7 @@ namespace GHL {
     
     /// write file
     bool GHL_CALL VFSPosixImpl::WriteFile(const char* file, const Data* data) {
+        create_dir(file);
         FILE* f = fopen(file, "wb" );
         if (!f)
             return false;
