@@ -164,6 +164,12 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
     SystemSDL system;
     g_application->SetSystem(&system);
 
+    {
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_APP_STARTED;
+        g_application->OnEvent(&e);
+    }
+
     GHL::Settings settings;
     settings.width = 800;
     settings.height = 600;
@@ -193,6 +199,8 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
     if ( g_render && g_application ) {
         g_application->SetRender(g_render);
         g_application->Load();
+    } else {
+         LOG_ERROR(  "not started" );
     }
 
     g_last_time = SDL_GetTicks();
