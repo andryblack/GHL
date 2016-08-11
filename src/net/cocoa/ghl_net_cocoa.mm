@@ -69,6 +69,10 @@
     m_handler = 0;
 }
 
+- (nullable NSCachedURLResponse *)connection:(NSURLConnection *)connection willCacheResponse:(NSCachedURLResponse *)cachedResponse {
+    return nil;
+}
+
 -(BOOL)complete
 {
     return m_handler!=0;
@@ -115,6 +119,8 @@ public:
         }
         
         NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:urlObject];
+        request.cachePolicy  = NSURLRequestReloadIgnoringLocalCacheData;
+        
         GHL::UInt32 heades = handler->GetHeadersCount();
         bool has_encoding = false;
         for (GHL::UInt32 i=0;i<heades;++i) {
