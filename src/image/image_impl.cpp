@@ -53,7 +53,11 @@ namespace GHL
 	}
     
     void GHL_CALL ImageImpl::Fill(UInt32 clr) {
+        if (!m_data)
+            return;
         Byte* data = m_data->GetDataPtr();
+        if (!data)
+            return;
         const size_t len = m_width*m_height;
         
         if (m_fmt==IMAGE_FORMAT_RGB)
