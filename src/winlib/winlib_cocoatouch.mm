@@ -711,6 +711,10 @@ public:
     window = [[UIWindow alloc] initWithFrame:rect];
     [window setAutoresizesSubviews:YES];
     
+    GHL::Event e;
+    e.type = GHL::EVENT_TYPE_APP_STARTED;
+    g_application->OnEvent(&e);
+    
     view = [[WinLibView alloc] initWithFrame:CGRectMake(0, 0, settings.width, settings.height)];
     controller.view = view;
     
@@ -730,9 +734,7 @@ public:
     
     [window makeKeyAndVisible];
     
-    GHL::Event e;
-    e.type = GHL::EVENT_TYPE_APP_STARTED;
-    g_application->OnEvent(&e);
+    
     
     [pool drain];
 }
