@@ -13,6 +13,7 @@
 #include "ghl_shader.h"
 #include "../shader_impl.h"
 #include "render_opengl_api.h"
+#include <ghl_render.h>
 
 #include <map>
 #include <string>
@@ -82,15 +83,17 @@ namespace GHL {
 		
 		GL::GLhandle handle() const { return m_handle;}
         GL::GLint   GetAttribute(GLSLPredefinedAttribute attr) const;
-        void  SetTextureSlot(const char* name, Int32 slot ) const;
+        void  Setup();
+        void SetPMVMatrix(const float* m) const;
 	private:
         friend class ShaderUniformGLSL;
         const GL& gl;
 		GL::GLhandle	m_handle;
 		VertexShaderGLSL* m_v;
 		FragmentShaderGLSL* m_f;
-		mutable std::map<std::string,ShaderUniformGLSL> m_uniforms;
-        mutable GL::GLint m_attributes[GLSLPredefinedAttributesAmount];
+      	mutable std::map<std::string,ShaderUniformGLSL> m_uniforms;
+        GL::GLint m_pmv_uniform;
+        GL::GLint m_attributes[GLSLPredefinedAttributesAmount];
         const ShaderProgram* GetCurrent() const;
         void SetCurrent(const ShaderProgram* prg) const;
 	};

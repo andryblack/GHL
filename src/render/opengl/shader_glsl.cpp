@@ -39,13 +39,13 @@ namespace GHL {
 	
 	
 	ShaderProgramGLSL::ShaderProgramGLSL(RenderOpenGLBase* parent,GL::GLhandle handle_,VertexShaderGLSL* vt,FragmentShaderGLSL* fr)
-    : ShaderProgramImpl(parent),gl(parent->get_api()),m_handle(handle_),m_v(vt),m_f(fr) {
+    : ShaderProgramImpl(parent),gl(parent->get_api()),m_handle(handle_),m_v(vt),m_f(fr),m_pmv_uniform(-1) {
 			m_v->AddRef();
 			m_f->AddRef();
         for (size_t i=0;i<sizeof(m_attributes)/sizeof(m_attributes[0]);++i) {
             m_attributes[i] = -1;
         }
-	}
+    }
 	
 	ShaderProgramGLSL::~ShaderProgramGLSL() {
 		gl.sdrapi.DeleteProgram(m_handle);
@@ -109,13 +109,6 @@ namespace GHL {
 		it = m_uniforms.find(sname);
 		return &it->second;
 	}
-    void GHL_CALL ShaderProgramGLSL::SetTextureSlot(const char* name, Int32 slot ) const {
-        GL::GLint location = -1;
-        CHECK_GL(location = gl.sdrapi.GetUniformLocation(m_handle,name));
-		if (location<0)
-            return;
-        gl.sdrapi.Uniform1i(location,slot);
-    }
     
     static const char* predefinedAttributeNames[GLSLPredefinedAttributesAmount] = {
         "vPosition",
@@ -123,13 +116,32 @@ namespace GHL {
         "vColor",
         "vTex2Coord",
     };
-    GL::GLint   ShaderProgramGLSL::GetAttribute(GLSLPredefinedAttribute attr) const {
-        if (m_attributes[attr]<0) {
-            m_attributes[attr] = gl.sdrapi.GetAttribLocation(m_handle,predefinedAttributeNames[attr]);
-            if (m_attributes[attr]>=0) {
-                CHECK_GL(gl.sdrapi.EnableVertexAttribArray(m_attributes[attr]));
+    
+    void ShaderProgramGLSL::Setup() {
+        for (size_t i=0;i<MAX_TEXTURE_STAGES;++i) {
+            char uf[64];
+            ::snprintf(uf, 64, "texture_%d",int(i));
+            GL::GLint location = -1;
+            CHECK_GL(location = gl.sdrapi.GetUniformLocation(m_handle,uf));
+            if (location>=0) {
+                gl.sdrapi.Uniform1i(location,GL::GLint(i));
             }
         }
+        for (size_t i=0;i<GLSLPredefinedAttributesAmount;++i) {
+            m_attributes[i] = gl.sdrapi.GetAttribLocation(m_handle,predefinedAttributeNames[i]);
+            if (m_attributes[i]>=0) {
+                CHECK_GL(gl.sdrapi.EnableVertexAttribArray(m_attributes[i]));
+            }
+        }
+        m_pmv_uniform = gl.sdrapi.GetUniformLocation(m_handle,"mProjectionModelView");
+    }
+    void ShaderProgramGLSL::SetPMVMatrix(const float* m) const {
+        if (m_pmv_uniform >= 0) {
+            CHECK_GL(gl.sdrapi.UniformMatrix4fv(m_pmv_uniform,1,gl._FALSE,m));
+        }
+    }
+   
+    GL::GLint   ShaderProgramGLSL::GetAttribute(GLSLPredefinedAttribute attr) const {
         return m_attributes[attr];
     }
     const ShaderProgram* ShaderProgramGLSL::GetCurrent() const {

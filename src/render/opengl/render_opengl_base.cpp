@@ -277,7 +277,7 @@ namespace GHL {
         RenderImpl::SetIndexBuffer(buf);
         if (gl.vboapi.valid) {
             if (buf) {
-                reinterpret_cast<const IndexBufferOpenGL*>(buf)->bind();
+                static_cast<const IndexBufferOpenGL*>(buf)->bind();
             } else {
                 CHECK_GL(gl.vboapi.BindBuffer(gl.vboapi.ELEMENT_ARRAY_BUFFER,0));
             }
@@ -298,7 +298,7 @@ namespace GHL {
 		RenderImpl::SetVertexBuffer(buf);
         if (gl.vboapi.valid) {
             if (buf) {
-                reinterpret_cast<const VertexBufferOpenGL*>(buf)->bind();
+                static_cast<const VertexBufferOpenGL*>(buf)->bind();
             } else {
                 CHECK_GL(gl.vboapi.BindBuffer(gl.vboapi.ARRAY_BUFFER,0));
             }
@@ -489,8 +489,8 @@ namespace GHL {
         if (!v || !f) return 0;
         GL::GLhandle handle = 0;
         CHECK_GL(handle=gl.sdrapi.CreateProgram());
-		VertexShaderGLSL* vs = reinterpret_cast<VertexShaderGLSL*> (v);
-		FragmentShaderGLSL* fs = reinterpret_cast<FragmentShaderGLSL*> (f);
+		VertexShaderGLSL* vs = static_cast<VertexShaderGLSL*> (v);
+		FragmentShaderGLSL* fs = static_cast<FragmentShaderGLSL*> (f);
 		// @todo check vs ans fs
 		CHECK_GL(gl.sdrapi.AttachShader(handle, vs->handle()));
 		CHECK_GL(gl.sdrapi.AttachShader(handle, fs->handle()));
@@ -508,6 +508,15 @@ namespace GHL {
 			return 0;
 		}
 		ShaderProgramGLSL* prg = new ShaderProgramGLSL(this,handle,vs,fs);
+        const ShaderProgram* current = GetShader();
+        CHECK_GL(gl.sdrapi.UseProgram(handle));
+        prg->Setup();
+        if (current) {
+            const ShaderProgramGLSL* sp = static_cast<const ShaderProgramGLSL*>(current);
+            CHECK_GL(gl.sdrapi.UseProgram(sp->handle()));
+        } else {
+            CHECK_GL(gl.sdrapi.UseProgram(0));
+        }
 		return prg;
 	}
 
@@ -516,7 +525,7 @@ namespace GHL {
         RenderImpl::SetShader(shader);
         if (!gl.sdrapi.valid) return;
 		if (shader) {
-			const ShaderProgramGLSL* sp = reinterpret_cast<const ShaderProgramGLSL*>(shader);
+			const ShaderProgramGLSL* sp = static_cast<const ShaderProgramGLSL*>(shader);
 			CHECK_GL(gl.sdrapi.UseProgram(sp->handle()));
 		} else {
 			CHECK_GL(gl.sdrapi.UseProgram(0));
@@ -572,7 +581,7 @@ namespace GHL {
 		set_texture_stage(gl,stage);
 		//glClientActiveTexture(texture_stages[stage]);
 		if (texture) {
-			const TextureOpenGL* tex = reinterpret_cast<const TextureOpenGL*>(texture);
+			const TextureOpenGL* tex = static_cast<const TextureOpenGL*>(texture);
             CHECK_GL(gl.Enable(gl.TEXTURE_2D));
 			tex->bind();
 		} else {
@@ -769,7 +778,7 @@ namespace GHL {
         set_texture_stage(gl,stage);
 		//glClientActiveTexture(texture_stages[stage]);
 		if (texture) {
-			const TextureOpenGL* tex = reinterpret_cast<const TextureOpenGL*>(texture);
+			const TextureOpenGL* tex = static_cast<const TextureOpenGL*>(texture);
         	tex->bind();
 		} else {
 			CHECK_GL(gl.BindTexture(gl.TEXTURE_2D, 0));
@@ -783,7 +792,6 @@ namespace GHL {
             m_crnt_state.texture_stages[stage].rgb.c.texture = false;
             m_crnt_state.texture_stages[stage].alpha.c.texture = false;
         }
-        m_reset_uniforms = true;
     }
     
     /// set texture stage color operation
@@ -813,18 +821,7 @@ namespace GHL {
             prg = GetShader();
         }
         if (prg) {
-            ShaderUniform* uniform = prg->GetUniform("mProjectionModelView");
-            if (uniform) {
-                uniform->SetValueMatrix(m_projection_view_matrix);
-            }
-            
-            for (size_t i=0;i<MAX_TEXTURE_STAGES;++i) {
-                if (m_crnt_state.texture_stages[i].rgb.c.texture) {
-                    char uf[64];
-                    ::snprintf(uf, 64, "texture_%d",int(i));
-                    static_cast<const ShaderProgramGLSL*>(prg)->SetTextureSlot(uf,Int32(i));
-                }
-            }
+            static_cast<const ShaderProgramGLSL*>(prg)->SetPMVMatrix(m_projection_view_matrix);
         }
         m_reset_uniforms = false;
     }
