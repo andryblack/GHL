@@ -621,11 +621,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     LOG_INFO( "WinLibAppDelegate::switchFullscreen" );
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	
-	if (m_application) {
-        GHL::Event e;
-        e.type = GHL::EVENT_TYPE_DEACTIVATE;
-        m_application->OnEvent(&e);
-    }
+	
     
     NSInteger style = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
     
@@ -648,6 +644,11 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
         }
         
         if (recreateWindow) {
+            if (m_application) {
+                GHL::Event e;
+                e.type = GHL::EVENT_TYPE_DEACTIVATE;
+                m_application->OnEvent(&e);
+            }
             LOG_DEBUG( "WinLibAppDelegate::switchFullscreen recreateWindow" );
             [m_window setContentView:nil];
             [m_window setDelegate:nil];
