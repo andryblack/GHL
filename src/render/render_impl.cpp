@@ -267,25 +267,25 @@ namespace GHL {
                 {
                     v->x = cx; v->y = cy; v->z = 0.0f;
                     v->tx = itw * cd.x; v->ty = ith * cd.y;
-                    v->color[0] = v->color[1] = v->color[2] = v->color[3] = 0xff;
+                    v->color = 0xffffffff;
                 }
                 v++;
                 {
                     v->x = cx + cd.w; v->y = cy; v->z = 0.0f;
                     v->tx = itw * (cd.x+ cd.w); v->ty = ith * cd.y;
-                    v->color[0] = v->color[1] = v->color[2] = v->color[3] = 0xff;
+                    v->color = 0xffffffff;
                 }
                 v++;
                 {
                     v->x = cx + cd.w; v->y = cy+cd.h; v->z = 0.0f;
                     v->tx = itw * (cd.x+ cd.w); v->ty = ith * (cd.y+cd.h);
-                    v->color[0] = v->color[1] = v->color[2] = v->color[3] = 0xff;
+                    v->color = 0xffffffff;
                 }
                 v++;
                 {
                     v->x = cx ; v->y = cy+cd.h; v->z = 0.0f;
                     v->tx = itw * (cd.x); v->ty = ith * (cd.y+cd.h);
-                    v->color[0] = v->color[1] = v->color[2] = v->color[3] = 0xff;
+                    v->color = 0xffffffff;
                 }
                 v++;
                 text++;

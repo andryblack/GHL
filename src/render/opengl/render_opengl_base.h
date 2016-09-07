@@ -14,6 +14,7 @@
 #include "../pfpl/pfpl_render.h"
 #include "glsl_generator.h"
 #include "render_opengl_api.h"
+#include "shader_glsl.h"
 
 #include <vector>
 
@@ -154,8 +155,14 @@ namespace GHL
 		
 		virtual void GHL_CALL DrawPrimitivesFromMemory(PrimitiveType type,VertexType v_type,const void* vertices,UInt32 v_amount,const UInt16* indexes,UInt32 prim_amoun);
         
+        /// set current index buffer
+        virtual void GHL_CALL SetIndexBuffer(const IndexBuffer* buf) ;
+        /// set current vertex buffer
+        virtual void GHL_CALL SetVertexBuffer(const VertexBuffer* buf) ;
+
     protected:
         GLSLGenerator&  GetGenerator() { return m_generator; }
+        void ResetPointers();
     private:
         pfpl_render         m_shaders_render;
         pfpl_state_data     m_crnt_state;
@@ -165,6 +172,7 @@ namespace GHL
         float               m_projection_view_matrix[16];
         void DoDrawPrimitives(VertexType v_type);
         bool    m_reset_uniforms;
+        const void*               m_current_pointers[GLSLPredefinedAttributesAmount];
     };
     
 }

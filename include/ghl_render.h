@@ -50,7 +50,7 @@ namespace GHL
 		float	x;	///< vertex position  x
 		float	y;	///< vertex position  y
 		float  	z;	///< vertex position  z
-		Byte	color[4];	///< diffuse color
+		UInt32	color;	///< diffuse color
 		float	tx;		///< texture coordinate x
 		float 	ty;		///< texture coordinate y
 	};

@@ -571,7 +571,7 @@ namespace GHL {
             CHECK_GL(glffpl.TexCoordPointer(2,gl.FLOAT, vs, &v2->t2x));
         }
         CHECK_GL(glffpl.TexCoordPointer(2,gl.FLOAT, vs, &v->tx));
-        CHECK_GL(glffpl.ColorPointer(4,gl.UNSIGNED_BYTE, vs, v->color));
+        CHECK_GL(glffpl.ColorPointer(4,gl.UNSIGNED_BYTE, vs, &v->color));
         CHECK_GL(glffpl.VertexPointer(3,gl.FLOAT, vs , &v->x));
     }
 
@@ -711,8 +711,10 @@ namespace GHL {
         for (UInt32 i=0;i<MAX_TEXTURE_STAGES;++i) {
             m_crnt_state.texture_stages[i].tex.all = 0;
         }
+        ResetPointers();
         return true;
     }
+    
     
     void RenderOpenGLPPL::RenderDone() {
         m_shaders_render.done();
@@ -721,8 +723,13 @@ namespace GHL {
     
     void RenderOpenGLPPL::ResetRenderState() {
         RenderOpenGLBase::ResetRenderState();
+        ResetPointers();
     }
     
+    void RenderOpenGLPPL::ResetPointers() {
+        for (size_t i=0;i<GLSLPredefinedAttributesAmount;++i)
+            m_current_pointers[i] = 0;
+    }
     void RenderOpenGLPPL::SetupVertexData(const Vertex* v,VertexType vt) {
         const ShaderProgramGLSL* prg = static_cast<const ShaderProgramGLSL*>(GetShader());
         if (!prg) {
@@ -733,24 +740,35 @@ namespace GHL {
         const Vertex2Tex* v2 = static_cast<const Vertex2Tex*>(v);
         GL::GLint t2Loc = -1;
         if (vt == VERTEX_TYPE_2_TEX) {
-            t2Loc = prg->GetAttribute(GLSLPredefinedAttributeTex2Coord);
+            if (m_current_pointers[GLSLPredefinedAttributeTex2Coord]!=&v2->t2x) {
+                t2Loc = prg->GetAttribute(GLSLPredefinedAttributeTex2Coord);
+            }
             vs = sizeof(*v2);
         }
-        
-        GL::GLint pLoc = prg->GetAttribute(GLSLPredefinedAttributePosition);
-        if (pLoc>=0) {
-            CHECK_GL(gl.sdrapi.VertexAttribPointer(pLoc,3,gl.FLOAT,gl._FALSE,vs,&v->x));
+        if (m_current_pointers[GLSLPredefinedAttributePosition]!=&v->x) {
+            GL::GLint pLoc = prg->GetAttribute(GLSLPredefinedAttributePosition);
+            if (pLoc>=0) {
+                CHECK_GL(gl.sdrapi.VertexAttribPointer(pLoc,3,gl.FLOAT,gl._FALSE,vs,&v->x));
+                m_current_pointers[GLSLPredefinedAttributePosition]=&v->x;
+            }
         }
-        GL::GLint tLoc = prg->GetAttribute(GLSLPredefinedAttributeTexCoord);
-        if (tLoc>=0) {
-            CHECK_GL(gl.sdrapi.VertexAttribPointer(tLoc,2,gl.FLOAT,gl._FALSE,vs,&v->tx));
+        if (m_current_pointers[GLSLPredefinedAttributeTexCoord]!=&v->tx) {
+            GL::GLint tLoc = prg->GetAttribute(GLSLPredefinedAttributeTexCoord);
+            if (tLoc>=0) {
+                CHECK_GL(gl.sdrapi.VertexAttribPointer(tLoc,2,gl.FLOAT,gl._FALSE,vs,&v->tx));
+                m_current_pointers[GLSLPredefinedAttributeTexCoord]=&v->tx;
+            }
         }
         if (t2Loc>=0) {
             CHECK_GL(gl.sdrapi.VertexAttribPointer(t2Loc,2,gl.FLOAT,gl._FALSE,vs,&v2->t2x));
+            m_current_pointers[GLSLPredefinedAttributeTex2Coord]=&v2->t2x;
         }
-        GL::GLint cLoc = prg->GetAttribute(GLSLPredefinedAttributeColor);
-        if (cLoc>=0) {
-            CHECK_GL(gl.sdrapi.VertexAttribPointer(cLoc,4,gl.UNSIGNED_BYTE,gl._TRUE,vs,v->color));
+        if (m_current_pointers[GLSLPredefinedAttributeColor]!=&v->color) {
+            GL::GLint cLoc = prg->GetAttribute(GLSLPredefinedAttributeColor);
+            if (cLoc>=0) {
+                CHECK_GL(gl.sdrapi.VertexAttribPointer(cLoc,4,gl.UNSIGNED_BYTE,gl._TRUE,vs,&v->color));
+                m_current_pointers[GLSLPredefinedAttributeColor]=&v->color;
+            }
         }
     }
     
@@ -810,12 +828,16 @@ namespace GHL {
     
     void GHL_CALL RenderOpenGLPPL::SetShader(const ShaderProgram* shader)  {
         m_reset_uniforms = true;
+        ResetPointers();
         RenderOpenGLBase::SetShader(shader);
         m_shaders_render.set_shader(shader);
     }
     void RenderOpenGLPPL::DoDrawPrimitives(VertexType v_type) {
         const ShaderProgram* prg = m_shaders_render.get_shader(m_crnt_state, v_type==VERTEX_TYPE_2_TEX);
         if (prg) {
+            if (prg != GetShader()) {
+                ResetPointers();
+            }
             RenderOpenGLBase::SetShader(prg);
         } else if (m_reset_uniforms) {
             prg = GetShader();
@@ -845,7 +867,16 @@ namespace GHL {
         RenderOpenGLBase::DrawPrimitivesFromMemory(type, v_type, vertices, v_amount, indexes, prim_amoun);
     }
     
-    
+    /// set current index buffer
+    void GHL_CALL RenderOpenGLPPL::SetIndexBuffer(const IndexBuffer* buf) {
+        RenderOpenGLBase::SetIndexBuffer(buf);
+        ResetPointers();
+    }
+    /// set current vertex buffer
+    void GHL_CALL RenderOpenGLPPL::SetVertexBuffer(const VertexBuffer* buf) {
+        RenderOpenGLBase::SetVertexBuffer(buf);
+        ResetPointers();
+    }
 
 }
 
