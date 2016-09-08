@@ -179,7 +179,7 @@ public class Activity  extends android.app.NativeActivity  {
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             m_text_edit = new InvisibleEdit(Activity.this);
-            m_text_edit.setId(100500);
+            //m_text_edit.setId(100500);
             addContentView(m_text_edit,params);
             m_text_edit.getViewTreeObserver().addOnGlobalLayoutListener(new android.view.ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override 

@@ -21,7 +21,8 @@ namespace GHL {
 		DEVICE_STATE_ORIENTATION_LOCKED,	///< bool
 		DEVICE_STATE_MULTITOUCH_ENABLED,	///< bool
         DEVICE_STATE_SYSTEM_CURSOR_ENABLED, ///< bool
-		DEVICE_STATE_RETINA_ENABLED			///< bool
+		DEVICE_STATE_RETINA_ENABLED,		///< bool
+        DEVICE_STATE_FRAME_INTERVAL         ///< Int32
 	};
 	
 	/// device data

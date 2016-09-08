@@ -38,6 +38,7 @@ static UIInterfaceOrientation g_orientation = UIInterfaceOrientationLandscapeLef
 static bool g_orientationLocked = false;
 static bool g_retina_enabled = true;
 static bool g_need_depth = false;
+static GHL::Int32 g_frame_interval = 1;
 
 #ifndef GHL_NOSOUND
 extern GHL::SoundImpl* GHL_CreateSoundCocoa();
@@ -102,7 +103,7 @@ static const size_t max_touches = 10;
 	GHL::SoundImpl*	m_sound;
 	NSString*	m_appName;
 	GHL::RenderImpl* m_render;
-	NSTimer*	m_timer;
+	CADisplayLink *m_timer;
 	bool	m_loaded;
 	::timeval	m_timeval;
 	bool	m_active;
@@ -116,6 +117,7 @@ static const size_t max_touches = 10;
 - (bool)loaded;
 - (void)showKeyboard;
 - (void)hideKeyboard;
+- (void)setFrameInterval:(GHL::Int32)interval;
 
 @end
 
@@ -218,10 +220,15 @@ public:
 	if (m_active!=a) {
 		m_active = a;
 	}
+    if (m_timer) {
+        [m_timer setPaused:!m_active];
+    }
 }
 
 -(id) initWithFrame:(CGRect) rect {
 	if (self = [super initWithFrame:rect]) {
+        m_timer = nil;
+        
 		m_appName = (NSString*)[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
 		m_imageDecoder = 0;
 		
@@ -366,8 +373,9 @@ public:
 	g_application->SetRender(m_render);
 	GHL::g_default_framebuffer = [m_context defaultFramebuffer];
 	if (g_application->Load()) {
-		m_timer = [NSTimer scheduledTimerWithTimeInterval: 1.0f/200.0f target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
-		[m_timer fire];
+        m_timer = [CADisplayLink displayLinkWithTarget:self selector:@selector(tick:)];
+        [m_timer setFrameInterval:g_frame_interval];
+        [m_timer addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
 		m_loaded = true;
 	}
 	::gettimeofday(&m_timeval,0);
@@ -492,12 +500,23 @@ public:
 	}
 }
 
+- (void)tick:(CADisplayLink*)displayLink {
+    (void)displayLink;
+    if (m_active) {
+        [self drawRect:[self bounds]];
+    }
+}
+
 -(void)showKeyboard {
 	[m_hiddenInput becomeFirstResponder];
 }
 
 -(void)hideKeyboard {
 	[m_hiddenInput resignFirstResponder];
+}
+
+- (void)setFrameInterval:(GHL::Int32)interval {
+    [m_timer setFrameInterval:interval];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
@@ -809,6 +828,13 @@ bool GHL_CALL SystemCocoaTouch::SetDeviceState( GHL::DeviceState name, const voi
 		const bool* state = (const bool*)data;
 		g_retina_enabled = *state;
 		return true;
+    } else if (name==GHL::DEVICE_STATE_FRAME_INTERVAL) {
+        const GHL::Int32* state = (const GHL::Int32*)data;
+        g_frame_interval = *state;
+        if (m_controller.isViewLoaded) {
+            [(WinLibView*)m_controller.view setFrameInterval:*state];
+        }
+        return true;
     }
 	return false;
 }

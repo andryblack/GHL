@@ -23,6 +23,7 @@
 #include <sys/uio.h>
 
 static GHL::UInt32 g_main_thread_id = 0;
+static GHL::Int32 g_frame_interval = 1;
 
 
 static const char* MODULE = "WinLib";
@@ -63,9 +64,9 @@ GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {
     };
 }
 
-static GHL::Application* temp_app = 0;
+static GHL::Application* volatile temp_app = 0;
 
-int ghl_android_app_main(int argc,char** argv);
+extern int ghl_android_app_main(int argc,char** argv);
 static GHL::Application* android_app_create() {
     ghl_android_app_main(0,0);
     return temp_app;
@@ -167,6 +168,11 @@ namespace GHL {
         }
         /// Set device specific state
         virtual bool GHL_CALL SetDeviceState( DeviceState name, const void* data) {
+            if (name==GHL::DEVICE_STATE_FRAME_INTERVAL) {
+                const GHL::Int32* state = (const GHL::Int32*)data;
+                g_frame_interval = *state;
+                return true;
+            }
             return false;
         }
         /// Get device specific data
@@ -815,7 +821,7 @@ namespace GHL {
             pthread_mutex_unlock(&activity->m_mutex);
    
             if (!exit) {
-                usleep(1000000/60);
+                usleep(1000000*g_frame_interval/60);
                 int8_t cmd = 1;
                 if (write(fd, &cmd, sizeof(cmd)) != sizeof(cmd)) {
                     LOG_ERROR("Failure writing android_app cmd:" << strerror(errno));
@@ -901,10 +907,8 @@ extern "C" JNIEXPORT void JNICALL Java_com_GHL_Activity_nativeOnScreenRectChange
     };
   }
 
-extern "C" __attribute__ ((visibility ("default"))) void ANativeActivity_onCreate(ANativeActivity* activity,
-                                                                                  void* savedState, size_t savedStateSize);
-extern "C" {
-    __attribute__ ((visibility ("default"))) void ANativeActivity_onCreate(ANativeActivity* activity,
+
+extern "C" JNIEXPORT void ANativeActivity_onCreate(ANativeActivity* activity,
                                   void* savedState, size_t savedStateSize) {
         GHL_Log(GHL::LOG_LEVEL_INFO,"Create\n");
 
@@ -928,9 +932,6 @@ extern "C" {
         GHL::GHLActivity* ghl_activity = new GHL::GHLActivity(activity, savedState, savedStateSize);
         activity->instance = ghl_activity;
         ghl_activity->OnCreate();
-
-
-    }
 }
 
 GHL_API GHL::UInt32 GHL_CALL GHL_GetCurrentThreadId() {
@@ -939,7 +940,6 @@ GHL_API GHL::UInt32 GHL_CALL GHL_GetCurrentThreadId() {
 GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char** argv) {
     temp_app = app;
     GHL_Log(GHL::LOG_LEVEL_INFO,"GHL_StartApplication\n");
-    (void)&ANativeActivity_onCreate;
     return 0;
 }
     

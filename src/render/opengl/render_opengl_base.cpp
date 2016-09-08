@@ -439,7 +439,7 @@ namespace GHL {
         const GL::GLchar* source[] = {
 			reinterpret_cast<const GL::GLchar*>(ds->GetData())
 		};
-        GL::GLint len[] = {ds->GetSize()};
+        GL::GLint len[] = {GL::GLint(ds->GetSize())};
 		CHECK_GL(gl.sdrapi.ShaderSource(handle,1,source,len));
 		CHECK_GL(gl.sdrapi.CompileShader(handle));
 		GL::GLint res;

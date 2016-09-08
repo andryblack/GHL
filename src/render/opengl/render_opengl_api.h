@@ -14,6 +14,14 @@
 
 #if defined(GHL_PLATFORM_IOS) || defined(GHL_PLATFORM_ANDROID) || defined(GHL_PLATFORM_EMSCRIPTEN)
 #define GHL_OPENGLES
+#ifdef GHL_PLATFORM_ANDROID
+#include <GLES/glplatform.h>
+#define GHL_GL_API GL_API
+#endif
+#endif
+
+#ifndef GHL_GL_API
+#define GHL_GL_API
 #endif
 
 namespace GHL {
@@ -163,25 +171,25 @@ DYNAMIC_GL_FUNCTION(TexSubImage2D,(GLenum,GLint,GLint,GLint,GLsizei,GLsizei,GLen
 DYNAMIC_GL_FUNCTION(PixelStorei,(GLenum,GLint))\
 
         
-#define DYNAMIC_GL_FUNCTION(Name,Args) void (*Name) Args;
+#define DYNAMIC_GL_FUNCTION(Name,Args) GHL_GL_API void (*Name) Args;
         DYNAMIC_GL_FUNCTIONS
         DYNAMIC_GL_FUNCTIONS_Multitexture
 #undef DYNAMIC_GL_FUNCTION
         
-        GLenum (*GetError)();
+        GHL_GL_API GLenum (*GetError)();
         
         struct RenderTargetAPI {
             bool valid;
-            void (*GenFramebuffers)(GLsizei n , GLuint *framebuffers);
-            void (*BindFramebuffer)(GLenum target , GLuint framebuffer);
-            void (*DeleteFramebuffers)(GLsizei n , const GLuint *framebuffers);
-            void (*FramebufferTexture2D)(GLenum  ,GLenum  ,GLenum  ,GLuint  , GLint );
-            void (*BindRenderbuffer)(GLenum target , GLuint renderbuffer);
-            void (*DeleteRenderbuffers)(GLsizei n , const GLuint *renderbuffers);
-            void (*GenRenderbuffers)(GLsizei n , GLuint *renderbuffers);
-            void (*RenderbufferStorage)(GLenum target , GLenum internalformat , GLsizei width , GLsizei height);
-            void (*FramebufferRenderbuffer)(GLenum ,GLenum ,GLenum ,GLuint renderbuffer);
-            GLenum (*CheckFramebufferStatus)(GLenum target);
+            GHL_GL_API void (*GenFramebuffers)(GLsizei n , GLuint *framebuffers);
+            GHL_GL_API void (*BindFramebuffer)(GLenum target , GLuint framebuffer);
+            GHL_GL_API void (*DeleteFramebuffers)(GLsizei n , const GLuint *framebuffers);
+            GHL_GL_API void (*FramebufferTexture2D)(GLenum  ,GLenum  ,GLenum  ,GLuint  , GLint );
+            GHL_GL_API void (*BindRenderbuffer)(GLenum target , GLuint renderbuffer);
+            GHL_GL_API void (*DeleteRenderbuffers)(GLsizei n , const GLuint *renderbuffers);
+            GHL_GL_API void (*GenRenderbuffers)(GLsizei n , GLuint *renderbuffers);
+            GHL_GL_API void (*RenderbufferStorage)(GLenum target , GLenum internalformat , GLsizei width , GLsizei height);
+            GHL_GL_API void (*FramebufferRenderbuffer)(GLenum ,GLenum ,GLenum ,GLuint renderbuffer);
+            GHL_GL_API GLenum (*CheckFramebufferStatus)(GLenum target);
             GLenum FRAMEBUFFER;
             GLenum COLOR_ATTACHMENT0;
             GLenum RENDERBUFFER;
@@ -200,7 +208,7 @@ DYNAMIC_GL_FUNCTION(void,BindBuffer,(GLenum,GLuint))\
 DYNAMIC_GL_FUNCTION(void,DeleteBuffers,(GLsizei,const GLuint *))\
 DYNAMIC_GL_FUNCTION(void,BufferData,(GLenum,GLsizeiptr,const GLvoid *, GLenum))\
 
-#define DYNAMIC_GL_FUNCTION(Res,Name,Args) Res(*Name)Args;
+#define DYNAMIC_GL_FUNCTION(Res,Name,Args) GHL_GL_API Res(*Name)Args;
             DYNAMIC_GL_FUNCTIONS_VBO
 #undef DYNAMIC_GL_FUNCTION
             
@@ -238,7 +246,7 @@ DYNAMIC_GL_FUNCTION(void,VertexAttribPointer,(GLuint,GLint,GLenum,GLboolean,GLsi
 DYNAMIC_GL_FUNCTION(void,EnableVertexAttribArray,(GLuint))\
 
             
-#define DYNAMIC_GL_FUNCTION(Res,Name,Args) Res(*Name)Args;
+#define DYNAMIC_GL_FUNCTION(Res,Name,Args) GHL_GL_API Res(*Name)Args;
             DYNAMIC_GL_FUNCTIONS_ShaderObject
 #undef DYNAMIC_GL_FUNCTION
             
@@ -321,7 +329,7 @@ DYNAMIC_GL_ffpl_FUNCTION(VertexPointer,(GLint,GLenum,GLsizei,const GLvoid *))\
 //DYNAMIC_GL_ffpl_FUNCTION(ClientActiveTexture,(GLenum))\
 
         
-#define DYNAMIC_GL_ffpl_FUNCTION(Name,Args) void (*Name) Args;
+#define DYNAMIC_GL_ffpl_FUNCTION(Name,Args) GHL_GL_API void (*Name) Args;
         DYNAMIC_GL_ffpl_FUNCTIONS
 //        DYNAMIC_GL_ffpl_FUNCTIONS_Multitexture
 #undef DYNAMIC_GL_ffpl_FUNCTION

@@ -94,10 +94,10 @@ namespace GHL {
     int GLES2Api_impl::gl_v1 = 0;
     int GLES2Api_impl::gl_v2 = 0;
     
-    static void glClearDepth(double v) { glClearDepthf(v);}
+    static GHL_GL_API void glClearDepth(double v) { glClearDepthf(v);}
     
     
-    static void glShaderSource(GL::GLhandle s,GLsizei count,const GLchar*const* string,const GLint * length) {
+    static GHL_GL_API void glShaderSource(GL::GLhandle s,GLsizei count,const GLchar*const* string,const GLint * length) {
             ::glShaderSource(s, count, const_cast<const char**>(string), length);
     }
     
@@ -105,7 +105,7 @@ namespace GHL {
 #define GL_RGBA8 GL_RGBA
 #define GL_UNPACK_ROW_LENGTH 0
     
-    static void _glBufferData (GLenum target, GL::GLsizeiptr size, const GLvoid *data, GLenum usage) {
+    static GHL_GL_API void _glBufferData (GLenum target, GL::GLsizeiptr size, const GLvoid *data, GLenum usage) {
         glBufferData(target, size, data, usage);
     }
     

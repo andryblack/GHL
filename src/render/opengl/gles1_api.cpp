@@ -94,7 +94,7 @@ namespace GHL {
     int GLES1Api_impl::gl_v1 = 0;
     int GLES1Api_impl::gl_v2 = 0;
     
-    static void glClearDepth(double v) { glClearDepthf(v);}
+    static GHL_GL_API void glClearDepth(double v) { glClearDepthf(v);}
     
     
     
