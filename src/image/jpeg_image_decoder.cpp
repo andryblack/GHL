@@ -24,6 +24,7 @@
 #include "image_impl.h"
 
 #include "../ghl_log_impl.h"
+#include "../ghl_data_impl.h"
 
 #include <cstring>
 #include <cstdio>
@@ -116,6 +117,29 @@ namespace GHL {
     };
     
         
+    struct ghl_jpeg_destination_mgr : jpeg_destination_mgr {
+        GHL::DataArrayImpl* data;
+        static const size_t OUTPUT_BUF_SIZE = 1024 * 64;
+        static void ghl_jpeg_init_destination(j_compress_ptr cinfo) {
+            ghl_jpeg_destination_mgr* dest = (ghl_jpeg_destination_mgr*) cinfo->dest;
+            dest->data->resize(OUTPUT_BUF_SIZE);
+            dest->next_output_byte = dest->data->data();
+            dest->free_in_buffer = OUTPUT_BUF_SIZE;
+
+        }
+        static boolean ghl_jpeg_empty_output_buffer(j_compress_ptr cinfo) {
+            ghl_jpeg_destination_mgr* dest = (ghl_jpeg_destination_mgr*) cinfo->dest;
+            size_t pos = dest->data->GetSize();
+            dest->data->resize(pos+OUTPUT_BUF_SIZE);
+            dest->next_output_byte = dest->data->data() + pos;
+            dest->free_in_buffer = OUTPUT_BUF_SIZE;
+            return TRUE;
+        }
+        static void ghl_jpeg_term_destination(j_compress_ptr cinfo) {
+            ghl_jpeg_destination_mgr* dest = (ghl_jpeg_destination_mgr*) cinfo->dest;
+            dest->data->resize(dest->data->GetSize()-dest->free_in_buffer);
+        }
+    };
     
     static void ghl_jpeg_error_exit (j_common_ptr cinfo)
     {
@@ -314,8 +338,78 @@ namespace GHL {
         return img;
     }
     
-    const Data* JpegDecoder::Encode( const Image* /*image*/) {
-        return 0;
+    const Data* JpegDecoder::Encode( const Image* image) {
+        if (!image) {
+            return 0;
+        }
+        if (image->GetFormat() != GHL::IMAGE_FORMAT_RGB)
+            return 0;
+        
+        int quality = 90;
+        struct ghl_jpeg_error_mgr jerr;
+        
+        struct jpeg_compress_struct cinfo;
+
+        cinfo.err = jpeg_std_error(&jerr);
+        cinfo.err->error_exit = ghl_jpeg_error_exit;
+        cinfo.err->output_message = ghl_jpeg_output_message;
+
+        struct ghl_jpeg_destination_mgr dest;
+        dest.data = new DataArrayImpl();
+        
+        // compatibility fudge:
+        // we need to use setjmp/longjmp for error handling as gcc-linux
+        // crashes when throwing within external c code
+        if (setjmp(jerr.setjmp_buffer))
+        {
+            // If we get here, the JPEG code has signaled an error.
+            // We need to clean up the JPEG object and return.
+            
+            jpeg_destroy_compress(&cinfo);
+            if (dest.data)
+                dest.data->Release();
+             // return null pointer
+            return 0;
+        }
+        /* Now we can initialize the JPEG compression object. */
+        jpeg_create_compress(&cinfo);
+
+        
+
+        dest.init_destination = &ghl_jpeg_destination_mgr::ghl_jpeg_init_destination;
+        dest.empty_output_buffer = &ghl_jpeg_destination_mgr::ghl_jpeg_empty_output_buffer;
+        dest.term_destination = &ghl_jpeg_destination_mgr::ghl_jpeg_term_destination;
+        
+        cinfo.dest = &dest;
+        cinfo.image_width = image->GetWidth();    /* image width and height, in pixels */
+        cinfo.image_height = image->GetHeight();
+        cinfo.input_components = 3;       /* # of color components per pixel */
+        cinfo.in_color_space = JCS_RGB;   /* colorspace of input image */
+
+        /* Now use the library's routine to set default compression parameters.
+         * (You must set at least cinfo.in_color_space before calling this,
+         * since the defaults depend on the source color space.)
+         */
+        jpeg_set_defaults(&cinfo);
+        /* Now you can set any non-default parameters you wish to.
+         * Here we just illustrate the use of quality (quantization table) scaling:
+         */
+        jpeg_set_quality(&cinfo, quality, TRUE /* limit to baseline-JPEG values */);
+
+
+        /* TRUE ensures that we will write a complete interchange-JPEG file.
+         * Pass TRUE unless you are very sure of what you're doing.
+         */
+        jpeg_start_compress(&cinfo, TRUE);
+        size_t row_stride = cinfo.image_width * 3;   /* JSAMPLEs per row in image_buffer */
+        JSAMPROW row_pointer[1];
+        while (cinfo.next_scanline < cinfo.image_height) {
+            row_pointer[0] = const_cast<JSAMPROW>(image->GetData()->GetData() + (cinfo.next_scanline * row_stride));
+            jpeg_write_scanlines(&cinfo, row_pointer, 1);
+        }
+        jpeg_finish_compress(&cinfo);
+        jpeg_destroy_compress(&cinfo);
+        return dest.data;
     }
     
 } /*namespace*/

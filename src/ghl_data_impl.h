@@ -141,12 +141,18 @@ namespace GHL {
                 ::memcpy(&(m_data[offset]),data,size);
         }
         
+        Byte* data() {
+            return &(m_data[0]);
+        }
         void append( const Byte* data, UInt32 size ) {
             size_t pos = m_data.size();
             m_data.resize(m_data.size()+size);
             SetData(UInt32(pos),data,size);
         }
         
+        void resize( UInt32 size ) {
+            m_data.resize( size );
+        }
         
         void reserve( UInt32 size ) {
             m_data.reserve(size);
