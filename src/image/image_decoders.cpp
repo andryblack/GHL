@@ -37,7 +37,7 @@
 #endif
 
 #ifdef USE_IPHONE_IMAGE_DECODER
-#include "iphone/iphone_image_decoder.h"
+#include "image_io_image_decoder.h"
 #endif
 
 #ifdef USE_TGA_IMAGE_DECODER
@@ -74,8 +74,8 @@ namespace GHL {
         m_decoders.push_back(new QtImageFileDecoder());
 #endif
 #ifdef USE_IPHONE_IMAGE_DECODER
-        LOG_VERBOSE("add iPhone decoder");
-		m_decoders.push_back(new iPhoneImageDecoder());
+        LOG_VERBOSE("add Image IO decoder");
+		m_decoders.push_back(new ImageIOImageDecoder());
 #endif
 #ifdef USE_TGA_IMAGE_DECODER
         LOG_VERBOSE("add TGA decoder");

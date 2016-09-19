@@ -40,6 +40,7 @@ namespace GHL
         TEXTURE_FORMAT_ALPHA,           ///< alpha channel
 		TEXTURE_FORMAT_RGB,             ///< r,g,b channels
 		TEXTURE_FORMAT_RGBA,            ///< r,g,b,alpha channels
+        TEXTURE_FORMAT_RGBX,            ///< r,g,b,unused channels
 		TEXTURE_FORMAT_565,             ///< 5-6-5
 		TEXTURE_FORMAT_4444,            ///< 4-4-4-4
 		TEXTURE_FORMAT_PVRTC_2BPPV1,	///< compressed, PVRTC_2

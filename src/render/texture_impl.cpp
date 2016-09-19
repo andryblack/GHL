@@ -39,6 +39,7 @@ namespace GHL {
             case GHL::TEXTURE_FORMAT_ALPHA:     res *= 1; break;
             case GHL::TEXTURE_FORMAT_RGB:       res *= 3; break;
             case GHL::TEXTURE_FORMAT_RGBA:      res *= 4; break;
+            case GHL::TEXTURE_FORMAT_RGBX:      res *= 4; break;
             case GHL::TEXTURE_FORMAT_565:       res *= 2; break;
             case GHL::TEXTURE_FORMAT_4444:      res *= 2; break;
             case GHL::TEXTURE_FORMAT_PVRTC_2BPPV1: res = (res * 2 + 7)/8; break;
@@ -56,6 +57,7 @@ GHL_API GHL::TextureFormat GHL_CALL GHL_ImageFormatToTextureFormat( GHL::ImageFo
         case GHL::IMAGE_FORMAT_GRAY:    return GHL::TEXTURE_FORMAT_ALPHA;
         case GHL::IMAGE_FORMAT_RGB:     return GHL::TEXTURE_FORMAT_RGB;
         case GHL::IMAGE_FORMAT_RGBA:    return GHL::TEXTURE_FORMAT_RGBA;
+        case GHL::IMAGE_FORMAT_RGBX:    return GHL::TEXTURE_FORMAT_RGBX;
         case GHL::IMAGE_FORMAT_565:     return GHL::TEXTURE_FORMAT_565;
         case GHL::IMAGE_FORMAT_4444:    return GHL::TEXTURE_FORMAT_4444;
         case GHL::IMAGE_FORMAT_PVRTC_2: return GHL::TEXTURE_FORMAT_PVRTC_2BPPV1;
@@ -70,6 +72,7 @@ GHL_API GHL::ImageFormat GHL_CALL GHL_TextureFormatToImageFormat( GHL::TextureFo
         case GHL::TEXTURE_FORMAT_ALPHA:     return GHL::IMAGE_FORMAT_GRAY;
         case GHL::TEXTURE_FORMAT_RGB:       return GHL::IMAGE_FORMAT_RGB;
         case GHL::TEXTURE_FORMAT_RGBA:      return GHL::IMAGE_FORMAT_RGBA;
+        case GHL::TEXTURE_FORMAT_RGBX:      return GHL::IMAGE_FORMAT_RGBX;
         case GHL::TEXTURE_FORMAT_565:       return GHL::IMAGE_FORMAT_565;
         case GHL::TEXTURE_FORMAT_4444:      return GHL::IMAGE_FORMAT_4444;
         case GHL::TEXTURE_FORMAT_PVRTC_2BPPV1: return GHL::IMAGE_FORMAT_PVRTC_2;

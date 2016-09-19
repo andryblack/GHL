@@ -30,11 +30,16 @@
 #if defined( GHL_QT )
 #define USE_QT_IMAGE_DECODER
 #elif defined( GHL_PLATFORM_IOS )
-//#define USE_IPHONE_IMAGE_DECODER
+#define USE_IPHONE_IMAGE_DECODER
 #define USE_PNG_DECODER
-#define USE_JPEG_DECODER
+//#define USE_JPEG_DECODER
 #define USE_PVRTC_IMAGE_DECODER
-#elif defined( GHL_PLATFORM_MAC )
+#elif defined( GHL_PLATFORM_MAC ) && !defined(GHL_BUILD_TOOLS)
+#define USE_IPHONE_IMAGE_DECODER
+#define USE_PNG_DECODER
+//#define USE_JPEG_DECODER
+#elif defined( GHL_PLATFORM_MAC ) && defined(GHL_BUILD_TOOLS)
+//#define USE_IPHONE_IMAGE_DECODER
 #define USE_PNG_DECODER
 #define USE_JPEG_DECODER
 #elif defined( GHL_PLATFORM_ANDROID )

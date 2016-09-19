@@ -38,6 +38,7 @@ namespace GHL
         IMAGE_FORMAT_GRAY,		///< grayscale
         IMAGE_FORMAT_RGB,		///< r,g,b channels
         IMAGE_FORMAT_RGBA,		///< r,g,b,alpha channels
+        IMAGE_FORMAT_RGBX,		///< r,g,b,unused channels
         IMAGE_FORMAT_565,       ///< r5,g6,b5 channels
         IMAGE_FORMAT_4444,      ///< r4,g4,b4,alpha4 channels
 		IMAGE_FORMAT_PVRTC_2,	///< compressed format PVRTC_2

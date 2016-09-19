@@ -34,8 +34,17 @@ namespace GHL
         const GHL::Data*  m_data;
         GHL::UInt32 m_pointer;
     public:
-        explicit MemoryDataStream(const GHL::Data* data) : m_data(data),m_pointer(0) {}
+        explicit MemoryDataStream(const GHL::Data* data) : m_data(data),m_pointer(0) {
+            if (m_data) {
+                m_data->AddRef();
+            }
+        }
         
+        ~MemoryDataStream() {
+            if (m_data) {
+                m_data->Release();
+            }
+        }
         /// read data
 		virtual GHL::UInt32 GHL_CALL Read(GHL::Byte* dest,GHL::UInt32 bytes) {
             GHL::UInt32 size = u_min(bytes,m_data->GetSize() - m_pointer);

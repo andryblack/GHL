@@ -20,6 +20,8 @@
  blackicebox (at) gmail (dot) com
  */
 
+#include "ghl_image_config.h"
+#ifdef USE_JPEG_DECODER
 #include "jpeg_image_decoder.h"
 #include "image_impl.h"
 
@@ -413,3 +415,5 @@ namespace GHL {
     }
     
 } /*namespace*/
+
+#endif

@@ -33,7 +33,7 @@ namespace GHL
 		UInt32 size = 0;	
 		if (fmt==IMAGE_FORMAT_RGB)
 			size = w * h * 3;
-		else if (fmt==IMAGE_FORMAT_RGBA)
+		else if (fmt==IMAGE_FORMAT_RGBA || fmt==IMAGE_FORMAT_RGBX)
 			size = w * h * 4;
 		else if (fmt==IMAGE_FORMAT_GRAY)
 			size = w * h;
@@ -71,7 +71,7 @@ namespace GHL
                 *data = b2; ++data;
                 *data = b3; ++data;
             }
-		} else if (m_fmt==IMAGE_FORMAT_RGBA) {
+		} else if (m_fmt==IMAGE_FORMAT_RGBA || m_fmt == IMAGE_FORMAT_RGBX) {
             UInt32* ddata = reinterpret_cast<UInt32*>(data);
             std::fill(ddata, ddata+len, clr);
         } else if (m_fmt==IMAGE_FORMAT_GRAY)
@@ -89,7 +89,7 @@ namespace GHL
 			size_t len = m_width*m_height;
 			DataImpl* buffer = new DataImpl( UInt32(len * 3) );
 			Byte* data = buffer->GetDataPtr();
-			if (m_fmt==IMAGE_FORMAT_RGBA) {
+			if (m_fmt==IMAGE_FORMAT_RGBA || m_fmt==IMAGE_FORMAT_RGBX) {
 				for (size_t i=0;i<len;i++) {
 					data[i*3+0]=original[i*4+0];
 					data[i*3+1]=original[i*4+1];
@@ -110,7 +110,15 @@ namespace GHL
 		}
 		else if (fmt==IMAGE_FORMAT_RGBA)
 		{
-			size_t len = m_width*m_height;
+            size_t len = m_width*m_height;
+            if (m_fmt == IMAGE_FORMAT_RGBX) {
+                Byte* data = m_data->GetDataPtr();
+                for (size_t i=0;i<len;i++) {
+                    data[i*4+3]=0xff;
+                }
+                m_fmt = IMAGE_FORMAT_RGBA;
+                return true;
+            }
 			DataImpl* buffer = new DataImpl( UInt32(len * 4) );
 			Byte* data = buffer->GetDataPtr();
 			if (m_fmt==IMAGE_FORMAT_RGB) {
@@ -120,7 +128,14 @@ namespace GHL
 					data[i*4+2]=original[i*3+2];
 					data[i*4+3]=0xff;
 				}
-			} else if (m_fmt==IMAGE_FORMAT_GRAY) {
+            } else if (m_fmt==IMAGE_FORMAT_RGBX) {
+                for (size_t i=0;i<len;i++) {
+                    data[i*4+0]=original[i*4+0];
+                    data[i*4+1]=original[i*4+1];
+                    data[i*4+2]=original[i*4+2];
+                    data[i*4+3]=0xff;
+                }
+            } else if (m_fmt==IMAGE_FORMAT_GRAY) {
 				for (size_t i=0;i<len;i++) {
 					data[i*4+0]=original[i];
 					data[i*4+1]=original[i];
@@ -157,7 +172,7 @@ namespace GHL
 				std::swap(data[i*3+0],data[i*3+2]);
 			}
 		}
-		else if (m_fmt==IMAGE_FORMAT_RGBA)
+		else if (m_fmt==IMAGE_FORMAT_RGBA || m_fmt==IMAGE_FORMAT_RGBX)
 		{
 			const size_t len = m_width*m_height;
 			for (size_t i=0;i<len;i++) {
@@ -202,6 +217,7 @@ namespace GHL
 	UInt32 ImageImpl::GetBpp() const {
 		if (m_fmt==IMAGE_FORMAT_RGB) return 3;
 		if (m_fmt==IMAGE_FORMAT_RGBA) return 4;
+        if (m_fmt==IMAGE_FORMAT_RGBX) return 4;
 		if (m_fmt==IMAGE_FORMAT_GRAY) return 1;
         if (m_fmt==IMAGE_FORMAT_565) return 2;
         if (m_fmt==IMAGE_FORMAT_4444) return 2;

@@ -120,15 +120,17 @@ GHL_API GHL::DataStream* GHL_CALL GHL_CreateUnpackZlibStream( GHL::DataStream* d
 GHL_API GHL::Data* GHL_CALL GHL_ReadAllData( GHL::DataStream* ds ) {
     if (!ds) return 0;
     GHL::DataArrayImpl* data = new GHL::DataArrayImpl();
-    GHL::Byte buf[1024*8];
+    static const GHL::UInt32 buffer_size = 1024 * 8;
     ds->Seek(0, GHL::F_SEEK_END);
     GHL::UInt32 size = ds->Tell();
     ds->Seek(0, GHL::F_SEEK_BEGIN);
-    data->reserve(size);
+    data->reserve(size + buffer_size);
     while (!ds->Eof()) {
-        GHL::UInt32 readed = ds->Read(buf,sizeof(buf));
+        GHL::UInt32 pos = data->GetSize();
+        data->resize(pos + buffer_size);
+        GHL::UInt32 readed = ds->Read(data->data() + pos,buffer_size);
+        data->resize(pos+readed);
         if( readed == 0 ) break;
-        data->append(buf,readed);
     }
     return data;
 }
