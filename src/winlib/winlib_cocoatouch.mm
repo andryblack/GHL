@@ -270,13 +270,10 @@ public:
         }
         
         
-        if([self respondsToSelector:@selector(setContentScaleFactor:)]){
-            if (!g_retina_enabled) {
-				self.contentScaleFactor = 1.0;
-            } else {
-                self.contentScaleFactor = [[UIScreen mainScreen] scale];
-            }
-            LOG_VERBOSE("contentScaleFactor:"<<self.contentScaleFactor);
+        if (!g_retina_enabled) {
+            self.contentScaleFactor = 1.0;
+        } else {
+            self.contentScaleFactor = [[UIScreen mainScreen] scale];
         }
 		
 		
@@ -301,22 +298,24 @@ public:
 		
 		m_hiddenInput = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
 		m_hiddenInput.delegate = self;
-		m_hiddenInput.keyboardType = UIKeyboardTypeASCIICapable;
+        m_hiddenInput.keyboardType = UIKeyboardTypeDefault;
 		m_hiddenInput.returnKeyType = UIReturnKeyDone;
 		m_hiddenInput.text = @"*";
+        m_hiddenInput.spellCheckingType = UITextSpellCheckingTypeNo;
+        m_hiddenInput.autocapitalizationType = UITextAutocapitalizationTypeNone;
         m_hiddenInput.autocorrectionType = UITextAutocorrectionTypeNo;
+        if ([m_hiddenInput respondsToSelector:@selector(setKeyboardAppearance:)]) {
+            m_hiddenInput.keyboardAppearance = UIKeyboardAppearanceDark;
+        }
 		[self addSubview:m_hiddenInput];
 		
         [self setAutoresizesSubviews:YES];
         
-		if([self respondsToSelector:@selector(setContentScaleFactor:)]){
-            if (!g_retina_enabled) {
-				self.contentScaleFactor = 1.0;
-            } else {
-                self.contentScaleFactor = [[UIScreen mainScreen] scale];
-            }
-			LOG_VERBOSE("contentScaleFactor:"<<self.contentScaleFactor);
-		}
+        if (!g_retina_enabled) {
+            self.contentScaleFactor = 1.0;
+        } else {
+            self.contentScaleFactor = [[UIScreen mainScreen] scale];
+        }
 		
 		[self prepareOpenGL:gles2];
 	}
@@ -330,14 +329,11 @@ public:
 - (void)layoutSubviews
 {
     LOG_VERBOSE( "layoutSubviews" ); 
-	if([self respondsToSelector:@selector(setContentScaleFactor:)]){
-        if (!g_retina_enabled) {
-			self.contentScaleFactor = 1.0;
-        } else {
-            self.contentScaleFactor = [[UIScreen mainScreen] scale];
-        }
-		LOG_VERBOSE("contentScaleFactor:"<<self.contentScaleFactor);
-	}
+    if (!g_retina_enabled) {
+        self.contentScaleFactor = 1.0;
+    } else {
+        self.contentScaleFactor = [[UIScreen mainScreen] scale];
+    }
 
 	[m_context onLayout:(CAEAGLLayer*)self.layer];
     GHL::g_default_framebuffer = [m_context defaultFramebuffer];
@@ -351,16 +347,13 @@ public:
 	[self makeCurrent];
 	int w = [self bounds].size.width;
 	int h = [self bounds].size.height;
-	if([self respondsToSelector:@selector(setContentScaleFactor:)]){
-        if (!g_retina_enabled) {
-			self.contentScaleFactor = 1.0;
-        } else {
-            self.contentScaleFactor = [[UIScreen mainScreen] scale];
-			w *= self.contentScaleFactor;
-			h *= self.contentScaleFactor;
-		}
-		LOG_VERBOSE("contentScaleFactor:"<<self.contentScaleFactor);
-	}
+    if (!g_retina_enabled) {
+        self.contentScaleFactor = 1.0;
+    } else {
+        self.contentScaleFactor = [[UIScreen mainScreen] scale];
+        w *= self.contentScaleFactor;
+        h *= self.contentScaleFactor;
+    }
 	
     if (gles2) {
         m_render = new GHL::RenderOpenGLES2(GHL::UInt32(w),
@@ -645,9 +638,15 @@ public:
     event.data.visible_rect_changed.w = self.view.bounds.size.width * self.view.contentScaleFactor;
     event.data.visible_rect_changed.h = self.view.bounds.size.height * self.view.contentScaleFactor;
 	g_application->OnEvent(&event);
+    event.type = GHL::EVENT_TYPE_KEYBOARD_HIDE;
+    g_application->OnEvent(&event);
 }
 
 - (void)keyboardDidChangeFrame:(NSNotification *)note {
+    if (![note userInfo])
+        return;
+    if (![[note userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] )
+        return;
     CGRect keyboardRect = [note.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
     CGRect localRect = [self.view convertRect:keyboardRect fromView:nil];
     
@@ -656,7 +655,7 @@ public:
     event.data.visible_rect_changed.x = 0;
     event.data.visible_rect_changed.y = 0;
     event.data.visible_rect_changed.w = self.view.bounds.size.width * self.view.contentScaleFactor;
-    event.data.visible_rect_changed.h = (self.view.bounds.size.height-localRect.origin.y) * self.view.contentScaleFactor;
+    event.data.visible_rect_changed.h = localRect.origin.y * self.view.contentScaleFactor;
 	g_application->OnEvent(&event);
 }
 

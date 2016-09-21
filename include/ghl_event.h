@@ -39,7 +39,8 @@ namespace GHL
         EVENT_TYPE_DEACTIVATE,
         EVENT_TYPE_VISIBLE_RECT_CHANGED,
         EVENT_TYPE_APP_STARTED,
-        EVENT_TYPE_HANDLE_URL
+        EVENT_TYPE_HANDLE_URL,
+        EVENT_TYPE_KEYBOARD_HIDE
     };
 
     /// Key press
