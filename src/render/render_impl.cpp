@@ -219,6 +219,11 @@ namespace GHL {
             SetOrthoProjection();
             const Texture* oldTexture = m_current_texture[0];
             SetTexture(m_sfont_texture,0);
+            SetupTextureStageColorOp(TEX_OP_MODULATE,TEX_ARG_TEXTURE,TEX_ARG_CURRENT,0);
+            SetupTextureStageAlphaOp(TEX_OP_MODULATE,TEX_ARG_TEXTURE,TEX_ARG_CURRENT,0);
+            SetupTextureStageColorOp(TEX_OP_DISABLE,TEX_ARG_TEXTURE,TEX_ARG_CURRENT,1);
+            SetupTextureStageAlphaOp(TEX_OP_DISABLE,TEX_ARG_TEXTURE,TEX_ARG_CURRENT,1);
+
             static Vertex vtxbuf[128];
             static const UInt16 indxbuf[] = {
                 0,1,2,2,3,0,

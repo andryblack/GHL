@@ -46,8 +46,7 @@ namespace GHL {
         0.0f, 0.0f, 1.0f, 0.0f,
         0.0f, 0.0f, 0.0f, 1.0f
     };
-    
-	static void set_texture_stage(const GL& gl,UInt32 stage) {
+    static void set_texture_stage(const GL& gl,UInt32 stage) {
         GL::GLenum texture_stages[] = {
             gl.TEXTURE0,
             gl.TEXTURE1,
@@ -60,6 +59,15 @@ namespace GHL {
             oldStage=stage;
         }
 	}
+    static void set_client_texture_stage(const GL& gl, const GLffpl& ffpl, UInt32 stage) {
+        GL::GLenum texture_stages[] = {
+            gl.TEXTURE0,
+            gl.TEXTURE1,
+            gl.TEXTURE2,
+            gl.TEXTURE3,
+        };
+        CHECK_GL(ffpl.ClientActiveTexture(texture_stages[stage]));
+    }
 	
 	static inline GL::GLenum convert_blend(const GL& gl,BlendFactor bf ) {
 		if (bf==BLEND_FACTOR_SRC_COLOR)
@@ -114,7 +122,19 @@ namespace GHL {
 		} else if (f==TEX_ARG_TEXTURE_INV) {
 			arg = gl.TEXTURE;
 			op = alpha ? gl.ONE_MINUS_SRC_ALPHA : gl.ONE_MINUS_SRC_COLOR;
-		}
+        } else if (f==TEX_ARG_TEXTURE_ALPHA) {
+            arg = gl.TEXTURE;
+            op = gl.SRC_ALPHA;
+        } else if (f==TEX_ARG_TEXTURE_ALPHA_INV) {
+            arg = gl.TEXTURE;
+            op = gl.ONE_MINUS_SRC_ALPHA;
+        } else if (f==TEX_ARG_CURRENT_ALPHA) {
+            arg = ffpl.PREVIOUS;
+            op = gl.SRC_ALPHA;
+        } else if (f==TEX_ARG_CURRENT_ALPHA_INV) {
+            arg = ffpl.PREVIOUS;
+            op = gl.ONE_MINUS_SRC_ALPHA;
+        }
 	}
 	
 	RenderOpenGLBase::RenderOpenGLBase(UInt32 w,UInt32 h,bool haveDepth) : RenderImpl(w,h,haveDepth) {
@@ -534,7 +554,7 @@ namespace GHL {
 
     
     RenderOpenGLFFPL::RenderOpenGLFFPL(UInt32 w,UInt32 h,bool haveDepth) : RenderOpenGLBase(w,h,haveDepth) {
-        
+        m_enabled_tex2 = false;
     }
     
     void RenderOpenGLFFPL::ResetRenderState() {
@@ -542,6 +562,7 @@ namespace GHL {
         CHECK_GL(glffpl.EnableClientState(glffpl.VERTEX_ARRAY));
         CHECK_GL(glffpl.EnableClientState(glffpl.COLOR_ARRAY));
         CHECK_GL(glffpl.EnableClientState(glffpl.TEXTURE_COORD_ARRAY));
+        m_enabled_tex2 = false;
     }
     
     /// set projection matrix
@@ -566,9 +587,18 @@ namespace GHL {
     void RenderOpenGLFFPL::SetupVertexData(const Vertex* v,VertexType vt) {
         GL::GLsizei vs = sizeof(*v);
         if (vt == VERTEX_TYPE_2_TEX) {
+            set_client_texture_stage(gl, glffpl, 1);
+            CHECK_GL(glffpl.EnableClientState(glffpl.TEXTURE_COORD_ARRAY));
+            m_enabled_tex2 = true;
             const Vertex2Tex* v2 = static_cast<const Vertex2Tex*>(v);
             vs = sizeof(*v2);
             CHECK_GL(glffpl.TexCoordPointer(2,gl.FLOAT, vs, &v2->t2x));
+            set_client_texture_stage(gl,glffpl, 0);
+        } else if (m_enabled_tex2) {
+            set_client_texture_stage(gl, glffpl, 1);
+            CHECK_GL(glffpl.DisableClientState(glffpl.TEXTURE_COORD_ARRAY));
+            set_client_texture_stage(gl,glffpl, 0);
+            m_enabled_tex2 = false;
         }
         CHECK_GL(glffpl.TexCoordPointer(2,gl.FLOAT, vs, &v->tx));
         CHECK_GL(glffpl.ColorPointer(4,gl.UNSIGNED_BYTE, vs, &v->color));
@@ -577,8 +607,8 @@ namespace GHL {
 
     void GHL_CALL RenderOpenGLFFPL::SetTexture(const Texture* texture, UInt32 stage ) {
         RenderOpenGLBase::SetTexture(texture, stage);
-        RenderImpl::SetTexture(texture, stage);
-		set_texture_stage(gl,stage);
+        set_texture_stage(gl,stage);
+        //set_client_texture_stage(gl, glffpl, stage);
 		//glClientActiveTexture(texture_stages[stage]);
 		if (texture) {
 			const TextureOpenGL* tex = static_cast<const TextureOpenGL*>(texture);
@@ -588,6 +618,7 @@ namespace GHL {
 			CHECK_GL(gl.BindTexture(gl.TEXTURE_2D, 0));
             CHECK_GL(gl.Disable(gl.TEXTURE_2D));
 		}
+        //set_client_texture_stage(gl, glffpl, 0);
 		set_texture_stage(gl,0);
     }
     

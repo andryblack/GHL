@@ -125,8 +125,12 @@ namespace GHL
 		TEX_ARG_TEXTURE,		///< current texture
 		TEX_ARG_TEXTURE_INV,	///< inverse current texture
 		TEX_ARG_CURRENT,		///< prev stage value
-		TEX_ARG_CURRENT_INV     ///< inverse prev stage value
-	};
+		TEX_ARG_CURRENT_INV,    ///< inverse prev stage value
+        TEX_ARG_TEXTURE_ALPHA,	///< current texture alpha
+        TEX_ARG_TEXTURE_ALPHA_INV,	///< inverse current texture alpha
+        TEX_ARG_CURRENT_ALPHA,		///< prev stage alpha value
+        TEX_ARG_CURRENT_ALPHA_INV   ///< inverse prev stage alpha value
+  	};
 
 	/// texture stage operation
 	enum TextureOperation

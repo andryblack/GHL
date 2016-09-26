@@ -321,14 +321,12 @@ DYNAMIC_GL_ffpl_FUNCTION(MatrixMode,(GLenum))\
 DYNAMIC_GL_ffpl_FUNCTION(LoadMatrixf,(const GLfloat *))\
 DYNAMIC_GL_ffpl_FUNCTION(LoadIdentity,())\
 DYNAMIC_GL_ffpl_FUNCTION(EnableClientState,(GLenum))\
+DYNAMIC_GL_ffpl_FUNCTION(DisableClientState,(GLenum))\
 DYNAMIC_GL_ffpl_FUNCTION(TexCoordPointer,(GLint,GLenum,GLsizei,const GLvoid *))\
 DYNAMIC_GL_ffpl_FUNCTION(ColorPointer,(GLint,GLenum,GLsizei,const GLvoid *))\
 DYNAMIC_GL_ffpl_FUNCTION(VertexPointer,(GLint,GLenum,GLsizei,const GLvoid *))\
-        
-//#define DYNAMIC_GL_ffpl_FUNCTIONS_Multitexture \
-//DYNAMIC_GL_ffpl_FUNCTION(ClientActiveTexture,(GLenum))\
+DYNAMIC_GL_ffpl_FUNCTION(ClientActiveTexture,(GLenum))\
 
-        
 #define DYNAMIC_GL_ffpl_FUNCTION(Name,Args) GHL_GL_API void (*Name) Args;
         DYNAMIC_GL_ffpl_FUNCTIONS
 //        DYNAMIC_GL_ffpl_FUNCTIONS_Multitexture

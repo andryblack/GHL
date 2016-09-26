@@ -105,6 +105,7 @@ namespace GHL
     protected:
         GLffpl  glffpl;
         RenderOpenGLFFPL(UInt32 w,UInt32 h,bool haveDepth);
+        bool m_enabled_tex2;
     public:
         virtual void ResetRenderState();
         virtual void SetupVertexData(const Vertex* v,VertexType vt);

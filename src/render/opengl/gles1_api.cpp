@@ -128,8 +128,26 @@ namespace GHL {
             api->RGBA8 = GL_RGBA8_OES;
         }
         
-        
-        //        }
+      
+        if (GLES1Api_impl::CheckExtensionSupported("GL_OES_framebuffer_object")) {
+            api->rtapi.valid = true;
+            api->rtapi.FRAMEBUFFER = GL_FRAMEBUFFER_OES;
+            api->rtapi.COLOR_ATTACHMENT0 = GL_COLOR_ATTACHMENT0_OES;
+            api->rtapi.RENDERBUFFER = GL_RENDERBUFFER_OES;
+            api->rtapi.DEPTH_ATTACHMENT = GL_DEPTH_ATTACHMENT_OES;
+            api->rtapi.DEPTH_COMPONENT16 = GL_DEPTH_COMPONENT16_OES;
+            api->rtapi.FRAMEBUFFER_COMPLETE = GL_FRAMEBUFFER_COMPLETE_OES;
+            api->rtapi.GenFramebuffers = glGenFramebuffersOES;
+            api->rtapi.BindFramebuffer = glBindFramebufferOES;
+            api->rtapi.DeleteFramebuffers = glDeleteFramebuffersOES;
+            api->rtapi.FramebufferTexture2D = glFramebufferTexture2DOES;
+            api->rtapi.BindRenderbuffer = glBindRenderbufferOES;
+            api->rtapi.DeleteRenderbuffers = glDeleteRenderbuffersOES;
+            api->rtapi.GenRenderbuffers = glGenRenderbuffersOES;
+            api->rtapi.RenderbufferStorage = glRenderbufferStorageOES;
+            api->rtapi.FramebufferRenderbuffer = glFramebufferRenderbufferOES;
+            api->rtapi.CheckFramebufferStatus = glCheckFramebufferStatusOES;
+        }
         
         api->vboapi.valid = false;
         
