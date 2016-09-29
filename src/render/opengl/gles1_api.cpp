@@ -13,6 +13,7 @@
 #include <OpenGLES/ES1/glext.h>
 #elif defined ( GHL_PLATFORM_ANDROID ) || defined ( GHL_PLATFORM_EMSCRIPTEN )
 #include <GLES/gl.h>
+#define GL_GLEXT_PROTOTYPES
 #include <GLES/glext.h>
 #else
 #error "usupported platform"
