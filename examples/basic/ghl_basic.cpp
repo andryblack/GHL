@@ -187,7 +187,7 @@ public:
         return y;
     }
     
-    virtual void GHL_CALL OnEvent(const GHL::Event* e) {
+    virtual void GHL_CALL OnEvent( GHL::Event* e) {
         if (e->type == GHL::EVENT_TYPE_MOUSE_PRESS) {
             StarState star;
             star.x = float(e->data.mouse_press.x);

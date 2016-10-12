@@ -48,12 +48,14 @@ namespace GHL
         Key     key;
         UInt32  charcode;
         UInt32  modificators;
+        bool    handled;
     };
 
     /// Key release
     struct KeyReleaseEvent {
         Key     key;
         UInt32  modificators;
+        bool    handled;
     };
 
     /// Base mouse event

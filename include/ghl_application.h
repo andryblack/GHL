@@ -46,7 +46,7 @@ namespace GHL {
         /// Frame event
         virtual bool GHL_CALL OnFrame( UInt32 usecs ) = 0;
         /// Notify event
-        virtual void GHL_CALL OnEvent( const Event* event ) = 0;
+        virtual void GHL_CALL OnEvent( Event* event ) = 0;
         /// Release (destroy) application
         virtual void GHL_CALL Release(  ) = 0;
     };

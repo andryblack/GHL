@@ -29,6 +29,8 @@ import android.os.Handler;
 import android.graphics.Canvas;
 import android.graphics.*;
 
+import android.media.AudioManager;
+
 import android.util.Log;
 
 public class Activity  extends android.app.NativeActivity  {
@@ -217,24 +219,29 @@ public class Activity  extends android.app.NativeActivity  {
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
+        Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         ensureLoadLibrary();
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
     }
 
     @Override
     protected void onDestroy(){
+        Log.v(TAG, "onDestroy");
         super.onDestroy();
         ensureLoadLibrary();
     }
 
     @Override
     protected void onPause(){
+        Log.v(TAG, "onPause");
         super.onPause();
         ensureLoadLibrary();
     }
 
     @Override
     protected void onResume(){
+        Log.v(TAG, "onResume");
         super.onResume();
         ensureLoadLibrary();
     }

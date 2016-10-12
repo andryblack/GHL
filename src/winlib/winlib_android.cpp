@@ -76,6 +76,7 @@ static GHL::Key convert_key(uint32_t k) {
     switch (k) {
         case AKEYCODE_ENTER: return GHL::KEY_ENTER;
         case AKEYCODE_DEL: return GHL::KEY_BACKSPACE;
+        case AKEYCODE_BACK: return GHL::KEY_BACK;
     }
     return GHL::KEY_NONE;
 }
@@ -566,34 +567,39 @@ namespace GHL {
              m_app->OnEvent(&event);
         }
         void OnConfigurationChanged() {
-            
+            ILOG_INFO("OnConfigurationChanged");
         }
         void OnLowMemory() {
             LOG_WARNING("OnLowMemory");
         }
 
-        void onKey(int key_code,uint32_t unicode,int action) {
+        bool onKey(int key_code,uint32_t unicode,int action) {
             if (!m_app) 
-                return;
+                return false;
             
 
             if (AKEY_EVENT_ACTION_DOWN == action) {
                 //ILOG_INFO("AKEY_EVENT_ACTION_DOWN " << key_code << " " << unicode);
                 GHL::Event e;
                 e.type = GHL::EVENT_TYPE_KEY_PRESS;
+                e.data.key_press.handled = false;
                 e.data.key_press.key = convert_key(key_code);
                 e.data.key_press.modificators = 0;
                 e.data.key_press.charcode = unicode;
                 m_app->OnEvent(&e);
+                return e.data.key_press.handled;
             } else if (AKEY_EVENT_ACTION_UP == action) {
                 //ILOG_INFO("AKEY_EVENT_ACTION_UP " << key_code << " " << unicode);
                 GHL::Event e;
                 e.type = GHL::EVENT_TYPE_KEY_RELEASE;
+                e.data.key_release.handled = false;
                 e.data.key_release.key = convert_key(key_code);
                 m_app->OnEvent(&e);
+                return e.data.key_release.handled;
             } else {
                 ILOG_INFO("unknown key event " << action);
             }
+            return false;
         }
 
     protected:
@@ -641,7 +647,7 @@ namespace GHL {
                 return true;
             } else if (AINPUT_EVENT_TYPE_KEY == AInputEvent_getType(event)) {
                 int32_t key_code = AKeyEvent_getKeyCode(event);
-                onKey(key_code,0,AKeyEvent_getAction(event));
+                return onKey(key_code,0,AKeyEvent_getAction(event));
             } else {
                 LOG_INFO("unknown event type " << AInputEvent_getType(event));
             }
@@ -657,7 +663,7 @@ namespace GHL {
                        continue;
                     }
                     bool handled = HandleEvent(event);
-                    AInputQueue_finishEvent(m_input_queue,event,handled?0:1);
+                    AInputQueue_finishEvent(m_input_queue,event,handled?1:0);
                 }
             }
         }
