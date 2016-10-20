@@ -414,6 +414,99 @@ namespace GHL {
         return dest.data;
     }
     
+    
+    const Data* JpegDecoder::ReEncode(GHL::DataStream* src) {
+        // allocate and initialize JPEG decompression object
+        struct jpeg_decompress_struct srcinfo;
+        struct ghl_jpeg_error_mgr jerr;
+        
+        //We have to set up the error handler first, in case the initialization
+        //step fails.  (Unlikely, but it could happen if you are out of memory.)
+        //This routine fills in the contents of struct jerr, and returns jerr's
+        //address which we place into the link field in cinfo.
+        
+        srcinfo.err = jpeg_std_error(&jerr);
+        srcinfo.err->error_exit = ghl_jpeg_error_exit;
+        srcinfo.err->output_message = ghl_jpeg_output_message;
+        
+        struct jpeg_compress_struct dstinfo;
+        
+        dstinfo.err = jpeg_std_error(&jerr);
+        dstinfo.err->error_exit = ghl_jpeg_error_exit;
+        dstinfo.err->output_message = ghl_jpeg_output_message;
+        
+        struct ghl_jpeg_destination_mgr dest;
+        dest.data = new DataArrayImpl();
+        dstinfo.dest = &dest;
+        
+        // compatibility fudge:
+        // we need to use setjmp/longjmp for error handling as gcc-linux
+        // crashes when throwing within external c code
+        if (setjmp(jerr.setjmp_buffer))
+        {
+            // If we get here, the JPEG code has signaled an error.
+            // We need to clean up the JPEG object and return.
+            
+            jpeg_destroy_decompress(&srcinfo);
+            jpeg_destroy_compress(&dstinfo);
+           
+            if (dest.data)
+                dest.data->Release();
+            return 0;
+        }
+        
+        // Now we can initialize the JPEG decompression object.
+        jpeg_create_decompress(&srcinfo);
+        
+        // specify data source
+        ghl_jpeg_source_mgr jsrc;
+        jsrc.stream = src;
+        
+        
+        jsrc.init_source = &ghl_jpeg_source_mgr::ghl_jpeg_init_source;
+        jsrc.fill_input_buffer = &ghl_jpeg_source_mgr::ghl_jpeg_fill_input_buffer;
+        jsrc.skip_input_data = &ghl_jpeg_source_mgr::ghl_jpeg_skip_input_data;
+        jsrc.resync_to_restart = &jpeg_resync_to_restart;
+        jsrc.term_source = &ghl_jpeg_source_mgr::ghl_jpeg_term_source;
+        srcinfo.src = &jsrc;
+        
+        // Decodes JPG input from whatever source
+        // Does everything AFTER jpeg_create_decompress
+        // and BEFORE jpeg_destroy_decompress
+        // Caller is responsible for arranging these + setting up cinfo
+        
+        // read file parameters with jpeg_read_header()
+        jpeg_read_header(&srcinfo, TRUE);
+        
+        /* Now we can initialize the JPEG compression object. */
+        jpeg_create_compress(&dstinfo);
+
+        /* Read source file as DCT coefficients */
+        jvirt_barray_ptr * coef_arrays = jpeg_read_coefficients(&srcinfo);
+     
+        /* Initialize destination compression parameters from source values */
+        jpeg_copy_critical_parameters(&srcinfo, &dstinfo);
+        
+        // use arithmetic coding if input file is arithmetic coded
+        if (srcinfo.arith_code) {
+            dstinfo.arith_code = true;
+            dstinfo.optimize_coding = false;
+        } else {
+            dstinfo.optimize_coding = true;
+        }
+
+        /* Start compressor (note no image data is actually written here) */
+        jpeg_write_coefficients(&dstinfo, coef_arrays);
+        
+        /* Finish compression and release memory */
+        jpeg_finish_compress(&dstinfo);
+        
+        (void)jpeg_finish_decompress(&srcinfo);
+        jpeg_destroy_decompress(&srcinfo);
+        
+        return dest.data;
+    }
+    
 } /*namespace*/
 
 #endif
