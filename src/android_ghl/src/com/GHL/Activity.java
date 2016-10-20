@@ -222,7 +222,7 @@ public class Activity  extends android.app.NativeActivity  {
         Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         ensureLoadLibrary();
-        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        //setVolumeControlStream(AudioManager.STREAM_MUSIC);
     }
 
     @Override
