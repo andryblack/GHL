@@ -35,7 +35,7 @@ static std::string g_title = "GHL";
 static NSRect g_rect;
 static bool g_need_depth = false;
 static bool g_need_retina = true;
-
+static GHL::Int32 g_frame_interval = 1;
 static const char* MODULE = "WINLIB";
 
 class SystemCocoa : public GHL::System {
@@ -140,6 +140,7 @@ public:
 {
 	self = [super initWithFrame:frameRect pixelFormat:format];
 	if (self) {
+        m_timer = nil;
         m_render = 0;
         m_loaded = false;
         m_null_cursor = nil;
@@ -421,6 +422,13 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 	return YES;
 }
 
+- (void)setTimerInterval {
+    NSTimeInterval interval = g_frame_interval/60.0f;
+    if (m_timer) {
+        [m_timer invalidate];
+    }
+    m_timer = [NSTimer scheduledTimerWithTimeInterval: interval target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
+}
 - (void)prepareOpenGL {
 	LOG_INFO( "WinLibOpenGLView::prepareOpenGL" ); 
    
@@ -439,7 +447,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
         [m_application getApplication]->SetRender(m_render);
         if ([m_application getApplication]->Load()) {
             LOG_VERBOSE( "WinLibOpenGLView::prepareOpenGL application loaded" );
-            m_timer = [NSTimer scheduledTimerWithTimeInterval: 1.0f/60.0f target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
+            [self setTimerInterval];
             m_loaded = true;
         }
     
@@ -895,6 +903,11 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     }
 }
 
+- (void) setTimerInterval {
+    if (m_gl_view) {
+        [m_gl_view setTimerInterval];
+    }
+}
 @end
 
 
@@ -926,6 +939,11 @@ bool GHL_CALL SystemCocoa::SetDeviceState(GHL::DeviceState name, const void *dat
             [delegate setCursorVisible:enabled];
         }
       return true;
+    } else if (name==GHL::DEVICE_STATE_FRAME_INTERVAL) {
+        const GHL::Int32* state = (const GHL::Int32*)data;
+        g_frame_interval = *state;
+        [delegate setTimerInterval];
+        return true;
     }
     return false;
 }

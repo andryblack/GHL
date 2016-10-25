@@ -522,7 +522,7 @@ namespace GHL {
             GL::GLsizei size;
             gl.sdrapi.GetProgramInfoLog(handle,512,&size,log);
             log[size]=0;
-            LOG_VERBOSE( "Shader link result : " << log );
+            LOG_ERROR( "Shader link result : " << log );
             
             CHECK_GL(gl.sdrapi.DeleteProgram(handle));
 			return 0;
