@@ -523,7 +523,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     
     if ( g_fullscreen != g_need_fullscreen ) {
         WinLibAppDelegate* delegate = (WinLibAppDelegate*)[NSApplication sharedApplication].delegate;
-       if (delegate) {
+        if (delegate) {
             [delegate switchFullscreen];
         }
     }
@@ -625,98 +625,35 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 	[super dealloc];
 }
 
-- (void)switchFullscreen {
-    LOG_INFO( "WinLibAppDelegate::switchFullscreen" );
+- (void)createWindow {
+    LOG_INFO( "WinLibAppDelegate::createWindow" );
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	
 	
     
-    NSInteger style = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
+    NSInteger style = NSTitledWindowMask | NSClosableWindowMask /*| NSResizableWindowMask */| NSMiniaturizableWindowMask;
     
     NSScreen* screen = 0;
     
-    NSInteger windowLevel = NSNormalWindowLevel;
-    
     NSRect rect = m_rect;
     
-    bool recreateWindow = false; 
+    screen = [NSScreen mainScreen];
     
-    
-    if (m_window) {
-        screen = m_window.screen;
-        if (g_need_fullscreen)
-            m_rect.origin = [m_window frame].origin;
-        
-        if (![m_window respondsToSelector:@selector(setStyleMask:)]) {
-            recreateWindow = true;
-        }
-        
-        if (recreateWindow) {
-            if (m_application) {
-                GHL::Event e;
-                e.type = GHL::EVENT_TYPE_DEACTIVATE;
-                m_application->OnEvent(&e);
-            }
-            LOG_DEBUG( "WinLibAppDelegate::switchFullscreen recreateWindow" );
-            [m_window setContentView:nil];
-            [m_window setDelegate:nil];
-            [m_window closeWindow];
-            m_window = nil;
-        }
-    } else {
-        screen = [NSScreen mainScreen];
-    }
-    
-    if (g_need_fullscreen) {
-        rect = [screen frame];
-        style = NSBorderlessWindowMask ;
-        windowLevel = NSMainMenuWindowLevel+1;
-    } else {
-        
-    }
     if (!m_window) {
-        LOG_DEBUG( "WinLibAppDelegate::switchFullscreen create new window" );
+        LOG_DEBUG( "WinLibAppDelegate::createWindow create new window" );
         m_window = [[WinLibWindow alloc] initWithContentRect:rect styleMask:style backing:NSBackingStoreBuffered defer:YES];
         [m_window disableFlushWindow];
         [m_window setContentView:m_gl_view];
         [m_window setDelegate:self];
-    } else {
-        [m_window disableFlushWindow];
-        [m_window disableScreenUpdatesUntilFlush];
-        [m_gl_view setHidden:YES];
-        
-        
-        [m_window setStyleMask:style];
-        
-        if (g_need_fullscreen) {
-            [m_window setFrame:rect display:YES];
-        } else {
-            [m_window setContentSize:rect.size];
-            [m_window setFrameOrigin:m_rect.origin];
-        }
+        [m_gl_view setAutoresizesSubviews:YES];
     }
     
-    [m_window setLevel:windowLevel];
-    
-    if (g_need_fullscreen) {
-        [m_window setOpaque:YES];
-        [m_window setHasShadow:NO];
-        [m_window setHidesOnDeactivate:YES];
-        [m_window setMovable:NO];
-    } else {
-        [m_window setHasShadow:YES];
-        [m_window setOpaque:NO];
-        [m_window setHidesOnDeactivate:NO];
-        [m_window setMovable:YES];
-    }
     
     [m_window setAcceptsMouseMovedEvents:YES];
     [m_window setTitle:[NSString stringWithUTF8String:g_title.c_str()] ];
     
     [m_gl_view reshape];
-    
-    g_fullscreen = g_need_fullscreen;
-    
+  
     [m_gl_view setHidden:NO];
     [m_window enableFlushWindow];
     [m_window makeKeyAndOrderFront:nil];
@@ -730,6 +667,11 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     }
     
     [pool release];
+}
+
+- (void)switchFullscreen {
+    [m_window toggleFullScreen:self];
+    g_fullscreen = g_need_fullscreen;
 }
 
 - (void)updateWindowTitle {
@@ -764,6 +706,8 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     LOG_INFO( "WinLibAppDelegate::applicationDidFinishLaunching" );
     (void)aNotification;
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+    
+    //[[NSApplication sharedApplication] setPresentationOptions:NSFullScreenWindowMask];
     
     GHL::Event e;
     e.type = GHL::EVENT_TYPE_APP_STARTED;
@@ -844,8 +788,8 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     
     m_system->setView(gl);
 	
-    [self switchFullscreen];
-    
+    [self createWindow];
+    [m_window setCollectionBehavior: NSWindowCollectionBehaviorFullScreenPrimary];
     [m_window makeKeyAndOrderFront:nil];
 	
 	[pool release];
@@ -875,13 +819,8 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 /// ---- NSWindowDelegate
 - (void)windowDidBecomeKey:(NSNotification *)notification {
     (void)notification;
-    if (g_fullscreen) {
-        //[m_window setIsVisible:YES];
-        [m_window setLevel: NSMainMenuWindowLevel+1];
-    } else {
-        
-    }
-	LOG_VERBOSE("Activated");
+    
+    LOG_VERBOSE("Activated");
     if (m_application) {
         GHL::Event e;
         e.type = GHL::EVENT_TYPE_ACTIVATE;
@@ -908,6 +847,20 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
         [m_gl_view setTimerInterval];
     }
 }
+
+
+- (void)windowDidEnterFullScreen:(NSNotification *)notification {
+    if (m_gl_view) {
+        [m_window setContentSize:m_window.screen.frame.size];
+    }
+}
+
+- (void)windowWillExitFullScreen:(NSNotification *)notification {
+    if (m_gl_view) {
+        [m_window setContentSize:m_rect.size];
+    }
+}
+
 @end
 
 

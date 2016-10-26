@@ -42,6 +42,7 @@ class SystemCocoa;
 -(SystemCocoa*) getSystem;
 -(void) initSound;
 -(void) switchFullscreen;
+-(void) createWindow;
 -(void) setCursorVisible:(BOOL) visible;
 @end
 
