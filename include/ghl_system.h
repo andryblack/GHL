@@ -1,8 +1,6 @@
 /*
  *  ghl_system.h
- *  SR
  *
- *  Created by Андрей Куницын on 13.02.11.
  *  Copyright 2011 andryblack. All rights reserved.
  *
  */
@@ -54,15 +52,8 @@ namespace GHL {
         /// Set window title
         virtual void GHL_CALL SetTitle( const char* title ) = 0;
     };
- 
-    struct TimeValue {
-        UInt32 secs;
-        UInt32 usecs;
-    };
 }
 
-/// Get system time (secs returned)
-GHL_API GHL::UInt32 GHL_CALL GHL_SystemGetTime(GHL::TimeValue* tv);
 /// Get opaque thread id
 GHL_API GHL::UInt32 GHL_CALL GHL_GetCurrentThreadId();
 

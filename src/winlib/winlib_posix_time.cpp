@@ -1,5 +1,5 @@
 
-#include <ghl_system.h>
+#include <ghl_time.h>
 
 #ifndef _MSC_VER
 #include <sys/time.h>
@@ -35,7 +35,7 @@ static int gettimeofday(struct timeval * tp, struct timezone * tzp)
 #endif
 
 /// Get system time (secs returned)
-GHL_API GHL::UInt32 GHL_CALL GHL_SystemGetTime(GHL::TimeValue* ret) {
+GHL_API GHL::UInt32 GHL_CALL GHL_GetTime(GHL::TimeValue* ret) {
     struct ::timeval tv = {0,0};
     ::gettimeofday(&tv, 0);
     if (ret) {
