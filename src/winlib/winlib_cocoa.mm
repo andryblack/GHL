@@ -37,6 +37,7 @@ static bool g_need_depth = false;
 static bool g_need_retina = true;
 static GHL::Int32 g_frame_interval = 1;
 static const char* MODULE = "WINLIB";
+static bool g_resizeable_window = false;
 
 class SystemCocoa : public GHL::System {
 private:
@@ -631,7 +632,9 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 	
 	
     
-    NSInteger style = NSTitledWindowMask | NSClosableWindowMask /*| NSResizableWindowMask */| NSMiniaturizableWindowMask;
+    NSInteger style = NSTitledWindowMask | NSClosableWindowMask |
+        (g_resizeable_window ? NSResizableWindowMask : 0) |
+        NSMiniaturizableWindowMask;
     
     NSScreen* screen = 0;
     
@@ -861,6 +864,19 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     }
 }
 
+- (void)setResizeableWindow:(BOOL) resizeable {
+    if (m_window) {
+        NSWindowStyleMask style = [m_window styleMask];
+        if (resizeable) {
+            style |= NSWindowStyleMaskResizable;
+        } else {
+            style &= ~NSWindowStyleMaskResizable;
+        }
+        [m_window setStyleMask:style];
+    }
+    g_resizeable_window = resizeable;
+}
+
 @end
 
 
@@ -896,6 +912,12 @@ bool GHL_CALL SystemCocoa::SetDeviceState(GHL::DeviceState name, const void *dat
         const GHL::Int32* state = (const GHL::Int32*)data;
         g_frame_interval = *state;
         [delegate setTimerInterval];
+        return true;
+    } else if (name==GHL::DEVICE_STATE_RESIZEABLE_WINDOW) {
+        BOOL enabled = *(const bool*)data;
+        if (delegate) {
+            [delegate setResizeableWindow:enabled];
+        }
         return true;
     }
     return false;
