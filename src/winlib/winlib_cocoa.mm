@@ -12,6 +12,7 @@
 #import "winlib_cocoa.h"
 
 #import <Cocoa/Cocoa.h>
+#import <AppKit/NSWindow.h>
 
 #include <ghl_application.h>
 #include <ghl_settings.h>
@@ -866,6 +867,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 
 - (void)setResizeableWindow:(BOOL) resizeable {
     if (m_window) {
+#if __MAC_OS_X_VERSION_MAX_ALLOWED >= __MAC_10_12
         NSWindowStyleMask style = [m_window styleMask];
         if (resizeable) {
             style |= NSWindowStyleMaskResizable;
@@ -873,6 +875,15 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
             style &= ~NSWindowStyleMaskResizable;
         }
         [m_window setStyleMask:style];
+#else
+        NSInteger style = [m_window styleMask];
+        if (resizeable) {
+            style |= NSResizableWindowMask;
+        } else {
+            style &= ~NSResizableWindowMask;
+        }
+        [m_window setStyleMask:style];
+#endif
     }
     g_resizeable_window = resizeable;
 }
