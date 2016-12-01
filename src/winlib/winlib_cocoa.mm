@@ -867,7 +867,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 
 - (void)setResizeableWindow:(BOOL) resizeable {
     if (m_window) {
-#if __MAC_OS_X_VERSION_MAX_ALLOWED >= __MAC_10_12
+#if (__MAC_OS_X_VERSION_MAX_ALLOWED >= 101200)
         NSWindowStyleMask style = [m_window styleMask];
         if (resizeable) {
             style |= NSWindowStyleMaskResizable;
