@@ -83,7 +83,7 @@
 class GHL_Network_Cocoa : public GHL::Network {
 private:
     std::list<GHLHttpRequest*> m_requests;
-    void cleaRequests(bool all=false) {
+    void clearRequests(bool all=false) {
         std::list<GHLHttpRequest*>::iterator it = m_requests.begin();
         while (it!=m_requests.end()) {
             if (all || [*it complete]) {
@@ -99,7 +99,7 @@ public:
         
     }
     ~GHL_Network_Cocoa() {
-        cleaRequests(true);
+        clearRequests(true);
     }
     
     NSMutableURLRequest* createRequest(GHL::NetworkRequest* handler) {
@@ -140,7 +140,7 @@ public:
     
     /// GET request
     virtual bool GHL_CALL Get(GHL::NetworkRequest* handler) {
-        cleaRequests(false);
+        clearRequests(false);
         
         if (!handler)
             return false;
@@ -163,7 +163,7 @@ public:
     }
     /// POST request
     virtual bool GHL_CALL Post(GHL::NetworkRequest* handler,const GHL::Data* data) {
-        cleaRequests(false);
+        clearRequests(false);
         if (!handler)
             return false;
         if (!data)
