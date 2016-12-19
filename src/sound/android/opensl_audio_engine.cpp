@@ -107,9 +107,9 @@ namespace GHL {
         SLDataSink audio_snk = {&loc_outmix, NULL};
         
         // create audio player
-        const SLuint32 ids_count = 3;
-        const SLInterfaceID ids[ids_count] = {SL_IID_SEEK, SL_IID_MUTESOLO, SL_IID_VOLUME};
-        const SLboolean req[ids_count] = {SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE};
+        const SLuint32 ids_count = 4;
+        const SLInterfaceID ids[ids_count] = {SL_IID_SEEK, SL_IID_MUTESOLO, SL_IID_VOLUME,SL_IID_PITCH};
+        const SLboolean req[ids_count] = {SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE,SL_BOOLEAN_FALSE};
         
         SLObjectItf player_obj;
         
@@ -160,10 +160,13 @@ namespace GHL {
             SLDataSink audio_snk = {&loc_outmix, NULL};
             
             // create audio player
-            const SLuint32 ids_count = 3;
+            const SLuint32 ids_count = 4;
             const SLInterfaceID ids[ids_count] = {SL_IID_ANDROIDSIMPLEBUFFERQUEUE,
-                SL_IID_SEEK, SL_IID_VOLUME};
-            const SLboolean req[ids_count] = {SL_BOOLEAN_TRUE, SL_BOOLEAN_FALSE, SL_BOOLEAN_TRUE};
+                SL_IID_SEEK, SL_IID_VOLUME, SL_IID_PITCH};
+            const SLboolean req[ids_count] = {SL_BOOLEAN_TRUE, 
+                SL_BOOLEAN_FALSE, 
+                SL_BOOLEAN_TRUE,
+                SL_BOOLEAN_FALSE};
             
             SLObjectItf player_obj;
             

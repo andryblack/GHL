@@ -10,6 +10,7 @@ namespace GHL {
     OpenSLAudioChannelBase::OpenSLAudioChannelBase( SLObjectItf player_obj ) : m_player_obj(player_obj)
     , m_play_i(0)
     , m_volume_i(0)
+    , m_pitch_i(0)
     , m_pan_value(0.0f)
     {
         SLresult result;
@@ -21,6 +22,27 @@ namespace GHL {
         // get the volume interface
         result = (*m_player_obj)->GetInterface(m_player_obj, SL_IID_VOLUME, &m_volume_i);
         assert(SL_RESULT_SUCCESS == result);
+
+        // get the pitch interface
+        result = (*m_player_obj)->GetInterface(m_player_obj, SL_IID_PITCH, &m_pitch_i);
+        if (SL_RESULT_SUCCESS!=result) {
+            LOG_DEBUG("failed GetInterface SL_IID_PITCH");
+            m_pitch_i = 0;
+        }
+        if (m_pitch_i == 0) {
+            result = (*m_player_obj)->GetInterface(m_player_obj, SL_IID_PLAYBACKRATE, &m_playback_rate_i);
+            if (SL_RESULT_SUCCESS!=result) {
+                LOG_DEBUG("failed GetInterface SL_IID_PLAYBACKRATE");
+                m_playback_rate_i = 0;
+            } else {
+                result = (*m_playback_rate_i)->SetPropertyConstraints(m_playback_rate_i,
+                    SL_RATEPROP_PITCHCORAUDIO);
+                if (SL_RESULT_SUCCESS != result) {
+                    LOG_DEBUG("failed SetPropertyConstraints SL_RATEPROP_PITCHCORAUDIO");
+                }
+            }
+        }
+        //sb_assert(SL_RESULT_SUCCESS == result);
         
     }
 
@@ -72,6 +94,25 @@ namespace GHL {
                 SLmillibel pv = pan / 100.0f * 1000.0f;
                 (*m_volume_i)->SetStereoPosition(m_volume_i, pv);
             }
+        }
+    }
+    void OpenSLAudioChannelBase::SetPitch(float pitch) {
+        if (m_pitch_i) {
+            SLpermille pv = pitch / 100.0f * 1000.0f;
+            (*m_pitch_i)->SetPitch(m_pitch_i, pv);
+        } else if (m_playback_rate_i) {
+            SLpermille pv = pitch / 100.0f * 1000.0f;
+            SLpermille minRate;
+            SLpermille maxRate;
+            SLpermille step;
+            SLuint32 capa;
+            (*m_playback_rate_i)->GetRateRange(m_playback_rate_i,0,&minRate,&maxRate,&step,&capa);
+            if (pv<minRate) {
+                pv = minRate;
+            } else if (pv>maxRate) {
+                pv = maxRate;
+            }
+            (*m_playback_rate_i)->SetRate(m_playback_rate_i, pv);
         }
     }
     

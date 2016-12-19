@@ -60,6 +60,8 @@ namespace GHL {
         virtual void GHL_CALL SetVolume( float vol ) = 0;
         /// set pan (-100..0..+100)
         virtual void GHL_CALL SetPan( float pan ) = 0;
+        /// set pitch
+        virtual void GHL_CALL SetPitch( float pitch ) = 0;
         /// stop
         virtual void GHL_CALL Stop() = 0;
     };

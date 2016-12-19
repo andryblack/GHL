@@ -36,6 +36,7 @@ namespace GHL {
         bool                            m_done;
         double                          m_volume;
         double                          m_pan;
+        double                          m_pitch;
         GHL::DataStream*                m_input_stream;
         bool                            m_loop;
     protected:
@@ -164,6 +165,7 @@ namespace GHL {
             m_loop(false) {
             m_volume = 100.0;
             m_pan = 0.0;
+            m_pitch = 100.0;
             m_input_stream->AddRef();
         }
         static MusicInstanceCocoa* Open( GHL::DataStream* ds ) {
@@ -311,6 +313,7 @@ namespace GHL {
             
             AudioQueueSetParameter(m_queue, kAudioQueueParam_Volume, m_volume/100.0);
             AudioQueueSetParameter(m_queue, kAudioQueueParam_Pan, m_pan/100.0);
+            AudioQueueSetParameter(m_queue, kAudioQueueParam_Pitch, m_pitch/100.0);
             
             for (int i = 0; i < number_buffers; ++i) {
                 AQBufferCallback (this, m_queue, m_buffers[i]);
@@ -352,6 +355,13 @@ namespace GHL {
             m_pan = pan;
             if ( m_queue && !m_done ) {
                 AudioQueueSetParameter(m_queue, kAudioQueueParam_Pan, m_pan/100.0);
+            }
+        }
+        
+        virtual void GHL_CALL SetPitch( float pitch ) {
+            m_pitch = pitch;
+            if ( m_queue && !m_done ) {
+                AudioQueueSetParameter(m_queue, kAudioQueueParam_Pitch, m_pitch/100.0);
             }
         }
     };

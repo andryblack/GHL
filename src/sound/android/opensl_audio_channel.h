@@ -13,6 +13,8 @@ namespace GHL {
         SLObjectItf m_player_obj;
         SLPlayItf   m_play_i;
         SLVolumeItf m_volume_i;
+        SLPitchItf  m_pitch_i;
+        SLPlaybackRateItf m_playback_rate_i;
         OpenSLAudioChannelBase(SLObjectItf player_obj);
         virtual ~OpenSLAudioChannelBase();
         float   m_pan_value;
@@ -21,6 +23,7 @@ namespace GHL {
         void Stop();
         void SetVolume(float vol);
         void SetPan(float pan);
+        void SetPitch(float pitch);
     };
     
     class OpenSLAudioChannel : public OpenSLAudioChannelBase {

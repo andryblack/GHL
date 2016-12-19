@@ -72,6 +72,11 @@ namespace GHL {
                 m_channel->SetPan(pan);
             }
         }
+        virtual void GHL_CALL SetPitch( float pitch ) {
+            if (m_channel) {
+                m_channel->SetPitch(pitch);
+            }
+        }
         /// stop
         virtual void GHL_CALL Stop() {
             if (m_channel) {
@@ -148,6 +153,9 @@ namespace GHL {
         }
         virtual void GHL_CALL SetPan( float pan ) {
             m_stream->SetPan(pan);
+        }
+        virtual void GHL_CALL SetPitch( float pitch ) {
+            m_stream->SetPitch(pitch);
         }
     };
     

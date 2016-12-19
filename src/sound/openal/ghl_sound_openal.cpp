@@ -69,6 +69,7 @@ namespace GHL {
         void Stop();
         void SetVolume( float val );
         void SetPan( float pan );
+        void SetPitch(float pitch);
         void Clear();
         void SetEffect( SoundEffectOpenAL* effect );
         void SetInstance(SoundInstanceOpenAL* instance);
@@ -93,6 +94,11 @@ namespace GHL {
         virtual void GHL_CALL SetPan( float pan ) {
             if (m_channel) {
                 m_channel->SetPan(pan);
+            }
+        }
+        virtual void GHL_CALL SetPitch( float pitch ) {
+            if (m_channel) {
+                m_channel->SetPitch(pitch);
             }
         }
         /// stop
@@ -148,6 +154,11 @@ namespace GHL {
     void SoundChannelOpenAL::SetPan( float pan ) {
         alSource3f(m_source, AL_POSITION, pan/100.0f, 0.0f, 0.0f);
         CHECK_ERROR_F(alSource3f);
+    }
+    
+    void SoundChannelOpenAL::SetPitch(float pitch) {
+        alSourcef(m_source, AL_PITCH, pitch / 100.0f );
+        CHECK_ERROR_F(alSourcef);
     }
 	
 	
