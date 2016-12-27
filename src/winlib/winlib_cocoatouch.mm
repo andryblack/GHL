@@ -28,6 +28,7 @@
 #import <CoreMotion/CoreMotion.h>
 
 #import "WinLibCocoaTouchContext2.h"
+#import "winlib_cocoatouch.h"
 
 #include <pthread.h>
 
@@ -661,14 +662,6 @@ public:
 
 @end
 
-@interface WinLibAppDelegate : NSObject<UIApplicationDelegate> {
-	UIWindow* window;
-	WinLibView*	view;
-	WinLibViewController* controller;
-	GHL::VFSCocoaImpl*	m_vfs;
-	SystemCocoaTouch*	m_system;
-}
-@end
 
 @implementation WinLibAppDelegate
 
