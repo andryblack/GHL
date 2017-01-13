@@ -1,5 +1,8 @@
 #import <Foundation/Foundation.h>
 
+namespace GHL {
+    class VFSCocoaImpl;
+}
 
 @class WinLibView;
 @class WinLibViewController;

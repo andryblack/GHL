@@ -859,7 +859,12 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int argc, cha
     (void)MODULE;
     g_application = app;
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-	UIApplicationMain(argc, argv, nil, @"WinLibAppDelegate");
+    NSString* app_delegate_class = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"WinLibAppDelegateClass"];
+    if (!app_delegate_class) {
+        app_delegate_class =  @"WinLibAppDelegate";
+    }
+    
+	UIApplicationMain(argc, argv, nil, app_delegate_class);
 	[pool release];
 	return 0;
 }
