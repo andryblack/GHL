@@ -57,5 +57,7 @@ namespace GHL {
 
 /// Get opaque thread id
 GHL_API GHL::UInt32 GHL_CALL GHL_GetCurrentThreadId();
+GHL_API void GHL_CALL GHL_GlobalLock();
+GHL_API void GHL_CALL GHL_GlobalUnlock();
 
 #endif /*GHL_SYSTEM_H*/

@@ -497,6 +497,30 @@ GHL_API GHL::UInt32 GHL_CALL GHL_GetCurrentThreadId() {
     return (GHL::UInt32) GetCurrentThreadId();
 }
 
+struct critical_section_holder {
+	CRITICAL_SECTION section;
+	critical_section_holder() {
+		InitializeCriticalSection(&section);
+	}
+	~critical_section_holder() {
+		DeleteCriticalSection(&section);
+	}
+};
+
+CRITICAL_SECTION& ghl_system_mutex() 
+{ 
+    static critical_section_holder the_x; 
+    return the_x.section; 
+}
+
+GHL_API void GHL_CALL GHL_GlobalLock() {
+    EnterCriticalSection(&ghl_system_mutex());
+}
+
+GHL_API void GHL_CALL GHL_GlobalUnlock() {
+    LeaveCriticalSection(&ghl_system_mutex());
+}
+
 /// Get system time (secs returned)
 GHL_API GHL::UInt32 GHL_CALL GHL_SystemGetTime(GHL::TimeValue* ret) {
     DWORD now = timeGetTime();

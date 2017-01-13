@@ -855,6 +855,17 @@ GHL_API GHL::UInt32 GHL_CALL GHL_GetCurrentThreadId() {
     return (GHL::UInt32)(thread_id ^ (thread_id>>32));
 }
 
+static pthread_mutex_t ghl_system_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+GHL_API void GHL_CALL GHL_GlobalLock() {
+    pthread_mutex_lock(&ghl_system_mutex);
+}
+
+GHL_API void GHL_CALL GHL_GlobalUnlock() {
+    pthread_mutex_unlock(&ghl_system_mutex);
+}
+
+
 GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int argc, char** argv) {
     (void)MODULE;
     g_application = app;

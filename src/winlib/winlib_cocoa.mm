@@ -1001,6 +1001,17 @@ GHL_API GHL::UInt32 GHL_CALL GHL_GetCurrentThreadId() {
     pthread_threadid_np(pthread_self(),&thread_id);
     return (GHL::UInt32)(thread_id ^ (thread_id>>32));
 }
+
+static pthread_mutex_t ghl_system_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+GHL_API void GHL_CALL GHL_GlobalLock() {
+    pthread_mutex_lock(&ghl_system_mutex);
+}
+
+GHL_API void GHL_CALL GHL_GlobalUnlock() {
+    pthread_mutex_unlock(&ghl_system_mutex);
+}
+
 GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {
     (void)level;
    	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
