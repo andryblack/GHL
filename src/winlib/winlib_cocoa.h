@@ -24,6 +24,7 @@ class SystemCocoa;
 
 @interface WinLibAppDelegate : NSObject <NSApplicationDelegate,NSWindowDelegate> {
 	GHL::Application* m_application;
+    int             m_sheets_level;
 	SystemCocoa*	m_system;
 	GHL::VFSCocoaImpl*	m_vfs;
 	GHL::ImageDecoderImpl* m_imageDecoder;

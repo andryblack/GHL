@@ -40,7 +40,10 @@ namespace GHL
         EVENT_TYPE_VISIBLE_RECT_CHANGED,
         EVENT_TYPE_APP_STARTED,
         EVENT_TYPE_HANDLE_URL,
-        EVENT_TYPE_KEYBOARD_HIDE
+        EVENT_TYPE_KEYBOARD_HIDE,
+        EVENT_TYPE_TEXT_INPUT_TEXT_CHANGED,
+        EVENT_TYPE_TEXT_INPUT_ACCEPTED,
+        EVENT_TYPE_TEXT_INPUT_CLOSED
     };
 
     /// Key press
@@ -97,6 +100,16 @@ namespace GHL
     struct HandleUrlEvent {
         const char* url;
     };
+    
+    // text input changed
+    struct TextInputTextChangedEvent {
+        const char* text;
+    };
+    // text input accepted
+    struct TextInputAcceptedEvent : TextInputTextChangedEvent {
+        
+    };
+    
 
     /// Event uninon
     struct Event {
@@ -110,6 +123,8 @@ namespace GHL
             VisibleRectChanged  visible_rect_changed;
             AppStartedEvent     app_started;
             HandleUrlEvent      handle_url;
+            TextInputTextChangedEvent text_input_text_changed;
+            TextInputAcceptedEvent  text_input_accepted;
         } data;
     };
     

@@ -205,7 +205,7 @@ public:
 		/// @todo
 	}
         ///
-	virtual void GHL_CALL ShowKeyboard() {
+	virtual void GHL_CALL ShowKeyboard(const GHL::TextInputConfig* input) {
 	}
         ///
 	virtual void GHL_CALL HideKeyboard() {

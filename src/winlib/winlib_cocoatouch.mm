@@ -17,6 +17,7 @@
 #include "ghl_settings.h"
 #include "ghl_system.h"
 #include "ghl_event.h"
+
 #include "../ghl_log_impl.h"
 
 #include "../sound/ghl_sound_impl.h"
@@ -97,6 +98,217 @@ class SystemCocoaTouch;
 
 static const size_t max_touches = 10;
 
+@interface TextInputDelegate : NSObject<UITextFieldDelegate> {
+    UIScrollView* m_input_view;
+    CGSize m_kb_size;
+}
+
+@end
+
+@implementation TextInputDelegate
+
++(void)configureInput:(NSObject<UIKeyInput>*) input config:(const GHL::TextInputConfig*) config {
+    
+    input.keyboardType = UIKeyboardTypeDefault;
+    
+    input.spellCheckingType = UITextSpellCheckingTypeNo;
+    input.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    input.autocorrectionType = UITextAutocorrectionTypeNo;
+    if ([input respondsToSelector:@selector(setKeyboardAppearance:)]) {
+        input.keyboardAppearance = UIKeyboardAppearanceDark;
+    }
+    
+    switch (config->accept_button) {
+        case GHL::TIAB_SEND:
+            input.returnKeyType = UIReturnKeySend;
+            break;
+        default:
+            input.returnKeyType = UIReturnKeyDone;
+            break;
+    }
+
+}
+
+-(id)init {
+    if (self=[super init]) {
+        m_input_view = 0;
+        m_kb_size = CGSizeZero;
+    }
+    return self;
+}
+
+-(void)dealloc {
+    [super dealloc];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    GHL::Event e;
+    e.type = GHL::EVENT_TYPE_TEXT_INPUT_ACCEPTED;
+    e.data.text_input_accepted.text = textField.text.UTF8String;
+    g_application->OnEvent(&e);
+    return YES;
+}
+
+-(void)textFieldDidEndEditing:(UITextField *)textField {
+    GHL::Event e;
+    e.type = GHL::EVENT_TYPE_TEXT_INPUT_TEXT_CHANGED;
+    e.data.text_input_text_changed.text = textField.text.UTF8String;}
+
+-(void)cenacelEditing:(id)sendr {
+    [self close];
+}
+
+-(void)show:(const GHL::TextInputConfig*) input withController:(UIViewController*) controller {
+    [self close];
+    
+    
+    UITextField* field = 0;
+    if (!m_input_view) {
+        m_input_view = [[UIScrollView alloc] initWithFrame:controller.view.bounds];
+        m_input_view.scrollEnabled = NO;
+        m_input_view.contentSize = m_input_view.frame.size;
+        CGRect rect = CGRectMake(0, 0, m_input_view.frame.size.width, 32);
+        UITextField* field = [[UITextField alloc] initWithFrame:rect];
+        field.backgroundColor = [UIColor darkGrayColor];
+        field.textColor = [UIColor whiteColor];
+        field.delegate = self;
+        field.borderStyle = UITextBorderStyleRoundedRect;
+        field.tag = 123;
+        
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cenacelEditing:)];
+        [m_input_view addGestureRecognizer:tap];
+        
+        [m_input_view addSubview:field];
+    } else {
+        [controller.view addSubview:m_input_view];
+        field = (UITextField*)[m_input_view viewWithTag:123];
+    }
+    
+    [TextInputDelegate configureInput:field config:input];
+    
+    field.text = @"";
+    const char* placeholder = input->placeholder;
+    if (placeholder && *placeholder) {
+        field.placeholder = [NSString stringWithUTF8String:placeholder];
+    } else {
+        field.placeholder = @"";
+    }
+    
+    [self layout:m_kb_size];
+    
+    [field becomeFirstResponder];
+}
+
+-(void)layout:(CGSize)kbSize {
+    m_kb_size = kbSize;
+    if (m_input_view) {
+        UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, m_kb_size.height, 0.0);
+        m_input_view.contentInset = contentInsets;
+    }
+    if (m_input_view && (m_input_view.superview!=0)) {
+        m_input_view.frame = m_input_view.superview.bounds;
+        m_input_view.contentSize = m_input_view.window.screen.bounds.size;
+        
+        UITextField* field = (UITextField*)[m_input_view viewWithTag:123];
+        field.frame = CGRectMake(0, m_input_view.contentSize.height-32, m_input_view.contentSize.width, 32);
+        [m_input_view scrollRectToVisible:field.frame animated:YES];
+    }
+}
+
+-(void)close {
+    if (m_input_view && (m_input_view.superview!=nil)) {
+        [m_input_view removeFromSuperview];
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_TEXT_INPUT_CLOSED;
+        g_application->OnEvent(&e);
+    }
+    if (m_input_view) {
+        [m_input_view removeFromSuperview];
+    }
+}
+
+@end
+
+@interface HiddenInput : UIView <UIKeyInput>
+
+@property(nonatomic) UITextAutocapitalizationType autocapitalizationType; // default is UITextAutocapitalizationTypeSentences
+@property(nonatomic) UITextAutocorrectionType autocorrectionType;         // default is UITextAutocorrectionTypeDefault
+@property(nonatomic) UITextSpellCheckingType spellCheckingType;  // default is UITextSpellCheckingTypeDefault;
+@property(nonatomic) UIKeyboardType keyboardType;                         // default is UIKeyboardTypeDefault
+@property(nonatomic) UIKeyboardAppearance keyboardAppearance;             // default is UIKeyboardAppearanceDefault
+@property(nonatomic) UIReturnKeyType returnKeyType;                       // default is
+
+@end
+
+//- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+//    //use string here for the text input
+//    if (string!=nil && [string length]>0) {
+//        unichar wc = [string characterAtIndex:0];
+//        GHL::Event e;
+//        e.type = GHL::EVENT_TYPE_KEY_PRESS;
+//        e.data.key_press.key = GHL::KEY_NONE;
+//        e.data.key_press.modificators = 0;
+//        e.data.key_press.charcode = wc;
+//        g_application->OnEvent(&e);
+//    } else {
+//        GHL::Event e;
+//        e.type = GHL::EVENT_TYPE_KEY_PRESS;
+//        e.data.key_press.key = GHL::KEY_BACKSPACE;
+//        e.data.key_press.modificators = 0;
+//        e.data.key_press.charcode = 0;
+//        g_application->OnEvent(&e);
+//        e.type = GHL::EVENT_TYPE_KEY_RELEASE;
+//        g_application->OnEvent(&e);
+//    }
+//    /// always have one char
+//    textField.text = @"*";
+//    return NO;
+//}
+//
+//- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+//    GHL::Event e;
+//    e.type = GHL::EVENT_TYPE_KEY_PRESS;
+//    e.data.key_press.key = GHL::KEY_ENTER;
+//    e.data.key_press.modificators = 0;
+//    e.data.key_press.charcode = 0;
+//    g_application->OnEvent(&e);
+//    e.type = GHL::EVENT_TYPE_KEY_RELEASE;
+//    g_application->OnEvent(&e);
+//    return NO;
+//}
+
+
+@implementation HiddenInput
+- (void)insertText:(NSString *)text {
+    if (text!=nil && [text length]>0) {
+        unichar wc = [text characterAtIndex:0];
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_KEY_PRESS;
+        e.data.key_press.key = wc == '\n' ? GHL::KEY_ENTER : GHL::KEY_NONE;
+        e.data.key_press.modificators = 0;
+        e.data.key_press.charcode = wc;
+        g_application->OnEvent(&e);
+    }
+}
+- (void)deleteBackward {
+    GHL::Event e;
+    e.type = GHL::EVENT_TYPE_KEY_PRESS;
+    e.data.key_press.key = GHL::KEY_BACKSPACE;
+    e.data.key_press.modificators = 0;
+    e.data.key_press.charcode = 0;
+    g_application->OnEvent(&e);
+    e.type = GHL::EVENT_TYPE_KEY_RELEASE;
+    g_application->OnEvent(&e);
+}
+- (BOOL)hasText {
+    // Return whether there's any text present
+    return YES;
+}
+- (BOOL)canBecomeFirstResponder {
+    return YES;
+}
+@end
+
 @interface WinLibView : UIView<UITextFieldDelegate> {
     WinLibCocoaTouchContext*    m_context;
     
@@ -108,7 +320,7 @@ static const size_t max_touches = 10;
 	bool	m_loaded;
 	::timeval	m_timeval;
 	bool	m_active;
-	UITextField* m_hiddenInput;
+	HiddenInput* m_hiddenInput;
 	UITouch* m_touches[max_touches];
 }
 
@@ -116,7 +328,7 @@ static const size_t max_touches = 10;
 - (void)makeCurrent;
 - (void)setActive:(bool) a;
 - (bool)loaded;
-- (void)showKeyboard;
+- (void)showKeyboard:(const GHL::TextInputConfig*) config;
 - (void)hideKeyboard;
 - (void)setFrameInterval:(GHL::Int32)interval;
 
@@ -124,8 +336,12 @@ static const size_t max_touches = 10;
 
 @interface WinLibViewController : UIViewController
 {
-	
+    
+    TextInputDelegate* m_text_input;
 }
+
+- (void) show:(const GHL::TextInputConfig*) input withController:(UIViewController*) controller;
+- (void) closeTextInput;
 
 @end
 
@@ -156,7 +372,7 @@ public:
 	
 	virtual void GHL_CALL SwapBuffers();	
 	///
-	virtual void GHL_CALL ShowKeyboard();
+    virtual void GHL_CALL ShowKeyboard(const GHL::TextInputConfig* input);
 		
 	///
 	virtual void GHL_CALL HideKeyboard();
@@ -297,17 +513,7 @@ public:
 			m_touches[i] = 0;
 		}
 		
-		m_hiddenInput = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
-		m_hiddenInput.delegate = self;
-        m_hiddenInput.keyboardType = UIKeyboardTypeDefault;
-		m_hiddenInput.returnKeyType = UIReturnKeyDone;
-		m_hiddenInput.text = @"*";
-        m_hiddenInput.spellCheckingType = UITextSpellCheckingTypeNo;
-        m_hiddenInput.autocapitalizationType = UITextAutocapitalizationTypeNone;
-        m_hiddenInput.autocorrectionType = UITextAutocorrectionTypeNo;
-        if ([m_hiddenInput respondsToSelector:@selector(setKeyboardAppearance:)]) {
-            m_hiddenInput.keyboardAppearance = UIKeyboardAppearanceDark;
-        }
+        m_hiddenInput = [[HiddenInput alloc] init];
 		[self addSubview:m_hiddenInput];
 		
         [self setAutoresizesSubviews:YES];
@@ -501,8 +707,22 @@ public:
     }
 }
 
--(void)showKeyboard {
-	[m_hiddenInput becomeFirstResponder];
+-(void)showKeyboard:(const GHL::TextInputConfig*) config {
+    if (config) {
+        [TextInputDelegate configureInput:m_hiddenInput config:config];
+    } else {
+        
+        m_hiddenInput.keyboardType = UIKeyboardTypeDefault;
+        m_hiddenInput.returnKeyType = UIReturnKeyDone;
+        m_hiddenInput.spellCheckingType = UITextSpellCheckingTypeNo;
+        m_hiddenInput.autocapitalizationType = UITextAutocapitalizationTypeNone;
+        m_hiddenInput.autocorrectionType = UITextAutocorrectionTypeNo;
+        if ([m_hiddenInput respondsToSelector:@selector(setKeyboardAppearance:)]) {
+            m_hiddenInput.keyboardAppearance = UIKeyboardAppearanceDark;
+        }
+        
+    }
+    [m_hiddenInput becomeFirstResponder];
 }
 
 -(void)hideKeyboard {
@@ -513,42 +733,6 @@ public:
     [m_timer setFrameInterval:interval];
 }
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-	//use string here for the text input
-	if (string!=nil && [string length]>0) {
-		unichar wc = [string characterAtIndex:0];
-        GHL::Event e;
-        e.type = GHL::EVENT_TYPE_KEY_PRESS;
-        e.data.key_press.key = GHL::KEY_NONE;
-        e.data.key_press.modificators = 0;
-        e.data.key_press.charcode = wc;
-        g_application->OnEvent(&e);
-    } else {
-        GHL::Event e;
-        e.type = GHL::EVENT_TYPE_KEY_PRESS;
-        e.data.key_press.key = GHL::KEY_BACKSPACE;
-        e.data.key_press.modificators = 0;
-        e.data.key_press.charcode = 0;
-        g_application->OnEvent(&e);
-        e.type = GHL::EVENT_TYPE_KEY_RELEASE;
-        g_application->OnEvent(&e);
-   }
-	/// always have one char
-	textField.text = @"*";
-	return NO;
-}
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    GHL::Event e;
-    e.type = GHL::EVENT_TYPE_KEY_PRESS;
-    e.data.key_press.key = GHL::KEY_ENTER;
-    e.data.key_press.modificators = 0;
-    e.data.key_press.charcode = 0;
-    g_application->OnEvent(&e);
-    e.type = GHL::EVENT_TYPE_KEY_RELEASE;
-    g_application->OnEvent(&e);
-	return NO;
-}
 
 -(void)dealloc {
 	if (m_timer) {
@@ -572,6 +756,26 @@ public:
 @end
 
 @implementation WinLibViewController
+
+- (id)init {
+    if (self = [super init]) {
+        m_text_input = [[TextInputDelegate alloc] init];
+    }
+    return self;
+}
+
+- (void) dealloc {
+    [m_text_input release];
+    [super dealloc];
+}
+
+- (void) showTextInput:(const GHL::TextInputConfig*) input {
+    [m_text_input show:input withController:self];
+}
+
+- (void) closeTextInput {
+    [m_text_input close];
+}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation {
 	if (g_orientation==UIInterfaceOrientationLandscapeRight && !g_orientationLocked) {
@@ -632,6 +836,7 @@ public:
 }
 
 - (void)keyboardDidHide:(NSNotification *)note {
+    [m_text_input layout:CGSizeZero];
 	GHL::Event event;
     event.type = GHL::EVENT_TYPE_VISIBLE_RECT_CHANGED;
     event.data.visible_rect_changed.x = 0;
@@ -650,6 +855,8 @@ public:
         return;
     CGRect keyboardRect = [note.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
     CGRect localRect = [self.view convertRect:keyboardRect fromView:nil];
+    
+    [m_text_input layout:keyboardRect.size];
     
     GHL::Event event;
     event.type = GHL::EVENT_TYPE_VISIBLE_RECT_CHANGED;
@@ -792,11 +999,16 @@ void GHL_CALL SystemCocoaTouch::SwapBuffers() {
 	//[[m_view getContext] presentRenderbuffer:GL_RENDERBUFFER_OES];	
 }
 
-void GHL_CALL SystemCocoaTouch::ShowKeyboard() {
-	[(WinLibView*)m_controller.view showKeyboard];
+void GHL_CALL SystemCocoaTouch::ShowKeyboard(const GHL::TextInputConfig* input) {
+    if (input && input->system_input) {
+        [m_controller showTextInput:input];
+    } else {
+        [(WinLibView*)m_controller.view showKeyboard:input];
+    }
 }
 
 void GHL_CALL SystemCocoaTouch::HideKeyboard() {
+    [m_controller closeTextInput];
 	[(WinLibView*)m_controller.view hideKeyboard];
 }
 

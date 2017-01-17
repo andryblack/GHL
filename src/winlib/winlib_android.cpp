@@ -153,10 +153,38 @@ namespace GHL {
             m_activity->env->DeleteLocalRef(ActivityClass);
             return true;
         }
+
+        bool show_system_input(const TextInputConfig* config) {
+            
+            jclass ActivityClass = m_activity->env->GetObjectClass(m_activity->clazz);
+            jmethodID method = m_activity->env->GetMethodID(ActivityClass,"showTextInput","(ILjava/lang/String;)V");
+            if (m_activity->env->ExceptionCheck()) {
+                m_activity->env->ExceptionDescribe();
+                m_activity->env->ExceptionClear();
+                ILOG_INFO("[native] not found method");
+                return false;
+            }
+            jstring placeholder = 0;
+            jint accept_button = 0x00000006; ///  IME_ACTION_DONE
+            if (config->accept_button == GHL::TIAB_SEND) {
+                accept_button = 0x00000004; /// IME_ACTION_SEND
+            }
+            if (config->placeholder) {
+                placeholder = m_activity->env->NewStringUTF(config->placeholder);
+            }
+            m_activity->env->CallVoidMethod(m_activity->clazz,method,accept_button,placeholder);
+            m_activity->env->DeleteLocalRef(ActivityClass);
+            return true;
+        }
         /// Show soft keyboard
-        virtual void GHL_CALL ShowKeyboard() {
-            if (!set_keyboard_visible(true))
-                ANativeActivity_showSoftInput(m_activity,ANATIVEACTIVITY_SHOW_SOFT_INPUT_FORCED);
+        virtual void GHL_CALL ShowKeyboard(const TextInputConfig* input) {
+            if (input && input->system_input) {
+                if (!show_system_input(input))
+                    ANativeActivity_showSoftInput(m_activity,ANATIVEACTIVITY_SHOW_SOFT_INPUT_FORCED);
+            } else {
+                if (!set_keyboard_visible(true))
+                    ANativeActivity_showSoftInput(m_activity,ANATIVEACTIVITY_SHOW_SOFT_INPUT_FORCED);
+            }
         }
         /// Hide soft keyboard
         virtual void GHL_CALL HideKeyboard() {
@@ -602,6 +630,32 @@ namespace GHL {
             return false;
         }
 
+        void onTextInputDismiss() {
+            if (m_app) {
+                GHL::Event e;
+                e.type = GHL::EVENT_TYPE_TEXT_INPUT_CLOSED;
+                m_app->OnEvent(&e);
+            }
+        }
+
+        void onTextInputAccepted(const std::string& text) {
+            if (m_app) {
+                GHL::Event e;
+                e.type = GHL::EVENT_TYPE_TEXT_INPUT_ACCEPTED;
+                e.data.text_input_accepted.text = text.c_str();
+                m_app->OnEvent(&e);
+            }
+        }
+
+        void onTextInputChanged(const std::string& text) {
+            if (m_app) {
+                GHL::Event e;
+                e.type = GHL::EVENT_TYPE_TEXT_INPUT_TEXT_CHANGED;
+                e.data.text_input_text_changed.text = text.c_str();
+                m_app->OnEvent(&e);
+            }
+        }
+
     protected:
         bool HandleEvent(const AInputEvent* event) {
             g_native_activity = m_activity;
@@ -911,6 +965,45 @@ extern "C" JNIEXPORT void JNICALL Java_com_GHL_Activity_nativeOnScreenRectChange
        }
        
     };
+  }
+
+extern "C" JNIEXPORT jboolean JNICALL Java_com_GHL_Activity_nativeOnTextInputDismiss
+  (JNIEnv *, jclass) {
+    if (GHL::g_native_activity) {
+        static_cast<GHL::GHLActivity*>(GHL::g_native_activity->instance)->onTextInputDismiss();
+        return true;
+    }
+    return false;
+  }
+
+extern "C" JNIEXPORT jboolean JNICALL Java_com_GHL_Activity_nativeOnTextInputAccepted
+  (JNIEnv *env, jclass, jstring text) {
+    if (GHL::g_native_activity) {
+        const char *path_chars = env->GetStringUTFChars( text, NULL );
+            
+        std::string temp_text( path_chars );
+
+        env->ReleaseStringUTFChars( text, path_chars );
+
+        static_cast<GHL::GHLActivity*>(GHL::g_native_activity->instance)->onTextInputAccepted(temp_text);
+        return true;
+    }
+    return false;
+  }
+
+extern "C" JNIEXPORT jboolean JNICALL Java_com_GHL_Activity_nativeOnTextInputChanged
+  (JNIEnv * env, jclass, jstring text) {
+    if (GHL::g_native_activity) {
+        const char *path_chars = env->GetStringUTFChars( text, NULL );
+            
+        std::string temp_text( path_chars );
+
+        env->ReleaseStringUTFChars( text, path_chars );
+
+        static_cast<GHL::GHLActivity*>(GHL::g_native_activity->instance)->onTextInputAccepted(temp_text);
+        return true;
+    }
+    return false;
   }
 
 

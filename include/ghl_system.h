@@ -32,7 +32,18 @@ namespace GHL {
         DEVICE_DATA_APPLICATION,        ///< ANativeActivity**
         DEVICE_DATA_LANGUAGE,           ///< char[32]
         DEVICE_DATA_UTC_OFFSET          ///< Int32*
-   };
+    };
+    
+    enum TextInputAcceptButton {
+        TIAB_DONE,
+        TIAB_SEND,
+    };
+    
+    struct TextInputConfig {
+        bool system_input;                      ///< show system input box
+        TextInputAcceptButton accept_button;    ///< accept button type
+        const char* placeholder;                ///< placeholder text
+    };
 
     /// system interface
     struct System {
@@ -43,7 +54,7 @@ namespace GHL {
         /// Switch fullscreen / windowed state
         virtual void GHL_CALL SwitchFullscreen(bool fs) = 0;
         /// Show soft keyboard
-        virtual void GHL_CALL ShowKeyboard() = 0;
+        virtual void GHL_CALL ShowKeyboard(const TextInputConfig* input) = 0;
         /// Hide soft keyboard
         virtual void GHL_CALL HideKeyboard() = 0;
         /// Set device specific state

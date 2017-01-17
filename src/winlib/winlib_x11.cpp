@@ -121,7 +121,7 @@ class SystemImpl : public GHL::System  {
         glXSwapBuffers(GLWin.dpy, GLWin.win);
     }
     ///
-    virtual void GHL_CALL ShowKeyboard() {
+    virtual void GHL_CALL ShowKeyboard(const GHL::TextInputConfig* input) {
     }
     ///
     virtual void GHL_CALL HideKeyboard() {

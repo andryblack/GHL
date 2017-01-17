@@ -40,13 +40,166 @@ static GHL::Int32 g_frame_interval = 1;
 static const char* MODULE = "WINLIB";
 static bool g_resizeable_window = false;
 
+
+@interface TextInputControl : NSTextField {
+    GHL::Application* m_application;
+}
+@end
+
+@implementation TextInputControl
+
+-(id)initWithApplication:(GHL::Application*) application andRect:(NSRect) aRect {
+    if (self = [super initWithFrame:aRect]) {
+        m_application = application;
+        
+        //self.backgroundColor = [NSColor whiteColor];
+        self.editable = YES;
+        self.enabled = YES;
+        //self.bordered = YES;
+        
+        
+    }
+    return self;
+}
+
+- (void)textDidChange:(NSNotification *)notification {
+    if (m_application) {
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_TEXT_INPUT_TEXT_CHANGED;
+        e.data.text_input_text_changed.text = self.stringValue.UTF8String;
+        m_application->OnEvent(&e);
+    }
+}
+
+-(void)accept {
+    if (m_application) {
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_TEXT_INPUT_ACCEPTED;
+        e.data.text_input_accepted.text = self.stringValue.UTF8String;
+        m_application->OnEvent(&e);
+    }
+}
+
+-(void)dealloc {
+    [super dealloc];
+}
+
+@end
+
+@interface TextInputPanel : NSPanel
+
+@end
+
+@implementation TextInputPanel
+
+-(void) closePanel:(id)sender {
+    [NSApp endSheet:self];
+    [self close];
+}
+
+- (BOOL)canBecomeKeyWindow
+{
+    return YES;
+}
+
+@end
+
+@interface TextInputDelegate : NSObject<NSWindowDelegate> {
+    TextInputPanel* m_panel;
+    GHL::Application* m_application;
+}
+@end
+
+@implementation TextInputDelegate
+
+-(id)initWithApplication:(GHL::Application* )app {
+    if (self = [super init]) {
+        m_panel = 0;
+        m_application = app;
+    }
+    return self;
+}
+
+-(void)dealloc {
+    [m_panel close];
+    [super dealloc];
+}
+
+-(void)close:(id) sender{
+    if (m_panel) {
+        if (sender) {
+            TextInputControl* control = (TextInputControl*)[m_panel.contentView viewWithTag:123];
+            if (control) {
+                [control accept];
+            }
+        }
+        [NSApp endSheet:m_panel];
+        NSPanel* panel = m_panel;
+        m_panel = nil;
+        [panel close];
+    }
+}
+- (void)windowWillClose:(NSNotification *)notification {
+    if (m_application) {
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_TEXT_INPUT_CLOSED;
+        m_application->OnEvent(&e);
+    }
+}
+-(void)show:(const GHL::TextInputConfig*)input {
+    if (m_panel) {
+        [NSApp endSheet:m_panel];
+        [m_panel close];
+    }
+    NSRect rect = NSMakeRect(0, 0, 320, 128);
+    TextInputPanel* panel  = [[TextInputPanel alloc]
+                              initWithContentRect:rect styleMask:NSWindowStyleMaskUtilityWindow backing:NSBackingStoreBuffered defer:NO];
+    NSView* panelView = [[NSView alloc] initWithFrame:rect];
+    TextInputControl* inputControl =[[TextInputControl alloc] initWithApplication:m_application andRect:NSMakeRect(8,32+16,rect.size.width-16,32)];
+    inputControl.tag = 123;
+    [panelView addSubview:inputControl];
+    if (input->placeholder && *input->placeholder) {
+        inputControl.placeholderString = [NSString stringWithUTF8String:input->placeholder];
+    }
+    //NSButton* btn = [NSButton buttonWithTitle:@"Done" target:m_editor_window action:@selector(closePanel)];
+    NSButton* btn = [[NSButton alloc] initWithFrame:NSMakeRect(rect.size.width-128-8, 8, 128, 32)];
+    [btn setButtonType:NSButtonTypeMomentaryLight];
+    [btn setBezelStyle:NSBezelStyleRounded];
+    [btn setTarget:self];
+    [btn setAction:@selector(close:)];
+    switch (input->accept_button) {
+        case GHL::TIAB_SEND:
+            [btn setTitle:@"Send"];
+            break;
+         default:
+            [btn setTitle:@"Done"];
+            break;
+    }
+    [btn setKeyEquivalent:@"\r"];
+    
+    [panelView addSubview:btn];
+    [panel setContentView:panelView];
+    [panel setReleasedWhenClosed:YES];
+    
+    panel.initialFirstResponder = inputControl;
+    
+    [NSApp beginSheet:panel modalForWindow:[NSApp mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:0];
+    panel.delegate = self;
+    m_panel = panel;
+}
+
+@end
+
 class SystemCocoa : public GHL::System {
 private:
     NSView* m_view;
+    TextInputDelegate* m_editor;
 public:
-    SystemCocoa() : m_view(0) {}
+    SystemCocoa(GHL::Application* app) : m_view(0){
+        m_editor = [[TextInputDelegate alloc] initWithApplication:app];
+    }
     virtual ~SystemCocoa() {
-
+        [m_editor release];
     }
     
     void setView(NSView* v) { m_view = v; }
@@ -61,14 +214,18 @@ public:
     ///
     virtual void GHL_CALL SwitchFullscreen(bool fs);
     ///
-    virtual void GHL_CALL SwapBuffers();
-    ///
-    virtual void GHL_CALL ShowKeyboard() {
-        /// do nothing
+    virtual void GHL_CALL ShowKeyboard(const GHL::TextInputConfig* input) {
+        if (input && input->system_input) {
+            [m_editor show:input];
+        }
     }
     ///
     virtual void GHL_CALL HideKeyboard() {
         /// do nothing
+        if (m_editor) {
+            [m_editor close:nil];
+        }
+        
     }
     ///
     virtual bool GHL_CALL SetDeviceState( GHL::DeviceState /*name*/, const void* /*data*/);
@@ -473,6 +630,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
         }
         m_render->Resize( size.width, size.height );
     }
+    [super reshape];
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
@@ -500,6 +658,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
         [[self openGLContext] flushBuffer];
         in_draw = false;
    }
+    [super drawRect:dirtyRect];
 }
 
 - (void)renewGState
@@ -513,11 +672,6 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 	/* Only available in 10.4 and later, so check that it exists */
 	if(window && [window respondsToSelector:@selector(disableScreenUpdatesUntilFlush)])
 		[window disableScreenUpdatesUntilFlush];
-}
-
-
-- (void)swapBuffers {
-    //[[self openGLContext] flushBuffer];
 }
 
 - (void)timerFireMethod:(NSTimer*)theTimer {
@@ -555,12 +709,14 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 @implementation WinLibAppDelegate
 
 
-- (id)init {
+- (id)initWithApplication:(GHL::Application*) app {
     self = [super init];
     if (self) {
         // Initialization code here.
-		m_system = new SystemCocoa();
+        m_application = app;
+		m_system = new SystemCocoa(app);
         m_gl_view = nil;
+        m_sheets_level = 0;
 		m_appName = (NSString*)[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
 		m_vfs = new GHL::VFSCocoaImpl();
 		m_imageDecoder = new GHL::ImageDecoderImpl();
@@ -578,10 +734,6 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 		m_sound = 0;
 	}
 #endif
-}
-
--(void) setApplication:(GHL::Application*) app {
-	m_application = app;
 }
 
 -(GHL::Application*) getApplication {
@@ -603,9 +755,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 -(NSString*) getAppName {
 	return m_appName;
 }
--(void)swapBuffers {
-    [m_gl_view swapBuffers];
-}
+
 -(void) setCursorVisible:(BOOL) visible
 {
     [m_gl_view setCursorVisible:visible];
@@ -821,11 +971,19 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 }
 
 /// ---- NSWindowDelegate
+
+- (void)windowWillBeginSheet:(NSNotification *)notification {
+    ++m_sheets_level;
+}
+- (void)windowDidEndSheet:(NSNotification *)notification {
+    --m_sheets_level;
+}
+
 - (void)windowDidBecomeKey:(NSNotification *)notification {
     (void)notification;
     
     LOG_VERBOSE("Activated");
-    if (m_application) {
+    if (m_application && (m_sheets_level==0) ) {
         GHL::Event e;
         e.type = GHL::EVENT_TYPE_ACTIVATE;
         m_application->OnEvent(&e);
@@ -839,7 +997,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
         [m_window setLevel:NSNormalWindowLevel];
     }
 	LOG_VERBOSE("Deactivated");
-    if (m_application) {
+    if (m_application && (m_sheets_level==0) ) {
         GHL::Event e;
         e.type = GHL::EVENT_TYPE_DEACTIVATE;
         m_application->OnEvent(&e);
@@ -894,12 +1052,6 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 void GHL_CALL SystemCocoa::SwitchFullscreen(bool fs) {
     g_need_fullscreen = fs;
 }
-void GHL_CALL SystemCocoa::SwapBuffers() {
-    WinLibAppDelegate* delegate = (WinLibAppDelegate*)[NSApplication sharedApplication].delegate;
-    if (delegate) {
-        [delegate swapBuffers];
-    }
-}
 
 ///
 void GHL_CALL SystemCocoa::SetTitle( const char* title ) {
@@ -940,10 +1092,9 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
     
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	[NSApplication sharedApplication];
-	WinLibAppDelegate* delegate = [[WinLibAppDelegate alloc] init];
+	WinLibAppDelegate* delegate = [[WinLibAppDelegate alloc] initWithApplication:app];
     app->SetVFS([delegate getVFS]);
-    [delegate setApplication:app];
-	app->SetSystem([delegate getSystem]);
+    app->SetSystem([delegate getSystem]);
 	app->SetImageDecoder([delegate getImageDecoder]);
 	
 	/// create menu
