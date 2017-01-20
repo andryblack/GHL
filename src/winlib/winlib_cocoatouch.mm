@@ -38,7 +38,6 @@ static const char* MODULE = "WINLIB";
 static GHL::Application* g_application = 0;
 static UIInterfaceOrientation g_orientation = UIInterfaceOrientationLandscapeLeft;
 static bool g_orientationLocked = false;
-static bool g_retina_enabled = true;
 static bool g_need_depth = false;
 static GHL::Int32 g_frame_interval = 1;
 
@@ -440,6 +439,13 @@ public:
     if (m_timer) {
         [m_timer setPaused:!m_active];
     }
+    if (m_active) {
+        [self updateScale];
+    }
+}
+
+-(void)updateScale {
+    self.contentScaleFactor = [[UIScreen mainScreen] scale];
 }
 
 -(id) initWithFrame:(CGRect) rect {
@@ -486,13 +492,7 @@ public:
             m_context = [[WinLibCocoaTouchContext alloc] initWithContext:context];
         }
         
-        
-        if (!g_retina_enabled) {
-            self.contentScaleFactor = 1.0;
-        } else {
-            self.contentScaleFactor = [[UIScreen mainScreen] scale];
-        }
-		
+        [self updateScale];
 		
         [m_context createBuffers:g_need_depth];
 
@@ -517,12 +517,7 @@ public:
 		[self addSubview:m_hiddenInput];
 		
         [self setAutoresizesSubviews:YES];
-        
-        if (!g_retina_enabled) {
-            self.contentScaleFactor = 1.0;
-        } else {
-            self.contentScaleFactor = [[UIScreen mainScreen] scale];
-        }
+        [self updateScale];
 		
 		[self prepareOpenGL:gles2];
 	}
@@ -535,12 +530,8 @@ public:
 
 - (void)layoutSubviews
 {
-    LOG_VERBOSE( "layoutSubviews" ); 
-    if (!g_retina_enabled) {
-        self.contentScaleFactor = 1.0;
-    } else {
-        self.contentScaleFactor = [[UIScreen mainScreen] scale];
-    }
+    LOG_VERBOSE( "layoutSubviews" );
+    [self updateScale];
 
 	[m_context onLayout:(CAEAGLLayer*)self.layer];
     GHL::g_default_framebuffer = [m_context defaultFramebuffer];
@@ -554,13 +545,9 @@ public:
 	[self makeCurrent];
 	int w = [self bounds].size.width;
 	int h = [self bounds].size.height;
-    if (!g_retina_enabled) {
-        self.contentScaleFactor = 1.0;
-    } else {
-        self.contentScaleFactor = [[UIScreen mainScreen] scale];
-        w *= self.contentScaleFactor;
-        h *= self.contentScaleFactor;
-    }
+    [self updateScale];
+    w *= self.contentScaleFactor;
+    h *= self.contentScaleFactor;
 	
     if (gles2) {
         m_render = new GHL::RenderOpenGLES2(GHL::UInt32(w),
@@ -898,14 +885,6 @@ public:
     LOG_INFO("application require " << settings.width << "x" << settings.height);
     settings.fullscreen = true;
     
-    if ( rect.size.width==320 && rect.size.height==480 ) {
-        if (( settings.width >= 480*2 && settings.height >= 320*2 ) ||
-            ( settings.height >= 480*2 && settings.width >= 320*2 ) ) {
-            LOG_VERBOSE("Enable retina");
-            g_retina_enabled = true;
-        }
-    }
-    
     g_need_depth = settings.depth;
     
     if (settings.width > settings.height) {
@@ -1030,11 +1009,7 @@ bool GHL_CALL SystemCocoaTouch::SetDeviceState( GHL::DeviceState name, const voi
 		const bool* state = (const bool*)data;
 		m_controller.view.multipleTouchEnabled = *state ? YES : NO;
 		return true;
-	} else if (name==GHL::DEVICE_STATE_RETINA_ENABLED) {
-		const bool* state = (const bool*)data;
-		g_retina_enabled = *state;
-		return true;
-    } else if (name==GHL::DEVICE_STATE_FRAME_INTERVAL) {
+	} else if (name==GHL::DEVICE_STATE_FRAME_INTERVAL) {
         const GHL::Int32* state = (const GHL::Int32*)data;
         g_frame_interval = *state;
         if (m_controller.isViewLoaded) {
