@@ -236,6 +236,21 @@ namespace GHL {
         virtual void GHL_CALL SetTitle( const char* title ) {
             
         }
+        virtual bool GHL_CALL OpenURL( const char* url ) {
+            jclass ActivityClass = m_activity->env->GetObjectClass(m_activity->clazz);
+            jmethodID method = m_activity->env->GetMethodID(ActivityClass,"openURL","(Ljava/lang/String;)Z");
+            if (m_activity->env->ExceptionCheck()) {
+                m_activity->env->ExceptionDescribe();
+                m_activity->env->ExceptionClear();
+                ILOG_INFO("[native] not found openURL method");
+                return false;
+            }
+            jstring urlobj = m_activity->env->NewStringUTF(url);
+            jboolean res = m_activity->env->CallBooleanMethod(m_activity->clazz,method,urlobj);
+            m_activity->env->DeleteLocalRef(ActivityClass);
+            m_activity->env->DeleteLocalRef(urlobj);
+            return res;
+        }
         static const unsigned int AWINDOW_FLAG_KEEP_SCREEN_ON = 0x00000080;
         void OnCreate() {
             LOG_INFO("OnCreate");

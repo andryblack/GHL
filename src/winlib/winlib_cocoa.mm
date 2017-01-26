@@ -255,6 +255,7 @@ public:
     }
     ///
     virtual void GHL_CALL SetTitle( const char* title );
+    virtual bool GHL_CALL OpenURL( const char* url );
 };
 
 
@@ -1060,6 +1061,10 @@ void GHL_CALL SystemCocoa::SetTitle( const char* title ) {
     if (delegate) {
         [delegate updateWindowTitle];
     }
+}
+
+bool GHL_CALL SystemCocoa::OpenURL( const char* url ) {
+    return [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithUTF8String:url]]];
 }
 
 bool GHL_CALL SystemCocoa::SetDeviceState(GHL::DeviceState name, const void *data) {

@@ -62,6 +62,8 @@ namespace GHL {
 		virtual bool GHL_CALL GetDeviceData( DeviceData name, void* data) = 0;
         /// Set window title
         virtual void GHL_CALL SetTitle( const char* title ) = 0;
+        /// Open external url
+        virtual bool GHL_CALL OpenURL( const char* url ) = 0;
     };
 }
 

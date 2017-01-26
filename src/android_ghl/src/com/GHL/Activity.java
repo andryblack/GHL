@@ -331,6 +331,11 @@ public class Activity  extends android.app.NativeActivity  {
         }
     }
 
+    public boolean openURL(String url) {
+        startActivity(new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url)));
+        return true;
+    }
+
 
 
     @Override

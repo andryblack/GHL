@@ -227,6 +227,10 @@ public:
 	virtual void GHL_CALL SetTitle( const char* title ) {
 		/// @todo
 	}
+	virtual bool GHL_CALL OpenURL( const char* url ) {
+        /// @todo
+        return false;
+    }
 };
 static const TCHAR* WINDOW_CLASS_NAME = TEXT("GHL_WINLIB_WINDOW");
 GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char** argv)

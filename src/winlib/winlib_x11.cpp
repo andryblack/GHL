@@ -138,6 +138,13 @@ class SystemImpl : public GHL::System  {
     virtual void GHL_CALL SwitchFullscreen(bool fs) {
         GLWin.needFS = fs;
     }
+    virtual void GHL_CALL SetTitle( const char* title ) {
+        /// @todo
+    }
+    virtual bool GHL_CALL OpenURL( const char* url ) {
+        /// @todo
+        return false;
+    }
 };
 
 

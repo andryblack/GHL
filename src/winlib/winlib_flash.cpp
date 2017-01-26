@@ -103,6 +103,10 @@ public:
 	virtual void GHL_CALL SetTitle( const char* title ) {
 		/// @todo
 	}
+    virtual bool GHL_CALL OpenURL( const char* url ) {
+        /// @todo
+        return false;
+    }
     void addStartupParam(const char* val);
 public:
     GHL::Application* application;

@@ -66,6 +66,10 @@ public:
     virtual void GHL_CALL SetTitle( const char* title ) {
         /// do nothing
     }
+    virtual bool GHL_CALL OpenURL( const char* url ) {
+        /// @todo
+        return false;
+    }
 };
 
 static void loop_iteration(SDL_Window* window) {

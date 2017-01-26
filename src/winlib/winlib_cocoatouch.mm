@@ -413,6 +413,9 @@ public:
     virtual void GHL_CALL SetTitle( const char* title ) {
         /// do nothing
     }
+    virtual bool GHL_CALL OpenURL( const char* url ) {
+        return [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithUTF8String:url]]];
+    }
 };
 
 
