@@ -515,14 +515,14 @@ namespace GHL {
 		CHECK_GL(gl.sdrapi.AttachShader(handle, vs->handle()));
 		CHECK_GL(gl.sdrapi.AttachShader(handle, fs->handle()));
 		CHECK_GL(gl.sdrapi.LinkProgram(handle));
-        GL::GLint res;
+        GL::GLint res = GL::_TRUE;
 		gl.sdrapi.GetProgramiv(handle,gl.sdrapi.LINK_STATUS,&res);
         if (res!=GL::_TRUE) {
             GL::GLchar log[512];
-            GL::GLsizei size;
-            gl.sdrapi.GetProgramInfoLog(handle,512,&size,log);
+            GL::GLsizei size = 0;
+            gl.sdrapi.GetProgramInfoLog(handle,511,&size,log);
             log[size]=0;
-            LOG_ERROR( "Shader link result : " << log );
+            LOG_ERROR( "Shader link result : " << size << " " << log );
             
             CHECK_GL(gl.sdrapi.DeleteProgram(handle));
 			return 0;

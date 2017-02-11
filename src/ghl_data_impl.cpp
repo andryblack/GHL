@@ -25,6 +25,7 @@
 #include <ghl_data_stream.h>
 #include "ghl_log_impl.h"
 #include "zlib/zlib.h"
+#include <cstdlib>
 #undef Byte
 
 static const char* MODULE = "Data";

@@ -32,7 +32,7 @@ GHL_API void GHL_CALL GHL_DestroyVFS(GHL::VFS* vfs) {
 #ifdef GHL_PLATFORM_LINUX
 #include "vfs_posix.h"
 GHL_API GHL::VFS* GHL_CALL GHL_CreateVFS() {
-    return new GHL::VFSPosixImpl();
+    return new GHL::VFSPosixImpl("/","/");
 }
 GHL_API void GHL_CALL GHL_DestroyVFS(GHL::VFS* vfs) {
     delete reinterpret_cast<GHL::VFSPosixImpl*>(vfs);

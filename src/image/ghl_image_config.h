@@ -38,10 +38,6 @@
 #define USE_IPHONE_IMAGE_DECODER
 #define USE_PNG_DECODER
 //#define USE_JPEG_DECODER
-#elif defined( GHL_PLATFORM_MAC ) && defined(GHL_BUILD_TOOLS)
-//#define USE_IPHONE_IMAGE_DECODER
-#define USE_PNG_DECODER
-#define USE_JPEG_DECODER
 #elif defined( GHL_PLATFORM_ANDROID )
 #define USE_PNG_DECODER
 #define USE_JPEG_DECODER
@@ -52,6 +48,9 @@
 #define USE_PNG_DECODER
 #define USE_JPEG_DECODER
 #elif defined( GHL_PLATFORM_EMSCRIPTEN )
+#define USE_PNG_DECODER
+#define USE_JPEG_DECODER
+#elif defined( GHL_BUILD_TOOLS )
 #define USE_PNG_DECODER
 #define USE_JPEG_DECODER
 #else

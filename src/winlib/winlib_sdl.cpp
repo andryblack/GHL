@@ -199,17 +199,23 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
 
     g_height = settings.height;
 
+    g_done = false;
+
     g_render = GHL_CreateRenderOpenGL(settings.width,settings.height,settings.depth);
     if ( g_render && g_application ) {
         g_application->SetRender(g_render);
-        g_application->Load();
+        if (!g_application->Load()) {
+            LOG_ERROR(  "not loaded" );
+            g_done = true;
+        }
     } else {
          LOG_ERROR(  "not started" );
+         g_done = true;
     }
 
     g_last_time = SDL_GetTicks();
 
-    g_done = false;
+    
 
 #ifdef GHL_PLATFORM_EMSCRIPTEN
     emscripten_set_main_loop_arg((em_arg_callback_func)loop_iteration, g_window, 0, 1);

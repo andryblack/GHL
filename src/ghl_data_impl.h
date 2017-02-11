@@ -26,6 +26,7 @@
 #include "ghl_data.h"
 #include "ghl_ref_counter_impl.h"
 #include <vector>
+#include <cstring>
 
 namespace GHL {
 	

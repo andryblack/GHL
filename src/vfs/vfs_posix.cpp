@@ -80,7 +80,7 @@ namespace GHL {
         /// write data
         virtual UInt32 GHL_CALL Write(const Byte* src,UInt32 bytes) {
             if (!m_file) return 0;
-            return fwrite(src,bytes,1,m_file);
+            return fwrite(src,1,bytes,m_file);
         }
     };
 
