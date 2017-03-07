@@ -447,8 +447,21 @@ public:
     }
 }
 
+-(void)didMoveToWindow
+{
+    [self updateScale];
+}
+
 -(void)updateScale {
-    self.contentScaleFactor = [[UIScreen mainScreen] scale];
+    UIScreen* screen = self.window.screen;
+    if (!screen) {
+        screen = [UIScreen mainScreen];
+    }
+    if ([UIScreen instancesRespondToSelector:@selector(nativeScale)]) {
+        self.contentScaleFactor = screen.nativeScale;
+    } else {
+        self.contentScaleFactor = screen.scale;
+    }
 }
 
 -(id) initWithFrame:(CGRect) rect {
