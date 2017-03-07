@@ -452,16 +452,19 @@ public:
     [self updateScale];
 }
 
--(void)updateScale {
+-(float)updateScale {
     UIScreen* screen = self.window.screen;
+    float scale = 1.0f;
     if (!screen) {
         screen = [UIScreen mainScreen];
     }
     if ([UIScreen instancesRespondToSelector:@selector(nativeScale)]) {
-        self.contentScaleFactor = screen.nativeScale;
+        scale = screen.nativeScale;
     } else {
-        self.contentScaleFactor = screen.scale;
+        scale = screen.scale;
     }
+    self.contentScaleFactor = scale;
+    return scale;
 }
 
 -(id) initWithFrame:(CGRect) rect {
@@ -889,6 +892,9 @@ public:
     
     CGRect rect = [[UIScreen mainScreen] bounds];
     float scale = [[UIScreen mainScreen] scale];
+    if ([UIScreen instancesRespondToSelector:@selector(nativeScale)]) {
+        scale = [[UIScreen mainScreen] nativeScale];
+    }
     
     GHL::Settings settings;
     settings.width = rect.size.width * scale;
