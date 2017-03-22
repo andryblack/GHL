@@ -129,7 +129,18 @@ namespace GHL {
         /// GHL::System impl
         /// Exit from application
         virtual void GHL_CALL Exit() {
-            
+            if (m_activity && m_activity->env) {
+                jclass ActivityClass = m_activity->env->GetObjectClass(m_activity->clazz);
+                jmethodID method = m_activity->env->GetMethodID(ActivityClass, "finish" ,"()V");
+                if (m_activity->env->ExceptionCheck()) {
+                    m_activity->env->ExceptionDescribe();
+                    m_activity->env->ExceptionClear();
+                    ILOG_INFO("[native] not found method finish");
+                    return;
+                }
+                m_activity->env->CallVoidMethod(m_activity->clazz,method);
+                m_activity->env->DeleteLocalRef(ActivityClass);
+            }
         }
         /// Current fullscreen / windowed state
         virtual bool GHL_CALL IsFullscreen() const {
