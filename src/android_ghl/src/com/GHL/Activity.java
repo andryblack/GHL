@@ -168,7 +168,7 @@ public class Activity  extends android.app.NativeActivity  {
     private InvisibleEdit m_text_edit;
 
 	private static boolean libloaded = false;
-    private void ensureLoadLibrary() {
+    public void ensureLoadLibrary() {
         if (libloaded) {
             return;
         }
