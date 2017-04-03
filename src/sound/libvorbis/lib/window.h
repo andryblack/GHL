@@ -11,7 +11,7 @@
  ********************************************************************
 
  function: window functions
- last mod: $Id: window.h 13293 2007-07-24 00:09:47Z xiphmont $
+ last mod: $Id: window.h 19028 2013-12-02 23:23:39Z tterribe $
 
  ********************************************************************/
 
@@ -22,5 +22,5 @@ extern const float *_vorbis_window_get(int n);
 extern void _vorbis_apply_window(float *d,int *winno,long *blocksizes,
                           int lW,int W,int nW);
 
-extern const float *vorbis_window(vorbis_dsp_state *v,int W);
+
 #endif

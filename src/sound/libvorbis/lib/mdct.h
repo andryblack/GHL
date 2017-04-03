@@ -18,7 +18,8 @@
 #ifndef _OGG_mdct_H_
 #define _OGG_mdct_H_
 
-#include "../include/vorbis/codec.h"
+#include "vorbis/codec.h"
+
 
 
 
