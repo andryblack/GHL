@@ -162,7 +162,7 @@ namespace GHL {
     
     WriteStream* GHL_CALL VFSPosixImpl::OpenFileWrite(const char* _file){
         (void)MODULE;
-        LOG_VERBOSE("try open write file '" << _file << "'");
+        //LOG_VERBOSE("try open write file '" << _file << "'");
         if (!_file) return 0;
         if (_file[0]==0) return 0;
         create_dir(_file);

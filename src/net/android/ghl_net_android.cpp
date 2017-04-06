@@ -105,16 +105,12 @@ struct jni_global_object
 
 static std::string jni_object_to_string(jobject obj,JNIEnv* env)
 {
-    jclass clazz = env->GetObjectClass(obj);
-    if (!clazz) return "not found class";
-    jmethodID getMessageID__ = env->GetMethodID(clazz, "toString", "()Ljava/lang/String;");
+    jni_object clazz(env->GetObjectClass(obj),env);
+    jmethodID getMessageID__ = env->GetMethodID((jclass)clazz.jobj, "toString", "()Ljava/lang/String;");
     if(getMessageID__)
     {
-        jstring jmsg__ = (jstring) env->CallObjectMethod(obj, getMessageID__);
-        if (jmsg__) {
-           return jni_string::extract(jmsg__,env);
-        }
-        return "empty toString result";
+        jni_string jmsg(env->CallObjectMethod(obj, getMessageID__),env);
+        return jmsg.str();
     }
     return "not found toString";
 }
@@ -127,12 +123,13 @@ static bool check_exception( JNIEnv* env ) {
         } else { \
            env->ExceptionClear();
            LOG_ERROR("details: " << jni_object_to_string(t__,env)); 
+           env->DeleteLocalRef(t__);
         } 
         return true;
     }
     return false;
 } 
-static const size_t BUFFER_SIZE = 1024*8;
+static const size_t BUFFER_SIZE = 1024*128;
 
 class NetworkTask {
 public:
@@ -160,7 +157,6 @@ private:
     enum state_t {
         S_INIT,
         S_CONNECT,
-        S_RESPONSE,
         S_WRITE,
         S_READ,
         S_COMPLETE,
@@ -169,6 +165,8 @@ private:
     std::string m_error;
     GHL::Data*  m_send_data;
     int m_response_code;
+    GHL::UInt32 m_headers_count;
+    bool    m_response_received;
 public:
     explicit NetworkTask(JNIEnv* env,GHL::NetworkRequest* handler,
          GHL::Data* send_data) : m_connection(0,env),
@@ -176,7 +174,8 @@ public:
         //PROFILE(NetworkTask_ctr);
         m_handler->AddRef();
         m_state = S_INIT;
-        
+        m_headers_count = m_handler->GetHeadersCount();
+        m_response_received = false;
         m_buffer_size = 0;
         jobject buf_loc = env->NewByteArray(BUFFER_SIZE);
         m_buffer.jobj = env->NewGlobalRef(buf_loc);
@@ -192,6 +191,34 @@ public:
             m_send_data->Release();
         }
     }
+    bool DoRead(JNIEnv* env) {
+        //PROFILE(ProcessBackground_S_READ);
+        jni_object read_stream(env->CallObjectMethod(m_connection.jobj,m_HttpURLConnection_getInputStream),env);
+        if (check_exception(env)) {
+            m_state = S_ERROR;
+            m_error = "getInputStream failed";
+            return true;
+        } 
+        int readed = env->CallIntMethod(read_stream.jobj,m_InputStream_read,m_buffer.jobj,m_buffer_size,BUFFER_SIZE-m_buffer_size);
+        //ILOG_INFO("readed " << readed);
+        if (check_exception(env)) {
+            m_state = S_ERROR;
+            m_error = "read failed";
+            return true;
+        } 
+        if (readed == -1) {
+            //ILOG_INFO("S_READ->S_COMPLETE");
+            m_state = S_COMPLETE;
+            return true;
+        } else {
+            m_buffer_size += readed;
+            if (m_buffer_size>=BUFFER_SIZE) {
+                //ILOG_INFO("buffer full");
+                return true;
+            }
+        }
+        return false;
+    }
     bool ProcessBackground( JNIEnv* env ) {
         switch (m_state) {
             case S_INIT: {
@@ -205,6 +232,10 @@ public:
                     return true;
                 }
                 m_connection.jobj = env->NewGlobalRef(connection.jobj);
+                if (m_headers_count == 0) {
+                    UpdateInitState();
+                    return false;
+                }
                 return true;
             } break;
             case S_WRITE: {
@@ -261,36 +292,19 @@ public:
                     m_error = "get response code failed";
                     return true;
                 }
-                m_state = S_RESPONSE;
-                //ILOG_INFO("S_CONNECT->S_RESPONSE");
-                return true;
+                m_response_received = true;
+                m_state = S_READ;
+                if (DoRead(env)) {
+                    return true;
+                }
             } break;
             case S_READ: {
-                //PROFILE(ProcessBackground_S_READ);
-                jni_object read_stream(env->CallObjectMethod(m_connection.jobj,m_HttpURLConnection_getInputStream),env);
-                if (check_exception(env)) {
-                    m_state = S_ERROR;
-                    m_error = "getInputStream failed";
+                if (DoRead(env)) {
                     return true;
-                } 
-                int readed = env->CallIntMethod(read_stream.jobj,m_InputStream_read,m_buffer.jobj,m_buffer_size,BUFFER_SIZE-m_buffer_size);
-                //ILOG_INFO("readed " << readed);
-                if (check_exception(env)) {
-                    m_state = S_ERROR;
-                    m_error = "read failed";
-                    return true;
-                } 
-                if (readed == -1) {
-                    //ILOG_INFO("S_READ->S_COMPLETE");
-                    m_state = S_COMPLETE;
-                    return true;
-                } else {
-                    m_buffer_size += readed;
-                    if (m_buffer_size>=BUFFER_SIZE) {
-                        //ILOG_INFO("buffer full");
-                        return true;
-                    }
                 }
+            } break;
+            case S_ERROR: {
+                return true;
             } break;
         }     
         return false;
@@ -308,8 +322,27 @@ public:
         }
     }
 
+    void UpdateInitState() {
+        if (m_send_data) {
+            //ILOG_INFO("S_INIT->S_WRITE");
+            m_state = S_WRITE;
+        } else {
+            //ILOG_INFO("S_INIT->S_CONNECT");
+            m_state = S_CONNECT;
+        }
+    }
     bool ProcessMain(JNIEnv* env) {
         //PROFILE(ProcessMain)
+        if (m_response_received) {
+            m_handler->OnResponse(m_response_code);
+            for (int j = 1; ; j++) {
+                jni_string key( env->CallObjectMethod(m_connection.jobj,m_HttpURLConnection_getHeaderFieldKey,j) ,env );
+                jni_string value( env->CallObjectMethod(m_connection.jobj,m_HttpURLConnection_getHeaderField,j)  ,env);
+                if (!key.jstr || !value.jstr) break;
+                m_handler->OnHeader(key.str().c_str(),value.str().c_str());
+            }  // end for
+            m_response_received = false;
+        }
         switch (m_state) {
             case S_INIT: {
 
@@ -321,30 +354,10 @@ public:
                         name_str.jstr,value_str.jstr);
                 }
 
-                if (m_send_data) {
-                    //ILOG_INFO("S_INIT->S_WRITE");
-                    m_state = S_WRITE;
-                } else {
-                    //ILOG_INFO("S_INIT->S_CONNECT");
-                    m_state = S_CONNECT;
-                }
+                UpdateInitState();
 
                 return true;
 
-            } break;
-            case S_RESPONSE: {
-                //PROFILE(ProcessMain_S_RESPONSE);
-                
-                m_handler->OnResponse(m_response_code);
-                for (int j = 1; ; j++) {
-                    jni_string key( env->CallObjectMethod(m_connection.jobj,m_HttpURLConnection_getHeaderFieldKey,j) ,env );
-                    jni_string value( env->CallObjectMethod(m_connection.jobj,m_HttpURLConnection_getHeaderField,j)  ,env);
-                    if (!key.jstr || !value.jstr) break;
-                    m_handler->OnHeader(key.str().c_str(),value.str().c_str());
-                }  // end for
-                m_state = S_READ;
-                //ILOG_INFO("S_RESPONSE->S_READ");
-                return true;
             } break;
             case S_READ: {
                 //PROFILE(ProcessMainS_READ);
@@ -378,16 +391,19 @@ static jmethodID get_method(JNIEnv* env,jclass c,const char* name,const char* si
     return m;
 }
 
+#define THREADS_POOL_SIZE 4
+
 class NetworkAndroid : public GHL::Network {
 private:
     std::list<NetworkTask*> m_to_bg_tasks;
     std::list<NetworkTask*> m_to_fg_tasks;
-    std::list<NetworkTask*> m_bg_tasks;
-    std::list<NetworkTask*> m_fg_tasks;
+    size_t  m_num_requests;
+    
     pthread_mutex_t m_lock;
     pthread_mutex_t m_list_lock;
     
-    pthread_t       m_thread;
+    pthread_t       m_threads[THREADS_POOL_SIZE];
+    size_t          m_num_threads;
     bool m_stop;
 public:
     NetworkAndroid() {
@@ -444,7 +460,10 @@ public:
         pthread_mutex_init( &m_list_lock, NULL );
         m_stop = false;
         env->GetJavaVM(&jvm);
-        pthread_create( &m_thread, 0, thread_thunk, this );
+        memset(m_threads,0,sizeof(m_threads));
+        m_num_threads = 1;
+        m_num_requests = 0;
+        pthread_create( &m_threads[0], 0, thread_thunk, this );
     }
     ~NetworkAndroid() {
         LOG_INFO("~NetworkAndroid");
@@ -456,12 +475,9 @@ public:
             slock l(m_lock);
             m_stop = true;
         }
-        pthread_join( m_thread, 0 );
-        for (std::list<NetworkTask*>::iterator it = m_bg_tasks.begin();it!=m_bg_tasks.end();++it) {
-            delete *it;
-        }
-        for (std::list<NetworkTask*>::iterator it = m_fg_tasks.begin();it!=m_fg_tasks.end();++it) {
-            delete *it;
+        for (size_t i=0;i<m_num_threads;++i) {
+            if (m_threads[i])
+                pthread_join( m_threads[i], 0 );
         }
         for (std::list<NetworkTask*>::iterator it = m_to_bg_tasks.begin();it!=m_to_bg_tasks.end();++it) {
             delete *it;
@@ -472,6 +488,13 @@ public:
         pthread_mutex_destroy( &m_lock );
         pthread_mutex_destroy( &m_list_lock );
     }
+    void StartNewThread() {
+        if (m_num_threads < THREADS_POOL_SIZE) {
+            //ILOG_INFO("start new thread:" << m_num_threads+1);
+            pthread_create( &m_threads[m_num_threads], 0, thread_thunk, this );
+            ++m_num_threads;
+        }
+    }
     /// GET request
     virtual bool GHL_CALL Get(GHL::NetworkRequest* handler) {
         if (!handler)
@@ -480,6 +503,8 @@ public:
         JNIEnv* env = GHL::g_native_activity->env;
         {
             slock l(m_list_lock);
+            ++m_num_requests;
+            //ILOG_INFO("add request:" << m_num_requests);
             m_to_bg_tasks.push_back(new NetworkTask(env,handler,0));
         }
         return true;
@@ -494,6 +519,8 @@ public:
         {
             //PROFILE(Post_m_list_lock);
             slock l(m_list_lock);
+            ++m_num_requests;
+            //ILOG_INFO("add request:" << m_num_requests);
             m_to_bg_tasks.push_back(new NetworkTask(env,handler,data->Clone()));
         }
         return true;
@@ -501,18 +528,22 @@ public:
     virtual void GHL_CALL Process() {
         //PROFILE(Process);
         JNIEnv* env = GHL::g_native_activity->env;
+        std::list<NetworkTask*> fg_tasks;
         {
             slock l(m_list_lock);
-            for (std::list<NetworkTask*>::iterator it = m_to_fg_tasks.begin();it!=m_to_fg_tasks.end();++it) {
-                m_fg_tasks.push_back(*it);
-                //ILOG_INFO("to_fg->fg");
-            }
-            m_to_fg_tasks.clear();
+            fg_tasks.swap(m_to_fg_tasks);
+            if (m_to_bg_tasks.size() > m_num_threads) {
+                StartNewThread();
+            } 
         }
         
-        for (std::list<NetworkTask*>::iterator it = m_fg_tasks.begin();it!=m_fg_tasks.end();) {
+        for (std::list<NetworkTask*>::iterator it = fg_tasks.begin();it!=fg_tasks.end();++it) {
             if ((*it)->ProcessMain(env)) {
                 if ((*it)->IsComplete()) {
+                    slock l(m_list_lock);
+                    assert(m_num_requests);
+                    --m_num_requests;
+                    //ILOG_INFO("stop request:" << m_num_requests);
                     //ILOG_INFO("fg->delete");
                     delete *it;
                 } else {
@@ -520,56 +551,63 @@ public:
                     slock l(m_list_lock);
                     m_to_bg_tasks.push_back(*it);
                 }
-                it = m_fg_tasks.erase(it);
             } else {
-                ++it;
+                slock l(m_list_lock);
+                m_to_fg_tasks.push_back(*it);
             }
         }
     }
-    bool ProcessBackground(JNIEnv* env) {
+
+    bool ProcessBackground(JNIEnv* env,int& counter) {
+        NetworkTask* task = 0;
         {
             slock l(m_list_lock);
-            for (std::list<NetworkTask*>::iterator it = m_to_bg_tasks.begin();it!=m_to_bg_tasks.end();++it) {
-                m_bg_tasks.push_back(*it);
-                //ILOG_INFO("to_bg->bg");
-            }
-            m_to_bg_tasks.clear();
-        }
-        {
-            for (std::list<NetworkTask*>::iterator it = m_bg_tasks.begin();it!=m_bg_tasks.end();) {
-                {
-                    slock s(m_lock);
-                    if (m_stop) return true;
-                }
-                
-                if ((*it)->ProcessBackground(env)) {
-                    slock l(m_list_lock);
-                    //ILOG_INFO("bg->to_fg");
-                    m_to_fg_tasks.push_back(*it);
-                    it = m_bg_tasks.erase(it);
-                }  else {
-                    ++it;
+            if (!m_to_bg_tasks.empty()) {
+                task = m_to_bg_tasks.front();
+                m_to_bg_tasks.pop_front();
+                counter = 1000;
+            } else {
+                // terminate pool threads on idle 1s
+                pthread_t self = pthread_self();
+                if ((m_num_threads >1) && 
+                    (self == m_threads[m_num_threads-1]) && 
+                    (m_num_requests==0)) {
+                    if (--counter < 0) {
+                        //ILOG_INFO("stop thread:" << m_num_threads-1);
+                        --m_num_threads;
+                        return true;
+                    }
                 }
             }
         }
-        // if (m_bg_tasks.empty()) {
-        //     sleep(10);
-        // }
+        if (task) {
+            if (task->ProcessBackground(env)) {
+                slock l(m_list_lock);
+                m_to_fg_tasks.push_back(task);
+            } else {
+                slock l(m_list_lock);
+                m_to_bg_tasks.push_back(task);
+                return false;
+            }
+        }
         {
             slock s(m_lock);
-            return m_stop;
+            if (m_stop) {
+                return true;
+            }
         }
+        usleep(1000);
         return false;
     }
     static void *thread_thunk( void *arg ) {
         JNIEnv* env = 0;
         jvm->AttachCurrentThread(&env,0);
 
+        int counter = 1000;
         while (true) {
-            if (static_cast<NetworkAndroid*>(arg)->ProcessBackground(env))
+            if (static_cast<NetworkAndroid*>(arg)->ProcessBackground(env,counter)) {
                 break;
-            
-            usleep(100);
+            }
         }
 
         jvm->DetachCurrentThread();
