@@ -224,6 +224,12 @@ public:
             case S_INIT: {
                 jni_string url_str(m_url.c_str(),env);
                 jni_object url(env->NewObject(m_URL_class,m_URL_ctr,url_str.jstr),env);
+                if (check_exception(env)) {
+                    m_state = S_ERROR;
+                    //ILOG_INFO("S_INIT->S_ERROR 1");
+                    m_error = "create url failed";
+                    return true;
+                }
                 jni_object connection(env->CallObjectMethod(url.jobj,m_URL_openConnection),env);
                 if (check_exception(env)) {
                     m_state = S_ERROR;
