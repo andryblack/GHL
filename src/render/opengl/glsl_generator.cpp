@@ -22,6 +22,14 @@ namespace GHL {
         m_render = render;
     }
     
+    void GLSLGenerator::done() {
+        if (m_simple_v)
+            m_simple_v->Release();
+        m_simple_v = 0;
+        if (m_simple_v2)
+            m_simple_v2->Release();
+        m_simple_v2 = 0;
+    }
     static const char* simple_v =
     "attribute vec3 vPosition;\n"
     "attribute vec2 vTexCoord;\n"
@@ -166,7 +174,12 @@ namespace GHL {
         } else {
             LOG_VERBOSE("created fragment shader:\n" << s);
         }
-        return m_render->CreateShaderProgram(tex2 ? m_simple_v2 : m_simple_v, fs);
+        VertexShader* vs = tex2 ? m_simple_v2 : m_simple_v;
+        ShaderProgram* res =  m_render->CreateShaderProgram(vs, fs);
+        if (res) {
+            fs->Release();
+        }
+        return res;
     }
     
 }

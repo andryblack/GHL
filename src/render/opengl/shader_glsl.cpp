@@ -40,8 +40,8 @@ namespace GHL {
 	
 	ShaderProgramGLSL::ShaderProgramGLSL(RenderOpenGLBase* parent,GL::GLhandle handle_,VertexShaderGLSL* vt,FragmentShaderGLSL* fr)
     : ShaderProgramImpl(parent),gl(parent->get_api()),m_handle(handle_),m_v(vt),m_f(fr),m_pmv_uniform(-1) {
-			m_v->AddRef();
-			m_f->AddRef();
+        m_v->AddRef();
+        m_f->AddRef();
         for (size_t i=0;i<sizeof(m_attributes)/sizeof(m_attributes[0]);++i) {
             m_attributes[i] = -1;
         }

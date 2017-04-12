@@ -19,6 +19,7 @@ namespace GHL {
     public:
         GLSLGenerator();
         void init(GHL::Render* render);
+        void done();
         virtual ShaderProgram* generate( const pfpl_state_data& entry, bool tex2 );
         
         void set_fshader_header( const char* v) { m_fshader_header = v; }

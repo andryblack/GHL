@@ -734,7 +734,7 @@ namespace GHL {
     }
     
     bool RenderOpenGLPPL::RenderInit() {
-        LOG_INFO("RenderOpenGL2::RenderInit");
+        LOG_INFO("RenderOpenGLPPL::RenderInit");
         if (!gl.sdrapi.valid)
             return false;
         if (!RenderOpenGLBase::RenderInit())
@@ -750,7 +750,9 @@ namespace GHL {
     
     
     void RenderOpenGLPPL::RenderDone() {
+        LOG_INFO("RenderOpenGLPPL::RenderDone");
         m_shaders_render.done();
+        m_generator.done();
         RenderOpenGLBase::RenderDone();
     }
     
