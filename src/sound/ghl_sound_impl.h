@@ -39,7 +39,7 @@ namespace GHL {
             return SoundDecoderBase::GetChannels(m_type);
         }
         UInt32 GetBits() const {
-            return SoundDecoderBase::GetBps(m_type)*8;
+            return SoundDecoderBase::GetBps(m_type)*8 / GetChannels();
         }
     };
     

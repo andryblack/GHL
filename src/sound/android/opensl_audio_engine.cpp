@@ -44,7 +44,7 @@ namespace GHL {
         }
         
         result = (*m_engine)->CreateOutputMix(m_engine, &m_output_mix_obj,
-                                            0, output_mix_IIDs, output_mix_reqs);
+                                            output_mix_count, output_mix_IIDs, output_mix_reqs);
         
         if (result != SL_RESULT_SUCCESS ) {
             LOG_ERROR("failed m_engine->CreateOutputMix");
@@ -150,7 +150,7 @@ namespace GHL {
             }
         }
         if (m_channels.size() < max_channels || !best) {
-            LOG_DEBUG("allocate new channel fmt: " << format.numChannels << " " << format.bitsPerSample << " " << format.samplesPerSec);
+            LOG_INFO("requested new channel: " << format.numChannels << " " << format.samplesPerSec/1000 << " " << format.bitsPerSample);
             SLDataLocator_AndroidSimpleBufferQueue locatorBufferQueue = {0};
             locatorBufferQueue.locatorType = SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE;
             locatorBufferQueue.numBuffers = 2;
