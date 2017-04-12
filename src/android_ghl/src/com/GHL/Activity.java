@@ -226,6 +226,17 @@ public class Activity  extends android.app.NativeActivity  {
 
     public void showTextInput(int accept_button,String placeholder) {
         Log.v(TAG, "showTextInput");
+        final int accept_button_f = accept_button;
+        final String placeholder_f = placeholder;
+        runOnUiThread(new Runnable() {
+            public void run() {
+                showTextInputImpl(accept_button_f,placeholder_f);
+            }
+        });
+    }
+
+    private void showTextInputImpl(int accept_button,String placeholder) {
+        
         if (m_text_input_window == null) {
             Log.v(TAG, "create");
 

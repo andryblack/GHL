@@ -24,7 +24,7 @@
 
 namespace GHL {
     
-    static const char* MODULE = "DYNAMIC_GL";
+    static const char* MODULE = "GLES1";
     
     
     
@@ -32,8 +32,6 @@ namespace GHL {
     struct GLES1Api_impl {
         
         static const char* all_extensions;
-        static int gl_v1;
-        static int gl_v2;
         
         static void Init() {
             
@@ -58,24 +56,10 @@ namespace GHL {
                 }
             }
             
-            gl_v1 = 0;
-            gl_v2 = 0;
-            if (::sscanf(version_string, "%d.%d",&gl_v1,&gl_v2)!=2) {
-                gl_v1 = 0;
-                gl_v2 = 0;
-            }
-            LOG_INFO("Parsed version: " << gl_v1 << "." << gl_v2);
         }
         static bool CheckExtensionSupported(const char* extensionName) {
             if (::strcmp(extensionName, "CORE")==0) {
                 return true;
-            }
-            int v1 = 0;
-            int v2 = 0;
-            if (::sscanf(extensionName, "VERSION_%d_%d",&v1,&v2)==2) {
-                if (v1<gl_v1) return true;
-                if (v1>gl_v1) return false;
-                return v2 <= gl_v2;
             }
             if (!all_extensions) return false;
             const char* pos = all_extensions;
@@ -91,9 +75,6 @@ namespace GHL {
         
     };
     const char* GLES1Api_impl::all_extensions = 0;
-    
-    int GLES1Api_impl::gl_v1 = 0;
-    int GLES1Api_impl::gl_v2 = 0;
     
     static GHL_GL_API void glClearDepth(double v) { glClearDepthf(v);}
     

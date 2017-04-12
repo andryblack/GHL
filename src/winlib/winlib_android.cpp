@@ -33,7 +33,7 @@ static void check_main_thread() {
         LOG_ERROR("main thread expected");
     }
 }
-char message_buffer[256];
+static char message_buffer[256];
 
 GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {
     if (::strlen(message)>=sizeof(message_buffer)) {
@@ -185,6 +185,9 @@ namespace GHL {
             }
             m_activity->env->CallVoidMethod(m_activity->clazz,method,accept_button,placeholder);
             m_activity->env->DeleteLocalRef(ActivityClass);
+            if (placeholder) {
+                m_activity->env->DeleteLocalRef(placeholder);
+            }
             return true;
         }
         /// Show soft keyboard
