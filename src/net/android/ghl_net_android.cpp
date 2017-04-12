@@ -607,6 +607,8 @@ public:
     }
     static void *thread_thunk( void *arg ) {
         JNIEnv* env = 0;
+        pthread_setname_np(pthread_self(),"GHL_Network");
+
         jvm->AttachCurrentThread(&env,0);
 
         int counter = 1000;

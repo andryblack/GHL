@@ -239,7 +239,9 @@ namespace GHL {
             }
         }
 		TextureOpenGL* tex = TextureOpenGL::Create(this,fmt,width,height,data);
-		if (!tex) return tex;
+        if (!tex) {
+            LOG_ERROR("CreateTexture failed: " << width << "x" << height);
+        }
 		return tex;
 	}
 	

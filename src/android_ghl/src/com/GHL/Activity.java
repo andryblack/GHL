@@ -189,6 +189,7 @@ public class Activity  extends android.app.NativeActivity  {
 
 
     public void showSoftKeyboard() {
+        Log.v(TAG, "showSoftKeyboard");
         if (m_text_edit == null) {
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -229,6 +230,7 @@ public class Activity  extends android.app.NativeActivity  {
         final int accept_button_f = accept_button;
         final String placeholder_f = placeholder;
         runOnUiThread(new Runnable() {
+            @Override
             public void run() {
                 showTextInputImpl(accept_button_f,placeholder_f);
             }
@@ -254,8 +256,13 @@ public class Activity  extends android.app.NativeActivity  {
                 public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                     if (i == EditorInfo.IME_ACTION_DONE ||
                             i == EditorInfo.IME_ACTION_SEND) {
-
-                        nativeOnTextInputAccepted(textView.getText().toString());
+                        final String text = textView.getText().toString();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                nativeOnTextInputAccepted(text);
+                            }
+                        });
                         m_text_input_window.dismiss();
                         return true;
                     }
@@ -287,7 +294,12 @@ public class Activity  extends android.app.NativeActivity  {
             m_text_input_window.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 @Override
                 public void onDismiss() {
-                    nativeOnTextInputDismiss();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            nativeOnTextInputDismiss();
+                        }
+                    });
                 }
             });
             m_text_input_window.update();
@@ -329,6 +341,7 @@ public class Activity  extends android.app.NativeActivity  {
 
 
     public void hideSoftKeyboard() {
+        Log.v(TAG, "hideSoftKeyboard");
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 
         if (m_text_edit != null) {
