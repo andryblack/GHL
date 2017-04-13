@@ -178,6 +178,7 @@ namespace GHL {
                 m_activity->env->ExceptionDescribe();
                 m_activity->env->ExceptionClear();
                 ILOG_INFO("[native] not found method");
+                SetGLContext();
                 return false;
             }
             jstring placeholder = 0;
@@ -193,7 +194,7 @@ namespace GHL {
             if (placeholder) {
                 m_activity->env->DeleteLocalRef(placeholder);
             }
-            return true;
+            return SetGLContext();
         }
         /// Show soft keyboard
         virtual void GHL_CALL ShowKeyboard(const TextInputConfig* input) {
@@ -204,11 +205,17 @@ namespace GHL {
                 if (!set_keyboard_visible(true))
                     ANativeActivity_showSoftInput(m_activity,ANATIVEACTIVITY_SHOW_SOFT_INPUT_FORCED);
             }
+            if (!SetGLContext()) {
+               return;
+            }
         }
         /// Hide soft keyboard
         virtual void GHL_CALL HideKeyboard() {
             if (!set_keyboard_visible(false))
                 ANativeActivity_hideSoftInput(m_activity,0);
+            if (!SetGLContext()) {
+               return;
+            }
         }
         /// Get current key modifiers state
         virtual UInt32  GHL_CALL GetKeyMods() const {
@@ -408,12 +415,23 @@ namespace GHL {
                 return false ;
             }
             
+            
+            return SetGLContext();
+        }
+
+        bool SetGLContext() {
+            if (m_display == EGL_NO_DISPLAY ||
+                m_surface == EGL_NO_SURFACE || 
+                m_context == EGL_NO_CONTEXT) {
+                return false;
+            }
             if (eglMakeCurrent(m_display, m_surface, m_surface, m_context) == EGL_FALSE) {
                 GHL_Log(GHL::LOG_LEVEL_ERROR,"Unable to eglMakeCurrent");
                 return false ;
             }
             return true;
         }
+
         void OnNativeWindowCreated(ANativeWindow* window) {
             LOG_INFO("OnNativeWindowCreated");
             check_main_thread();
@@ -521,9 +539,8 @@ namespace GHL {
             g_native_activity = m_activity;
             if (window==m_window) {
                 if ( m_render && m_context!=EGL_NO_CONTEXT ) {
-                    if (eglMakeCurrent(m_display, m_surface, m_surface, m_context) == EGL_FALSE) {
-                        GHL_Log(GHL::LOG_LEVEL_ERROR,"Unable to eglMakeCurrent");
-                        return ;
+                    if (!SetGLContext()) {
+                        return;
                     }
                     EGLint w, h;
                     eglQuerySurface(m_display, m_surface, EGL_WIDTH, &w);
@@ -624,6 +641,9 @@ namespace GHL {
         bool onJavaKey(int key_code,uint32_t unicode,int action) {
             if (!m_app) return false;
             check_main_thread();
+            if (!SetGLContext()) {
+                return false;
+            }
             return onKey(key_code,unicode,action);
         }
 
@@ -659,6 +679,9 @@ namespace GHL {
         void onTextInputDismiss() {
             if (m_app) {
                 check_main_thread();
+                if (!SetGLContext()) {
+                   return;
+                }
                 GHL::Event e;
                 e.type = GHL::EVENT_TYPE_TEXT_INPUT_CLOSED;
                 m_app->OnEvent(&e);
@@ -668,6 +691,9 @@ namespace GHL {
         void onTextInputAccepted(const std::string& text) {
             if (m_app) {
                 check_main_thread();
+                if (!SetGLContext()) {
+                   return;
+                }
                 GHL::Event e;
                 e.type = GHL::EVENT_TYPE_TEXT_INPUT_ACCEPTED;
                 e.data.text_input_accepted.text = text.c_str();
@@ -678,6 +704,9 @@ namespace GHL {
         void onTextInputChanged(const std::string& text) {
             if (m_app) {
                 check_main_thread();
+                if (!SetGLContext()) {
+                   return;
+                }
                 GHL::Event e;
                 e.type = GHL::EVENT_TYPE_TEXT_INPUT_TEXT_CHANGED;
                 e.data.text_input_text_changed.text = text.c_str();
@@ -689,6 +718,9 @@ namespace GHL {
         bool HandleEvent(const AInputEvent* event) {
             g_native_activity = m_activity;
             check_main_thread();
+            if (!SetGLContext()) {
+                return false;
+            }
           
             if (AINPUT_EVENT_TYPE_MOTION==AInputEvent_getType(event)) {
                 int x = int( AMotionEvent_getX(event,0) );
@@ -774,8 +806,11 @@ namespace GHL {
         }
         void Render() {
             //LOG_DEBUG("Render ->");
+            if (!SetGLContext()) {
+               return;
+            }
             
-            if (m_app && m_surface!=EGL_NO_SURFACE) {
+            if (m_app) {
                 timeval now;
                 gettimeofday(&now,0);
                 GHL::UInt32 frameTime = (now.tv_sec-m_last_time.tv_sec)*1000000 + (now.tv_usec-m_last_time.tv_usec);
