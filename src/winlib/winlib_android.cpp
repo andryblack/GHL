@@ -64,6 +64,57 @@ GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {
     };
 }
 
+extern "C" JNIEXPORT void JNICALL Java_com_GHL_Log_d
+  (JNIEnv * env, jclass, jstring tag, jstring text) {
+    const char *tag_chars = env->GetStringUTFChars( tag, NULL );
+    const char *text_chars = env->GetStringUTFChars( text, NULL );
+    if (!GHL::LoggerImpl::LogExternal(GHL::LOG_LEVEL_DEBUG,tag_chars,text_chars)) {
+        __android_log_write(ANDROID_LOG_DEBUG,tag_chars,text_chars);
+    }
+    env->ReleaseStringUTFChars( tag, tag_chars );
+    env->ReleaseStringUTFChars( text, text_chars );
+}
+extern "C" JNIEXPORT void JNICALL Java_com_GHL_Log_v
+  (JNIEnv * env, jclass, jstring tag, jstring text) {
+    const char *tag_chars = env->GetStringUTFChars( tag, NULL );
+    const char *text_chars = env->GetStringUTFChars( text, NULL );
+    if (!GHL::LoggerImpl::LogExternal(GHL::LOG_LEVEL_VERBOSE,tag_chars,text_chars)) {
+        __android_log_write(ANDROID_LOG_VERBOSE,tag_chars,text_chars);
+    }
+    env->ReleaseStringUTFChars( tag, tag_chars );
+    env->ReleaseStringUTFChars( text, text_chars );
+}
+extern "C" JNIEXPORT void JNICALL Java_com_GHL_Log_i
+  (JNIEnv * env, jclass, jstring tag, jstring text) {
+    const char *tag_chars = env->GetStringUTFChars( tag, NULL );
+    const char *text_chars = env->GetStringUTFChars( text, NULL );
+    if (!GHL::LoggerImpl::LogExternal(GHL::LOG_LEVEL_INFO,tag_chars,text_chars)) {
+        __android_log_write(ANDROID_LOG_INFO,tag_chars,text_chars);
+    }
+    env->ReleaseStringUTFChars( tag, tag_chars );
+    env->ReleaseStringUTFChars( text, text_chars );
+}
+extern "C" JNIEXPORT void JNICALL Java_com_GHL_Log_w
+  (JNIEnv * env, jclass, jstring tag, jstring text) {
+    const char *tag_chars = env->GetStringUTFChars( tag, NULL );
+    const char *text_chars = env->GetStringUTFChars( text, NULL );
+    if (!GHL::LoggerImpl::LogExternal(GHL::LOG_LEVEL_WARNING,tag_chars,text_chars)) {
+        __android_log_write(ANDROID_LOG_WARN,tag_chars,text_chars);
+    }
+    env->ReleaseStringUTFChars( tag, tag_chars );
+    env->ReleaseStringUTFChars( text, text_chars );
+}
+extern "C" JNIEXPORT void JNICALL Java_com_GHL_Log_e
+  (JNIEnv * env, jclass, jstring tag, jstring text) {
+    const char *tag_chars = env->GetStringUTFChars( tag, NULL );
+    const char *text_chars = env->GetStringUTFChars( text, NULL );
+    if (!GHL::LoggerImpl::LogExternal(GHL::LOG_LEVEL_ERROR,tag_chars,text_chars)) {
+        __android_log_write(ANDROID_LOG_ERROR,tag_chars,text_chars);
+    }
+    env->ReleaseStringUTFChars( tag, tag_chars );
+    env->ReleaseStringUTFChars( text, text_chars );
+}
+
 static GHL::Application* volatile temp_app = 0;
 
 extern int ghl_android_app_main(int argc,char** argv);

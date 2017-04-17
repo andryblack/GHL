@@ -40,7 +40,7 @@ namespace GHL
     
     /// Logger interface
     struct Logger {
-        virtual void GHL_CALL AddMessage( GHL::LogLevel level, const char* message) = 0;
+        virtual bool GHL_CALL AddMessage( GHL::LogLevel level, const char* message) = 0;
     };
 
 } /*namespace*/

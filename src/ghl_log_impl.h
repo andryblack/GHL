@@ -49,6 +49,7 @@ namespace GHL {
             m_stream << v.c_str();
             return *this;
         }
+        static bool LogExternal( LogLevel level, const char* module, const char* text);
     private:
         LoggerImpl( const LoggerImpl& );
         LoggerImpl& operator = (const LoggerImpl&);

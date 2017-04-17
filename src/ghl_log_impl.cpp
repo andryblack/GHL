@@ -38,6 +38,14 @@ namespace GHL{
             GHL_Log(m_level, m_stream.str().c_str());
         }
     }
+    bool LoggerImpl::LogExternal(LogLevel level, const char* module, const char* text) {
+        if (g_external_logger) {
+            std::stringstream   stream;
+            stream << "[" << module << "]" << text;
+            return g_external_logger->AddMessage(level,stream.str().c_str());
+        }
+        return false;
+    }
     
 }
 

@@ -37,7 +37,7 @@ import android.graphics.*;
 
 import android.media.AudioManager;
 
-import android.util.Log;
+import com.GHL.Log;
 import android.widget.TextView;
 
 public class Activity  extends android.app.NativeActivity  {
