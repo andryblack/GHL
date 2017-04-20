@@ -24,6 +24,9 @@ namespace GHL {
         bool SoundInit();
         bool SoundDone();
         
+        void Resume();
+        void Suspend();
+        
         /// create sound effect from data
         virtual SoundEffect* GHL_CALL CreateEffect( SampleType type, UInt32 freq, Data* data );
         /// play effect
@@ -33,5 +36,7 @@ namespace GHL {
     };
     
 }
+
+GHL::SoundCocoa* GHL_CreateSoundCocoa();
 
 #endif /* defined(__GHL__ghl_sound_cocoa__) */

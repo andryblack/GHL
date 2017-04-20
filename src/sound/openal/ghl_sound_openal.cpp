@@ -301,6 +301,21 @@ namespace GHL {
 		}
         return true;
 	}
+    
+    void SoundOpenAL::Suspend() {
+        if (m_context) {
+            alcMakeContextCurrent(NULL);
+            alcSuspendContext(m_context);
+        }
+    }
+
+    
+    void SoundOpenAL::Resume() {
+        if (m_context) {
+            alcMakeContextCurrent(m_context);
+            alcProcessContext(m_context);
+        }
+    }
 	
     SoundChannelOpenAL* SoundOpenAL::CreateChannel() {
         CHECK_ERROR_F(begforealGenSources);

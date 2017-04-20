@@ -39,6 +39,12 @@ namespace GHL {
         double                          m_pitch;
         GHL::DataStream*                m_input_stream;
         bool                            m_loop;
+        bool                            m_need_resume;
+        static void processError(const char* func,OSStatus err) {
+            if (err) {
+                LOG_ERROR(func << " : error: " << err);
+            }
+        }
     protected:
         static OSStatus AFReadProc (
                                     void     *inClientData,
@@ -92,10 +98,10 @@ namespace GHL {
             if (nPackets > 0) {
                 inCompleteAQBuffer->mAudioDataByteSize = numBytes;
                 
-                AudioQueueEnqueueBuffer(inAQ,
+                processError("AudioQueueEnqueueBuffer",AudioQueueEnqueueBuffer(inAQ,
                                         inCompleteAQBuffer,
                                         (myInfo->m_packet_description ? nPackets : 0),
-                                        myInfo->m_packet_description);
+                                        myInfo->m_packet_description));
                 
                 myInfo->m_current_packet += nPackets;
             } else {
@@ -141,6 +147,8 @@ namespace GHL {
             }
             *outNumPackets = *outBufferSize / inMaxPacketSize;
         }
+        
+        static std::vector<MusicInstanceCocoa*> m_all_music;
     public:
 
         explicit MusicInstanceCocoa( GHL::DataStream* ds,
@@ -166,7 +174,25 @@ namespace GHL {
             m_volume = 100.0;
             m_pan = 0.0;
             m_pitch = 100.0;
+            m_need_resume = false;
             m_input_stream->AddRef();
+            m_all_music.push_back(this);
+        }
+        ~MusicInstanceCocoa() {
+            std::vector<MusicInstanceCocoa*>::iterator i = std::find(m_all_music.begin(),m_all_music.end(),this);
+            if (i!=m_all_music.end()) {
+                m_all_music.erase(i);
+            }
+            if (m_queue) {
+                AudioQueueDispose(m_queue,true);
+            }
+            if (m_audio_file) {
+                AudioFileClose(m_audio_file);
+            }
+            
+            delete [] ((char*)m_channel_layout);
+            delete [] m_packet_description;
+            m_input_stream->Release();
         }
         static MusicInstanceCocoa* Open( GHL::DataStream* ds ) {
             AudioFileID audioFile;
@@ -254,20 +280,6 @@ namespace GHL {
         }
 
         
-        ~MusicInstanceCocoa() {
-            if (m_queue) {
-                AudioQueueDispose(m_queue,true);
-            }
-            if (m_audio_file) {
-                AudioFileClose(m_audio_file);
-            }
-
-            delete [] ((char*)m_channel_layout);
-            delete [] m_packet_description;
-            m_input_stream->Release();
-        }
-        
-        
         virtual void GHL_CALL Play( bool loop ) {
             OSStatus result;
             
@@ -320,7 +332,9 @@ namespace GHL {
                 if (m_done) break;
             }
             
-            AudioQueueStart(m_queue, NULL);
+            m_need_resume = !m_done;
+            
+            processError("AudioQueueStart",AudioQueueStart(m_queue, NULL));
         }
         
         virtual void GHL_CALL SetVolume( float volume ) {
@@ -335,18 +349,21 @@ namespace GHL {
                 //AudioQueueDispose(m_queue,true);
                 //m_queue = 0;
                 m_done = true;
+                m_need_resume = false;
             }
         }
         
         virtual void GHL_CALL Pause() {
             if ( m_queue && !m_done ) {
-                AudioQueuePause(m_queue);
+                processError("Pause",AudioQueuePause(m_queue));
+                m_need_resume = false;
             }
         }
         
         virtual void GHL_CALL Resume() {
             if ( m_queue && !m_done ) {
-                AudioQueueStart(m_queue,0);
+                processError("Resume",AudioQueueStart(m_queue,0));
+                m_need_resume = true;
             }
         }
         
@@ -364,7 +381,17 @@ namespace GHL {
                 AudioQueueSetParameter(m_queue, kAudioQueueParam_Pitch, m_pitch/100.0);
             }
         }
+        
+        static void ResumeAll() {
+            for (std::vector<MusicInstanceCocoa*>::iterator i = m_all_music.begin();i!=m_all_music.end();++i) {
+                if ((*i)->m_need_resume && (*i)->m_queue) {
+                    processError("ResumeAll",AudioQueueStart((*i)->m_queue,0));
+                }
+            }
+        }
     };
+    
+    std::vector<MusicInstanceCocoa*> MusicInstanceCocoa::m_all_music;
     
     SoundCocoa::SoundCocoa() : m_openal(8) {
         
@@ -382,6 +409,15 @@ namespace GHL {
     bool SoundCocoa::SoundDone() {
         m_openal.SoundDone();
         return SoundImpl::SoundDone();
+    }
+    
+    void SoundCocoa::Suspend() {
+        m_openal.Suspend();
+    }
+    
+    void SoundCocoa::Resume() {
+        MusicInstanceCocoa::ResumeAll();
+        m_openal.Resume();
     }
     
     /// create sound effect from data
@@ -402,6 +438,6 @@ namespace GHL {
     }
 }
 
-GHL::SoundImpl* GHL_CreateSoundCocoa() {
+GHL::SoundCocoa* GHL_CreateSoundCocoa() {
     return new GHL::SoundCocoa();
 }

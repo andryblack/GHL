@@ -20,7 +20,7 @@
 
 #include "../ghl_log_impl.h"
 
-#include "../sound/ghl_sound_impl.h"
+#include "../sound/cocoa/ghl_sound_cocoa.h"
 #include "../vfs/vfs_cocoa.h"
 #include "../image/image_decoders.h"
 
@@ -42,7 +42,7 @@ static bool g_need_depth = false;
 static GHL::Int32 g_frame_interval = 1;
 
 #ifndef GHL_NOSOUND
-extern GHL::SoundImpl* GHL_CreateSoundCocoa();
+extern GHL::SoundCocoa* GHL_CreateSoundCocoa();
 #endif
 
 namespace GHL {
@@ -157,7 +157,7 @@ static const size_t max_touches = 10;
     [self close];
 }
 
--(void)show:(const GHL::TextInputConfig*) input withController:(UIViewController*) controller {
+-(void)show:(const GHL::TextInputConfig*)input withController:(UIViewController*) controller {
     [self close];
     
     
@@ -312,7 +312,7 @@ static const size_t max_touches = 10;
     WinLibCocoaTouchContext*    m_context;
     
 	GHL::ImageDecoderImpl* m_imageDecoder;
-	GHL::SoundImpl*	m_sound;
+	GHL::SoundCocoa*	m_sound;
 	NSString*	m_appName;
 	GHL::RenderImpl* m_render;
 	CADisplayLink *m_timer;
@@ -339,7 +339,6 @@ static const size_t max_touches = 10;
     TextInputDelegate* m_text_input;
 }
 
-- (void) show:(const GHL::TextInputConfig*) input withController:(UIViewController*) controller;
 - (void) closeTextInput;
 
 @end
@@ -526,6 +525,8 @@ public:
 			m_sound = 0;
 		}
 		g_application->SetSound(m_sound);
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAudioSessionEvent:) name:AVAudioSessionInterruptionNotification object:nil];
+
 #endif
 		
 		for (size_t i=0;i<max_touches;i++) {
@@ -541,6 +542,50 @@ public:
 		[self prepareOpenGL:gles2];
 	}
 	return self;
+}
+
+- (void) onAudioSessionEvent: (NSNotification *) notification
+{
+    //Check the type of notification, especially if you are sending multiple AVAudioSession events here
+    NSLog(@"Interruption notification name %@", notification.name);
+    
+    if ([notification.name isEqualToString:AVAudioSessionInterruptionNotification]) {
+        NSLog(@"Interruption notification received %@!", notification);
+        
+        //Check to see if it was a Begin interruption
+        if ([[notification.userInfo valueForKey:AVAudioSessionInterruptionTypeKey] isEqualToNumber:[NSNumber numberWithInt:AVAudioSessionInterruptionTypeBegan]]) {
+            NSLog(@"Interruption began!");
+            [self suspendSound];
+            
+        } else if([[notification.userInfo valueForKey:AVAudioSessionInterruptionTypeKey] isEqualToNumber:[NSNumber numberWithInt:AVAudioSessionInterruptionTypeEnded]]){
+            NSLog(@"Interruption ended!");
+            //Resume your audio
+            [self resumeSound];
+            
+        }
+    }
+}
+
+- (void)suspendSound {
+#ifndef GHL_NO_SOUND
+    if (m_sound) {
+        m_sound->Suspend();
+    }
+    //AVAudioSession *session = [AVAudioSession sharedInstance];
+    //[session setActive:NO error:nil];
+
+#endif
+}
+
+- (void)resumeSound {
+#ifndef GHL_NO_SOUND
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    [session setActive:YES error:nil];
+
+    if (m_sound) {
+        m_sound->Resume();
+    }
+#endif
 }
 
 - (void)makeCurrent {
@@ -756,6 +801,8 @@ public:
 	delete m_imageDecoder;
 	delete m_sound;
 
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVAudioSessionInterruptionNotification object:nil];
+    
 	[super dealloc];
 }
 
