@@ -167,7 +167,7 @@ static const size_t max_touches = 10;
         m_input_view.scrollEnabled = NO;
         m_input_view.contentSize = m_input_view.frame.size;
         CGRect rect = CGRectMake(0, 0, m_input_view.frame.size.width, 32);
-        UITextField* field = [[UITextField alloc] initWithFrame:rect];
+        field = [[UITextField alloc] initWithFrame:rect];
         field.backgroundColor = [UIColor darkGrayColor];
         field.textColor = [UIColor whiteColor];
         field.delegate = self;
@@ -177,6 +177,7 @@ static const size_t max_touches = 10;
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cenacelEditing:)];
         [m_input_view addGestureRecognizer:tap];
         
+        [controller.view addSubview:m_input_view];
         [m_input_view addSubview:field];
     } else {
         [controller.view addSubview:m_input_view];
@@ -195,7 +196,11 @@ static const size_t max_touches = 10;
     
     [self layout:m_kb_size];
     
-    [field becomeFirstResponder];
+    if (field.window && [field becomeFirstResponder]) {
+        
+    } else {
+        [field performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:0.1];
+    }
 }
 
 -(void)layout:(CGSize)kbSize {
