@@ -59,7 +59,7 @@
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
     if (error) {
-        const char* err = error.description.UTF8String;
+        const char* err = error.localizedDescription.UTF8String;
         m_handler->OnError(err);
     } else {
         m_handler->OnError("unknown");
