@@ -6,6 +6,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <errno.h>
 #include "../ghl_ref_counter_impl.h"
 #include "../ghl_log_impl.h"
 #include <ghl_data.h>
@@ -16,7 +17,6 @@ namespace GHL {
     class PosixFileStream : public RefCounterImpl<DataStream> {
     private:
         FILE* m_file;
-        bool m_eof;
     public:
         explicit PosixFileStream(FILE* file) {
             m_file = file;
@@ -126,8 +126,11 @@ namespace GHL {
 		typedef struct stat stat_t;
 		stat_t s;
 		if (::stat(file, (stat_t*)(&s)) == 0) {
-			return (s.st_mode&S_IFREG)!=0;
+            if ((s.st_mode&S_IFREG)!=0) {
+                return true;
+            }
         }
+        LOG_VERBOSE("file not exist '" << file << "'");
         return false;
     }
     /// remove file
@@ -136,8 +139,26 @@ namespace GHL {
         return false;
     }
     /// copy file
-    bool GHL_CALL VFSPosixImpl::DoCopyFile(const char* /*from*/,const char* /*to*/) {
-        return false;
+    bool GHL_CALL VFSPosixImpl::DoCopyFile(const char* from,const char* to) {
+        DataStream* src = OpenFile(from);
+        if (!src){
+            return false;
+        }
+        WriteStream* dst = OpenFileWrite(to);
+        if (!dst) {
+            src->Release();
+            return false;
+        }
+        Byte buffer[1024*8];
+        while (!src->Eof()) {
+            UInt32 w = src->Read(buffer, sizeof(buffer));
+            if (w) {
+                w -= dst->Write(buffer, w);
+            }
+        }
+        src->Release();
+        dst->Release();
+        return true;
     }
     /// rename file
     bool GHL_CALL VFSPosixImpl::DoRenameFile(const char* from,const char* to) {
@@ -154,9 +175,11 @@ namespace GHL {
         if (!_file) return 0;
         if (_file[0]==0) return 0;
         if (!IsFileExists(_file)) return 0;
-        FILE* f = fopen(_file, "rb"  );
-        if (f)
+        FILE* f = fopen(_file, "rb" );
+        if (f) {
             return new PosixFileStream(f);
+        }
+        LOG_VERBOSE("failed open file '" << _file << "' " << errno);
         return 0;
     }
     
