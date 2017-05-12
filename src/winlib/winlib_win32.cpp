@@ -16,6 +16,7 @@
 #include <time.h>
 
 #include <ghl_system.h>
+#include <ghl_time.h>
 #include <Windowsx.h>
 
 GHL_API GHL::RenderImpl* GHL_CALL GHL_CreateRenderOpenGL(GHL::UInt32 w, GHL::UInt32 h, bool depth);
@@ -267,6 +268,13 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 	GHL::ImageDecoderImpl image;
 	app->SetImageDecoder(&image);
 
+	
+	{
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_APP_STARTED;
+        app->OnEvent(&e);
+    }
+
 	HINSTANCE hInstance = GetModuleHandle(0);
 	WNDCLASS		winclass;
 	{
@@ -330,6 +338,8 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)&ctx);
 
 	
+	Win32System sys(hwnd);
+	app->SetSystem(&sys);
 
 #ifndef GHL_NO_SOUND
 	GHL::SoundDSound sound(8);
@@ -340,8 +350,6 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 	app->SetSound(&sound);
 #endif
 
-	Win32System sys(hwnd);
-	app->SetSystem(&sys);
 
 	HDC hDC = GetDC (hwnd);
 	if (!hDC) {

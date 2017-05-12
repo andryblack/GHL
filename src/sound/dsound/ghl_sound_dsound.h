@@ -58,6 +58,7 @@ namespace GHL {
         virtual void GHL_CALL SetVolume( float vol );
         /// set pan (-100..0..+100)
         virtual void GHL_CALL SetPan( float pan );
+		virtual void GHL_CALL SetPitch(float pitch);
         /// stop
         virtual void GHL_CALL Stop();
 	};
@@ -97,6 +98,7 @@ namespace GHL {
         /// play
         virtual void GHL_CALL Play( bool loop );
     
+		virtual void GHL_CALL SetPitch(float pitch);
     };
 
 	class SoundDSound : public SoundImpl {

@@ -147,6 +147,9 @@ namespace GHL {
 			m_channel->SetPan(pan);
 		}
 	}
+	void GHL_CALL SoundInstanceDSound::SetPitch(float pitch) {
+		/// @todo
+	}
     /// stop
 	void GHL_CALL SoundInstanceDSound::Stop() {
 		if (m_channel) {
@@ -534,6 +537,9 @@ namespace GHL {
     void GHL_CALL MusicInstanceDSound::SetPan( float pan ) {
 		SetPanImpl(m_IDSBuffer,pan);
     }
+	void GHL_CALL MusicInstanceDSound::SetPitch(float pitch) {
+		/// @todo
+	}
     /// stop
     void GHL_CALL MusicInstanceDSound::Stop() {
         if (m_IDSBuffer==0) return;
