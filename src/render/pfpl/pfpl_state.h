@@ -31,8 +31,8 @@ namespace GHL {
     struct pfpl_state_data {
         struct texture_stage {
             union state {
-                struct {
-                    bool                texture:8;
+                struct c_t {
+					UInt32              texture:8;
                     TextureOperation    operation:8;
                     TextureArgument     arg_1:8;
                     TextureArgument     arg_2:8;
@@ -41,8 +41,8 @@ namespace GHL {
             };
             state rgb;
             state alpha;
-            union {
-                struct {
+            union tex_t {
+                struct c_t {
                     TextureFilter       min_filter:8;
                     TextureFilter       mag_filter:8;
                     TextureFilter       mip_filter:8;
@@ -54,6 +54,9 @@ namespace GHL {
         };
         texture_stage   texture_stages[MAX_TEXTURE_STAGES];
     };
+	GHL_STATIC_ASSERT(sizeof(pfpl_state_data::texture_stage::state::c_t) == sizeof(UInt32));
+	GHL_STATIC_ASSERT(sizeof(pfpl_state_data::texture_stage::tex_t::c_t) == sizeof(UInt32));
+
     static inline bool operation_equal( const pfpl_state_data::texture_stage::state& a,
                                        const pfpl_state_data::texture_stage::state& b) {
         return (a.c.operation == b.c.operation) &&
