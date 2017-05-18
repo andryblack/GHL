@@ -163,13 +163,13 @@ private:
         S_ERROR,
     } m_state;
     std::string m_error;
-    GHL::Data*  m_send_data;
+    const GHL::Data*  m_send_data;
     int m_response_code;
     GHL::UInt32 m_headers_count;
     bool    m_response_received;
 public:
     explicit NetworkTask(JNIEnv* env,GHL::NetworkRequest* handler,
-         GHL::Data* send_data) : m_connection(0,env),
+        const GHL::Data* send_data) : m_connection(0,env),
         m_handler(handler),m_buffer(0,env),m_send_data(send_data),m_response_code(0) {
         //PROFILE(NetworkTask_ctr);
         m_handler->AddRef();
