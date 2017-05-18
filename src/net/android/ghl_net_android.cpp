@@ -173,6 +173,9 @@ public:
         m_handler(handler),m_buffer(0,env),m_send_data(send_data),m_response_code(0) {
         //PROFILE(NetworkTask_ctr);
         m_handler->AddRef();
+        if (m_send_data) {
+            m_send_data->AddRef();
+        }
         m_state = S_INIT;
         m_headers_count = m_handler->GetHeadersCount();
         m_response_received = false;
@@ -527,7 +530,7 @@ public:
             slock l(m_list_lock);
             ++m_num_requests;
             //ILOG_INFO("add request:" << m_num_requests);
-            m_to_bg_tasks.push_back(new NetworkTask(env,handler,data->Clone()));
+            m_to_bg_tasks.push_back(new NetworkTask(env,handler,data));
         }
         return true;
     }
