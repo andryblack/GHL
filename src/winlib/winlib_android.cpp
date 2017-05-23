@@ -278,6 +278,16 @@ namespace GHL {
                 const GHL::Int32* state = (const GHL::Int32*)data;
                 g_frame_interval = *state;
                 return true;
+            } else if (name == GHL::DEVICE_STATE_KEEP_SCREEN_ON) {
+                if (m_activity) {
+                    const bool* state = (const bool*)data;
+                    if (*state) {
+                        ANativeActivity_setWindowFlags(m_activity, AWINDOW_FLAG_KEEP_SCREEN_ON, 0);
+                    } else {
+                        ANativeActivity_setWindowFlags(m_activity, 0, AWINDOW_FLAG_KEEP_SCREEN_ON);
+                    }
+                    return true;
+                }
             }
             return false;
         }
@@ -332,7 +342,6 @@ namespace GHL {
         void OnCreate() {
             LOG_INFO("OnCreate");
             g_native_activity = m_activity;
-            ANativeActivity_setWindowFlags(m_activity, AWINDOW_FLAG_KEEP_SCREEN_ON, 0);
               /* Set the window color depth to 24bpp, since the default is
                 * ugly-looking 16bpp. */
             ANativeActivity_setWindowFormat(m_activity, WINDOW_FORMAT_RGBX_8888);

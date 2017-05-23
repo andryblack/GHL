@@ -244,43 +244,6 @@ static const size_t max_touches = 10;
 
 @end
 
-//- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-//    //use string here for the text input
-//    if (string!=nil && [string length]>0) {
-//        unichar wc = [string characterAtIndex:0];
-//        GHL::Event e;
-//        e.type = GHL::EVENT_TYPE_KEY_PRESS;
-//        e.data.key_press.key = GHL::KEY_NONE;
-//        e.data.key_press.modificators = 0;
-//        e.data.key_press.charcode = wc;
-//        g_application->OnEvent(&e);
-//    } else {
-//        GHL::Event e;
-//        e.type = GHL::EVENT_TYPE_KEY_PRESS;
-//        e.data.key_press.key = GHL::KEY_BACKSPACE;
-//        e.data.key_press.modificators = 0;
-//        e.data.key_press.charcode = 0;
-//        g_application->OnEvent(&e);
-//        e.type = GHL::EVENT_TYPE_KEY_RELEASE;
-//        g_application->OnEvent(&e);
-//    }
-//    /// always have one char
-//    textField.text = @"*";
-//    return NO;
-//}
-//
-//- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-//    GHL::Event e;
-//    e.type = GHL::EVENT_TYPE_KEY_PRESS;
-//    e.data.key_press.key = GHL::KEY_ENTER;
-//    e.data.key_press.modificators = 0;
-//    e.data.key_press.charcode = 0;
-//    g_application->OnEvent(&e);
-//    e.type = GHL::EVENT_TYPE_KEY_RELEASE;
-//    g_application->OnEvent(&e);
-//    return NO;
-//}
-
 
 @implementation HiddenInput
 - (void)insertText:(NSString *)text {
@@ -991,17 +954,7 @@ public:
     view = [[WinLibView alloc] initWithFrame:CGRectMake(0, 0, settings.width, settings.height)];
     controller.view = view;
     
-    NSString *reqSysVer = @"4.0";
-    NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
-    if ([currSysVer compare:reqSysVer options:NSNumericSearch] != NSOrderedAscending) {
-        LOG_INFO("setRootViewController");
-        [window setRootViewController:controller];
-    } else
-    {
-        while(window.subviews.count > 0)
-            [[window.subviews objectAtIndex:0] removeFromSuperview];
-        [window addSubview:controller.view];
-    }
+    [window setRootViewController:controller];
     [window setOpaque:YES];
     
     
