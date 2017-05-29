@@ -1021,7 +1021,7 @@ void GHL_CALL SystemCocoaTouch::HideKeyboard() {
 bool GHL_CALL SystemCocoaTouch::SetDeviceState( GHL::DeviceState name, const void* data) {
 	if (!data) return false;
 	if (name==GHL::DEVICE_STATE_ACCELEROMETER_ENABLED) {
-		const bool* state = (const bool*)data;
+		const bool* state = static_cast<const bool*>(data);
 		if (*state && !m_accelerometer) {
 			m_accelerometer = [[AccelerometerDelegate alloc] init];
 		} else if (!*state && m_accelerometer) {
@@ -1030,18 +1030,22 @@ bool GHL_CALL SystemCocoaTouch::SetDeviceState( GHL::DeviceState name, const voi
 		}
 		return true;
 	} else if (name==GHL::DEVICE_STATE_ORIENTATION_LOCKED) {
-		g_orientationLocked = *(const bool*)data;
+		g_orientationLocked = *static_cast<const bool*>(data);
 		return true;
 	} else if (name==GHL::DEVICE_STATE_MULTITOUCH_ENABLED) {
-		const bool* state = (const bool*)data;
+		const bool* state = static_cast<const bool*>(data);
 		m_controller.view.multipleTouchEnabled = *state ? YES : NO;
 		return true;
 	} else if (name==GHL::DEVICE_STATE_FRAME_INTERVAL) {
-        const GHL::Int32* state = (const GHL::Int32*)data;
+        const GHL::Int32* state = static_cast<const GHL::Int32*>(data);
         g_frame_interval = *state;
         if (m_controller.isViewLoaded) {
             [(WinLibView*)m_controller.view setFrameInterval:*state];
         }
+        return true;
+    } else if (name==GHL::DEVICE_STATE_KEEP_SCREEN_ON) {
+        const bool* state = static_cast<const bool*>(data);
+        UIApplication.sharedApplication.idleTimerDisabled = (*state) ? YES : NO;
         return true;
     }
 	return false;
