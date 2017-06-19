@@ -592,25 +592,13 @@ namespace GHL {
                 LOG_INFO("skip another window");
             }
         }
+
         void OnNativeWindowResized(ANativeWindow* window) {
             LOG_INFO("OnNativeWindowResized");
             check_main_thread();
-         
-            g_native_activity = m_activity;
-            if (window==m_window) {
-                if ( m_render && m_context!=EGL_NO_CONTEXT ) {
-                    if (!SetGLContext()) {
-                        return;
-                    }
-                    EGLint w, h;
-                    eglQuerySurface(m_display, m_surface, EGL_WIDTH, &w);
-                    eglQuerySurface(m_display, m_surface, EGL_HEIGHT, &h);
-                    m_render->Resize(w,h);
-                    Render();
-                }
-            } else {
-                LOG_INFO("skip another window");
-            }
+            int32_t w = ANativeWindow_getWidth(window);
+            int32_t h = ANativeWindow_getHeight(window);
+            LOG_INFO("window size: " << w << "x" << h);
         }
         void OnNativeWindowRedrawNeeded(ANativeWindow* window) {
             
@@ -672,11 +660,17 @@ namespace GHL {
             }
         }
         void OnContentRectChanged(const ARect* rect) {
+            if (!rect) return;
             check_main_thread();
-          
-            if (m_render) {
-                //m_render->Resize(rect->right - rect->left, rect->bottom - rect->top );
-                ILOG_INFO("OnContentRectChanged " << rect->left << "," << rect->top << "," << rect->right << "," << rect->bottom);
+            ILOG_INFO("OnContentRectChanged " << rect->left << "," << rect->top << "," << rect->right << "," << rect->bottom);
+                
+            if (m_render && m_context!=EGL_NO_CONTEXT) {
+                g_native_activity = m_activity;
+                int w = rect->right-rect->left;
+                int h = rect->bottom-rect->top;
+                if (w >0 && h > 0) {
+                    m_render->Resize(w,h);
+                }
             }
         }
         void OnVisibleRectChanged(int x,int y,int w,int h) {
