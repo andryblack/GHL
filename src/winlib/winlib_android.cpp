@@ -1146,6 +1146,7 @@ extern "C" JNIEXPORT void ANativeActivity_onCreate(ANativeActivity* activity,
         activity->callbacks->onWindowFocusChanged = &GHL::proxy_func_1<int,&GHL::GHLActivity::OnWindowFocusChanged>;
         activity->callbacks->onNativeWindowCreated = &GHL::proxy_func_1<ANativeWindow*,&GHL::GHLActivity::OnNativeWindowCreated>;
         activity->callbacks->onNativeWindowDestroyed = &GHL::proxy_func_1<ANativeWindow*,&GHL::GHLActivity::OnNativeWindowDestroyed>;
+        activity->callbacks->onNativeWindowResized = &GHL::proxy_func_1<ANativeWindow*,&GHL::GHLActivity::OnNativeWindowResized>;
         activity->callbacks->onInputQueueCreated = &GHL::proxy_func_1<AInputQueue*,&GHL::GHLActivity::OnInputQueueCreated>;
         activity->callbacks->onInputQueueDestroyed = &GHL::proxy_func_1<AInputQueue*,&GHL::GHLActivity::OnInputQueueDestroyed>;
         activity->callbacks->onContentRectChanged = &GHL::proxy_func_1<const ARect*,&GHL::GHLActivity::OnContentRectChanged>;
