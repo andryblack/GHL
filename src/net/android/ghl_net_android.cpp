@@ -42,12 +42,14 @@ struct time_profile {
 };
 #define PROFILE(name) time_profile name(#name);
 
+GHL_API jstring GHL_CALL GHL_JNI_CreateStringUTF8(JNIEnv* env,const char* str);
+
 struct jni_string
 {
     jstring jstr;
     JNIEnv* env;
     explicit jni_string(const char* str, JNIEnv* env) : env(env) {
-        jstr = env->NewStringUTF( str );
+        jstr = GHL_JNI_CreateStringUTF8(env,str);
     }
     explicit jni_string(jobject obj, JNIEnv* env) : jstr((jstring)obj),env(env){
     }

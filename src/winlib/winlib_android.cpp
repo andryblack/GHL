@@ -35,6 +35,8 @@ static void check_main_thread() {
 }
 static char message_buffer[256];
 
+GHL_API jstring GHL_CALL GHL_JNI_CreateStringUTF8(JNIEnv* env,const char* str);
+
 GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {
     if (::strlen(message)>=sizeof(message_buffer)) {
         // truncate
@@ -238,7 +240,7 @@ namespace GHL {
                 accept_button = 0x00000004; /// IME_ACTION_SEND
             }
             if (config->placeholder) {
-                placeholder = m_activity->env->NewStringUTF(config->placeholder);
+                placeholder = GHL_JNI_CreateStringUTF8(m_activity->env,config->placeholder);
             }
             m_activity->env->CallVoidMethod(m_activity->clazz,method,accept_button,placeholder);
             m_activity->env->DeleteLocalRef(ActivityClass);
@@ -332,7 +334,7 @@ namespace GHL {
                 ILOG_INFO("[native] not found openURL method");
                 return false;
             }
-            jstring urlobj = m_activity->env->NewStringUTF(url);
+            jstring urlobj = GHL_JNI_CreateStringUTF8(m_activity->env,url);
             jboolean res = m_activity->env->CallBooleanMethod(m_activity->clazz,method,urlobj);
             m_activity->env->DeleteLocalRef(ActivityClass);
             m_activity->env->DeleteLocalRef(urlobj);
@@ -1061,6 +1063,146 @@ namespace GHL {
         close(m_msgwrite);
         m_timer_state = TS_NONE;
     }
+}
+
+
+static const unsigned char UTF8_BYTE_MARK = 0x80;
+static const unsigned char UTF8_BYTE_MASK_READ = 0x3F;
+static const unsigned char UTF8_FIRST_BYTE_MARK[7] = { 0x00, 0x00, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC };
+
+static bool check_utf8(const char* s) {
+    const unsigned char* str = reinterpret_cast<const unsigned char*>(s);
+    while (*str) {
+        unsigned char c = *str;
+        if ( (c & 0x80) == 0x00 ) {
+            // single char
+            ++str;
+        } else if ((c & 0xe0)==0xc0) {
+            ++str;
+            if (!*str) return false;
+            c = *str;
+            if ((c & 0xc0) != 0x80 ) 
+                return false;
+            ++str;
+        } else if ((c & 0x0f) == 0xe0) {
+            ++str;
+            if (!*str) return false;
+            c = *str;
+            if ((c & 0xc0) != 0x80 ) 
+                return false;
+            ++str;
+            if (!*str) return false;
+            c = *str;
+            if ((c & 0xc0) != 0x80 ) 
+                return false;
+            ++str;
+        } else {
+            return false;
+        }
+    }
+    return true;
+}
+struct utf8_to_jchar_array_converter {
+    size_t size;
+    jchar* buffer;
+    size_t allocated;
+    utf8_to_jchar_array_converter() {
+        size = 0;
+        allocated = 32;
+        buffer = static_cast<jchar*>(::malloc(sizeof(jchar)*allocated));
+    }
+    ~utf8_to_jchar_array_converter() {
+        ::free(buffer);
+    }
+    void reallocate() {
+        allocated = allocated * 2;
+        buffer = static_cast<jchar*>(::realloc(buffer,sizeof(jchar)*allocated));
+    }
+    static const char* get_char(const char* s,uint32_t& ch) {
+        unsigned int length;
+    
+        const unsigned char* str = reinterpret_cast<const unsigned char*>(s);
+        
+        if (*str < UTF8_BYTE_MARK)
+        {
+            ch = *str;
+            return s + 1;
+        }
+        else if (*str < 0xC0)
+        {
+            ch = ' ';
+            return s + 1;
+        }
+        else if (*str < 0xE0) length = 2;
+        else if (*str < 0xF0) length = 3;
+        else if (*str < 0xF8) length = 4;
+        else
+        {
+            ch = ' ';
+            return s + 1;
+        }
+        
+        ch = (*str++ & ~UTF8_FIRST_BYTE_MARK[length]);
+        if (!*str) {
+            ch = ' ';
+            length = 0;
+        }
+        // Scary scary fall throughs.
+        switch (length)
+        {
+            case 4:
+                ch <<= 6;
+                ch += (*str++ & UTF8_BYTE_MASK_READ);
+                if (!*str) {
+                    ch = ' ';
+                    break;
+                }
+            case 3:
+                ch <<= 6;
+                ch += (*str++ & UTF8_BYTE_MASK_READ);
+                if (!*str) {
+                    ch = ' ';
+                    break;
+                }
+            case 2:
+                ch <<= 6;
+                ch += (*str++ & UTF8_BYTE_MASK_READ);
+        }
+        
+        return reinterpret_cast<const char*>(str);
+    }
+    void convert(const char* str) {
+        while (*str) {
+            uint32_t ch = 0;
+            str = get_char(str,ch);
+            if (size>=allocated) {
+                reallocate();
+            }
+            if (ch < 0x10000) {
+                buffer[size++] = static_cast<uint16_t>(ch);
+            } else {
+                uint32_t msh = static_cast<uint32_t>(ch - 0x10000) >> 10;
+                buffer[size++] = static_cast<uint16_t>(0xD800 + msh);
+                if (size>=allocated) {
+                    reallocate();
+                }
+                uint32_t lsh = static_cast<uint32_t>(ch - 0x10000) & 0x3ff;
+                buffer[size++] = static_cast<uint16_t>(0xDC00 + lsh);
+            }
+        }
+    }
+};
+
+GHL_API jstring GHL_CALL GHL_JNI_CreateStringUTF8(JNIEnv* env,const char* str) {
+    if (check_utf8(str)) {
+        return env->NewStringUTF(str);
+    } else {
+        utf8_to_jchar_array_converter c;
+        c.convert(str);
+        jstring res = env->NewString(c.buffer,c.size);
+        return res;
+    }
+    return 0;
 }
 
 extern "C" JNIEXPORT jboolean JNICALL Java_com_GHL_Activity_nativeOnKey
