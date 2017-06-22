@@ -56,6 +56,9 @@ namespace GHL {
         if (feature == RENDER_FEATURE_NPOT_TEXTURES) {
             return true;
         }
+        if (feature == RENDER_FEATURE_NPOT_TARGET) {
+            return true;
+        }
         return RenderOpenGLPPL::IsFeatureSupported(feature);
     }
     

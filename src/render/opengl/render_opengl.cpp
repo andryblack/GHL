@@ -48,7 +48,8 @@ namespace GHL {
     }
     
     bool GHL_CALL RenderOpenGL2::IsFeatureSupported(RenderFeature feature) {
-        if (feature == RENDER_FEATURE_NPOT_TEXTURES) {
+        if (feature == RENDER_FEATURE_NPOT_TEXTURES ||
+            feature == RENDER_FEATURE_NPOT_TARGET) {
             return gl.npot_textures;
         }
         return RenderOpenGLPPL::IsFeatureSupported(feature);
