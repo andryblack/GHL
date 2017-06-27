@@ -152,18 +152,14 @@ namespace GHL {
             , m_vfs(0)
             , m_input_queue(0)
         {
+            m_running = false;
+
             m_display = EGL_NO_DISPLAY;
             m_context = EGL_NO_CONTEXT;
             m_surface = EGL_NO_SURFACE;
-   
-            pthread_mutex_init(&m_mutex, NULL);
-            pthread_cond_init(&m_cond, NULL);
-
         }
         ~GHLActivity() {
             delete m_vfs;
-            pthread_cond_destroy(&m_cond);
-            pthread_mutex_destroy(&m_mutex);
         }
 
         class event_scoped_lock {
@@ -439,11 +435,56 @@ namespace GHL {
                 m_surface = EGL_NO_SURFACE;
             }
         }
+        void dump_config(EGLConfig c) {
+            EGLint v;
+            eglGetConfigAttrib(m_display, c, EGL_NATIVE_VISUAL_ID, &v);
+            LOG_INFO("EGL_NATIVE_VISUAL_ID: " << v);
+            eglGetConfigAttrib(m_display, c, EGL_ALPHA_SIZE, &v);
+            LOG_INFO("EGL_ALPHA_SIZE:   " << v);
+            eglGetConfigAttrib(m_display, c, EGL_RED_SIZE, &v);
+            LOG_INFO("EGL_RED_SIZE:     " << v);
+            eglGetConfigAttrib(m_display, c, EGL_GREEN_SIZE, &v);
+            LOG_INFO("EGL_GREEN_SIZE:   " << v);
+            eglGetConfigAttrib(m_display, c, EGL_BLUE_SIZE, &v);
+            LOG_INFO("EGL_BLUE_SIZE:    " << v);
+            eglGetConfigAttrib(m_display, c, EGL_SAMPLES, &v);
+            LOG_INFO("EGL_SAMPLES:      " << v);
+            eglGetConfigAttrib(m_display, c, EGL_STENCIL_SIZE, &v);
+
+            LOG_INFO("EGL_STENCIL_SIZE: " << v);
+            eglGetConfigAttrib(m_display, c, EGL_DEPTH_SIZE, &v);
+            LOG_INFO("EGL_DEPTH_SIZE:   " << v);
+            eglGetConfigAttrib(m_display, c, EGL_NATIVE_RENDERABLE, &v);
+            LOG_INFO("EGL_NATIVE_RENDERABLE: " << v);
+            eglGetConfigAttrib(m_display, c, EGL_RENDERABLE_TYPE, &v);
+            LOG_INFO("EGL_RENDERABLE_TYPE:   " << v);
+            eglGetConfigAttrib(m_display, c, EGL_SAMPLE_BUFFERS, &v);
+            LOG_INFO("EGL_SAMPLE_BUFFERS:    " << v);
+        }
+        void dump_all_configs(const EGLint* attribs) {
+            EGLint numConfigs;
+            EGLint format;
+            eglChooseConfig(m_display, attribs,0, 0, &numConfigs);
+            if (numConfigs <= 0) {
+                GHL_Log(GHL::LOG_LEVEL_ERROR,"Unable to eglChooseConfig");
+                return;
+            }
+            EGLConfig* configs = new EGLConfig[numConfigs];
+            eglChooseConfig(m_display, attribs,configs, numConfigs, &numConfigs);
+            for (int i=0;i<numConfigs;++i) {
+                dump_config(configs[i]);
+            }
+            delete [] configs;
+        }
         bool CreateContext(const EGLint* attribs) {
             EGLConfig config = 0;
             EGLint numConfigs;
             EGLint format;
 
+#ifdef GHL_DEBUG
+            LOG_INFO("EGL configs:");
+            dump_all_configs(attribs);
+#endif
              /* Here, the application chooses the configuration it desires. In this
              * sample, we have a very simplified selection process, where we pick
              * the first EGLConfig that matches our criteria */
@@ -452,6 +493,8 @@ namespace GHL {
                 GHL_Log(GHL::LOG_LEVEL_ERROR,"Unable to eglChooseConfig");
                 return false ;
             }
+            LOG_INFO("EGL selected config:");
+            dump_config(config);
             
             /* EGL_NATIVE_VISUAL_ID is an attribute of the EGLConfig that is
              * guaranteed to be accepted by ANativeWindow_setBuffersGeometry().
@@ -840,8 +883,18 @@ namespace GHL {
         void OnTimerCallback() {
             g_native_activity = m_activity;
             check_main_thread();
-        
-            Render();
+            
+            Render(true);
+
+            if (m_running) {
+                ScheduleFrame();
+            }
+        }
+        void ScheduleFrame() {
+            int8_t cmd = 1;
+            if (write(m_msgwrite, &cmd, sizeof(cmd)) != sizeof(cmd)) {
+                LOG_ERROR("Failure writing android_app cmd:" << strerror(errno));
+            }
         }
         static int ALooper_InputCallback(int fd, int events, void* data) {
             //LOG_INFO("ALooper_InputCallback");
@@ -860,7 +913,7 @@ namespace GHL {
             }
             return 1;
         }
-        void Render() {
+        void Render(bool from_timer = false) {
             //LOG_DEBUG("Render ->");
             if (!SetGLContext()) {
                return;
@@ -870,6 +923,8 @@ namespace GHL {
                 timeval now;
                 gettimeofday(&now,0);
                 GHL::UInt32 frameTime = (now.tv_sec-m_last_time.tv_sec)*1000000 + (now.tv_usec-m_last_time.tv_usec);
+                if (from_timer && (frameTime < (1000000*g_frame_interval/60)))
+                    return;
                 m_app->OnFrame( frameTime );
                 eglSwapBuffers(m_display, m_surface);
                 m_last_time = now;
@@ -949,19 +1004,11 @@ namespace GHL {
         RenderImpl*         m_render;
         timeval             m_last_time;
         AInputQueue*        m_input_queue;
-        static void* TimerThread(void* param);
+        
         int m_msgread;
         int m_msgwrite;
-        pthread_t   m_thread;
-        pthread_mutex_t m_mutex;
-        pthread_cond_t m_cond;
-        volatile enum {
-            TS_NONE,
-            TS_START,
-            TS_RUNNING,
-            TS_STOP,
-            TS_STOPPED
-        } m_timer_state;
+        bool m_running;
+       
     };
     template <void(GHLActivity::*func)()> static inline void proxy_func(ANativeActivity* activity) {
         if ( activity && activity->instance ) {
@@ -981,42 +1028,8 @@ namespace GHL {
     }
 
     
-    void* GHLActivity::TimerThread(void* param) {
-        GHLActivity* activity = static_cast<GHLActivity*>(param);
-        
-        pthread_mutex_lock(&activity->m_mutex);
-        activity->m_timer_state = TS_RUNNING;
-        int fd  = activity->m_msgwrite;
-        pthread_cond_broadcast(&activity->m_cond);
-        pthread_mutex_unlock(&activity->m_mutex);
-
-        pthread_setname_np(pthread_self(),"GHL_Timer");
-        
-        bool exit = false;
-        while (!exit) {
-            pthread_mutex_lock(&activity->m_mutex);
-            exit = activity->m_timer_state==TS_STOP;
-            pthread_mutex_unlock(&activity->m_mutex);
-   
-            if (!exit) {
-                usleep(1000000*g_frame_interval/60);
-                int8_t cmd = 1;
-                if (write(fd, &cmd, sizeof(cmd)) != sizeof(cmd)) {
-                    LOG_ERROR("Failure writing android_app cmd:" << strerror(errno));
-                }
-            }
-            
-        }
-        
-        pthread_mutex_lock(&activity->m_mutex);
-        activity->m_timer_state = TS_STOPPED;
-        pthread_cond_broadcast(&activity->m_cond);
-        pthread_mutex_unlock(&activity->m_mutex);
-        return NULL;
-    }
-    
     void GHLActivity::StartTimerThread() {
-
+        m_running = true;
         
         int msgpipe[2];
         if (pipe(msgpipe)) {
@@ -1035,33 +1048,16 @@ namespace GHL {
         ALooper_addFd(looper, m_msgread, ALOOPER_POLL_CALLBACK, ALOOPER_EVENT_INPUT, &GHLActivity::ALooper_TimerCallback,
                       this);
         
-        pthread_attr_t attr;
-        pthread_attr_init(&attr);
-        pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-        pthread_create(&m_thread, &attr, &GHLActivity::TimerThread , this);
-        
-        // Wait for thread to start.
-        pthread_mutex_lock(&m_mutex);
-        m_timer_state = TS_START;
-        while (m_timer_state!=TS_RUNNING) {
-            pthread_cond_wait(&m_cond, &m_mutex);
-        }
-        pthread_mutex_unlock(&m_mutex);
-
+        m_running = true;
+        ScheduleFrame();
     }
     void GHLActivity::StopTimerThread() {
-        pthread_mutex_lock(&m_mutex);
-        m_timer_state = TS_STOP;
-        while (m_timer_state!=TS_STOPPED) {
-            pthread_cond_wait(&m_cond, &m_mutex);
-        }
-        pthread_mutex_unlock(&m_mutex);
+        m_running = false;
         
         ALooper_removeFd(ALooper_forThread(),m_msgread);
         
         close(m_msgread);
         close(m_msgwrite);
-        m_timer_state = TS_NONE;
     }
 }
 
