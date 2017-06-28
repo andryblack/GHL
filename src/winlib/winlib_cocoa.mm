@@ -970,6 +970,27 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 		[m_window release];
 	
 }
+- (void)applicationDidBecomeActive:(NSNotification *)notification {
+    LOG_VERBOSE("Activated");
+    if (m_application  ) {
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_ACTIVATE;
+        m_application->OnEvent(&e);
+    }
+}
+
+- (void)applicationDidResignActive:(NSNotification *)notification {
+    if (g_fullscreen) {
+        //[m_window setIsVisible:NO];
+        [m_window setLevel:NSNormalWindowLevel];
+    }
+    LOG_VERBOSE("Deactivated");
+    if (m_application ) {
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_DEACTIVATE;
+        m_application->OnEvent(&e);
+    }
+}
 
 /// ---- NSWindowDelegate
 
@@ -978,31 +999,6 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 }
 - (void)windowDidEndSheet:(NSNotification *)notification {
     --m_sheets_level;
-}
-
-- (void)windowDidBecomeKey:(NSNotification *)notification {
-    (void)notification;
-    
-    LOG_VERBOSE("Activated");
-    if (m_application && (m_sheets_level==0) ) {
-        GHL::Event e;
-        e.type = GHL::EVENT_TYPE_ACTIVATE;
-        m_application->OnEvent(&e);
-    }
-}
-
-- (void)windowDidResignKey:(NSNotification *)notification {
-    (void)notification;
-    if (g_fullscreen) {
-        //[m_window setIsVisible:NO];
-        [m_window setLevel:NSNormalWindowLevel];
-    }
-	LOG_VERBOSE("Deactivated");
-    if (m_application && (m_sheets_level==0) ) {
-        GHL::Event e;
-        e.type = GHL::EVENT_TYPE_DEACTIVATE;
-        m_application->OnEvent(&e);
-    }
 }
 
 - (void) setTimerInterval {
