@@ -71,6 +71,7 @@ namespace GHL {
 		virtual void GHL_CALL SetVertexBuffer(const VertexBuffer* buf);
 
         virtual bool GHL_CALL IsFeatureSupported(RenderFeature feature);
+        virtual bool GHL_CALL IsTextureFormatSupported(TextureFormat fmt);
         
 		virtual void GHL_CALL DebugDrawText( Int32 x,Int32 y,const char* text );
 	

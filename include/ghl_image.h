@@ -42,7 +42,8 @@ namespace GHL
         IMAGE_FORMAT_565,       ///< r5,g6,b5 channels
         IMAGE_FORMAT_4444,      ///< r4,g4,b4,alpha4 channels
 		IMAGE_FORMAT_PVRTC_2,	///< compressed format PVRTC_2
-		IMAGE_FORMAT_PVRTC_4	///< compressed format PVRTC_4
+		IMAGE_FORMAT_PVRTC_4,	///< compressed format PVRTC_4
+        IMAGE_FORMAT_ETC_1      ///< compressed format ETC1
     };
 
     /// image object interface
@@ -55,11 +56,11 @@ namespace GHL
         /// get image format
         virtual ImageFormat GHL_CALL GetFormat() const = 0;
         /// get image data
-        virtual const Data* GHL_CALL GetData() const = 0;
+        virtual Data* GHL_CALL GetData() const = 0;
 		/// convert image to format
         virtual bool GHL_CALL Convert(ImageFormat fmt) = 0;
         /// fill image with specified color
-        virtual void GHL_CALL Fill(UInt32 clr) = 0;
+        virtual bool GHL_CALL Fill(UInt32 clr) = 0;
         /// swap RB channels
         virtual bool GHL_CALL SwapRB() = 0;
         /// set alpha from another image
@@ -72,16 +73,14 @@ namespace GHL
         /// clone image
         virtual Image* GHL_CALL Clone() const = 0;
         /// Draw other image
-        virtual void GHL_CALL Draw(UInt32 x,UInt32 y,const Image* src) = 0;
+        virtual bool GHL_CALL Draw(UInt32 x,UInt32 y,const Image* src) = 0;
         /// Premultiply alpha
-        virtual void GHL_CALL PremultiplyAlpha() = 0;
-        /// data ptr
-        virtual Byte* GetDataPtr() = 0;
+        virtual bool GHL_CALL PremultiplyAlpha() = 0;
     };
 
 } /*namespace*/
 
 GHL_API GHL::Image* GHL_CALL GHL_CreateImage( GHL::UInt32 w, GHL::UInt32 h,GHL::ImageFormat fmt);
-GHL_API GHL::Image* GHL_CALL GHL_CreateImageWithData( GHL::UInt32 w, GHL::UInt32 h,GHL::ImageFormat fmt,const GHL::Byte* data);
+GHL_API GHL::Image* GHL_CALL GHL_CreateImageWithData( GHL::UInt32 w, GHL::UInt32 h,GHL::ImageFormat fmt, GHL::Data* data);
 
 #endif /*GHL_IMAGE_H*/

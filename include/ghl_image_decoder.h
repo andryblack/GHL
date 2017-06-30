@@ -38,6 +38,7 @@ namespace GHL
 		IMAGE_FILE_FORMAT_JPEG,		///< jpeg
 		IMAGE_FILE_FORMAT_TGA,		///< targa
 		IMAGE_FILE_FORMAT_PVRTC,	///< pvrtc
+        IMAGE_FILE_FORMAT_ETC,      ///< etc
 	};
     
     /// Image information

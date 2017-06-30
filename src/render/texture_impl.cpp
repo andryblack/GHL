@@ -44,6 +44,7 @@ namespace GHL {
             case GHL::TEXTURE_FORMAT_4444:      res *= 2; break;
             case GHL::TEXTURE_FORMAT_PVRTC_2BPPV1: res = (res * 2 + 7)/8; break;
             case GHL::TEXTURE_FORMAT_PVRTC_4BPPV1: res = (res * 4 + 7)/8; break;
+            case GHL::TEXTURE_FORMAT_ETC1:      res = (res * 8 + 15)/16; break;
             default: break;
         }
         if (HeveMipmaps())
@@ -62,6 +63,7 @@ GHL_API GHL::TextureFormat GHL_CALL GHL_ImageFormatToTextureFormat( GHL::ImageFo
         case GHL::IMAGE_FORMAT_4444:    return GHL::TEXTURE_FORMAT_4444;
         case GHL::IMAGE_FORMAT_PVRTC_2: return GHL::TEXTURE_FORMAT_PVRTC_2BPPV1;
         case GHL::IMAGE_FORMAT_PVRTC_4: return GHL::TEXTURE_FORMAT_PVRTC_4BPPV1;
+        case GHL::IMAGE_FORMAT_ETC_1:   return GHL::TEXTURE_FORMAT_ETC1;
         default: break;
     }
     return GHL::TEXTURE_FORMAT_UNKNOWN;
@@ -77,7 +79,19 @@ GHL_API GHL::ImageFormat GHL_CALL GHL_TextureFormatToImageFormat( GHL::TextureFo
         case GHL::TEXTURE_FORMAT_4444:      return GHL::IMAGE_FORMAT_4444;
         case GHL::TEXTURE_FORMAT_PVRTC_2BPPV1: return GHL::IMAGE_FORMAT_PVRTC_2;
         case GHL::TEXTURE_FORMAT_PVRTC_4BPPV1: return GHL::IMAGE_FORMAT_PVRTC_4;
+        case GHL::TEXTURE_FORMAT_ETC1:      return GHL::IMAGE_FORMAT_ETC_1;
         default: break;
     }
     return GHL::IMAGE_FORMAT_UNKNOWN;
+}
+
+GHL_API bool GHL_CALL GHL_IsCompressedFormat( GHL::TextureFormat fmt ) {
+    switch (fmt) {
+        case GHL::TEXTURE_FORMAT_PVRTC_2BPPV1:
+        case GHL::TEXTURE_FORMAT_PVRTC_4BPPV1:
+        case GHL::TEXTURE_FORMAT_ETC1:
+            return true;
+        default: break;
+    }
+    return false;
 }

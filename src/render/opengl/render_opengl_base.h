@@ -53,9 +53,10 @@ namespace GHL
 		virtual void GHL_CALL Clear(float r,float g,float b,float a, float depth) ;
 		
 		
-		/// create empty texture
+		/// create texture
 		virtual Texture* GHL_CALL CreateTexture(UInt32 width,UInt32 height,TextureFormat fmt,const Image* data);
-		
+        virtual bool GHL_CALL IsTextureFormatSupported(TextureFormat fmt);
+        
 			
 		/// set blend factors
 		virtual void GHL_CALL SetupBlend(bool enable,BlendFactor src_factor,BlendFactor dst_factor) ;

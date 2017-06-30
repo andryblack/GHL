@@ -143,12 +143,13 @@ namespace GHL {
     bool RenderImpl::RenderInit() {
         LOG_VERBOSE("RenderImpl::RenderInit");
         if (m_sfont_texture) return true;
-        //size_t size = lucida_console_regular_8_width*lucida_console_regular_8_height*4;
-        //ConstInlinedData data((const Byte*)lucida_console_regular_8_data,size);
+        Data* data = GHL_HoldData((const Byte*)lucida_console_regular_8_data,
+                                  lucida_console_regular_8_width*lucida_console_regular_8_height*4);
         Image* img = GHL_CreateImageWithData(lucida_console_regular_8_width,
                                      lucida_console_regular_8_height,
                                      IMAGE_FORMAT_RGBA,
-                                             (const Byte*)lucida_console_regular_8_data);
+                                             data);
+        data->Release();
         m_sfont_texture = CreateTexture(lucida_console_regular_8_width,
                                         lucida_console_regular_8_height,
                                         TEXTURE_FORMAT_RGBA,img);
@@ -569,7 +570,9 @@ namespace GHL {
     bool GHL_CALL RenderImpl::IsFeatureSupported(RenderFeature /*feature*/) {
         return false;
     }
-    
+    bool GHL_CALL RenderImpl::IsTextureFormatSupported(TextureFormat fmt) {
+        return false;
+    }
     void RenderImpl::MatrixMul(const float* a,const float* b,float* r) {
         for (int x=0; x<4; x++)
         {

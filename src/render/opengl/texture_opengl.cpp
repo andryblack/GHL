@@ -16,12 +16,12 @@ namespace GHL {
 	
 	static inline  GL::GLenum convert_int_format( const GL& gl,TextureFormat fmt ) {
 #ifdef GHL_OPENGLES
-//		if (DinamicGLFeature_IMG_texture_compression_pvrtc_Supported()) {
-//			if ( fmt == TEXTURE_FORMAT_PVRTC_2BPPV1 )
-//				return  gl.COMPRESSED_RGBA_PVRTC_2BPPV1_IMG;
-//			if ( fmt == TEXTURE_FORMAT_PVRTC_4BPPV1 )
-//				return  gl.COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
-//		} 
+        if ( fmt == TEXTURE_FORMAT_PVRTC_2BPPV1 )
+            return  gl.COMPRESSED_RGBA_PVRTC_2BPPV1_IMG;
+        if ( fmt == TEXTURE_FORMAT_PVRTC_4BPPV1 )
+            return  gl.COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
+        if ( fmt == TEXTURE_FORMAT_ETC1 )
+            return  gl.ETC1_RGB8_OES;
         if (fmt==TEXTURE_FORMAT_ALPHA )
             return  gl.ALPHA;
 		if (fmt==TEXTURE_FORMAT_RGB )
@@ -41,11 +41,6 @@ namespace GHL {
 		return  gl.RGBA;
 	}
 	
-	static inline bool format_compressed( TextureFormat fmt ) {
-		return fmt == TEXTURE_FORMAT_PVRTC_2BPPV1 ||
-		fmt == TEXTURE_FORMAT_PVRTC_4BPPV1;
-	}
-
 	static inline  GL::GLenum convert_format(const GL& gl, TextureFormat fmt ) {
         if (fmt==TEXTURE_FORMAT_ALPHA )
             return  gl.ALPHA;
@@ -94,7 +89,7 @@ namespace GHL {
         CHECK_GL(gl.TexParameteri(gl.TEXTURE_2D,  gl.TEXTURE_WRAP_T,  gl.CLAMP_TO_EDGE));
 		
         
-        if (format_compressed(fmt)) {
+        if (GHL_IsCompressedFormat(fmt)) {
 			if ( data ) {
                 const Data* tdata = data->GetData();
 				CHECK_GL(gl.CompressedTexImage2D  (gl.TEXTURE_2D, 0, convert_int_format(gl,fmt), w, h, 0,tdata->GetSize(), tdata->GetData() ));
@@ -238,7 +233,7 @@ namespace GHL {
         UInt32 h = data->GetHeight();
         if (gl.UNPACK_ROW_LENGTH)
             CHECK_GL(gl.PixelStorei(gl.UNPACK_ROW_LENGTH,w));
-		if (format_compressed(m_fmt)) {
+		if (GHL_IsCompressedFormat(m_fmt)) {
             const Data* tdata = data->GetData();
 			CHECK_GL(gl.CompressedTexSubImage2D  (gl.TEXTURE_2D, level, x, y, w, h,
                                          convert_int_format(gl,m_fmt), tdata->GetSize(), tdata->GetData()));

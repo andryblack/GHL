@@ -89,7 +89,7 @@ namespace GHL {
     bool GLES1Api::InitGL(GL* api) {
         GLES1Api_impl::Init();
         
-        
+        api->IsTextureFormatSupported = 0;
         api->rtapi.valid = false;
         api->sdrapi.valid = false;
         

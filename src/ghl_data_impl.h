@@ -59,9 +59,7 @@ namespace GHL {
 		Byte* GetDataPtr() { return m_buffer; }
 		/// Const data ptr
 		virtual const Byte* GHL_CALL	GetData() const { return m_buffer; }
-		/// set data
-		virtual void GHL_CALL	SetData( UInt32 offset, const Byte* data, UInt32 size ) ;
-        /// clone data
+		/// clone data
         virtual Data* GHL_CALL  Clone() const { return 0; }
 	};
 	
@@ -85,8 +83,8 @@ namespace GHL {
 		/// Const data ptr
 		virtual const Byte* GHL_CALL	GetData() const { return m_buffer; }
 		/// set data
-        virtual void GHL_CALL	SetData( UInt32 /*offset*/, const Byte* /*data*/, UInt32 /*size*/ ) {
-			
+        virtual Byte* GHL_CALL	GetDataPtr() {
+            return 0;
 		}
         /// clone data
         virtual Data* GHL_CALL  Clone() const { return 0; }
@@ -137,18 +135,14 @@ namespace GHL {
             return &(m_data[0]);
         }
 		/// set data
-		virtual void GHL_CALL	SetData( UInt32 offset, const Byte* data, UInt32 size ) {
-            if (offset+size<=m_data.size())
-                ::memcpy(&(m_data[offset]),data,size);
-        }
-        
-        Byte* data() {
+		virtual Byte* GHL_CALL	GetDataPtr( ) {
             return &(m_data[0]);
         }
+        
         void append( const Byte* data, UInt32 size ) {
             size_t pos = m_data.size();
             m_data.resize(m_data.size()+size);
-            SetData(UInt32(pos),data,size);
+            memcpy(GetDataPtr()+pos,data,size);
         }
         
         void resize( UInt32 size ) {

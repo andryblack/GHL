@@ -217,21 +217,44 @@ namespace GHL {
         }
 	}
 	
-	
+    bool GHL_CALL RenderOpenGLBase::IsTextureFormatSupported(TextureFormat fmt) {
+        switch (fmt) {
+            case TEXTURE_FORMAT_ALPHA:
+            case TEXTURE_FORMAT_RGB:
+            case TEXTURE_FORMAT_RGBA:
+            case TEXTURE_FORMAT_RGBX:
+            case TEXTURE_FORMAT_565:
+            case TEXTURE_FORMAT_4444:
+                return true;
+                
+            default:
+                break;
+        }
+        if (gl.IsTextureFormatSupported) {
+            if (gl.IsTextureFormatSupported(fmt))
+                return true;
+        }
+        return RenderImpl::IsTextureFormatSupported(fmt);
+    }
 	
 	/// create empty texture
 	Texture* GHL_CALL RenderOpenGLBase::CreateTexture(UInt32 width,UInt32 height,TextureFormat fmt,const Image* data) {
-		if ( fmt == TEXTURE_FORMAT_PVRTC_2BPPV1 || fmt == TEXTURE_FORMAT_PVRTC_4BPPV1 ) {
-#ifdef GHL_OPENGLES
-//			if ( !DinamicGLFeature_IMG_texture_compression_pvrtc_Supported() ) {
-//				return 0;
-//			}
-//			if ( !data )
-				return 0;
-#else
-			return 0;
-#endif
-		}
+        if (GHL_IsCompressedFormat(fmt)) {
+            if (!data) {
+                LOG_ERROR("CreateTexture failed create empty compressed texture");
+                return 0;
+            }
+            if (GHL_ImageFormatToTextureFormat(data->GetFormat())!=fmt && fmt != GHL::TEXTURE_FORMAT_UNKNOWN) {
+                LOG_ERROR("CreateTexture invalid format for compressed texure");
+                return 0;
+            }
+            fmt = GHL_ImageFormatToTextureFormat(data->GetFormat());
+            if (!IsTextureFormatSupported(fmt)) {
+                LOG_ERROR("CreateTexture not supported compressed texure format");
+                return 0;
+            }
+        }
+        
         if (data) {
             if (data->GetWidth() != width || data->GetHeight() != height) {
                 LOG_ERROR("CreateTexture with invalid data size");

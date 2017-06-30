@@ -125,7 +125,7 @@ namespace GHL {
         static void ghl_jpeg_init_destination(j_compress_ptr cinfo) {
             ghl_jpeg_destination_mgr* dest = (ghl_jpeg_destination_mgr*) cinfo->dest;
             dest->data->resize(OUTPUT_BUF_SIZE);
-            dest->next_output_byte = dest->data->data();
+            dest->next_output_byte = dest->data->GetDataPtr();
             dest->free_in_buffer = OUTPUT_BUF_SIZE;
 
         }
@@ -133,7 +133,7 @@ namespace GHL {
             ghl_jpeg_destination_mgr* dest = (ghl_jpeg_destination_mgr*) cinfo->dest;
             size_t pos = dest->data->GetSize();
             dest->data->resize(pos+OUTPUT_BUF_SIZE);
-            dest->next_output_byte = dest->data->data() + pos;
+            dest->next_output_byte = dest->data->GetDataPtr() + pos;
             dest->free_in_buffer = OUTPUT_BUF_SIZE;
             return TRUE;
         }

@@ -71,7 +71,18 @@ namespace GHL {
             }
             return false;
         }
-        
+        static bool IsTextureFormatSupported(GHL::TextureFormat fmt) {
+            switch (fmt) {
+                case GHL::TEXTURE_FORMAT_ETC1:
+                    return CheckExtensionSupported("GL_OES_compressed_ETC1_RGB8_texture");
+                case GHL::TEXTURE_FORMAT_PVRTC_2BPPV1:
+                case GHL::TEXTURE_FORMAT_PVRTC_4BPPV1:
+                    return CheckExtensionSupported("GL_IMG_texture_compression_pvrtc");
+                default:
+                    break;
+            }
+            return false;
+        }
     };
     const char* GLES2Api_impl::all_extensions = 0;
     
@@ -96,7 +107,7 @@ namespace GHL {
         
         api->rtapi.valid = false;
         api->sdrapi.valid = false;
-        
+        api->IsTextureFormatSupported = &GLES2Api_impl::IsTextureFormatSupported;
         
 #define DYNAMIC_GL_CONSTANT(Name) api->Name = GL_##Name;
         DYNAMIC_GL_CONSTANTS
@@ -105,6 +116,18 @@ namespace GHL {
         DYNAMIC_GL_FUNCTIONS
 #undef DYNAMIC_GL_FUNCTION
         
+#ifdef GL_OES_compressed_ETC1_RGB8_texture
+        api->ETC1_RGB8_OES = GL_ETC1_RGB8_OES;
+#else
+        api->ETC1_RGB8_OES = 0;
+#endif
+#ifdef GL_IMG_texture_compression_pvrtc
+        api->COMPRESSED_RGBA_PVRTC_2BPPV1_IMG = GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG;
+        api->COMPRESSED_RGBA_PVRTC_4BPPV1_IMG = GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
+#else
+        api->COMPRESSED_RGBA_PVRTC_2BPPV1_IMG = 0;
+        api->COMPRESSED_RGBA_PVRTC_4BPPV1_IMG = 0;
+#endif
         api->GetError = &glGetError;
         
         if (GLES2Api_impl::CheckExtensionSupported("GL_OES_rgb8_rgba8")) {

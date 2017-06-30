@@ -10,6 +10,7 @@
 #define GHL_render_opengl_api_h
 
 #include "ghl_api.h"
+#include "ghl_texture.h"
 #include <stddef.h>
 
 #if defined(GHL_PLATFORM_IOS) || defined(GHL_PLATFORM_ANDROID) || defined(GHL_PLATFORM_EMSCRIPTEN)
@@ -49,6 +50,7 @@ namespace GHL {
         
         static const GLboolean _TRUE;
         static const GLboolean _FALSE;
+        
 #define DYNAMIC_GL_CONSTANTS_Multitexture \
 \
 DYNAMIC_GL_CONSTANT(TEXTURE0)\
@@ -140,6 +142,11 @@ DYNAMIC_GL_CONSTANT(NO_ERROR)\
         DYNAMIC_GL_CONSTANTS_Multitexture
         DYNAMIC_GL_CONSTANTS
 #undef DYNAMIC_GL_CONSTANT
+        
+        GLenum ETC1_RGB8_OES;
+        GLenum COMPRESSED_RGBA_PVRTC_2BPPV1_IMG;
+        GLenum COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
+        
         
 #define DYNAMIC_GL_FUNCTIONS_Multitexture \
 DYNAMIC_GL_FUNCTION(ActiveTexture,(GLenum))\
@@ -260,6 +267,7 @@ DYNAMIC_GL_FUNCTION(void,EnableVertexAttribArray,(GLuint))\
         bool npot_textures;
         
         void (*Release)();
+        bool (*IsTextureFormatSupported)(GHL::TextureFormat);
     };
     
     struct GLffpl {

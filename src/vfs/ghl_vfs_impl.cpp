@@ -129,7 +129,7 @@ GHL_API GHL::Data* GHL_CALL GHL_ReadAllData( GHL::DataStream* ds ) {
     while (!ds->Eof()) {
         GHL::UInt32 pos = data->GetSize();
         data->resize(pos + buffer_size);
-        GHL::UInt32 readed = ds->Read(data->data() + pos,buffer_size);
+        GHL::UInt32 readed = ds->Read(data->GetDataPtr() + pos,buffer_size);
         data->resize(pos+readed);
         if( readed == 0 ) break;
     }

@@ -229,6 +229,8 @@ namespace GHL
         
         /// feature is supported
         virtual bool GHL_CALL IsFeatureSupported(RenderFeature feature) = 0;
+        /// texture format is supported
+        virtual bool GHL_CALL IsTextureFormatSupported(TextureFormat fmt) = 0;
 		
 		/// draw debug text
 		virtual void GHL_CALL DebugDrawText( Int32 x,Int32 y,const char* text ) = 0;

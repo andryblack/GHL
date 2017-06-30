@@ -303,7 +303,7 @@ Image* PngDecoder::Decode(DataStream* file)
 	}
 
 	// Fill array of pointers to rows in image data
-	DataImpl* dataBuffer = image->GetRawData();
+	Data* dataBuffer = image->GetData();
 	if (!buffer) {
 		png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
 		delete [] RowPointers;

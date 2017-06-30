@@ -30,23 +30,6 @@
 
 static const char* MODULE = "Data";
 
-namespace GHL {
- 
-    
-    
-	void GHL_CALL	InlinedData::SetData( UInt32 offset, const Byte* data, UInt32 size ) {
-		if (offset>=m_size) return;
-		Byte* begin = m_buffer + offset;
-		Byte* end = m_buffer + offset + size;
-		if ( end > ( m_buffer + m_size ) ) {
-			end = m_buffer + m_size;
-		}
-		size = UInt32(end - begin);
-		::memcpy(m_buffer, data, size);
-	}
-    
-}
-
 GHL_API GHL::Data* GHL_CALL GHL_CreateData( GHL::UInt32 size ,
                                            bool fill  , 
                                            GHL::Byte filler ) {

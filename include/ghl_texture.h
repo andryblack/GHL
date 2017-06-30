@@ -44,7 +44,8 @@ namespace GHL
 		TEXTURE_FORMAT_565,             ///< 5-6-5
 		TEXTURE_FORMAT_4444,            ///< 4-4-4-4
 		TEXTURE_FORMAT_PVRTC_2BPPV1,	///< compressed, PVRTC_2
-		TEXTURE_FORMAT_PVRTC_4BPPV1		///< compressed, PVRTC_4
+		TEXTURE_FORMAT_PVRTC_4BPPV1,	///< compressed, PVRTC_4
+        TEXTURE_FORMAT_ETC1             ///< compressed, ETC1
 	};
 
 
@@ -113,6 +114,7 @@ namespace GHL
 
 GHL_API GHL::TextureFormat GHL_CALL GHL_ImageFormatToTextureFormat( GHL::ImageFormat fmt );
 GHL_API GHL::ImageFormat GHL_CALL GHL_TextureFormatToImageFormat( GHL::TextureFormat fmt );
+GHL_API bool GHL_CALL GHL_IsCompressedFormat( GHL::TextureFormat fmt );
 
 
 

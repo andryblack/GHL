@@ -38,34 +38,31 @@ namespace GHL {
 		UInt32 m_width;
 		UInt32 m_height;
 		ImageFormat m_fmt;
-		DataImpl*  m_data;
+		Data*  m_data;
 		ImageImpl(const ImageImpl&);
 		ImageImpl& operator = (const ImageImpl&);
 	public:
 		ImageImpl(UInt32 w,UInt32 h,ImageFormat fmt);
-		ImageImpl(UInt32 w,UInt32 h,ImageFormat fmt,DataImpl* data);
+		ImageImpl(UInt32 w,UInt32 h,ImageFormat fmt,Data* data);
 		virtual ~ImageImpl();
 		virtual UInt32 GHL_CALL GetWidth() const { return m_width;}
 		virtual UInt32 GHL_CALL GetHeight() const { return m_height;}
-		virtual const Data* GHL_CALL GetData() const { return m_data;}
+		virtual Data* GHL_CALL GetData() const { return m_data;}
 		virtual ImageFormat GHL_CALL GetFormat() const { return m_fmt;}
 		virtual bool GHL_CALL Convert(ImageFormat fmt);
 		virtual bool GHL_CALL SetAlpha(const Image* img);
 		virtual Image* GHL_CALL SubImage(UInt32 x,UInt32 y,UInt32 w,UInt32 h) const;
-        virtual void GHL_CALL Fill(UInt32 clr);
-        virtual void GHL_CALL Draw(UInt32 x,UInt32 y,const Image* src);
+        virtual bool GHL_CALL Fill(UInt32 clr);
+        virtual bool GHL_CALL Draw(UInt32 x,UInt32 y,const Image* src);
         /// clone image
         virtual Image* GHL_CALL Clone() const;
 		bool SwapChannelsRB();
 		/// swap RB channels
 		virtual bool GHL_CALL SwapRB() { return SwapChannelsRB() ; }
         /// Premultiply alpha
-        virtual void GHL_CALL PremultiplyAlpha();
+        virtual bool GHL_CALL PremultiplyAlpha();
 		UInt32 GetBpp() const;
 		void FlipV();
-		DataImpl*	GetRawData() { return m_data; }
-        /// data ptr
-        virtual Byte* GetDataPtr() { return m_data->GetDataPtr(); }
     };
 
 }/*namespace*/

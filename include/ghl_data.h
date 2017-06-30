@@ -36,8 +36,8 @@ namespace GHL {
 		virtual UInt32 GHL_CALL	GetSize() const = 0;	
 		/// Const data ptr
 		virtual const Byte* GHL_CALL	GetData() const = 0;
-		/// set data
-		virtual void GHL_CALL	SetData( UInt32 offset, const Byte* data, UInt32 size ) = 0;
+		/// Write data ptr
+		virtual Byte* GHL_CALL	GetDataPtr() = 0;
         /// clone data
         virtual Data* GHL_CALL  Clone() const = 0;
 	};
