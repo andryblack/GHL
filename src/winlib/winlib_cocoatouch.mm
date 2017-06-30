@@ -967,6 +967,29 @@ public:
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(nullable NSDictionary *)launchOptions {
     [self doStartup];
+    
+    return YES;
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(nullable NSString *)sourceApplication annotation:(id)annotation  {
+    if (g_application) {
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_HANDLE_URL;
+        e.data.handle_url.url = [[url absoluteString] UTF8String];
+        g_application->OnEvent(&e);
+    }
+    
+    return YES;
+}
+
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
+    if (g_application) {
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_HANDLE_URL;
+        e.data.handle_url.url = [[url absoluteString] UTF8String];
+        g_application->OnEvent(&e);
+    }
+    
     return YES;
 }
 

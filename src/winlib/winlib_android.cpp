@@ -21,6 +21,7 @@
 #include "ghl_settings.h"
 #include <unistd.h>
 #include <sys/uio.h>
+#include <cassert>
 
 static GHL::UInt32 g_main_thread_id = 0;
 static GHL::Int32 g_frame_interval = 1;
@@ -37,6 +38,15 @@ static char message_buffer[256];
 
 GHL_API jstring GHL_CALL GHL_JNI_CreateStringUTF8(JNIEnv* env,const char* str);
 
+static std::string get_string(JNIEnv* env,jstring str) {
+    if (!str) return "";
+    const char *chars = env->GetStringUTFChars( str, NULL );
+            
+    std::string text( chars );
+
+    env->ReleaseStringUTFChars( str, chars );
+    return text;
+}
 GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {
     if (::strlen(message)>=sizeof(message_buffer)) {
         // truncate
@@ -369,6 +379,7 @@ namespace GHL {
             }
 
 
+
         }
         void OnStart() {
             LOG_INFO("OnStart");
@@ -376,6 +387,50 @@ namespace GHL {
             check_main_thread();
             g_native_activity = m_activity;
             
+            if (m_activity && m_app)
+            {
+                jclass ActivityClass = m_activity->env->GetObjectClass(m_activity->clazz);
+                jmethodID method = m_activity->env->GetMethodID(ActivityClass,"getIntent","()Landroid/content/Intent;");
+                assert(method);
+
+                jobject intent = m_activity->env->CallObjectMethod(m_activity->clazz,method);
+                if (intent) {
+                    jclass IntentClass = m_activity->env->GetObjectClass(intent);
+                    jmethodID get_data = m_activity->env->GetMethodID(IntentClass,"getDataString","()Ljava/lang/String;");
+                    assert(get_data);
+                    jmethodID get_extra = m_activity->env->GetMethodID(IntentClass,"getBooleanExtra","(Ljava/lang/String;Z)Z");
+                    assert(get_extra);
+                    jstring handled_str = m_activity->env->NewStringUTF("GHL_handled");
+                    jboolean handled = m_activity->env->CallBooleanMethod(intent,get_extra,handled_str,JNI_FALSE);
+                    if (!handled) {
+                        jstring url = (jstring)m_activity->env->CallObjectMethod(intent,get_data);
+                        if (url) {
+                            std::string url_str = get_string(m_activity->env,url);
+                            m_activity->env->DeleteLocalRef((jobject)url);
+
+                            GHL::Event e;
+                            e.type = GHL::EVENT_TYPE_HANDLE_URL;
+                            e.data.handle_url.url = url_str.c_str();
+                            m_app->OnEvent(&e);
+                        } else {
+                            LOG_INFO("intent data empty");
+                        }
+                        jmethodID put_extra = m_activity->env->GetMethodID(IntentClass,"putExtra","(Ljava/lang/String;Z)Landroid/content/Intent;");
+                        assert(put_extra);
+                        jobject ni = m_activity->env->CallObjectMethod(intent,put_extra,handled_str,JNI_TRUE);
+                        if (ni)
+                            m_activity->env->DeleteLocalRef(ni);
+                    }
+
+                    
+                    m_activity->env->DeleteLocalRef(handled_str);
+                    m_activity->env->DeleteLocalRef(IntentClass);
+                    m_activity->env->DeleteLocalRef(intent);
+                } else {
+                    LOG_INFO("intent empty");
+                }
+                m_activity->env->DeleteLocalRef(ActivityClass);
+            }
         }
         void OnResume() {
             LOG_INFO("OnResume");
@@ -952,11 +1007,8 @@ namespace GHL {
             jstring path_string = (jstring)m_activity->env->CallObjectMethod( cache_dir, getPath );
             m_activity->env->DeleteLocalRef(fileClass);
 
-            const char *path_chars = m_activity->env->GetStringUTFChars( path_string, NULL );
-            std::string temp_folder( path_chars );
-
-            m_activity->env->ReleaseStringUTFChars( path_string, path_chars );
-            
+            std::string temp_folder = get_string(m_activity->env,path_string);
+            m_activity->env->DeleteLocalRef(path_string);
             return temp_folder;
         }
 
@@ -977,11 +1029,7 @@ namespace GHL {
                 if (getLanguage) {
                     jstring language = (jstring)m_activity->env->CallObjectMethod(obj,getLanguage);
                     if (language) {
-                        const char *language_chars = m_activity->env->GetStringUTFChars( language, NULL );
-                        if (language_chars) {
-                            result = language_chars;
-                            m_activity->env->ReleaseStringUTFChars( language, language_chars );
-                        }
+                        result = get_string(m_activity->env,language);
                         m_activity->env->DeleteLocalRef(language);
                     }
                 }
@@ -1233,12 +1281,7 @@ extern "C" JNIEXPORT jboolean JNICALL Java_com_GHL_Activity_nativeOnTextInputDis
 extern "C" JNIEXPORT jboolean JNICALL Java_com_GHL_Activity_nativeOnTextInputAccepted
   (JNIEnv *env, jclass, jstring text) {
     if (GHL::g_native_activity) {
-        const char *path_chars = env->GetStringUTFChars( text, NULL );
-            
-        std::string temp_text( path_chars );
-
-        env->ReleaseStringUTFChars( text, path_chars );
-
+        std::string temp_text = get_string(env,text);
         static_cast<GHL::GHLActivity*>(GHL::g_native_activity->instance)->onTextInputAccepted(temp_text);
         return true;
     }
@@ -1248,12 +1291,7 @@ extern "C" JNIEXPORT jboolean JNICALL Java_com_GHL_Activity_nativeOnTextInputAcc
 extern "C" JNIEXPORT jboolean JNICALL Java_com_GHL_Activity_nativeOnTextInputChanged
   (JNIEnv * env, jclass, jstring text) {
     if (GHL::g_native_activity) {
-        const char *path_chars = env->GetStringUTFChars( text, NULL );
-            
-        std::string temp_text( path_chars );
-
-        env->ReleaseStringUTFChars( text, path_chars );
-
+        std::string temp_text = get_string(env,text);
         static_cast<GHL::GHLActivity*>(GHL::g_native_activity->instance)->onTextInputChanged(temp_text);
         return true;
     }
