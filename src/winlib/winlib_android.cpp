@@ -23,6 +23,12 @@
 #include <sys/uio.h>
 #include <cassert>
 
+#include <sys/system_properties.h>
+
+#define ANDROID_OS_BUILD_VERSION_RELEASE     "ro.build.version.release"          // * The user-visible version string. E.g., "1.0" or "3.4b5".
+#define ANDROID_OS_BUILD_MODEL               "ro.product.model"                  // * The end-user-visible name for the end product..
+#define ANDROID_OS_BUILD_MANUFACTURER        "ro.product.manufacturer"           // The manufacturer of the product/hardware.
+
 static GHL::UInt32 g_main_thread_id = 0;
 static GHL::Int32 g_frame_interval = 1;
 
@@ -324,7 +330,33 @@ namespace GHL {
                     ::strncpy(dest, language.c_str(), 32);
                     return true;
                 }
+            } else if (name == GHL::DEVICE_DATA_NAME) {
+                char manufacturer[PROP_VALUE_MAX]; 
+                int len_manufacturer = __system_property_get(ANDROID_OS_BUILD_MANUFACTURER, manufacturer); 
+                char model[PROP_VALUE_MAX]; 
+                int len_model = __system_property_get(ANDROID_OS_BUILD_MODEL, model); 
+                if (data) {
+                    char* dest = static_cast<char*>(data);
+                    if (len_manufacturer || len_model) {
+                        if (len_manufacturer == 0 || ::strncmp(model,manufacturer,len_manufacturer)==0) {
+                            ::strncpy(dest,model,128);
+                        } else {
+                            ::snprintf(dest,128,"%s %s",manufacturer,model);
+                        } 
+                        return true;
+                    }
+                    
+                }
+            } else if (name == GHL::DEVICE_DATA_OS) {
+                char version[PROP_VALUE_MAX]; 
+                int len = __system_property_get(ANDROID_OS_BUILD_VERSION_RELEASE, version); 
+                if (len && data) {
+                    char* dest = static_cast<char*>(data);
+                    ::snprintf(dest,128,"android %s",version);
+                    return true;
+                }
             }
+
             return false;
         }
         /// Set window title

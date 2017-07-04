@@ -32,6 +32,8 @@
 #import "winlib_cocoatouch.h"
 
 #include <pthread.h>
+#include <sys/utsname.h>
+
 
 static const char* MODULE = "WINLIB";
 
@@ -373,8 +375,26 @@ public:
                 ::strncpy(dest, [language UTF8String], 32);
                 return true;
             }
+        } else if (name == GHL::DEVICE_DATA_NAME) {
+            struct utsname systemInfo;
+            uname(&systemInfo);
+            
+            if (data) {
+                char* dest = static_cast<char*>(data);
+                ::strncpy(dest, systemInfo.machine, 128);
+                return true;
+            }
+        } else if (name == GHL::DEVICE_DATA_OS) {
+            NSString* name = [[UIDevice currentDevice] systemName];
+            NSString* ver = [[UIDevice currentDevice] systemVersion];
+            NSString* full = [NSString stringWithFormat:@"%@ %@",name,ver];
+            if (full && data) {
+                char* dest = static_cast<char*>(data);
+                ::strncpy(dest, [full UTF8String], 32);
+                return true;
+            }
         }
-		return false;
+        return false;
 	}
     ///
     virtual void GHL_CALL SetTitle( const char* title ) {
@@ -897,6 +917,10 @@ public:
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     LOG_INFO("applicationDidFinishLaunching");
     
+    controller = [[WinLibViewController alloc] init];
+    m_system = new SystemCocoaTouch(controller);
+    g_application->SetSystem(m_system);
+    
     m_vfs = new GHL::VFSCocoaImpl();
     g_application->SetVFS(m_vfs);
     
@@ -943,9 +967,7 @@ public:
     
     
     
-    controller = [[WinLibViewController alloc] init];
-    m_system = new SystemCocoaTouch(controller);
-    g_application->SetSystem(m_system);
+    
     
     window = [[UIWindow alloc] initWithFrame:rect];
     [window setAutoresizesSubviews:YES];

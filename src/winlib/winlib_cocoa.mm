@@ -13,6 +13,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <AppKit/NSWindow.h>
+#import <CoreServices/CoreServices.h>
 
 #include <ghl_application.h>
 #include <ghl_settings.h>
@@ -22,6 +23,8 @@
 #include <ghl_event.h>
 
 #include <pthread.h>
+#include <sys/types.h>
+#include <sys/sysctl.h>
 
 #include "../vfs/vfs_cocoa.h"
 #include "../image/image_decoders.h"
@@ -250,7 +253,33 @@ public:
                 ::strncpy(dest, [language UTF8String], 32);
                 return true;
             }
+        } else if (name == GHL::DEVICE_DATA_NAME) {
+            
+            size_t len = 0;
+            sysctlbyname("hw.model", NULL, &len, NULL, 0);
+            if (len) {
+                char *model = (char*)malloc(len*sizeof(char));
+                char* dest = static_cast<char*>(data);
+                sysctlbyname("hw.model", model, &len, NULL, 0);
+                ::strncpy(dest, model, 128);
+                free(model);
+                return true;
+            }
+            
+        } else if (name == GHL::DEVICE_DATA_OS) {
+            SInt32 major, minor, bugfix;
+            Gestalt(gestaltSystemVersionMajor, &major);
+            Gestalt(gestaltSystemVersionMinor, &minor);
+            Gestalt(gestaltSystemVersionBugFix, &bugfix);
+            
+            NSString* full = [NSString stringWithFormat:@"OSX %d.%d.%d",major,minor,bugfix];
+            if (full && data) {
+                char* dest = static_cast<char*>(data);
+                ::strncpy(dest, [full UTF8String], 32);
+                return true;
+            }
         }
+
         return false;
     }
     ///

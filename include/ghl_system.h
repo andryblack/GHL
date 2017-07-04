@@ -31,7 +31,9 @@ namespace GHL {
         DEVICE_DATA_VIEW,               ///< NSView** /UIView**
         DEVICE_DATA_APPLICATION,        ///< ANativeActivity**
         DEVICE_DATA_LANGUAGE,           ///< char[32]
-        DEVICE_DATA_UTC_OFFSET          ///< Int32*
+        DEVICE_DATA_UTC_OFFSET,         ///< Int32*
+        DEVICE_DATA_NAME,               ///< char[128]
+        DEVICE_DATA_OS,                 ///< char[32]
     };
     
     enum TextInputAcceptButton {
