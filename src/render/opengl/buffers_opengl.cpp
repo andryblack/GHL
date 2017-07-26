@@ -10,8 +10,11 @@
 #include "render_opengl.h"
 
 namespace GHL {
-    VertexBufferOpenGL::VertexBufferOpenGL(RenderOpenGLBase* parent, VertexType type, UInt32 size,GL::GLuint name)
-    : VertexBufferImpl(parent,type,size),gl(parent->get_api()),m_name(name) {
+    VertexBufferOpenGL::VertexBufferOpenGL(RenderOpenGLBase* parent, UInt32 vsize,
+                                           UInt32 count,
+                                           const VertexAttributeDef* attributes
+                                           ,GL::GLuint name)
+    : VertexBufferImpl(parent,vsize,count,attributes),gl(parent->get_api()),m_name(name) {
         
     }
     

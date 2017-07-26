@@ -16,11 +16,14 @@ namespace GHL {
     
     class RenderOpenGLBase;
     
+    
     class VertexBufferOpenGL : public VertexBufferImpl {
         const GL& gl;
 		GL::GLuint  m_name;
     public:
-        VertexBufferOpenGL(RenderOpenGLBase* parent, VertexType type, UInt32 size,GL::GLuint name);
+        VertexBufferOpenGL(RenderOpenGLBase* parent, UInt32 vsize,
+                           UInt32 count,
+                           const VertexAttributeDef* attributes,GL::GLuint name);
         ~VertexBufferOpenGL();
         void bind() const;
         /// set buffer data

@@ -30,6 +30,7 @@
 #include "ghl_render_target.h"
 #include "ghl_shader.h"
 #include "ghl_data.h"
+#include "ghl_buffer.h"
 
 namespace GHL
 {
@@ -69,26 +70,7 @@ namespace GHL
 		VERTEX_TYPE_2_TEX,	///<x,y,z color, two texture coords ( Vertex2Tex )
 	};
 
-	/// vertex buffer object
-	struct VertexBuffer : RefCounter
-	{
-		/// get vertex type
-		virtual VertexType GHL_CALL GetType() const = 0;
-		/// get buffer capacity
-		virtual UInt32 GHL_CALL GetCapacity() const = 0;
-		/// set buffer data
-		virtual void GHL_CALL SetData(const Data* data) = 0;
-	};
-
-	/// index buffer object
-	struct IndexBuffer : RefCounter
-	{
-		/// get buffer capacity
-		virtual UInt32 GHL_CALL GetCapacity() const = 0;
-		/// set buffer data
-		virtual void GHL_CALL SetData(const Data* data) = 0;
-	};
-
+	
 
 
 	/// source or destination blend factor
@@ -188,12 +170,12 @@ namespace GHL
 		/// setup faces culling
 		virtual void GHL_CALL SetupFaceCull(bool enable,bool cw = true) = 0;
 		
-		/// create index buffer
+		/// create index buffer (elements)
 		virtual IndexBuffer* GHL_CALL CreateIndexBuffer(UInt32 size) = 0;
 		/// set current index buffer
 		virtual void GHL_CALL SetIndexBuffer(const IndexBuffer* buf) = 0;
-		/// create vertex buffer
-		virtual VertexBuffer* GHL_CALL CreateVertexBuffer(VertexType type,UInt32 size) = 0;
+		/// create vertex buffer (elements)
+		virtual VertexBuffer* GHL_CALL CreateVertexBuffer(UInt32 vsize,const VertexAttributeDef* attributes,UInt32 count) = 0;
 		/// set current vertex buffer
 		virtual void GHL_CALL SetVertexBuffer(const VertexBuffer* buf) = 0;
 
@@ -207,11 +189,9 @@ namespace GHL
 		/// draw primitives
 		/**
 		 * @par type primitives type
-		 * @par v_amount vertices amount used in this call
-		 * @par i_begin start index buffer position
 		 * @par amount drw primitives amount
 		 */
-		virtual void GHL_CALL DrawPrimitives(PrimitiveType type,UInt32 v_amount,UInt32 i_begin,UInt32 amount) = 0;
+		virtual void GHL_CALL DrawPrimitives(PrimitiveType type,UInt32 amount) = 0;
 
 		/// draw primitives from memory
 		virtual void GHL_CALL DrawPrimitivesFromMemory(PrimitiveType type,VertexType v_type,const void* vertices,UInt32 v_amount,const UInt16* indexes,UInt32 prim_amount) = 0;

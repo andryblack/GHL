@@ -100,9 +100,34 @@ namespace GHL {
 		return gl.NEVER;
 	}
 	
+		
 	RenderOpenGLBase::RenderOpenGLBase(UInt32 w,UInt32 h,bool haveDepth) : RenderImpl(w,h,haveDepth) {
         m_depth_write_enabled = false;
         m_reset_uniforms = true;
+        
+        VertexAttributeDef def;
+        def.usage = VERTEX_POSITION;
+        def.data = VERTEX_3_FLOAT;
+        def.offset = 0;
+        m_simple_vdef.push_back(def);
+        m_2tex_vdef.push_back(def);
+        
+        def.usage = VERTEX_COLOR;
+        def.data = VERTEX_4_BYTE;
+        def.offset = 3*sizeof(float);
+        m_simple_vdef.push_back(def);
+        m_2tex_vdef.push_back(def);
+        
+        def.usage = VERTEX_TEX_COORD0;
+        def.data = VERTEX_2_FLOAT;
+        def.offset = 3*sizeof(float)+sizeof(UInt32);
+        m_simple_vdef.push_back(def);
+        m_2tex_vdef.push_back(def);
+        
+        def.usage = VERTEX_TEX_COORD1;
+        def.data = VERTEX_2_FLOAT;
+        def.offset = 3*sizeof(float)+sizeof(UInt32)+2*sizeof(float);
+        m_2tex_vdef.push_back(def);
     }
 
 	RenderOpenGLBase::~RenderOpenGLBase() {
@@ -294,7 +319,7 @@ namespace GHL {
             CHECK_GL(gl.vboapi.GenBuffers(1,&name));
             return new IndexBufferOpenGL(this,size, name);
         }
-        return new SoftIndexBuffer(this,size);
+        return 0;
 	}
 	
 	/// set current index buffer
@@ -310,13 +335,13 @@ namespace GHL {
 	}
 	
 	/// create vertex buffer
-	VertexBuffer* GHL_CALL RenderOpenGLBase::CreateVertexBuffer(VertexType type,UInt32 size) {
+	VertexBuffer* GHL_CALL RenderOpenGLBase::CreateVertexBuffer(UInt32 vsize,const VertexAttributeDef* attributes,UInt32 count) {
 		if (gl.vboapi.valid) {
             GL::GLuint name;
             CHECK_GL(gl.vboapi.GenBuffers(1,&name));
-            return new VertexBufferOpenGL(this, type, size, name);
+            return new VertexBufferOpenGL(this, vsize, count, attributes,name);
         } 
-		return new SoftVertexBuffer(this,type,size);
+		return 0;
 	}
 	/// set current vertex buffer
 	void GHL_CALL RenderOpenGLBase::SetVertexBuffer(const VertexBuffer* buf) {
@@ -332,39 +357,20 @@ namespace GHL {
 	
 		
 	/// draw primitives
-	/**
-	 * @par type primitives type
-	 * @par v_amount vertices amount used in this call
-	 * @par i_begin start index buffer position
-	 * @par amount drw primitives amount
-	 */
-	void GHL_CALL RenderOpenGLBase::DrawPrimitives(PrimitiveType type,UInt32 v_amount,UInt32 i_begin,UInt32 prim_amount) {
-        const VertexBuffer* vb = GetVertexBuffer();
+    void GHL_CALL RenderOpenGLBase::DrawPrimitives(PrimitiveType type,UInt32 prim_amount) {
+        const VertexBufferImpl* vb = GetVertexBuffer();
         if (!vb) {
             LOG_ERROR("DrawPrimitives without vertex buffer");
             return;
         }
-        const IndexBuffer* ib = GetIndexBuffer();
+        const IndexBufferImpl* ib = GetIndexBuffer();
         if (!ib) {
             LOG_ERROR("DrawPrimitives without index buffer");
             return;
         }
-        VertexType v_type = vb->GetType();
-        /// @todo
-        DoDrawPrimitives(vb->GetType());
-        
-        GHL_UNUSED(v_amount);
-        UInt32 vertex_size = 0;
-		const Vertex* v =  reinterpret_cast<const Vertex*> (0);
-		
-		if (v_type == VERTEX_TYPE_SIMPLE) {
-			vertex_size = sizeof(Vertex);
-		} else if (v_type == VERTEX_TYPE_2_TEX ) {
-			vertex_size = sizeof(Vertex2Tex);
-			//v2 = reinterpret_cast<const Vertex2Tex*> (vertices);
-            NOT_IMPLEMENTED;
+        if (!GetShader())
             return;
-		}
+        
         GL::GLenum element =gl.TRIANGLES;
 		UInt32 indexes_amount = prim_amount * 3;
 		if (type==PRIMITIVE_TYPE_TRIANGLE_STRIP) {
@@ -383,35 +389,27 @@ namespace GHL {
         
         
         if (gl.vboapi.valid) {
-            SetupVertexData(v,v_type);
-            CHECK_GL(gl.DrawElements(element, indexes_amount,gl.UNSIGNED_SHORT, (void*)(i_begin*sizeof(UInt16))));
-        } else {
-            const SoftVertexBuffer* sv = static_cast<const SoftVertexBuffer*>(vb);
-            const SoftIndexBuffer* si = static_cast<const SoftIndexBuffer*>(ib);
-            const Vertex* v =  reinterpret_cast<const Vertex*> (sv->GetData());
-            SetupVertexData(v,v_type);
-            const UInt16* bi = reinterpret_cast<const UInt16*>(si->GetData());
-            CHECK_GL(gl.DrawElements(element, indexes_amount,gl.UNSIGNED_SHORT, bi+i_begin));
+            SetupVertexData(0,vb->GetVertexSize(), vb->GetAttributes());
+            CHECK_GL(gl.DrawElements(element, indexes_amount,gl.UNSIGNED_SHORT, (void*)0));
         }
         
-		
-	}
+    }
 	
 	/// draw primitives from memory
 	void GHL_CALL RenderOpenGLBase::DrawPrimitivesFromMemory(PrimitiveType type,VertexType v_type,const void* vertices,UInt32 v_amount,const UInt16* indexes,UInt32 prim_amount) {
         DoDrawPrimitives(v_type);
-            /// @todo
-            GHL_UNUSED(v_amount);
-            UInt32 vertex_size = 0;
-		const Vertex* v =  reinterpret_cast<const Vertex*> (vertices);
-		//const Vertex2Tex* v2 = 0;
-		
-		if (v_type == VERTEX_TYPE_SIMPLE) {
-			vertex_size = sizeof(Vertex);
-		} else if (v_type == VERTEX_TYPE_2_TEX ) {
-			vertex_size = sizeof(Vertex2Tex);
-            v = reinterpret_cast<const Vertex2Tex*> (vertices);
-		}
+        /// @todo
+        GHL_UNUSED(v_amount);
+        UInt32 vertex_size = 0;
+        const VertexAttributes* vdef = 0;
+        
+        if (v_type == VERTEX_TYPE_SIMPLE) {
+            vertex_size = sizeof(Vertex);
+            vdef = &m_simple_vdef;
+        } else if (v_type == VERTEX_TYPE_2_TEX ) {
+            vertex_size = sizeof(Vertex2Tex);
+            vdef = &m_2tex_vdef;
+        }
         GL::GLenum element =gl.TRIANGLES;
 		UInt32 indexes_amount = prim_amount * 3;
 		if (type==PRIMITIVE_TYPE_TRIANGLE_STRIP) {
@@ -436,15 +434,14 @@ namespace GHL {
             }
         }
 #endif
-        SetupVertexData(v,v_type);
+        SetupVertexData(vertices,vertex_size,*vdef);
         if (indexes) {
             CHECK_GL(gl.DrawElements(element, indexes_amount,gl.UNSIGNED_SHORT, indexes));
         } else {
             CHECK_GL(gl.DrawArrays(element,0,indexes_amount));
         }
 	}
-			
-	
+		
 	
 	
 	/// create render target
@@ -509,11 +506,15 @@ namespace GHL {
 		return 0;
 	}
 
-    static const char* predefinedAttributeNames[] = {
+    static const char* predefinedAttributeNames[VERTEX_MAX_ATTRIBUTES] = {
         "vPosition",
         "vTexCoord",
         "vTex2Coord",
-        "vColor"
+        "vColor",
+        "vNormal",
+        "vWeight",
+        "vIndex",
+        "vTangent"
     };
 
 	
@@ -577,39 +578,57 @@ namespace GHL {
             m_current_pointers[i] = NO_POINTER;
         }
     }
-    void RenderOpenGLBase::SetupAttribute(const void* ptr,
-                                         VertexAttributeUsage u,
-                                         UInt32 cnt,
-                                         GL::GLenum t,
-                                         bool norm,
-                                         UInt32 vsize) {
-        if (m_current_pointers[u]!=ptr) {
-            CHECK_GL(gl.sdrapi.VertexAttribPointer(u,cnt,t,norm?gl._TRUE:gl._FALSE,vsize,ptr));
-            if (m_current_pointers[u] == NO_POINTER) {
-                CHECK_GL(gl.sdrapi.EnableVertexAttribArray(u));
-            }
-            m_current_pointers[u]=ptr;
-            
+
+    void RenderOpenGLBase::SetupAttribute(const VertexAttributeDef& def,size_t vsize,const void* ptr) {
+        GL::GLuint cnt;
+        GL::GLenum type;
+        GL::GLboolean norm;
+        switch(def.data) {
+            case VERTEX_4_BYTE:
+                cnt = 4; type = gl.UNSIGNED_BYTE;
+                break;
+            case VERTEX_2_FLOAT:
+                cnt = 2; type = gl.FLOAT;
+                break;
+            case VERTEX_3_FLOAT:
+                cnt = 3; type = gl.FLOAT;
+                break;
+            case VERTEX_4_FLOAT:
+                cnt = 4; type = gl.FLOAT;
         }
+        norm = (def.usage == VERTEX_COLOR) ? gl._TRUE : gl._FALSE;
+        CHECK_GL(gl.sdrapi.VertexAttribPointer(def.usage,cnt,type,norm,vsize,ptr));
     }
-    
-    void RenderOpenGLBase::SetupVertexData(const Vertex* v,VertexType vt) {
+
+    void RenderOpenGLBase::SetupVertexData(const void* v,UInt32 vsize,const VertexAttributes& vt) {
+
         const ShaderProgramGLSL* prg = static_cast<const ShaderProgramGLSL*>(GetShader());
         if (!prg) {
             LOG_ERROR("not have current shader");
             return;
         }
-        GL::GLsizei vs = sizeof(*v);
-        const Vertex2Tex* v2 = static_cast<const Vertex2Tex*>(v);
-        if (vt == VERTEX_TYPE_2_TEX) {
-            vs = sizeof(*v2);
-            SetupAttribute(&v2->t2x, VERTEX_TEX_COORD1, 2, gl.FLOAT, false, vs);
-        } else if (m_current_pointers[VERTEX_TEX_COORD1] != NO_POINTER) {
-            CHECK_GL(gl.sdrapi.DisableVertexAttribArray(VERTEX_TEX_COORD1));
+
+        bool used[VERTEX_MAX_ATTRIBUTES];
+        for (size_t i=0;i<VERTEX_MAX_ATTRIBUTES;++i) {
+            used[i] = false;
         }
-        SetupAttribute(&v->x, VERTEX_POSITION, 3, gl.FLOAT, false, vs);
-        SetupAttribute(&v->tx, VERTEX_TEX_COORD0, 2, gl.FLOAT, false, vs);
-        SetupAttribute(&v->color, VERTEX_COLOR, 4, gl.UNSIGNED_BYTE, true, vs);
+        for (VertexAttributes::const_iterator it = vt.begin();it!=vt.end();++it) {
+            const void* ptr = static_cast<const Byte*>(v) + it->offset;
+            if (ptr != m_current_pointers[it->usage]) {
+                SetupAttribute(*it, vsize, ptr);
+            }
+            used[it->usage] = true;
+            if (m_current_pointers[it->usage] == NO_POINTER) {
+                CHECK_GL(gl.sdrapi.EnableVertexAttribArray(it->usage));
+            }
+            m_current_pointers[it->usage] = ptr;
+        }
+        for (size_t i=0;i<VERTEX_MAX_ATTRIBUTES;++i) {
+            if (!used[i] && m_current_pointers[i]!=NO_POINTER) {
+                CHECK_GL(gl.sdrapi.DisableVertexAttribArray(i));
+                m_current_pointers[i] = NO_POINTER;
+            }
+        }
     }
     
     /// set projection matrix

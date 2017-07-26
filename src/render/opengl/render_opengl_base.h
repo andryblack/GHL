@@ -42,7 +42,7 @@ namespace GHL
 		virtual bool RenderSetFullScreen(bool fs) ;
 		virtual void SetOrthoProjection();
         virtual void ResetRenderState();
-        void SetupVertexData(const Vertex* v,VertexType vt);
+        void SetupVertexData(const void* v,UInt32 vsize,const VertexAttributes& vt);
 		void RestoreTexture();
 		/// Render impl
 
@@ -70,7 +70,7 @@ namespace GHL
 		/// set current index buffer
 		virtual void GHL_CALL SetIndexBuffer(const IndexBuffer* buf) ;
 		/// create vertex buffer
-		virtual VertexBuffer* GHL_CALL CreateVertexBuffer(VertexType type,UInt32 size) ;
+		virtual VertexBuffer* GHL_CALL CreateVertexBuffer(UInt32 vsize,const VertexAttributeDef* attributes,UInt32 count) ;
 		/// set current vertex buffer
 		virtual void GHL_CALL SetVertexBuffer(const VertexBuffer* buf) ;
 		
@@ -81,11 +81,9 @@ namespace GHL
 		/// draw primitives
 		/**
 		 * @par type primitives type
-		 * @par v_amount vertices amount used in this call
-		 * @par i_begin start index buffer position
 		 * @par amount drw primitives amount
 		 */
-		virtual void GHL_CALL DrawPrimitives(PrimitiveType type,UInt32 v_amount,UInt32 i_begin,UInt32 amount);
+		virtual void GHL_CALL DrawPrimitives(PrimitiveType type,UInt32 amount);
 		
 		/// draw primitives from memory
 		virtual void GHL_CALL DrawPrimitivesFromMemory(PrimitiveType type,VertexType v_type,const void* vertices,UInt32 v_amount,const UInt16* indexes,UInt32 prim_amoun);
@@ -113,26 +111,15 @@ namespace GHL
 		virtual void GHL_CALL SetTexture(const Texture* texture, UInt32 stage );
         
         /// set texture stage color operation
-		virtual void GHL_CALL SetupTextureStageColorOp(TextureOperation op,TextureArgument arg1,TextureArgument arg2,UInt32 stage );
-		/// set texture stage alpha operation
-		virtual void GHL_CALL SetupTextureStageAlphaOp(TextureOperation op,TextureArgument arg1,TextureArgument arg2,UInt32 stage );
+        virtual void GHL_CALL SetupTextureStageColorOp(TextureOperation op,TextureArgument arg1,TextureArgument arg2,UInt32 stage );
+        /// set texture stage alpha operation
+        virtual void GHL_CALL SetupTextureStageAlphaOp(TextureOperation op,TextureArgument arg1,TextureArgument arg2,UInt32 stage );
         
+      
     protected:
         GLSLGenerator&  GetGenerator() { return m_generator; }
         void ResetPointers();
-        enum VertexAttributeUsage {
-            VERTEX_POSITION,
-            VERTEX_TEX_COORD0,
-            VERTEX_TEX_COORD1,
-            VERTEX_COLOR,
-            VERTEX_MAX_ATTRIBUTES
-        };
-        void SetupAttribute(const void* ptr,
-                            VertexAttributeUsage u,
-                            UInt32 cnt,
-                            GL::GLenum t,
-                            bool norm,
-                            UInt32 vsize);
+        void SetupAttribute(const VertexAttributeDef& def,size_t vsize,const void* ptr);
         void SetShaderImpl(const ShaderProgram* shader);
 
     private:
@@ -144,9 +131,10 @@ namespace GHL
         float               m_projection_view_matrix[16];
         void DoDrawPrimitives(VertexType v_type);
         bool    m_reset_uniforms;
-        
         const void*               m_current_pointers[VERTEX_MAX_ATTRIBUTES];
-    };
+        VertexAttributes m_simple_vdef;
+        VertexAttributes m_2tex_vdef;        
+	};
     
 }
 
