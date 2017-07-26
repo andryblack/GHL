@@ -834,6 +834,7 @@ namespace GHL {
             SetupAttribute(&v2->t2x, VERTEX_TEX_COORD1, 2, gl.FLOAT, false, vs);
         } else if (m_current_pointers[VERTEX_TEX_COORD1] != NO_POINTER) {
             CHECK_GL(gl.sdrapi.DisableVertexAttribArray(VERTEX_TEX_COORD1));
+            m_current_pointers[VERTEX_TEX_COORD1] = NO_POINTER;
         }
         SetupAttribute(&v->x, VERTEX_POSITION, 3, gl.FLOAT, false, vs);
         SetupAttribute(&v->tx, VERTEX_TEX_COORD0, 2, gl.FLOAT, false, vs);
