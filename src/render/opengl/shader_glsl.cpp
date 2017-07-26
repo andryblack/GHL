@@ -42,9 +42,7 @@ namespace GHL {
     : ShaderProgramImpl(parent),gl(parent->get_api()),m_handle(handle_),m_v(vt),m_f(fr),m_pmv_uniform(-1) {
         m_v->AddRef();
         m_f->AddRef();
-        for (size_t i=0;i<sizeof(m_attributes)/sizeof(m_attributes[0]);++i) {
-            m_attributes[i] = -1;
-        }
+        
     }
 	
 	ShaderProgramGLSL::~ShaderProgramGLSL() {
@@ -105,17 +103,9 @@ namespace GHL {
         CHECK_GL(location=gl.sdrapi.GetUniformLocation(m_handle,name));
 		if (location<0)
 			return 0;
-		m_uniforms.insert(std::make_pair(sname,ShaderUniformGLSL(this,location)));
-		it = m_uniforms.find(sname);
-		return &it->second;
+		return &m_uniforms.insert(std::make_pair(sname,ShaderUniformGLSL(this,location))).first->second;
 	}
     
-    static const char* predefinedAttributeNames[GLSLPredefinedAttributesAmount] = {
-        "vPosition",
-        "vTexCoord",
-        "vColor",
-        "vTex2Coord",
-    };
     
     void ShaderProgramGLSL::Setup() {
         for (size_t i=0;i<MAX_TEXTURE_STAGES;++i) {
@@ -127,12 +117,6 @@ namespace GHL {
                 gl.sdrapi.Uniform1i(location,GL::GLint(i));
             }
         }
-        for (size_t i=0;i<GLSLPredefinedAttributesAmount;++i) {
-            m_attributes[i] = gl.sdrapi.GetAttribLocation(m_handle,predefinedAttributeNames[i]);
-            if (m_attributes[i]>=0) {
-                CHECK_GL(gl.sdrapi.EnableVertexAttribArray(m_attributes[i]));
-            }
-        }
         m_pmv_uniform = gl.sdrapi.GetUniformLocation(m_handle,"mProjectionModelView");
     }
     void ShaderProgramGLSL::SetPMVMatrix(const float* m) const {
@@ -141,9 +125,6 @@ namespace GHL {
         }
     }
    
-    GL::GLint   ShaderProgramGLSL::GetAttribute(GLSLPredefinedAttribute attr) const {
-        return m_attributes[attr];
-    }
     const ShaderProgram* ShaderProgramGLSL::GetCurrent() const {
         return GetParent()->GetShader();
     }

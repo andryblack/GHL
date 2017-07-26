@@ -65,13 +65,6 @@ namespace GHL {
 		virtual void GHL_CALL SetValueMatrix(const float* v);
 	};
     
-    enum GLSLPredefinedAttribute {
-        GLSLPredefinedAttributePosition,
-        GLSLPredefinedAttributeTexCoord,
-        GLSLPredefinedAttributeColor,
-        GLSLPredefinedAttributeTex2Coord,
-        GLSLPredefinedAttributesAmount
-    };
 	
 	class ShaderProgramGLSL : public ShaderProgramImpl {
 	public:
@@ -82,7 +75,6 @@ namespace GHL {
 		ShaderUniform* GHL_CALL GetUniform(const char* name) const;
 		
 		GL::GLhandle handle() const { return m_handle;}
-        GL::GLint   GetAttribute(GLSLPredefinedAttribute attr) const;
         void  Setup();
         void SetPMVMatrix(const float* m) const;
 	private:
@@ -93,7 +85,6 @@ namespace GHL {
 		FragmentShaderGLSL* m_f;
       	mutable std::map<std::string,ShaderUniformGLSL> m_uniforms;
         GL::GLint m_pmv_uniform;
-        GL::GLint m_attributes[GLSLPredefinedAttributesAmount];
         const ShaderProgram* GetCurrent() const;
         void SetCurrent(const ShaderProgram* prg) const;
 	};

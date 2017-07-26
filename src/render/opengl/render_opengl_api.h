@@ -250,7 +250,9 @@ DYNAMIC_GL_FUNCTION(void,GetShaderiv,(GLhandle,GLenum,GLint *))\
 DYNAMIC_GL_FUNCTION(void,GetShaderInfoLog,(GLhandle,GLsizei,GLsizei *,GLchar *))\
 DYNAMIC_GL_FUNCTION(void,AttachShader,(GLhandle,GLhandle))\
 DYNAMIC_GL_FUNCTION(void,VertexAttribPointer,(GLuint,GLint,GLenum,GLboolean,GLsizei,const GLvoid *))\
+DYNAMIC_GL_FUNCTION(void,BindAttribLocation,(GLuint,GLuint,const GLchar*))\
 DYNAMIC_GL_FUNCTION(void,EnableVertexAttribArray,(GLuint))\
+DYNAMIC_GL_FUNCTION(void,DisableVertexAttribArray,(GLuint))\
 
             
 #define DYNAMIC_GL_FUNCTION(Res,Name,Args) GHL_GL_API Res(*Name)Args;

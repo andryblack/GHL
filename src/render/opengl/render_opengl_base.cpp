@@ -144,6 +144,8 @@ namespace GHL {
 	RenderOpenGLBase::~RenderOpenGLBase() {
         LOG_VERBOSE("Destructor");
 	}
+    
+    static const void* NO_POINTER = (const void*)(0xffffffff);
 
 #define NOT_IMPLEMENTED LOG_ERROR( "render openGL function " << __FUNCTION__ << " not implemented" )
 
@@ -528,6 +530,13 @@ namespace GHL {
 		return 0;
 	}
 
+    static const char* predefinedAttributeNames[] = {
+        "vPosition",
+        "vTexCoord",
+        "vTex2Coord",
+        "vColor"
+    };
+
 	
 	ShaderProgram* GHL_CALL RenderOpenGLBase::CreateShaderProgram(VertexShader* v,FragmentShader* f) {
         if (!gl.sdrapi.valid) return 0;
@@ -539,6 +548,11 @@ namespace GHL {
 		// @todo check vs ans fs
 		CHECK_GL(gl.sdrapi.AttachShader(handle, vs->handle()));
 		CHECK_GL(gl.sdrapi.AttachShader(handle, fs->handle()));
+
+        for (size_t i=0;i<(sizeof(predefinedAttributeNames)/sizeof(predefinedAttributeNames[0]));++i) {
+            CHECK_GL(gl.sdrapi.BindAttribLocation(handle,i,predefinedAttributeNames[i]));
+        }
+        
 		CHECK_GL(gl.sdrapi.LinkProgram(handle));
         GL::GLint res = GL::_TRUE;
 		gl.sdrapi.GetProgramiv(handle,gl.sdrapi.LINK_STATUS,&res);
@@ -564,7 +578,7 @@ namespace GHL {
         }
 		return prg;
 	}
-
+    
 	
 	void RenderOpenGLBase::SetShader(const ShaderProgram* shader) {
         RenderImpl::SetShader(shader);
@@ -785,8 +799,27 @@ namespace GHL {
     }
     
     void RenderOpenGLPPL::ResetPointers() {
-        for (size_t i=0;i<GLSLPredefinedAttributesAmount;++i)
-            m_current_pointers[i] = 0;
+        for (size_t i=0;i<VERTEX_MAX_ATTRIBUTES;++i) {
+            if (m_current_pointers[i]!=NO_POINTER) {
+                gl.sdrapi.DisableVertexAttribArray(GL::GLuint(i));
+            }
+            m_current_pointers[i] = NO_POINTER;
+        }
+    }
+    void RenderOpenGLPPL::SetupAttribute(const void* ptr,
+                                         VertexAttributeUsage u,
+                                         UInt32 cnt,
+                                         GL::GLenum t,
+                                         bool norm,
+                                         UInt32 vsize) {
+        if (m_current_pointers[u]!=ptr) {
+            CHECK_GL(gl.sdrapi.VertexAttribPointer(u,cnt,t,norm?gl._TRUE:gl._FALSE,vsize,ptr));
+            if (m_current_pointers[u] == NO_POINTER) {
+                CHECK_GL(gl.sdrapi.EnableVertexAttribArray(u));
+            }
+            m_current_pointers[u]=ptr;
+            
+        }
     }
     void RenderOpenGLPPL::SetupVertexData(const Vertex* v,VertexType vt) {
         const ShaderProgramGLSL* prg = static_cast<const ShaderProgramGLSL*>(GetShader());
@@ -796,38 +829,15 @@ namespace GHL {
         }
         GL::GLsizei vs = sizeof(*v);
         const Vertex2Tex* v2 = static_cast<const Vertex2Tex*>(v);
-        GL::GLint t2Loc = -1;
         if (vt == VERTEX_TYPE_2_TEX) {
-            if (m_current_pointers[GLSLPredefinedAttributeTex2Coord]!=&v2->t2x) {
-                t2Loc = prg->GetAttribute(GLSLPredefinedAttributeTex2Coord);
-            }
             vs = sizeof(*v2);
+            SetupAttribute(&v2->t2x, VERTEX_TEX_COORD1, 2, gl.FLOAT, false, vs);
+        } else if (m_current_pointers[VERTEX_TEX_COORD1] != NO_POINTER) {
+            CHECK_GL(gl.sdrapi.DisableVertexAttribArray(VERTEX_TEX_COORD1));
         }
-        if (m_current_pointers[GLSLPredefinedAttributePosition]!=&v->x) {
-            GL::GLint pLoc = prg->GetAttribute(GLSLPredefinedAttributePosition);
-            if (pLoc>=0) {
-                CHECK_GL(gl.sdrapi.VertexAttribPointer(pLoc,3,gl.FLOAT,gl._FALSE,vs,&v->x));
-                m_current_pointers[GLSLPredefinedAttributePosition]=&v->x;
-            }
-        }
-        if (m_current_pointers[GLSLPredefinedAttributeTexCoord]!=&v->tx) {
-            GL::GLint tLoc = prg->GetAttribute(GLSLPredefinedAttributeTexCoord);
-            if (tLoc>=0) {
-                CHECK_GL(gl.sdrapi.VertexAttribPointer(tLoc,2,gl.FLOAT,gl._FALSE,vs,&v->tx));
-                m_current_pointers[GLSLPredefinedAttributeTexCoord]=&v->tx;
-            }
-        }
-        if (t2Loc>=0) {
-            CHECK_GL(gl.sdrapi.VertexAttribPointer(t2Loc,2,gl.FLOAT,gl._FALSE,vs,&v2->t2x));
-            m_current_pointers[GLSLPredefinedAttributeTex2Coord]=&v2->t2x;
-        }
-        if (m_current_pointers[GLSLPredefinedAttributeColor]!=&v->color) {
-            GL::GLint cLoc = prg->GetAttribute(GLSLPredefinedAttributeColor);
-            if (cLoc>=0) {
-                CHECK_GL(gl.sdrapi.VertexAttribPointer(cLoc,4,gl.UNSIGNED_BYTE,gl._TRUE,vs,&v->color));
-                m_current_pointers[GLSLPredefinedAttributeColor]=&v->color;
-            }
-        }
+        SetupAttribute(&v->x, VERTEX_POSITION, 3, gl.FLOAT, false, vs);
+        SetupAttribute(&v->tx, VERTEX_TEX_COORD0, 2, gl.FLOAT, false, vs);
+        SetupAttribute(&v->color, VERTEX_COLOR, 4, gl.UNSIGNED_BYTE, true, vs);
     }
     
     /// set projection matrix
@@ -886,16 +896,12 @@ namespace GHL {
     
     void GHL_CALL RenderOpenGLPPL::SetShader(const ShaderProgram* shader)  {
         m_reset_uniforms = true;
-        ResetPointers();
         RenderOpenGLBase::SetShader(shader);
         m_shaders_render.set_shader(shader);
     }
     void RenderOpenGLPPL::DoDrawPrimitives(VertexType v_type) {
         const ShaderProgram* prg = m_shaders_render.get_shader(m_crnt_state, v_type==VERTEX_TYPE_2_TEX);
         if (prg) {
-            if (prg != GetShader()) {
-                ResetPointers();
-            }
             RenderOpenGLBase::SetShader(prg);
         } else if (m_reset_uniforms) {
             prg = GetShader();
@@ -928,12 +934,10 @@ namespace GHL {
     /// set current index buffer
     void GHL_CALL RenderOpenGLPPL::SetIndexBuffer(const IndexBuffer* buf) {
         RenderOpenGLBase::SetIndexBuffer(buf);
-        ResetPointers();
     }
     /// set current vertex buffer
     void GHL_CALL RenderOpenGLPPL::SetVertexBuffer(const VertexBuffer* buf) {
         RenderOpenGLBase::SetVertexBuffer(buf);
-        ResetPointers();
     }
 
 }
