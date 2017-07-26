@@ -7,8 +7,8 @@
 //
 
 #import "WinLibCocoaTouchContext.h"
-#include <OpenGLES/ES1/gl.h>
-#include <OpenGLES/ES1/glext.h>
+#include <OpenGLES/ES2/gl.h>
+#include <OpenGLES/ES2/glext.h>
 
 
 @implementation WinLibCocoaTouchContext
@@ -38,15 +38,16 @@
 -(void)createBuffers:(bool) depth;
 {
     // Create default framebuffer object. The backing will be allocated for the current layer in -resizeFromLayer
-    glGenFramebuffersOES(1, &m_defaultFramebuffer);
-    glGenRenderbuffersOES(1, &m_colorRenderbuffer);
-    glBindFramebufferOES(GL_FRAMEBUFFER_OES, m_defaultFramebuffer);
-    glBindRenderbufferOES(GL_RENDERBUFFER_OES, m_colorRenderbuffer);
-    glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_RENDERBUFFER_OES, m_colorRenderbuffer);
+    glGenFramebuffers(1, &m_defaultFramebuffer);
+    glGenRenderbuffers(1, &m_colorRenderbuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_defaultFramebuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, m_colorRenderbuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_colorRenderbuffer);
+    
     if (depth) {
-        glGenRenderbuffersOES(1, &m_depthRenderbuffer);
-        glBindRenderbufferOES(GL_RENDERBUFFER_OES, m_depthRenderbuffer);
-        glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, m_depthRenderbuffer);
+        glGenRenderbuffers(1, &m_depthRenderbuffer);
+        glBindRenderbuffer(GL_RENDERBUFFER, m_depthRenderbuffer);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthRenderbuffer);
     }
 }
 
@@ -55,19 +56,19 @@
     // Tear down GL
     if (m_defaultFramebuffer)
     {
-        glDeleteFramebuffersOES(1, &m_defaultFramebuffer);
+        glDeleteFramebuffers(1, &m_defaultFramebuffer);
         m_defaultFramebuffer = 0;
     }
-	
+    
     if (m_colorRenderbuffer)
     {
-        glDeleteRenderbuffersOES(1, &m_colorRenderbuffer);
+        glDeleteRenderbuffers(1, &m_colorRenderbuffer);
         m_colorRenderbuffer = 0;
     }
     
     if (m_depthRenderbuffer)
     {
-        glDeleteRenderbuffersOES(1, &m_depthRenderbuffer);
+        glDeleteRenderbuffers(1, &m_depthRenderbuffer);
         m_depthRenderbuffer = 0;
     }
 }
@@ -90,42 +91,41 @@
 -(void)onLayout:(CAEAGLLayer*)layer
 {
     [EAGLContext setCurrentContext:m_context];
-	// Allocate color buffer backing based on the current layer size
-    glBindRenderbufferOES(GL_RENDERBUFFER_OES, m_colorRenderbuffer);
-    [m_context renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable:layer];
-    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &m_backingWidth);
-    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &m_backingHeight);
+    // Allocate color buffer backing based on the current layer size
+    glBindFramebuffer(GL_FRAMEBUFFER, m_defaultFramebuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, m_colorRenderbuffer);
+    [m_context renderbufferStorage:GL_RENDERBUFFER fromDrawable:layer];
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &m_backingWidth);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &m_backingHeight);
     if (m_depthRenderbuffer) {
-        glBindRenderbufferOES(GL_RENDERBUFFER_OES, m_depthRenderbuffer);
-        glRenderbufferStorageOES(GL_RENDERBUFFER_OES, GL_DEPTH_COMPONENT16_OES, m_backingWidth, m_backingHeight);
+        glBindRenderbuffer(GL_RENDERBUFFER, m_depthRenderbuffer);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, m_backingWidth, m_backingHeight);
     }
     
-	if (glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES) != GL_FRAMEBUFFER_COMPLETE_OES)
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
     {
-        NSLog(@"Failed to make complete framebuffer object %d" , glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES));
+        NSLog(@"Failed to make complete framebuffer object %d" , glCheckFramebufferStatus(GL_FRAMEBUFFER));
     }
+
 }
 
 -(void)makeCurrent
 {
     [EAGLContext setCurrentContext:m_context];
     if (m_defaultFramebuffer) {
-        glBindFramebufferOES(GL_FRAMEBUFFER_OES, m_defaultFramebuffer);
-    }
-    if (m_colorRenderbuffer) {
-        glBindRenderbufferOES(GL_RENDERBUFFER_OES, m_colorRenderbuffer);
-    }
-    if (m_depthRenderbuffer) {
-        glBindRenderbufferOES(GL_RENDERBUFFER_OES, m_depthRenderbuffer);
+        glBindFramebuffer(GL_FRAMEBUFFER, m_defaultFramebuffer);
     }
 }
 
 -(void)present
 {
     if (m_defaultFramebuffer) {
-        glBindFramebufferOES(GL_FRAMEBUFFER_OES, m_defaultFramebuffer);
+        glBindFramebuffer(GL_FRAMEBUFFER, m_defaultFramebuffer);
     }
-    [m_context presentRenderbuffer:GL_RENDERBUFFER_OES];
+    if (m_colorRenderbuffer) {
+        glBindRenderbuffer(GL_RENDERBUFFER, m_colorRenderbuffer);
+    }
+    [m_context presentRenderbuffer:GL_RENDERBUFFER];
 }
 
 -(bool)haveDepth

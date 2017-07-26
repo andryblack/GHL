@@ -28,7 +28,7 @@
 
 #import <CoreMotion/CoreMotion.h>
 
-#import "WinLibCocoaTouchContext2.h"
+#import "WinLibCocoaTouchContext.h"
 #import "winlib_cocoatouch.h"
 
 #include <pthread.h>
@@ -293,7 +293,7 @@ static const size_t max_touches = 10;
 	UITouch* m_touches[max_touches];
 }
 
-- (void)prepareOpenGL:(Boolean) gles2;
+- (void)prepareOpenGL;
 - (void)makeCurrent;
 - (void)setActive:(bool) a;
 - (bool)loaded;
@@ -476,27 +476,17 @@ public:
                                         [NSNumber numberWithBool:FALSE], kEAGLDrawablePropertyRetainedBacking,
 										kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
         EAGLContext* context = 0;
-		Boolean gles2 = YES;
-        
-        
+		
 		context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
 		
         
-        if (!context) {
-            gles2 = NO;
-            context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
-        }
         if (!context || ![EAGLContext setCurrentContext:context])
         {
             [self release];
             return nil;
         }
 		
-        if (gles2) {
-            m_context = [[WinLibCocoaTouchContext2 alloc] initWithContext:context];
-        } else {
-            m_context = [[WinLibCocoaTouchContext alloc] initWithContext:context];
-        }
+        m_context = [[WinLibCocoaTouchContext alloc] initWithContext:context];
         
         [self updateScale];
 		
@@ -527,7 +517,7 @@ public:
         [self setAutoresizesSubviews:YES];
         [self updateScale];
 		
-		[self prepareOpenGL:gles2];
+		[self prepareOpenGL];
 	}
 	return self;
 }
@@ -591,8 +581,8 @@ public:
  	
 }
 
-- (void)prepareOpenGL:(Boolean) gles2 {
-	LOG_VERBOSE( "prepareOpenGL " << (gles2 ? "GLES2" : "GLES1") );
+- (void)prepareOpenGL {
+	LOG_VERBOSE( "prepareOpenGL" );
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	[self makeCurrent];
 	int w = [self bounds].size.width;
@@ -601,13 +591,8 @@ public:
     w *= self.contentScaleFactor;
     h *= self.contentScaleFactor;
 	
-    if (gles2) {
-        m_render = new GHL::RenderOpenGLES2(GHL::UInt32(w),
-									 GHL::UInt32(h),[m_context haveDepth]);
-    } else {
-        m_render = new GHL::RenderOpenGLES(GHL::UInt32(w),
-                                            GHL::UInt32(h), [m_context haveDepth]);
-    }
+    m_render = new GHL::RenderOpenGLES2(GHL::UInt32(w),
+                                        GHL::UInt32(h),[m_context haveDepth]);
 	m_render->RenderInit();
 	g_application->SetRender(m_render);
 	GHL::g_default_framebuffer = [m_context defaultFramebuffer];

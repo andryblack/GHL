@@ -9,7 +9,6 @@ namespace GHL {
     
     struct GLApi {
         static bool InitGL(GL* api);
-        static bool InitGLffpl(GLffpl* api);
     };
 }
 

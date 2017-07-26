@@ -417,39 +417,5 @@ namespace GHL {
         api->Release = &GLApi_impl::DynamicGLFinish;
         return true;
     }
-    
-    bool GLApi::InitGLffpl(GLffpl* api) {
-#define DYNAMIC_GL_ffpl_CONSTANT(Name) api->Name = GLApi_impl::GL_##Name;
-        DYNAMIC_GL_ffpl_CONSTANTS
-#undef DYNAMIC_GL_ffpl_CONSTANT
-#define DYNAMIC_GL_ffpl_FUNCTION(Name,Args) api->Name = &GLApi_impl::Name;
-        DYNAMIC_GL_ffpl_FUNCTIONS
-#undef DYNAMIC_GL_ffpl_FUNCTION
-
-        if (!GLApi_impl::Feature_VERSION_1_3_Supported()) {
-            if (GLApi_impl::Feature_ARB_texture_env_combine_Supported()) {
-                LOG_INFO("using extension ARB_texture_env_combine");
-#define DYNAMIC_GL_ffpl_CONSTANT(Name) api->Name = GLApi_impl::GL_##Name##_ARB;
-                DYNAMIC_GL_ffpl_CONSTANTS_Combiners
-#undef DYNAMIC_GL_ffpl_CONSTANT
-            } else if (GLApi_impl::Feature_EXT_texture_env_combine_Supported()) {
-                LOG_INFO("using extension EXT_texture_env_combine");
-#define DYNAMIC_GL_ffpl_CONSTANT(Name) api->Name = GLApi_impl::GL_##Name##_EXT;
-                DYNAMIC_GL_ffpl_CONSTANTS_Combiners
-#undef DYNAMIC_GL_ffpl_CONSTANT
-            } else {
-                LOG_ERROR("extensions (ARB|EXT)_texture_env_combine not found");
-                return false;
-            }
-        } else {
-#define DYNAMIC_GL_ffpl_CONSTANT(Name) api->Name = GLApi_impl::GL_##Name;
-            DYNAMIC_GL_ffpl_CONSTANTS_Combiners
-#undef DYNAMIC_GL_ffpl_CONSTANT
-            
-        }
         
-        
-        return true;
-    }
-    
 }

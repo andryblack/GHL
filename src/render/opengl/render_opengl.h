@@ -14,19 +14,8 @@
 namespace GHL {
     
     
-    
-    
-    class RenderOpenGL : public RenderOpenGLFFPL {
-    private:
         
-    public:
-        RenderOpenGL(UInt32 w,UInt32 h,bool depth);
-        
-        bool RenderInit();
-        
-    };
-    
-    class RenderOpenGL2 : public RenderOpenGLPPL {
+    class RenderOpenGL2 : public RenderOpenGLBase {
     public:
         RenderOpenGL2(UInt32 w,UInt32 h, bool depth);
         

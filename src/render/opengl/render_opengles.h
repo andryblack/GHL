@@ -12,18 +12,8 @@
 #include "render_opengl_base.h"
 
 namespace GHL {
-    class RenderOpenGLES : public RenderOpenGLFFPL {
-    private:
-        
-    public:
-        RenderOpenGLES(UInt32 w,UInt32 h,bool haveDepth);
-        
-        void GHL_CALL BeginScene(RenderTarget* target);
-        bool RenderInit();
-        
-    };
     
-    class RenderOpenGLES2 : public RenderOpenGLPPL {
+    class RenderOpenGLES2 : public RenderOpenGLBase {
     public:
         RenderOpenGLES2(UInt32 w,UInt32 h,bool haveDepth);
         

@@ -18,25 +18,8 @@
 
 namespace GHL {
 
-    static const char* MODULE = "RENDER:OpenGL";
     
-    
-    
-    RenderOpenGL::RenderOpenGL(UInt32 w,UInt32 h,bool depth) : RenderOpenGLFFPL(w,h,depth){
-        
-    }
-    
-    bool RenderOpenGL::RenderInit() {
-        LOG_INFO("RenderOpenGL::RenderInit");
-        if (!GLApi::InitGL(&gl)) {
-            return false;
-        }
-        if (!RenderOpenGLBase::RenderInit())
-            return false;
-        return GLApi::InitGLffpl(&glffpl);
-    }
-    
-    RenderOpenGL2::RenderOpenGL2(UInt32 w,UInt32 h,bool depth) : RenderOpenGLPPL(w,h,depth) {
+    RenderOpenGL2::RenderOpenGL2(UInt32 w,UInt32 h,bool depth) : RenderOpenGLBase(w,h,depth) {
         
     }
         
@@ -44,7 +27,7 @@ namespace GHL {
         if (!GLApi::InitGL(&gl)) {
             return false;
         }
-        return RenderOpenGLPPL::RenderInit();
+        return RenderOpenGLBase::RenderInit();
     }
     
     bool GHL_CALL RenderOpenGL2::IsFeatureSupported(RenderFeature feature) {
@@ -52,7 +35,7 @@ namespace GHL {
             feature == RENDER_FEATURE_NPOT_TARGET) {
             return gl.npot_textures;
         }
-        return RenderOpenGLPPL::IsFeatureSupported(feature);
+        return RenderOpenGLBase::IsFeatureSupported(feature);
     }
 }
 
@@ -63,16 +46,8 @@ GHL_API GHL::RenderImpl* GHL_CALL GHL_CreateRenderOpenGL(GHL::UInt32 w,GHL::UInt
         render->RenderDone();
         delete render;
         render = 0;
-    } else {
-        return render;
     }
-	render = new GHL::RenderOpenGL(w,h,depth);
-	if (!render->RenderInit()) {
-		render->RenderDone();
-		delete render;
-		render = 0;
-	}
-	return render;
+    return render;
 }
 
 GHL_API void GHL_DestroyRenderOpenGL(GHL::RenderImpl* render_) {

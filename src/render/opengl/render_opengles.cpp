@@ -7,7 +7,6 @@
 //
 
 #include "render_opengles.h"
-#include "gles1_api.h"
 #include "gles2_api.h"
 #include "../../ghl_log_impl.h"
 
@@ -16,32 +15,8 @@ namespace GHL {
     UInt32 g_default_framebuffer = 0;
     
     
-    
-         
-    static const char* MODULE = "RENDER:OpenGLES";
-    
-    #ifndef GHL_NO_ES1
-    RenderOpenGLES::RenderOpenGLES(UInt32 w,UInt32 h,bool depth) : RenderOpenGLFFPL(w,h,depth) {
-        
-    }
-    
-    void GHL_CALL RenderOpenGLES::BeginScene(RenderTarget* target) {
-        gl.rtapi.default_framebuffer = g_default_framebuffer;
-        RenderOpenGLFFPL::BeginScene(target);
-    }
-    
-    bool RenderOpenGLES::RenderInit() {
-        LOG_INFO("RenderInit");
-        if (!GLES1Api::InitGL(&gl)) {
-            return false;
-        }
-        if (!RenderOpenGLBase::RenderInit())
-            return false;
-        return GLES1Api::InitGLffpl(&glffpl);
-    }
-    #endif
-    
-    RenderOpenGLES2::RenderOpenGLES2(UInt32 w,UInt32 h,bool depth) : RenderOpenGLPPL(w,h,depth) {
+
+    RenderOpenGLES2::RenderOpenGLES2(UInt32 w,UInt32 h,bool depth) : RenderOpenGLBase(w,h,depth) {
         GetGenerator().set_fshader_header("precision mediump float;\n");
     }
     
@@ -49,7 +24,7 @@ namespace GHL {
         if (!GLES2Api::InitGL(&gl)) {
             return false;
         }
-        return RenderOpenGLPPL::RenderInit();
+        return RenderOpenGLBase::RenderInit();
     }
     
     bool GHL_CALL RenderOpenGLES2::IsFeatureSupported(RenderFeature feature) {
@@ -59,12 +34,12 @@ namespace GHL {
         if (feature == RENDER_FEATURE_NPOT_TARGET) {
             return true;
         }
-        return RenderOpenGLPPL::IsFeatureSupported(feature);
+        return RenderOpenGLBase::IsFeatureSupported(feature);
     }
     
     void GHL_CALL RenderOpenGLES2::BeginScene(RenderTarget* target) {
         gl.rtapi.default_framebuffer = g_default_framebuffer;
-        RenderOpenGLPPL::BeginScene(target);
+        RenderOpenGLBase::BeginScene(target);
     }
     
     
@@ -82,14 +57,6 @@ GHL_API GHL::RenderImpl* GHL_CALL GHL_CreateRenderOpenGL(GHL::UInt32 w,GHL::UInt
     } else {
         return render;
     }
-#ifndef GHL_NO_ES1
-    render = new GHL::RenderOpenGLES(w,h,depth);
-    if (!render->RenderInit()) {
-        render->RenderDone();
-        delete render;
-        render = 0;
-    }
-#endif
     return render;
 }
 
