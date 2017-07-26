@@ -129,7 +129,7 @@ namespace GHL {
         if  (!m_fshader_header.empty()) {
             ss << m_fshader_header;
         }
-        for (size_t i=0;i<MAX_TEXTURE_STAGES;++i) {
+        for (size_t i=0;i<STATE_MAX_TEXTURE_STAGES;++i) {
             if (entry.texture_stages[i].rgb.c.texture) {
                 ss << "uniform sampler2D texture_" << i << ";\n";
             }
@@ -144,7 +144,7 @@ namespace GHL {
         ss << "  vec4 clr = varColor;\n";
         size_t texCoordIdx = 0;
         //char buf[128];
-        for (size_t i=0;i<MAX_TEXTURE_STAGES;++i) {
+        for (size_t i=0;i<STATE_MAX_TEXTURE_STAGES;++i) {
             texCoordIdx = 0;
             if (tex2 && i==1)
                 texCoordIdx = 1;

@@ -108,7 +108,7 @@ namespace GHL {
     
     
     void ShaderProgramGLSL::Setup() {
-        for (size_t i=0;i<MAX_TEXTURE_STAGES;++i) {
+        for (size_t i=0;i<STATE_MAX_TEXTURE_STAGES;++i) {
             char uf[64];
             ::snprintf(uf, 64, "texture_%d",int(i));
             GL::GLint location = -1;

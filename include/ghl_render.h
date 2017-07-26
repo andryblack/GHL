@@ -151,7 +151,7 @@ namespace GHL
         RENDER_FEATURE_NPOT_TARGET,     ///< NPOT Render target
     };
     
-    static const UInt32 MAX_TEXTURE_STAGES = 2;
+    static const UInt32 MAX_TEXTURE_STAGES = 4;
     
     struct Image;
 

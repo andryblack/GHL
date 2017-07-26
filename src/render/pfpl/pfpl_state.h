@@ -28,6 +28,8 @@
 
 namespace GHL {
     
+    static const UInt32 STATE_MAX_TEXTURE_STAGES = 2;
+    
     struct pfpl_state_data {
         struct texture_stage {
             union state {
@@ -52,7 +54,7 @@ namespace GHL {
                 UInt32 all;
             } tex;
         };
-        texture_stage   texture_stages[MAX_TEXTURE_STAGES];
+        texture_stage   texture_stages[STATE_MAX_TEXTURE_STAGES];
     };
 	GHL_STATIC_ASSERT(sizeof(pfpl_state_data::texture_stage::state::c_t) == sizeof(UInt32));
 	GHL_STATIC_ASSERT(sizeof(pfpl_state_data::texture_stage::tex_t::c_t) == sizeof(UInt32));
@@ -64,7 +66,7 @@ namespace GHL {
             (a.c.arg_2 == b.c.arg_2);
     }
     static inline void normalize( pfpl_state_data& s ) {
-        for (UInt32 i=0;i<MAX_TEXTURE_STAGES;++i) {
+        for (UInt32 i=0;i<STATE_MAX_TEXTURE_STAGES;++i) {
             s.texture_stages[i].alpha.c.texture = s.texture_stages[i].rgb.c.texture;
             if (!s.texture_stages[i].rgb.c.texture) {
                 s.texture_stages[i].rgb.c.operation = TEX_OP_DISABLE;
@@ -83,7 +85,7 @@ namespace GHL {
         }
     }
     static inline bool compare( const pfpl_state_data& a, const pfpl_state_data& b ) {
-        for (UInt32 i=0;i<MAX_TEXTURE_STAGES;++i) {
+        for (UInt32 i=0;i<STATE_MAX_TEXTURE_STAGES;++i) {
             if (a.texture_stages[i].rgb.all!=b.texture_stages[i].rgb.all)
                 return false;
             if (a.texture_stages[i].alpha.all!=b.texture_stages[i].alpha.all)

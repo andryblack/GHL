@@ -125,7 +125,7 @@ namespace GHL {
             return false;
         m_generator.init(this);
         m_shaders_render.init(&m_generator);
-        for (UInt32 i=0;i<MAX_TEXTURE_STAGES;++i) {
+        for (UInt32 i=0;i<STATE_MAX_TEXTURE_STAGES;++i) {
             m_crnt_state.texture_stages[i].tex.all = 0;
         }
         ResetPointers();
@@ -643,17 +643,21 @@ namespace GHL {
         }
         set_texture_stage(gl,0);
 
-        if (texture) {
-            m_crnt_state.texture_stages[stage].rgb.c.texture = true;
-            m_crnt_state.texture_stages[stage].alpha.c.texture = true;
-        } else {
-            m_crnt_state.texture_stages[stage].rgb.c.texture = false;
-            m_crnt_state.texture_stages[stage].alpha.c.texture = false;
+        if (stage < STATE_MAX_TEXTURE_STAGES) {
+            if (texture) {
+                m_crnt_state.texture_stages[stage].rgb.c.texture = true;
+                m_crnt_state.texture_stages[stage].alpha.c.texture = true;
+            } else {
+                m_crnt_state.texture_stages[stage].rgb.c.texture = false;
+                m_crnt_state.texture_stages[stage].alpha.c.texture = false;
+            }
         }
     }
     
     /// set texture stage color operation
     void GHL_CALL RenderOpenGLBase::SetupTextureStageColorOp(TextureOperation op,TextureArgument arg1,TextureArgument arg2,UInt32 stage ) {
+        if (stage >= STATE_MAX_TEXTURE_STAGES)
+            return;
         m_crnt_state.texture_stages[stage].rgb.c.operation = op;
         m_crnt_state.texture_stages[stage].rgb.c.arg_1 = arg1;
         m_crnt_state.texture_stages[stage].rgb.c.arg_2 = arg2;
@@ -661,6 +665,8 @@ namespace GHL {
     
     /// set texture stage alpha operation
     void GHL_CALL RenderOpenGLBase::SetupTextureStageAlphaOp(TextureOperation op,TextureArgument arg1,TextureArgument arg2,UInt32 stage ) {
+        if (stage >= STATE_MAX_TEXTURE_STAGES)
+            return;
         m_crnt_state.texture_stages[stage].alpha.c.operation = op;
         m_crnt_state.texture_stages[stage].alpha.c.arg_1 = arg1;
         m_crnt_state.texture_stages[stage].alpha.c.arg_2 = arg2;
