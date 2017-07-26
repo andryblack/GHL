@@ -1270,6 +1270,9 @@ struct utf8_to_jchar_array_converter {
 };
 
 GHL_API jstring GHL_CALL GHL_JNI_CreateStringUTF8(JNIEnv* env,const char* str) {
+    if (!str) {
+        return 0;
+    }
     if (check_utf8(str)) {
         return env->NewStringUTF(str);
     } else {
