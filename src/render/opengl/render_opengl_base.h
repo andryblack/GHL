@@ -165,6 +165,19 @@ namespace GHL
     protected:
         GLSLGenerator&  GetGenerator() { return m_generator; }
         void ResetPointers();
+        enum VertexAttributeUsage {
+            VERTEX_POSITION,
+            VERTEX_TEX_COORD0,
+            VERTEX_TEX_COORD1,
+            VERTEX_COLOR,
+            VERTEX_MAX_ATTRIBUTES
+        };
+        void SetupAttribute(const void* ptr,
+                            VertexAttributeUsage u,
+                            UInt32 cnt,
+                            GL::GLenum t,
+                            bool norm,
+                            UInt32 vsize);
     private:
         pfpl_render         m_shaders_render;
         pfpl_state_data     m_crnt_state;
@@ -174,7 +187,8 @@ namespace GHL
         float               m_projection_view_matrix[16];
         void DoDrawPrimitives(VertexType v_type);
         bool    m_reset_uniforms;
-        const void*               m_current_pointers[GLSLPredefinedAttributesAmount];
+        
+        const void*               m_current_pointers[VERTEX_MAX_ATTRIBUTES];
     };
     
 }
