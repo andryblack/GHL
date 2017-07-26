@@ -24,6 +24,7 @@
 #define RENDER_IMPL_H
 
 #include "ghl_render.h"
+#include "buffer_impl.h"
 
 #include <cstring>
 #include <vector>
@@ -85,8 +86,8 @@ namespace GHL {
         UInt32  GetRenderWidth() const { return m_width; }
         UInt32  GetRenderHeight() const { return m_height; }
         bool  IsSceneStarted() const { return m_scene_started; }
-        const IndexBuffer* GetIndexBuffer() const { return m_current_i_buffer; }
-        const VertexBuffer* GetVertexBuffer() const { return m_current_v_buffer; }
+        const IndexBufferImpl* GetIndexBuffer() const { return m_current_i_buffer; }
+        const VertexBufferImpl* GetVertexBuffer() const { return m_current_v_buffer; }
         const ShaderProgram* GetShader() const { return m_current_shader; }
         RenderTargetImpl* GetTarget() { return m_scene_target; }
         bool GetHaveDepth() const { return m_have_depth; }
@@ -101,8 +102,8 @@ namespace GHL {
 		bool	m_scene_started;
 		const Texture*	m_current_texture[MAX_TEXTURE_STAGES];
         const ShaderProgram*   m_current_shader;
-        const VertexBuffer*     m_current_v_buffer;
-        const IndexBuffer*      m_current_i_buffer;
+        const VertexBufferImpl*     m_current_v_buffer;
+        const IndexBufferImpl*      m_current_i_buffer;
 		Texture* m_sfont_texture;
 #ifdef GHL_DEBUG
 		std::vector<const TextureImpl*>         m_textures;

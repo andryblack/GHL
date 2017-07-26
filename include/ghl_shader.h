@@ -47,6 +47,8 @@ namespace GHL
 	
 	/// Uniform
 	struct ShaderUniform {
+        /// set sampler index
+        virtual void GHL_CALL SetSamplerSlot(UInt32 s) = 0;
 		/// Set float value
 		virtual void GHL_CALL SetValueFloat(float v) = 0;
 		/// Set 2 floats value
@@ -57,6 +59,8 @@ namespace GHL
         virtual void GHL_CALL SetValueFloat4(float x, float y, float z, float w) = 0;
         /// Set matrix value (16 floats)
 		virtual void GHL_CALL SetValueMatrix(const float* v) = 0;
+        /// Set matrices value (16 floats)*cnt
+        virtual void GHL_CALL SetArrayMatrix(const float* v,UInt32 cnt) = 0;
 	};
 	
 	/// Shader program interface

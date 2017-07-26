@@ -53,6 +53,13 @@ namespace GHL {
         m_f = 0;
     }
 	
+    void GHL_CALL ShaderUniformGLSL::SetSamplerSlot(UInt32 s) {
+        const ShaderProgram* prg = m_program->GetCurrent();
+        if (prg!=m_program) m_program->SetCurrent(m_program);
+        const GL& gl = m_program->gl;
+        CHECK_GL(gl.sdrapi.Uniform1i(m_location,s));
+        if (prg!=m_program) m_program->SetCurrent(prg);
+    }
 	
 	void GHL_CALL ShaderUniformGLSL::SetValueFloat(float v) {
         const ShaderProgram* prg = m_program->GetCurrent();
@@ -91,6 +98,13 @@ namespace GHL {
         if (prg!=m_program) m_program->SetCurrent(m_program);
         const GL& gl = m_program->gl;
         CHECK_GL(gl.sdrapi.UniformMatrix4fv(m_location,1,gl._FALSE,v));
+        if (prg!=m_program) m_program->SetCurrent(prg);
+    }
+    void GHL_CALL ShaderUniformGLSL::SetArrayMatrix(const float* v,UInt32 cnt) {
+        const ShaderProgram* prg = m_program->GetCurrent();
+        if (prg!=m_program) m_program->SetCurrent(m_program);
+        const GL& gl = m_program->gl;
+        CHECK_GL(gl.sdrapi.UniformMatrix4fv(m_location,cnt,gl._FALSE,v));
         if (prg!=m_program) m_program->SetCurrent(prg);
     }
 	

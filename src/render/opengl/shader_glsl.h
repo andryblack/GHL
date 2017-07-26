@@ -58,11 +58,13 @@ namespace GHL {
             m_location(location_) {}
 		virtual ~ShaderUniformGLSL() {}
 		GL::GLint location() const { return m_location;}
+        virtual void GHL_CALL SetSamplerSlot(UInt32 s);
 		virtual void GHL_CALL SetValueFloat(float v);
         virtual void GHL_CALL SetValueFloat2(float x,float y);
         virtual void GHL_CALL SetValueFloat3(float x, float y, float z);
         virtual void GHL_CALL SetValueFloat4(float x, float y, float z, float w);
 		virtual void GHL_CALL SetValueMatrix(const float* v);
+        virtual void GHL_CALL SetArrayMatrix(const float* v,UInt32 cnt);
 	};
     
 	

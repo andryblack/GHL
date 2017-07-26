@@ -544,7 +544,7 @@ namespace GHL {
         if (m_current_i_buffer) {
             m_current_i_buffer->Release();
         }
-        m_current_i_buffer = buf;
+        m_current_i_buffer = static_cast<const IndexBufferImpl*>(buf);
     }
     
     void GHL_CALL RenderImpl::SetVertexBuffer(const VertexBuffer* buf) {
@@ -564,7 +564,7 @@ namespace GHL {
         if (m_current_v_buffer) {
             m_current_v_buffer->Release();
         }
-        m_current_v_buffer = buf;
+        m_current_v_buffer = static_cast<const VertexBufferImpl*>(buf);
     }
     
     bool GHL_CALL RenderImpl::IsFeatureSupported(RenderFeature /*feature*/) {
