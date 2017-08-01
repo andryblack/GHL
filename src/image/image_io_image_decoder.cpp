@@ -89,7 +89,7 @@ namespace GHL {
         // Get pixel data
         CFDataRef pdata = CGDataProviderCopyData( CGImageGetDataProvider( img ) );
         if (pdata) {
-            CFRange range = { 0, imageWidth*imageHeight*bpp };
+            CFRange range = CFRangeMake( 0, imageWidth*imageHeight*bpp );
             CFDataGetBytes(pdata, range , res->GetData()->GetDataPtr());
             CFRelease(pdata);
         }
