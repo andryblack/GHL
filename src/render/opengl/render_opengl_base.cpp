@@ -549,7 +549,7 @@ namespace GHL {
 		CHECK_GL(gl.sdrapi.AttachShader(handle, vs->handle()));
 		CHECK_GL(gl.sdrapi.AttachShader(handle, fs->handle()));
 
-        for (size_t i=0;i<(sizeof(predefinedAttributeNames)/sizeof(predefinedAttributeNames[0]));++i) {
+        for (GL::GLuint i=0;i<(sizeof(predefinedAttributeNames)/sizeof(predefinedAttributeNames[0]));++i) {
             CHECK_GL(gl.sdrapi.BindAttribLocation(handle,i,predefinedAttributeNames[i]));
         }
         
@@ -813,7 +813,7 @@ namespace GHL {
                                          bool norm,
                                          UInt32 vsize) {
         if (m_current_pointers[u]!=ptr) {
-            CHECK_GL(gl.sdrapi.VertexAttribPointer(u,cnt,t,norm?gl._TRUE:gl._FALSE,vsize,ptr));
+            CHECK_GL(gl.sdrapi.VertexAttribPointer(u,cnt,t,norm?gl._TRUE:gl._FALSE,GL::GLsizei(vsize),ptr));
             if (m_current_pointers[u] == NO_POINTER) {
                 CHECK_GL(gl.sdrapi.EnableVertexAttribArray(u));
             }

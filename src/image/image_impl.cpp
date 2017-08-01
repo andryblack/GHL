@@ -255,7 +255,7 @@ namespace GHL
         size_t scbw = (src->GetWidth() + bw - 1) / bw;
         size_t cbw = (w + bw - 1) / bw;
         size_t cbh = (h + bh - 1) / bh;
-        Data* d = GHL_CreateData(cbw*cbh*bs);
+        Data* d = GHL_CreateData(UInt32(cbw*cbh*bs));
         const Byte* src_b = src->GetData()->GetData() + (y/bh)*scbw*bs + (x/bw) * bs;
         Byte* dst_b = d->GetDataPtr();
         for (size_t i=0;i<cbh;++i) {

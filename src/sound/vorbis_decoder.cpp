@@ -31,7 +31,7 @@ namespace GHL
 	{
 		DataStream* ds = reinterpret_cast<DataStream*>(datasource);
 		if (!ds) return 0;
-		return ds->Read(reinterpret_cast<Byte*>(ptr),size*nmemb);
+		return ds->Read(reinterpret_cast<Byte*>(ptr),UInt32(size*nmemb));
 	}
 	static   int  ghl_ogg_seek_func  (void *datasource, ogg_int64_t offset, int whence) 
 	{
@@ -84,7 +84,7 @@ namespace GHL
 		if (!vi) return false;
         if (vi->channels!=1 && vi->channels!=2) return false;
         m_type = vi->channels==2 ? SAMPLE_TYPE_STEREO_16 : SAMPLE_TYPE_MONO_16;
-		m_freq = vi->rate;
+		m_freq = UInt32(vi->rate);
         m_bytes_per_sample = vi->channels * 2;
 		m_samples = static_cast<UInt32>(ov_pcm_total(&m_file,-1));
         if (m_samples<=0) return false;
@@ -96,7 +96,7 @@ namespace GHL
 		int res = 0;
 		while (samples)
 		{
-			int c_res = ov_read(&m_file,reinterpret_cast<char*>(buf),samples*m_bytes_per_sample,0,2,1,&m_current_section);
+			long c_res = ov_read(&m_file,reinterpret_cast<char*>(buf),samples*m_bytes_per_sample,0,2,1,&m_current_section);
 			if (c_res<=0) return res;
 			buf+=c_res;
 			c_res = c_res/m_bytes_per_sample;

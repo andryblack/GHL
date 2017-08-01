@@ -104,7 +104,7 @@ namespace GHL {
             NSData* data = [NSData dataWithBytesNoCopy:const_cast<Byte*>(src) length:bytes freeWhenDone:NO];
             if (data) @try {
                 [m_file writeData:data];
-                len = [data length];
+                len = UInt32([data length]);
             } @catch ( NSException* e) {
                 len = 0;
             }

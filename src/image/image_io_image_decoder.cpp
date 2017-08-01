@@ -18,13 +18,13 @@ namespace GHL {
     static size_t dp_getBytes(void * __nullable info,
                                                     void *  buffer, size_t count) {
         DataStream* ds = static_cast<DataStream*>(info);
-        return ds->Read(static_cast<Byte*>(buffer), count);
+        return ds->Read(static_cast<Byte*>(buffer), UInt32(count));
     }
     
     static off_t dp_skipForward(void * __nullable info,
                                                off_t count) {
         DataStream* ds = static_cast<DataStream*>(info);
-        if (ds->Seek(count, F_SEEK_CURRENT))
+        if (ds->Seek(Int32(count), F_SEEK_CURRENT))
             return count;
         return 0;
     }
@@ -73,8 +73,8 @@ namespace GHL {
         if (!img)
             return NULL;
         
-        UInt32 imageWidth = CGImageGetWidth( img );
-        UInt32 imageHeight = CGImageGetHeight( img );
+        UInt32 imageWidth = UInt32(CGImageGetWidth( img ));
+        UInt32 imageHeight = UInt32(CGImageGetHeight( img ));
         ImageFormat format = IMAGE_FORMAT_GRAY;
         UInt32 bpp = 1;
         if ( CGImageGetBitsPerPixel(img) == 24 ) {
@@ -122,8 +122,8 @@ namespace GHL {
         if (!img)
             return false;
         info->file_format = IMAGE_FILE_FORMAT_JPEG;
-        info->width = CGImageGetWidth(img);
-        info->height = CGImageGetHeight(img);
+        info->width = UInt32(CGImageGetWidth(img));
+        info->height = UInt32(CGImageGetHeight(img));
         if (CGImageGetBitsPerPixel(img) == 24)
             info->image_format = IMAGE_FORMAT_RGB;
         else if (CGImageGetBitsPerPixel(img) == 32)
