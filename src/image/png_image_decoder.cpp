@@ -338,7 +338,7 @@ Image* PngDecoder::Decode(DataStream* file)
     
     static void write_png_func(png_structp p, png_bytep d, png_size_t s) {
         DataArrayImpl* res = reinterpret_cast<DataArrayImpl*>(png_get_io_ptr(p));
-        res->append(d, s);
+        res->append(d, UInt32(s));
     }
     static void flush_png_func (png_structp p) {
         

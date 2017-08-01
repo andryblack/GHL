@@ -529,7 +529,7 @@ namespace GHL {
 		CHECK_GL(gl.sdrapi.AttachShader(handle, vs->handle()));
 		CHECK_GL(gl.sdrapi.AttachShader(handle, fs->handle()));
 
-        for (size_t i=0;i<(sizeof(predefinedAttributeNames)/sizeof(predefinedAttributeNames[0]));++i) {
+        for (GL::GLuint i=0;i<(sizeof(predefinedAttributeNames)/sizeof(predefinedAttributeNames[0]));++i) {
             CHECK_GL(gl.sdrapi.BindAttribLocation(handle,i,predefinedAttributeNames[i]));
         }
         
@@ -597,7 +597,7 @@ namespace GHL {
                 cnt = 4; type = gl.FLOAT;
         }
         norm = (def.usage == VERTEX_COLOR) ? gl._TRUE : gl._FALSE;
-        CHECK_GL(gl.sdrapi.VertexAttribPointer(def.usage,cnt,type,norm,vsize,ptr));
+        CHECK_GL(gl.sdrapi.VertexAttribPointer(def.usage,cnt,type,norm,GL::GLsizei(vsize),ptr));
     }
 
     void RenderOpenGLBase::SetupVertexData(const void* v,UInt32 vsize,const VertexAttributes& vt) {
@@ -623,7 +623,7 @@ namespace GHL {
             }
             m_current_pointers[it->usage] = ptr;
         }
-        for (size_t i=0;i<VERTEX_MAX_ATTRIBUTES;++i) {
+        for (GL::GLuint i=0;i<VERTEX_MAX_ATTRIBUTES;++i) {
             if (!used[i] && m_current_pointers[i]!=NO_POINTER) {
                 CHECK_GL(gl.sdrapi.DisableVertexAttribArray(i));
                 m_current_pointers[i] = NO_POINTER;

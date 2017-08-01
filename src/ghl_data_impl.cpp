@@ -83,7 +83,7 @@ GHL_API bool GHL_CALL GHL_UnpackZlib(const GHL::Data* src, GHL::Byte* dst,GHL::U
         }
         return false;
     }
-    *dst_size = stream.total_out;
+    *dst_size = GHL::UInt32(stream.total_out);
     
     err = inflateEnd(&stream);
     
@@ -189,5 +189,5 @@ GHL_API GHL::Data* GHL_CALL GHL_UnpackZlibData(const GHL::Data* src) {
     return res;
 }
 GHL_API GHL::UInt32 GHL_CALL GHL_DataCRC32(const GHL::Data* data ) {
-    return crc32(0,data->GetData(),data->GetSize());
+    return crc32(0,data->GetData(),GHL::UInt32(data->GetSize()));
 }
