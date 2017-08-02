@@ -40,6 +40,7 @@ static const char* MODULE = "WINLIB";
 static GHL::Application* g_application = 0;
 static UIInterfaceOrientation g_orientation = UIInterfaceOrientationLandscapeLeft;
 static bool g_orientationLocked = false;
+static bool g_multitouchEnabled = false;
 static bool g_need_depth = false;
 static GHL::Int32 g_frame_interval = 1;
 
@@ -451,6 +452,7 @@ public:
         scale = screen.scale;
     }
     self.contentScaleFactor = scale;
+    self.multipleTouchEnabled = g_multitouchEnabled ? YES : NO;
     return scale;
 }
 
@@ -650,7 +652,7 @@ public:
 		m_touches[touch_num]=touch; /// no retain!!
 		GHL::MouseButton btn = GHL::TOUCH_1;
 		if (touch_num>0) {
-			btn = GHL::MouseButton(GHL::MUTITOUCH_1+touch_num-1);
+			btn = GHL::MouseButton(GHL::MULTITOUCH_1+touch_num-1);
 		}
         GHL::Event e;
         e.type = GHL::EVENT_TYPE_MOUSE_PRESS;
@@ -675,7 +677,7 @@ public:
 		m_touches[touch_num]=0;
 		GHL::MouseButton btn = GHL::TOUCH_1;
 		if (touch_num>0) {
-			btn = GHL::MouseButton(GHL::MUTITOUCH_1+touch_num-1);
+			btn = GHL::MouseButton(GHL::MULTITOUCH_1+touch_num-1);
 		}
         GHL::Event e;
         e.type = GHL::EVENT_TYPE_MOUSE_RELEASE;
@@ -703,7 +705,7 @@ public:
 		}
 		GHL::MouseButton btn = GHL::TOUCH_1;
 		if (touch_num>0) {
-			btn = GHL::MouseButton(GHL::MUTITOUCH_1+touch_num-1);
+			btn = GHL::MouseButton(GHL::MULTITOUCH_1+touch_num-1);
 		}
         GHL::Event e;
         e.type = GHL::EVENT_TYPE_MOUSE_MOVE;
@@ -960,6 +962,7 @@ public:
     
     view = [[WinLibView alloc] initWithFrame:CGRectMake(0, 0, settings.width, settings.height)];
     controller.view = view;
+    view.multipleTouchEnabled = g_multitouchEnabled ? YES : NO;
     
     [window setRootViewController:controller];
     [window setOpaque:YES];
@@ -1068,6 +1071,7 @@ bool GHL_CALL SystemCocoaTouch::SetDeviceState( GHL::DeviceState name, const voi
 	} else if (name==GHL::DEVICE_STATE_MULTITOUCH_ENABLED) {
 		const bool* state = static_cast<const bool*>(data);
 		m_controller.view.multipleTouchEnabled = *state ? YES : NO;
+        g_multitouchEnabled = *state;
 		return true;
 	} else if (name==GHL::DEVICE_STATE_FRAME_INTERVAL) {
         const GHL::Int32* state = static_cast<const GHL::Int32*>(data);
