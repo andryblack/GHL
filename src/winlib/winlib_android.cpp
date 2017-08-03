@@ -173,6 +173,8 @@ namespace GHL {
             m_display = EGL_NO_DISPLAY;
             m_context = EGL_NO_CONTEXT;
             m_surface = EGL_NO_SURFACE;
+
+            m_multitouch_enabled = false;
         }
         ~GHLActivity() {
             delete m_vfs;
@@ -302,7 +304,11 @@ namespace GHL {
                     }
                     return true;
                 }
-            }
+            } else if (name==GHL::DEVICE_STATE_MULTITOUCH_ENABLED) {
+                const bool* state = static_cast<const bool*>(data);
+                m_multitouch_enabled = *state;
+                return true;
+            } 
             return false;
         }
         /// Get device specific data
@@ -901,6 +907,12 @@ namespace GHL {
         }
 
     protected:
+
+        GHL::MouseButton get_touch(int32_t pointer_id) const {
+            std::map<int32_t,GHL::MouseButton>::const_iterator it = m_touch_map.find(pointer_id);
+            if (it == m_touch_map.end()) return GHL::MOUSE_BUTTON_NONE;
+            return it->second;
+        }
         bool HandleEvent(const AInputEvent* event) {
             g_native_activity = m_activity;
             check_main_thread();
@@ -909,40 +921,89 @@ namespace GHL {
             }
           
             if (AINPUT_EVENT_TYPE_MOTION==AInputEvent_getType(event)) {
-                int x = int( AMotionEvent_getX(event,0) );
-                int y = int( AMotionEvent_getY(event,0) );
                 int32_t action = AMotionEvent_getAction(event);
                 int32_t actionType = action & AMOTION_EVENT_ACTION_MASK;
-                int32_t ptr = ( action & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK ) >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
-                GHL::MouseButton btn = GHL::TOUCH_1;
-                if ( ptr!=0 ) {
-                    /// @todo
-                    /// support multitouch
-                }
+                
+                
                 if (m_app) {
                     GHL::Event e;
-                    if ( action == AMOTION_EVENT_ACTION_DOWN ) {
+                    if ( actionType == AMOTION_EVENT_ACTION_DOWN ) {
+                        e.data.mouse_press.button = GHL::TOUCH_1;
                         e.type = GHL::EVENT_TYPE_MOUSE_PRESS;
-                        e.data.mouse_press.button = btn;
                         e.data.mouse_press.modificators = 0;
-                        e.data.mouse_press.x = x;
-                        e.data.mouse_press.y = y;
-                    } else if (action == AMOTION_EVENT_ACTION_UP) {
+                        e.data.mouse_press.x = int( AMotionEvent_getX(event,0) );
+                        e.data.mouse_press.y = int( AMotionEvent_getY(event,0) );
+                        m_touch_map.clear();
+                        m_touch_map[AMotionEvent_getPointerId(event,0)] = e.data.mouse_press.button;
+                        //LOG_DEBUG("set touch1 " << AMotionEvent_getPointerId(event,0) << " " << e.data.mouse_press.button);
+                        m_app->OnEvent(&e);
+                    } else if (actionType == AMOTION_EVENT_ACTION_UP) {
                         e.type = GHL::EVENT_TYPE_MOUSE_RELEASE;
-                        e.data.mouse_release.button = btn;
+                        int32_t id = AMotionEvent_getPointerId(event,0);
+                        e.data.mouse_release.button = get_touch(id);
+                        if (e.data.mouse_release.button == GHL::MOUSE_BUTTON_NONE) {
+                            //LOG_DEBUG("skip up touch1 " << id);
+                            return true;
+                        }
                         e.data.mouse_release.modificators = 0;
-                        e.data.mouse_release.x = x;
-                        e.data.mouse_release.y = y;
-                    } else if (action == AMOTION_EVENT_ACTION_MOVE) {
+                        e.data.mouse_release.x = int( AMotionEvent_getX(event,0) );
+                        e.data.mouse_release.y = int( AMotionEvent_getY(event,0) );
+                        m_touch_map.erase(id);
+                        //LOG_DEBUG("erase touch1 " << id);
+                        m_app->OnEvent(&e);
+                    } else if ( actionType == AMOTION_EVENT_ACTION_POINTER_DOWN ) {
+                        int32_t ptr = ( action & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK ) >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
+                        if (!m_multitouch_enabled && m_touch_map.size()>0) {
+                            //LOG_DEBUG("skip touch down" << AMotionEvent_getPointerId(event,ptr));
+                            return true;
+                        }
+                        if (m_touch_map.size()==0)
+                            e.data.mouse_press.button = GHL::TOUCH_1;
+                        else
+                            e.data.mouse_press.button = static_cast<GHL::MouseButton>(GHL::MULTITOUCH_1 + m_touch_map.size() - 1);
+                        e.type = GHL::EVENT_TYPE_MOUSE_PRESS;
+                        e.data.mouse_press.modificators = 0;
+                        e.data.mouse_press.x = int( AMotionEvent_getX(event,ptr) );
+                        e.data.mouse_press.y = int( AMotionEvent_getY(event,ptr) );
+                        m_touch_map[AMotionEvent_getPointerId(event,ptr)] = e.data.mouse_press.button;
+                        //LOG_DEBUG("set touch " << AMotionEvent_getPointerId(event,ptr) << " " << ptr << " " << e.data.mouse_press.button);
+                        m_app->OnEvent(&e);
+                    } else if (actionType == AMOTION_EVENT_ACTION_POINTER_UP) {
+                        int32_t ptr =  ( action & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK ) >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
+                        e.type = GHL::EVENT_TYPE_MOUSE_RELEASE;
+                        int32_t id = AMotionEvent_getPointerId(event,ptr);
+                        e.data.mouse_release.button = get_touch(id);
+                        if (e.data.mouse_release.button == GHL::MOUSE_BUTTON_NONE) {
+                            //LOG_DEBUG("skip up touch " << id);
+                            return true;
+                        }
+                        e.data.mouse_release.modificators = 0;
+                        e.data.mouse_release.x = int( AMotionEvent_getX(event,ptr) );
+                        e.data.mouse_release.y = int( AMotionEvent_getY(event,ptr) );
+                        m_touch_map.erase(id);
+                        //LOG_DEBUG("erase touch " << id);
+                        m_app->OnEvent(&e);
+                    } else if (actionType == AMOTION_EVENT_ACTION_MOVE) {
+                        size_t cnt = AMotionEvent_getPointerCount(event);
                         e.type = GHL::EVENT_TYPE_MOUSE_MOVE;
-                        e.data.mouse_move.button = btn;
-                        e.data.mouse_move.modificators = 0;
-                        e.data.mouse_move.x = x;
-                        e.data.mouse_move.y = y;
+                            
+                        for (size_t i=0;i<cnt;++i) {
+                            e.data.mouse_move.button = get_touch(AMotionEvent_getPointerId(event,i));
+                            if (e.data.mouse_move.button == GHL::MOUSE_BUTTON_NONE) {
+                                //LOG_DEBUG("skip move touch " << AMotionEvent_getPointerId(event,i));
+                                continue;
+                            }
+                            //LOG_DEBUG("move touch " << AMotionEvent_getPointerId(event,i));
+                            e.data.mouse_move.modificators = 0;
+                            e.data.mouse_move.x =  int( AMotionEvent_getX(event,i) );
+                            e.data.mouse_move.y =  int( AMotionEvent_getY(event,i) );
+                            m_app->OnEvent(&e);
+                        }
+                        
                     } else {
                         return false;
                     }
-                    m_app->OnEvent(&e);
+                    
                 }
                 return true;
             } else if (AINPUT_EVENT_TYPE_KEY == AInputEvent_getType(event)) {
@@ -1089,6 +1150,8 @@ namespace GHL {
         int m_msgwrite;
         bool m_running;
        
+        bool m_multitouch_enabled;
+        std::map<int32_t,GHL::MouseButton> m_touch_map;
     };
     template <void(GHLActivity::*func)()> static inline void proxy_func(ANativeActivity* activity) {
         if ( activity && activity->instance ) {
