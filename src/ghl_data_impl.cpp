@@ -120,7 +120,7 @@ GHL_API GHL::Data* GHL_CALL GHL_PackZlib(const GHL::Data* src) {
     while (true) {
         err = deflate(&stream, Z_FINISH);
         data->append(buf, sizeof(buf)-stream.avail_out);
-        if (err == Z_OK) {
+        if (err == Z_OK || err == Z_BUF_ERROR) {
             if (stream.avail_out==0) {
                 stream.next_out = buf;
                 stream.avail_out = sizeof(buf);
@@ -141,19 +141,23 @@ GHL_API GHL::Data* GHL_CALL GHL_PackZlib(const GHL::Data* src) {
 GHL_API GHL::Data* GHL_CALL GHL_UnpackZlibData(const GHL::Data* src) {
     if (!src)
         return 0;
+   
     
     GHL::DataArrayImpl* res = new GHL::DataArrayImpl();
-    
+    if (src->GetSize()==0)
+        return res;
     z_stream stream = {};
     int err;
     
     stream.next_in = (Bytef*)src->GetData();
     stream.avail_in = src->GetSize();
     
-    GHL::Byte dec_buffer[1024];
+    static const size_t buffer_size = 1024;
+    res->resize(buffer_size);
     
-    stream.next_out = dec_buffer;
-    stream.avail_out = (uInt)sizeof(dec_buffer);
+    stream.next_out = res->GetDataPtr();
+    stream.avail_out = buffer_size;
+    stream.total_out = 0;
     
     stream.zalloc = &z__alloc_func;
     stream.zfree = &z__free_func;
@@ -164,20 +168,27 @@ GHL_API GHL::Data* GHL_CALL GHL_UnpackZlibData(const GHL::Data* src) {
         return 0;
     }
     while (true) {
-        err = inflate(&stream, stream.avail_in == 0 ? Z_FINISH : Z_NO_FLUSH);
-        res->append(dec_buffer, sizeof(dec_buffer)-stream.avail_out);
+        err = inflate(&stream, Z_FINISH);
+        
         if (err == Z_OK || err==Z_BUF_ERROR) {
-            stream.next_out = dec_buffer;
-            stream.avail_out = (uInt)sizeof(dec_buffer);
-        }
-        if (err == Z_STREAM_END) {
+            if (err == Z_BUF_ERROR) {
+                if (stream.avail_out) {
+                    LOG_ERROR("UnpackZlib input stream error");
+                    res->Release();
+                    return 0;
+                }
+            }
+            res->resize(stream.total_out + buffer_size);
+            stream.next_out = res->GetDataPtr() + stream.total_out;
+            stream.avail_out = (uInt)buffer_size;
+        } else if (err == Z_STREAM_END) {
             break;
         } else {
             inflateEnd(&stream);
             if (stream.msg) {
                 LOG_ERROR("UnpackZlib " << stream.msg);
             }
-            delete res;
+            res->Release();
             return 0;
         }
     }
@@ -185,7 +196,7 @@ GHL_API GHL::Data* GHL_CALL GHL_UnpackZlibData(const GHL::Data* src) {
     if (stream.msg) {
         LOG_ERROR("UnpackZlib " << stream.msg);
     }
-    
+    res->resize(stream.total_out);
     return res;
 }
 GHL_API GHL::UInt32 GHL_CALL GHL_DataCRC32(const GHL::Data* data ) {
