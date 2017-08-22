@@ -291,7 +291,9 @@ namespace GHL
 			Byte* dst = res->GetDataPtr()+_y*w*GetBpp();
 			::memcpy(dst,src,w*GetBpp());
 		}
-		return new ImageImpl( w, h, GetFormat(), res );
+		ImageImpl* res_img = new ImageImpl( w, h, GetFormat(), res );
+        res->Release();
+        return res_img;
 	}
     bool GHL_CALL ImageImpl::Draw(UInt32 x,UInt32 y,const Image* src) {
         Image* simg = 0;
@@ -357,8 +359,10 @@ namespace GHL
 
     /// clone image
     Image* GHL_CALL ImageImpl::Clone() const {
+        DataImpl* copy_data =  new DataImpl(m_data->GetSize(),m_data->GetData());
         ImageImpl* res = new ImageImpl(GetWidth(),GetHeight(),GetFormat(),
-                                       new DataImpl(m_data->GetSize(),m_data->GetData()));
+                                      copy_data);
+        copy_data->Release();
         return res;
     }
 }
