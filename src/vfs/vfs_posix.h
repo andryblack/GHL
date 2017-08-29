@@ -33,6 +33,7 @@ namespace GHL {
 	private:
 		std::string m_data_dir;
         std::string m_docs_dir;
+        Byte m_buffer[1024*8];
 	};
 
 }

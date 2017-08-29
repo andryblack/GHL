@@ -31,7 +31,7 @@ namespace GHL
 {
     
     struct Data;
-    
+    struct DataStream;
     
     /// connection handler
     struct NetworkRequest : RefCounter
@@ -64,6 +64,8 @@ namespace GHL
         virtual bool GHL_CALL Get(NetworkRequest* handler) = 0;
         /// POST request
         virtual bool GHL_CALL Post(NetworkRequest* handler,const Data* data) = 0;
+        /// big POST request
+        virtual bool GHL_CALL PostStream(NetworkRequest* handler, DataStream* data) = 0;
         /// process events on main thread
         virtual void GHL_CALL Process() = 0;
    };

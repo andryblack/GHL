@@ -24,6 +24,7 @@
 #include <ghl_data_stream.h>
 #include "../zlib/zlib.h"
 #include <cstdlib>
+#include <cassert>
 #undef Byte
 
 //static const char* MODULE = "VFS";
@@ -111,12 +112,108 @@ namespace GHL {
             return m_error != Z_OK;
         }
     };
+    
+    
+    class PackZlibStream : public RefCounterImpl<GHL::DataStream> {
+    private:
+        GHL::DataStream*  m_ds;
+        z_stream m_z;
+        static const size_t BUFFER_SIZE = 1024 * 4;
+        Byte m_buffer_in[BUFFER_SIZE];
+        Byte m_buffer_out[BUFFER_SIZE];
+        UInt32 m_out_data;
+        UInt32 m_out_read;
+        void FillBuffer() {
+            UInt32 size = m_ds->Read(m_buffer_in,BUFFER_SIZE);
+            m_z.next_in = m_buffer_in;
+            m_z.avail_in = size;
+        }
+        int m_error;
+        UInt32 m_pos;
+    public:
+        explicit PackZlibStream( GHL::DataStream* data,int level) : m_ds(data) {
+            m_ds->AddRef();
+            m_pos = 0;
+            ::memset(&m_z,0,sizeof(m_z));
+            m_error = Z_OK;
+            m_z.zalloc = &z__alloc_func;
+            m_z.zfree = &z__free_func;
+            FillBuffer();
+            m_z.next_out = m_buffer_out;
+            m_z.avail_out = BUFFER_SIZE;
+            m_error = deflateInit(&m_z,level);
+            m_out_data = BUFFER_SIZE - m_z.avail_out;
+            m_out_read = 0;
+        }
+        ~PackZlibStream() {
+            m_error = deflateEnd(&m_z);
+            m_ds->Release();
+        }
+        
+        /// read data
+        virtual GHL::UInt32 GHL_CALL Read(GHL::Byte* dest,GHL::UInt32 bytes) {
+            UInt32 readed = 0;
+            
+            while (true) {
+                if (m_out_data!=m_out_read) {
+                    UInt32 r = (m_out_data-m_out_read) < bytes ? (m_out_data-m_out_read) : bytes;
+                    if (r) {
+                        ::memcpy(dest, &m_buffer_out[m_out_read], r);
+                    }
+                    m_out_read += r;
+                    bytes -= r;
+                    readed += r;
+                    dest += r;
+                    if (!bytes)
+                        break;
+                    assert(m_out_read == m_out_data);
+                    if (m_error == Z_STREAM_END)
+                        break;
+                }
+                
+                if (m_z.avail_in==0) {
+                    FillBuffer();
+                }
+                bool all_data_complete = (m_z.avail_in == 0);
+                
+                m_z.next_out = m_buffer_out;
+                m_z.avail_out = BUFFER_SIZE;
+                m_error = deflate(&m_z,all_data_complete ? Z_FINISH : 0);
+                m_out_data = BUFFER_SIZE - m_z.avail_out;
+                m_out_read = 0;
+            }
+            if (m_error == Z_BUF_ERROR) {
+                m_error = Z_OK;
+            }
+            m_pos += readed;
+            return readed;
+        }
+        /// tell
+        virtual GHL::UInt32 GHL_CALL Tell() const {
+            return m_pos;
+        }
+        /// seek
+        virtual	bool GHL_CALL Seek(GHL::Int32 offset,GHL::FileSeekType st) {
+            return false;
+        }
+        /// End of file
+        virtual bool GHL_CALL Eof() const {
+            return ((m_error == Z_STREAM_END) && (m_out_read == m_out_data)) ||
+                    (m_error != Z_OK);
+        }
+    };
 }
 
 GHL_API GHL::DataStream* GHL_CALL GHL_CreateUnpackZlibStream( GHL::DataStream* ds ) {
     if (!ds)  return 0;
     return new GHL::UnpackZlibStream(ds);
 }
+
+GHL_API GHL::DataStream* GHL_CALL GHL_CreatePackZlibStream( GHL::DataStream* ds ) {
+    if (!ds)  return 0;
+    return new GHL::PackZlibStream(ds,Z_DEFAULT_COMPRESSION);
+}
+
 
 GHL_API GHL::Data* GHL_CALL GHL_ReadAllData( GHL::DataStream* ds ) {
     if (!ds) return 0;

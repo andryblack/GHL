@@ -1,13 +1,29 @@
 #include "../ghl_net_common.h"
 #include "ghl_data.h"
+#include "ghl_data_stream.h"
 #import <Foundation/Foundation.h>
 #include <list>
+
+
+@interface GHLHttpInputStream : NSInputStream
+{
+    GHL::DataStream* m_stream;
+    id <NSStreamDelegate> m_delegate;
+    NSStreamStatus m_status;
+}
+@end
 
 @interface GHLHttpRequest : NSObject<NSURLConnectionDataDelegate>
 {
     GHL::NetworkRequest*     m_handler;
+    GHLHttpInputStream* m_stream;
 }
+
+-(void)setStream:(GHLHttpInputStream*)stream;
+
 @end
+
+
 
 @implementation GHLHttpRequest
 
@@ -17,15 +33,21 @@
     if( self ) {
         request->AddRef();
         m_handler = request;
+        m_stream = 0;
         return self;
     }
     
     return self;
 }
 
+-(void)setStream:(GHLHttpInputStream*)stream {
+    m_stream = [stream retain];
+}
+
 -(void)dealloc
 {
     if (m_handler) m_handler->Release();
+    [m_stream release];
     [super dealloc];
 }
 
@@ -75,7 +97,66 @@
 
 -(BOOL)complete
 {
-    return m_handler!=0;
+    return m_handler==0;
+}
+
+@end
+
+@implementation GHLHttpInputStream
+
+-(id)initWithStream:(GHL::DataStream*) ds {
+    self = [super init];
+    if (self) {
+        m_delegate = 0;
+        m_stream = ds;
+        m_stream->AddRef();
+        m_status = NSStreamStatusOpen;
+    }
+    return self;
+}
+
+-(void)dealloc {
+    if (m_stream) {
+        m_stream->Release();
+        m_stream = 0;
+    }
+    [super dealloc];
+}
+
+- (void)open {
+    m_status = NSStreamStatusOpen;
+}
+- (void)close {
+    m_status = NSStreamStatusClosed;
+}
+
+- (NSStreamStatus) streamStatus {
+    return m_status;
+}
+- (NSInteger)read:(uint8_t *)buffer maxLength:(NSUInteger)len {
+    return m_stream->Read(buffer, len);
+}
+// reads up to length bytes into the supplied buffer, which must be at least of size len. Returns the actual number of bytes read.
+
+- (BOOL)getBuffer:(uint8_t * _Nullable * _Nonnull)buffer length:(NSUInteger *)len {
+    return NO;
+}
+- (BOOL) hasBytesAvailable {
+    return m_stream->Eof() ? NO : YES;
+}
+
+- (void)scheduleInRunLoop:(NSRunLoop *)aRunLoop forMode:(NSString *)mode {
+    
+}
+- (void)removeFromRunLoop:(NSRunLoop *)aRunLoop forMode:(NSString *)mode {
+    
+}
+
+- (id <NSStreamDelegate>)delegate {
+    return m_delegate;
+}
+- (void)setDelegate:(id <NSStreamDelegate>)delegate {
+    m_delegate = delegate;
 }
 
 @end
@@ -176,6 +257,36 @@ public:
         req.HTTPMethod = @"POST";
         req.HTTPBody = [NSData dataWithBytes:data->GetData() length:data->GetSize()];
         GHLHttpRequest* request = [[GHLHttpRequest alloc] initWithRequest:handler];
+        NSURLConnection* conn = [[NSURLConnection alloc] initWithRequest:req
+                                                                delegate:request startImmediately:NO];
+        if ( !conn ) {
+            [request release];
+            return false;
+        }
+        
+        m_requests.push_back(request);
+        [conn start];
+        
+        return true;
+    }
+    
+    virtual bool GHL_CALL PostStream(GHL::NetworkRequest* handler, GHL::DataStream* data) {
+        clearRequests(false);
+        if (!handler)
+            return false;
+        if (!data)
+            return false;
+        
+        
+        NSMutableURLRequest* req = createRequest( handler );
+        if (!req)
+            return false;
+        req.HTTPMethod = @"POST";
+        GHLHttpInputStream* stream = [[GHLHttpInputStream alloc] initWithStream:data];
+        req.HTTPBodyStream = stream;
+        [stream release];
+        GHLHttpRequest* request = [[GHLHttpRequest alloc] initWithRequest:handler];
+        [request setStream:stream];
         NSURLConnection* conn = [[NSURLConnection alloc] initWithRequest:req
                                                                 delegate:request startImmediately:NO];
         if ( !conn ) {

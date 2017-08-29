@@ -149,11 +149,11 @@ namespace GHL {
             src->Release();
             return false;
         }
-        Byte buffer[1024*8];
+        
         while (!src->Eof()) {
-            UInt32 w = src->Read(buffer, sizeof(buffer));
+            UInt32 w = src->Read(m_buffer, sizeof(m_buffer));
             if (w) {
-                w -= dst->Write(buffer, w);
+                w -= dst->Write(m_buffer, w);
             }
         }
         src->Release();
