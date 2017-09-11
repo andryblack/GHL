@@ -184,11 +184,11 @@
     
 }
 
-- (BOOL)setProperty:(id)property forKey:(NSStreamPropertyKey)key {
+- (BOOL)setProperty:(id)property forKey:(NSString*)key {
     return NO;
 }
 - (void)_setCFClientFlags:(CFOptionFlags)flags callback:(CFReadStreamClientCallBack)callback context:(CFStreamClientContext)context {}
-- (id)propertyForKey:(NSStreamPropertyKey)key {
+- (id)propertyForKey:(NSString*)key {
     return nil;
 }
 
