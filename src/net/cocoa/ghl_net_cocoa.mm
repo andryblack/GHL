@@ -8,9 +8,10 @@
 @interface GHLHttpInputStream : NSInputStream
 {
     GHL::DataStream* m_stream;
-    id <NSStreamDelegate> m_delegate;
-    NSStreamStatus m_status;
 }
+@property (nonatomic) NSStreamStatus status;
+-(BOOL) canRestart;
+-(void) restart;
 @end
 
 @interface GHLHttpRequest : NSObject<NSURLConnectionDataDelegate>
@@ -81,7 +82,7 @@
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
     if (error) {
-        const char* err = error.localizedDescription.UTF8String;
+        const char* err = error.description.UTF8String;
         m_handler->OnError(err);
     } else {
         m_handler->OnError("unknown");
@@ -89,6 +90,16 @@
     [connection release];
     m_handler->Release();
     m_handler = 0;
+}
+
+- (nullable NSInputStream *)connection:(NSURLConnection *)connection needNewBodyStream:(NSURLRequest *)request {
+    if (m_stream && [m_stream canRestart]) {
+        [m_stream restart];
+    } else {
+        [connection cancel];
+        return nil;
+    }
+    return m_stream;
 }
 
 - (nullable NSCachedURLResponse *)connection:(NSURLConnection *)connection willCacheResponse:(NSCachedURLResponse *)cachedResponse {
@@ -104,15 +115,26 @@
 
 @implementation GHLHttpInputStream
 
+@synthesize delegate;
+
 -(id)initWithStream:(GHL::DataStream*) ds {
     self = [super init];
     if (self) {
-        m_delegate = 0;
         m_stream = ds;
         m_stream->AddRef();
-        m_status = NSStreamStatusOpen;
     }
     return self;
+}
+
+-(BOOL) canRestart {
+    return m_stream && (m_stream->Tell() == 0);
+}
+
+-(void)restart {
+    self.status = NSStreamStatusNotOpen;
+    if (m_stream) {
+        m_stream->Seek(0, GHL::F_SEEK_BEGIN);
+    }
 }
 
 -(void)dealloc {
@@ -123,18 +145,28 @@
     [super dealloc];
 }
 
-- (void)open {
-    m_status = NSStreamStatusOpen;
+- (void)open
+{
+    self.status = NSStreamStatusOpen;
 }
-- (void)close {
-    m_status = NSStreamStatusClosed;
+- (void)close
+{
+    self.status = NSStreamStatusClosed;
 }
 
-- (NSStreamStatus) streamStatus {
-    return m_status;
+- (NSStreamStatus)streamStatus
+{
+    if (self.status != NSStreamStatusClosed && m_stream && m_stream->Eof())
+    {
+        self.status = NSStreamStatusAtEnd;
+    }
+    return self.status;
 }
+
 - (NSInteger)read:(uint8_t *)buffer maxLength:(NSUInteger)len {
-    return m_stream->Read(buffer, len);
+    self.status = NSStreamStatusReading;
+    NSInteger readed = m_stream->Read(buffer, len);
+    return readed;
 }
 // reads up to length bytes into the supplied buffer, which must be at least of size len. Returns the actual number of bytes read.
 
@@ -142,7 +174,7 @@
     return NO;
 }
 - (BOOL) hasBytesAvailable {
-    return m_stream->Eof() ? NO : YES;
+    return (!m_stream || m_stream->Eof()) ? NO : YES;
 }
 
 - (void)scheduleInRunLoop:(NSRunLoop *)aRunLoop forMode:(NSString *)mode {
@@ -152,11 +184,12 @@
     
 }
 
-- (id <NSStreamDelegate>)delegate {
-    return m_delegate;
+- (BOOL)setProperty:(id)property forKey:(NSStreamPropertyKey)key {
+    return NO;
 }
-- (void)setDelegate:(id <NSStreamDelegate>)delegate {
-    m_delegate = delegate;
+- (void)_setCFClientFlags:(CFOptionFlags)flags callback:(CFReadStreamClientCallBack)callback context:(CFStreamClientContext)context {}
+- (id)propertyForKey:(NSStreamPropertyKey)key {
+    return nil;
 }
 
 @end
