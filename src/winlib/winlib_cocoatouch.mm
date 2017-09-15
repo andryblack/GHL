@@ -258,6 +258,9 @@ static const size_t max_touches = 10;
         e.data.key_press.modificators = 0;
         e.data.key_press.charcode = wc;
         g_application->OnEvent(&e);
+        e.type = GHL::EVENT_TYPE_KEY_RELEASE;
+        e.data.key_release.key = e.data.key_press.key;
+        g_application->OnEvent(&e);
     }
 }
 - (void)deleteBackward {
@@ -268,6 +271,7 @@ static const size_t max_touches = 10;
     e.data.key_press.charcode = 0;
     g_application->OnEvent(&e);
     e.type = GHL::EVENT_TYPE_KEY_RELEASE;
+    e.data.key_release.key = e.data.key_press.key;
     g_application->OnEvent(&e);
 }
 - (BOOL)hasText {
