@@ -149,6 +149,7 @@ public:
     static jmethodID  m_HttpURLConnection_setChunkedStreamingMode;
     static jmethodID  m_HttpURLConnection_getOutputStream;
     static jmethodID  m_HttpURLConnection_getInputStream;
+    static jmethodID  m_HttpURLConnection_getErrorStream;
     static jmethodID  m_HttpURLConnection_disconnect;
 
     static jmethodID  m_InputStream_read;
@@ -196,7 +197,10 @@ public:
 
     bool DoRead(JNIEnv* env) {
         //PROFILE(ProcessBackground_S_READ);
-        jni_object read_stream(env->CallObjectMethod(m_connection.jobj,m_HttpURLConnection_getInputStream),env);
+        bool is_success = (m_response_code == 0) || (
+            m_response_code < 400);
+        jni_object read_stream(env->CallObjectMethod(m_connection.jobj,
+            is_success ? m_HttpURLConnection_getInputStream : m_HttpURLConnection_getErrorStream),env);
         if (check_exception(env)) {
             m_state = S_ERROR;
             m_error = "getInputStream failed";
@@ -204,7 +208,7 @@ public:
         } 
         int readed = env->CallIntMethod(read_stream.jobj,m_InputStream_read,m_buffer.jobj,m_buffer_size,BUFFER_SIZE-m_buffer_size);
         //ILOG_INFO("readed " << readed);
-        if (check_exception(env)) {
+        if (check_exception(env) || !read_stream.jobj) {
             m_state = S_ERROR;
             m_error = "read failed";
             return true;
@@ -557,6 +561,8 @@ public:
         assert(NetworkTaskBase::m_HttpURLConnection_getInputStream);
         NetworkTaskBase::m_HttpURLConnection_getOutputStream = get_method(env,HttpURLConnection_class,"getOutputStream","()Ljava/io/OutputStream;");
         assert(NetworkTaskBase::m_HttpURLConnection_getOutputStream);
+        NetworkTaskBase::m_HttpURLConnection_getErrorStream = get_method(env,HttpURLConnection_class,"getErrorStream","()Ljava/io/InputStream;");
+        assert(NetworkTaskBase::m_HttpURLConnection_getErrorStream);
         NetworkTaskBase::m_HttpURLConnection_getHeaderFieldKey = get_method(env,HttpURLConnection_class,"getHeaderFieldKey","(I)Ljava/lang/String;");
         assert(NetworkTaskBase::m_HttpURLConnection_getHeaderFieldKey);
         NetworkTaskBase::m_HttpURLConnection_getHeaderField = get_method(env,HttpURLConnection_class,"getHeaderField","(I)Ljava/lang/String;");
@@ -773,6 +779,7 @@ jmethodID  NetworkTaskBase::m_HttpURLConnection_getHeaderField = 0;
 jmethodID  NetworkTaskBase::m_HttpURLConnection_setChunkedStreamingMode = 0;
 jmethodID  NetworkTaskBase::m_HttpURLConnection_getOutputStream = 0;
 jmethodID  NetworkTaskBase::m_HttpURLConnection_getInputStream = 0;
+jmethodID  NetworkTaskBase::m_HttpURLConnection_getErrorStream = 0;
 jmethodID  NetworkTaskBase::m_HttpURLConnection_disconnect = 0;
 jmethodID  NetworkTaskBase::m_InputStream_read = 0;
 jmethodID  NetworkTaskBase::m_OutputStream_write = 0;
