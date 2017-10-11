@@ -416,5 +416,10 @@ public class Activity  extends android.app.NativeActivity  {
         super.onActivityResult(requestCode, resultCode, data);
         ensureLoadLibrary();
     }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
 
 }

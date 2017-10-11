@@ -449,6 +449,7 @@ namespace GHL {
                             GHL::Event e;
                             e.type = GHL::EVENT_TYPE_HANDLE_URL;
                             e.data.handle_url.url = url_str.c_str();
+                            LOG_INFO("handle url: " << e.data.handle_url.url);
                             m_app->OnEvent(&e);
                         } else {
                             LOG_INFO("intent data empty");
@@ -457,7 +458,9 @@ namespace GHL {
                         assert(put_extra);
                         jobject ni = m_activity->env->CallObjectMethod(intent,put_extra,handled_str,JNI_TRUE);
                         if (ni)
-                            m_activity->env->DeleteLocalRef(ni);
+                             m_activity->env->DeleteLocalRef(ni);
+                     } else {
+                         LOG_INFO("url already handled");
                     }
 
                     
@@ -468,6 +471,8 @@ namespace GHL {
                     LOG_INFO("intent empty");
                 }
                 m_activity->env->DeleteLocalRef(ActivityClass);
+            } else {
+                LOG_INFO("app empty");
             }
         }
         void OnResume() {
