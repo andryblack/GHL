@@ -225,16 +225,22 @@ namespace GHL {
         bool set_keyboard_visible(bool visible) {
             
             jclass ActivityClass = m_activity->env->GetObjectClass(m_activity->clazz);
-            jmethodID method = m_activity->env->GetMethodID(ActivityClass,visible ? "showSoftKeyboard" : "hideSoftKeyboard","()V");
+            jmethodID method = m_activity->env->GetMethodID(ActivityClass,visible ? "showSoftKeyboard" : "hideSoftKeyboard","()Z");
             if (m_activity->env->ExceptionCheck()) {
                 m_activity->env->ExceptionDescribe();
                 m_activity->env->ExceptionClear();
                 ILOG_INFO("[native] not found method");
+                if (visible) {
+                        ANativeActivity_showSoftInput(m_activity,ANATIVEACTIVITY_SHOW_SOFT_INPUT_FORCED);
+                } else {
+                        ANativeActivity_hideSoftInput(m_activity,0);
+                }
+                
                 return false;
             }
-            m_activity->env->CallVoidMethod(m_activity->clazz,method);
+            jboolean res = m_activity->env->CallBooleanMethod(m_activity->clazz,method);
             m_activity->env->DeleteLocalRef(ActivityClass);
-            return true;
+            return res == JNI_TRUE;
         }
 
         bool show_system_input(const TextInputConfig* config) {
@@ -246,6 +252,7 @@ namespace GHL {
                 m_activity->env->ExceptionClear();
                 ILOG_INFO("[native] not found method");
                 SetGLContext();
+                ANativeActivity_showSoftInput(m_activity,ANATIVEACTIVITY_SHOW_SOFT_INPUT_FORCED);
                 return false;
             }
             jstring placeholder = 0;
@@ -266,11 +273,9 @@ namespace GHL {
         /// Show soft keyboard
         virtual void GHL_CALL ShowKeyboard(const TextInputConfig* input) {
             if (input && input->system_input) {
-                if (!show_system_input(input))
-                    ANativeActivity_showSoftInput(m_activity,ANATIVEACTIVITY_SHOW_SOFT_INPUT_FORCED);
+                show_system_input(input);    
             } else {
-                if (!set_keyboard_visible(true))
-                    ANativeActivity_showSoftInput(m_activity,ANATIVEACTIVITY_SHOW_SOFT_INPUT_FORCED);
+                set_keyboard_visible(true);
             }
             if (!SetGLContext()) {
                return;
@@ -278,8 +283,7 @@ namespace GHL {
         }
         /// Hide soft keyboard
         virtual void GHL_CALL HideKeyboard() {
-            if (!set_keyboard_visible(false))
-                ANativeActivity_hideSoftInput(m_activity,0);
+            set_keyboard_visible(false);
             if (!SetGLContext()) {
                return;
             }
@@ -1012,6 +1016,16 @@ namespace GHL {
                 }
                 return true;
             } else if (AINPUT_EVENT_TYPE_KEY == AInputEvent_getType(event)) {
+                if (IsBackPress(event)) {
+                    if (set_keyboard_visible(false)) {
+                        if (m_app) {
+                            GHL::Event e;
+                            e.type = GHL::EVENT_TYPE_KEYBOARD_HIDE;
+                            m_app->OnEvent(&e);
+                        }
+                        return true;
+                    }
+                }
                 int32_t key_code = AKeyEvent_getKeyCode(event);
                 return onKey(key_code,0,AKeyEvent_getAction(event));
             } else {
@@ -1019,13 +1033,19 @@ namespace GHL {
             }
             return false;
         }
+
+        bool IsBackPress(const AInputEvent* event) {
+            return AInputEvent_getType(event) == AINPUT_EVENT_TYPE_KEY &&
+                AKeyEvent_getKeyCode(event) == AKEYCODE_BACK &&
+                AKeyEvent_getAction(event) == AKEY_EVENT_ACTION_DOWN;
+        }
         
         void OnInputCallback() {
             g_native_activity = m_activity;
             if (m_input_queue) {
                 AInputEvent* event = 0;
                 while ( AInputQueue_getEvent(m_input_queue,&event)>=0 ) {
-                    if (AInputQueue_preDispatchEvent(m_input_queue, event)) {
+                    if (!IsBackPress(event) && AInputQueue_preDispatchEvent(m_input_queue, event)) {
                        continue;
                     }
                     bool handled = HandleEvent(event);
