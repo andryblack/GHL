@@ -131,6 +131,20 @@ namespace GHL {
         int m_error;
         UInt32 m_pos;
     public:
+        explicit PackZlibStream( GHL::DataStream* data) : m_ds(data) {
+            m_ds->AddRef();
+            m_pos = 0;
+            ::memset(&m_z,0,sizeof(m_z));
+            m_error = Z_OK;
+            m_z.zalloc = &z__alloc_func;
+            m_z.zfree = &z__free_func;
+            FillBuffer();
+            m_z.next_out = m_buffer_out;
+            m_z.avail_out = BUFFER_SIZE;
+            m_error = deflateInit(&m_z,Z_DEFAULT_COMPRESSION);
+            m_out_data = BUFFER_SIZE - m_z.avail_out;
+            m_out_read = 0;
+        }
         explicit PackZlibStream( GHL::DataStream* data,int level) : m_ds(data) {
             m_ds->AddRef();
             m_pos = 0;
@@ -141,7 +155,7 @@ namespace GHL {
             FillBuffer();
             m_z.next_out = m_buffer_out;
             m_z.avail_out = BUFFER_SIZE;
-            m_error = deflateInit(&m_z,level);
+            m_error = deflateInit2(&m_z,level,Z_DEFLATED,15+16,8,Z_DEFAULT_STRATEGY);
             m_out_data = BUFFER_SIZE - m_z.avail_out;
             m_out_read = 0;
         }
@@ -210,6 +224,11 @@ GHL_API GHL::DataStream* GHL_CALL GHL_CreateUnpackZlibStream( GHL::DataStream* d
 }
 
 GHL_API GHL::DataStream* GHL_CALL GHL_CreatePackZlibStream( GHL::DataStream* ds ) {
+    if (!ds)  return 0;
+    return new GHL::PackZlibStream(ds);
+}
+
+GHL_API GHL::DataStream* GHL_CALL GHL_CreatePackGZipStream( GHL::DataStream* ds ) {
     if (!ds)  return 0;
     return new GHL::PackZlibStream(ds,Z_DEFAULT_COMPRESSION);
 }
