@@ -629,6 +629,7 @@ namespace GHL {
                 m_current_pointers[i] = NO_POINTER;
             }
         }
+
     }
     
     /// set projection matrix

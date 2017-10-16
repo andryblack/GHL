@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <time.h>
 #include "../../ghl_log_impl.h"
+#include <ghl_data_stream.h>
 
 static const char* MODULE = "Net";
 
@@ -133,7 +134,7 @@ static bool check_exception( JNIEnv* env ) {
 } 
 static const size_t BUFFER_SIZE = 1024*128;
 
-class NetworkTask {
+class NetworkTaskBase {
 public:
     static jclass  m_URL_class;
     static jmethodID m_URL_ctr;
@@ -145,12 +146,15 @@ public:
     static jmethodID  m_HttpURLConnection_getResponseCode;
     static jmethodID  m_HttpURLConnection_getHeaderFieldKey;
     static jmethodID  m_HttpURLConnection_getHeaderField;
+    static jmethodID  m_HttpURLConnection_setChunkedStreamingMode;
     static jmethodID  m_HttpURLConnection_getOutputStream;
     static jmethodID  m_HttpURLConnection_getInputStream;
+    static jmethodID  m_HttpURLConnection_getErrorStream;
     static jmethodID  m_HttpURLConnection_disconnect;
+
     static jmethodID  m_InputStream_read;
     static jmethodID  m_OutputStream_write;
-private:
+protected:
     std::string             m_url;
     jni_global_object       m_connection;
     GHL::NetworkRequest*    m_handler;
@@ -160,24 +164,20 @@ private:
         S_INIT,
         S_CONNECT,
         S_WRITE,
+        S_WRITE_MORE,
         S_READ,
         S_COMPLETE,
         S_ERROR,
     } m_state;
     std::string m_error;
-    const GHL::Data*  m_send_data;
     int m_response_code;
     GHL::UInt32 m_headers_count;
     bool    m_response_received;
-public:
-    explicit NetworkTask(JNIEnv* env,GHL::NetworkRequest* handler,
-        const GHL::Data* send_data) : m_connection(0,env),
-        m_handler(handler),m_buffer(0,env),m_send_data(send_data),m_response_code(0) {
+
+    explicit NetworkTaskBase(JNIEnv* env,GHL::NetworkRequest* handler) : m_connection(0,env),
+        m_handler(handler),m_buffer(0,env),m_response_code(0) {
         //PROFILE(NetworkTask_ctr);
         m_handler->AddRef();
-        if (m_send_data) {
-            m_send_data->AddRef();
-        }
         m_state = S_INIT;
         m_headers_count = m_handler->GetHeadersCount();
         m_response_received = false;
@@ -187,18 +187,20 @@ public:
         m_url = handler->GetURL();
         env->DeleteLocalRef(buf_loc);
     }
+public:
+    virtual ~NetworkTaskBase() {
+         m_handler->Release();
+    }
     bool IsComplete() {
         return m_state == S_COMPLETE || m_state == S_ERROR;
     }
-    ~NetworkTask() {
-        m_handler->Release();
-        if (m_send_data) {
-            m_send_data->Release();
-        }
-    }
+
     bool DoRead(JNIEnv* env) {
         //PROFILE(ProcessBackground_S_READ);
-        jni_object read_stream(env->CallObjectMethod(m_connection.jobj,m_HttpURLConnection_getInputStream),env);
+        bool is_success = (m_response_code == 0) || (
+            m_response_code < 400);
+        jni_object read_stream(env->CallObjectMethod(m_connection.jobj,
+            is_success ? m_HttpURLConnection_getInputStream : m_HttpURLConnection_getErrorStream),env);
         if (check_exception(env)) {
             m_state = S_ERROR;
             m_error = "getInputStream failed";
@@ -206,7 +208,7 @@ public:
         } 
         int readed = env->CallIntMethod(read_stream.jobj,m_InputStream_read,m_buffer.jobj,m_buffer_size,BUFFER_SIZE-m_buffer_size);
         //ILOG_INFO("readed " << readed);
-        if (check_exception(env)) {
+        if (check_exception(env) || !read_stream.jobj) {
             m_state = S_ERROR;
             m_error = "read failed";
             return true;
@@ -224,6 +226,7 @@ public:
         }
         return false;
     }
+
     bool ProcessBackground( JNIEnv* env ) {
         switch (m_state) {
             case S_INIT: {
@@ -257,6 +260,9 @@ public:
                     m_error = "set output failed";
                     return true;
                 }
+                if (!ConfigureStream(env)) {
+                    return true;
+                }
                 jni_object out_stream(env->CallObjectMethod(m_connection.jobj,m_HttpURLConnection_getOutputStream),env);
                 if (check_exception(env)) {
                     m_state = S_ERROR;
@@ -264,27 +270,24 @@ public:
                     m_error = "getOutputStream failed";
                     return true;
                 }
-                jbyteArray arr = env->NewByteArray(m_send_data->GetSize());
-                if (check_exception(env)) {
-                    m_state = S_ERROR;
-                    //ILOG_INFO("S_WRITE->S_ERROR 3");
-                    m_error = "create byte array failed";
-                    return true;
-                }
-                env->SetByteArrayRegion(arr,0,m_send_data->GetSize(),
-                    reinterpret_cast<const jbyte*>(m_send_data->GetData()));
-                env->CallVoidMethod(out_stream.jobj,m_OutputStream_write,arr);
-                env->DeleteLocalRef(arr);
-                if (check_exception(env)) {
-                    m_state = S_ERROR;
-                    //ILOG_INFO("S_WRITE->S_ERROR 4");
-                    m_error = "send failed";
+                if (ProcessWriteStream(env,out_stream)) {
                     return true;
                 } else {
-                    //PROFILE(ProcessBackground_S_WRITE_S_CONNECT);
-                    //ILOG_INFO("S_WRITE->S_CONNECT");
-                    m_state = S_CONNECT;
-                    
+                    return false;
+                }
+                
+            } break;
+            case S_WRITE_MORE: {
+                jni_object out_stream(env->CallObjectMethod(m_connection.jobj,m_HttpURLConnection_getOutputStream),env);
+                if (check_exception(env)) {
+                    m_state = S_ERROR;
+                    //ILOG_INFO("S_WRITE->S_ERROR 2");
+                    m_error = "getOutputStream failed";
+                    return true;
+                }
+                if (ProcessWriteStream(env,out_stream)) {
+                    return true;
+                } else {
                     return false;
                 }
             } break;
@@ -321,6 +324,7 @@ public:
         return false;
     }
 
+
     void FlushData(JNIEnv* env) {
         if (m_buffer_size) {
             //ILOG_INFO("flush " << m_buffer_size);
@@ -333,15 +337,7 @@ public:
         }
     }
 
-    void UpdateInitState() {
-        if (m_send_data) {
-            //ILOG_INFO("S_INIT->S_WRITE");
-            m_state = S_WRITE;
-        } else {
-            //ILOG_INFO("S_INIT->S_CONNECT");
-            m_state = S_CONNECT;
-        }
-    }
+   
     bool ProcessMain(JNIEnv* env) {
         //PROFILE(ProcessMain)
         if (m_response_received) {
@@ -391,6 +387,128 @@ public:
         }
         return false;
     }
+    virtual void UpdateInitState() = 0;
+    virtual bool ConfigureStream(JNIEnv* env) { return true; }
+    virtual bool ProcessWriteStream(JNIEnv* env,jni_object& stream) = 0;
+};
+
+class NetworkTask : public NetworkTaskBase {
+public:
+    
+private:
+    
+    const GHL::Data*  m_send_data;
+    
+public:
+    explicit NetworkTask(JNIEnv* env,GHL::NetworkRequest* handler,
+        const GHL::Data* send_data) : NetworkTaskBase(env,handler),m_send_data(send_data) {
+        if (m_send_data) {
+            m_send_data->AddRef();
+        }
+    }
+    
+    ~NetworkTask() {
+        if (m_send_data) {
+            m_send_data->Release();
+        }
+    }
+
+    void UpdateInitState() {
+        if (m_send_data) {
+            //ILOG_INFO("S_INIT->S_WRITE");
+            m_state = S_WRITE;
+        } else {
+            //ILOG_INFO("S_INIT->S_CONNECT");
+            m_state = S_CONNECT;
+        }
+    }
+
+    bool ProcessWriteStream(JNIEnv* env,jni_object& out_stream) {
+        jbyteArray arr = env->NewByteArray(m_send_data->GetSize());
+        if (check_exception(env)) {
+            m_state = S_ERROR;
+            //ILOG_INFO("S_WRITE->S_ERROR 3");
+            m_error = "create byte array failed";
+            return true;
+        }
+        env->SetByteArrayRegion(arr,0,m_send_data->GetSize(),
+            reinterpret_cast<const jbyte*>(m_send_data->GetData()));
+        env->CallVoidMethod(out_stream.jobj,m_OutputStream_write,arr);
+        env->DeleteLocalRef(arr);
+        if (check_exception(env)) {
+            m_state = S_ERROR;
+            //ILOG_INFO("S_WRITE->S_ERROR 4");
+            m_error = "send failed";
+            return true;
+        } 
+        //PROFILE(ProcessBackground_S_WRITE_S_CONNECT);
+        //ILOG_INFO("S_WRITE->S_CONNECT");
+        m_state = S_CONNECT;
+        return false;
+    }
+};
+
+class NetworkStreamTask : public NetworkTaskBase {
+public:
+    
+private:
+    
+    GHL::DataStream*  m_send_data;
+    jni_global_object m_out_buffer;
+    GHL::Byte m_out_raw_buffer[BUFFER_SIZE];
+public:
+    explicit NetworkStreamTask(JNIEnv* env,GHL::NetworkRequest* handler,
+        GHL::DataStream* send_data) : NetworkTaskBase(env,handler),m_send_data(send_data),m_out_buffer(0,env) {
+        if (m_send_data) {
+            m_send_data->AddRef();
+        }
+        jobject buf_loc = env->NewByteArray(BUFFER_SIZE);
+        m_out_buffer.jobj = env->NewGlobalRef(buf_loc);
+        env->DeleteLocalRef(buf_loc);
+    }
+    
+    ~NetworkStreamTask() {
+        if (m_send_data) {
+            m_send_data->Release();
+        }
+    }
+
+    void UpdateInitState() {
+        m_state = S_WRITE;
+    }
+
+    virtual bool ConfigureStream(JNIEnv* env) { 
+        env->CallVoidMethod(m_connection.jobj,m_HttpURLConnection_setChunkedStreamingMode,(jint)BUFFER_SIZE);
+        if (check_exception(env)) {
+            m_state = S_ERROR;
+            //ILOG_INFO("S_WRITE->S_ERROR 1");
+            m_error = "set chunked failed";
+            return false;
+        }
+        return true;
+    }
+
+    virtual bool ProcessWriteStream(JNIEnv* env,jni_object& out_stream) {
+        GHL::UInt32 readed = m_send_data->Read(m_out_raw_buffer,BUFFER_SIZE);
+        if (readed) {
+            env->SetByteArrayRegion((jbyteArray)m_out_buffer.jobj,0,readed,
+                reinterpret_cast<const jbyte*>(m_out_raw_buffer));
+            env->CallVoidMethod(out_stream.jobj,m_OutputStream_write,m_out_buffer.jobj);
+
+            if (check_exception(env)) {
+                m_state = S_ERROR;
+                //ILOG_INFO("S_WRITE->S_ERROR 4");
+                m_error = "send failed";
+                return true;
+            } 
+            m_state = S_WRITE_MORE;
+            return true;
+        } 
+        //PROFILE(ProcessBackground_S_WRITE_S_CONNECT);
+        //ILOG_INFO("S_WRITE->S_CONNECT");
+        m_state = S_CONNECT;
+        return false;
+    }
 };
 
 static JavaVM* jvm = 0;
@@ -406,8 +524,8 @@ static jmethodID get_method(JNIEnv* env,jclass c,const char* name,const char* si
 
 class NetworkAndroid : public GHL::Network {
 private:
-    std::list<NetworkTask*> m_to_bg_tasks;
-    std::list<NetworkTask*> m_to_fg_tasks;
+    std::list<NetworkTaskBase*> m_to_bg_tasks;
+    std::list<NetworkTaskBase*> m_to_fg_tasks;
     size_t  m_num_requests;
     
     pthread_mutex_t m_lock;
@@ -424,45 +542,49 @@ public:
         if (check_exception(env)) {
             LOG_INFO("clear pending exception");
         }
-        NetworkTask::m_URL_class = (jclass)env->NewGlobalRef((jobject)env->FindClass("java/net/URL"));
-        NetworkTask::m_URL_ctr = get_method(env,NetworkTask::m_URL_class,"<init>","(Ljava/lang/String;)V"); 
-        assert(NetworkTask::m_URL_ctr);
-        NetworkTask::m_URL_openConnection = get_method(env,NetworkTask::m_URL_class,"openConnection","()Ljava/net/URLConnection;"); 
+        NetworkTaskBase::m_URL_class = (jclass)env->NewGlobalRef((jobject)env->FindClass("java/net/URL"));
+        NetworkTaskBase::m_URL_ctr = get_method(env,NetworkTaskBase::m_URL_class,"<init>","(Ljava/lang/String;)V"); 
+        assert(NetworkTaskBase::m_URL_ctr);
+        NetworkTaskBase::m_URL_openConnection = get_method(env,NetworkTaskBase::m_URL_class,"openConnection","()Ljava/net/URLConnection;"); 
         assert(NetworkTask::m_URL_openConnection);
 
         jclass HttpURLConnection_class = env->FindClass("java/net/HttpURLConnection");
-        NetworkTask::m_HttpURLConnection_setDoOutput = get_method(env,HttpURLConnection_class,"setDoOutput","(Z)V");
-        assert(NetworkTask::m_HttpURLConnection_setDoOutput);
-        NetworkTask::m_HttpURLConnection_connect = get_method(env,HttpURLConnection_class,"connect","()V");
-        assert(NetworkTask::m_HttpURLConnection_connect);
-        NetworkTask::m_HttpURLConnection_disconnect = get_method(env,HttpURLConnection_class,"disconnect","()V");
-        assert(NetworkTask::m_HttpURLConnection_disconnect);
-        NetworkTask::m_HttpURLConnection_getInputStream = get_method(env,HttpURLConnection_class,"getInputStream","()Ljava/io/InputStream;");
-        assert(NetworkTask::m_HttpURLConnection_getInputStream);
-        NetworkTask::m_HttpURLConnection_getOutputStream = get_method(env,HttpURLConnection_class,"getOutputStream","()Ljava/io/OutputStream;");
-        assert(NetworkTask::m_HttpURLConnection_getOutputStream);
-        NetworkTask::m_HttpURLConnection_getHeaderFieldKey = get_method(env,HttpURLConnection_class,"getHeaderFieldKey","(I)Ljava/lang/String;");
-        assert(NetworkTask::m_HttpURLConnection_getHeaderFieldKey);
-        NetworkTask::m_HttpURLConnection_getHeaderField = get_method(env,HttpURLConnection_class,"getHeaderField","(I)Ljava/lang/String;");
-        assert(NetworkTask::m_HttpURLConnection_getHeaderField);
-        NetworkTask::m_HttpURLConnection_setRequestProperty = get_method(env,HttpURLConnection_class,"setRequestProperty","(Ljava/lang/String;Ljava/lang/String;)V");
-        assert(NetworkTask::m_HttpURLConnection_setRequestProperty);
-        NetworkTask::m_HttpURLConnection_getResponseCode = get_method(env,HttpURLConnection_class,"getResponseCode","()I");
-        assert(NetworkTask::m_HttpURLConnection_getResponseCode);
+        NetworkTaskBase::m_HttpURLConnection_setDoOutput = get_method(env,HttpURLConnection_class,"setDoOutput","(Z)V");
+        assert(NetworkTaskBase::m_HttpURLConnection_setDoOutput);
+        NetworkTaskBase::m_HttpURLConnection_connect = get_method(env,HttpURLConnection_class,"connect","()V");
+        assert(NetworkTaskBase::m_HttpURLConnection_connect);
+        NetworkTaskBase::m_HttpURLConnection_disconnect = get_method(env,HttpURLConnection_class,"disconnect","()V");
+        assert(NetworkTaskBase::m_HttpURLConnection_disconnect);
+        NetworkTaskBase::m_HttpURLConnection_setChunkedStreamingMode = get_method(env,HttpURLConnection_class,"setChunkedStreamingMode","(I)V");
+        assert(NetworkTaskBase::m_HttpURLConnection_setChunkedStreamingMode);
+        NetworkTaskBase::m_HttpURLConnection_getInputStream = get_method(env,HttpURLConnection_class,"getInputStream","()Ljava/io/InputStream;");
+        assert(NetworkTaskBase::m_HttpURLConnection_getInputStream);
+        NetworkTaskBase::m_HttpURLConnection_getOutputStream = get_method(env,HttpURLConnection_class,"getOutputStream","()Ljava/io/OutputStream;");
+        assert(NetworkTaskBase::m_HttpURLConnection_getOutputStream);
+        NetworkTaskBase::m_HttpURLConnection_getErrorStream = get_method(env,HttpURLConnection_class,"getErrorStream","()Ljava/io/InputStream;");
+        assert(NetworkTaskBase::m_HttpURLConnection_getErrorStream);
+        NetworkTaskBase::m_HttpURLConnection_getHeaderFieldKey = get_method(env,HttpURLConnection_class,"getHeaderFieldKey","(I)Ljava/lang/String;");
+        assert(NetworkTaskBase::m_HttpURLConnection_getHeaderFieldKey);
+        NetworkTaskBase::m_HttpURLConnection_getHeaderField = get_method(env,HttpURLConnection_class,"getHeaderField","(I)Ljava/lang/String;");
+        assert(NetworkTaskBase::m_HttpURLConnection_getHeaderField);
+        NetworkTaskBase::m_HttpURLConnection_setRequestProperty = get_method(env,HttpURLConnection_class,"setRequestProperty","(Ljava/lang/String;Ljava/lang/String;)V");
+        assert(NetworkTaskBase::m_HttpURLConnection_setRequestProperty);
+        NetworkTaskBase::m_HttpURLConnection_getResponseCode = get_method(env,HttpURLConnection_class,"getResponseCode","()I");
+        assert(NetworkTaskBase::m_HttpURLConnection_getResponseCode);
         if (check_exception(env)) {
             LOG_INFO("exception on get method");
             assert(false);
         }
         jclass InputStream = env->FindClass("java/io/InputStream");
         assert(InputStream);
-        NetworkTask::m_InputStream_read = get_method(env,InputStream,"read","([BII)I");
+        NetworkTaskBase::m_InputStream_read = get_method(env,InputStream,"read","([BII)I");
         assert(NetworkTask::m_InputStream_read);
         env->DeleteLocalRef(InputStream);
 
         jclass OutputStream = env->FindClass("java/io/OutputStream");
         assert(OutputStream);
-        NetworkTask::m_OutputStream_write = get_method(env,OutputStream,"write","([B)V");
-        assert(NetworkTask::m_OutputStream_write);
+        NetworkTaskBase::m_OutputStream_write = get_method(env,OutputStream,"write","([B)V");
+        assert(NetworkTaskBase::m_OutputStream_write);
         env->DeleteLocalRef(OutputStream);
 
         env->DeleteLocalRef(HttpURLConnection_class);
@@ -480,7 +602,7 @@ public:
         LOG_INFO("~NetworkAndroid");
         assert(GHL::g_native_activity);
         JNIEnv* env = GHL::g_native_activity->env;
-        env->DeleteGlobalRef(NetworkTask::m_URL_class);
+        env->DeleteGlobalRef(NetworkTaskBase::m_URL_class);
         
         {
             slock l(m_lock);
@@ -490,10 +612,10 @@ public:
             if (m_threads[i])
                 pthread_join( m_threads[i], 0 );
         }
-        for (std::list<NetworkTask*>::iterator it = m_to_bg_tasks.begin();it!=m_to_bg_tasks.end();++it) {
+        for (std::list<NetworkTaskBase*>::iterator it = m_to_bg_tasks.begin();it!=m_to_bg_tasks.end();++it) {
             delete *it;
         }
-        for (std::list<NetworkTask*>::iterator it = m_to_fg_tasks.begin();it!=m_to_fg_tasks.end();++it) {
+        for (std::list<NetworkTaskBase*>::iterator it = m_to_fg_tasks.begin();it!=m_to_fg_tasks.end();++it) {
             delete *it;
         }
         pthread_mutex_destroy( &m_lock );
@@ -536,10 +658,27 @@ public:
         }
         return true;
     }
+
+    virtual bool GHL_CALL PostStream(GHL::NetworkRequest* handler, GHL::DataStream* data) {
+        if (!handler)
+            return false;
+        if (!data)
+            return false;
+        JNIEnv* env = GHL::g_native_activity->env;
+        {
+            //PROFILE(Post_m_list_lock);
+            slock l(m_list_lock);
+            ++m_num_requests;
+            //ILOG_INFO("add request:" << m_num_requests);
+            m_to_bg_tasks.push_back(new NetworkStreamTask(env,handler,data));
+        }
+        
+        return true;
+    }
     virtual void GHL_CALL Process() {
         //PROFILE(Process);
         JNIEnv* env = GHL::g_native_activity->env;
-        std::list<NetworkTask*> fg_tasks;
+        std::list<NetworkTaskBase*> fg_tasks;
         {
             slock l(m_list_lock);
             fg_tasks.swap(m_to_fg_tasks);
@@ -548,7 +687,7 @@ public:
             } 
         }
         
-        for (std::list<NetworkTask*>::iterator it = fg_tasks.begin();it!=fg_tasks.end();++it) {
+        for (std::list<NetworkTaskBase*>::iterator it = fg_tasks.begin();it!=fg_tasks.end();++it) {
             if ((*it)->ProcessMain(env)) {
                 if ((*it)->IsComplete()) {
                     slock l(m_list_lock);
@@ -570,7 +709,7 @@ public:
     }
 
     bool ProcessBackground(JNIEnv* env,int& counter) {
-        NetworkTask* task = 0;
+        NetworkTaskBase* task = 0;
         {
             slock l(m_list_lock);
             if (!m_to_bg_tasks.empty()) {
@@ -628,20 +767,22 @@ public:
     }
 };
 
-jclass     NetworkTask::m_URL_class = 0;
-jmethodID  NetworkTask::m_URL_ctr = 0;
-jmethodID  NetworkTask::m_URL_openConnection = 0;
-jmethodID  NetworkTask::m_HttpURLConnection_setDoOutput = 0;
-jmethodID  NetworkTask::m_HttpURLConnection_connect = 0;
-jmethodID  NetworkTask::m_HttpURLConnection_setRequestProperty = 0;
-jmethodID  NetworkTask::m_HttpURLConnection_getResponseCode = 0;
-jmethodID  NetworkTask::m_HttpURLConnection_getHeaderFieldKey = 0;
-jmethodID  NetworkTask::m_HttpURLConnection_getHeaderField = 0;
-jmethodID  NetworkTask::m_HttpURLConnection_getOutputStream = 0;
-jmethodID  NetworkTask::m_HttpURLConnection_getInputStream = 0;
-jmethodID  NetworkTask::m_HttpURLConnection_disconnect = 0;
-jmethodID  NetworkTask::m_InputStream_read = 0;
-jmethodID  NetworkTask::m_OutputStream_write = 0;
+jclass     NetworkTaskBase::m_URL_class = 0;
+jmethodID  NetworkTaskBase::m_URL_ctr = 0;
+jmethodID  NetworkTaskBase::m_URL_openConnection = 0;
+jmethodID  NetworkTaskBase::m_HttpURLConnection_setDoOutput = 0;
+jmethodID  NetworkTaskBase::m_HttpURLConnection_connect = 0;
+jmethodID  NetworkTaskBase::m_HttpURLConnection_setRequestProperty = 0;
+jmethodID  NetworkTaskBase::m_HttpURLConnection_getResponseCode = 0;
+jmethodID  NetworkTaskBase::m_HttpURLConnection_getHeaderFieldKey = 0;
+jmethodID  NetworkTaskBase::m_HttpURLConnection_getHeaderField = 0;
+jmethodID  NetworkTaskBase::m_HttpURLConnection_setChunkedStreamingMode = 0;
+jmethodID  NetworkTaskBase::m_HttpURLConnection_getOutputStream = 0;
+jmethodID  NetworkTaskBase::m_HttpURLConnection_getInputStream = 0;
+jmethodID  NetworkTaskBase::m_HttpURLConnection_getErrorStream = 0;
+jmethodID  NetworkTaskBase::m_HttpURLConnection_disconnect = 0;
+jmethodID  NetworkTaskBase::m_InputStream_read = 0;
+jmethodID  NetworkTaskBase::m_OutputStream_write = 0;
 
 GHL_API GHL::Network* GHL_CALL GHL_CreateNetwork() {
     return new NetworkAndroid();

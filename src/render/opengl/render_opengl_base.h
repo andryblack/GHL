@@ -121,7 +121,6 @@ namespace GHL
         void ResetPointers();
         void SetupAttribute(const VertexAttributeDef& def,size_t vsize,const void* ptr);
         void SetShaderImpl(const ShaderProgram* shader);
-
     private:
         pfpl_render         m_shaders_render;
         pfpl_state_data     m_crnt_state;

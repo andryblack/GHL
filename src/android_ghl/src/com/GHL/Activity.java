@@ -101,6 +101,15 @@ public class Activity  extends android.app.NativeActivity  {
                 });
                 return true;
             }
+            @Override
+            public boolean deleteSurroundingText(int beforeLength, int afterLength) {
+                if (beforeLength > 0 && afterLength == 0) {
+                    nativeOnKey(KeyEvent.KEYCODE_DEL,0,0);
+                    nativeOnKey(KeyEvent.KEYCODE_DEL,0,1);
+                }
+
+                return true;
+            }
         }
 
 
@@ -188,7 +197,7 @@ public class Activity  extends android.app.NativeActivity  {
     }
 
 
-    public void showSoftKeyboard() {
+    public boolean showSoftKeyboard() {
         Log.v(TAG, "showSoftKeyboard");
         if (m_text_edit == null) {
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
@@ -219,7 +228,29 @@ public class Activity  extends android.app.NativeActivity  {
 
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(m_text_edit, 0);
+        return true;
     }
+
+    public boolean hideSoftKeyboard() {
+        Log.v(TAG, "hideSoftKeyboard");
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        boolean res = false;
+
+        if (m_text_edit != null) {
+            imm.hideSoftInputFromWindow(m_text_edit.getWindowToken(), 0);
+            if (m_text_edit.getVisibility() == View.VISIBLE) {
+                res = true;
+            }
+            m_text_edit.setVisibility(View.GONE);
+        }
+        if (m_text_input_window != null) {
+            EditText text_input = (EditText)(m_text_input_window.getContentView()).findViewWithTag("text_input");
+            imm.hideSoftInputFromWindow(text_input.getWindowToken(), 0);
+            m_text_input_window.dismiss();
+        }
+        return res;
+    }
+
 
 
     private PopupWindow m_text_input_window = null;
@@ -340,21 +371,7 @@ public class Activity  extends android.app.NativeActivity  {
 
 
 
-    public void hideSoftKeyboard() {
-        Log.v(TAG, "hideSoftKeyboard");
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        if (m_text_edit != null) {
-            imm.hideSoftInputFromWindow(m_text_edit.getWindowToken(), 0);
-            m_text_edit.setVisibility(View.VISIBLE);
-        }
-        if (m_text_input_window != null) {
-            EditText text_input = (EditText)(m_text_input_window.getContentView()).findViewWithTag("text_input");
-            imm.hideSoftInputFromWindow(text_input.getWindowToken(), 0);
-            m_text_input_window.dismiss();
-        }
-    }
-
+    
     public boolean openURL(String url) {
         startActivity(new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url)));
         return true;
@@ -415,6 +432,11 @@ public class Activity  extends android.app.NativeActivity  {
                                         Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         ensureLoadLibrary();
+    }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
     }
 
 }
