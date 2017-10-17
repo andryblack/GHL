@@ -147,6 +147,7 @@ public:
     static jmethodID  m_HttpURLConnection_getHeaderFieldKey;
     static jmethodID  m_HttpURLConnection_getHeaderField;
     static jmethodID  m_HttpURLConnection_setChunkedStreamingMode;
+    static jmethodID  m_HttpURLConnection_setInstanceFollowRedirects;
     static jmethodID  m_HttpURLConnection_getOutputStream;
     static jmethodID  m_HttpURLConnection_getInputStream;
     static jmethodID  m_HttpURLConnection_getErrorStream;
@@ -246,6 +247,7 @@ public:
                     return true;
                 }
                 m_connection.jobj = env->NewGlobalRef(connection.jobj);
+                env->CallVoidMethod(m_connection.jobj,m_HttpURLConnection_setInstanceFollowRedirects,JNI_TRUE);
                 if (m_headers_count == 0) {
                     UpdateInitState();
                     return false;
@@ -557,6 +559,8 @@ public:
         assert(NetworkTaskBase::m_HttpURLConnection_disconnect);
         NetworkTaskBase::m_HttpURLConnection_setChunkedStreamingMode = get_method(env,HttpURLConnection_class,"setChunkedStreamingMode","(I)V");
         assert(NetworkTaskBase::m_HttpURLConnection_setChunkedStreamingMode);
+        NetworkTaskBase::m_HttpURLConnection_setInstanceFollowRedirects = get_method(env,HttpURLConnection_class,"setInstanceFollowRedirects","(Z)V");
+        assert(NetworkTaskBase::m_HttpURLConnection_setInstanceFollowRedirects);
         NetworkTaskBase::m_HttpURLConnection_getInputStream = get_method(env,HttpURLConnection_class,"getInputStream","()Ljava/io/InputStream;");
         assert(NetworkTaskBase::m_HttpURLConnection_getInputStream);
         NetworkTaskBase::m_HttpURLConnection_getOutputStream = get_method(env,HttpURLConnection_class,"getOutputStream","()Ljava/io/OutputStream;");
@@ -777,6 +781,7 @@ jmethodID  NetworkTaskBase::m_HttpURLConnection_getResponseCode = 0;
 jmethodID  NetworkTaskBase::m_HttpURLConnection_getHeaderFieldKey = 0;
 jmethodID  NetworkTaskBase::m_HttpURLConnection_getHeaderField = 0;
 jmethodID  NetworkTaskBase::m_HttpURLConnection_setChunkedStreamingMode = 0;
+jmethodID  NetworkTaskBase::m_HttpURLConnection_setInstanceFollowRedirects = 0;
 jmethodID  NetworkTaskBase::m_HttpURLConnection_getOutputStream = 0;
 jmethodID  NetworkTaskBase::m_HttpURLConnection_getInputStream = 0;
 jmethodID  NetworkTaskBase::m_HttpURLConnection_getErrorStream = 0;
