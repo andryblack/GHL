@@ -184,6 +184,8 @@ namespace GHL {
                 m_all_music.erase(i);
             }
             if (m_queue) {
+                m_done = true;
+                m_need_resume = false;
                 AudioQueueDispose(m_queue,true);
             }
             if (m_audio_file) {
@@ -320,7 +322,10 @@ namespace GHL {
                 }
                 
             } else {
+                m_done = true;
+                AudioQueueStop(m_queue, true);
                 AudioQueueReset(m_queue);
+                m_done = false;
             }
             
             AudioQueueSetParameter(m_queue, kAudioQueueParam_Volume, m_volume/100.0);
@@ -345,6 +350,7 @@ namespace GHL {
         }
         virtual void GHL_CALL Stop() {
             if ( m_queue ) {
+                m_done = true;
                 AudioQueueStop(m_queue, true);
                 //AudioQueueDispose(m_queue,true);
                 //m_queue = 0;

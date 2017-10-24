@@ -24,6 +24,13 @@ namespace GHL {
 		LOG_ERROR( __FUNCTION__ << ":" << #Name << " :" << alGetString(err) ); \
 	} } while(0)
 	 
+#define CHECK_ERROR  do { ALenum err = alGetError(); if (err!=AL_NO_ERROR) { \
+    LOG_ERROR(  __FUNCTION__ << " :" << alGetString(err) ); \
+    } } while(0)
+    
+#define CHECK_AERROR_F(Name)  do { ALCenum err = alcGetError(m_device); if (err!=ALC_NO_ERROR) { \
+    LOG_ERROR( __FUNCTION__ << ":" << #Name << " alc :" << err ); \
+    } } while(0)
 	
 	static ALenum convert_format(SampleType type) {
 		if (type==SAMPLE_TYPE_MONO_8) return AL_FORMAT_MONO8;
@@ -182,9 +189,9 @@ namespace GHL {
         if (m_effect!=0)
             Clear();
         alSourcei(m_source, AL_BUFFER, effect->buffer() );
+        CHECK_ERROR_F(alSourcei);
 	    m_effect = effect;
         m_effect->AddRef();
-		CHECK_ERROR;
 	}
     
     void SoundChannelOpenAL::SetInstance(SoundInstanceOpenAL* instance) {
@@ -267,15 +274,13 @@ namespace GHL {
                 }
             }
         }
+        CHECK_ERROR;
+        
 		alcMakeContextCurrent(m_context);
+        CHECK_AERROR_F(alcMakeContextCurrent);
 		alcProcessContext(m_context);
-		{
-			ALCenum err = alcGetError(m_device);
-			if (err!=ALC_NO_ERROR) {
-				LOG_ERROR( " error" );
-			}
-		}
-		CHECK_ERROR;
+        CHECK_AERROR_F(alcProcessContext);
+		
 		return true;
 	}
 	
@@ -305,7 +310,9 @@ namespace GHL {
     void SoundOpenAL::Suspend() {
         if (m_context) {
             alcMakeContextCurrent(NULL);
+            CHECK_AERROR_F(alcMakeContextCurrent);
             alcSuspendContext(m_context);
+            CHECK_AERROR_F(alcSuspendContext);
         }
     }
 
@@ -313,7 +320,9 @@ namespace GHL {
     void SoundOpenAL::Resume() {
         if (m_context) {
             alcMakeContextCurrent(m_context);
+            CHECK_AERROR_F(alcMakeContextCurrent);
             alcProcessContext(m_context);
+            CHECK_AERROR_F(alcProcessContext);
         }
     }
 	
