@@ -26,6 +26,7 @@ import android.widget.EditText;
 import android.widget.PopupWindow;
 
 import android.text.InputType;
+import android.text.Editable;
 
 import android.R;
 
@@ -45,15 +46,17 @@ public class Activity  extends android.app.NativeActivity  {
     private static final String TAG = "GHL";
 
     static native boolean nativeOnKey(int keycode,long unicode,long action);
+    static native void nativeOnKeyboardHide();
     static native void nativeOnTextInputDismiss();
     static native void nativeOnTextInputAccepted(String text);
     static native void nativeOnTextInputChanged(String text);
 
     static native void nativeOnScreenRectChanged(int left, int top, int width, int height);
 
-    class InvisibleEdit extends View {
-        GHLInputConnection ic;
+    class InvisibleEdit extends EditText {
         
+        GHLInputConnection ic;
+
         class GHLInputConnection extends BaseInputConnection {
            
             public GHLInputConnection(InvisibleEdit targetView, boolean fullEditor) {
@@ -86,7 +89,8 @@ public class Activity  extends android.app.NativeActivity  {
                 });
                 return true;
             }
-            @Override
+
+                        @Override
             public boolean setComposingText (CharSequence text, int newCursorPosition) {
                 final CharSequence finalText = text;
                 Activity.this.runOnUiThread(new Runnable(){
@@ -113,44 +117,28 @@ public class Activity  extends android.app.NativeActivity  {
         }
 
 
-
         public InvisibleEdit(Activity context) {
             super(context);
             setFocusableInTouchMode(true);
             setFocusable(true);
-            //setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         }
 
-
-        @Override public boolean dispatchKeyEvent (KeyEvent event) {
-            final KeyEvent finalEvent = event;
-            runOnUiThread( new Runnable() {
-                @Override
-                public void run() {
-                    nativeOnKey(finalEvent.getKeyCode(), finalEvent.getUnicodeChar(), finalEvent.getAction() );
-                }
-            });
-            return true;
-        }
-          
         @Override
         public boolean dispatchKeyEventPreIme ( KeyEvent event) {
             final KeyEvent finalEvent = event;
             runOnUiThread( new Runnable() {
                 @Override
                 public void run() {
-                    nativeOnKey(finalEvent.getKeyCode(), finalEvent.getUnicodeChar(), finalEvent.getAction() );
+                    if (finalEvent.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+                        nativeOnKeyboardHide();
+                    } else {
+                        nativeOnKey(finalEvent.getKeyCode(), finalEvent.getUnicodeChar(), finalEvent.getAction() );
+                    }
                 }
             });
             return true;
         }
 
-        @Override
-        public boolean onCheckIsTextEditor() {
-            return true;
-        }
-
-        
         @Override
         public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
             ic = new GHLInputConnection(this, true);
@@ -161,20 +149,30 @@ public class Activity  extends android.app.NativeActivity  {
 
             return ic;
         }
-        
+
+
         @Override
-        protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-            super.onSizeChanged(w, h, oldw, oldh);
-            Log.v(TAG, "onSizeChanged " + oldw + "x" + oldh+"->"+w+"x"+h);
+        protected void onLayout(boolean v, int x, int y, int w, int h) {
+            Log.d(TAG,"onLayout " + x + "," + y + "," + w + "," + h );
+            final int fx = x;
+            final int fy = y;
+            final int fw = w;
+            final int fh = h;
+            Activity.this.runOnUiThread(new Runnable(){
+                 @Override
+                 public void run() {
+                    nativeOnScreenRectChanged(fx,fy,fw,fh);
+                }
+            });
+            
         }
+
 
         @Override
         protected void onDraw(Canvas canvas) {
                
         }
     }
-
-    private InvisibleEdit m_text_edit;
 
 	private static boolean libloaded = false;
     public void ensureLoadLibrary() {
@@ -199,35 +197,12 @@ public class Activity  extends android.app.NativeActivity  {
 
     public boolean showSoftKeyboard() {
         Log.v(TAG, "showSoftKeyboard");
-        if (m_text_edit == null) {
-            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            m_text_edit = new InvisibleEdit(Activity.this);
-            //m_text_edit.setId(100500);
-            addContentView(m_text_edit,params);
-            m_text_edit.getViewTreeObserver().addOnGlobalLayoutListener(new android.view.ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override 
-                public void onGlobalLayout() {
-                    Rect r = new Rect();
-                    m_text_edit.getWindowVisibleDisplayFrame(r);
-                    final Rect fr = r;
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            nativeOnScreenRectChanged(fr.left,fr.top,fr.width(),fr.height());
-                        }
-                    });
-                }
-            });
-        } 
-        m_text_edit.setVisibility(View.VISIBLE);
-        m_text_edit.requestFocus();
-        
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE|
-            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(m_text_edit, 0);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                showTextEditImpl();
+            }
+        });
         return true;
     }
 
@@ -236,12 +211,10 @@ public class Activity  extends android.app.NativeActivity  {
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         boolean res = false;
 
-        if (m_text_edit != null) {
-            imm.hideSoftInputFromWindow(m_text_edit.getWindowToken(), 0);
-            if (m_text_edit.getVisibility() == View.VISIBLE) {
-                res = true;
-            }
-            m_text_edit.setVisibility(View.GONE);
+        if (m_text_edit_window != null) {
+            EditText text_edit = (EditText)(m_text_edit_window.getContentView()).findViewWithTag("text_edit");
+            imm.hideSoftInputFromWindow(text_edit.getWindowToken(), 0);
+            m_text_edit_window.dismiss();
         }
         if (m_text_input_window != null) {
             EditText text_input = (EditText)(m_text_input_window.getContentView()).findViewWithTag("text_input");
@@ -254,6 +227,7 @@ public class Activity  extends android.app.NativeActivity  {
 
 
     private PopupWindow m_text_input_window = null;
+    private PopupWindow m_text_edit_window = null;
 
 
     public void showTextInput(int accept_button,String placeholder) {
@@ -268,10 +242,12 @@ public class Activity  extends android.app.NativeActivity  {
         });
     }
 
+
+
     private void showTextInputImpl(int accept_button,String placeholder) {
         
         if (m_text_input_window == null) {
-            Log.v(TAG, "create");
+            Log.v(TAG, "create text_input");
 
             LinearLayout containerLayout = new LinearLayout(this);
 
@@ -294,7 +270,8 @@ public class Activity  extends android.app.NativeActivity  {
                                 nativeOnTextInputAccepted(text);
                             }
                         });
-                        m_text_input_window.dismiss();
+                        if (m_text_input_window!=null) 
+                            m_text_input_window.dismiss();
                         return true;
                     }
                     return false;
@@ -370,6 +347,106 @@ public class Activity  extends android.app.NativeActivity  {
     }
 
 
+    private void showTextEditImpl() {
+        boolean create = false;
+
+        if (m_text_edit_window == null) {
+            Log.v(TAG, "create text_edit");
+            create = true;
+
+            LinearLayout containerLayout = new LinearLayout(this);
+
+
+            InvisibleEdit et = new InvisibleEdit(this);
+
+            et.setTag("text_edit");
+            et.setGravity(Gravity.BOTTOM);
+            et.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                    if (i == EditorInfo.IME_ACTION_DONE ) {
+                        runOnUiThread( new Runnable() {
+                            @Override
+                            public void run() {
+                                nativeOnKey(KeyEvent.KEYCODE_ENTER,0,0);
+                                nativeOnKey(KeyEvent.KEYCODE_ENTER,0,1);
+                            }
+                        });
+                        
+                       return true;
+                    }
+                    return false;
+                }
+            });
+
+
+            et.setTextIsSelectable(false);
+
+            final EditText fet = et;
+
+           
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT);
+            params.gravity = Gravity.FILL;
+            params.setMargins(0,0,0,0);
+            
+            containerLayout.setOrientation(LinearLayout.VERTICAL);
+            containerLayout.addView(et, params);
+            
+            PopupWindow popUpWindow = new PopupWindow(containerLayout,320,32,true);
+
+            m_text_edit_window = popUpWindow;
+            m_text_edit_window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            m_text_edit_window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+            m_text_edit_window.setOutsideTouchable(false);
+            m_text_edit_window.setTouchable(false);
+
+            m_text_edit_window.update();
+
+            m_text_edit_window.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                @Override
+                public void onDismiss() {
+                    final View view = getWindow().getDecorView();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            nativeOnScreenRectChanged(0,0,
+                                view.getWidth(),
+                                view.getHeight());
+                        }
+                    });
+                }
+            });
+        }
+
+
+        m_text_edit_window.setWidth(getWindow().getDecorView().getWidth());
+        m_text_edit_window.setHeight(WindowManager.LayoutParams.FILL_PARENT);
+
+        m_text_edit_window.showAtLocation(getWindow().getDecorView(), Gravity.FILL_VERTICAL, 0, 0);
+        m_text_edit_window.update();
+
+        final EditText text_edit = (EditText)(m_text_edit_window.getContentView()).findViewWithTag("text_edit");
+        if (text_edit != null) {
+            Log.v(TAG,"Activate edit input");
+            text_edit.setText("");
+            final InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    text_edit.requestFocus();
+                    imm.showSoftInput(text_edit, 0);
+                }
+            }, 0);
+
+        }
+
+        
+    }
+
+
 
     
     public boolean openURL(String url) {
@@ -397,8 +474,8 @@ public class Activity  extends android.app.NativeActivity  {
     @Override
     protected void onPause(){
         Log.v(TAG, "onPause");
-        super.onPause();
         ensureLoadLibrary();
+        super.onPause();
     }
 
     @Override

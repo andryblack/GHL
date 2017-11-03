@@ -914,6 +914,13 @@ namespace GHL {
                 m_app->OnEvent(&e);
             }
         }
+        void onKeyboardHide() {
+             if (m_app) {
+                GHL::Event e;
+                e.type = GHL::EVENT_TYPE_KEYBOARD_HIDE;
+                m_app->OnEvent(&e);
+            }
+        }
 
     protected:
 
@@ -1392,34 +1399,37 @@ extern "C" JNIEXPORT void JNICALL Java_com_GHL_Activity_nativeOnScreenRectChange
     };
   }
 
-extern "C" JNIEXPORT jboolean JNICALL Java_com_GHL_Activity_nativeOnTextInputDismiss
+extern "C" JNIEXPORT void JNICALL Java_com_GHL_Activity_nativeOnTextInputDismiss
   (JNIEnv *, jclass) {
     if (GHL::g_native_activity) {
         static_cast<GHL::GHLActivity*>(GHL::g_native_activity->instance)->onTextInputDismiss();
-        return true;
     }
-    return false;
   }
 
-extern "C" JNIEXPORT jboolean JNICALL Java_com_GHL_Activity_nativeOnTextInputAccepted
+extern "C" JNIEXPORT void JNICALL Java_com_GHL_Activity_nativeOnTextInputAccepted
   (JNIEnv *env, jclass, jstring text) {
     if (GHL::g_native_activity) {
         std::string temp_text = get_string(env,text);
         static_cast<GHL::GHLActivity*>(GHL::g_native_activity->instance)->onTextInputAccepted(temp_text);
-        return true;
     }
-    return false;
   }
 
-extern "C" JNIEXPORT jboolean JNICALL Java_com_GHL_Activity_nativeOnTextInputChanged
+extern "C" JNIEXPORT void JNICALL Java_com_GHL_Activity_nativeOnTextInputChanged
   (JNIEnv * env, jclass, jstring text) {
     if (GHL::g_native_activity) {
         std::string temp_text = get_string(env,text);
         static_cast<GHL::GHLActivity*>(GHL::g_native_activity->instance)->onTextInputChanged(temp_text);
-        return true;
     }
-    return false;
   }
+
+  extern "C" JNIEXPORT void JNICALL Java_com_GHL_Activity_nativeOnKeyboardHide
+  (JNIEnv * env, jclass) {
+    if (GHL::g_native_activity) {
+        static_cast<GHL::GHLActivity*>(GHL::g_native_activity->instance)->onKeyboardHide();
+    }
+  }
+
+  
 
 
 extern "C" JNIEXPORT void ANativeActivity_onCreate(ANativeActivity* activity,
