@@ -655,9 +655,6 @@ public:
     }
     ~NetworkAndroid() {
         LOG_INFO("~NetworkAndroid");
-        assert(GHL::g_native_activity);
-        JNIEnv* env = GHL::g_native_activity->env;
-        env->DeleteGlobalRef(NetworkTaskBase::m_URL_class);
         
         {
             slock l(m_lock);
@@ -673,6 +670,11 @@ public:
         for (std::list<NetworkTaskBase*>::iterator it = m_to_fg_tasks.begin();it!=m_to_fg_tasks.end();++it) {
             delete *it;
         }
+
+        assert(GHL::g_native_activity);
+        JNIEnv* env = GHL::g_native_activity->env;
+        env->DeleteGlobalRef(NetworkTaskBase::m_URL_class);
+        
         pthread_mutex_destroy( &m_lock );
         pthread_mutex_destroy( &m_list_lock );
     }
