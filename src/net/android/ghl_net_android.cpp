@@ -162,6 +162,7 @@ public:
 
     static jmethodID  m_InputStream_read;
     static jmethodID  m_OutputStream_write;
+    static jmethodID  m_OutputStream_close;
 protected:
     GHL::UInt32             m_id;
     std::string             m_url;
@@ -478,6 +479,14 @@ public:
             m_error = "send failed";
             return true;
         } 
+
+        env->CallVoidMethod(out_stream.jobj,m_OutputStream_close);
+        if (check_exception(env)) {
+            m_state = S_ERROR;
+            NET_LOG("ProcessWriteStream -> S_ERROR 3");
+            m_error = "close output failed";
+            return true;
+        } 
         NET_LOG("S_WRITE->S_START_READ");
         m_state = S_START_READ;
         return false;
@@ -556,6 +565,14 @@ public:
             NET_LOG("S_WRITE->S_WRITE_MORE bg");
             m_state = S_WRITE_MORE;
             return false;
+        } 
+
+        env->CallVoidMethod(out_stream.jobj,m_OutputStream_close);
+        if (check_exception(env)) {
+            m_state = S_ERROR;
+            NET_LOG("ProcessWriteStream -> S_ERROR 5");
+            m_error = "close output failed";
+            return true;
         } 
         //PROFILE(ProcessBackground_S_WRITE_S_CONNECT);
         NET_LOG("S_WRITE->S_START_READ");
@@ -640,6 +657,9 @@ public:
         assert(OutputStream);
         NetworkTaskBase::m_OutputStream_write = get_method(env,OutputStream,"write","([B)V");
         assert(NetworkTaskBase::m_OutputStream_write);
+        NetworkTaskBase::m_OutputStream_close = get_method(env,OutputStream,"close","()V");
+        assert(NetworkTaskBase::m_OutputStream_close);
+
         env->DeleteLocalRef(OutputStream);
 
         env->DeleteLocalRef(HttpURLConnection_class);
@@ -841,6 +861,7 @@ jmethodID  NetworkTaskBase::m_HttpURLConnection_getErrorStream = 0;
 jmethodID  NetworkTaskBase::m_HttpURLConnection_disconnect = 0;
 jmethodID  NetworkTaskBase::m_InputStream_read = 0;
 jmethodID  NetworkTaskBase::m_OutputStream_write = 0;
+jmethodID  NetworkTaskBase::m_OutputStream_close = 0;
 
 GHL_API GHL::Network* GHL_CALL GHL_CreateNetwork() {
     return new NetworkAndroid();
