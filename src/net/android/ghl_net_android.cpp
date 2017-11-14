@@ -154,6 +154,7 @@ public:
     static jmethodID  m_HttpURLConnection_getHeaderFieldKey;
     static jmethodID  m_HttpURLConnection_getHeaderField;
     static jmethodID  m_HttpURLConnection_setChunkedStreamingMode;
+    static jmethodID  m_HttpURLConnection_setFixedLengthStreamingMode;
     static jmethodID  m_HttpURLConnection_setInstanceFollowRedirects;
     static jmethodID  m_HttpURLConnection_getOutputStream;
     static jmethodID  m_HttpURLConnection_getInputStream;
@@ -390,6 +391,12 @@ public:
                 //PROFILE(ProcessMainS_COMPLETE);
                 FlushData(env);
                 m_handler->OnComplete(); 
+                if (m_connection.jobj) {
+                    env->CallVoidMethod(m_connection.jobj,m_HttpURLConnection_disconnect);
+                    if (check_exception(env)) {
+                        LOG_ERROR("disconnect failed");
+                    }
+                }
                 return true;
             }
             case S_ERROR: {
@@ -397,6 +404,12 @@ public:
                 LOG_ERROR(m_error);
                 m_handler->OnError(m_error.c_str());
                 m_handler->OnComplete();
+                if (m_connection.jobj) {
+                    env->CallVoidMethod(m_connection.jobj,m_HttpURLConnection_disconnect);
+                    if (check_exception(env)) {
+                        LOG_ERROR("disconnect error failed");
+                    }
+                }
                 return true;
             }
             case S_START_READ:
@@ -443,6 +456,15 @@ public:
                 NET_LOG("ConfigureStream->S_ERROR 1");
                 m_error = "set output failed";
                 return false;
+            }
+            if (m_send_data->GetSize()) {
+                env->CallVoidMethod(m_connection.jobj,m_HttpURLConnection_setFixedLengthStreamingMode,(jint)m_send_data->GetSize());
+                if (check_exception(env)) {
+                    m_state = S_ERROR;
+                    ILOG_INFO("setFixedLengthStreamingMode error");
+                    m_error = "set fized length failed";
+                    return false;
+                }
             }
         }
         return true;
@@ -627,6 +649,8 @@ public:
         assert(NetworkTaskBase::m_HttpURLConnection_disconnect);
         NetworkTaskBase::m_HttpURLConnection_setChunkedStreamingMode = get_method(env,HttpURLConnection_class,"setChunkedStreamingMode","(I)V");
         assert(NetworkTaskBase::m_HttpURLConnection_setChunkedStreamingMode);
+        NetworkTaskBase::m_HttpURLConnection_setFixedLengthStreamingMode = get_method(env,HttpURLConnection_class,"setFixedLengthStreamingMode","(I)V");
+        assert(NetworkTaskBase::m_HttpURLConnection_setFixedLengthStreamingMode);
         NetworkTaskBase::m_HttpURLConnection_setInstanceFollowRedirects = get_method(env,HttpURLConnection_class,"setInstanceFollowRedirects","(Z)V");
         assert(NetworkTaskBase::m_HttpURLConnection_setInstanceFollowRedirects);
         NetworkTaskBase::m_HttpURLConnection_getInputStream = get_method(env,HttpURLConnection_class,"getInputStream","()Ljava/io/InputStream;");
@@ -854,6 +878,7 @@ jmethodID  NetworkTaskBase::m_HttpURLConnection_getResponseCode = 0;
 jmethodID  NetworkTaskBase::m_HttpURLConnection_getHeaderFieldKey = 0;
 jmethodID  NetworkTaskBase::m_HttpURLConnection_getHeaderField = 0;
 jmethodID  NetworkTaskBase::m_HttpURLConnection_setChunkedStreamingMode = 0;
+jmethodID  NetworkTaskBase::m_HttpURLConnection_setFixedLengthStreamingMode = 0;
 jmethodID  NetworkTaskBase::m_HttpURLConnection_setInstanceFollowRedirects = 0;
 jmethodID  NetworkTaskBase::m_HttpURLConnection_getOutputStream = 0;
 jmethodID  NetworkTaskBase::m_HttpURLConnection_getInputStream = 0;
