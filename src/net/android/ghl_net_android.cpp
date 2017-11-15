@@ -8,6 +8,7 @@
 #include <assert.h>
 #include <iostream>
 #include <list>
+#include <map>
 #include <pthread.h>
 #include <unistd.h>
 #include <time.h>
@@ -183,8 +184,10 @@ protected:
     } m_state;
     std::string m_error;
     int m_response_code;
-    GHL::UInt32 m_headers_count;
     bool    m_response_received;
+
+    std::map<std::string,std::string> m_send_headers;
+    std::map<std::string,std::string> m_receive_headers;
 
     explicit NetworkTaskBase(JNIEnv* env,GHL::NetworkRequest* handler) : m_connection(0,env),
         m_handler(handler),m_buffer(0,env),m_response_code(0) {
@@ -194,13 +197,25 @@ protected:
 
         m_handler->AddRef();
         m_state = S_INIT;
-        m_headers_count = m_handler->GetHeadersCount();
+        GHL::UInt32 headers_count = m_handler->GetHeadersCount();
+        for (GHL::UInt32 i=0;i<headers_count;++i) {
+            m_send_headers[m_handler->GetHeaderName(i)]=m_handler->GetHeaderValue(i);
+        }
         m_response_received = false;
         m_buffer_size = 0;
         jobject buf_loc = env->NewByteArray(BUFFER_SIZE);
         m_buffer.jobj = env->NewGlobalRef(buf_loc);
         m_url = handler->GetURL();
         env->DeleteLocalRef(buf_loc);
+    }
+
+    void disconnect(JNIEnv* env) {
+        if (m_connection.jobj) {
+            env->CallVoidMethod(m_connection.jobj,m_HttpURLConnection_disconnect);
+            if (check_exception(env)) {
+                LOG_ERROR("disconnect failed");
+            }
+        }
     }
 public:
     virtual ~NetworkTaskBase() {
@@ -226,11 +241,13 @@ public:
         if (check_exception(env) || !read_stream.jobj) {
             m_state = S_ERROR;
             m_error = "read failed";
+            disconnect(env);
             return true;
         } 
         if (readed == -1) {
             NET_LOG("S_READ->S_COMPLETE");
             m_state = S_COMPLETE;
+            disconnect(env);
             return true;
         } else {
             m_buffer_size += readed;
@@ -267,13 +284,17 @@ public:
                 if (!ConfigureStream(env)) {
                     return true;
                 }
-               
-                if (m_headers_count == 0) {
-                    NET_LOG("S_INIT->S_CONNECT bg");
-                    m_state = S_CONNECT;
-                    return false;
+                for (std::map<std::string,std::string>::const_iterator it = m_send_headers.begin();
+                        it != m_send_headers.end(); ++it) {
+                    jni_string name_str(it->first.c_str(),env);
+                    jni_string value_str(it->second.c_str(),env);
+                    env->CallVoidMethod(m_connection.jobj,m_HttpURLConnection_setRequestProperty,
+                        name_str.jstr,value_str.jstr);
                 }
-                return true;
+
+                NET_LOG("S_INIT -> S_CONNECT bg");
+                m_state = S_CONNECT;
+                return false;
             } break;
             case S_WRITE: {
                 jni_object out_stream(env->CallObjectMethod(m_connection.jobj,m_HttpURLConnection_getOutputStream),env);
@@ -281,6 +302,7 @@ public:
                     m_state = S_ERROR;
                     NET_LOG("S_WRITE->S_ERROR 2");
                     m_error = "getOutputStream failed";
+                    disconnect(env);
                     return true;
                 }
                 if (ProcessWriteStream(env,out_stream)) {
@@ -296,6 +318,7 @@ public:
                     m_state = S_ERROR;
                     NET_LOG("S_WRITE_MORE->S_ERROR 1");
                     m_error = "getOutputStream failed";
+                    disconnect(env);
                     return true;
                 }
                 if (ProcessWriteStream(env,out_stream)) {
@@ -311,6 +334,7 @@ public:
                     m_state = S_ERROR;
                     NET_LOG("S_CONNECT->S_ERROR 1");
                     m_error = "connect failed";
+                    disconnect(env);
                     return true;
                 } 
                 
@@ -322,8 +346,17 @@ public:
                     m_state = S_ERROR;
                     //ILOG_INFO("S_START_READ->S_ERROR");
                     m_error = "get response code failed";
+                    disconnect(env);
                     return true;
                 }
+
+                for (int j = 1; ; j++) {
+                    jni_string key( env->CallObjectMethod(m_connection.jobj,m_HttpURLConnection_getHeaderFieldKey,j) ,env );
+                    jni_string value( env->CallObjectMethod(m_connection.jobj,m_HttpURLConnection_getHeaderField,j)  ,env);
+                    if (!key.jstr || !value.jstr) break;
+                    m_receive_headers[key.str()]=value.str();
+                }  // end for
+
                 m_response_received = true;
                 m_state = S_READ;
                 return true;
@@ -358,30 +391,13 @@ public:
         //PROFILE(ProcessMain)
         if (m_response_received) {
             m_handler->OnResponse(m_response_code);
-            for (int j = 1; ; j++) {
-                jni_string key( env->CallObjectMethod(m_connection.jobj,m_HttpURLConnection_getHeaderFieldKey,j) ,env );
-                jni_string value( env->CallObjectMethod(m_connection.jobj,m_HttpURLConnection_getHeaderField,j)  ,env);
-                if (!key.jstr || !value.jstr) break;
-                m_handler->OnHeader(key.str().c_str(),value.str().c_str());
-            }  // end for
+            for (std::map<std::string,std::string>::const_iterator it = m_receive_headers.begin();
+                it != m_receive_headers.end(); ++it) {
+                m_handler->OnHeader(it->first.c_str(),it->second.c_str());
+            }
             m_response_received = false;
         }
         switch (m_state) {
-            case S_INIT: {
-
-                GHL::UInt32 count = m_handler->GetHeadersCount();
-                for (GHL::UInt32 i = 0;i<count; ++i) {
-                    jni_string name_str(m_handler->GetHeaderName(i),env);
-                    jni_string value_str(m_handler->GetHeaderValue(i),env);
-                    env->CallVoidMethod(m_connection.jobj,m_HttpURLConnection_setRequestProperty,
-                        name_str.jstr,value_str.jstr);
-                }
-                NET_LOG("S_INIT -> S_CONNECT fg");
-                m_state = S_CONNECT;
-
-                return true;
-
-            } break;
             case S_READ: {
                 //PROFILE(ProcessMainS_READ);
                 FlushData(env);
@@ -391,12 +407,6 @@ public:
                 //PROFILE(ProcessMainS_COMPLETE);
                 FlushData(env);
                 m_handler->OnComplete(); 
-                if (m_connection.jobj) {
-                    env->CallVoidMethod(m_connection.jobj,m_HttpURLConnection_disconnect);
-                    if (check_exception(env)) {
-                        LOG_ERROR("disconnect failed");
-                    }
-                }
                 return true;
             }
             case S_ERROR: {
@@ -404,17 +414,12 @@ public:
                 LOG_ERROR(m_error);
                 m_handler->OnError(m_error.c_str());
                 m_handler->OnComplete();
-                if (m_connection.jobj) {
-                    env->CallVoidMethod(m_connection.jobj,m_HttpURLConnection_disconnect);
-                    if (check_exception(env)) {
-                        LOG_ERROR("disconnect error failed");
-                    }
-                }
                 return true;
             }
             case S_START_READ:
             case S_WRITE:
             case S_WRITE_MORE:
+            case S_INIT:
                 return true;
         }
         return false;
@@ -489,6 +494,7 @@ public:
             m_state = S_ERROR;
             NET_LOG("ProcessWriteStream -> S_ERROR 1");
             m_error = "create byte array failed";
+            disconnect(env);
             return true;
         }
         env->SetByteArrayRegion(arr,0,m_send_data->GetSize(),
@@ -499,6 +505,7 @@ public:
             m_state = S_ERROR;
             NET_LOG("ProcessWriteStream -> S_ERROR 2");
             m_error = "send failed";
+            disconnect(env);
             return true;
         } 
 
@@ -507,6 +514,7 @@ public:
             m_state = S_ERROR;
             NET_LOG("ProcessWriteStream -> S_ERROR 3");
             m_error = "close output failed";
+            disconnect(env);
             return true;
         } 
         NET_LOG("S_WRITE->S_START_READ");
@@ -582,6 +590,7 @@ public:
                 m_state = S_ERROR;
                 NET_LOG("ProcessWriteStream->S_ERROR 4");
                 m_error = "send failed";
+                disconnect(env);
                 return true;
             } 
             NET_LOG("S_WRITE->S_WRITE_MORE bg");
@@ -594,6 +603,7 @@ public:
             m_state = S_ERROR;
             NET_LOG("ProcessWriteStream -> S_ERROR 5");
             m_error = "close output failed";
+            disconnect(env);
             return true;
         } 
         //PROFILE(ProcessBackground_S_WRITE_S_CONNECT);
