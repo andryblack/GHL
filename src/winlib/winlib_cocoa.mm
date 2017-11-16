@@ -136,10 +136,12 @@ static bool g_resizeable_window = false;
                 [control accept];
             }
         }
-        [NSApp endSheet:m_panel];
-        NSPanel* panel = m_panel;
-        m_panel = nil;
-        [panel close];
+        if (m_panel) {
+            [NSApp endSheet:m_panel];
+            NSPanel* panel = m_panel;
+            m_panel = nil;
+            [panel close];
+        }
     }
 }
 - (void)windowWillClose:(NSNotification *)notification {

@@ -2,6 +2,7 @@
 #include <jni.h>
 #include <android/asset_manager.h>
 #include <ghl_data.h>
+#include <ghl_data_stream.h>
 
 namespace GHL {
     
@@ -129,12 +130,14 @@ namespace GHL {
     class AndroidAssetMusic : public RefCounterImpl<MusicInstance> {
     private:
         OpenSLAudioStream*  m_stream;
+        DataStream* m_ds;
     public:
-        explicit AndroidAssetMusic(DataStream* ds,OpenSLAudioStream* stream) : m_stream(stream) {
-            
+        explicit AndroidAssetMusic(DataStream* ds,OpenSLAudioStream* stream) : m_stream(stream),m_ds(ds) {
+            m_ds->AddRef();
         }
         ~AndroidAssetMusic() {
             delete m_stream;
+            m_ds->Release();
         }
         virtual void GHL_CALL Play( bool loop ) {
             m_stream->Play(loop);
@@ -162,6 +165,8 @@ namespace GHL {
     /// open music
     MusicInstance* GHL_CALL SoundAndroid::OpenMusic( GHL::DataStream* file ) {
         if (!m_opensl_engine)
+            return 0;
+        if (!file)
             return 0;
         AAsset* asset = GetAssetFromDataStream( file );
         if (asset) {

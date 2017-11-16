@@ -436,6 +436,7 @@ public:
     }
     if (m_active) {
         [self updateScale];
+        [self resumeSound];
     }
 }
 
@@ -538,11 +539,11 @@ public:
         
         //Check to see if it was a Begin interruption
         if ([[notification.userInfo valueForKey:AVAudioSessionInterruptionTypeKey] isEqualToNumber:[NSNumber numberWithInt:AVAudioSessionInterruptionTypeBegan]]) {
-            NSLog(@"Interruption began!");
+            LOG_INFO("Interruption began!");
             [self suspendSound];
             
         } else if([[notification.userInfo valueForKey:AVAudioSessionInterruptionTypeKey] isEqualToNumber:[NSNumber numberWithInt:AVAudioSessionInterruptionTypeEnded]]){
-            NSLog(@"Interruption ended!");
+            LOG_INFO("Interruption ended!");
             //Resume your audio
             [self resumeSound];
             
