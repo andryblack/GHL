@@ -1431,14 +1431,30 @@ extern "C" JNIEXPORT void JNICALL Java_com_GHL_Activity_nativeOnTextInputChanged
 
   
 
+static GHL::GHLActivity* g_active_instance = 0;
+
+static void ANativeActivity_onDestroy(ANativeActivity* activity) {
+    if ( activity && activity->instance ) {
+        GHL::GHLActivity* instance = static_cast<GHL::GHLActivity*>(activity->instance);
+        instance->OnDestroy();
+        if (g_active_instance == instance) {
+            g_active_instance = 0;
+        }
+        delete instance;
+    }
+}
 
 extern "C" JNIEXPORT void ANativeActivity_onCreate(ANativeActivity* activity,
                                   void* savedState, size_t savedStateSize) {
         GHL_Log(GHL::LOG_LEVEL_INFO,"Create\n");
+        if (g_active_instance) {
+            GHL_Log(GHL::LOG_LEVEL_ERROR,"Destroy active instance\n");
+            g_active_instance->OnDestroy();
+        }
 
         g_main_thread_id = GHL_GetCurrentThreadId();
 
-        activity->callbacks->onDestroy = &GHL::proxy_func<&GHL::GHLActivity::OnDestroy>;
+        activity->callbacks->onDestroy = &ANativeActivity_onDestroy;
         activity->callbacks->onStart = &GHL::proxy_func<&GHL::GHLActivity::OnStart>;
         activity->callbacks->onResume = &GHL::proxy_func<&GHL::GHLActivity::OnResume>;
         //activity->callbacks->onSaveInstanceState = onSaveInstanceState;
@@ -1456,6 +1472,7 @@ extern "C" JNIEXPORT void ANativeActivity_onCreate(ANativeActivity* activity,
         
         GHL::GHLActivity* ghl_activity = new GHL::GHLActivity(activity, savedState, savedStateSize);
         activity->instance = ghl_activity;
+        g_active_instance = ghl_activity;
         ghl_activity->OnCreate();
 }
 

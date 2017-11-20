@@ -4,7 +4,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.content.Intent;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 
 import android.view.MotionEvent;
@@ -175,23 +175,26 @@ public class Activity  extends android.app.NativeActivity  {
     }
 
 	private static boolean libloaded = false;
-    public void ensureLoadLibrary() {
-        if (libloaded) {
+    public static void ensureLoadLibraryForContext( android.content.Context context ) {
+         if (libloaded) {
             return;
         }
         String libname = "main";
         try {
-            ActivityInfo ai = getPackageManager().getActivityInfo(
-                                                     getIntent().getComponent(), PackageManager.GET_META_DATA);
+            ApplicationInfo ai = context.getPackageManager().getApplicationInfo(context.getPackageName(), 
+                 PackageManager.GET_META_DATA);  
             if (ai.metaData != null) {
                 String ln = ai.metaData.getString(android.app.NativeActivity.META_DATA_LIB_NAME);
                 if (ln != null) libname = ln;
             }
-        } catch (PackageManager.NameNotFoundException e) {
-            throw new RuntimeException("Error getting activity info", e);
+        } catch (Exception e) {
+            android.util.Log.e(TAG,"Error getting activity info" + e);
         }
         System.loadLibrary(libname);
         libloaded = true;
+    }
+    public void ensureLoadLibrary(  ) {
+       ensureLoadLibraryForContext(getApplicationContext());
     }
 
 
