@@ -794,7 +794,10 @@ public:
     [m_context release];
     m_context = nil;
 	delete m_imageDecoder;
-	delete m_sound;
+    if (m_sound) {
+        m_sound->SoundDone();
+        delete m_sound;
+    }
 
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVAudioSessionInterruptionNotification object:nil];
     
