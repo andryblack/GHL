@@ -296,6 +296,8 @@ static const size_t max_touches = 10;
 	bool	m_active;
 	HiddenInput* m_hiddenInput;
 	UITouch* m_touches[max_touches];
+    GHL::Int32 m_borders[4];
+    bool m_need_relayout;
 }
 
 - (void)prepareOpenGL:(Boolean) gles2;
@@ -305,7 +307,7 @@ static const size_t max_touches = 10;
 - (void)showKeyboard:(const GHL::TextInputConfig*) config;
 - (void)hideKeyboard;
 - (void)setFrameInterval:(GHL::Int32)interval;
-
+- (void)fillBorders:(GHL::Int32*)borders;
 @end
 
 @interface WinLibViewController : UIViewController
@@ -398,6 +400,12 @@ public:
                 ::strncpy(dest, [full UTF8String], 32);
                 return true;
             }
+        } else if ( name == GHL::DEVICE_DATA_SCREEN_BORDERS) {
+            if (m_controller && m_controller.viewLoaded) {
+                WinLibView* v = (WinLibView*)m_controller.view;
+                [v fillBorders:static_cast<GHL::Int32*>(data)];
+                return true;
+            }
         }
         return false;
 	}
@@ -469,6 +477,9 @@ public:
 		m_imageDecoder = 0;
 		
 		m_active = false;
+        
+        m_borders[0]=m_borders[1]=m_borders[2]=m_borders[3]=0;
+        m_need_relayout = false;
 		
 #ifndef GHL_NO_IMAGE_DECODERS
 		m_imageDecoder = new GHL::ImageDecoderImpl();		
@@ -594,10 +605,33 @@ public:
 
 	[m_context onLayout:(CAEAGLLayer*)self.layer];
     GHL::g_default_framebuffer = [m_context defaultFramebuffer];
+    
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_11_0
+    if (@available(iOS 11.0, *)) {
+            UILayoutGuide* guide = self.safeAreaLayoutGuide;
+            if (guide) {
+                m_borders[0]=guide.layoutFrame.origin.x;
+                m_borders[1]=self.frame.size.width - guide.layoutFrame.origin.x - guide.layoutFrame.size.width;
+                m_borders[2]=guide.layoutFrame.origin.y;
+                m_borders[3]=self.frame.size.height - guide.layoutFrame.origin.y - guide.layoutFrame.size.height;
+                for (size_t i=0;i<4;++i) {
+                    m_borders[i] = m_borders[i] * self.contentScaleFactor;
+                }
+                m_need_relayout = true;
+            }
+    } else {
+        // Fallback on earlier versions
+    }
+#endif
+    
 	m_render->Resize([m_context backingWidth], [m_context backingHeight]);
  	
 }
 
+- (void)fillBorders:(GHL::Int32*)borders {
+    for (size_t i=0;i<4;++i)
+        borders[i]=m_borders[i];
+}
 - (void)prepareOpenGL:(Boolean) gles2 {
 	LOG_VERBOSE( "prepareOpenGL " << (gles2 ? "GLES2" : "GLES1") );
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
@@ -638,6 +672,13 @@ public:
 		m_timeval = time;
 		[self makeCurrent];
 		GHL::g_default_framebuffer = [m_context defaultFramebuffer];
+        
+        if (m_need_relayout) {
+            GHL::Event e;
+            e.type = GHL::EVENT_TYPE_RELAYOUT;
+            m_need_relayout = false;
+            g_application->OnEvent(&e);
+        }
 		if (g_application->OnFrame(dt)) {
 			
 		}

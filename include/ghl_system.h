@@ -34,6 +34,7 @@ namespace GHL {
         DEVICE_DATA_UTC_OFFSET,         ///< Int32*
         DEVICE_DATA_NAME,               ///< char[128]
         DEVICE_DATA_OS,                 ///< char[32]
+        DEVICE_DATA_SCREEN_BORDERS,     ///< Int32[4] [l,r,t,b]
     };
     
     enum TextInputAcceptButton {
