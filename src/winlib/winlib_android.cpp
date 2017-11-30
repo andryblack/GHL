@@ -428,56 +428,7 @@ namespace GHL {
 
             check_main_thread();
             g_native_activity = m_activity;
-            
-            if (m_activity && m_app)
-            {
-                jclass ActivityClass = m_activity->env->GetObjectClass(m_activity->clazz);
-                jmethodID method = m_activity->env->GetMethodID(ActivityClass,"getIntent","()Landroid/content/Intent;");
-                assert(method);
 
-                jobject intent = m_activity->env->CallObjectMethod(m_activity->clazz,method);
-                if (intent) {
-                    jclass IntentClass = m_activity->env->GetObjectClass(intent);
-                    jmethodID get_data = m_activity->env->GetMethodID(IntentClass,"getDataString","()Ljava/lang/String;");
-                    assert(get_data);
-                    jmethodID get_extra = m_activity->env->GetMethodID(IntentClass,"getBooleanExtra","(Ljava/lang/String;Z)Z");
-                    assert(get_extra);
-                    jstring handled_str = m_activity->env->NewStringUTF("GHL_handled");
-                    jboolean handled = m_activity->env->CallBooleanMethod(intent,get_extra,handled_str,JNI_FALSE);
-                    if (!handled) {
-                        jstring url = (jstring)m_activity->env->CallObjectMethod(intent,get_data);
-                        if (url) {
-                            std::string url_str = get_string(m_activity->env,url);
-                            m_activity->env->DeleteLocalRef((jobject)url);
-
-                            GHL::Event e;
-                            e.type = GHL::EVENT_TYPE_HANDLE_URL;
-                            e.data.handle_url.url = url_str.c_str();
-                            LOG_INFO("handle url: " << e.data.handle_url.url);
-                            m_app->OnEvent(&e);
-                        } else {
-                            LOG_INFO("intent data empty");
-                        }
-                        jmethodID put_extra = m_activity->env->GetMethodID(IntentClass,"putExtra","(Ljava/lang/String;Z)Landroid/content/Intent;");
-                        assert(put_extra);
-                        jobject ni = m_activity->env->CallObjectMethod(intent,put_extra,handled_str,JNI_TRUE);
-                        if (ni)
-                             m_activity->env->DeleteLocalRef(ni);
-                     } else {
-                         LOG_INFO("url already handled");
-                    }
-
-                    
-                    m_activity->env->DeleteLocalRef(handled_str);
-                    m_activity->env->DeleteLocalRef(IntentClass);
-                    m_activity->env->DeleteLocalRef(intent);
-                } else {
-                    LOG_INFO("intent empty");
-                }
-                m_activity->env->DeleteLocalRef(ActivityClass);
-            } else {
-                LOG_INFO("app empty");
-            }
         }
         void OnResume() {
             LOG_INFO("OnResume");
@@ -526,6 +477,32 @@ namespace GHL {
             check_main_thread();
             m_sound.SetFocus(hasFocus);
         }
+
+        bool onIntent(JNIEnv* env,jobject intent) {
+            if (!m_app ) {
+                LOG_INFO("no app");
+                return false;
+            }
+            jclass IntentClass = env->GetObjectClass(intent);
+            jmethodID get_data = env->GetMethodID(IntentClass,"getDataString","()Ljava/lang/String;");
+            assert(get_data);
+            jstring url = (jstring)env->CallObjectMethod(intent,get_data);
+            if (url) {
+                std::string url_str = get_string(env,url);
+                env->DeleteLocalRef((jobject)url);
+
+                GHL::Event e;
+                e.type = GHL::EVENT_TYPE_HANDLE_URL;
+                e.data.handle_url.url = url_str.c_str();
+                LOG_INFO("handle url: " << e.data.handle_url.url);
+                m_app->OnEvent(&e);
+            } else {
+                LOG_INFO("intent data empty");
+            }
+            env->DeleteLocalRef(IntentClass);
+            return true;
+        }
+
         void DestroyContext() {
             eglMakeCurrent(m_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
             if (m_context != EGL_NO_CONTEXT) {
@@ -1427,6 +1404,14 @@ extern "C" JNIEXPORT void JNICALL Java_com_GHL_Activity_nativeOnTextInputChanged
     if (GHL::g_native_activity) {
         static_cast<GHL::GHLActivity*>(GHL::g_native_activity->instance)->onKeyboardHide();
     }
+  }
+
+  extern "C" JNIEXPORT jboolean JNICALL Java_com_GHL_Activity_nativeOnIntent
+  (JNIEnv * env, jclass, jobject intent) {
+    if (GHL::g_native_activity) {
+        return static_cast<GHL::GHLActivity*>(GHL::g_native_activity->instance)->onIntent(env,intent) ? JNI_TRUE : JNI_FALSE;
+    }
+    return JNI_FALSE;
   }
 
   

@@ -52,6 +52,7 @@ public class Activity  extends android.app.NativeActivity  {
     static native void nativeOnTextInputChanged(String text);
 
     static native void nativeOnScreenRectChanged(int left, int top, int width, int height);
+    static native boolean nativeOnIntent(Intent i);
 
     class InvisibleEdit extends EditText {
         
@@ -461,60 +462,77 @@ public class Activity  extends android.app.NativeActivity  {
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
+        ensureLoadLibrary();
         Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        ensureLoadLibrary();
         //setVolumeControlStream(AudioManager.STREAM_MUSIC);
     }
 
     @Override
     protected void onDestroy(){
+        ensureLoadLibrary();
         Log.v(TAG, "onDestroy");
         super.onDestroy();
-        ensureLoadLibrary();
     }
 
     @Override
     protected void onPause(){
-        Log.v(TAG, "onPause");
         ensureLoadLibrary();
+        Log.v(TAG, "onPause");
         super.onPause();
     }
 
     @Override
     protected void onResume(){
+        ensureLoadLibrary();
         Log.v(TAG, "onResume");
         super.onResume();
-        ensureLoadLibrary();
+
+        Intent i = getIntent();
+        if (i!=null) {
+            if (i.getBooleanExtra("com.GHL.intent_handled",false) == false) {
+                Log.v(TAG, "new intent " + i.toString());
+                if (nativeOnIntent(i)) {
+                    i.putExtra("com.GHL.intent_handled",true);
+                }
+            } else {
+                Log.v(TAG, "processed intent " + i.toString());
+            }
+        }
     }
 
     @Override
     protected void onStart(){
-        super.onStart();
         ensureLoadLibrary();
+        Log.v(TAG, "onStart");
+        super.onStart();
     }
 
     @Override
     protected void onStop(){
-        super.onStop();
         ensureLoadLibrary();
+         Log.v(TAG, "onStop");
+        super.onStop();
+        
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         ensureLoadLibrary();
+        super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onActivityResult(int requestCode,
                                         int resultCode,
                                         Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         ensureLoadLibrary();
+        super.onActivityResult(requestCode, resultCode, data);
     }
     @Override
     protected void onNewIntent(Intent intent) {
+        ensureLoadLibrary();
+        Log.v(TAG,"onNewIntent " + intent.toString());
         super.onNewIntent(intent);
         setIntent(intent);
     }
