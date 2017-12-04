@@ -304,6 +304,7 @@ static const size_t max_touches = 10;
     
 	GHL::ImageDecoderImpl* m_imageDecoder;
 	GHL::SoundCocoa*	m_sound;
+    bool m_need_reinit_sound;
 	NSString*	m_appName;
 	GHL::RenderImpl* m_render;
 	CADisplayLink *m_timer;
@@ -324,6 +325,10 @@ static const size_t max_touches = 10;
 - (void)hideKeyboard;
 - (void)setFrameInterval:(GHL::Int32)interval;
 - (void)fillBorders:(GHL::Int32*)borders;
+- (void) onMediaServicesWereReset: (NSNotification *) notification;
+- (void) onAudioSessionInterruption: (NSNotification *) notification;
++ (void) doSetupAudioSession;
+
 @end
 
 @interface WinLibViewController : UIViewController
@@ -561,12 +566,14 @@ public:
 		m_sound = 0;
 #ifndef GHL_NO_SOUND
 		m_sound = GHL_CreateSoundCocoa();
+        m_need_reinit_sound = false;
 		if (!m_sound->SoundInit()) {
 			delete m_sound;
 			m_sound = 0;
 		}
 		g_application->SetSound(m_sound);
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAudioSessionEvent:) name:AVAudioSessionInterruptionNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAudioSessionInterruption:) name:AVAudioSessionInterruptionNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onMediaServicesWereReset:) name:AVAudioSessionMediaServicesWereResetNotification object:nil];
 
 #endif
 		
@@ -585,10 +592,10 @@ public:
 	return self;
 }
 
-- (void) onAudioSessionEvent: (NSNotification *) notification
+- (void) onAudioSessionInterruption: (NSNotification *) notification
 {
     //Check the type of notification, especially if you are sending multiple AVAudioSession events here
-    NSLog(@"Interruption notification name %@", notification.name);
+    NSLog(@"onAudioSessionInterruption %@", notification.name);
     
     if ([notification.name isEqualToString:AVAudioSessionInterruptionNotification]) {
         NSLog(@"Interruption notification received %@!", notification);
@@ -605,6 +612,28 @@ public:
             
         }
     }
+}
+
+- (void) onMediaServicesWereReset: (NSNotification *) notification
+{
+    NSLog(@"onMediaServicesWereReset");
+#ifndef GHL_NO_SOUND
+    [WinLibView doSetupAudioSession];
+    if (m_sound) {
+        if (g_application) {
+            g_application->SetSound(0);
+            m_sound->SoundDone();
+            m_need_reinit_sound = true;
+        }
+    }
+    [self resumeSound];
+#endif
+}
+
++ (void) doSetupAudioSession {
+    /// setup audio session
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    [session setCategory:AVAudioSessionCategoryAmbient error:nil];
 }
 
 - (void)suspendSound {
@@ -702,6 +731,14 @@ public:
 		m_timeval = time;
 		[self makeCurrent];
 		GHL::g_default_framebuffer = [m_context defaultFramebuffer];
+    
+#ifndef GHL_NO_SOUND
+        if (m_need_reinit_sound) {
+            m_need_reinit_sound = false;
+            m_sound->SoundInit();
+            g_application->SetSound(m_sound);
+        }
+#endif
         
         if (m_need_relayout) {
             GHL::Event e;
@@ -871,7 +908,7 @@ public:
     }
 
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVAudioSessionInterruptionNotification object:nil];
-    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVAudioSessionMediaServicesWereResetNotification object:nil];
 	[super dealloc];
 }
 
@@ -1002,6 +1039,7 @@ public:
 
 @implementation WinLibAppDelegate
 
+
 - (void)doStartup {
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     LOG_INFO("applicationDidFinishLaunching");
@@ -1050,12 +1088,7 @@ public:
     }
     
     
-    /// setup audio session
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    [session setCategory:AVAudioSessionCategoryAmbient error:nil];
-    
-    
-    
+    [WinLibView doSetupAudioSession];
     
     
     window = [[UIWindow alloc] initWithFrame:rect];
