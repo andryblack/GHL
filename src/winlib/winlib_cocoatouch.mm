@@ -208,8 +208,22 @@ static const size_t max_touches = 10;
 
 -(void)layout:(CGSize)kbSize {
     m_kb_size = kbSize;
+    
+
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0,0,0,0);
     if (m_input_view) {
-        UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, m_kb_size.height, 0.0);
+        contentInsets.bottom = m_kb_size.height;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_11_0
+        if (@available(iOS 11.0, *)) {
+            UIEdgeInsets insets = m_input_view.safeAreaInsets;
+            contentInsets.left = insets.left;
+            contentInsets.right = insets.right;
+            contentInsets.top = insets.top;
+            if (insets.bottom > contentInsets.bottom) {
+                contentInsets.bottom = insets.bottom;
+            }
+        }
+#endif
         m_input_view.contentInset = contentInsets;
     }
     if (m_input_view && (m_input_view.superview!=0)) {
@@ -217,7 +231,9 @@ static const size_t max_touches = 10;
         m_input_view.contentSize = m_input_view.window.screen.bounds.size;
         
         UITextField* field = (UITextField*)[m_input_view viewWithTag:123];
-        field.frame = CGRectMake(0, m_input_view.contentSize.height-32, m_input_view.contentSize.width, 32);
+        field.frame = CGRectMake(contentInsets.left,
+                                 m_input_view.contentSize.height-32,
+                                 m_input_view.contentSize.width-contentInsets.left-contentInsets.right, 32);
         [m_input_view scrollRectToVisible:field.frame animated:YES];
     }
 }
@@ -406,6 +422,22 @@ public:
                 [v fillBorders:static_cast<GHL::Int32*>(data)];
                 return true;
             }
+        } else if ( name == GHL::DEVICE_DATA_ORIENTATION) {
+            if (m_controller) {
+                *static_cast<char*>(data) = 0;
+                if (m_controller.interfaceOrientation == UIInterfaceOrientationPortrait) {
+                    strncpy(static_cast<char*>(data),"portrait",32);
+                } else if (m_controller.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+                    strncpy(static_cast<char*>(data),"portrait_ud",32);
+                } else if (m_controller.interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
+                    strncpy(static_cast<char*>(data),"landscape_left",32);
+                } else if (m_controller.interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+                    strncpy(static_cast<char*>(data),"landscape_right",32);
+                } else {
+                    return false;
+                }
+                return true;
+            }
         }
         return false;
 	}
@@ -431,6 +463,9 @@ public:
     return [CAEAGLLayer class];
 }
 
+- (void)markRelayout {
+    m_need_relayout = true;
+}
 
 - (bool)loaded{
 	return m_loaded;
@@ -608,17 +643,12 @@ public:
     
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_11_0
     if (@available(iOS 11.0, *)) {
-            UILayoutGuide* guide = self.safeAreaLayoutGuide;
-            if (guide) {
-                m_borders[0]=guide.layoutFrame.origin.x;
-                m_borders[1]=self.frame.size.width - guide.layoutFrame.origin.x - guide.layoutFrame.size.width;
-                m_borders[2]=guide.layoutFrame.origin.y;
-                m_borders[3]=self.frame.size.height - guide.layoutFrame.origin.y - guide.layoutFrame.size.height;
-                for (size_t i=0;i<4;++i) {
-                    m_borders[i] = m_borders[i] * self.contentScaleFactor;
-                }
-                m_need_relayout = true;
-            }
+        UIEdgeInsets insets = self.safeAreaInsets;
+        m_borders[0]=insets.left * self.contentScaleFactor;
+        m_borders[1]=insets.right * self.contentScaleFactor;
+        m_borders[2]=insets.top * self.contentScaleFactor;
+        m_borders[3]=insets.bottom * self.contentScaleFactor;
+        m_need_relayout = true;
     } else {
         // Fallback on earlier versions
     }
@@ -876,6 +906,14 @@ public:
 	}
     return orientation == g_orientation ? YES : NO; 
 }
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    if (self.viewLoaded) {
+        [(WinLibView*)self.view markRelayout];
+    }
+}
+
 
 - (void)viewWillAppear:(BOOL)animated    // Called when the view is about to made visible. Default does nothing
 {
