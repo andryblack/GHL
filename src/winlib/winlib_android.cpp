@@ -32,6 +32,7 @@
 static GHL::UInt32 g_main_thread_id = 0;
 static GHL::Int32 g_frame_interval = 1;
 
+JavaVM *g_jvm = 0;
 
 static const char* MODULE = "WinLib";
 
@@ -154,7 +155,6 @@ static GHL::Key convert_key(uint32_t k) {
 namespace GHL {
 
 
-    ANativeActivity* g_native_activity = 0;
 
     class GHLActivity  : public System {
       
@@ -170,48 +170,26 @@ namespace GHL {
         {
             m_running = false;
 
+            m_render = 0;
+
             m_display = EGL_NO_DISPLAY;
             m_context = EGL_NO_CONTEXT;
             m_surface = EGL_NO_SURFACE;
+            m_offscreen_surface = EGL_NO_SURFACE;
+            m_config = 0;
+            m_app_state = APP_SUSPENDED;
 
             m_multitouch_enabled = false;
         }
         ~GHLActivity() {
             delete m_vfs;
         }
-
-        class event_scoped_lock {
-            pthread_mutex_t& m;
-            event_scoped_lock(const event_scoped_lock&);
-            event_scoped_lock& operator = (const event_scoped_lock&);
-        public:
-            explicit event_scoped_lock(pthread_mutex_t& m,const char*& l,const char* f) : m(m) {
-                pthread_mutex_lock(&m);
-                l = f;
-            }
-            explicit event_scoped_lock(pthread_mutex_t& m) : m(m) {
-                pthread_mutex_lock(&m);
-            }
-            ~event_scoped_lock() {
-                pthread_mutex_unlock(&m);
-            }
-        };
-
         
         /// GHL::System impl
         /// Exit from application
         virtual void GHL_CALL Exit() {
-            if (m_activity && m_activity->env) {
-                jclass ActivityClass = m_activity->env->GetObjectClass(m_activity->clazz);
-                jmethodID method = m_activity->env->GetMethodID(ActivityClass, "finish" ,"()V");
-                if (m_activity->env->ExceptionCheck()) {
-                    m_activity->env->ExceptionDescribe();
-                    m_activity->env->ExceptionClear();
-                    ILOG_INFO("[native] not found method finish");
-                    return;
-                }
-                m_activity->env->CallVoidMethod(m_activity->clazz,method);
-                m_activity->env->DeleteLocalRef(ActivityClass);
+            if (m_activity ) {
+                ANativeActivity_finish(m_activity);
             }
         }
         /// Current fullscreen / windowed state
@@ -391,7 +369,6 @@ namespace GHL {
         static const unsigned int AWINDOW_FLAG_KEEP_SCREEN_ON = 0x00000080;
         void OnCreate() {
             LOG_INFO("OnCreate");
-            g_native_activity = m_activity;
               /* Set the window color depth to 24bpp, since the default is
                 * ugly-looking 16bpp. */
             ANativeActivity_setWindowFormat(m_activity, WINDOW_FORMAT_RGBX_8888);
@@ -400,6 +377,10 @@ namespace GHL {
 
             if (m_app) {
                 m_app->SetSystem(this);
+            }
+
+            if (m_app && m_sound.SoundInit()) {
+                m_app->SetSound(&m_sound);
             }
             
             gettimeofday(&m_last_time,0);
@@ -427,18 +408,19 @@ namespace GHL {
             LOG_INFO("OnStart");
 
             check_main_thread();
-            g_native_activity = m_activity;
-
+      
         }
         void OnResume() {
             LOG_INFO("OnResume");
             check_main_thread();
            
-            g_native_activity = m_activity;
             if (m_app) {
-                GHL::Event e;
-                e.type = GHL::EVENT_TYPE_ACTIVATE;
-                m_app->OnEvent(&e);
+                if (m_app_state == APP_SUSPENDED) {
+                    GHL::Event e;
+                    e.type = GHL::EVENT_TYPE_RESUME;
+                    m_app->OnEvent(&e);
+                    m_app_state = APP_INACTIVE;
+                }
             }
             StartTimerThread();
         }
@@ -446,26 +428,52 @@ namespace GHL {
             return 0;
         }
         void OnPause() {
-            LOG_INFO("OnPause");
+            LOG_INFO("OnPause: " << m_app_state);
             check_main_thread();
        
-            g_native_activity = m_activity;
             if (m_app) {
-                GHL::Event e;
-                e.type = GHL::EVENT_TYPE_DEACTIVATE;
-                m_app->OnEvent(&e);
+                if (m_app_state == APP_ACTIVE) {
+                    GHL::Event e;
+                    e.type = GHL::EVENT_TYPE_DEACTIVATE;
+                    m_app->OnEvent(&e);
+                    m_app_state = APP_INACTIVE;
+                }
+                if (m_app_state == APP_INACTIVE) {
+                    GHL::Event e;
+                    e.type = GHL::EVENT_TYPE_SUSPEND;
+                    m_app->OnEvent(&e);
+                    m_app_state = APP_SUSPENDED;
+                }
+                
             }
             StopTimerThread();
         }
         void OnStop() {
             LOG_INFO("OnStop");
             check_main_thread();
-       
-            g_native_activity = m_activity;
         }
         void OnDestroy() {
             LOG_INFO("OnDestroy");
             check_main_thread();
+
+            if (m_app) {
+                m_app->SetSound(0);
+                m_sound.SoundDone();
+            }
+
+            DestroySurface();
+
+            if (m_display != EGL_NO_DISPLAY && m_offscreen_surface != EGL_NO_CONTEXT) {
+
+                eglMakeCurrent(m_display,m_offscreen_surface,m_offscreen_surface,m_context);
+                if (m_app) {
+                    m_app->Unload();
+                }
+            }
+            
+
+            DestroyContext();
+
        
             if (m_app) {
                 m_app->Release();
@@ -476,6 +484,23 @@ namespace GHL {
             LOG_VERBOSE("OnWindowFocusChanged:" << hasFocus);
             check_main_thread();
             m_sound.SetFocus(hasFocus);
+            if (m_app) {
+                if (hasFocus) {
+                    if (m_app_state == APP_INACTIVE) {
+                        GHL::Event e;
+                        e.type = GHL::EVENT_TYPE_ACTIVATE;
+                        m_app->OnEvent(&e);
+                        m_app_state = APP_ACTIVE;
+                    }
+                } else {
+                    if (m_app_state == APP_ACTIVE) {
+                        GHL::Event e;
+                        e.type = GHL::EVENT_TYPE_DEACTIVATE;
+                        m_app->OnEvent(&e);
+                        m_app_state = APP_INACTIVE;
+                    }
+                }
+            }
         }
 
         bool onIntent(JNIEnv* env,jobject intent) {
@@ -503,15 +528,48 @@ namespace GHL {
             return true;
         }
 
-        void DestroyContext() {
-            eglMakeCurrent(m_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-            if (m_context != EGL_NO_CONTEXT) {
-                eglDestroyContext(m_display, m_context);
-                m_context = EGL_NO_CONTEXT;
+        void DestroySurface() {
+            LOG_INFO("DestroySurface");
+            if (m_display != EGL_NO_DISPLAY) {
+                if (m_surface != EGL_NO_SURFACE) {
+                    if (m_offscreen_surface == EGL_NO_SURFACE) {
+                        if (m_app) {
+                            LOG_INFO("unload");
+                            SetGLContext();
+                            m_app->Unload();
+                        }
+                    }
+                    eglMakeCurrent(m_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+                    eglDestroySurface(m_display,m_surface);
+                    m_surface = EGL_NO_SURFACE;
+                }
+                if (m_offscreen_surface == EGL_NO_SURFACE) {
+                    DestroyContext();
+                }
             }
-            if (m_surface != EGL_NO_SURFACE) {
-                eglDestroySurface(m_display, m_surface);
-                m_surface = EGL_NO_SURFACE;
+        }
+
+        void DestroyContext() {
+            LOG_INFO("DestroyContext");
+            if (m_render) {
+                m_app->SetRender(0);
+                GHL_DestroyRenderOpenGL(m_render);
+                m_render = 0;
+            }
+            DestroySurface();
+            if (m_display != EGL_NO_DISPLAY) {
+
+                eglMakeCurrent(m_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+                if (m_offscreen_surface != EGL_NO_SURFACE) {
+                    eglDestroySurface(m_display,m_offscreen_surface);
+                    m_offscreen_surface = EGL_NO_SURFACE;
+                }
+                if (m_context != EGL_NO_CONTEXT) {
+                    eglDestroyContext(m_display, m_context);
+                    m_context = EGL_NO_CONTEXT;
+                }
+                eglTerminate(m_display);
+                m_display = EGL_NO_DISPLAY;
             }
         }
         void dump_config(EGLConfig c) {
@@ -539,133 +597,179 @@ namespace GHL {
             LOG_INFO("EGL_RENDERABLE_TYPE:   " << v);
             eglGetConfigAttrib(m_display, c, EGL_SAMPLE_BUFFERS, &v);
             LOG_INFO("EGL_SAMPLE_BUFFERS:    " << v);
-        }
-        void dump_all_configs(const EGLint* attribs) {
-            EGLint numConfigs;
-            EGLint format;
-            eglChooseConfig(m_display, attribs,0, 0, &numConfigs);
-            if (numConfigs <= 0) {
-                GHL_Log(GHL::LOG_LEVEL_ERROR,"Unable to eglChooseConfig");
-                return;
+            eglGetConfigAttrib(m_display, c, EGL_SURFACE_TYPE, &v);
+            std::string type;
+            if (v&EGL_WINDOW_BIT) {
+                type = "WINDOW";
+                v&=~EGL_WINDOW_BIT;
             }
-            EGLConfig* configs = new EGLConfig[numConfigs];
-            eglChooseConfig(m_display, attribs,configs, numConfigs, &numConfigs);
-            for (int i=0;i<numConfigs;++i) {
-                dump_config(configs[i]);
+            if (v&EGL_PBUFFER_BIT) {
+                if (!type.empty()) type +="|";
+                type += "PBUFFER";
+                v&=~EGL_PBUFFER_BIT;
             }
-            delete [] configs;
+            if (v&EGL_PIXMAP_BIT) {
+                if (!type.empty()) type +="|";
+                type += "PIXMAP";
+                v&=~EGL_PIXMAP_BIT;
+            }
+            if (v&EGL_MULTISAMPLE_RESOLVE_BOX_BIT) {
+                if (!type.empty()) type +="|";
+                type += "MULTISAMPLE";
+                v&=~EGL_MULTISAMPLE_RESOLVE_BOX_BIT;
+            }
+            LOG_INFO("EGL_SURFACE_TYPE:    " << type << (type.empty() ? "" : "|") << v);
         }
+        
         bool CreateContext(const EGLint* attribs) {
-            EGLConfig config = 0;
-            EGLint numConfigs;
-            EGLint format;
+            m_config = 0;
 
-#ifdef GHL_DEBUG
-            LOG_INFO("EGL configs:");
-            dump_all_configs(attribs);
-#endif
+            EGLint numConfigs;
+            
              /* Here, the application chooses the configuration it desires. In this
              * sample, we have a very simplified selection process, where we pick
              * the first EGLConfig that matches our criteria */
-            eglChooseConfig(m_display, attribs, &config, 1, &numConfigs);
+            eglChooseConfig(m_display, attribs, &m_config, 1, &numConfigs);
             if (numConfigs <= 0) {
                 GHL_Log(GHL::LOG_LEVEL_ERROR,"Unable to eglChooseConfig");
                 return false ;
             }
             LOG_INFO("EGL selected config:");
-            dump_config(config);
+            dump_config(m_config);
             
-            /* EGL_NATIVE_VISUAL_ID is an attribute of the EGLConfig that is
-             * guaranteed to be accepted by ANativeWindow_setBuffersGeometry().
-             * As soon as we picked a EGLConfig, we can safely reconfigure the
-             * ANativeWindow buffers to match, using EGL_NATIVE_VISUAL_ID. */
-            eglGetConfigAttrib(m_display, config, EGL_NATIVE_VISUAL_ID, &format);
             
-            ANativeWindow_setBuffersGeometry(m_window, 0, 0, format);
-            
-            m_surface = eglCreateWindowSurface(m_display, config, m_window, NULL);
-            if (!m_surface) {
-                GHL_Log(GHL::LOG_LEVEL_ERROR,"Unable to eglCreateWindowSurface");
-                return false ;
-            }
             const EGLint ctx_attribs[] = {
                 EGL_CONTEXT_CLIENT_VERSION,
                 2,
                 EGL_NONE
             };
-            m_context = eglCreateContext(m_display, config, NULL, ctx_attribs);
+            m_context = eglCreateContext(m_display, m_config, NULL, ctx_attribs);
             if (m_context == EGL_NO_CONTEXT) {
                 GHL_Log(GHL::LOG_LEVEL_ERROR,"Unable to eglCreateContext");
                 return false ;
             }
-            
-            
-            return SetGLContext();
-        }
 
+            EGLint renderable_type = 0;
+            eglGetConfigAttrib(m_display,m_config,EGL_SURFACE_TYPE,&renderable_type);
+            if (renderable_type & EGL_PBUFFER_BIT) {
+                LOG_INFO("create offscreen surface");
+                const EGLint surface_attribs[] = {
+                    EGL_WIDTH, 32,
+                    EGL_HEIGHT, 32,
+                    EGL_NONE
+                };
+                m_offscreen_surface = eglCreatePbufferSurface(m_display,m_config,surface_attribs);
+                if (m_offscreen_surface == EGL_NO_SURFACE) {
+                    LOG_ERROR("failed create offscreen surface");
+                }
+            } else {
+                LOG_INFO("config dnt support offscreen surface");
+            }
+
+            
+            return true;
+            
+        }
         bool SetGLContext() {
             if (m_display == EGL_NO_DISPLAY ||
-                m_surface == EGL_NO_SURFACE || 
                 m_context == EGL_NO_CONTEXT) {
                 return false;
             }
-            if (eglMakeCurrent(m_display, m_surface, m_surface, m_context) == EGL_FALSE) {
-                GHL_Log(GHL::LOG_LEVEL_ERROR,"Unable to eglMakeCurrent");
+            if (m_surface != EGL_NO_SURFACE) {
+                if (eglMakeCurrent(m_display, m_surface, m_surface, m_context) == EGL_FALSE) {
+                    GHL_Log(GHL::LOG_LEVEL_ERROR,"Unable to eglMakeCurrent");
+                    return false ;
+                }
+            } else if (m_offscreen_surface != EGL_NO_SURFACE) {
+                if (eglMakeCurrent(m_display, m_offscreen_surface, m_offscreen_surface, m_context) == EGL_FALSE) {
+                    GHL_Log(GHL::LOG_LEVEL_ERROR,"Unable to eglMakeCurrent for offscreen");
+                    return false ;
+                }
+            } else {
+                return false;
+            }
+            
+            return true;
+        }
+
+        bool CreateSurface() {
+            EGLint format = 0;
+             /* EGL_NATIVE_VISUAL_ID is an attribute of the EGLConfig that is
+             * guaranteed to be accepted by ANativeWindow_setBuffersGeometry().
+             * As soon as we picked a EGLConfig, we can safely reconfigure the
+             * ANativeWindow buffers to match, using EGL_NATIVE_VISUAL_ID. */
+            eglGetConfigAttrib(m_display, m_config, EGL_NATIVE_VISUAL_ID, &format);
+            
+            ANativeWindow_setBuffersGeometry(m_window, 0, 0, format);
+            
+            m_surface = eglCreateWindowSurface(m_display, m_config, m_window, NULL);
+            if (!m_surface) {
+                GHL_Log(GHL::LOG_LEVEL_ERROR,"Unable to eglCreateWindowSurface");
                 return false ;
             }
-            return true;
+            return SetGLContext();
         }
 
         void OnNativeWindowCreated(ANativeWindow* window) {
             LOG_INFO("OnNativeWindowCreated");
             check_main_thread();
           
-            g_native_activity = m_activity;
             if (m_window==0) {
-                
-                
-                 if (m_app && m_sound.SoundInit()) {
-                     m_app->SetSound(&m_sound);
-                 }
-                
-                m_window = window;
                 // initialize OpenGL ES and EGL
+
+                if (m_display == EGL_NO_DISPLAY) {
+                    m_display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+                    EGLint major=0;
+                    EGLint minor=0;
+                    if (eglInitialize(m_display, &major, &minor)!=EGL_TRUE) {
+                        LOG_ERROR("Unable to eglInitialize");
+                        return;
+                    } else {
+                        LOG_INFO("EGL: " << major << "." << minor);
+                    }
+
+                    
+                }
+
+                if (m_context == EGL_NO_CONTEXT) {
+                    /*
+                     * Here specify the attributes of the desired configuration.
+                     * Below, we select an EGLConfig with at least 8 bits per color
+                     * component compatible with on-screen windows
+                     */
+                    const EGLint attribs[] = {
+                        EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+                        EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
+                        EGL_BLUE_SIZE, 8,
+                        EGL_GREEN_SIZE, 8,
+                        EGL_RED_SIZE, 8,
+                        EGL_DEPTH_SIZE, 0,
+                        EGL_SAMPLE_BUFFERS, 0,
+                        EGL_SAMPLES, 0,
+                        EGL_NONE
+                    };
+
+                    if (!CreateContext(attribs)) {
+                        LOG_ERROR("Unable to CreateContext");
+                        return;
+                    }
+                }
+
+                m_window = window;
+                if (m_surface == EGL_NO_SURFACE) {
+                    if (!CreateSurface()) {
+                        LOG_ERROR("Unable to CreateSurface");
+                        return;
+                    }
+                }
+                 
                 
-                /*
-                 * Here specify the attributes of the desired configuration.
-                 * Below, we select an EGLConfig with at least 8 bits per color
-                 * component compatible with on-screen windows
-                 */
-                const EGLint attribs[] = {
-                    EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
-                    EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
-                    EGL_BLUE_SIZE, 8,
-                    EGL_GREEN_SIZE, 8,
-                    EGL_RED_SIZE, 8,
-                    EGL_DEPTH_SIZE, 0,
-                    EGL_SAMPLE_BUFFERS, 0,
-                    EGL_SAMPLES, 0,
-                    EGL_NONE
-                };
+                
+                
+                
+                
                 EGLint w, h, dummy;
-                
-                
-                m_display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-                
-                EGLint major=0;
-                EGLint minor=0;
-                if (eglInitialize(m_display, &major, &minor)!=EGL_TRUE) {
-                    LOG_ERROR("Unable to eglInitialize");
-                    return;
-                } else {
-                    LOG_INFO("EGL: " << major << "." << minor);
-                }
-                
-                if (!CreateContext(attribs)) {
-                    LOG_ERROR("Unable to CreateContext");
-                    return;
-                }
-                
+                   
                 eglQuerySurface(m_display, m_surface, EGL_WIDTH, &w);
                 eglQuerySurface(m_display, m_surface, EGL_HEIGHT, &h);
                 
@@ -684,7 +788,8 @@ namespace GHL {
                 }
 
                 if (settings.depth) {
-                    DestroyContext();
+                     DestroySurface();
+                     DestroyContext();
                      const EGLint depth_attribs[] = {
                         EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
                         EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
@@ -700,17 +805,27 @@ namespace GHL {
                         LOG_ERROR("Unable to CreateContext with depth");
                         return;
                     }
-                }
-
-                
-                m_render = GHL_CreateRenderOpenGL(w,h,settings.depth);
-                if ( m_render && m_app ) {
-                    m_app->SetRender(m_render);
-                    m_app->Load();
-                    if (m_activity->env->ExceptionCheck()) {
+                    if (!CreateSurface()) {
+                        LOG_ERROR("Unable to CreateSurface with depth");
                         return;
                     }
                 }
+
+                
+                if (!m_render) {
+                    m_render = GHL_CreateRenderOpenGL(w,h,settings.depth);
+                    if ( m_render && m_app ) {
+                        m_app->SetRender(m_render);
+                        m_app->Load();
+                        if (m_activity->env->ExceptionCheck()) {
+                            return;
+                        }
+                    }
+                }
+                
+
+               
+
                 Render();
             } else {
                 LOG_INFO("skip another window");
@@ -731,27 +846,10 @@ namespace GHL {
             LOG_INFO("OnNativeWindowDestroyed");
             check_main_thread();
            
-            g_native_activity = m_activity;
             if (m_window==window) {
                 
+                DestroySurface();
                 
-                if (m_render) {
-                    if (m_app) {
-                        m_app->Unload();
-                    }
-                    GHL_DestroyRenderOpenGL(m_render);
-                    m_render = 0;
-                }
-
-                 m_sound.SoundDone();
-               
-                if (m_display != EGL_NO_DISPLAY) {
-                    DestroyContext();
-                    eglTerminate(m_display);
-                }
-                m_display = EGL_NO_DISPLAY;
-                m_context = EGL_NO_CONTEXT;
-                m_surface = EGL_NO_SURFACE;
                 m_window = 0;
             } else {
                 LOG_INFO("skip another window");
@@ -775,7 +873,7 @@ namespace GHL {
                                      &GHLActivity::ALooper_InputCallback,this);
         }
         void OnInputQueueDestroyed(AInputQueue* queue) {
-            LOG_INFO("OnInputQueueCreated");
+            LOG_INFO("OnInputQueueDestroyed");
             check_main_thread();
      
             if (m_input_queue==queue) {
@@ -789,7 +887,6 @@ namespace GHL {
             ILOG_INFO("OnContentRectChanged " << rect->left << "," << rect->top << "," << rect->right << "," << rect->bottom);
                 
             if (m_render && m_context!=EGL_NO_CONTEXT) {
-                g_native_activity = m_activity;
                 int w = rect->right-rect->left;
                 int h = rect->bottom-rect->top;
                 if (w >0 && h > 0) {
@@ -814,6 +911,12 @@ namespace GHL {
         }
         void OnLowMemory() {
             LOG_WARNING("OnLowMemory");
+            if (!m_app) return;
+            check_main_thread();
+
+            GHL::Event e;
+            e.type = GHL::EVENT_TYPE_TRIM_MEMORY;
+            m_app->OnEvent(&e);
         }
 
         bool onJavaKey(int key_code,uint32_t unicode,int action) {
@@ -907,7 +1010,6 @@ namespace GHL {
             return it->second;
         }
         bool HandleEvent(const AInputEvent* event) {
-            g_native_activity = m_activity;
             check_main_thread();
             if (!SetGLContext()) {
                 return false;
@@ -1025,7 +1127,6 @@ namespace GHL {
         }
         
         void OnInputCallback() {
-            g_native_activity = m_activity;
             if (m_input_queue) {
                 AInputEvent* event = 0;
                 while ( AInputQueue_getEvent(m_input_queue,&event)>=0 ) {
@@ -1038,7 +1139,6 @@ namespace GHL {
             }
         }
         void OnTimerCallback() {
-            g_native_activity = m_activity;
             check_main_thread();
             
             Render(true);
@@ -1150,7 +1250,9 @@ namespace GHL {
         VFSAndroidImpl*     m_vfs;
         EGLDisplay          m_display;
         EGLSurface          m_surface;
+        EGLSurface          m_offscreen_surface;
         EGLContext          m_context;
+        EGLConfig           m_config;
         RenderImpl*         m_render;
         timeval             m_last_time;
         AInputQueue*        m_input_queue;
@@ -1161,24 +1263,14 @@ namespace GHL {
        
         bool m_multitouch_enabled;
         std::map<int32_t,GHL::MouseButton> m_touch_map;
-    };
-    template <void(GHLActivity::*func)()> static inline void proxy_func(ANativeActivity* activity) {
-        if ( activity && activity->instance ) {
-            ((static_cast<GHLActivity*>(activity->instance))->*(func))();
-        }
-    }
-    template <class T,void(GHLActivity::*func)(T)> static inline void proxy_func_1(ANativeActivity* activity,T a) {
-        if ( activity && activity->instance ) {
-            ((static_cast<GHLActivity*>(activity->instance))->*(func))(a);
-        }
-    }
-    template <class R,class T,R(GHLActivity::*func)(T)> static inline R proxy_func_2(ANativeActivity* activity,T a) {
-        if ( activity && activity->instance ) {
-            return ((static_cast<GHLActivity*>(activity->instance))->*(func))(a);
-        }
-        return 0;
-    }
 
+        enum {
+            APP_SUSPENDED,
+            APP_INACTIVE,
+            APP_ACTIVE
+        } m_app_state;
+    };
+   
     
     void GHLActivity::StartTimerThread() {
         m_running = true;
@@ -1357,59 +1449,59 @@ GHL_API jstring GHL_CALL GHL_JNI_CreateStringUTF8(JNIEnv* env,const char* str) {
 }
 
 extern "C" JNIEXPORT jboolean JNICALL Java_com_GHL_Activity_nativeOnKey
-  (JNIEnv *, jclass, jint key_code, jlong unicode, jlong action) {
-    if (GHL::g_native_activity) {
-        static_cast<GHL::GHLActivity*>(GHL::g_native_activity->instance)->onJavaKey(key_code,unicode,action);
+  (JNIEnv *, jclass, jlong instance,jint key_code, jlong unicode, jlong action) {
+    if (instance) {
+        reinterpret_cast<GHL::GHLActivity*>(instance)->onJavaKey(key_code,unicode,action);
         return true;
     }
     return false;
   }
 
 extern "C" JNIEXPORT void JNICALL Java_com_GHL_Activity_nativeOnScreenRectChanged
-  (JNIEnv *, jclass, jint left, jint top, jint width, jint height) {
-    if (GHL::g_native_activity) {
+  (JNIEnv *, jclass, jlong instance,jint left, jint top, jint width, jint height) {
+    if (instance) {
        LOG_INFO("nativeOnScreenRectChanged " << left << "," << top << "," << width << "," << height);
-       if (GHL::g_native_activity) {
-            static_cast<GHL::GHLActivity*>(GHL::g_native_activity->instance)->OnVisibleRectChanged(left,top,width,height);
+       if (instance) {
+            reinterpret_cast<GHL::GHLActivity*>(instance)->OnVisibleRectChanged(left,top,width,height);
        }
        
     };
   }
 
 extern "C" JNIEXPORT void JNICALL Java_com_GHL_Activity_nativeOnTextInputDismiss
-  (JNIEnv *, jclass) {
-    if (GHL::g_native_activity) {
-        static_cast<GHL::GHLActivity*>(GHL::g_native_activity->instance)->onTextInputDismiss();
+  (JNIEnv *, jclass, jlong instance) {
+    if (instance) {
+        reinterpret_cast<GHL::GHLActivity*>(instance)->onTextInputDismiss();
     }
   }
 
 extern "C" JNIEXPORT void JNICALL Java_com_GHL_Activity_nativeOnTextInputAccepted
-  (JNIEnv *env, jclass, jstring text) {
-    if (GHL::g_native_activity) {
+  (JNIEnv *env, jclass, jlong instance, jstring text) {
+    if (instance) {
         std::string temp_text = get_string(env,text);
-        static_cast<GHL::GHLActivity*>(GHL::g_native_activity->instance)->onTextInputAccepted(temp_text);
+        reinterpret_cast<GHL::GHLActivity*>(instance)->onTextInputAccepted(temp_text);
     }
   }
 
 extern "C" JNIEXPORT void JNICALL Java_com_GHL_Activity_nativeOnTextInputChanged
-  (JNIEnv * env, jclass, jstring text) {
-    if (GHL::g_native_activity) {
+  (JNIEnv * env, jclass, jlong instance, jstring text) {
+    if (instance) {
         std::string temp_text = get_string(env,text);
-        static_cast<GHL::GHLActivity*>(GHL::g_native_activity->instance)->onTextInputChanged(temp_text);
+        reinterpret_cast<GHL::GHLActivity*>(instance)->onTextInputChanged(temp_text);
     }
   }
 
   extern "C" JNIEXPORT void JNICALL Java_com_GHL_Activity_nativeOnKeyboardHide
-  (JNIEnv * env, jclass) {
-    if (GHL::g_native_activity) {
-        static_cast<GHL::GHLActivity*>(GHL::g_native_activity->instance)->onKeyboardHide();
+  (JNIEnv * env, jclass,jlong instance) {
+    if (instance) {
+        reinterpret_cast<GHL::GHLActivity*>(instance)->onKeyboardHide();
     }
   }
 
   extern "C" JNIEXPORT jboolean JNICALL Java_com_GHL_Activity_nativeOnIntent
-  (JNIEnv * env, jclass, jobject intent) {
-    if (GHL::g_native_activity) {
-        return static_cast<GHL::GHLActivity*>(GHL::g_native_activity->instance)->onIntent(env,intent) ? JNI_TRUE : JNI_FALSE;
+  (JNIEnv * env,jclass, jlong instance, jobject intent) {
+    if (instance) {
+        return reinterpret_cast<GHL::GHLActivity*>(instance)->onIntent(env,intent) ? JNI_TRUE : JNI_FALSE;
     }
     return JNI_FALSE;
   }
@@ -1429,8 +1521,78 @@ static void ANativeActivity_onDestroy(ANativeActivity* activity) {
     }
 }
 
+static void ANativeActivity_onStart(ANativeActivity* activity) {
+    if (activity && activity->instance) {
+        static_cast<GHL::GHLActivity*>(activity->instance)->OnStart();
+    }
+}
+static void ANativeActivity_onStop(ANativeActivity* activity) {
+    if (activity && activity->instance) {
+        static_cast<GHL::GHLActivity*>(activity->instance)->OnStop();
+    }
+}
+static void ANativeActivity_onPause(ANativeActivity* activity) {
+    if (activity && activity->instance) {
+        static_cast<GHL::GHLActivity*>(activity->instance)->OnPause();
+    }
+}
+static void ANativeActivity_onResume(ANativeActivity* activity) {
+    if (activity && activity->instance) {
+        static_cast<GHL::GHLActivity*>(activity->instance)->OnResume();
+    }
+}
+static void ANativeActivity_onConfigurationChanged(ANativeActivity* activity) {
+    if (activity && activity->instance) {
+        static_cast<GHL::GHLActivity*>(activity->instance)->OnConfigurationChanged();
+    }
+}
+static void ANativeActivity_onLowMemory(ANativeActivity* activity) {
+    if (activity && activity->instance) {
+        static_cast<GHL::GHLActivity*>(activity->instance)->OnLowMemory();
+    }
+}
+static void ANativeActivity_onWindowFocusChanged(ANativeActivity* activity,int focus) {
+    if (activity && activity->instance) {
+        static_cast<GHL::GHLActivity*>(activity->instance)->OnWindowFocusChanged(focus);
+    }
+}
+static void ANativeActivity_onNativeWindowCreated(ANativeActivity* activity,ANativeWindow* window) {
+    if (activity && activity->instance) {
+        static_cast<GHL::GHLActivity*>(activity->instance)->OnNativeWindowCreated(window);
+    }
+}
+static void ANativeActivity_onNativeWindowDestroyed(ANativeActivity* activity,ANativeWindow* window) {
+    if (activity && activity->instance) {
+        static_cast<GHL::GHLActivity*>(activity->instance)->OnNativeWindowDestroyed(window);
+    }
+}
+static void ANativeActivity_onNativeWindowResized(ANativeActivity* activity,ANativeWindow* window) {
+    if (activity && activity->instance) {
+        static_cast<GHL::GHLActivity*>(activity->instance)->OnNativeWindowResized(window);
+    }
+}
+static void ANativeActivity_onInputQueueCreated(ANativeActivity* activity,AInputQueue* queue) {
+    if (activity && activity->instance) {
+        static_cast<GHL::GHLActivity*>(activity->instance)->OnInputQueueCreated(queue);
+    }
+}
+static void ANativeActivity_onInputQueueDestroyed(ANativeActivity* activity,AInputQueue* queue) {
+    if (activity && activity->instance) {
+        static_cast<GHL::GHLActivity*>(activity->instance)->OnInputQueueDestroyed(queue);
+    }
+}
+static void ANativeActivity_onContentRectChanged(ANativeActivity* activity,const ARect* rect) {
+    if (activity && activity->instance) {
+        static_cast<GHL::GHLActivity*>(activity->instance)->OnContentRectChanged(rect);
+    }
+}
+
+
 extern "C" JNIEXPORT void ANativeActivity_onCreate(ANativeActivity* activity,
                                   void* savedState, size_t savedStateSize) {
+
+        activity->env->GetJavaVM(&g_jvm);
+
         GHL_Log(GHL::LOG_LEVEL_INFO,"Create\n");
         if (g_active_instance) {
             GHL_Log(GHL::LOG_LEVEL_ERROR,"Destroy active instance\n");
@@ -1440,24 +1602,35 @@ extern "C" JNIEXPORT void ANativeActivity_onCreate(ANativeActivity* activity,
         g_main_thread_id = GHL_GetCurrentThreadId();
 
         activity->callbacks->onDestroy = &ANativeActivity_onDestroy;
-        activity->callbacks->onStart = &GHL::proxy_func<&GHL::GHLActivity::OnStart>;
-        activity->callbacks->onResume = &GHL::proxy_func<&GHL::GHLActivity::OnResume>;
-        //activity->callbacks->onSaveInstanceState = onSaveInstanceState;
-        activity->callbacks->onPause = &GHL::proxy_func<&GHL::GHLActivity::OnPause>;
-        activity->callbacks->onStop = &GHL::proxy_func<&GHL::GHLActivity::OnStop>;
-        activity->callbacks->onConfigurationChanged = &GHL::proxy_func<&GHL::GHLActivity::OnConfigurationChanged>;
-        activity->callbacks->onLowMemory = &GHL::proxy_func<&GHL::GHLActivity::OnLowMemory>;
-        activity->callbacks->onWindowFocusChanged = &GHL::proxy_func_1<int,&GHL::GHLActivity::OnWindowFocusChanged>;
-        activity->callbacks->onNativeWindowCreated = &GHL::proxy_func_1<ANativeWindow*,&GHL::GHLActivity::OnNativeWindowCreated>;
-        activity->callbacks->onNativeWindowDestroyed = &GHL::proxy_func_1<ANativeWindow*,&GHL::GHLActivity::OnNativeWindowDestroyed>;
-        activity->callbacks->onNativeWindowResized = &GHL::proxy_func_1<ANativeWindow*,&GHL::GHLActivity::OnNativeWindowResized>;
-        activity->callbacks->onInputQueueCreated = &GHL::proxy_func_1<AInputQueue*,&GHL::GHLActivity::OnInputQueueCreated>;
-        activity->callbacks->onInputQueueDestroyed = &GHL::proxy_func_1<AInputQueue*,&GHL::GHLActivity::OnInputQueueDestroyed>;
-        activity->callbacks->onContentRectChanged = &GHL::proxy_func_1<const ARect*,&GHL::GHLActivity::OnContentRectChanged>;
+        activity->callbacks->onStart = &ANativeActivity_onStart;
+        activity->callbacks->onResume = &ANativeActivity_onResume;
+        activity->callbacks->onPause = &ANativeActivity_onPause;
+        activity->callbacks->onStop = &ANativeActivity_onStop;
+        activity->callbacks->onConfigurationChanged = &ANativeActivity_onConfigurationChanged;
+        activity->callbacks->onLowMemory = &ANativeActivity_onLowMemory;
+        activity->callbacks->onWindowFocusChanged = &ANativeActivity_onWindowFocusChanged;
+        activity->callbacks->onNativeWindowCreated = &ANativeActivity_onNativeWindowCreated;
+        activity->callbacks->onNativeWindowDestroyed = &ANativeActivity_onNativeWindowDestroyed;
+        activity->callbacks->onNativeWindowResized = &ANativeActivity_onNativeWindowResized;
+        activity->callbacks->onInputQueueCreated = &ANativeActivity_onInputQueueCreated;
+        activity->callbacks->onInputQueueDestroyed = &ANativeActivity_onInputQueueDestroyed;
+        activity->callbacks->onContentRectChanged = &ANativeActivity_onContentRectChanged;
         
         GHL::GHLActivity* ghl_activity = new GHL::GHLActivity(activity, savedState, savedStateSize);
         activity->instance = ghl_activity;
         g_active_instance = ghl_activity;
+        
+
+        jclass ActivityClass = activity->env->GetObjectClass(activity->clazz);
+        jmethodID method = activity->env->GetMethodID(ActivityClass, "setInstance" ,"(J)V");
+        if (activity->env->ExceptionCheck()) {
+            activity->env->ExceptionDescribe();
+            activity->env->ExceptionClear();
+            ILOG_INFO("[native] not found method setInstance");
+        }
+        activity->env->CallVoidMethod(activity->clazz,method,reinterpret_cast<jlong>(ghl_activity));
+        activity->env->DeleteLocalRef(ActivityClass);
+
         ghl_activity->OnCreate();
 }
 

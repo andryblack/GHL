@@ -34,7 +34,6 @@ class SystemCocoa;
     WinLibOpenGLView*   m_gl_view;
     NSRect      m_rect;
 }
--(void) setApplication:(GHL::Application*) app;
 -(GHL::Application*) getApplication;
 -(GHL::VFSCocoaImpl*) getVFS;
 -(GHL::ImageDecoderImpl*) getImageDecoder;

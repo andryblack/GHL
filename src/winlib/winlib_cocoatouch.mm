@@ -1163,6 +1163,30 @@ public:
 	LOG_INFO("Activated");
 }
 
+- (void)applicationDidEnterBackground:(UIApplication *)application
+{
+    GHL::Event e;
+    e.type = GHL::EVENT_TYPE_SUSPEND;
+    g_application->OnEvent(&e);
+    LOG_INFO("Suspend");
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application
+{
+    GHL::Event e;
+    e.type = GHL::EVENT_TYPE_RESUME;
+    g_application->OnEvent(&e);
+    LOG_INFO("Resume");
+}
+
+-(void)applicationDidReceiveMemoryWarning:(UIApplication *)application
+{
+    GHL::Event e;
+    e.type = GHL::EVENT_TYPE_TRIM_MEMORY;
+    g_application->OnEvent(&e);
+    LOG_INFO("TrimMemory");
+}
+
 - (void)dealloc
 {
 	delete m_system;
