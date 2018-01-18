@@ -345,7 +345,7 @@ Image* PngDecoder::Decode(DataStream* file)
     }
 
 	
-    const Data* PngDecoder::Encode( const Image* image) {
+    const Data* PngDecoder::Encode( const Image* image,Int32 settings) {
         int bit_depth = 0;
         int color_type = 0;
         int bpp = 0;
@@ -376,6 +376,9 @@ Image* PngDecoder::Decode(DataStream* file)
             png_destroy_write_struct (&png_ptr, (png_infopp) NULL);
             return 0;
         }
+
+        if (settings != 0) 
+            png_set_compression_level(png_ptr, settings);
         
         DataArrayImpl* res = new DataArrayImpl();
         std::vector<const Byte*> row_ptrs;

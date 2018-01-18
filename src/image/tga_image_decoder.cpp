@@ -328,7 +328,7 @@ namespace GHL {
         return img;
     }
 
-    const Data* TGAImageDecoder::Encode( const Image* image) {
+    const Data* TGAImageDecoder::Encode( const Image* image,Int32 settings) {
         if (!image) return 0;
         
         if (image->GetFormat()==IMAGE_FORMAT_GRAY)

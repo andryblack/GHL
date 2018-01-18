@@ -43,7 +43,7 @@ namespace GHL {
 		}
 		virtual ~ImageFileDecoder() {}
 		virtual Image* Decode(DataStream* ds) = 0;
-		virtual const Data* Encode( const Image* /*image*/) {
+		virtual const Data* Encode( const Image* /*image*/,Int32 settings) {
 			return 0;
 		}
         virtual bool GetFileInfo(DataStream* ds, ImageInfo* info) = 0;

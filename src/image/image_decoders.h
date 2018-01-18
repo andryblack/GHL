@@ -40,7 +40,9 @@ namespace GHL {
 			/// get image file format
 			virtual bool GHL_CALL GetFileInfo( DataStream* stream, ImageInfo* info ) const;
 			virtual Image* GHL_CALL Decode(DataStream* ds) const;
-			virtual const Data* GHL_CALL Encode( const Image* image, ImageFileFormat fmt) const;
+			virtual const Data* GHL_CALL Encode( const Image* image, 
+                ImageFileFormat fmt,
+                Int32 settings) const;
 	};
 
 }/*namespace*/
