@@ -331,7 +331,7 @@ static const size_t max_touches = 10;
 
 @end
 
-@interface WinLibViewController : UIViewController
+@interface WinLibViewController()
 {
     
     TextInputDelegate* m_text_input;
@@ -1039,12 +1039,16 @@ public:
 
 @implementation WinLibAppDelegate
 
+- (WinLibViewController*) createController
+{
+    return [[WinLibViewController alloc] init];
+}
 
 - (void)doStartup {
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     LOG_INFO("applicationDidFinishLaunching");
     
-    controller = [[WinLibViewController alloc] init];
+    controller = [self createController];
     m_system = new SystemCocoaTouch(controller);
     g_application->SetSystem(m_system);
     
