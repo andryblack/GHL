@@ -1218,7 +1218,9 @@ bool GHL_CALL SystemCocoaTouch::SetDeviceState( GHL::DeviceState name, const voi
 		return true;
 	} else if (name==GHL::DEVICE_STATE_MULTITOUCH_ENABLED) {
 		const bool* state = static_cast<const bool*>(data);
-		m_controller.view.multipleTouchEnabled = *state ? YES : NO;
+        if (m_controller.isViewLoaded) {
+            m_controller.view.multipleTouchEnabled = *state ? YES : NO;
+        }
         g_multitouchEnabled = *state;
 		return true;
 	} else if (name==GHL::DEVICE_STATE_FRAME_INTERVAL) {
