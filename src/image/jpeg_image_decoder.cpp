@@ -340,14 +340,14 @@ namespace GHL {
         return img;
     }
     
-    const Data* JpegDecoder::Encode( const Image* image) {
+    const Data* JpegDecoder::Encode( const Image* image,Int32 settings) {
         if (!image) {
             return 0;
         }
         if (image->GetFormat() != GHL::IMAGE_FORMAT_RGB)
             return 0;
         
-        int quality = 90;
+        int quality = (settings == 0) ? 90 : settings;
         struct ghl_jpeg_error_mgr jerr;
         
         struct jpeg_compress_struct cinfo;

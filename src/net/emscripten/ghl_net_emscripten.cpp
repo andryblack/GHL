@@ -3,6 +3,7 @@
 #include <ghl_net.h>
 #include <ghl_log.h>
 #include <ghl_data.h>
+#include <ghl_data_stream.h>
 #include "../../ghl_log_impl.h"
 #include <emscripten.h>
 #include <vector>
@@ -78,6 +79,33 @@ public:
         	&GET_async_wget2_data_onerror_func,
         	&GET_async_wget2_data_onprogress_func
         	);
+        return true;
+    }
+
+    virtual bool GHL_CALL PostStream(GHL::NetworkRequest* handler, GHL::DataStream* data) {
+         if (!handler)
+            return false;
+        handler->AddRef();
+        std::vector<char> updata;
+        if (data) {
+            static const size_t CHUNK_SIZE = 1024 * 2;
+            while (!data->Eof()) {
+                size_t pos = updata.size();
+                updata.resize(pos + CHUNK_SIZE);
+                size_t readed = data->Read(reinterpret_cast<GHL::Byte*>(&updata[pos]),CHUNK_SIZE);
+                updata.resize(pos + readed);
+            }
+        }
+        updata.push_back(0);
+        emscripten_async_wget2_data(handler->GetURL(),
+            "POST",
+            updata.data(),
+            handler,
+            1,
+            &GET_async_wget2_data_onload_func,
+            &GET_async_wget2_data_onerror_func,
+            &GET_async_wget2_data_onprogress_func
+            );
         return true;
     }
 

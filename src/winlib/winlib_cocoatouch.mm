@@ -208,8 +208,22 @@ static const size_t max_touches = 10;
 
 -(void)layout:(CGSize)kbSize {
     m_kb_size = kbSize;
+    
+
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0,0,0,0);
     if (m_input_view) {
-        UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, m_kb_size.height, 0.0);
+        contentInsets.bottom = m_kb_size.height;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_11_0
+        if (@available(iOS 11.0, *)) {
+            UIEdgeInsets insets = m_input_view.safeAreaInsets;
+            contentInsets.left = insets.left;
+            contentInsets.right = insets.right;
+            contentInsets.top = insets.top;
+            if (insets.bottom > contentInsets.bottom) {
+                contentInsets.bottom = insets.bottom;
+            }
+        }
+#endif
         m_input_view.contentInset = contentInsets;
     }
     if (m_input_view && (m_input_view.superview!=0)) {
@@ -217,7 +231,9 @@ static const size_t max_touches = 10;
         m_input_view.contentSize = m_input_view.window.screen.bounds.size;
         
         UITextField* field = (UITextField*)[m_input_view viewWithTag:123];
-        field.frame = CGRectMake(0, m_input_view.contentSize.height-32, m_input_view.contentSize.width, 32);
+        field.frame = CGRectMake(contentInsets.left,
+                                 m_input_view.contentSize.height-32,
+                                 m_input_view.contentSize.width-contentInsets.left-contentInsets.right, 32);
         [m_input_view scrollRectToVisible:field.frame animated:YES];
     }
 }
@@ -288,6 +304,7 @@ static const size_t max_touches = 10;
     
 	GHL::ImageDecoderImpl* m_imageDecoder;
 	GHL::SoundCocoa*	m_sound;
+    bool m_need_reinit_sound;
 	NSString*	m_appName;
 	GHL::RenderImpl* m_render;
 	CADisplayLink *m_timer;
@@ -296,6 +313,8 @@ static const size_t max_touches = 10;
 	bool	m_active;
 	HiddenInput* m_hiddenInput;
 	UITouch* m_touches[max_touches];
+    GHL::Int32 m_borders[4];
+    bool m_need_relayout;
 }
 
 - (void)prepareOpenGL;
@@ -305,10 +324,14 @@ static const size_t max_touches = 10;
 - (void)showKeyboard:(const GHL::TextInputConfig*) config;
 - (void)hideKeyboard;
 - (void)setFrameInterval:(GHL::Int32)interval;
+- (void)fillBorders:(GHL::Int32*)borders;
+- (void) onMediaServicesWereReset: (NSNotification *) notification;
+- (void) onAudioSessionInterruption: (NSNotification *) notification;
++ (void) doSetupAudioSession;
 
 @end
 
-@interface WinLibViewController : UIViewController
+@interface WinLibViewController()
 {
     
     TextInputDelegate* m_text_input;
@@ -398,6 +421,28 @@ public:
                 ::strncpy(dest, [full UTF8String], 32);
                 return true;
             }
+        } else if ( name == GHL::DEVICE_DATA_SCREEN_BORDERS) {
+            if (m_controller && m_controller.viewLoaded) {
+                WinLibView* v = (WinLibView*)m_controller.view;
+                [v fillBorders:static_cast<GHL::Int32*>(data)];
+                return true;
+            }
+        } else if ( name == GHL::DEVICE_DATA_ORIENTATION) {
+            if (m_controller) {
+                *static_cast<char*>(data) = 0;
+                if (m_controller.interfaceOrientation == UIInterfaceOrientationPortrait) {
+                    strncpy(static_cast<char*>(data),"portrait",32);
+                } else if (m_controller.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+                    strncpy(static_cast<char*>(data),"portrait_ud",32);
+                } else if (m_controller.interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
+                    strncpy(static_cast<char*>(data),"landscape_left",32);
+                } else if (m_controller.interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+                    strncpy(static_cast<char*>(data),"landscape_right",32);
+                } else {
+                    return false;
+                }
+                return true;
+            }
         }
         return false;
 	}
@@ -423,6 +468,9 @@ public:
     return [CAEAGLLayer class];
 }
 
+- (void)markRelayout {
+    m_need_relayout = true;
+}
 
 - (bool)loaded{
 	return m_loaded;
@@ -469,6 +517,9 @@ public:
 		m_imageDecoder = 0;
 		
 		m_active = false;
+        
+        m_borders[0]=m_borders[1]=m_borders[2]=m_borders[3]=0;
+        m_need_relayout = false;
 		
 #ifndef GHL_NO_IMAGE_DECODERS
 		m_imageDecoder = new GHL::ImageDecoderImpl();		
@@ -505,12 +556,14 @@ public:
 		m_sound = 0;
 #ifndef GHL_NO_SOUND
 		m_sound = GHL_CreateSoundCocoa();
+        m_need_reinit_sound = false;
 		if (!m_sound->SoundInit()) {
 			delete m_sound;
 			m_sound = 0;
 		}
 		g_application->SetSound(m_sound);
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAudioSessionEvent:) name:AVAudioSessionInterruptionNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAudioSessionInterruption:) name:AVAudioSessionInterruptionNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onMediaServicesWereReset:) name:AVAudioSessionMediaServicesWereResetNotification object:nil];
 
 #endif
 		
@@ -529,10 +582,10 @@ public:
 	return self;
 }
 
-- (void) onAudioSessionEvent: (NSNotification *) notification
+- (void) onAudioSessionInterruption: (NSNotification *) notification
 {
     //Check the type of notification, especially if you are sending multiple AVAudioSession events here
-    NSLog(@"Interruption notification name %@", notification.name);
+    NSLog(@"onAudioSessionInterruption %@", notification.name);
     
     if ([notification.name isEqualToString:AVAudioSessionInterruptionNotification]) {
         NSLog(@"Interruption notification received %@!", notification);
@@ -549,6 +602,28 @@ public:
             
         }
     }
+}
+
+- (void) onMediaServicesWereReset: (NSNotification *) notification
+{
+    NSLog(@"onMediaServicesWereReset");
+#ifndef GHL_NO_SOUND
+    [WinLibView doSetupAudioSession];
+    if (m_sound) {
+        if (g_application) {
+            g_application->SetSound(0);
+            m_sound->SoundDone();
+            m_need_reinit_sound = true;
+        }
+    }
+    [self resumeSound];
+#endif
+}
+
++ (void) doSetupAudioSession {
+    /// setup audio session
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    [session setCategory:AVAudioSessionCategoryAmbient error:nil];
 }
 
 - (void)suspendSound {
@@ -584,12 +659,30 @@ public:
 
 	[m_context onLayout:(CAEAGLLayer*)self.layer];
     GHL::g_default_framebuffer = [m_context defaultFramebuffer];
+    
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_11_0
+    if (@available(iOS 11.0, *)) {
+        UIEdgeInsets insets = self.safeAreaInsets;
+        m_borders[0]=insets.left * self.contentScaleFactor;
+        m_borders[1]=insets.right * self.contentScaleFactor;
+        m_borders[2]=insets.top * self.contentScaleFactor;
+        m_borders[3]=insets.bottom * self.contentScaleFactor;
+        m_need_relayout = true;
+    } else {
+        // Fallback on earlier versions
+    }
+#endif
+    
 	m_render->Resize([m_context backingWidth], [m_context backingHeight]);
  	
 }
 
+- (void)fillBorders:(GHL::Int32*)borders {
+    for (size_t i=0;i<4;++i)
+        borders[i]=m_borders[i];
+}
 - (void)prepareOpenGL {
-	LOG_VERBOSE( "prepareOpenGL" );
+    LOG_VERBOSE( "prepareOpenGL" );
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	[self makeCurrent];
 	int w = [self bounds].size.width;
@@ -623,6 +716,21 @@ public:
 		m_timeval = time;
 		[self makeCurrent];
 		GHL::g_default_framebuffer = [m_context defaultFramebuffer];
+    
+#ifndef GHL_NO_SOUND
+        if (m_need_reinit_sound) {
+            m_need_reinit_sound = false;
+            m_sound->SoundInit();
+            g_application->SetSound(m_sound);
+        }
+#endif
+        
+        if (m_need_relayout) {
+            GHL::Event e;
+            e.type = GHL::EVENT_TYPE_RELAYOUT;
+            m_need_relayout = false;
+            g_application->OnEvent(&e);
+        }
 		if (g_application->OnFrame(dt)) {
 			
 		}
@@ -779,10 +887,13 @@ public:
     [m_context release];
     m_context = nil;
 	delete m_imageDecoder;
-	delete m_sound;
+    if (m_sound) {
+        m_sound->SoundDone();
+        delete m_sound;
+    }
 
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVAudioSessionInterruptionNotification object:nil];
-    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVAudioSessionMediaServicesWereResetNotification object:nil];
 	[super dealloc];
 }
 
@@ -817,6 +928,14 @@ public:
 	}
     return orientation == g_orientation ? YES : NO; 
 }
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    if (self.viewLoaded) {
+        [(WinLibView*)self.view markRelayout];
+    }
+}
+
 
 - (void)viewWillAppear:(BOOL)animated    // Called when the view is about to made visible. Default does nothing
 {
@@ -905,11 +1024,16 @@ public:
 
 @implementation WinLibAppDelegate
 
+- (WinLibViewController*) createController
+{
+    return [[WinLibViewController alloc] init];
+}
+
 - (void)doStartup {
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     LOG_INFO("applicationDidFinishLaunching");
     
-    controller = [[WinLibViewController alloc] init];
+    controller = [self createController];
     m_system = new SystemCocoaTouch(controller);
     g_application->SetSystem(m_system);
     
@@ -953,12 +1077,7 @@ public:
     }
     
     
-    /// setup audio session
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    [session setCategory:AVAudioSessionCategoryAmbient error:nil];
-    
-    
-    
+    [WinLibView doSetupAudioSession];
     
     
     window = [[UIWindow alloc] initWithFrame:rect];
@@ -1031,6 +1150,30 @@ public:
 	[view setActive:true];
 	//if ([view loaded]) [view drawRect:[view bounds]];
 	LOG_INFO("Activated");
+}
+
+- (void)applicationDidEnterBackground:(UIApplication *)application
+{
+    GHL::Event e;
+    e.type = GHL::EVENT_TYPE_SUSPEND;
+    g_application->OnEvent(&e);
+    LOG_INFO("Suspend");
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application
+{
+    GHL::Event e;
+    e.type = GHL::EVENT_TYPE_RESUME;
+    g_application->OnEvent(&e);
+    LOG_INFO("Resume");
+}
+
+-(void)applicationDidReceiveMemoryWarning:(UIApplication *)application
+{
+    GHL::Event e;
+    e.type = GHL::EVENT_TYPE_TRIM_MEMORY;
+    g_application->OnEvent(&e);
+    LOG_INFO("TrimMemory");
 }
 
 - (void)dealloc

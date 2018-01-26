@@ -29,7 +29,7 @@ namespace GHL {
 		TGAImageDecoder() : ImageFileDecoder(IMAGE_FILE_FORMAT_TGA) {}
 		virtual ~TGAImageDecoder() {}
 		virtual Image* Decode(DataStream* ds) ;
-		virtual const Data* Encode( const Image* image);
+		virtual const Data* Encode( const Image* image,Int32 settings);
         virtual ImageFileFormat GetFileFormat( const CheckBuffer& ) const;
         virtual bool GetFileInfo(DataStream* ds, ImageInfo* info);
 	};

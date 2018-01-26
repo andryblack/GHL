@@ -4,7 +4,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.content.Intent;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 
 import android.view.MotionEvent;
@@ -45,13 +45,16 @@ public class Activity  extends android.app.NativeActivity  {
 
     private static final String TAG = "GHL";
 
-    static native boolean nativeOnKey(int keycode,long unicode,long action);
-    static native void nativeOnKeyboardHide();
-    static native void nativeOnTextInputDismiss();
-    static native void nativeOnTextInputAccepted(String text);
-    static native void nativeOnTextInputChanged(String text);
+    static native boolean nativeOnKey(long instance,int keycode,long unicode,long action);
+    static native void nativeOnKeyboardHide(long instance);
+    static native void nativeOnTextInputDismiss(long instance);
+    static native void nativeOnTextInputAccepted(long instance,String text);
+    static native void nativeOnTextInputChanged(long instance,String text);
 
-    static native void nativeOnScreenRectChanged(int left, int top, int width, int height);
+    static native void nativeOnScreenRectChanged(long instance,int left, int top, int width, int height);
+    static native boolean nativeOnIntent(long instance,Intent i);
+
+    private long m_instance = 0;
 
     class InvisibleEdit extends EditText {
         
@@ -69,7 +72,7 @@ public class Activity  extends android.app.NativeActivity  {
                 Activity.this.runOnUiThread(new Runnable(){
                      @Override
                      public void run() {
-                        nativeOnKey(finalEvent.getKeyCode(),finalEvent.getUnicodeChar(),finalEvent.getAction());
+                        nativeOnKey(m_instance,finalEvent.getKeyCode(),finalEvent.getUnicodeChar(),finalEvent.getAction());
                     }
                 });
                 return true;
@@ -82,8 +85,8 @@ public class Activity  extends android.app.NativeActivity  {
                      public void run() {
                         for (int i=0;i<finalText.length();i++) {
                             char c = finalText.charAt(i);
-                            nativeOnKey(0,c,0);
-                            nativeOnKey(0,c,1);
+                            nativeOnKey(m_instance,0,c,0);
+                            nativeOnKey(m_instance,0,c,1);
                         }
                     }
                 });
@@ -98,8 +101,8 @@ public class Activity  extends android.app.NativeActivity  {
                      public void run() {
                         for (int i=0;i<finalText.length();i++) {
                             char c = finalText.charAt(i);
-                            nativeOnKey(0,c,0);
-                            nativeOnKey(0,c,1);
+                            nativeOnKey(m_instance,0,c,0);
+                            nativeOnKey(m_instance,0,c,1);
                         }
                     }
                 });
@@ -108,8 +111,8 @@ public class Activity  extends android.app.NativeActivity  {
             @Override
             public boolean deleteSurroundingText(int beforeLength, int afterLength) {
                 if (beforeLength > 0 && afterLength == 0) {
-                    nativeOnKey(KeyEvent.KEYCODE_DEL,0,0);
-                    nativeOnKey(KeyEvent.KEYCODE_DEL,0,1);
+                    nativeOnKey(m_instance,KeyEvent.KEYCODE_DEL,0,0);
+                    nativeOnKey(m_instance,KeyEvent.KEYCODE_DEL,0,1);
                 }
 
                 return true;
@@ -130,9 +133,9 @@ public class Activity  extends android.app.NativeActivity  {
                 @Override
                 public void run() {
                     if (finalEvent.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-                        nativeOnKeyboardHide();
+                        nativeOnKeyboardHide(m_instance);
                     } else {
-                        nativeOnKey(finalEvent.getKeyCode(), finalEvent.getUnicodeChar(), finalEvent.getAction() );
+                        nativeOnKey(m_instance,finalEvent.getKeyCode(), finalEvent.getUnicodeChar(), finalEvent.getAction() );
                     }
                 }
             });
@@ -161,7 +164,7 @@ public class Activity  extends android.app.NativeActivity  {
             Activity.this.runOnUiThread(new Runnable(){
                  @Override
                  public void run() {
-                    nativeOnScreenRectChanged(fx,fy,fw,fh);
+                    nativeOnScreenRectChanged(m_instance,fx,fy,fw,fh);
                 }
             });
             
@@ -175,23 +178,26 @@ public class Activity  extends android.app.NativeActivity  {
     }
 
 	private static boolean libloaded = false;
-    public void ensureLoadLibrary() {
-        if (libloaded) {
+    public static void ensureLoadLibraryForContext( android.content.Context context ) {
+         if (libloaded) {
             return;
         }
         String libname = "main";
         try {
-            ActivityInfo ai = getPackageManager().getActivityInfo(
-                                                     getIntent().getComponent(), PackageManager.GET_META_DATA);
+            ApplicationInfo ai = context.getPackageManager().getApplicationInfo(context.getPackageName(), 
+                 PackageManager.GET_META_DATA);  
             if (ai.metaData != null) {
                 String ln = ai.metaData.getString(android.app.NativeActivity.META_DATA_LIB_NAME);
                 if (ln != null) libname = ln;
             }
-        } catch (PackageManager.NameNotFoundException e) {
-            throw new RuntimeException("Error getting activity info", e);
+        } catch (Exception e) {
+            android.util.Log.e(TAG,"Error getting activity info" + e);
         }
         System.loadLibrary(libname);
         libloaded = true;
+    }
+    public void ensureLoadLibrary(  ) {
+       ensureLoadLibraryForContext(getApplicationContext());
     }
 
 
@@ -267,7 +273,7 @@ public class Activity  extends android.app.NativeActivity  {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                nativeOnTextInputAccepted(text);
+                                nativeOnTextInputAccepted(m_instance,text);
                             }
                         });
                         if (m_text_input_window!=null) 
@@ -305,7 +311,7 @@ public class Activity  extends android.app.NativeActivity  {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            nativeOnTextInputDismiss();
+                            nativeOnTextInputDismiss(m_instance);
                         }
                     });
                 }
@@ -369,8 +375,8 @@ public class Activity  extends android.app.NativeActivity  {
                         runOnUiThread( new Runnable() {
                             @Override
                             public void run() {
-                                nativeOnKey(KeyEvent.KEYCODE_ENTER,0,0);
-                                nativeOnKey(KeyEvent.KEYCODE_ENTER,0,1);
+                                nativeOnKey(m_instance,KeyEvent.KEYCODE_ENTER,0,0);
+                                nativeOnKey(m_instance,KeyEvent.KEYCODE_ENTER,0,1);
                             }
                         });
                         
@@ -411,7 +417,7 @@ public class Activity  extends android.app.NativeActivity  {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            nativeOnScreenRectChanged(0,0,
+                            nativeOnScreenRectChanged(m_instance,0,0,
                                 view.getWidth(),
                                 view.getHeight());
                         }
@@ -454,66 +460,126 @@ public class Activity  extends android.app.NativeActivity  {
         return true;
     }
 
-
+    public void setInstance(long inst) {
+        m_instance = inst;
+        Log.v(TAG, "setInstance: " + inst);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
+        ensureLoadLibrary();
         Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        ensureLoadLibrary();
-        //setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+        //Hide toolbar
+        int SDK_INT = android.os.Build.VERSION.SDK_INT;
+        if(SDK_INT >= 19)
+        {
+            setImmersiveSticky();
+
+            View decorView = getWindow().getDecorView();
+            decorView.setOnSystemUiVisibilityChangeListener
+                    (new View.OnSystemUiVisibilityChangeListener() {
+                @Override
+                public void onSystemUiVisibilityChange(int visibility) {
+                    setImmersiveSticky();
+                }
+            });
+        }
     }
 
     @Override
     protected void onDestroy(){
+        ensureLoadLibrary();
         Log.v(TAG, "onDestroy");
         super.onDestroy();
-        ensureLoadLibrary();
     }
 
     @Override
     protected void onPause(){
-        Log.v(TAG, "onPause");
         ensureLoadLibrary();
+        Log.v(TAG, "onPause");
         super.onPause();
     }
 
     @Override
     protected void onResume(){
+        ensureLoadLibrary();
         Log.v(TAG, "onResume");
         super.onResume();
-        ensureLoadLibrary();
+
+        Intent i = getIntent();
+        if (i!=null) {
+            if (i.getBooleanExtra("com.GHL.intent_handled",false) == false) {
+                Log.v(TAG, "new intent " + i.toString());
+                if (nativeOnIntent(m_instance,i)) {
+                    i.putExtra("com.GHL.intent_handled",true);
+                }
+            } else {
+                Log.v(TAG, "processed intent " + i.toString());
+            }
+        }
+
+        //Hide toolbar
+        int SDK_INT = android.os.Build.VERSION.SDK_INT;
+        if(SDK_INT >= 11 && SDK_INT < 14)
+        {
+            getWindow().getDecorView().setSystemUiVisibility(View.STATUS_BAR_HIDDEN);
+        }
+        else if(SDK_INT >= 14 && SDK_INT < 19)
+        {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | 
+                View.SYSTEM_UI_FLAG_LOW_PROFILE);
+        }
+        else if(SDK_INT >= 19)
+        {
+            setImmersiveSticky();
+        }
     }
 
     @Override
     protected void onStart(){
-        super.onStart();
         ensureLoadLibrary();
+        Log.v(TAG, "onStart");
+        super.onStart();
     }
 
     @Override
     protected void onStop(){
-        super.onStop();
         ensureLoadLibrary();
+         Log.v(TAG, "onStop");
+        super.onStop();
+        
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         ensureLoadLibrary();
+        super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onActivityResult(int requestCode,
                                         int resultCode,
                                         Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         ensureLoadLibrary();
+        super.onActivityResult(requestCode, resultCode, data);
     }
     @Override
     protected void onNewIntent(Intent intent) {
+        ensureLoadLibrary();
+        Log.v(TAG,"onNewIntent " + intent.toString());
         super.onNewIntent(intent);
         setIntent(intent);
     }
 
+    void setImmersiveSticky() {
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+    }
 }

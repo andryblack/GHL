@@ -24,9 +24,7 @@ static const char* MODULE = "Net";
 
 static GHL::UInt32 next_request_idx = 0;
 
-namespace GHL {
-    extern ANativeActivity* g_native_activity;
-}
+extern JavaVM *g_jvm;
 
 struct slock {
     pthread_mutex_t& m;
@@ -613,7 +611,6 @@ public:
     }
 };
 
-static JavaVM* jvm = 0;
 static jmethodID get_method(JNIEnv* env,jclass c,const char* name,const char* sign) {
     jmethodID m = env->GetMethodID(c,name,sign); 
     if (check_exception(env)) {
@@ -639,8 +636,10 @@ private:
 public:
     NetworkAndroid() {
         LOG_INFO("NetworkAndroid");
-        assert(GHL::g_native_activity);
-        JNIEnv* env = GHL::g_native_activity->env;
+
+        JNIEnv* env = 0;
+        g_jvm->GetEnv((void**)&env,JNI_VERSION_1_6);
+
         if (check_exception(env)) {
             LOG_INFO("clear pending exception");
         }
@@ -701,11 +700,13 @@ public:
         pthread_mutex_init( &m_lock, NULL );
         pthread_mutex_init( &m_list_lock, NULL );
         m_stop = false;
-        env->GetJavaVM(&jvm);
+        
         memset(m_threads,0,sizeof(m_threads));
         m_num_threads = 1;
         m_num_requests = 0;
         pthread_create( &m_threads[0], 0, thread_thunk, this );
+
+        
     }
     ~NetworkAndroid() {
         LOG_INFO("~NetworkAndroid");
@@ -725,12 +726,14 @@ public:
             delete *it;
         }
 
-        assert(GHL::g_native_activity);
-        JNIEnv* env = GHL::g_native_activity->env;
+        JNIEnv* env = 0;
+        g_jvm->GetEnv((void**)&env,JNI_VERSION_1_6);
         env->DeleteGlobalRef(NetworkTaskBase::m_URL_class);
-        
+       
         pthread_mutex_destroy( &m_lock );
         pthread_mutex_destroy( &m_list_lock );
+
+        
     }
     void StartNewThread() {
         if (m_num_threads < THREADS_POOL_SIZE) {
@@ -741,10 +744,10 @@ public:
     }
     /// GET request
     virtual bool GHL_CALL Get(GHL::NetworkRequest* handler) {
-        if (!handler)
+        if (!handler || !g_jvm)
             return false;
-        //PROFILE(Get);
-        JNIEnv* env = GHL::g_native_activity->env;
+        JNIEnv* env = 0;
+        g_jvm->GetEnv((void**)&env,JNI_VERSION_1_6);
         {
             slock l(m_list_lock);
             ++m_num_requests;
@@ -755,10 +758,11 @@ public:
     }
     /// POST request
     virtual bool GHL_CALL Post(GHL::NetworkRequest* handler,const GHL::Data* data) {
-        if (!handler)
+        if (!handler || !g_jvm)
             return false;
         //PROFILE(Post);
-        JNIEnv* env = GHL::g_native_activity->env;
+        JNIEnv* env = 0;
+        g_jvm->GetEnv((void**)&env,JNI_VERSION_1_6);
         
         {
             //PROFILE(Post_m_list_lock);
@@ -771,11 +775,12 @@ public:
     }
 
     virtual bool GHL_CALL PostStream(GHL::NetworkRequest* handler, GHL::DataStream* data) {
-        if (!handler)
+        if (!handler || !g_jvm)
             return false;
         if (!data)
             return false;
-        JNIEnv* env = GHL::g_native_activity->env;
+        JNIEnv* env = 0;
+        g_jvm->GetEnv((void**)&env,JNI_VERSION_1_6);
         {
             //PROFILE(Post_m_list_lock);
             slock l(m_list_lock);
@@ -783,12 +788,15 @@ public:
             //ILOG_INFO("add request:" << m_num_requests);
             m_to_bg_tasks.push_back(new NetworkStreamTask(env,handler,data));
         }
-        
         return true;
     }
     virtual void GHL_CALL Process() {
-        //PROFILE(Process);
-        JNIEnv* env = GHL::g_native_activity->env;
+        if (!g_jvm)
+            return;
+        JNIEnv* env = 0;
+        
+        g_jvm->GetEnv((void**)&env,JNI_VERSION_1_6);
+    
         std::list<NetworkTaskBase*> fg_tasks;
         {
             slock l(m_list_lock);
@@ -817,6 +825,8 @@ public:
                 m_to_fg_tasks.push_back(*it);
             }
         }
+
+        
     }
 
     bool ProcessBackground(JNIEnv* env,int& counter) {
@@ -864,7 +874,7 @@ public:
         JNIEnv* env = 0;
         pthread_setname_np(pthread_self(),"GHL_Network");
 
-        jvm->AttachCurrentThread(&env,0);
+        g_jvm->AttachCurrentThread(&env,0);
 
         int counter = 1000;
         while (true) {
@@ -873,7 +883,7 @@ public:
             }
         }
 
-        jvm->DetachCurrentThread();
+        g_jvm->DetachCurrentThread();
         return 0;
     }
 };

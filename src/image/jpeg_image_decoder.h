@@ -19,7 +19,7 @@ namespace GHL {
 		JpegDecoder();
 		~JpegDecoder();
 		Image* Decode(DataStream* ds);
-		const Data* Encode( const Image* image);
+		const Data* Encode( const Image* image,Int32 settings);
 		virtual ImageFileFormat GetFileFormat(const CheckBuffer&) const;
         virtual bool GetFileInfo(DataStream* ds, ImageInfo* info);
         static const Data* ReEncode(GHL::DataStream* src);

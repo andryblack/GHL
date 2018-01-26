@@ -11,7 +11,7 @@ namespace GHL {
         ImageIOImageDecoder();
         ~ImageIOImageDecoder();
         Image* Decode(DataStream* ds);
-        const Data* Encode( const Image* image);
+        const Data* Encode( const Image* image,Int32 settings);
         virtual ImageFileFormat GetFileFormat(const CheckBuffer&) const;
         virtual bool GetFileInfo(DataStream* ds, ImageInfo* info);
     };

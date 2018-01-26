@@ -1074,6 +1074,24 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     g_resizeable_window = resizeable;
 }
 
+- (void)windowDidMiniaturize:(NSNotification *)notification {
+    LOG_VERBOSE("Suspend");
+    if (m_application  ) {
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_SUSPEND;
+        m_application->OnEvent(&e);
+    }
+}
+
+- (void)windowDidDeminiaturize:(NSNotification *)notification {
+    LOG_VERBOSE("Resume");
+    if (m_application  ) {
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_RESUME;
+        m_application->OnEvent(&e);
+    }
+}
+
 @end
 
 
