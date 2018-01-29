@@ -340,12 +340,14 @@ namespace GHL {
         return img;
     }
     
-    const Data* JpegDecoder::Encode( const Image* image,Int32 settings) {
+    const Data* JpegDecoder::Encode( const Image* image) {
         if (!image) {
             return 0;
         }
         if (image->GetFormat() != GHL::IMAGE_FORMAT_RGB)
             return 0;
+        
+        Int32 settings = GetEncodeSettings();
         
         int quality = (settings == 0) ? 90 : settings;
         struct ghl_jpeg_error_mgr jerr;
@@ -431,13 +433,14 @@ namespace GHL {
         
         struct jpeg_compress_struct dstinfo;
         
-        dstinfo.err = jpeg_std_error(&jerr);
-        dstinfo.err->error_exit = ghl_jpeg_error_exit;
-        dstinfo.err->output_message = ghl_jpeg_output_message;
         
-        struct ghl_jpeg_destination_mgr dest;
+        ghl_jpeg_destination_mgr dest;
+        dest.init_destination = &ghl_jpeg_destination_mgr::ghl_jpeg_init_destination;
+        dest.empty_output_buffer = &ghl_jpeg_destination_mgr::ghl_jpeg_empty_output_buffer;
+        dest.term_destination = &ghl_jpeg_destination_mgr::ghl_jpeg_term_destination;
+        
         dest.data = new DataArrayImpl();
-        dstinfo.dest = &dest;
+        
         
         // compatibility fudge:
         // we need to use setjmp/longjmp for error handling as gcc-linux
@@ -455,19 +458,21 @@ namespace GHL {
             return 0;
         }
         
-        // Now we can initialize the JPEG decompression object.
-        jpeg_create_decompress(&srcinfo);
         
         // specify data source
         ghl_jpeg_source_mgr jsrc;
-        jsrc.stream = src;
-        
-        
         jsrc.init_source = &ghl_jpeg_source_mgr::ghl_jpeg_init_source;
         jsrc.fill_input_buffer = &ghl_jpeg_source_mgr::ghl_jpeg_fill_input_buffer;
         jsrc.skip_input_data = &ghl_jpeg_source_mgr::ghl_jpeg_skip_input_data;
         jsrc.resync_to_restart = &jpeg_resync_to_restart;
         jsrc.term_source = &ghl_jpeg_source_mgr::ghl_jpeg_term_source;
+        
+        jsrc.stream = src;
+        
+        
+        // Now we can initialize the JPEG decompression object.
+        jpeg_create_decompress(&srcinfo);
+        
         srcinfo.src = &jsrc;
         
         // Decodes JPG input from whatever source
@@ -480,7 +485,13 @@ namespace GHL {
         
         /* Now we can initialize the JPEG compression object. */
         jpeg_create_compress(&dstinfo);
-
+        dstinfo.dest = &dest;
+        
+        dstinfo.err = jpeg_std_error(&jerr);
+        dstinfo.err->error_exit = ghl_jpeg_error_exit;
+        dstinfo.err->output_message = ghl_jpeg_output_message;
+        
+        
         /* Read source file as DCT coefficients */
         jvirt_barray_ptr * coef_arrays = jpeg_read_coefficients(&srcinfo);
      

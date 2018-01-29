@@ -41,8 +41,8 @@ namespace GHL {
 			virtual bool GHL_CALL GetFileInfo( DataStream* stream, ImageInfo* info ) const;
 			virtual Image* GHL_CALL Decode(DataStream* ds) const;
 			virtual const Data* GHL_CALL Encode( const Image* image, 
-                ImageFileFormat fmt,
-                Int32 settings) const;
+                ImageFileFormat fmt) const;
+            virtual void GHL_CALL SetEncodeSettings(ImageFileFormat fmt, GHL::Int32 settings);
 	};
 
 }/*namespace*/

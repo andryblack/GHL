@@ -345,7 +345,7 @@ Image* PngDecoder::Decode(DataStream* file)
     }
 
 	
-    const Data* PngDecoder::Encode( const Image* image,Int32 settings) {
+    const Data* PngDecoder::Encode( const Image* image) {
         int bit_depth = 0;
         int color_type = 0;
         int bpp = 0;
@@ -360,6 +360,8 @@ Image* PngDecoder::Decode(DataStream* file)
         } else {
             return 0;
         }
+        
+        Int32 settings = GetEncodeSettings();
         
         size_t line_bytes = image->GetWidth() * bpp;
 

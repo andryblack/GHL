@@ -33,17 +33,22 @@ namespace GHL {
 	{
 	private:
 		ImageFileFormat	m_file_format;
+        GHL::Int32 m_encode_settings;
 	public:
 		typedef Byte CheckBuffer[32*12];
-		explicit ImageFileDecoder(ImageFileFormat fmt) : m_file_format(fmt)  {}
+		explicit ImageFileDecoder(ImageFileFormat fmt) : m_file_format(fmt),m_encode_settings(0)  {}
 		ImageFileFormat GetFileFormat() const { return m_file_format;}
+        Int32 GetEncodeSettings() const { return m_encode_settings; }
+        void SetEncodeSettings(GHL::Int32 settings) {
+            m_encode_settings = settings;
+        }
 		/// get 8 bytes
 		virtual ImageFileFormat GetFileFormat( const CheckBuffer& ) const {
 			return IMAGE_FILE_FORMAT_UNKNOWN;
 		}
 		virtual ~ImageFileDecoder() {}
 		virtual Image* Decode(DataStream* ds) = 0;
-		virtual const Data* Encode( const Image* /*image*/,Int32 settings) {
+		virtual const Data* Encode( const Image* /*image*/) {
 			return 0;
 		}
         virtual bool GetFileInfo(DataStream* ds, ImageInfo* info) = 0;
