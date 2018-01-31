@@ -624,6 +624,18 @@ namespace GHL {
         bool CreateContext(const EGLint* attribs) {
             m_config = 0;
 
+            if (m_display == EGL_NO_DISPLAY) {
+                m_display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+                EGLint major=0;
+                EGLint minor=0;
+                if (eglInitialize(m_display, &major, &minor)!=EGL_TRUE) {
+                    LOG_ERROR("Unable to eglInitialize");
+                    return false;
+                } else {
+                    LOG_INFO("EGL: " << major << "." << minor);
+                }
+            }
+
             EGLint numConfigs;
             
              /* Here, the application chooses the configuration it desires. In this
@@ -717,20 +729,7 @@ namespace GHL {
             if (m_window==0) {
                 // initialize OpenGL ES and EGL
 
-                if (m_display == EGL_NO_DISPLAY) {
-                    m_display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-                    EGLint major=0;
-                    EGLint minor=0;
-                    if (eglInitialize(m_display, &major, &minor)!=EGL_TRUE) {
-                        LOG_ERROR("Unable to eglInitialize");
-                        return;
-                    } else {
-                        LOG_INFO("EGL: " << major << "." << minor);
-                    }
-
-                    
-                }
-
+                
                 if (m_context == EGL_NO_CONTEXT) {
                     /*
                      * Here specify the attributes of the desired configuration.
