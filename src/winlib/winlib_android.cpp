@@ -729,29 +729,67 @@ namespace GHL {
             if (m_window==0) {
                 // initialize OpenGL ES and EGL
 
+                GHL::Settings settings;
+                /// default settings
+                settings.width = ANativeWindow_getWidth(window);
+                settings.height = ANativeWindow_getHeight(window);
+                settings.fullscreen = true;
+                settings.depth = false;
+
+                
                 
                 if (m_context == EGL_NO_CONTEXT) {
+
+                    
+                    if (m_app)
+                    {                        
+                        m_app->FillSettings(&settings);
+                        if (m_activity->env->ExceptionCheck()) {
+                            return;
+                        }
+                    }
+
                     /*
                      * Here specify the attributes of the desired configuration.
                      * Below, we select an EGLConfig with at least 8 bits per color
                      * component compatible with on-screen windows
                      */
-                    const EGLint attribs[] = {
-                        EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
-                        EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
-                        EGL_BLUE_SIZE, 8,
-                        EGL_GREEN_SIZE, 8,
-                        EGL_RED_SIZE, 8,
-                        EGL_DEPTH_SIZE, 0,
-                        EGL_SAMPLE_BUFFERS, 0,
-                        EGL_SAMPLES, 0,
-                        EGL_NONE
-                    };
+                 
+                    if (settings.depth) {
+                        const EGLint depth_attribs[] = {
+                            EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+                            EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
+                            EGL_BLUE_SIZE, 8,
+                            EGL_GREEN_SIZE, 8,
+                            EGL_RED_SIZE, 8,
+                            EGL_DEPTH_SIZE, 16,
+                            EGL_SAMPLE_BUFFERS, 0,
+                            EGL_SAMPLES, 0,
+                            EGL_NONE
+                        };
+                        if (!CreateContext(depth_attribs)) {
+                            LOG_ERROR("Unable to CreateContext with depth");
+                            return;
+                        }
+                    } else {
+                        const EGLint attribs[] = {
+                            EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+                            EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
+                            EGL_BLUE_SIZE, 8,
+                            EGL_GREEN_SIZE, 8,
+                            EGL_RED_SIZE, 8,
+                            EGL_DEPTH_SIZE, 0,
+                            EGL_SAMPLE_BUFFERS, 0,
+                            EGL_SAMPLES, 0,
+                            EGL_NONE
+                        };
 
-                    if (!CreateContext(attribs)) {
-                        LOG_ERROR("Unable to CreateContext");
-                        return;
+                        if (!CreateContext(attribs)) {
+                            LOG_ERROR("Unable to CreateContext");
+                            return;
+                        }
                     }
+                     
                 }
 
                 m_window = window;
@@ -765,53 +803,14 @@ namespace GHL {
                 
                 
                 
-                
-                
-                EGLint w, h, dummy;
-                   
-                eglQuerySurface(m_display, m_surface, EGL_WIDTH, &w);
-                eglQuerySurface(m_display, m_surface, EGL_HEIGHT, &h);
-                
-                GHL::Settings settings;
-                /// default settings
-                settings.width = w;
-                settings.height = h;
-                settings.fullscreen = true;
-                settings.depth = false;
-                if (m_app)
-                {
-                    m_app->FillSettings(&settings);
-                    if (m_activity->env->ExceptionCheck()) {
-                        return;
-                    }
-                }
-
-                if (settings.depth) {
-                     DestroySurface();
-                     DestroyContext();
-                     const EGLint depth_attribs[] = {
-                        EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
-                        EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
-                        EGL_BLUE_SIZE, 8,
-                        EGL_GREEN_SIZE, 8,
-                        EGL_RED_SIZE, 8,
-                        EGL_DEPTH_SIZE, 16,
-                        EGL_SAMPLE_BUFFERS, 0,
-                        EGL_SAMPLES, 0,
-                        EGL_NONE
-                    };
-                    if (!CreateContext(depth_attribs)) {
-                        LOG_ERROR("Unable to CreateContext with depth");
-                        return;
-                    }
-                    if (!CreateSurface()) {
-                        LOG_ERROR("Unable to CreateSurface with depth");
-                        return;
-                    }
-                }
-
-                
                 if (!m_render) {
+
+                    EGLint w, h;
+                   
+                    eglQuerySurface(m_display, m_surface, EGL_WIDTH, &w);
+                    eglQuerySurface(m_display, m_surface, EGL_HEIGHT, &h);
+
+
                     m_render = GHL_CreateRenderOpenGL(w,h,settings.depth);
                     if ( m_render && m_app ) {
                         m_app->SetRender(m_render);
