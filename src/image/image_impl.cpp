@@ -109,6 +109,8 @@ namespace GHL
 				}
             } else {
                 LOG_ERROR("not implemented conversion");
+                buffer->Release();
+                return false;
             }
 			m_data->Release();
 			m_data = buffer;
@@ -156,10 +158,28 @@ namespace GHL
                 }
             } else {
                 LOG_ERROR("not implemented conversion");
+                buffer->Release();
+                return false;
             }
 			m_data->Release();
 			m_data = buffer;
-		} else {
+        } else if (fmt==IMAGE_FORMAT_GRAY)
+        {
+            size_t len = m_width*m_height;
+            DataImpl* buffer = new DataImpl( UInt32(len) );
+            Byte* data = buffer->GetDataPtr();
+            if (m_fmt==IMAGE_FORMAT_RGBA) {
+                for (size_t i=0;i<len;i++) {
+                    data[i+0]=original[i*4+3];
+                }
+            } else {
+                LOG_ERROR("not implemented conversion");
+                buffer->Release();
+                return false;
+            }
+            m_data->Release();
+            m_data = buffer;
+        }else {
 			return false;
 		}
         m_fmt = fmt;

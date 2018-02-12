@@ -357,6 +357,10 @@ Image* PngDecoder::Decode(DataStream* file)
             bit_depth = 8;
             color_type = PNG_COLOR_TYPE_RGB;
             bpp = 3;
+        } else if (image->GetFormat() == IMAGE_FORMAT_GRAY) {
+            bit_depth = 8;
+            color_type = PNG_COLOR_TYPE_GRAY;
+            bpp = 1;
         } else {
             return 0;
         }
