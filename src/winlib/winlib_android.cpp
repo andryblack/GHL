@@ -552,7 +552,9 @@ namespace GHL {
         void DestroyContext() {
             LOG_INFO("DestroyContext");
             if (m_render) {
-                m_app->SetRender(0);
+                if (m_app) {
+                    m_app->SetRender(0);
+                }
                 GHL_DestroyRenderOpenGL(m_render);
                 m_render = 0;
             }
