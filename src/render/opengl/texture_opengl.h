@@ -22,8 +22,7 @@ namespace GHL {
 	private:
         const GL& gl;
 		GL::GLuint	m_name;
-		TextureFormat	m_fmt;
-		bool	m_have_mipmaps;
+		
 		void calc_filtration_min();
 		void calc_filtration_mag();
 		void check_mips();
@@ -34,10 +33,6 @@ namespace GHL {
 		static TextureOpenGL* Create( RenderOpenGLBase* parent,TextureFormat fmt,UInt32 w,UInt32 h, const Image* data);
 		void bind() const;
 		GL::GLuint name() const { return m_name;}
-		/// get texture format
-		virtual TextureFormat GHL_CALL GetFormat() const { return m_fmt;}
-		/// get texture is have mipmaps
-		virtual bool GHL_CALL HeveMipmaps() const { return m_have_mipmaps;}
 		/// set minification texture filtration
 		virtual void GHL_CALL SetMinFilter(TextureFilter min);
 		/// set magnification texture filtration

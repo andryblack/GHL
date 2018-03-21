@@ -65,10 +65,8 @@ namespace GHL {
 		return  gl.REPEAT;
 	}
 	
-	TextureOpenGL::TextureOpenGL(GL::GLuint name,RenderOpenGLBase* parent,TextureFormat fmt,UInt32 w,UInt32 h) : TextureImpl(parent,w,h), gl(parent->get_api()),
-		m_name(name),
-		m_fmt(fmt),
-		m_have_mipmaps(false)
+	TextureOpenGL::TextureOpenGL(GL::GLuint name,RenderOpenGLBase* parent,TextureFormat fmt,UInt32 w,UInt32 h) : TextureImpl(parent,w,h,fmt), gl(parent->get_api()),
+		m_name(name)
 	{
         (void)MODULE;
 	}
@@ -185,7 +183,7 @@ namespace GHL {
 	
 	void TextureOpenGL::check_mips() {
 		if (m_mip_filter!=TEX_FILTER_NONE) {
-			if (!m_have_mipmaps) {
+			if (!HeveMipmaps()) {
 				GenerateMipmaps();
 			}
 		}
@@ -270,6 +268,7 @@ namespace GHL {
 	/// generate mipmaps
 	void GHL_CALL TextureOpenGL::GenerateMipmaps() {
 		/// @todo
+        /// SetHaveMipmaps(true);
 	}
 
 }

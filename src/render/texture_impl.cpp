@@ -11,13 +11,15 @@
 
 namespace GHL {
     
-    TextureImpl::TextureImpl(RenderImpl* parent,UInt32 w,UInt32 h) : m_parent(parent),m_width(w),m_height(h),
+    TextureImpl::TextureImpl(RenderImpl* parent,UInt32 w,UInt32 h,TextureFormat fmt) : m_parent(parent),m_width(w),m_height(h),
+        m_fmt(fmt),
         m_min_filter(TEX_FILTER_NEAR),
         m_mag_filter(TEX_FILTER_NEAR),
         m_mip_filter(TEX_FILTER_NONE),
         m_wrap_u(TEX_WRAP_CLAMP),
         m_wrap_v(TEX_WRAP_CLAMP)
 	{
+        m_have_mipmaps = false;
         parent->TextureCreated(this);
 #ifdef GHL_DEBUG
         m_is_valid = false;
@@ -33,9 +35,15 @@ namespace GHL {
         m_parent->SetTexture(m_parent->GetTexture(stage), stage);
     }
     
+    void TextureImpl::SetHaveMipmaps(bool m) {
+        m_parent->TextureReleased(this);
+        m_have_mipmaps = m;
+        m_parent->TextureCreated(this);
+    }
+    
     UInt32 GHL_CALL TextureImpl::GetMemoryUsage() const {
         UInt32 res = m_width * m_height;
-        switch (GetFormat()) {
+        switch (m_fmt) {
             case GHL::TEXTURE_FORMAT_ALPHA:     res *= 1; break;
             case GHL::TEXTURE_FORMAT_RGB:       res *= 3; break;
             case GHL::TEXTURE_FORMAT_RGBA:      res *= 4; break;
@@ -47,7 +55,7 @@ namespace GHL {
             case GHL::TEXTURE_FORMAT_ETC1:      res = (res * 8 + 15)/16; break;
             default: break;
         }
-        if (HeveMipmaps())
+        if (m_have_mipmaps)
             res *= 2;
         return res;
     }

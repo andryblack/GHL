@@ -37,6 +37,7 @@ namespace GHL {
             gl.rtapi.BindRenderbuffer(gl.rtapi.RENDERBUFFER, m_depth_renderbuffer);
             gl.rtapi.RenderbufferStorage(gl.rtapi.RENDERBUFFER, gl.rtapi.DEPTH_COMPONENT16, w, h);
             gl.rtapi.FramebufferRenderbuffer(gl.rtapi.FRAMEBUFFER, gl.rtapi.DEPTH_ATTACHMENT, gl.rtapi.RENDERBUFFER, m_depth_renderbuffer);
+            SetMemoryUsage(w*h*2);
 		}
 		unbind();
 	}

@@ -24,11 +24,14 @@ namespace GHL {
 		virtual void BeginScene( RenderImpl* render ) = 0;
 		virtual void EndScene( RenderImpl* render ) = 0;
         bool GetHaveDepth() const { return m_have_depth; }
+        UInt32 GetMemoryUsage() const;
     protected:
         RenderImpl* GetParent();
+        void SetMemoryUsage(UInt32 m);
     private:
         RenderImpl* m_parent;
         bool    m_have_depth;
+        UInt32  m_mem_usage;
 	};
 	
 }
