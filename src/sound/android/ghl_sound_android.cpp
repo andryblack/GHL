@@ -3,19 +3,25 @@
 #include <android/asset_manager.h>
 #include <ghl_data.h>
 #include <ghl_data_stream.h>
+#include "../ghl_sound_decoder.h"
+#include "android_music_stream.h"
+
+#include "../../ghl_log_impl.h"
+static const char* MODULE = "snd";
 
 namespace GHL {
     
     AAsset* GetAssetFromDataStream( DataStream* ds );
     
-    SoundAndroid::SoundAndroid() : m_opensl_engine(0) {
+    SoundAndroid::SoundAndroid() : m_opensl_engine(0),m_use_decoder(false) {
         
     }
     
     SoundAndroid::~SoundAndroid() {
     }
     
-    bool SoundAndroid::SoundInit() {
+    bool SoundAndroid::SoundInit(int android_os_version) {
+        m_use_decoder = android_os_version >= 24;
         if (!m_opensl_engine) {
             m_opensl_engine = new OpenSLAudioEngine();
         }
@@ -27,6 +33,16 @@ namespace GHL {
     bool SoundAndroid::SoundDone() {
         delete m_opensl_engine;
         m_opensl_engine = 0;
+        for (std::list<AndroidDecodeMusic*>::iterator it = m_decode_music.begin();
+            it != m_decode_music.end();++it) {
+            if ((*it)->NeedDestroy()) {
+                delete *it;
+            } else {
+                (*it)->ResetChannel();
+                LOG_ERROR("found busy music stream");
+            }
+        }
+        m_decode_music.clear();
         return true;
     }
 
@@ -127,40 +143,12 @@ namespace GHL {
         }
     }
     
-    class AndroidAssetMusic : public RefCounterImpl<MusicInstance> {
-    private:
-        OpenSLAudioStream*  m_stream;
-        DataStream* m_ds;
-    public:
-        explicit AndroidAssetMusic(DataStream* ds,OpenSLAudioStream* stream) : m_stream(stream),m_ds(ds) {
-            m_ds->AddRef();
-        }
-        ~AndroidAssetMusic() {
-            delete m_stream;
-            m_ds->Release();
-        }
-        virtual void GHL_CALL Play( bool loop ) {
-            m_stream->Play(loop);
-        }
-        virtual void GHL_CALL SetVolume( float volume ) {
-            m_stream->SetVolume(volume);
-        }
-        virtual void GHL_CALL Stop() {
-            m_stream->Stop();
-        }
-        virtual void GHL_CALL Pause() {
-            m_stream->Pause();
-        }
-        virtual void GHL_CALL Resume() {
-            m_stream->Resume();
-        }
-        virtual void GHL_CALL SetPan( float pan ) {
-            m_stream->SetPan(pan);
-        }
-        virtual void GHL_CALL SetPitch( float pitch ) {
-            m_stream->SetPitch(pitch);
-        }
-    };
+    
+
+
+    
+
+    
     
     /// open music
     MusicInstance* GHL_CALL SoundAndroid::OpenMusic( GHL::DataStream* file ) {
@@ -168,13 +156,44 @@ namespace GHL {
             return 0;
         if (!file)
             return 0;
-        AAsset* asset = GetAssetFromDataStream( file );
-        if (asset) {
-            OpenSLAudioStream* stream = m_opensl_engine->CreateStream(asset);
-            if (stream) {
-                return new AndroidAssetMusic(file,stream);
+
+        if (!m_use_decoder) {
+            AAsset* asset = GetAssetFromDataStream( file );
+            if (asset) {
+                OpenSLFileAudioStream* stream = m_opensl_engine->CreateFileStream(asset);
+                if (stream) {
+                    return new AndroidAssetMusic(file,stream);
+                }
             }
         }
-        return 0;
+
+        SoundDecoder* decoder = GHL_CreateSoundDecoder( file );
+        if (!decoder) {
+            return 0;
+        }
+
+        OpenSLPCMAudioStream* channel = m_opensl_engine->GetPCMStream(decoder->GetFrequency(),
+                                                             SoundDecoderBase::GetChannels(decoder->GetSampleType()),
+                                                             SoundDecoderBase::GetBps(decoder->GetSampleType())*8/SoundDecoderBase::GetChannels(decoder->GetSampleType()));
+        if (!channel) {
+            decoder->Release();
+            return 0;
+        }
+        
+        AndroidDecodeMusic* music = new AndroidDecodeMusic(channel,decoder);
+        m_decode_music.push_back(music);
+        return music;
+    }
+
+    void SoundAndroid::Process() {
+        for (std::list<AndroidDecodeMusic*>::iterator it = m_decode_music.begin();
+            it != m_decode_music.end();) {
+            if ((*it)->NeedDestroy()) {
+                delete *it;
+                it = m_decode_music.erase(it);
+            } else {
+                ++it;
+            }
+        }
     }
 }

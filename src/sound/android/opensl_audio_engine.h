@@ -17,7 +17,10 @@ namespace GHL {
         SLObjectItf m_engine_obj;
         SLObjectItf m_output_mix_obj;
         std::vector<OpenSLAudioChannel*> m_channels;
-        OpenSLAudioChannel* find_channel( SLDataFormat_PCM& format);
+        std::vector<OpenSLPCMAudioStream*> m_music_streams;
+        
+        OpenSLAudioChannel* find_channel( SLDataFormat_PCM& format );
+        OpenSLPCMAudioStream* find_stream( SLDataFormat_PCM& format );
     public:
         OpenSLAudioEngine();
         ~OpenSLAudioEngine();
@@ -25,8 +28,10 @@ namespace GHL {
         bool IsValid() const;
         void SetFocus(bool focus);
         
-        OpenSLAudioStream* CreateStream(AAsset* asset);
         OpenSLAudioChannel* GetChannel(int freq,int channels,int bits);
+        
+        OpenSLFileAudioStream* CreateFileStream(AAsset* asset);
+        OpenSLPCMAudioStream* GetPCMStream(int freq,int channels,int bits);
     };
     
 }

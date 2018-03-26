@@ -5,21 +5,27 @@
 
 #include "opensl_audio_engine.h"
 #include <map>
+#include <list>
 
 namespace GHL {
     
     
+    class AndroidDecodeMusic;
     class SoundAndroid : public SoundImpl {
     private:
         OpenSLAudioEngine*   m_opensl_engine;
+        bool    m_use_decoder;
+        std::list<AndroidDecodeMusic*> m_decode_music; 
+        Byte*   m_decode_buffer;
     public:
         SoundAndroid();
         ~SoundAndroid();
         
-        bool SoundInit();
+        bool SoundInit(int android_os_version);
         bool SoundDone();
         
         void SetFocus(bool focus);
+        void Process();
         
         /// create sound effect from data
         virtual SoundEffect* GHL_CALL CreateEffect( SampleType type, UInt32 freq, Data* data );

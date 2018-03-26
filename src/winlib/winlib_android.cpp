@@ -368,7 +368,7 @@ namespace GHL {
         }
         static const unsigned int AWINDOW_FLAG_KEEP_SCREEN_ON = 0x00000080;
         void OnCreate() {
-            LOG_INFO("OnCreate");
+            LOG_INFO("OnCreate SDK: " << m_activity->sdkVersion);
               /* Set the window color depth to 24bpp, since the default is
                 * ugly-looking 16bpp. */
             ANativeActivity_setWindowFormat(m_activity, WINDOW_FORMAT_RGBX_8888);
@@ -379,7 +379,7 @@ namespace GHL {
                 m_app->SetSystem(this);
             }
 
-            if (m_app && m_sound.SoundInit()) {
+            if (m_app && m_sound.SoundInit(m_activity->sdkVersion)) {
                 m_app->SetSound(&m_sound);
             }
             
@@ -1142,17 +1142,21 @@ namespace GHL {
         }
         void OnTimerCallback() {
             check_main_thread();
+
+            m_sound.Process();
             
             Render(true);
 
             if (m_running) {
                 ScheduleFrame();
+            } else {
+                LOG_INFO("skip next frame schedule");
             }
         }
         void ScheduleFrame() {
             int8_t cmd = 1;
             if (write(m_msgwrite, &cmd, sizeof(cmd)) != sizeof(cmd)) {
-                LOG_ERROR("Failure writing android_app cmd:" << strerror(errno));
+                LOG_ERROR("Failure writing timer cmd: " << strerror(errno));
             }
         }
         static int ALooper_InputCallback(int fd, int events, void* data) {
@@ -1168,6 +1172,8 @@ namespace GHL {
                 int8_t cmd;
                 if (read(_this->m_msgread, &cmd, sizeof(cmd)) == sizeof(cmd)) {
                     _this->OnTimerCallback();
+                } else {
+                    LOG_ERROR("failed read timer cmd: " << strerror(errno));
                 }
             }
             return 1;
