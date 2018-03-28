@@ -34,7 +34,7 @@ namespace GHL {
     }
     
     OpenSLFileAudioStream::~OpenSLFileAudioStream() {
-        LOG_INFO("~OpenSLFileAudioStream >>>>");
+        //LOG_INFO("~OpenSLFileAudioStream >>>>");
         if (m_seek_i) {
             if ((*m_seek_i)->SetLoop(m_seek_i,SL_BOOLEAN_FALSE,0,SL_TIME_UNKNOWN)!=SL_RESULT_SUCCESS) {
                 LOG_ERROR("failed reset SetLoop");
@@ -49,7 +49,7 @@ namespace GHL {
         }
         ::close(m_fd);
         Destroy();
-        LOG_INFO("~OpenSLAudioStream <<<<");
+        //LOG_INFO("~OpenSLAudioStream <<<<");
     }
 
     void OpenSLFileAudioStream::Play(bool loop) {

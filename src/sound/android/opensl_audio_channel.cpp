@@ -52,7 +52,7 @@ namespace GHL {
     }
 
     void OpenSLAudioChannelBase::Destroy() {
-        LOG_DEBUG("OpenSLAudioChannelBase::Destroy >>>>>");
+        //LOG_DEBUG("OpenSLAudioChannelBase::Destroy >>>>>");
         if (m_player_obj) {
             // if ((*m_player_obj)->AbortAsyncOperation) {
             //     (*m_player_obj)->AbortAsyncOperation(m_player_obj);
@@ -65,7 +65,7 @@ namespace GHL {
             (*m_player_obj)->Destroy(m_player_obj);
             m_player_obj = 0;
         }
-        LOG_DEBUG("OpenSLAudioChannelBase::Destroy <<<<");
+        //LOG_DEBUG("OpenSLAudioChannelBase::Destroy <<<<");
     }
     
     void OpenSLAudioChannelBase::Play() {
@@ -76,13 +76,13 @@ namespace GHL {
         }
     }
     void OpenSLAudioChannelBase::Stop() {
-        LOG_INFO("OpenSLAudioChannelBase::Stop >>>>");
+        //LOG_INFO("OpenSLAudioChannelBase::Stop >>>>");
         if (m_play_i) {
             if ((*m_play_i)->SetPlayState(m_play_i, SL_PLAYSTATE_STOPPED) != SL_RESULT_SUCCESS) {
                 LOG_ERROR("failed SetPlayState(SL_PLAYSTATE_STOPPED)");
             }
         }
-        LOG_INFO("OpenSLAudioChannelBase::Stop <<<<");
+        //LOG_INFO("OpenSLAudioChannelBase::Stop <<<<");
     }
     
 

@@ -558,8 +558,11 @@ namespace GHL {
                 GHL_DestroyRenderOpenGL(m_render);
                 m_render = 0;
             }
-            DestroySurface();
             if (m_display != EGL_NO_DISPLAY) {
+                if (m_surface != EGL_NO_SURFACE) {
+                     DestroySurface();
+                }
+           
 
                 eglMakeCurrent(m_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
                 if (m_offscreen_surface != EGL_NO_SURFACE) {
