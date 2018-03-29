@@ -309,6 +309,9 @@ namespace GHL {
     
     void SoundOpenAL::Suspend() {
         if (m_context) {
+            for (std::list<SoundChannelOpenAL*>::iterator it=m_channels.begin();it!=m_channels.end();++it) {
+                (*it)->Clear();
+            }
             alcMakeContextCurrent(NULL);
             CHECK_AERROR_F(alcMakeContextCurrent);
             alcSuspendContext(m_context);
