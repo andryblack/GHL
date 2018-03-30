@@ -146,6 +146,16 @@ namespace GHL {
             (*m_playback_rate_i)->SetRate(m_playback_rate_i, pv);
         }
     }
+
+    bool OpenSLAudioChannelBase::IsStopped() {
+        if (m_play_i) {
+            SLuint32 state;
+            if ( (*m_play_i)->GetPlayState(m_play_i, &state) == SL_RESULT_SUCCESS) {
+                return state != SL_PLAYSTATE_PLAYING;
+            }
+        }
+        return false;
+    }
     
     OpenSLAudioChannel::OpenSLAudioChannel( SLObjectItf player_obj ,const SLDataFormat_PCM& format) : OpenSLAudioChannelBase( player_obj ),
     m_format(format),m_buffer_queue(0), m_holder(0),m_data(0) {
@@ -186,6 +196,7 @@ namespace GHL {
     void OpenSLAudioChannel::UpdateLastUsed() {
         m_last_used = last_used++;
     }
+
     bool OpenSLAudioChannel::IsStopped() {
         if (m_play_i) {
             SLuint32 state;
@@ -210,11 +221,7 @@ namespace GHL {
         }
     }
 
-    void OpenSLAudioChannel::EnqueueData(const void* data,size_t size) {
-        if (!m_buffer_queue)
-            return;
-        (*m_buffer_queue)->Enqueue(m_buffer_queue, data , size);
-    }
+
 
 
    

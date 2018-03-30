@@ -33,16 +33,6 @@ namespace GHL {
     bool SoundAndroid::SoundDone() {
         delete m_opensl_engine;
         m_opensl_engine = 0;
-        for (std::list<AndroidDecodeMusic*>::iterator it = m_decode_music.begin();
-            it != m_decode_music.end();++it) {
-            if ((*it)->NeedDestroy()) {
-                delete *it;
-            } else {
-                (*it)->ResetChannel();
-                LOG_ERROR("found busy music stream");
-            }
-        }
-        m_decode_music.clear();
         return true;
     }
 
@@ -181,19 +171,10 @@ namespace GHL {
         }
         
         AndroidDecodeMusic* music = new AndroidDecodeMusic(channel,decoder);
-        m_decode_music.push_back(music);
         return music;
     }
 
     void SoundAndroid::Process() {
-        for (std::list<AndroidDecodeMusic*>::iterator it = m_decode_music.begin();
-            it != m_decode_music.end();) {
-            if ((*it)->NeedDestroy()) {
-                delete *it;
-                it = m_decode_music.erase(it);
-            } else {
-                ++it;
-            }
-        }
+        
     }
 }

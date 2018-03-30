@@ -3,7 +3,6 @@
 
 #include "opensl_audio_stream.h"
 #include "ghl_data_stream.h"
-#include "ghl_sound.h"
 #include "../../ghl_ref_counter_impl.h"
 
 #include <pthread.h>
@@ -26,27 +25,17 @@ namespace GHL {
         virtual void GHL_CALL SetPitch( float pitch );
     };
 
-    class AndroidDecodeMusic : public MusicInstance, public OpenSLPCMAudioStream::Holder { 
+    class AndroidDecodeMusic : public RefCounterImpl<MusicInstance>, public OpenSLPCMAudioStream::Holder { 
     private:
         mutable UInt32 m_refs;
         OpenSLPCMAudioStream* m_channel;
         SoundDecoder* m_decoder;
-        bool m_loop;
-        Byte* m_decode_buffer;
-        mutable pthread_mutex_t m_mutex;
-        pthread_mutex_t	m_decoder_lock;
-        bool ProcessDecode(OpenSLPCMAudioStream* channel);
     public:
         AndroidDecodeMusic(OpenSLPCMAudioStream* channel,SoundDecoder* decoder);
         ~AndroidDecodeMusic();
 
-
-        virtual void GHL_CALL AddRef() const;
-        
-        virtual void GHL_CALL Release() const;
-
-        void WriteData(OpenSLPCMAudioStream* channel);
-        void ResetChannel();
+        // holde
+        virtual void ResetChannel();
         
         virtual void GHL_CALL SetVolume( float vol );
         virtual void GHL_CALL SetPan( float pan );
@@ -56,8 +45,6 @@ namespace GHL {
         virtual void GHL_CALL Resume();
         virtual void GHL_CALL Play( bool loop );
 
-        
-        bool NeedDestroy();
     };
 }
 

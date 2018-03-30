@@ -1,7 +1,9 @@
 #ifndef OPENSL_AUDIO_STREAM_H_INCLUDED
 #define OPENSL_AUDIO_STREAM_H_INCLUDED
 
+#include "ghl_sound.h"
 #include "opensl_audio_channel.h"
+#include <pthread.h>
 
 namespace GHL {
     
@@ -20,20 +22,41 @@ namespace GHL {
     };
 
 
-    class OpenSLPCMAudioStream : public OpenSLAudioChannel {
+    class OpenSLPCMAudioStream : public OpenSLAudioChannelBase {
     public:
-        class Holder : public OpenSLAudioChannel::Holder {
+        SLDataFormat_PCM    m_format;
+        SLAndroidSimpleBufferQueueItf    m_buffer_queue;
+        class Holder {
         public:
-            virtual void WriteData(OpenSLPCMAudioStream* self) = 0;
+            virtual void ResetChannel() = 0;
         };
+        Holder* m_holder;
         float   m_volume;
+        pthread_mutex_t m_mutex;
+        SoundDecoder* m_decoder;
+        Byte* m_decode_buffer;
+        bool m_loop;
+        bool WriteData();
+        void ResetDecoder();
     private:
         static void callback(SLAndroidSimpleBufferQueueItf caller,void *pContext);
     public:
         OpenSLPCMAudioStream(SLObjectItf player_obj,const SLDataFormat_PCM& format);
+        ~OpenSLPCMAudioStream();
         void Stop();
         void SetVolume(float vol);
         float GetVolume() const { return m_volume; }
+
+        void ClearData();
+        void EnqueueData(const void* data,size_t size);
+        
+        const SLDataFormat_PCM& GetFormat() const { return m_format; }
+        
+        // main thread
+        void ResetHolder(Holder* holder);
+        void SetHolder(Holder* holder);
+
+        void Play(SoundDecoder* decoder,bool loop);
     };
 
 

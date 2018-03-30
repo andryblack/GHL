@@ -277,9 +277,6 @@ namespace GHL {
             m_music_streams.push_back(best);
                                                     
         }
-        if (best) {
-            best->UpdateLastUsed();
-        }
         return best;
      }
     

@@ -29,7 +29,7 @@ namespace GHL {
         void SetVolume(float vol);
         void SetPan(float pan);
         void SetPitch(float pitch);
-
+        bool IsStopped();
     };
     
     class OpenSLAudioChannel : public OpenSLAudioChannelBase {
@@ -52,6 +52,7 @@ namespace GHL {
         const SLDataFormat_PCM& GetFormat() const { return m_format; }
         size_t GetLastUsed() const { return m_last_used; }
         void UpdateLastUsed();
+
         bool IsStopped();
         void PutData(Data* data);
         void EnqueueData(const void* data,size_t size);

@@ -2,6 +2,7 @@
 
 #include "../../ghl_log_impl.h"
 #include "../ghl_sound_decoder.h"
+#include <cassert>
 
 static const char* MODULE = "snd";
 
@@ -61,47 +62,23 @@ namespace GHL {
 	AndroidDecodeMusic::AndroidDecodeMusic(OpenSLPCMAudioStream* channel,SoundDecoder* decoder) :
          m_refs(1),
          m_channel(channel),
-         m_decoder(decoder),
-         m_loop(false) {
-         
-        pthread_mutex_init(&m_mutex,0);
-        pthread_mutex_init(&m_decoder_lock,0);
-
+         m_decoder(decoder)
+    {
+      
         channel->SetHolder(this);
-        m_decode_buffer = (Byte*)::malloc(DECODE_SAMPLES_BUFFER*SoundDecoderBase::GetBps(m_decoder->GetSampleType()));
     }
 
     AndroidDecodeMusic::~AndroidDecodeMusic() {
-    	//LOG_INFO("~AndroidDecodeMusic >>>");
+    	LOG_INFO("~AndroidDecodeMusic >>>");
         if (m_channel) {
             m_channel->ResetHolder(this);
         }
         if (m_decoder) {
             m_decoder->Release();
         }
-        if (m_decode_buffer) {
-            ::free(m_decode_buffer);
-        }
-        pthread_mutex_destroy(&m_mutex);
-        pthread_mutex_destroy(&m_decoder_lock);
-        //LOG_INFO("~AndroidDecodeMusic <<<");
+        LOG_INFO("~AndroidDecodeMusic <<<");
     }
 
-
-
-	void GHL_CALL AndroidDecodeMusic::AddRef() const {
-		slock l(m_mutex);
-        ++m_refs;
-    }
-        
-    void GHL_CALL AndroidDecodeMusic::Release() const {
-    	slock l(m_mutex);
-        if (m_refs==0) {
-            ::GHL::LoggerImpl(::GHL::LOG_LEVEL_ERROR,"REFS") << "release released object" ;
-        } else {
-            m_refs--;
-        }
-    }
 
      /// set volume (0-100)
     void GHL_CALL AndroidDecodeMusic::SetVolume( float vol ) {
@@ -141,64 +118,16 @@ namespace GHL {
     }
     /// play
     void GHL_CALL AndroidDecodeMusic::Play( bool loop ) {
-        m_loop = loop;
         if (m_channel) {
-        	if (m_decoder) {
-        		slock l(m_decoder_lock);
-        		m_decoder->Reset();
-        	}
-        	ProcessDecode(m_channel);
-            m_channel->Play();
+            m_channel->Play(m_decoder,loop);
         }
     }
 
 
     void AndroidDecodeMusic::ResetChannel() {
-    	slock l(m_mutex);
-        m_channel = 0;
-    }
-
-    void AndroidDecodeMusic::WriteData(OpenSLPCMAudioStream* channel) {
-        if (!ProcessDecode(channel)) {
-            channel->Stop();
-        }
-    }
-
-    bool AndroidDecodeMusic::ProcessDecode(OpenSLPCMAudioStream* channel) {
-    	{
-    		slock l(m_mutex);
-	        if (!m_decoder) return false;
-	        if (!m_channel) return false;
-	        if (!m_decode_buffer) return false;
-	    }
-	  	AddRef();
-	 
-	 	slock l(m_decoder_lock);
-
-        UInt32 samples = m_decoder->ReadSamples(DECODE_SAMPLES_BUFFER,m_decode_buffer);
-        if (!samples) {
-            if (m_loop) {
-                m_decoder->Reset();
-                samples = m_decoder->ReadSamples(DECODE_SAMPLES_BUFFER,m_decode_buffer);
-                if (!samples) {
-                	Release();
-                    return false;
-                }
-            } else {
-                Release();
-                return false;
-            }
-        }
-        channel->EnqueueData(m_decode_buffer,samples*SoundDecoderBase::GetBps(m_decoder->GetSampleType()));
         {
-        	Release();
-        	return true;
+    	    m_channel = 0;
         }
-        return true;
     }
 
-    bool AndroidDecodeMusic::NeedDestroy() {
-    	slock l(m_mutex);
-        return m_refs == 0;
-    }
 }

@@ -15,8 +15,6 @@ namespace GHL {
     private:
         OpenSLAudioEngine*   m_opensl_engine;
         bool    m_use_decoder;
-        std::list<AndroidDecodeMusic*> m_decode_music; 
-        Byte*   m_decode_buffer;
     public:
         SoundAndroid();
         ~SoundAndroid();
