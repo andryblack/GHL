@@ -148,7 +148,7 @@ namespace GHL {
     }
     
     OpenSLAudioChannel::OpenSLAudioChannel( SLObjectItf player_obj ,const SLDataFormat_PCM& format) : OpenSLAudioChannelBase( player_obj ),
-    m_format(format),m_buffer_queue(0), m_holder(0) {
+    m_format(format),m_buffer_queue(0), m_holder(0),m_data(0) {
         SLresult result = (*player_obj)->GetInterface(player_obj,       SL_IID_ANDROIDSIMPLEBUFFERQUEUE, &m_buffer_queue);
         assert(SL_RESULT_SUCCESS == result);
         assert(m_buffer_queue);
@@ -156,6 +156,10 @@ namespace GHL {
     
     OpenSLAudioChannel::~OpenSLAudioChannel() {
         Clear();
+        if (m_data) {
+            m_data->Release();
+            m_data = 0;
+        }
     }
     
     void OpenSLAudioChannel::Clear() {
@@ -191,11 +195,19 @@ namespace GHL {
         }
         return false;
     }
-    void OpenSLAudioChannel::PutData(const void* data,size_t size) {
+    void OpenSLAudioChannel::PutData(Data* data) {
         if (!m_buffer_queue)
             return;
         (*m_buffer_queue)->Clear(m_buffer_queue);
-        (*m_buffer_queue)->Enqueue(m_buffer_queue, data , size);
+        if (m_data) {
+            m_data->Release();
+            m_data = 0;
+        }
+        if (data) {
+            m_data = data;
+            m_data->AddRef();
+            (*m_buffer_queue)->Enqueue(m_buffer_queue, data->GetData() , data->GetSize());
+        }
     }
 
     void OpenSLAudioChannel::EnqueueData(const void* data,size_t size) {

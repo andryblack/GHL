@@ -131,7 +131,7 @@ namespace GHL {
         if (!channel)
             return;
         channel->SetHolder(0);
-        channel->PutData(sl_effect->GetData()->GetData(),sl_effect->GetData()->GetSize());
+        channel->PutData(sl_effect->GetData());
         channel->SetVolume(vol);
         channel->SetPan(pan);
         channel->Play();
