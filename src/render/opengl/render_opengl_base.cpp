@@ -497,7 +497,7 @@ namespace GHL {
             GL::GLsizei size = 0;
             gl.sdrapi.GetShaderInfoLog(handle,512,&size,log);
             log[size]=0;
-            LOG_VERBOSE( "shader compile result : " << log );
+            LOG_ERROR( "shader compile result : " << log );
             
             return false;
 		}
