@@ -10,7 +10,11 @@
 #define __GHL__ghl_sound_cocoa__
 
 #include "../ghl_sound_impl.h"
+#ifdef GHL_USE_AVAUDIOENGINE
+#include "audio_engine.h"
+#else
 #include "../openal/ghl_sound_openal.h"
+#endif
 
 namespace GHL {
     
@@ -18,7 +22,11 @@ namespace GHL {
     
     class SoundCocoa : public SoundImpl {
     private:
-        SoundOpenAL m_openal;
+#ifdef GHL_USE_AVAUDIOENGINE
+        SoundAudioEngine m_effects;
+#else
+        SoundOpenAL m_effects;
+#endif
     public:
         SoundCocoa();
         bool SoundInit();

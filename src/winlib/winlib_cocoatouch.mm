@@ -315,6 +315,7 @@ static const size_t max_touches = 10;
 	UITouch* m_touches[max_touches];
     GHL::Int32 m_borders[4];
     bool m_need_relayout;
+    bool m_need_resume_sound;
 }
 
 - (void)prepareOpenGL:(Boolean) gles2;
@@ -567,6 +568,7 @@ public:
 #ifndef GHL_NO_SOUND
 		m_sound = GHL_CreateSoundCocoa();
         m_need_reinit_sound = false;
+        m_need_resume_sound = false;
 		if (!m_sound->SoundInit()) {
 			delete m_sound;
 			m_sound = 0;
@@ -648,10 +650,20 @@ public:
 }
 
 - (void)resumeSound {
-#ifndef GHL_NO_SOUND
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    [session setActive:YES error:nil];
+    m_need_resume_sound = true;
+}
 
+- (void)resumeSoundImpl {
+#ifndef GHL_NO_SOUND
+    LOG_INFO("resumeSound");
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    NSError* err = nil;
+    [session setActive:YES error:&err];
+    if (err) {
+        LOG_ERROR("failed activate audio session: " << err.description.UTF8String);
+        [err release];
+        return;
+    }
     if (m_sound) {
         m_sound->Resume();
     }
@@ -737,6 +749,10 @@ public:
             m_need_reinit_sound = false;
             m_sound->SoundInit();
             g_application->SetSound(m_sound);
+        }
+        if (m_need_resume_sound) {
+            m_need_resume_sound = false;
+            [self resumeSoundImpl];
         }
 #endif
         
