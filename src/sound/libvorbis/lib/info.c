@@ -11,6 +11,7 @@
  ********************************************************************
 
  function: maintain the info structure, info <-> header packets
+ last mod: $Id: info.c 19441 2015-01-21 01:17:41Z xiphmont $
 
  ********************************************************************/
 
@@ -30,8 +31,8 @@
 #include "misc.h"
 #include "os.h"
 
-#define GENERAL_VENDOR_STRING "Xiph.Org libVorbis 1.3.6"
-#define ENCODE_VENDOR_STRING "Xiph.Org libVorbis I 20180316 (Now 100% fewer shells)"
+#define GENERAL_VENDOR_STRING "Xiph.Org libVorbis 1.3.5"
+#define ENCODE_VENDOR_STRING "Xiph.Org libVorbis I 20150105 (⛄⛄⛄⛄)"
 
 /* helpers */
 static void _v_writestring(oggpack_buffer *o,const char *s, int bytes){
@@ -64,13 +65,11 @@ void vorbis_comment_add(vorbis_comment *vc,const char *comment){
 }
 
 void vorbis_comment_add_tag(vorbis_comment *vc, const char *tag, const char *contents){
-  /* Length for key and value +2 for = and \0 */
-  char *comment=_ogg_malloc(strlen(tag)+strlen(contents)+2);
+  char *comment=alloca(strlen(tag)+strlen(contents)+2); /* +2 for = and \0 */
   strcpy(comment, tag);
   strcat(comment, "=");
   strcat(comment, contents);
   vorbis_comment_add(vc, comment);
-  _ogg_free(comment);
 }
 
 /* This is more or less the same as strncasecmp - but that doesn't exist
@@ -89,30 +88,27 @@ char *vorbis_comment_query(vorbis_comment *vc, const char *tag, int count){
   long i;
   int found = 0;
   int taglen = strlen(tag)+1; /* +1 for the = we append */
-  char *fulltag = _ogg_malloc(taglen+1);
+  char *fulltag = alloca(taglen+ 1);
 
   strcpy(fulltag, tag);
   strcat(fulltag, "=");
 
   for(i=0;i<vc->comments;i++){
     if(!tagcompare(vc->user_comments[i], fulltag, taglen)){
-      if(count == found) {
+      if(count == found)
         /* We return a pointer to the data, not a copy */
-        _ogg_free(fulltag);
-        return vc->user_comments[i] + taglen;
-      } else {
+              return vc->user_comments[i] + taglen;
+      else
         found++;
-      }
     }
   }
-  _ogg_free(fulltag);
   return NULL; /* didn't find anything */
 }
 
 int vorbis_comment_query_count(vorbis_comment *vc, const char *tag){
   int i,count=0;
   int taglen = strlen(tag)+1; /* +1 for the = we append */
-  char *fulltag = _ogg_malloc(taglen+1);
+  char *fulltag = alloca(taglen+1);
   strcpy(fulltag,tag);
   strcat(fulltag, "=");
 
@@ -121,7 +117,6 @@ int vorbis_comment_query_count(vorbis_comment *vc, const char *tag){
       count++;
   }
 
-  _ogg_free(fulltag);
   return count;
 }
 
@@ -211,9 +206,9 @@ static int _vorbis_unpack_info(vorbis_info *vi,oggpack_buffer *opb){
   vi->channels=oggpack_read(opb,8);
   vi->rate=oggpack_read(opb,32);
 
-  vi->bitrate_upper=(ogg_int32_t)oggpack_read(opb,32);
-  vi->bitrate_nominal=(ogg_int32_t)oggpack_read(opb,32);
-  vi->bitrate_lower=(ogg_int32_t)oggpack_read(opb,32);
+  vi->bitrate_upper=oggpack_read(opb,32);
+  vi->bitrate_nominal=oggpack_read(opb,32);
+  vi->bitrate_lower=oggpack_read(opb,32);
 
   ci->blocksizes[0]=1<<oggpack_read(opb,4);
   ci->blocksizes[1]=1<<oggpack_read(opb,4);
@@ -588,8 +583,7 @@ int vorbis_analysis_headerout(vorbis_dsp_state *v,
   oggpack_buffer opb;
   private_state *b=v->backend_state;
 
-  if(!b||vi->channels<=0||vi->channels>256){
-    b = NULL;
+  if(!b||vi->channels<=0){
     ret=OV_EFAULT;
     goto err_out;
   }
@@ -648,7 +642,7 @@ int vorbis_analysis_headerout(vorbis_dsp_state *v,
   memset(op_code,0,sizeof(*op_code));
 
   if(b){
-    if(vi->channels>0)oggpack_writeclear(&opb);
+    oggpack_writeclear(&opb);
     if(b->header)_ogg_free(b->header);
     if(b->header1)_ogg_free(b->header1);
     if(b->header2)_ogg_free(b->header2);
