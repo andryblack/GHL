@@ -116,7 +116,7 @@ namespace GHL
         if (!ds) return 0;
         VorbisDecoder* vd = new VorbisDecoder(ds);
 		if (!vd->Init()) {
-			delete vd;
+            vd->Release();
 			return 0;
 		}
         return vd;

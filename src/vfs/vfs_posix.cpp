@@ -171,7 +171,7 @@ namespace GHL {
     /// open file
     DataStream* GHL_CALL VFSPosixImpl::OpenFile(const char* _file){
         (void)MODULE;
-        LOG_VERBOSE("try open file '" << _file << "'");
+        //LOG_VERBOSE("try open file '" << _file << "'");
         if (!_file) return 0;
         if (_file[0]==0) return 0;
         if (!IsFileExists(_file)) return 0;
