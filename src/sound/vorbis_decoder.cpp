@@ -96,8 +96,12 @@ namespace GHL
 		int res = 0;
 		while (samples)
 		{
-			long c_res = ov_read(&m_file,reinterpret_cast<char*>(buf),samples*m_bytes_per_sample,0,2,1,&m_current_section);
-			if (c_res<=0) return res;
+#ifdef GHL_USE_TREMOR
+			long c_res = ov_read(&m_file,reinterpret_cast<char*>(buf),samples*m_bytes_per_sample,&m_current_section);
+#else
+            long c_res = ov_read(&m_file,reinterpret_cast<char*>(buf),samples*m_bytes_per_sample,0,2,1,&m_current_section);
+#endif
+            if (c_res<=0) return res;
 			buf+=c_res;
 			c_res = c_res/m_bytes_per_sample;
 			assert(c_res<=static_cast<int>(samples));
