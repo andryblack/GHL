@@ -169,7 +169,7 @@ namespace GHL
 			return 0;
 		WavDecoder* dec = new WavDecoder(ds);
 		if (!dec->Init()) {
-			delete dec;
+            dec->Release();
 			return 0;
 		}
 		return dec;
