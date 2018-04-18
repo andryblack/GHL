@@ -20,6 +20,7 @@
     blackicebox (at) gmail (dot) com
 */
 
+#ifndef GHL_DISABLE_VORBIS
 #include "vorbis_decoder.h"
 #include <ghl_data_stream.h>
 #include <cassert>
@@ -123,3 +124,5 @@ namespace GHL
     }
 	
 }
+
+#endif

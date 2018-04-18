@@ -24,13 +24,17 @@
 #include <ghl_data_stream.h>
 #include "ghl_sound_decoder.h"
 #ifndef GHL_NO_SOUND
-#define GHL_USE_WAV_DECODER
 #define GHL_USE_VORBIS_DECODER
 #endif
 
-#ifdef GHL_USE_WAV_DECODER
 #include "wav_decoder.h"
+
+#ifdef GHL_DISABLE_VORBIS
+#ifdef GHL_USE_VORBIS_DECODER
+#undef GHL_USE_VORBIS_DECODER
 #endif
+#endif
+
 #ifdef GHL_USE_VORBIS_DECODER
 #include "vorbis_decoder.h"
 #endif
@@ -51,10 +55,8 @@ namespace GHL
 
 GHL_API GHL::SoundDecoder* GHL_CALL GHL_CreateSoundDecoder( GHL::DataStream* file ) {
     GHL::SoundDecoder* result = 0;
-#ifdef GHL_USE_WAV_DECODER
     result = GHL::WavDecoder::Open( file );
     if (result) return result;
-#endif
 #ifdef GHL_USE_VORBIS_DECODER
     result = GHL::VorbisDecoder::Open( file );
     if (result) return result;
