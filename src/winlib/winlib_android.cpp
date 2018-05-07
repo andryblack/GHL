@@ -225,7 +225,7 @@ namespace GHL {
         bool show_system_input(const TextInputConfig* config) {
             
             jclass ActivityClass = m_activity->env->GetObjectClass(m_activity->clazz);
-            jmethodID method = m_activity->env->GetMethodID(ActivityClass,"showTextInput","(ILjava/lang/String;)V");
+            jmethodID method = m_activity->env->GetMethodID(ActivityClass,"showTextInput","(ILjava/lang/String;I)V");
             if (m_activity->env->ExceptionCheck()) {
                 m_activity->env->ExceptionDescribe();
                 m_activity->env->ExceptionClear();
@@ -242,7 +242,9 @@ namespace GHL {
             if (config->placeholder) {
                 placeholder = GHL_JNI_CreateStringUTF8(m_activity->env,config->placeholder);
             }
-            m_activity->env->CallVoidMethod(m_activity->clazz,method,accept_button,placeholder);
+            jint max_length = config->max_length;
+            m_activity->env->CallVoidMethod(m_activity->clazz,method,
+                accept_button,placeholder,max_length);
             m_activity->env->DeleteLocalRef(ActivityClass);
             if (placeholder) {
                 m_activity->env->DeleteLocalRef(placeholder);
