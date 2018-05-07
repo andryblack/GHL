@@ -47,6 +47,7 @@ namespace GHL {
         bool system_input;                      ///< show system input box
         TextInputAcceptButton accept_button;    ///< accept button type
         const char* placeholder;                ///< placeholder text
+        UInt32  max_length;                     ///< max text length
     };
 
     /// system interface

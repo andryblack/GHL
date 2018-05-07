@@ -43,6 +43,58 @@ static GHL::Int32 g_frame_interval = 1;
 static const char* MODULE = "WINLIB";
 static bool g_resizeable_window = false;
 
+@interface TextInputFormatter : NSFormatter {
+    int m_max_length;
+}
+- (void)setMaximumLength:(int)len;
+- (int)maximumLength;
+
+@end
+
+@implementation TextInputFormatter
+
+- (id)init {
+    if(self = [super init]){
+        m_max_length = INT_MAX;
+    }
+    
+    return self;
+}
+
+- (void)setMaximumLength:(int)len {
+    m_max_length = len;
+}
+
+- (int)maximumLength {
+    return m_max_length;
+}
+
+- (NSString *)stringForObjectValue:(id)object {
+    return (NSString *)object;
+}
+
+- (BOOL)getObjectValue:(id *)object forString:(NSString *)string errorDescription:(NSString **)error {
+    *object = string;
+    return YES;
+}
+
+- (BOOL)isPartialStringValid:(NSString **)partialStringPtr
+       proposedSelectedRange:(NSRangePointer)proposedSelRangePtr
+              originalString:(NSString *)origString
+       originalSelectedRange:(NSRange)origSelRange
+            errorDescription:(NSString **)error {
+    if ([*partialStringPtr length] > m_max_length) {
+        return NO;
+    }
+    
+    return YES;
+}
+
+- (NSAttributedString *)attributedStringForObjectValue:(id)anObject withDefaultAttributes:(NSDictionary *)attributes {
+    return nil;
+}
+
+@end
 
 @interface TextInputControl : NSTextField {
     GHL::Application* m_application;
@@ -162,6 +214,11 @@ static bool g_resizeable_window = false;
     NSView* panelView = [[NSView alloc] initWithFrame:rect];
     TextInputControl* inputControl =[[TextInputControl alloc] initWithApplication:m_application andRect:NSMakeRect(8,32+16,rect.size.width-16,32)];
     inputControl.tag = 123;
+    if (input->max_length != 0) {
+        TextInputFormatter* formatter = [[TextInputFormatter alloc] init];
+        formatter.maximumLength = input->max_length;
+        inputControl.formatter = [formatter autorelease];
+    }
     [panelView addSubview:inputControl];
     if (input->placeholder && *input->placeholder) {
         inputControl.placeholderString = [NSString stringWithUTF8String:input->placeholder];
@@ -1176,7 +1233,24 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
                                       
         [mainMenu setSubmenu:submenu forItem:item];
         
-           
+        
+        item = [mainMenu addItemWithTitle:@"Edit" action:NULL keyEquivalent:@""];
+        submenu = [[[NSMenu alloc] initWithTitle:@"Edit"] autorelease];
+        
+        appItem = [submenu addItemWithTitle: NSLocalizedString(@"Copy", nil)
+                                                  action:@selector(copy:)
+                                           keyEquivalent:@"c"];
+        
+        appItem = [submenu addItemWithTitle: NSLocalizedString(@"Paste", nil)
+                                     action:@selector(paste:)
+                              keyEquivalent:@"v"];
+        
+        appItem = [submenu addItemWithTitle: NSLocalizedString(@"Select all", nil)
+                                     action:@selector(selectAll:)
+                              keyEquivalent:@"a"];
+        
+        [mainMenu setSubmenu:submenu forItem:item];
+        
         [NSApp setMainMenu:mainMenu];
         //[NSApp setServicesMenu:[[[NSMenu alloc] initWithTitle:@"Services"] autorelease]];
 	}
