@@ -103,6 +103,7 @@ static const size_t max_touches = 10;
 @interface TextInputDelegate : NSObject<UITextFieldDelegate> {
     UIScrollView* m_input_view;
     CGSize m_kb_size;
+    int m_max_length;
 }
 
 @end
@@ -128,6 +129,7 @@ static const size_t max_touches = 10;
             input.returnKeyType = UIReturnKeyDone;
             break;
     }
+    
 
 }
 
@@ -135,6 +137,7 @@ static const size_t max_touches = 10;
     if (self=[super init]) {
         m_input_view = 0;
         m_kb_size = CGSizeZero;
+        m_max_length = 0;
     }
     return self;
 }
@@ -155,6 +158,27 @@ static const size_t max_touches = 10;
     GHL::Event e;
     e.type = GHL::EVENT_TYPE_TEXT_INPUT_TEXT_CHANGED;
     e.data.text_input_text_changed.text = textField.text.UTF8String;}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range
+    replacementString:(NSString *)string {
+    if (m_max_length == 0) {
+        return YES;
+    }
+    // Prevent crashing undo bug – see note below.
+    if(range.length + range.location > textField.text.length)
+    {
+        return NO;
+    }
+    int limit = m_max_length - ([textField.text length] - range.length);
+    if (limit < string.length) {
+        if (limit > 0) {
+            NSString* cropped = [string substringToIndex:limit];
+            textField.text = [textField.text stringByReplacingCharactersInRange:range withString:cropped];
+        }
+        return NO;
+    }
+    return YES;
+}
 
 -(void)cenacelEditing:(id)sendr {
     [self close];
@@ -186,7 +210,7 @@ static const size_t max_touches = 10;
         [controller.view addSubview:m_input_view];
         field = (UITextField*)[m_input_view viewWithTag:123];
     }
-    
+    m_max_length = input->max_length;
     [TextInputDelegate configureInput:field config:input];
     
     field.text = @"";

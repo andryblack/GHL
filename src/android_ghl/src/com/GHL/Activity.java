@@ -27,6 +27,7 @@ import android.widget.PopupWindow;
 
 import android.text.InputType;
 import android.text.Editable;
+import android.text.InputFilter;
 
 import android.R;
 
@@ -236,21 +237,22 @@ public class Activity  extends android.app.NativeActivity  {
     private PopupWindow m_text_edit_window = null;
 
 
-    public void showTextInput(int accept_button,String placeholder) {
+    public void showTextInput(int accept_button,String placeholder,int max_length) {
         Log.v(TAG, "showTextInput");
         final int accept_button_f = accept_button;
         final String placeholder_f = placeholder;
+        final int max_length_f = max_length;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                showTextInputImpl(accept_button_f,placeholder_f);
+                showTextInputImpl(accept_button_f,placeholder_f,max_length_f);
             }
         });
     }
 
 
 
-    private void showTextInputImpl(int accept_button,String placeholder) {
+    private void showTextInputImpl(int accept_button,String placeholder,int max_length) {
         
         if (m_text_input_window == null) {
             Log.v(TAG, "create text_input");
@@ -331,8 +333,14 @@ public class Activity  extends android.app.NativeActivity  {
         final EditText text_input = (EditText)(m_text_input_window.getContentView()).findViewWithTag("text_input");
         if (text_input != null) {
             Log.v(TAG,"Activate text input");
+            text_input.setTextIsSelectable(true);
             text_input.setImeOptions(accept_button);
             text_input.setText("");
+            if (max_length != 0) {
+                text_input.setFilters(new InputFilter[] { new InputFilter.LengthFilter(max_length) });
+            } else {
+                text_input.setFilters(new InputFilter[] { });
+            }
             if (placeholder!=null) {
                 text_input.setHint(placeholder);
             } else {
