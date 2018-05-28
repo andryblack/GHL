@@ -42,6 +42,8 @@ import android.media.AudioManager;
 import com.GHL.Log;
 import android.widget.TextView;
 
+import com.GHL.SystemFont;
+
 public class Activity  extends android.app.NativeActivity  {
 
     private static final String TAG = "GHL";
@@ -591,5 +593,9 @@ public class Activity  extends android.app.NativeActivity  {
         {
             setImmersiveSticky();
         }
+    }
+
+    public SystemFont createSystemFont() {
+        return new SystemFont();
     }
 }

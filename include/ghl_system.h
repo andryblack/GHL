@@ -49,7 +49,15 @@ namespace GHL {
         const char* placeholder;                ///< placeholder text
         UInt32  max_length;                     ///< max text length
     };
+    
+    struct FontConfig {
+        const char* name;
+        float size;
+        float xscale;
+        float outline_width;
+    };
 
+    struct Font;
     /// system interface
     struct System {
         /// Exit from application
@@ -70,6 +78,8 @@ namespace GHL {
         virtual void GHL_CALL SetTitle( const char* title ) = 0;
         /// Open external url
         virtual bool GHL_CALL OpenURL( const char* url ) = 0;
+        /// Render text
+        virtual Font* GHL_CALL CreateFont( const FontConfig* config ) = 0;
     };
 }
 

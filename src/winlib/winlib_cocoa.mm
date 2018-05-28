@@ -28,6 +28,7 @@
 
 #include "../vfs/vfs_cocoa.h"
 #include "../image/image_decoders.h"
+#include "../font/font_ct.h"
 #include "../sound/ghl_sound_impl.h"
 #include "../ghl_log_impl.h"
 
@@ -337,13 +338,14 @@ public:
                 ::strncpy(dest, [full UTF8String], 32);
                 return true;
             }
-        }
+        } 
 
         return false;
     }
     ///
     virtual void GHL_CALL SetTitle( const char* title );
     virtual bool GHL_CALL OpenURL( const char* url );
+    virtual GHL::Font* GHL_CALL CreateFont( const GHL::FontConfig* config );
 };
 
 
@@ -1191,6 +1193,12 @@ bool GHL_CALL SystemCocoa::SetDeviceState(GHL::DeviceState name, const void *dat
         return true;
     }
     return false;
+}
+
+
+
+GHL::Font* GHL_CALL SystemCocoa::CreateFont( const GHL::FontConfig* config ) {
+    return GHL::FontCT::Create( config );
 }
 
 GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/, char** /*argv*/) {

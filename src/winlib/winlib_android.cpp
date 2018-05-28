@@ -14,6 +14,7 @@
 #include "../vfs/vfs_android.h"
 #include "../image/image_decoders.h"
 #include "../sound/android/ghl_sound_android.h"
+#include "../font/font_android.h"
 
 #include <sys/time.h>
 #include <pthread.h>
@@ -368,6 +369,27 @@ namespace GHL {
             m_activity->env->DeleteLocalRef(urlobj);
             return res;
         }
+
+        virtual Font* GHL_CALL CreateFont( const FontConfig* config ) {
+            jclass ActivityClass = m_activity->env->GetObjectClass(m_activity->clazz);
+            jmethodID method = m_activity->env->GetMethodID(ActivityClass,"createSystemFont","()Lcom/GHL/SystemFont;");
+            if (m_activity->env->ExceptionCheck()) {
+                m_activity->env->ExceptionDescribe();
+                m_activity->env->ExceptionClear();
+                ILOG_INFO("[native] not found createSystemFont method");
+                return false;
+            }
+            jobject fnt = m_activity->env->CallObjectMethod(m_activity->clazz,method);
+            Font* res = FontAndroid::Create(config,m_activity->env,fnt);
+            m_activity->env->DeleteLocalRef(ActivityClass);
+            m_activity->env->DeleteLocalRef(fnt);
+
+            return res;
+        }
+
+
+
+        ////////////
         static const unsigned int AWINDOW_FLAG_KEEP_SCREEN_ON = 0x00000080;
         void OnCreate() {
             LOG_INFO("OnCreate SDK: " << m_activity->sdkVersion);

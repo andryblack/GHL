@@ -33,6 +33,7 @@
 
 #include <pthread.h>
 #include <sys/utsname.h>
+#include "../font/font_ct.h"
 
 
 static const char* MODULE = "WINLIB";
@@ -157,7 +158,9 @@ static const size_t max_touches = 10;
 -(void)textFieldDidEndEditing:(UITextField *)textField {
     GHL::Event e;
     e.type = GHL::EVENT_TYPE_TEXT_INPUT_TEXT_CHANGED;
-    e.data.text_input_text_changed.text = textField.text.UTF8String;}
+    e.data.text_input_text_changed.text = textField.text.UTF8String;
+    
+}
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range
     replacementString:(NSString *)string {
@@ -291,16 +294,28 @@ static const size_t max_touches = 10;
 @implementation HiddenInput
 - (void)insertText:(NSString *)text {
     if (text!=nil && [text length]>0) {
-        unichar wc = [text characterAtIndex:0];
-        GHL::Event e;
-        e.type = GHL::EVENT_TYPE_KEY_PRESS;
-        e.data.key_press.key = wc == '\n' ? GHL::KEY_ENTER : GHL::KEY_NONE;
-        e.data.key_press.modificators = 0;
-        e.data.key_press.charcode = wc;
-        g_application->OnEvent(&e);
-        e.type = GHL::EVENT_TYPE_KEY_RELEASE;
-        e.data.key_release.key = e.data.key_press.key;
-        g_application->OnEvent(&e);
+        int len = text.length;
+        int idx = 0;
+        while (idx < len) {
+            unichar chars[2];
+            [text getCharacters:chars range:NSMakeRange(idx, 1)];
+            ++idx;
+            UInt32 wc = chars[0];
+            if (CFStringIsSurrogateHighCharacter(chars[0]) && idx<len) {
+                [text getCharacters:&chars[1] range:NSMakeRange(idx, 1)];
+                ++idx;
+                wc = CFStringGetLongCharacterForSurrogatePair(chars[0],chars[1]);
+            }
+            GHL::Event e;
+            e.type = GHL::EVENT_TYPE_KEY_PRESS;
+            e.data.key_press.key = wc == '\n' ? GHL::KEY_ENTER : GHL::KEY_NONE;
+            e.data.key_press.modificators = 0;
+            e.data.key_press.charcode = wc;
+            g_application->OnEvent(&e);
+            e.type = GHL::EVENT_TYPE_KEY_RELEASE;
+            e.data.key_release.key = e.data.key_press.key;
+            g_application->OnEvent(&e);
+        }
     }
 }
 - (void)deleteBackward {
@@ -477,6 +492,10 @@ public:
     }
     virtual bool GHL_CALL OpenURL( const char* url ) {
         return [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithUTF8String:url]]];
+    }
+    
+    GHL::Font* GHL_CALL CreateFont( const GHL::FontConfig* config ) {
+        return GHL::FontCT::Create(config);
     }
 };
 
