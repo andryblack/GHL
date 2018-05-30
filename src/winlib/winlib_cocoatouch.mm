@@ -30,6 +30,7 @@
 
 #import "WinLibCocoaTouchContext2.h"
 #import "winlib_cocoatouch.h"
+#import "cocoatouch_input.h"
 
 #include <pthread.h>
 #include <sys/utsname.h>
@@ -279,64 +280,10 @@ static const size_t max_touches = 10;
 
 @end
 
-@interface HiddenInput : UIView <UIKeyInput>
-
-@property(nonatomic) UITextAutocapitalizationType autocapitalizationType; // default is UITextAutocapitalizationTypeSentences
-@property(nonatomic) UITextAutocorrectionType autocorrectionType;         // default is UITextAutocorrectionTypeDefault
-@property(nonatomic) UITextSpellCheckingType spellCheckingType;  // default is UITextSpellCheckingTypeDefault;
-@property(nonatomic) UIKeyboardType keyboardType;                         // default is UIKeyboardTypeDefault
-@property(nonatomic) UIKeyboardAppearance keyboardAppearance;             // default is UIKeyboardAppearanceDefault
-@property(nonatomic) UIReturnKeyType returnKeyType;                       // default is
-
-@end
 
 
-@implementation HiddenInput
-- (void)insertText:(NSString *)text {
-    if (text!=nil && [text length]>0) {
-        int len = text.length;
-        int idx = 0;
-        while (idx < len) {
-            unichar chars[2];
-            [text getCharacters:chars range:NSMakeRange(idx, 1)];
-            ++idx;
-            UInt32 wc = chars[0];
-            if (CFStringIsSurrogateHighCharacter(chars[0]) && idx<len) {
-                [text getCharacters:&chars[1] range:NSMakeRange(idx, 1)];
-                ++idx;
-                wc = CFStringGetLongCharacterForSurrogatePair(chars[0],chars[1]);
-            }
-            GHL::Event e;
-            e.type = GHL::EVENT_TYPE_KEY_PRESS;
-            e.data.key_press.key = wc == '\n' ? GHL::KEY_ENTER : GHL::KEY_NONE;
-            e.data.key_press.modificators = 0;
-            e.data.key_press.charcode = wc;
-            g_application->OnEvent(&e);
-            e.type = GHL::EVENT_TYPE_KEY_RELEASE;
-            e.data.key_release.key = e.data.key_press.key;
-            g_application->OnEvent(&e);
-        }
-    }
-}
-- (void)deleteBackward {
-    GHL::Event e;
-    e.type = GHL::EVENT_TYPE_KEY_PRESS;
-    e.data.key_press.key = GHL::KEY_BACKSPACE;
-    e.data.key_press.modificators = 0;
-    e.data.key_press.charcode = 0;
-    g_application->OnEvent(&e);
-    e.type = GHL::EVENT_TYPE_KEY_RELEASE;
-    e.data.key_release.key = e.data.key_press.key;
-    g_application->OnEvent(&e);
-}
-- (BOOL)hasText {
-    // Return whether there's any text present
-    return YES;
-}
-- (BOOL)canBecomeFirstResponder {
-    return YES;
-}
-@end
+
+
 
 @interface WinLibView : UIView<UITextFieldDelegate> {
     WinLibCocoaTouchContext*    m_context;
@@ -626,7 +573,7 @@ public:
 			m_touches[i] = 0;
 		}
 		
-        m_hiddenInput = [[HiddenInput alloc] init];
+        m_hiddenInput = [[HiddenInput alloc] initWithApplication:g_application];
 		[self addSubview:m_hiddenInput];
 		
         [self setAutoresizesSubviews:YES];
@@ -923,6 +870,7 @@ public:
 -(void)showKeyboard:(const GHL::TextInputConfig*) config {
     if (config) {
         [TextInputDelegate configureInput:m_hiddenInput config:config];
+        [m_hiddenInput showWithConfig:config];
     } else {
         
         m_hiddenInput.keyboardType = UIKeyboardTypeDefault;
@@ -933,9 +881,8 @@ public:
         if ([m_hiddenInput respondsToSelector:@selector(setKeyboardAppearance:)]) {
             m_hiddenInput.keyboardAppearance = UIKeyboardAppearanceDark;
         }
-        
+        [m_hiddenInput show];
     }
-    [m_hiddenInput becomeFirstResponder];
 }
 
 -(void)hideKeyboard {

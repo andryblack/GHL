@@ -24,6 +24,7 @@
 #define GHL_EVENT_H
 
 #include "ghl_keys.h"
+#include "ghl_types.h"
 
 namespace GHL
 {
@@ -108,6 +109,7 @@ namespace GHL
     // text input changed
     struct TextInputTextChangedEvent {
         const char* text;
+        UInt32 cursor_position;
     };
     // text input accepted
     struct TextInputAcceptedEvent : TextInputTextChangedEvent {

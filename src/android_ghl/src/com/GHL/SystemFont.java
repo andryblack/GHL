@@ -79,10 +79,10 @@ public class SystemFont  {
 		m_bounds.right += m_add_size;
 		m_bounds.top -= m_add_size;
 		m_bounds.bottom += m_add_size;
-		if (m_bounds.width < 1)
+		if (m_bounds.width() < 1)
 			m_bounds.right += 1;
-		if (m_bounds.height < 1)
-			m_bounds.height += 1;
+		if (m_bounds.height() < 1)
+			m_bounds.bottom += 1;
 		m_advance = m_paint.measureText(text);
 
 		Log.i("Font","bounds: " + m_bounds.left + "," + m_bounds.top + " " + m_bounds.width() + "x" + m_bounds.height());
