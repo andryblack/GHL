@@ -70,6 +70,9 @@ public:
         /// @todo
         return false;
     }
+    virtual GHL::Font* GHL_CALL CreateFont( const GHL::FontConfig* config ) {
+        return 0;
+    }
 };
 
 static void loop_iteration(SDL_Window* window) {
