@@ -11,7 +11,9 @@
 #include <string>
 #include <iostream>
 
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_video.h>
+
 #include <sys/time.h>
 
 #ifdef EMSCRIPTEN
@@ -25,6 +27,8 @@ static bool g_done = false;
 static SDL_Window* g_window = 0;
 static GHL::RenderImpl* g_render = 0;
 static GHL::UInt32 g_height = 0;
+static GHL::UInt32 g_width = 0;
+
 
 class SystemSDL : public GHL::System {
 private:
@@ -108,36 +112,56 @@ static void loop_iteration(SDL_Window* window) {
                 }
                 break;
             case SDL_MOUSEBUTTONDOWN: {
-                GHL::Event ae;
-                ae.type = GHL::EVENT_TYPE_MOUSE_PRESS;
-                ae.data.mouse_press.button =  GHL::MOUSE_BUTTON_LEFT;
-                ae.data.mouse_press.modificators = 0;
-                ae.data.mouse_press.x = e.button.x;
-                ae.data.mouse_press.y = e.button.y;
-                g_application->OnEvent(&ae);
+                if (g_width * g_height) {
+                    GHL::Event ae;
+                    ae.type = GHL::EVENT_TYPE_MOUSE_PRESS;
+                    ae.data.mouse_press.button =  GHL::MOUSE_BUTTON_LEFT;
+                    ae.data.mouse_press.modificators = 0;
+                    ae.data.mouse_press.x = e.button.x * g_render->GetWidth() / g_width;
+                    ae.data.mouse_press.y = e.button.y * g_render->GetHeight() / g_height;
+                    g_application->OnEvent(&ae);
+                }
             }break;
             case SDL_MOUSEBUTTONUP: {
-                GHL::Event ae;
-                ae.type = GHL::EVENT_TYPE_MOUSE_RELEASE;
-                ae.data.mouse_press.button =  GHL::MOUSE_BUTTON_LEFT;
-                ae.data.mouse_press.modificators = 0;
-                ae.data.mouse_press.x = e.button.x;
-                ae.data.mouse_press.y = e.button.y;
-                g_application->OnEvent(&ae);
+                if (g_width * g_height) {
+                    GHL::Event ae;
+                    ae.type = GHL::EVENT_TYPE_MOUSE_RELEASE;
+                    ae.data.mouse_press.button =  GHL::MOUSE_BUTTON_LEFT;
+                    ae.data.mouse_press.modificators = 0;
+                    ae.data.mouse_press.x = e.button.x * g_render->GetWidth() / g_width;
+                    ae.data.mouse_press.y = e.button.y * g_render->GetHeight() / g_height;
+                    g_application->OnEvent(&ae);
+                }
             }break;
             case SDL_MOUSEMOTION: {
-                GHL::Event ae;
-                ae.type = GHL::EVENT_TYPE_MOUSE_MOVE;
-                ae.data.mouse_move.button =  (e.motion.state & SDL_BUTTON_LMASK) ? GHL::MOUSE_BUTTON_LEFT : GHL::MOUSE_BUTTON_NONE;
-                ae.data.mouse_move.modificators = 0;
-                ae.data.mouse_move.x = e.motion.x;
-                ae.data.mouse_move.y = e.motion.y;
-                g_application->OnEvent(&ae);
+                if (g_width * g_height) {
+                    GHL::Event ae;
+                    ae.type = GHL::EVENT_TYPE_MOUSE_MOVE;
+                    ae.data.mouse_move.button =  (e.motion.state & SDL_BUTTON_LMASK) ? GHL::MOUSE_BUTTON_LEFT : GHL::MOUSE_BUTTON_NONE;
+                    ae.data.mouse_move.modificators = 0;
+                    ae.data.mouse_move.x = e.motion.x * g_render->GetWidth() / g_width;
+                    ae.data.mouse_move.y = e.motion.y * g_render->GetHeight() / g_height;
+                    g_application->OnEvent(&ae);
+                }
             }break;
             case SDL_QUIT:
                 g_done = true;
                 return;
                 break;
+            case SDL_WINDOWEVENT: {
+                switch (e.window.event) {
+                    case SDL_WINDOWEVENT_RESIZED:
+                        if (g_render) {
+                            int w,h;
+                            SDL_GL_GetDrawableSize(g_window,&w,&h);
+                            g_render->Resize(w,h);
+                            g_width = e.window.data1;
+                            g_height = e.window.data2;
+                        }
+                        break;
+                }
+            } break;
+            
                 
             default:
                 break;
@@ -181,6 +205,13 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
     settings.width = 800;
     settings.height = 600;
     settings.depth = false;
+    settings.screen_dpi = 50;
+
+    float hdpi,vdpi;
+    if (SDL_GetDisplayDPI(0,0,&hdpi,&vdpi)==0) {
+        settings.screen_dpi = (hdpi + vdpi) * 0.5f;
+    }
+
     app->FillSettings(&settings);
 
     GHL::ImageDecoderImpl image_decoder;
@@ -196,11 +227,16 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
     
     g_window = SDL_CreateWindow(
         "GHL", 0, 0, settings.width, settings.height, 
-        SDL_WINDOW_OPENGL);
+        SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI
+#ifdef GHL_PLATFORM_EMSCRIPTEN
+       | SDL_WINDOW_RESIZABLE
+#endif
+        );
 
     SDL_GLContext glcontext = SDL_GL_CreateContext(g_window);
 
     g_height = settings.height;
+    g_width = settings.width;
 
     g_done = false;
 
