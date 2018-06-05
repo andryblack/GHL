@@ -11,6 +11,10 @@
 #include "gles2_api.h"
 #include "../../ghl_log_impl.h"
 
+#ifdef GHL_PLATFORM_EMSCRIPTEN
+#include "render_webgl.h"
+#endif
+
 namespace GHL {
     
     UInt32 g_default_framebuffer = 0;
@@ -74,7 +78,11 @@ namespace GHL {
 
 GHL_API GHL::RenderImpl* GHL_CALL GHL_CreateRenderOpenGL(GHL::UInt32 w,GHL::UInt32 h,bool depth) {
     GHL::RenderOpenGLBase* render = 0;
+#ifdef GHL_PLATFORM_EMSCRIPTEN
+    render = new GHL::RenderWebGL(w,h,depth);
+#else
     render = new GHL::RenderOpenGLES2(w,h,depth);
+#endif
     if (!render->RenderInit()) {
         render->RenderDone();
         delete render;

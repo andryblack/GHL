@@ -28,6 +28,7 @@ static SDL_Window* g_window = 0;
 static GHL::RenderImpl* g_render = 0;
 static GHL::UInt32 g_height = 0;
 static GHL::UInt32 g_width = 0;
+static GHL::UInt32 g_frame_interval = 0;
 
 
 class SystemSDL : public GHL::System {
@@ -60,6 +61,16 @@ public:
     }
     ///
     virtual bool GHL_CALL SetDeviceState( GHL::DeviceState name, const void* data) {
+        if (name == GHL::DEVICE_STATE_RESIZEABLE_WINDOW) {
+            bool enabled = *(const bool*)data;
+            SDL_SetWindowResizable(g_window,enabled?SDL_TRUE:SDL_FALSE);
+            return true;
+        }
+        else if (name==GHL::DEVICE_STATE_FRAME_INTERVAL) {
+            const GHL::Int32* state = static_cast<const GHL::Int32*>(data);
+            g_frame_interval = *state;
+            return true;
+        } 
         return false;
     }
     ///
@@ -167,6 +178,14 @@ static void loop_iteration(SDL_Window* window) {
                 break;
         }
     }
+    static GHL::UInt32 frame_cntr = 0;
+    if (g_frame_interval != 0 ) {
+        ++frame_cntr;
+        if (frame_cntr < g_frame_interval) {
+            return;
+        }
+        frame_cntr = 0;
+    }
 
     Uint32 cur_time = SDL_GetTicks();
     Uint32 delta = cur_time - g_last_time;
@@ -228,18 +247,23 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
     g_window = SDL_CreateWindow(
         "GHL", 0, 0, settings.width, settings.height, 
         SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI
-#ifdef GHL_PLATFORM_EMSCRIPTEN
-       | SDL_WINDOW_RESIZABLE
-#endif
         );
+
+    int w = 0;
+    int h = 0;
+    SDL_GetWindowSize(g_window,&w,&h);
+    g_width = w;
+    g_height = h;
 
     SDL_GLContext glcontext = SDL_GL_CreateContext(g_window);
 
-    g_height = settings.height;
-    g_width = settings.width;
+    
+    SDL_GL_GetDrawableSize(g_window,&w,&h);
+    settings.width = w;
+    settings.height = h;
 
     g_done = false;
-
+    LOG_INFO("create render " << settings.width << "x" << settings.height);
     g_render = GHL_CreateRenderOpenGL(settings.width,settings.height,settings.depth);
     if ( g_render && g_application ) {
         g_application->SetRender(g_render);
@@ -255,14 +279,15 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
     g_last_time = SDL_GetTicks();
 
     
-
+    if (!g_done) {
 #ifdef GHL_PLATFORM_EMSCRIPTEN
-    emscripten_set_main_loop_arg((em_arg_callback_func)loop_iteration, g_window, 0, 1);
+        emscripten_set_main_loop_arg((em_arg_callback_func)loop_iteration, g_window, 0, 1);
 #else
-    while (!g_done) {
-        loop_iteration(g_window);
-    }
+        while (!g_done) {
+            loop_iteration(g_window);
+        }
 #endif
+    }
 
     LOG_INFO(  "done" );
     SDL_GL_DeleteContext(glcontext);  

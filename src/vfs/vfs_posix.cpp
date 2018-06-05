@@ -130,7 +130,7 @@ namespace GHL {
                 return true;
             }
         }
-        LOG_VERBOSE("file not exist '" << file << "'");
+        //LOG_VERBOSE("file not exist '" << file << "'");
         return false;
     }
     /// remove file

@@ -100,6 +100,9 @@ namespace GHL {
     static GHL_GL_API void _glBufferData (GLenum target, GL::GLsizeiptr size, const GLvoid *data, GLenum usage) {
         glBufferData(target, size, data, usage);
     }
+    static GHL_GL_API void _glBufferSubData (GLenum target, GL::GLintptr offset, GL::GLsizeiptr size, const GLvoid *data) {
+        glBufferSubData(target, offset, size, data);
+    }
     
     bool GLES2Api::InitGL(GL* api) {
         GLES2Api_impl::Init();
@@ -162,10 +165,12 @@ namespace GHL {
         
         api->vboapi.valid = true;
         api->vboapi.STATIC_DRAW = GL_STATIC_DRAW;
+        api->vboapi.DYNAMIC_DRAW = GL_DYNAMIC_DRAW;
         api->vboapi.ELEMENT_ARRAY_BUFFER = GL_ELEMENT_ARRAY_BUFFER;
         api->vboapi.ARRAY_BUFFER = GL_ARRAY_BUFFER;
         api->vboapi.BindBuffer = glBindBuffer;
         api->vboapi.BufferData = _glBufferData;
+        api->vboapi.BufferSubData = _glBufferSubData;
         api->vboapi.DeleteBuffers = glDeleteBuffers;
         api->vboapi.GenBuffers = glGenBuffers;
         

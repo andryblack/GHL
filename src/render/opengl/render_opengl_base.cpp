@@ -351,6 +351,24 @@ namespace GHL {
             }
         } 
 	}
+
+	void RenderOpenGLBase::GetPrimitiveInfo(PrimitiveType type,UInt32 prim_amount,GL::GLenum& element,UInt32& indexes_amount) const {
+		element = gl.TRIANGLES;
+		indexes_amount = prim_amount * 3;
+		if (type==PRIMITIVE_TYPE_TRIANGLE_STRIP) {
+			element = gl.TRIANGLE_STRIP;
+			indexes_amount = prim_amount + 2;
+		} else if (type==PRIMITIVE_TYPE_TRIANGLE_FAN) {
+			element = gl.TRIANGLE_FAN;
+			indexes_amount = prim_amount + 2;
+		} else if (type==PRIMITIVE_TYPE_LINES) {
+			element = gl.LINES;
+			indexes_amount = prim_amount * 2;
+		} else if (type==PRIMITIVE_TYPE_LINE_STRIP) {
+			element = gl.LINE_STRIP;
+			indexes_amount = prim_amount + 1;
+		}
+	}
 	
 		
 	/// draw primitives
@@ -387,19 +405,7 @@ namespace GHL {
 		}
         GL::GLenum element =gl.TRIANGLES;
 		UInt32 indexes_amount = prim_amount * 3;
-		if (type==PRIMITIVE_TYPE_TRIANGLE_STRIP) {
-			element =gl.TRIANGLE_STRIP;
-			indexes_amount = prim_amount + 2;
-		} else if (type==PRIMITIVE_TYPE_TRIANGLE_FAN) {
-			element =gl.TRIANGLE_FAN;
-			indexes_amount = prim_amount + 2;
-		} else if (type==PRIMITIVE_TYPE_LINES) {
-			element =gl.LINES;
-			indexes_amount = prim_amount * 2;
-		} else if (type==PRIMITIVE_TYPE_LINE_STRIP) {
-			element =gl.LINE_STRIP;
-			indexes_amount = prim_amount + 1;
-		}
+		GetPrimitiveInfo(type,prim_amount,element,indexes_amount);
         
         
         if (gl.vboapi.valid) {
@@ -828,8 +834,8 @@ namespace GHL {
             return;
         }
         GL::GLsizei vs = sizeof(*v);
-        const Vertex2Tex* v2 = static_cast<const Vertex2Tex*>(v);
         if (vt == VERTEX_TYPE_2_TEX) {
+        	const Vertex2Tex* v2 = static_cast<const Vertex2Tex*>(v);
             vs = sizeof(*v2);
             SetupAttribute(&v2->t2x, VERTEX_TEX_COORD1, 2, gl.FLOAT, false, vs);
         } else if (m_current_pointers[VERTEX_TEX_COORD1] != NO_POINTER) {

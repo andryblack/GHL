@@ -31,6 +31,7 @@ namespace GHL
 	protected:
         GL  gl;
         bool    m_depth_write_enabled;
+        void GetPrimitiveInfo(PrimitiveType type,UInt32 amount,GL::GLenum& ptype,UInt32& iamount) const;
 	public:
 		RenderOpenGLBase(UInt32 w,UInt32 h,bool haveDepth);
 		~RenderOpenGLBase();
@@ -178,6 +179,7 @@ namespace GHL
                             GL::GLenum t,
                             bool norm,
                             UInt32 vsize);
+        void DoDrawPrimitives(VertexType v_type);
     private:
         pfpl_render         m_shaders_render;
         pfpl_state_data     m_crnt_state;
@@ -185,7 +187,6 @@ namespace GHL
         float               m_projection_matrix[16];
         float               m_view_matrix[16];
         float               m_projection_view_matrix[16];
-        void DoDrawPrimitives(VertexType v_type);
         bool    m_reset_uniforms;
         
         const void*               m_current_pointers[VERTEX_MAX_ATTRIBUTES];
