@@ -75,6 +75,7 @@ namespace GHL {
         void Pause();
         void Stop();
         void SetVolume( float val );
+        float GetVolume() const;
         void SetPan( float pan );
         void SetPitch(float pitch);
         void Clear();
@@ -157,7 +158,14 @@ namespace GHL {
 		alSourcef(m_source, AL_GAIN, val / 100.0f );
         CHECK_ERROR_F(alSourcef);
 	}
-    
+
+    float SoundChannelOpenAL::GetVolume() const {
+        float val = 0;
+        alGetSourcef(m_source, AL_GAIN, &val);
+        CHECK_ERROR_F(alSourcef);
+        return val * 100;
+    }
+
     void SoundChannelOpenAL::SetPan( float pan ) {
         alSource3f(m_source, AL_POSITION, pan/100.0f, 0.0f, 0.0f);
         CHECK_ERROR_F(alSource3f);
@@ -341,7 +349,7 @@ namespace GHL {
         return channel;
     }
     
-	SoundChannelOpenAL* SoundOpenAL::GetChannel() {
+	SoundChannelOpenAL* SoundOpenAL::GetChannel(float vol) {
         SoundChannelOpenAL* channel = 0;
         if ( m_channels.size() >= m_max_channels ) {
             for ( std::list<SoundChannelOpenAL*>::iterator it = m_channels.begin();it!=m_channels.end();++it) {
@@ -352,9 +360,17 @@ namespace GHL {
                     return channel;
                 }
             }
-            channel = m_channels.front();
-            m_channels.pop_front();
-            m_channels.push_back(channel);
+            for ( std::list<SoundChannelOpenAL*>::iterator it = m_channels.begin();it!=m_channels.end();++it) {
+                float channel_vol = (*it)->GetVolume();
+                if ( channel_vol <= vol) {
+                    channel = *it;
+                    m_channels.erase(it);
+                    m_channels.push_back(channel);
+                    return channel;
+                }
+            }
+
+            channel = 0;
         } else {
             channel = CreateChannel();
         }
@@ -372,7 +388,7 @@ namespace GHL {
     /// play effect
     void SoundOpenAL::PlayEffect( SoundEffect* effect_ , float vol , float pan, SoundInstance** instance ) {
         if (!effect_) return;
-        SoundChannelOpenAL* channel = GetChannel();
+        SoundChannelOpenAL* channel = GetChannel(vol);
         if (!channel) return;
         SoundEffectOpenAL* effect = static_cast<SoundEffectOpenAL*>(effect_);
         channel->SetEffect(effect);

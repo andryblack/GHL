@@ -111,7 +111,8 @@ namespace GHL {
         SoundEffectOpenSL* sl_effect = reinterpret_cast<SoundEffectOpenSL*>(effect);
         OpenSLAudioChannel* channel = m_opensl_engine->GetChannel(sl_effect->GetFrequency(),
                                                                  sl_effect->GetChannels(),
-                                                                 sl_effect->GetBits());
+                                                                 sl_effect->GetBits(),
+                                                                 vol);
         if (!channel)
             return;
         channel->SetHolder(0);
