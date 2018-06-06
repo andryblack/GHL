@@ -135,7 +135,7 @@ namespace GHL {
             a.bitsPerSample == b.bitsPerSample;
     }
     
-    OpenSLAudioChannel* OpenSLAudioEngine::find_channel( SLDataFormat_PCM& format) {
+    OpenSLAudioChannel* OpenSLAudioEngine::find_channel(SLDataFormat_PCM& format,float volume) {
         OpenSLAudioChannel* best = 0;
         size_t last_used = 0;
         for (std::vector<OpenSLAudioChannel*>::iterator it = m_channels.begin();it!=m_channels.end();++it) {
@@ -144,12 +144,14 @@ namespace GHL {
                     return *it;
                 }
                 if (!best || ((*it)->GetLastUsed() < last_used)) {
-                    best = *it;
-                    last_used = (*it)->GetLastUsed();
+                    if ((*it)->GetVolume() <= volume) {
+			best = *it;
+			last_used = (*it)->GetLastUsed();
+		    }
                 }
             }
         }
-        if (m_channels.size() < max_channels || !best) {
+        if (m_channels.size() < max_channels) {
             LOG_INFO("requested new channel: " << format.numChannels << " " << format.samplesPerSec/1000 << " " << format.bitsPerSample);
             SLDataLocator_AndroidSimpleBufferQueue locatorBufferQueue = {0};
             locatorBufferQueue.locatorType = SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE;
@@ -194,7 +196,7 @@ namespace GHL {
         return best;
     }
     
-    OpenSLAudioChannel* OpenSLAudioEngine::GetChannel(int freq,int channels,int bits) {
+    OpenSLAudioChannel* OpenSLAudioEngine::GetChannel(int freq,int channels,int bits,float volume) {
         SLDataFormat_PCM formatPCM = {0};
         formatPCM.formatType = SL_DATAFORMAT_PCM;
         formatPCM.numChannels = channels;
@@ -203,7 +205,7 @@ namespace GHL {
         formatPCM.containerSize = bits;// header.fmtSize;
         formatPCM.channelMask = channels == 2 ? (SL_SPEAKER_FRONT_LEFT|SL_SPEAKER_FRONT_RIGHT) : SL_SPEAKER_FRONT_CENTER;
         formatPCM.endianness = SL_BYTEORDER_LITTLEENDIAN;
-        return find_channel(formatPCM);
+        return find_channel(formatPCM, volume);
     }
     
 }

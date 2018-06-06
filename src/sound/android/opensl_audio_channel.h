@@ -22,6 +22,7 @@ namespace GHL {
         void Play();
         void Stop();
         void SetVolume(float vol);
+        float GetVolume() const;
         void SetPan(float pan);
         void SetPitch(float pitch);
     };
@@ -34,7 +35,7 @@ namespace GHL {
         };
     private:
         SLDataFormat_PCM    m_format;
-        SLBufferQueueItf    m_buffer_queue;
+        SLAndroidSimpleBufferQueueItf m_buffer_queue;
         Holder*     m_holder;
         void Clear();
         size_t  m_last_used;

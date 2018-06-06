@@ -35,7 +35,7 @@ namespace GHL {
 		ALCcontext* m_context;
 		SoundOpenAL(const SoundOpenAL&);
 		SoundOpenAL& operator = (const SoundOpenAL&);
-        SoundChannelOpenAL* GetChannel();
+        SoundChannelOpenAL* GetChannel(float vol);
         SoundChannelOpenAL* CreateChannel();
         std::list<SoundChannelOpenAL*>  m_channels;
         size_t  m_max_channels;

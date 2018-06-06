@@ -6,7 +6,7 @@
 namespace GHL {
     
     static const char* MODULE = "OpenSL";
-    
+
     OpenSLAudioChannelBase::OpenSLAudioChannelBase( SLObjectItf player_obj ) : m_player_obj(player_obj)
     , m_play_i(0)
     , m_volume_i(0)
@@ -43,7 +43,6 @@ namespace GHL {
             }
         }
         //sb_assert(SL_RESULT_SUCCESS == result);
-        
     }
 
     OpenSLAudioChannelBase::~OpenSLAudioChannelBase() {
@@ -82,6 +81,16 @@ namespace GHL {
             (*m_volume_i)->SetVolumeLevel(m_volume_i, volume_mb);
         }
     }
+    float OpenSLAudioChannelBase::GetVolume() const {
+        if (m_volume_i) {
+            SLmillibel volume_mb;
+            (*m_volume_i)->GetVolumeLevel(m_volume_i, &volume_mb);
+            float volume = 100.0f - 100.0f / exp(M_LN2/volume_mb * -1000.0f);
+            return volume;
+        }
+        return 0;
+    }
+
     void OpenSLAudioChannelBase::SetPan(float pan) {
         if (m_volume_i) {
             if ( m_pan_value != pan ) {
@@ -115,7 +124,7 @@ namespace GHL {
             (*m_playback_rate_i)->SetRate(m_playback_rate_i, pv);
         }
     }
-    
+
     OpenSLAudioChannel::OpenSLAudioChannel( SLObjectItf player_obj ,const SLDataFormat_PCM& format) : OpenSLAudioChannelBase( player_obj ),
     m_format(format),m_buffer_queue(0), m_holder(0) {
         SLresult result = (*player_obj)->GetInterface(player_obj,       SL_IID_ANDROIDSIMPLEBUFFERQUEUE, &m_buffer_queue);
@@ -152,9 +161,11 @@ namespace GHL {
     }
     bool OpenSLAudioChannel::IsStopped() {
         if (m_play_i) {
-            SLuint32 state;
-            if ( (*m_play_i)->GetPlayState(m_play_i, &state) == SL_RESULT_SUCCESS) {
-                return state != SL_PLAYSTATE_PLAYING;
+            SLresult res;
+            SLAndroidSimpleBufferQueueState state = {0};
+            res = (*m_buffer_queue)->GetState(m_buffer_queue, &state);
+            if (res == SL_RESULT_SUCCESS && state.count == 0) {
+                return true;
             }
         }
         return false;
