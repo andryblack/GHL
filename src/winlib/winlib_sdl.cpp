@@ -51,10 +51,14 @@ public:
         /// do nothing
     }
     
-    virtual void GHL_CALL ShowKeyboard(const GHL::TextInputConfig* input) {}
+    virtual void GHL_CALL ShowKeyboard(const GHL::TextInputConfig* input) {
+        SDL_StartTextInput();
+    }
         
     ///
-    virtual void GHL_CALL HideKeyboard() {}
+    virtual void GHL_CALL HideKeyboard() {
+        SDL_StopTextInput();
+    }
     
     virtual GHL::UInt32  GHL_CALL GetKeyMods() const {
         return 0;
@@ -90,38 +94,101 @@ public:
     }
 };
 
+static GHL::Key translate_key(SDL_Scancode sc) {
+    switch (sc) {
+        case SDL_SCANCODE_LEFT:     return GHL::KEY_LEFT;
+        case SDL_SCANCODE_RIGHT:    return GHL::KEY_RIGHT;
+        case SDL_SCANCODE_UP:       return GHL::KEY_UP;
+        case SDL_SCANCODE_DOWN:     return GHL::KEY_DOWN;
+        case SDL_SCANCODE_ESCAPE:   return GHL::KEY_ESCAPE;
+        case SDL_SCANCODE_RETURN:   return GHL::KEY_ENTER;
+        case SDL_SCANCODE_BACKSPACE:return GHL::KEY_BACKSPACE;
+    }
+    return GHL::KEY_NONE;
+}
+static GHL::UInt32 translate_mods(Uint16 mods) {
+    GHL::UInt32 res = 0;
+    if (mods & KMOD_SHIFT) {
+        res |= GHL::KEYMOD_SHIFT;
+    }
+    if (mods & KMOD_CTRL) {
+        res |= GHL::KEYMOD_CTRL;
+    }
+    if (mods & KMOD_ALT) {
+        res |= GHL::KEYMOD_ALT;
+    }
+    return res;
+};
+static GHL::UInt32 parse_charcode(const char* data) {
+    const GHL::Byte* str = reinterpret_cast<const GHL::Byte*>(data);
+    GHL::UInt32 ch = 0;
+    unsigned int length = 0;
+    if (*str < 0x80) {
+        ch = *str;
+        return ch;
+    } else if (*str < 0xC0){
+        ch = ' ';
+        return ch;
+    } else if (*str < 0xE0) {
+        length = 2;
+        ch = *str & ~0xC0;
+    }
+    else if (*str < 0xF0) {
+        length = 3;
+        ch = *str & ~0xE0;
+    }
+    else if (*str < 0xF8) {
+        length = 4;
+        ch = *str & ~0xF0;
+    } 
+    else
+    {
+        ch = ' ';
+        return ch;
+    }
+    ++str;
+    switch (length)
+    {
+        case 4:
+            ch <<= 6;
+            ch |= (*str++ & 0x3F);
+        case 3:
+            ch <<= 6;
+            ch |= (*str++ & 0x3F);
+        case 2:
+            ch <<= 6;
+            ch |= (*str++ & 0x3F);
+    }
+    return ch;
+};
 static void loop_iteration(SDL_Window* window) {
     SDL_Event e;
     while (SDL_PollEvent(&e)) {
         switch (e.type) {
-            case SDL_KEYDOWN:
-            case SDL_KEYUP:
-                switch (e.key.keysym.scancode) {
-                    case SDL_SCANCODE_LEFT:
-                    case SDL_SCANCODE_RIGHT: {
-                        // const Uint8* keys = SDL_GetKeyboardState(0);
-                        // Sint16 xpos = 0;
-
-                        // if (keys[SDL_SCANCODE_LEFT] && keys[SDL_SCANCODE_RIGHT]) {
-                        //     xpos = 0;
-                        // } else if (keys[SDL_SCANCODE_LEFT]) {
-                        //     xpos = -1.0f;
-                        // } else if (keys[SDL_SCANCODE_RIGHT]) {
-                        //     xpos = 1.0f;
-                        // }
-
-                        // game->apply_input(Game::InputForce_X_AXIS, xpos);
-                    }
-                        break;
-                    case SDL_SCANCODE_UP:
-                        //game->apply_input(Game::InputForce_SHOOT, e.key.state == SDL_PRESSED ? 1 : 0);
-                        break;
-                    case SDL_SCANCODE_ESCAPE:
-                        //game->apply_input(Game::InputForce_START, e.key.state == SDL_PRESSED ? 1 : 0);
-                    default:
-                        break;
-                }
-                break;
+            case SDL_KEYDOWN: {
+                GHL::Event ae;
+                ae.type = GHL::EVENT_TYPE_KEY_PRESS;
+                ae.data.key_press.key = translate_key(e.key.keysym.scancode);
+                ae.data.key_press.charcode = 0;
+                ae.data.key_press.modificators = translate_mods(e.key.keysym.mod);
+                g_application->OnEvent(&ae);
+            } break;
+            case SDL_KEYUP: {
+                GHL::Event ae;
+                ae.type = GHL::EVENT_TYPE_KEY_RELEASE;
+                ae.data.key_press.key = translate_key(e.key.keysym.scancode);
+                ae.data.key_press.charcode = 0;
+                ae.data.key_press.modificators =translate_mods(e.key.keysym.mod);
+                g_application->OnEvent(&ae);
+            } break;
+            case SDL_TEXTINPUT: {
+                GHL::Event ae;
+                ae.type = GHL::EVENT_TYPE_KEY_PRESS;
+                ae.data.key_press.key = GHL::KEY_NONE;
+                ae.data.key_press.charcode = parse_charcode(e.text.text);
+                ae.data.key_press.modificators =0;
+                g_application->OnEvent(&ae);
+            } break;
             case SDL_MOUSEBUTTONDOWN: {
                 if (g_width * g_height) {
                     GHL::Event ae;
