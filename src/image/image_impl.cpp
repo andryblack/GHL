@@ -172,6 +172,10 @@ namespace GHL
                 for (size_t i=0;i<len;i++) {
                     data[i+0]=original[i*4+3];
                 }
+            } else if (m_fmt==IMAGE_FORMAT_RGB) {
+                for (size_t i=0;i<len;i++) {
+                    data[i] = 0.299 * original[i*3+0] + 0.587 * original[i*3+1] + 0.114 * original[i*3+2];
+                }
             } else {
                 LOG_ERROR("not implemented conversion");
                 buffer->Release();
@@ -179,7 +183,7 @@ namespace GHL
             }
             m_data->Release();
             m_data = buffer;
-        }else {
+		} else {
 			return false;
 		}
         m_fmt = fmt;
