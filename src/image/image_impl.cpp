@@ -159,6 +159,22 @@ namespace GHL
             }
 			m_data->Release();
 			m_data = buffer;
+        }
+        else if (fmt==IMAGE_FORMAT_GRAY)
+        {
+            size_t len = m_width*m_height;
+            DataImpl* buffer = new DataImpl( UInt32(len) );
+            Byte* data = buffer->GetDataPtr();
+            if (m_fmt==IMAGE_FORMAT_RGB) {
+                for (size_t i=0;i<len;i++) {
+                    data[i] = 0.299 * original[i*3+0] + 0.587 * original[i*3+1] + 0.114 * original[i*3+2];
+                }
+            } else {
+                LOG_ERROR("not implemented conversion");
+                return false;
+            }
+            m_data->Release();
+            m_data = buffer;
 		} else {
 			return false;
 		}
