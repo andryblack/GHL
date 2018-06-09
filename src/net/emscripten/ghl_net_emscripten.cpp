@@ -30,9 +30,51 @@ static void GET_async_wget2_data_onprogress_func(unsigned,void* arg, int loaded,
 
 }
 
+extern "C" EMSCRIPTEN_KEEPALIVE void GHL_NetworkEmscripten_onLoad(GHL::NetworkRequest* handler,void* data, unsigned size) {
+    handler->OnResponse(200);
+    handler->OnData(reinterpret_cast<GHL::Byte*>(data),size);
+    handler->OnComplete();
+    handler->Release();
+}
+extern "C" EMSCRIPTEN_KEEPALIVE void GHL_NetworkEmscripten_onError(GHL::NetworkRequest* handler,int code, const char* status) {
+    handler->OnResponse(code);
+    handler->OnError(status ? status : "unknown");
+    handler->OnComplete();
+    handler->Release();
+}
+
+extern "C" EMSCRIPTEN_KEEPALIVE const char* GHL_NetworkEmscripten_getURL(GHL::NetworkRequest* handler) {
+    return handler->GetURL();
+}
+extern "C" EMSCRIPTEN_KEEPALIVE GHL::UInt32 GHL_NetworkEmscripten_getHeadersCount(GHL::NetworkRequest* handler) {
+    return handler->GetHeadersCount();
+}
+extern "C" EMSCRIPTEN_KEEPALIVE const char* GHL_NetworkEmscripten_getHeaderName(GHL::NetworkRequest* handler,GHL::UInt32 i) {
+    return handler->GetHeaderName(i);
+}
+extern "C" EMSCRIPTEN_KEEPALIVE const char* GHL_NetworkEmscripten_getHeaderValue(GHL::NetworkRequest* handler,GHL::UInt32 i) {
+    return handler->GetHeaderValue(i);
+}
+extern "C" EMSCRIPTEN_KEEPALIVE void GHL_NetworkEmscripten_onFetchHeader(GHL::NetworkRequest* handler,const char* key, const char* value) {
+    handler->OnHeader(key,value);
+}
+extern "C" EMSCRIPTEN_KEEPALIVE void GHL_NetworkEmscripten_onFetchResponse(GHL::NetworkRequest* handler,int code) {
+    handler->OnResponse(code);
+}
+extern "C" EMSCRIPTEN_KEEPALIVE void GHL_NetworkEmscripten_onFetchData(GHL::NetworkRequest* handler,const GHL::Byte* data, GHL::UInt32 size) {
+    handler->OnData(data,size);
+}  
+extern "C" EMSCRIPTEN_KEEPALIVE void GHL_NetworkEmscripten_onFetchEnd(GHL::NetworkRequest* handler) {
+    handler->OnComplete();
+    handler->Release();
+}   
+extern "C" EMSCRIPTEN_KEEPALIVE void GHL_NetworkEmscripten_onFetchError(GHL::NetworkRequest* handler,const char* status) {
+    handler->OnError(status ? status : "unknown");
+    handler->OnComplete();
+    handler->Release();
+}   
+
 class NetworkEmscripten : public GHL::Network {
-private:
-	static size_t m_init_counter;
 public:
 	NetworkEmscripten() {
 		
@@ -58,27 +100,66 @@ public:
         return true;
     }
 
+    void PostBinary(GHL::NetworkRequest* handler,const GHL::Byte* data, GHL::UInt32 data_size) {
+        handler->AddRef();
+        EM_ASM({
+            let _handler = $0;
+            let _url = Pointer_stringify(Module['_GHL_NetworkEmscripten_getURL'](_handler));
+            let http = new XMLHttpRequest();
+            let handle = Browser.getNextWgetRequestHandle();
+            http.open('POST', _url, true);
+            http.responseType = 'arraybuffer';
+
+            http.onload = function http_onload(e) {
+              if (http.status == 200) {
+                let byteArray = new Uint8Array(http.response);
+                let buffer = _malloc(byteArray.length);
+                HEAPU8.set(byteArray, buffer);
+                Module['_GHL_NetworkEmscripten_onLoad'](_handler,buffer,byteArray.length);
+                 _free(buffer);
+              } else {
+                let length = lengthBytesUTF8(http.statusText)+1;
+                let buffer = Module._malloc(length);
+                stringToUTF8(http.statusText,buffer,length);
+                Module['_GHL_NetworkEmscripten_onError'](_handler,http.status, buffer);
+                _free(buffer);
+              }
+              delete Browser.wgetRequests[handle];
+            };
+            http.onerror = function http_onerror(e) {
+                let length = lengthBytesUTF8(http.statusText)+1;
+                let buffer = Module._malloc(length);
+                stringToUTF8(http.statusText,buffer,length);
+                Module['_GHL_NetworkEmscripten_onError'](_handler,http.status, buffer);
+                _free(buffer);
+                delete Browser.wgetRequests[handle];
+            };
+            http.onabort = function http_onabort(e) {
+                delete Browser.wgetRequests[handle];
+            };
+
+            let headers_cnt = Module['_GHL_NetworkEmscripten_getHeadersCount'](_handler);
+            for (let i=0;i<headers_cnt;i++) {
+                let name =  Module['_GHL_NetworkEmscripten_getHeaderName'](_handler,i);
+                let value = Module['_GHL_NetworkEmscripten_getHeaderValue'](_handler,i);
+                http.setRequestHeader(Pointer_stringify(name),Pointer_stringify(value));
+            };
+
+            let data = HEAPU8.subarray($1,$1+$2);
+            http.send(data);
+
+            Browser.wgetRequests[handle] = http;
+        },handler,data,data_size);
+
+    }
+
     /// POST request
     virtual bool GHL_CALL Post(GHL::NetworkRequest* handler,const GHL::Data* data) {
         if (!handler)
             return false;
-        handler->AddRef();
-        std::vector<char> updata;
-        if (data) {
-        	updata.reserve(data->GetSize()+1);
-        	updata.resize(data->GetSize());
-        	::memcpy(updata.data(),data->GetData(),data->GetSize());
-        }
-        updata.push_back(0);
-        emscripten_async_wget2_data(handler->GetURL(),
-        	"POST",
-        	updata.data(),
-        	handler,
-        	1,
-        	&GET_async_wget2_data_onload_func,
-        	&GET_async_wget2_data_onerror_func,
-        	&GET_async_wget2_data_onprogress_func
-        	);
+        
+        PostBinary(handler,data->GetData(),data->GetSize());
+  
         return true;
     }
 
@@ -86,26 +167,19 @@ public:
          if (!handler)
             return false;
         handler->AddRef();
-        std::vector<char> updata;
+        std::vector<GHL::Byte> updata;
         if (data) {
             static const size_t CHUNK_SIZE = 1024 * 2;
             while (!data->Eof()) {
                 size_t pos = updata.size();
                 updata.resize(pos + CHUNK_SIZE);
-                size_t readed = data->Read(reinterpret_cast<GHL::Byte*>(&updata[pos]),CHUNK_SIZE);
+                size_t readed = data->Read(&updata[pos],CHUNK_SIZE);
                 updata.resize(pos + readed);
             }
         }
-        updata.push_back(0);
-        emscripten_async_wget2_data(handler->GetURL(),
-            "POST",
-            updata.data(),
-            handler,
-            1,
-            &GET_async_wget2_data_onload_func,
-            &GET_async_wget2_data_onerror_func,
-            &GET_async_wget2_data_onprogress_func
-            );
+
+        PostBinary(handler,updata.data(),updata.size());
+        
         return true;
     }
 
@@ -115,11 +189,146 @@ public:
     }
 };
 
+class NetworkEmscriptenFetch : public NetworkEmscripten {
+    bool m_fetch_suported;
+public:
+    NetworkEmscriptenFetch() {
+        m_fetch_suported = EM_ASM_INT({
+            function isFetchAPIsupported() {
+                return 'fetch' in window;
+            };
+            if (!isFetchAPIsupported()) {
+                return 0;
+            };
+            Module.GHL_NetworkEmscripten_fetch = function( _handler, _req ) {
+                let _url = Pointer_stringify(Module['_GHL_NetworkEmscripten_getURL'](_handler));
+                _req.headers = new Headers();
+                let _headers_cnt = Module['_GHL_NetworkEmscripten_getHeadersCount'](_handler);
+                for (let i=0;i<_headers_cnt;i++) {
+                    let name =  Module['_GHL_NetworkEmscripten_getHeaderName'](_handler,i);
+                    let value = Module['_GHL_NetworkEmscripten_getHeaderValue'](_handler,i);
+                    _req.headers.append(Pointer_stringify(name),Pointer_stringify(value));
+                };
+                let onerr = function( e ) {
+                  if (_handler != 0) { 
+                    let err = ' ' + e; 
+                    let length = lengthBytesUTF8(err)+1; 
+                    let buffer = Module._malloc(length); 
+                    stringToUTF8(err,buffer,length); 
+                    Module['_GHL_NetworkEmscripten_onFetchError'](_handler, buffer); 
+                    _free(buffer); 
+                    _handler = 0; 
+                  };
+                };
+    
+                let pump = function( reader ) {
+                    return reader.read().then(function(rres) {
+                        if (rres.done) {
+                            Module['_GHL_NetworkEmscripten_onFetchEnd'](_handler);
+                            _handler = 0;
+                            return;
+                        };
+                        const chunk = rres.value; 
+                        let buffer = _malloc(chunk.length); 
+                        HEAPU8.set(chunk, buffer); 
+                        Module['_GHL_NetworkEmscripten_onFetchData'](_handler,buffer,chunk.length); 
+                        _free(buffer);
+                        return pump(reader);
+                    }).catch(onerr);
+                };
+                fetch(_url,_req)
+                    .then(function( res ) {
+                        Module['_GHL_NetworkEmscripten_onFetchResponse'](_handler,res.status);
+                        for (var pair of res.headers) {
+                            let length = lengthBytesUTF8(pair[0])+1;
+                            let buffer_key = Module._malloc(length);
+                            stringToUTF8(pair[0],buffer_key,length);
+                            length = lengthBytesUTF8(pair[1])+1;
+                            let buffer_value = Module._malloc(length);
+                            stringToUTF8(pair[1],buffer_value,length);
+                            Module['_GHL_NetworkEmscripten_onFetchHeader'](_handler,buffer_key,buffer_value);
+                            _free(buffer_key);
+                            _free(buffer_value);
+                        };
+                        return pump(res.body.getReader());
+                    })
+                    .catch(onerr);
+            };
+            return 1;
+        });
+    }
+    virtual bool GHL_CALL Get(GHL::NetworkRequest* handler) {
+       if (!handler)
+            return false;
+        if (!m_fetch_suported) {
+            return NetworkEmscripten::Get(handler);
+        }
+        handler->AddRef();
+        EM_ASM({
+            let _handler = $0;
+            let _req = {};
+            _req.method = 'GET';
+            
+            Module.GHL_NetworkEmscripten_fetch(_handler,_req);
+            
+        },handler);
+        return true;
+    }
+    virtual bool GHL_CALL Post(GHL::NetworkRequest* handler,const GHL::Data* data) {
+        if (!handler)
+            return false;
+        if (!m_fetch_suported) {
+            return NetworkEmscripten::Post(handler,data);
+        }
+        handler->AddRef();
+        EM_ASM({
+            let _handler = $0;
+            let _req = {};
+            _req.method = 'POST';
+            _req.body = HEAPU8.subarray($1,$1+$2);
+            Module.GHL_NetworkEmscripten_fetch(_handler,_req);
+            
+        },handler,data->GetData(),data->GetSize());
+  
+        return true;
+    }
+    virtual bool GHL_CALL PostStream(GHL::NetworkRequest* handler, GHL::DataStream* data) {
+         if (!handler)
+            return false;
+        if (!m_fetch_suported) {
+            return NetworkEmscripten::PostStream(handler,data);
+        }
+        handler->AddRef();
+        std::vector<GHL::Byte> updata;
+        if (data) {
+            static const size_t CHUNK_SIZE = 1024 * 2;
+            while (!data->Eof()) {
+                size_t pos = updata.size();
+                updata.resize(pos + CHUNK_SIZE);
+                size_t readed = data->Read(&updata[pos],CHUNK_SIZE);
+                updata.resize(pos + readed);
+            }
+        }
+
+        /// @todo read stream from js
+        EM_ASM({
+            let _handler = $0;
+            let _req = {};
+            _req.method = 'POST';
+            _req.body = HEAPU8.subarray($1,$1+$2);
+            Module.GHL_NetworkEmscripten_fetch(_handler,_req);
+            
+        },handler,updata.data(),updata.size());
+        
+        return true;
+    }
+};
+
 GHL_API GHL::Network* GHL_CALL GHL_CreateNetwork() {
-    return new NetworkEmscripten();
+    return new NetworkEmscriptenFetch();
 }
 
 
 GHL_API void GHL_CALL GHL_DestroyNetwork(GHL::Network* n) {
-    delete static_cast<NetworkEmscripten*>(n);
+    delete static_cast<NetworkEmscriptenFetch*>(n);
 }
