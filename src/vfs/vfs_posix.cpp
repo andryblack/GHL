@@ -179,7 +179,7 @@ namespace GHL {
         if (f) {
             return new PosixFileStream(f);
         }
-        LOG_VERBOSE("failed open file '" << _file << "' " << errno);
+        //LOG_VERBOSE("failed open file '" << _file << "' " << errno);
         return 0;
     }
     
