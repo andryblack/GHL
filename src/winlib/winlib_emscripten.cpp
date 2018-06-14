@@ -195,61 +195,20 @@ static GHL::Key translate_key(const EmscriptenKeyboardEvent *keyEvent) {
     }
     return GHL::KEY_NONE;
 }
-// static GHL::UInt32 translate_mods(Uint16 mods) {
-//     GHL::UInt32 res = 0;
-//     if (mods & KMOD_SHIFT) {
-//         res |= GHL::KEYMOD_SHIFT;
-//     }
-//     if (mods & KMOD_CTRL) {
-//         res |= GHL::KEYMOD_CTRL;
-//     }
-//     if (mods & KMOD_ALT) {
-//         res |= GHL::KEYMOD_ALT;
-//     }
-//     return res;
-// };
-// static GHL::UInt32 parse_charcode(const char* data) {
-//     const GHL::Byte* str = reinterpret_cast<const GHL::Byte*>(data);
-//     GHL::UInt32 ch = 0;
-//     unsigned int length = 0;
-//     if (*str < 0x80) {
-//         ch = *str;
-//         return ch;
-//     } else if (*str < 0xC0){
-//         ch = ' ';
-//         return ch;
-//     } else if (*str < 0xE0) {
-//         length = 2;
-//         ch = *str & ~0xC0;
-//     }
-//     else if (*str < 0xF0) {
-//         length = 3;
-//         ch = *str & ~0xE0;
-//     }
-//     else if (*str < 0xF8) {
-//         length = 4;
-//         ch = *str & ~0xF0;
-//     } 
-//     else
-//     {
-//         ch = ' ';
-//         return ch;
-//     }
-//     ++str;
-//     switch (length)
-//     {
-//         case 4:
-//             ch <<= 6;
-//             ch |= (*str++ & 0x3F);
-//         case 3:
-//             ch <<= 6;
-//             ch |= (*str++ & 0x3F);
-//         case 2:
-//             ch <<= 6;
-//             ch |= (*str++ & 0x3F);
-//     }
-//     return ch;
-// };
+static GHL::UInt32 translate_mods(const EmscriptenKeyboardEvent *keyEvent) {
+    GHL::UInt32 res = 0;
+    if (keyEvent->shiftKey) {
+        res |= GHL::KEYMOD_SHIFT;
+    }
+    if (keyEvent->ctrlKey) {
+        res |= GHL::KEYMOD_CTRL;
+    }
+    if (keyEvent->altKey) {
+        res |= GHL::KEYMOD_ALT;
+    }
+    return res;
+};
+
 
 static EM_BOOL
 emscripten_handle_mouse_move(int eventType, const EmscriptenMouseEvent *mouseEvent, void *userData) {
@@ -300,11 +259,11 @@ emscripten_handle_key(int eventType, const EmscriptenKeyboardEvent *keyEvent, vo
             if (eventType == EMSCRIPTEN_EVENT_KEYDOWN) {
                 ae.type = GHL::EVENT_TYPE_KEY_PRESS;
                 ae.data.key_press.charcode = 0;
-                ae.data.key_press.modificators = 0;
+                ae.data.key_press.modificators = translate_mods(keyEvent);
             } else {
                 ae.type = GHL::EVENT_TYPE_KEY_RELEASE;
                 ae.data.key_press.charcode =  0;
-                ae.data.key_press.modificators = 0;
+                ae.data.key_press.modificators = translate_mods(keyEvent);
             }
             g_application->OnEvent(&ae);
             return EM_TRUE;

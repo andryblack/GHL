@@ -197,9 +197,29 @@ public:
             function isFetchAPIsupported() {
                 return 'fetch' in window;
             };
-            if (!isFetchAPIsupported()) {
+            function isFetchResponseBodySupported() {
+                  let response_support = ('Response' in window);
+                  if (!response_support ) {
+                    return response_support;
+                  }
+                  let test_response = new Response();
+                  let body_support = ('body' in test_response);
+                  return body_support; 
+            };
+            try {
+                if (!isFetchAPIsupported()) {
+                    console.log('fetch api dnt supported');
+                    return 0;
+                };
+                if (!isFetchResponseBodySupported()) {
+                    console.log('fetch response body dnt supported');
+                    return 0;
+                };
+            } catch (e) {
+                console.log('failed check response body support');
                 return 0;
             };
+            console.log('fetch api supported, use it');
             Module.GHL_NetworkEmscripten_fetch = function( _handler, _req ) {
                 let _url = Pointer_stringify(Module['_GHL_NetworkEmscripten_getURL'](_handler));
                 _req.headers = new Headers();
