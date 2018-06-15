@@ -6,6 +6,7 @@
 #include "../render/render_impl.h"
 #include "../image/image_decoders.h"
 #include "../vfs/vfs_posix.h"
+#include "../sound/emscripten/ghl_sound_emscripten.h"
 #include "ghl_system.h"
 #include "ghl_event.h"
 #include <string>
@@ -325,6 +326,7 @@ static void loop_iteration(void* arg) {
 }
 
 static SystemEmscripten g_system;
+static GHL::SoundEmscripten g_sound;
 
 GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/, char** /*argv*/) {
     
@@ -339,6 +341,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
 
     
     g_application->SetSystem(&g_system);
+    
 
     {
         GHL::Event e;
@@ -405,6 +408,9 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
         return 1;
     }
 
+    g_sound.SoundInit();
+    g_application->SetSound(&g_sound);
+
     eglMakeCurrent(g_egl_display,g_egl_surface,g_egl_surface, g_egl_context);
 
     g_done = false;
@@ -431,6 +437,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
     emscripten_set_keydown_callback("#window", 0, 0, emscripten_handle_key);
     emscripten_set_keyup_callback("#window", 0, 0, emscripten_handle_key);
     emscripten_set_keypress_callback("#window", 0, 0, emscripten_handle_key_press);
+
 
     g_last_time = emscripten_get_now();
     while (!g_done) {
