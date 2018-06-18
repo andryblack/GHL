@@ -194,11 +194,18 @@ public:
 
 class SystemEmscripten : public GHL::System {
 private:
+    bool m_keyboard_active;
 public:
     explicit SystemEmscripten() {
+        m_keyboard_active = false;
     }
     ~SystemEmscripten() {
     }
+
+    bool keyboardActive() const {
+        return m_keyboard_active;
+    }
+    
     virtual void GHL_CALL Exit() {
         
     }
@@ -215,12 +222,15 @@ public:
     virtual void GHL_CALL ShowKeyboard(const GHL::TextInputConfig* input) {
         if (input && input->system_input) {
             show_system_input(input);
+        } else {
+            m_keyboard_active = true;
         }
     }
         
     ///
     virtual void GHL_CALL HideKeyboard() {
         hide_system_input();
+        m_keyboard_active = false;
     }
     
     virtual GHL::UInt32  GHL_CALL GetKeyMods() const {
@@ -381,6 +391,8 @@ public:
                    
 };
 
+static SystemEmscripten g_system;
+
 static GHL::Key translate_key(const EmscriptenKeyboardEvent *keyEvent) {
     switch (keyEvent->keyCode) {
         case 37:     return GHL::KEY_LEFT;
@@ -449,6 +461,8 @@ emscripten_handle_key(int eventType, const EmscriptenKeyboardEvent *keyEvent, vo
 {
     if (g_system_input_active) 
         return EM_FALSE;
+    if (!g_system.keyboardActive())
+        return EM_FALSE;
     if (g_application) {
         GHL::Key key = translate_key(keyEvent);
         if (key!=GHL::KEY_NONE) {
@@ -475,6 +489,8 @@ static EM_BOOL
 emscripten_handle_key_press(int eventType, const EmscriptenKeyboardEvent *keyEvent, void *userData)
 {
     if (g_system_input_active) 
+        return EM_FALSE;
+    if (!g_system.keyboardActive())
         return EM_FALSE;
     if (g_application) {
         GHL::Event ae;
@@ -522,7 +538,7 @@ static void loop_iteration(void* arg) {
     eglSwapBuffers(g_egl_display,g_egl_surface);
 }
 
-static SystemEmscripten g_system;
+
 static GHL::SoundEmscripten g_sound;
 
 GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/, char** /*argv*/) {
