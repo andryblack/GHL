@@ -25,7 +25,6 @@ namespace GHL {
         const GL&  gl;
         UInt32	m_width;
 		UInt32	m_height;
-		bool	m_have_depth;
 		TextureOpenGL*	m_texture;
         GL::GLuint m_framebuffer;
 		GL::GLuint m_depth_renderbuffer;

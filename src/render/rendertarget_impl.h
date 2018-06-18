@@ -26,9 +26,9 @@ namespace GHL {
         bool GetHaveDepth() const { return m_have_depth; }
     protected:
         RenderImpl* GetParent();
+        bool    m_have_depth;
     private:
         RenderImpl* m_parent;
-        bool    m_have_depth;
 	};
 	
 }
