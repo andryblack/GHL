@@ -9,8 +9,10 @@
 #include "../sound/emscripten/ghl_sound_emscripten.h"
 #include "ghl_system.h"
 #include "ghl_event.h"
+#include "ghl_font.h"
 #include <string>
 #include <iostream>
+#include <cassert>
 
 
 #include <sys/time.h>
@@ -118,6 +120,77 @@ static void hide_system_input() {
     g_system_input_active = false;
 }
 
+extern "C" EMSCRIPTEN_KEEPALIVE GHL::Image* GHL_Font_allocate_image(GHL::UInt32 w,GHL::UInt32 h) {
+    assert(w>0);
+    assert(h>0);
+    return GHL_CreateImage(w,h,GHL::IMAGE_FORMAT_RGBA);
+}
+
+extern "C" EMSCRIPTEN_KEEPALIVE GHL::Byte* GHL_Font_get_image_data_ptr(GHL::Image* img) {
+    return img->GetData()->GetDataPtr();
+}
+extern "C" EMSCRIPTEN_KEEPALIVE void GHL_Font_set_glyph_info(GHL::Glyph* g, GHL::Image* img, GHL::Int32 x, GHL::Int32 y) {
+    g->bitmap = img;
+    g->x = x;
+    g->y = y;
+    g->advance = img->GetWidth();
+    img->PremultiplyAlpha();
+}
+
+class EmscriptenFont : public GHL::RefCounterImpl<GHL::Font>
+{
+private:
+    int m_handle;
+    std::string m_name;
+    float m_size;
+    float m_xscale;
+    float m_outline_width;
+public:
+    explicit EmscriptenFont(int handle,const GHL::FontConfig* fc) : m_handle(handle) {
+        m_name = fc->name;
+        m_size = fc->size;
+        m_xscale = fc->xscale;
+        m_outline_width = fc->outline_width;
+    }
+    ~EmscriptenFont() {
+        EM_ASM({
+            delete Module._text_render.fonts[$0];
+        },m_handle);
+    }
+
+    virtual const char* GHL_CALL GetName() const {
+        return m_name.c_str();
+    }
+    virtual float GHL_CALL GetSize() const {
+        return m_size;
+    }
+    virtual bool GHL_CALL RenderGlyph( GHL::UInt32 ch, GHL::Glyph* g ) {
+        GHL::UInt32 str[] = {ch,0};
+        g->bitmap = 0;
+        g->x = 0;
+        g->y = 0;
+        EM_ASM({
+            let handle = $0;
+            let text = $1;
+            let glyph = $2;
+            let str = UTF32ToString(text);
+            let fnt = Module._text_render.fonts[handle];
+            let img = fnt.render(str);
+            let ghl_img = Module['_GHL_Font_allocate_image'](img.width | 0,img.height | 0);
+            let ghl_img_ptr = Module['_GHL_Font_get_image_data_ptr'](ghl_img);
+            writeArrayToMemory(img.data,ghl_img_ptr);
+            Module['_GHL_Font_set_glyph_info'](glyph,ghl_img,img.x|0,img.y|0);
+        },m_handle,str,g);
+        return true;
+    }
+    virtual float GHL_CALL GetAscender() const {
+        return 0;
+    }
+    virtual float GHL_CALL GetDescender() const {
+        return 0;
+    }
+};
+
 
 class SystemEmscripten : public GHL::System {
 private:
@@ -169,6 +242,27 @@ public:
     }
     ///
     virtual bool GHL_CALL GetDeviceData( GHL::DeviceData name, void* data) {
+        if (name == GHL::DEVICE_DATA_LANGUAGE) {
+            char* buffer = (char*)EM_ASM_INT({
+                let text = navigator.language || navigator.userLanguage; 
+                let length = lengthBytesUTF8(text)+1;
+                let buffer = Module._malloc(length);
+                stringToUTF8(text,buffer,length);
+                return buffer;
+            });
+            char* dest = static_cast<char*>(data);
+            ::strncpy(dest,buffer, 32);
+            ::free(buffer);
+            return true;
+        } else if (name == GHL::DEVICE_DATA_UTC_OFFSET) {
+            GHL::Int32* output = static_cast<GHL::Int32*>(data);
+            *output = static_cast<GHL::Int32>(EM_ASM_INT({
+                let d = new Date();
+                let n = d.getTimezoneOffset();
+                return n*(-60);
+            }));
+            return true;
+        }
         return false;
     }
     ///
@@ -180,8 +274,111 @@ public:
         return false;
     }
     virtual GHL::Font* GHL_CALL CreateFont( const GHL::FontConfig* config ) {
-        return 0;
+        int handle = EM_ASM_INT(({
+            if (!Module._text_render) {
+                Module._text_render = {};
+                Module._text_render.fonts = {};
+                Module._text_render.fonts_cntr = 0;
+                Module._text_render.canvas = document.createElement("canvas");
+                document.body.appendChild(Module._text_render.canvas);
+                Module._text_render.canvas.style['background-color'] = 'rgb(0,0,0)';
+                Module._text_render.canvas.style.visibility = 'hidden';
+                Module._text_render.Font = function(size,outline,name) {
+                    this._size = size;
+                    this._outline = outline;
+                    this._name = name;
+                    this._canvas = Module._text_render.canvas;
+                    this._ctx = this._canvas.getContext('2d');
+                    this._ctx.textAlign = 'left';
+                    this._ctx.textBaseline = 'alphabetic';
+                    this._ctx.fillStyle = 'rgb(255,255,255)';
+                    this._ctx.strokeStyle = 'rgb(255,255,255)';
+                    let tmp_div = document.createElement("div");
+                    tmp_div.style.fontSize = size;
+                    tmp_div.style.visibility = 'hidden';
+                    tmp_div.style.width = 'auto';
+                    tmp_div.style.height = 'auto';
+                    tmp_div.style['white-space']='nowrap';
+                    tmp_div.style.position = 'absolute';
+                    document.body.appendChild(tmp_div);
+                    this._measure_div = tmp_div;
+                };
+                Module._text_render.Font.prototype.render = function(text) {
+                    this._ctx.font = this._size + 'px ' + this._name;
+                    let metrics = this._ctx.measureText(text);
+                    let w = metrics.width | 0;
+                    if (w < 1) {
+                        w = 1;
+                    };
+                    let h = this._size | 0;
+                    if (canvas.width < w || canvas.height < (h*2)) {
+                        this._canvas.width = w; 
+                        this._canvas.height = h * 2;
+                    };
+                    this._ctx.clearRect(0,0,this._canvas.width,this._canvas.height);
+                    if (this._outline > 0) {
+                        this._ctx.lineWidth = this._outline * 2;
+                        this._ctx.strokeText(text,0,h);
+                    } else {
+                        this._ctx.fillText(text,0,h);
+                    }
+                    let img = this._ctx.getImageData(0,0,w,h*2);
+                    let d = img.data;
+                    let begin_y = -1;
+                    for (let y=0; (y<h) && (begin_y<0) ;y++) {
+                        let pos = y * w * 4;
+                        for (let x=0;x<w;++x) {
+                            if (d[pos+x*4+3] != 0) {
+                                begin_y = y; 
+                                break;
+                            };
+                        };
+                    };
+                    let end_y = -1;
+                    for (let y=0; (y<h) && (end_y<0) ;y++) {
+                        let pos = (h*2-y-1) * w * 4;
+                        for (let x=0;x<w;++x) {
+                            if (d[pos+x*4+3] != 0) {
+                                end_y = (h*2-y-1); 
+                                break;
+                            };
+                        };
+                    };
+                    if (begin_y < 0) {
+                        begin_y = h;
+                    };
+                    if (end_y < 0) {
+                        end_y = h;
+                    };
+                    if (end_y <= begin_y) {
+                        end_y = h+1;
+                        begin_y = h;
+                    };
+                    let r = {
+                        x:0,
+                        y:(h-begin_y),
+                        width: (w | 0),
+                        height:(end_y-begin_y+1) | 0,
+                        data:d.slice(begin_y*w*4,(end_y*w+w-1)*4)
+                    };
+                    return r;
+                };
+            };
+            let size = $0;
+            let outline = $1;
+            Module._text_render.fonts_cntr++;
+            let handle = Module._text_render.fonts_cntr;
+            let name = Pointer_stringify($2);
+            let fnt = new Module._text_render.Font(size,outline,name);
+            Module._text_render.fonts[handle] = fnt;
+            return handle | 0;
+        }),double(config->size),double(config->outline_width),config->name);
+        return new EmscriptenFont(handle,config);
     }
+
+    //w = w * (window.devicePixelRatio || 1.0);
+    //h = h * (window.devicePixelRatio || 1.0);
+                   
 };
 
 static GHL::Key translate_key(const EmscriptenKeyboardEvent *keyEvent) {

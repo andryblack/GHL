@@ -105,7 +105,7 @@ namespace GHL {
             };
             if (!isWebAudioAPIsupported()) {
             	console.log('Web audio not supported');
-            	return 0 >> 0;
+            	return 0 | 0;
             };
             Module._sound = {};
             Module._sound.context = new (window.AudioContext || window.webkitAudioContext)();
@@ -113,7 +113,7 @@ namespace GHL {
             Module._sound.buffers = {};
             Module._sound.channels_cntr = 0;
             Module._sound.channels = {};
-			return 1 >> 0;
+			return 1 | 0;
 		});
 		if (!m_supported) {
 			LOG_INFO("Sound not supported");
@@ -153,7 +153,7 @@ namespace GHL {
     		let handle = Module._sound.buffers_cntr;
     		console.log('created buffer ' + handle);
     		Module._sound.buffers[handle] = buffer;
-    		return handle >> 0;
+    		return handle | 0;
     	},
     		SoundDecoderBase::GetChannels(type),
     		freq,
@@ -199,7 +199,7 @@ namespace GHL {
 	        	let handle = Module._sound.channels_cntr;
 	        	Module._sound.channels[handle] = node;
 	        	//console.log('created channel ' + handle);
-	        	return handle >> 0;
+	        	return handle | 0;
 	        }
 	        return 0;
         },em_effect->get_handle(),instance, vol / 100.0);
@@ -319,10 +319,10 @@ namespace GHL {
         bool result = EM_ASM_INT({
         	try {
         		Module._sound.music[$0].schedule($1,$2);
-        		return 1 >> 0;
+        		return 1 | 0;
         	} catch (e) {
         		console.log('failed schedule ' + $0 + ' ' + e);
-        		return 0 >> 0;
+        		return 0 | 0;
         	}
         },m_handle,m_buffer,samples);
         return result;
@@ -434,7 +434,7 @@ namespace GHL {
     		let handle = Module._sound.music_cntr;
     		let music = new Module.GHLMusicStream(numOfchannels,sampleRate);
     		Module._sound.music[handle] = music;
-    		return handle >> 0;
+    		return handle | 0;
     	}),
     		SoundDecoderBase::GetChannels(decoder->GetSampleType()),
     		decoder->GetFrequency()
