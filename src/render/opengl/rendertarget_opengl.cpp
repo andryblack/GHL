@@ -22,8 +22,9 @@ namespace GHL {
 
 
     RenderTargetOpenGL::RenderTargetOpenGL(RenderOpenGLBase* parent,UInt32 w,UInt32 h,TextureFormat fmt,bool depth) :
-		RenderTargetImpl(parent),gl(parent->get_api()),m_width(w),m_height(h),m_have_depth(depth),m_texture(0)
+		RenderTargetImpl(parent),gl(parent->get_api()),m_width(w),m_height(h),m_texture(0)
 	{
+        m_have_depth = depth;
         if (!gl.rtapi.valid) return;
         gl.rtapi.GenFramebuffers(1, &m_framebuffer);
 		gl.rtapi.BindFramebuffer(gl.rtapi.FRAMEBUFFER,m_framebuffer);
