@@ -542,7 +542,16 @@ static void loop_iteration(void* arg) {
 static GHL::SoundEmscripten g_sound;
 
 GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/, char** /*argv*/) {
-    
+    EM_ASM(({
+        Module.GHL_LogLevelNames = [
+                "F:",
+                "E:",
+                "W:",
+                "I:",
+                "V:",
+                "D:"
+        ];
+    }));
     g_application = app;
     
     LOG_INFO(  "start" );
@@ -682,13 +691,7 @@ GHL_API void GHL_CALL GHL_GlobalUnlock() {
 }
 
 GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {
-    static const char* levelName[] = {
-        "F:",
-        "E:",
-        "W:",
-        "I:",
-        "V:",
-        "D:"
-    };
-    std::cout << levelName[level] << message << std::endl;
+    EM_ASM({
+        Module.print(Module.GHL_LogLevelNames[$0],Pointer_stringify($1));
+    },GHL::UInt32(level),message);
 }
