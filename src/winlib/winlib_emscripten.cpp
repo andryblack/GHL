@@ -654,7 +654,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
     emscripten_set_mousedown_callback("#canvas", 0, 0, emscripten_handle_mouse_button);
     emscripten_set_mouseup_callback("#document", 0, 0, emscripten_handle_mouse_button);
     emscripten_set_mousemove_callback("#canvas", 0, 0, emscripten_handle_mouse_move);
-    emscripten_set_resize_callback("#canvas",0,0, emscripten_handle_resize);
+    emscripten_set_resize_callback("#window",0,0, emscripten_handle_resize);
 
     emscripten_set_keydown_callback("#window", 0, 0, emscripten_handle_key);
     emscripten_set_keyup_callback("#window", 0, 0, emscripten_handle_key);
