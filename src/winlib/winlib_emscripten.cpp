@@ -216,7 +216,15 @@ public:
     }
     ///
     virtual void GHL_CALL SwitchFullscreen(bool fs) {
-        /// do nothing
+        EmscriptenFullscreenChangeEvent status;
+        emscripten_get_fullscreen_status(&status);
+        if ((status.isFullscreen && fs)||(!status.isFullscreen && !fs)) 
+            return;
+        if (fs) {
+            emscripten_request_fullscreen("#canvas",0);
+        } else {
+            emscripten_exit_fullscreen();
+        }
     }
     
     virtual void GHL_CALL ShowKeyboard(const GHL::TextInputConfig* input) {
@@ -515,6 +523,24 @@ emscripten_handle_resize(int eventType, const EmscriptenUiEvent *uiEvent, void *
     return EM_TRUE;
 }
 
+static EM_BOOL
+emscripten_handle_fullscreen_change(int eventType, const EmscriptenFullscreenChangeEvent *fullscreenChangeEvent, void *userData) {
+    double w;
+    double h;
+    if (fullscreenChangeEvent->isFullscreen) {
+        w = fullscreenChangeEvent->screenWidth;
+        h = fullscreenChangeEvent->screenHeight;
+        LOG_INFO("switched to fullscreen " << w << "x" << h);
+    } else {
+        emscripten_get_element_css_size(NULL,&w,&h);
+        LOG_INFO("exit from fullscreen " << w << "x" << h);
+    }
+    emscripten_set_canvas_element_size("#canvas",w*g_pixel_ratio,h*g_pixel_ratio);
+    if (g_render) {
+        g_render->Resize(w*g_pixel_ratio,h*g_pixel_ratio);
+    }
+    return EM_TRUE;
+}
 
 
 static void loop_iteration(void* arg) {
@@ -603,33 +629,22 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
    
     eglBindAPI(EGL_OPENGL_ES_API);
 
-    EGLint config_attribs[] = {
-        EGL_RED_SIZE, 8,
-        EGL_GREEN_SIZE, 8,
-        EGL_BLUE_SIZE, 8,
-        EGL_DEPTH_SIZE, settings.depth ? 24 : EGL_DONT_CARE,
-        EGL_STENCIL_SIZE, settings.depth ? 8 : EGL_DONT_CARE,
-        EGL_RENDERABLE_TYPE,EGL_OPENGL_ES2_BIT,
-        EGL_NONE
-    };
-    EGLConfig configs[16];
-    EGLint found_configs = 0;
-    if (eglChooseConfig(g_egl_display,config_attribs,configs,16,&found_configs) == EGL_FALSE ||
-            found_configs == 0) {
-        LOG_ERROR("failed choose config");
+    GHL::UInt32 r = EM_ASM_INT(({
+        let contextAttributes = {
+            antialias: false,
+            depth: ($0 != 0),
+            stencil: false,
+            alpha: false
+        };
+        Module.ctx = Browser.createContext(Module['canvas'], true, true, contextAttributes);
+        return (Module.ctx ? 1 : 0) | 0;
+    }),settings.depth?1:0);
+
+    if (!r) {
+        LOG_ERROR("failed create context");
         return 1;
     }
-    EGLint context_attribs[] = {
-        EGL_CONTEXT_CLIENT_VERSION,2,
-        EGL_NONE
-    };
-
-    g_egl_context = eglCreateContext(g_egl_display,configs[0],EGL_NO_CONTEXT,context_attribs);
-    if (g_egl_context == EGL_NO_CONTEXT) {
-         LOG_ERROR("failed create context");
-        return 1;
-    }
-
+   
     g_sound.SoundInit();
     g_application->SetSound(&g_sound);
 
@@ -655,6 +670,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
     emscripten_set_mouseup_callback("#document", 0, 0, emscripten_handle_mouse_button);
     emscripten_set_mousemove_callback("#canvas", 0, 0, emscripten_handle_mouse_move);
     emscripten_set_resize_callback("#window",0,0, emscripten_handle_resize);
+    emscripten_set_fullscreenchange_callback("#window",0,0, emscripten_handle_fullscreen_change);
 
     emscripten_set_keydown_callback("#window", 0, 0, emscripten_handle_key);
     emscripten_set_keyup_callback("#window", 0, 0, emscripten_handle_key);
