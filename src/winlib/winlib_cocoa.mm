@@ -661,6 +661,12 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     e.data.mouse_move.y = local_point.y;
     [m_application getApplication]->OnEvent(&e);
 }
+- (void)scrollWheel:(NSEvent *)event {
+    GHL::Event e;
+    e.type = GHL::EVENT_TYPE_WHEEL;
+    e.data.wheel.delta = [event scrollingDeltaY];
+    [m_application getApplication]->OnEvent(&e);
+}
 
 - (BOOL) acceptsFirstResponder
 {

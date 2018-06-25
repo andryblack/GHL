@@ -36,6 +36,7 @@ namespace GHL
         EVENT_TYPE_MOUSE_PRESS,
         EVENT_TYPE_MOUSE_MOVE,
         EVENT_TYPE_MOUSE_RELEASE,
+        EVENT_TYPE_WHEEL,
         EVENT_TYPE_ACTIVATE,
         EVENT_TYPE_DEACTIVATE,
         EVENT_TYPE_VISIBLE_RECT_CHANGED,
@@ -89,6 +90,11 @@ namespace GHL
         MouseButton button;
     };
     
+    /// Wheel event
+    struct WheelEvent {
+        float delta;
+    };
+    
     // Soft Keyboard show
     struct VisibleRectChanged {
         Int32 x;
@@ -126,6 +132,7 @@ namespace GHL
             MousePressEvent     mouse_press;
             MouseMoveEvent      mouse_move;
             MouseReleaseEvent   mouse_release;
+            WheelEvent          wheel;
             VisibleRectChanged  visible_rect_changed;
             AppStartedEvent     app_started;
             HandleUrlEvent      handle_url;

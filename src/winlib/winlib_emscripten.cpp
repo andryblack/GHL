@@ -463,6 +463,21 @@ emscripten_handle_mouse_button(int eventType, const EmscriptenMouseEvent *mouseE
     }
     return EM_TRUE;
 }
+static EM_BOOL 
+emscripten_handle_wheel(int eventType, const EmscriptenWheelEvent *wheelEvent, void *userData) {
+    if (g_application) {
+        GHL::Event ae;
+        ae.type = GHL::EVENT_TYPE_WHEEL;
+        ae.data.wheel.delta = wheelEvent->deltaY;
+        if (wheelEvent->deltaMode == DOM_DELTA_PIXEL) {
+            ae.data.wheel.delta *= 0.2f;
+        }
+        g_application->OnEvent(&ae);
+        return EM_TRUE;
+    }
+    return EM_FALSE;
+}
+
 
 static EM_BOOL
 emscripten_handle_key(int eventType, const EmscriptenKeyboardEvent *keyEvent, void *userData)
@@ -669,6 +684,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
     emscripten_set_mousedown_callback("#canvas", 0, 0, emscripten_handle_mouse_button);
     emscripten_set_mouseup_callback("#document", 0, 0, emscripten_handle_mouse_button);
     emscripten_set_mousemove_callback("#canvas", 0, 0, emscripten_handle_mouse_move);
+    emscripten_set_wheel_callback("#canvas", 0, 0, emscripten_handle_wheel);
     emscripten_set_resize_callback("#window",0,0, emscripten_handle_resize);
     emscripten_set_fullscreenchange_callback("#window",0,0, emscripten_handle_fullscreen_change);
 
