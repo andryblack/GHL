@@ -5,6 +5,7 @@
 #include <assert.h>
 #include <math.h>
 #include <unistd.h>
+#include <cstdlib>
 
 namespace GHL {
     
