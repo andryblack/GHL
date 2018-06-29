@@ -23,6 +23,7 @@
 #include <unistd.h>
 #include <sys/uio.h>
 #include <cassert>
+#include <cstdlib>
 
 #include <sys/system_properties.h>
 
@@ -404,7 +405,7 @@ namespace GHL {
                 m_activity->env->ExceptionDescribe();
                 m_activity->env->ExceptionClear();
                 ILOG_INFO("[native] not found createSystemFont method");
-                return false;
+                return 0;
             }
             jobject fnt = m_activity->env->CallObjectMethod(m_activity->clazz,method);
             Font* res = FontAndroid::Create(config,m_activity->env,fnt);
