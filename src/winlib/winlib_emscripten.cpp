@@ -311,15 +311,15 @@ public:
                     this._ctx.textBaseline = 'alphabetic';
                     this._ctx.fillStyle = 'rgb(255,255,255)';
                     this._ctx.strokeStyle = 'rgb(255,255,255)';
-                    let tmp_div = document.createElement("div");
-                    tmp_div.style.fontSize = size;
-                    tmp_div.style.visibility = 'hidden';
-                    tmp_div.style.width = 'auto';
-                    tmp_div.style.height = 'auto';
-                    tmp_div.style['white-space']='nowrap';
-                    tmp_div.style.position = 'absolute';
-                    document.body.appendChild(tmp_div);
-                    this._measure_div = tmp_div;
+                    // let tmp_div = document.createElement("div");
+                    // tmp_div.style.fontSize = size;
+                    // tmp_div.style.visibility = 'hidden';
+                    // tmp_div.style.width = 'auto';
+                    // tmp_div.style.height = 'auto';
+                    // tmp_div.style['white-space']='nowrap';
+                    // tmp_div.style.position = 'absolute';
+                    // document.body.appendChild(tmp_div);
+                    // this._measure_div = tmp_div;
                 };
                 Module._text_render.Font.prototype.render = function(text) {
                     this._ctx.font = this._size + 'px ' + this._name;

@@ -1,5 +1,6 @@
 #include "render_webgl.h"
 #include <assert.h>
+#include <emscripten.h>
 
 static const char* MODULE = "RENDER:WebGL";
 
@@ -96,12 +97,12 @@ namespace GHL {
 		GL::GLenum element =gl.TRIANGLES;
 		UInt32 iamount = prim_amount * 3;
 		GetPrimitiveInfo(type,prim_amount,element,iamount);
-        GL::GLuint iid = m_index_buffers->Get(iamount,indexes);
-        for (UInt32 i=0;i<iamount;++i) {
-        	assert(indexes[i]<v_amount);
-        }
-        //LOG_INFO("DrawElements " << element << " " << iamount << " iid: " << iid << " vid: " << vid);
-        CHECK_GL(gl.DrawElements(element, iamount, gl.UNSIGNED_SHORT, 0));
+    /*GL::GLuint iid = */m_index_buffers->Get(iamount,indexes);
+    // for (UInt32 i=0;i<iamount;++i) {
+    // 	assert(indexes[i]<v_amount);
+    // }
+    //LOG_INFO("DrawElements " << element << " " << iamount << " iid: " << iid << " vid: " << vid);
+    CHECK_GL(gl.DrawElements(element, iamount, gl.UNSIGNED_SHORT, 0));
 	}
        
 
