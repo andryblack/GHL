@@ -180,6 +180,7 @@ namespace GHL
                             bool norm,
                             UInt32 vsize);
         void DoDrawPrimitives(VertexType v_type);
+        void InvalidatePointers() { m_force_update_pointers=true;}
     private:
         pfpl_render         m_shaders_render;
         pfpl_state_data     m_crnt_state;
@@ -190,6 +191,7 @@ namespace GHL
         bool    m_reset_uniforms;
         
         const void*               m_current_pointers[VERTEX_MAX_ATTRIBUTES];
+        bool m_force_update_pointers;
     };
     
 }

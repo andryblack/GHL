@@ -92,7 +92,7 @@ namespace GHL {
 		DoDrawPrimitives(v_type);
 		TempBuffersSet* vbuffer = (v_type == VERTEX_TYPE_SIMPLE) ? m_vertex_buffers : m_vertex2_buffers;
 		GL::GLuint vid = vbuffer->Get(v_amount,vertices);
-		ResetPointers(); // always different buffer
+		InvalidatePointers(); // always different buffer
 		SetupVertexData(0,v_type);
 		GL::GLenum element =gl.TRIANGLES;
 		UInt32 iamount = prim_amount * 3;

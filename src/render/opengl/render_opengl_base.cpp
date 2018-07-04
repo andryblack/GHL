@@ -788,6 +788,7 @@ namespace GHL {
             m_crnt_state.texture_stages[i].tex.all = 0;
         }
         ResetPointers();
+        m_force_update_pointers = true;
         return true;
     }
     
@@ -802,6 +803,7 @@ namespace GHL {
     void RenderOpenGLPPL::ResetRenderState() {
         RenderOpenGLBase::ResetRenderState();
         ResetPointers();
+        m_force_update_pointers = true;
     }
     
     void RenderOpenGLPPL::ResetPointers() {
@@ -818,13 +820,12 @@ namespace GHL {
                                          GL::GLenum t,
                                          bool norm,
                                          UInt32 vsize) {
-        if (m_current_pointers[u]!=ptr) {
+    	if (m_current_pointers[u]!=ptr || m_force_update_pointers) {
             CHECK_GL(gl.sdrapi.VertexAttribPointer(u,cnt,t,norm?gl._TRUE:gl._FALSE,GL::GLsizei(vsize),ptr));
             if (m_current_pointers[u] == NO_POINTER) {
                 CHECK_GL(gl.sdrapi.EnableVertexAttribArray(u));
             }
-            m_current_pointers[u]=ptr;
-            
+            m_current_pointers[u]=ptr;   
         }
     }
     void RenderOpenGLPPL::SetupVertexData(const Vertex* v,VertexType vt) {
@@ -837,7 +838,7 @@ namespace GHL {
         if (vt == VERTEX_TYPE_2_TEX) {
         	const Vertex2Tex* v2 = static_cast<const Vertex2Tex*>(v);
             vs = sizeof(*v2);
-            SetupAttribute(&v2->t2x, VERTEX_TEX_COORD1, 2, gl.FLOAT, false, vs);
+           	SetupAttribute(&v2->t2x, VERTEX_TEX_COORD1, 2, gl.FLOAT, false, vs);
         } else if (m_current_pointers[VERTEX_TEX_COORD1] != NO_POINTER) {
             CHECK_GL(gl.sdrapi.DisableVertexAttribArray(VERTEX_TEX_COORD1));
             m_current_pointers[VERTEX_TEX_COORD1] = NO_POINTER;
@@ -845,6 +846,7 @@ namespace GHL {
         SetupAttribute(&v->x, VERTEX_POSITION, 3, gl.FLOAT, false, vs);
         SetupAttribute(&v->tx, VERTEX_TEX_COORD0, 2, gl.FLOAT, false, vs);
         SetupAttribute(&v->color, VERTEX_COLOR, 4, gl.UNSIGNED_BYTE, true, vs);
+        m_force_update_pointers = false;
     }
     
     /// set projection matrix
@@ -945,6 +947,7 @@ namespace GHL {
     /// set current vertex buffer
     void GHL_CALL RenderOpenGLPPL::SetVertexBuffer(const VertexBuffer* buf) {
         RenderOpenGLBase::SetVertexBuffer(buf);
+        InvalidatePointers();
     }
 
 }
