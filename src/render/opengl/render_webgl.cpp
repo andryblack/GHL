@@ -53,6 +53,11 @@ namespace GHL {
 	RenderWebGL::RenderWebGL(UInt32 w,UInt32 h,bool haveDepth) : RenderOpenGLES2(w,h,haveDepth),
 		m_index_buffers(0),m_vertex_buffers(0),m_vertex2_buffers(0) {
 		
+    m_vertex_shader_prefix = "/*GHL*/\n"
+            "#version 100\n";
+    m_fragment_shader_prefix = "/*GHL*/\n"
+            "#version 100\n"
+            "precision mediump float;\n";
 	}
 
 	RenderWebGL::~RenderWebGL() {

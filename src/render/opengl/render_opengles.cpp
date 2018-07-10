@@ -46,7 +46,9 @@ namespace GHL {
     #endif
     
     RenderOpenGLES2::RenderOpenGLES2(UInt32 w,UInt32 h,bool depth) : RenderOpenGLPPL(w,h,depth) {
-        GetGenerator().set_fshader_header("precision mediump float;\n");
+        m_vertex_shader_prefix = "/*GHL*/\n";
+        m_fragment_shader_prefix = "/*GHL*/\n"
+            "precision mediump float;\n";
     }
     
     bool RenderOpenGLES2::RenderInit() {

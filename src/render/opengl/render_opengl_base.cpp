@@ -139,6 +139,8 @@ namespace GHL {
 	
 	RenderOpenGLBase::RenderOpenGLBase(UInt32 w,UInt32 h,bool haveDepth) : RenderImpl(w,h,haveDepth) {
         m_depth_write_enabled = false;
+        m_vertex_shader_prefix = "/*GHL*/\n";
+        m_fragment_shader_prefix = "/*GHL*/\n";
     }
 
 	RenderOpenGLBase::~RenderOpenGLBase() {
@@ -487,13 +489,14 @@ namespace GHL {
 	}
     
 	
-	static bool LoadShaderGLSL(const GL& gl,GL::GLhandle handle,const Data* ds) {
+	static bool LoadShaderGLSL(const GL& gl,GL::GLhandle handle,const Data* ds, const std::string& prefix) {
         if (!gl.sdrapi.valid) return false;
         const GL::GLchar* source[] = {
+        	reinterpret_cast<const GL::GLchar*>(prefix.c_str()),
 			reinterpret_cast<const GL::GLchar*>(ds->GetData())
 		};
-        GL::GLint len[] = {GL::GLint(ds->GetSize())};
-		CHECK_GL(gl.sdrapi.ShaderSource(handle,1,source,len));
+        GL::GLint len[] = {GL::GLint(prefix.length()),GL::GLint(ds->GetSize())};
+		CHECK_GL(gl.sdrapi.ShaderSource(handle,2,source,len));
 		CHECK_GL(gl.sdrapi.CompileShader(handle));
 		GL::GLint res;
 		gl.sdrapi.GetShaderiv(handle,gl.sdrapi.COMPILE_STATUS,&res);
@@ -514,7 +517,7 @@ namespace GHL {
         if (!gl.sdrapi.valid) return 0;
         GL::GLhandle handle = 0;
         CHECK_GL(handle = gl.sdrapi.CreateShader(gl.sdrapi.VERTEX_SHADER));
-		if (LoadShaderGLSL(gl,handle,ds)) {
+		if (LoadShaderGLSL(gl,handle,ds,m_vertex_shader_prefix)) {
 			VertexShaderGLSL* fs = new VertexShaderGLSL(this,handle);
 			return fs;
 		}
@@ -528,7 +531,7 @@ namespace GHL {
         if (!gl.sdrapi.valid) return 0;
         GL::GLhandle handle = 0;
         CHECK_GL(handle = gl.sdrapi.CreateShader(gl.sdrapi.FRAGMENT_SHADER));
-		if (LoadShaderGLSL(gl,handle,ds)) {
+		if (LoadShaderGLSL(gl,handle,ds,m_fragment_shader_prefix)) {
 			FragmentShaderGLSL* fs = new FragmentShaderGLSL(this,handle);
 			return fs;
 		}

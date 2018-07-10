@@ -55,6 +55,8 @@ namespace GHL {
 		bool SoundInit();
 		bool SoundDone();
 		
+        void Process();
+
         /// create sound effect from data
         virtual SoundEffect* GHL_CALL CreateEffect( SampleType type, UInt32 freq, Data* data );
         /// play effect

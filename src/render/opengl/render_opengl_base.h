@@ -100,6 +100,9 @@ namespace GHL
 		virtual ShaderProgram* GHL_CALL CreateShaderProgram(VertexShader* v,FragmentShader* f) ;
 		virtual void GHL_CALL SetShader(const ShaderProgram* shader);
         
+    protected:
+    	std::string m_vertex_shader_prefix;
+    	std::string m_fragment_shader_prefix;
         
 	};
     

@@ -390,11 +390,6 @@ namespace GHL {
 	    		};
 	    		GHLMusicStream.prototype.onAudioNodeEnded = function() {
 	    			this.scheduled_buffers.shift();
-	    			while (this.scheduled_buffers.length < 2 && this.playing) {
-	    				if (!this.decodeChunk()) {
-	    					break;
-	    				};
-	    			};
 	    		};
 	    		GHLMusicStream.prototype.decodeChunk = function() {
 	    			if (this.ptr == 0) {
@@ -424,11 +419,23 @@ namespace GHL {
 				    audioSrc.start(this.playStartedAt+this.totalTimeScheduled);
 				    this.totalTimeScheduled+= audioBuffer.duration;
 	    		};
+                GHLMusicStream.prototype.process = function() {
+                    while (this.scheduled_buffers.length < 2 && this.playing) {
+                        if (!this.decodeChunk()) {
+                            break;
+                        };
+                    };
+                };
 	    		GHLMusicStream.prototype.release = function() {
 	    			this.playing = false;
 	    			this.ptr = 0;
 	    		};
 	    		Module.GHLMusicStream = GHLMusicStream;
+                Module._sound.processMusic = function() {
+                    for(let music_id in Module._sound.music){
+                         Module._sound.music[music_id].process()
+                    }
+                };
     		};
     		Module._sound.music_cntr++;
     		let handle = Module._sound.music_cntr;
@@ -448,6 +455,14 @@ namespace GHL {
     	},handle,music_inst);
 
         return music_inst;
+    }
+
+    void SoundEmscripten::Process() {
+        EM_ASM({
+            if (Module._sound && Module._sound.processMusic) {
+                Module._sound.processMusic();
+            }
+        });
     }
 
 }

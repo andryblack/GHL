@@ -23,9 +23,9 @@
 static const char* MODULE = "WinLib";
 static GHL::Application* g_application = 0;
 static double g_last_time = 0;
-static bool g_done = false;
+static bool g_done = true;
 static GHL::RenderImpl* g_render = 0;
-static GHL::UInt32 g_frame_interval = 0;
+
 static bool g_window_resizeable = false;
 static EGLDisplay g_egl_display = EGL_NO_DISPLAY;
 static EGLSurface g_egl_surface = EGL_NO_SURFACE;
@@ -253,7 +253,7 @@ public:
         }
         else if (name==GHL::DEVICE_STATE_FRAME_INTERVAL) {
             const GHL::Int32* state = static_cast<const GHL::Int32*>(data);
-            g_frame_interval = *state;
+            emscripten_set_main_loop_timing(EM_TIMING_RAF,*state);
             return true;
         } 
         return false;
@@ -557,42 +557,41 @@ emscripten_handle_fullscreen_change(int eventType, const EmscriptenFullscreenCha
     return EM_TRUE;
 }
 
+static GHL::SoundEmscripten g_sound;
 
 static void loop_iteration(void* arg) {
     
     eglMakeCurrent(g_egl_display,g_egl_surface,g_egl_surface, g_egl_context);
 
-    static GHL::UInt32 frame_cntr = 0;
-    if (g_frame_interval != 0 ) {
-        ++frame_cntr;
-        if (frame_cntr < g_frame_interval) {
-            return;
-        }
-        frame_cntr = 0;
+    if (!g_done) {
+        double cur_time = emscripten_get_now();
+        GHL::UInt32 delta = (cur_time - g_last_time)*1000;
+        g_last_time = cur_time;
+
+        g_application->OnFrame(delta);
+        g_sound.Process();
+
     }
+    
+    // EM_ASM({
+    //     GLctx.finish();
+    // });
 
-    double cur_time = emscripten_get_now();
-    GHL::UInt32 delta = (cur_time - g_last_time)*1000;
-    g_last_time = cur_time;
-
-    g_application->OnFrame(delta);
-    eglSwapBuffers(g_egl_display,g_egl_surface);
 }
 
 
-static GHL::SoundEmscripten g_sound;
+static GHL::ImageDecoderImpl g_image_decoder;
 
 GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/, char** /*argv*/) {
-    EM_ASM(({
-        Module.GHL_LogLevelNames = [
-                "F:",
-                "E:",
-                "W:",
-                "I:",
-                "V:",
-                "D:"
-        ];
-    }));
+
+    
+    
+
+    emscripten_cancel_main_loop();
+    emscripten_set_main_loop_arg(loop_iteration, &g_system,0, 0);
+
+
+
     g_application = app;
     
     LOG_INFO(  "start" );
@@ -628,8 +627,8 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
 
     app->FillSettings(&settings);
 
-    GHL::ImageDecoderImpl image_decoder;
-    g_application->SetImageDecoder(&image_decoder);
+    
+    g_application->SetImageDecoder(&g_image_decoder);
 
 
     g_egl_display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
@@ -649,7 +648,8 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
             antialias: false,
             depth: ($0 != 0),
             stencil: false,
-            alpha: false
+            alpha: false,
+            premultipliedAlpha: false
         };
         Module.ctx = Browser.createContext(Module['canvas'], true, true, contextAttributes);
         return (Module.ctx ? 1 : 0) | 0;
@@ -694,18 +694,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
 
 
     g_last_time = emscripten_get_now();
-    while (!g_done) {
-        emscripten_set_main_loop_arg(loop_iteration, &g_system,0, 1);
-
-        LOG_INFO(  "done" );
-    }
-
     
-    //SDL_GL_DeleteContext(glcontext);  
-    // Cleanup
-   
-    GHL_DestroyVFS(vfs);
-    //SDL_Quit();
 
     return 0;
 }
@@ -723,7 +712,17 @@ GHL_API void GHL_CALL GHL_GlobalUnlock() {
 }
 
 GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {
-    EM_ASM({
+    EM_ASM(({
+        if (!Module.GHL_LogLevelNames) {
+            Module.GHL_LogLevelNames = [
+                "F:",
+                "E:",
+                "W:",
+                "I:",
+                "V:",
+                "D:"
+            ];
+        }
         Module.print(Module.GHL_LogLevelNames[$0],Pointer_stringify($1));
-    },GHL::UInt32(level),message);
+    }),GHL::UInt32(level),message);
 }

@@ -22,14 +22,12 @@ namespace GHL {
         void done();
         virtual ShaderProgram* generate( const pfpl_state_data& entry, bool tex2 );
         
-        void set_fshader_header( const char* v) { m_fshader_header = v; }
     protected:
         
     private:
         GHL::Render*    m_render;
         VertexShader*   m_simple_v;
         VertexShader*   m_simple_v2;
-        std::string     m_fshader_header;
     };
     
 }
