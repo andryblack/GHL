@@ -231,6 +231,9 @@ public:
         if (input && input->system_input) {
             show_system_input(input);
         } else {
+            EM_ASM({
+                window.focus();
+            });
             m_keyboard_active = true;
         }
     }
@@ -468,7 +471,7 @@ emscripten_handle_wheel(int eventType, const EmscriptenWheelEvent *wheelEvent, v
     if (g_application) {
         GHL::Event ae;
         ae.type = GHL::EVENT_TYPE_WHEEL;
-        ae.data.wheel.delta = wheelEvent->deltaY;
+        ae.data.wheel.delta = -wheelEvent->deltaY;
         if (wheelEvent->deltaMode == DOM_DELTA_PIXEL) {
             ae.data.wheel.delta *= 0.2f;
         }
