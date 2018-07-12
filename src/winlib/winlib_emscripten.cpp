@@ -25,6 +25,8 @@ static GHL::Application* g_application = 0;
 static double g_last_time = 0;
 static bool g_done = true;
 static GHL::RenderImpl* g_render = 0;
+static double g_mouse_scale_x = 1.0;
+static double g_mouse_scale_y = 1.0;
 
 static bool g_window_resizeable = false;
 static EGLDisplay g_egl_display = EGL_NO_DISPLAY;
@@ -32,6 +34,25 @@ static EGLSurface g_egl_surface = EGL_NO_SURFACE;
 static EGLContext g_egl_context = EGL_NO_CONTEXT;
 static double g_pixel_ratio = 1.0;
 static bool g_system_input_active = false;
+
+static void limit_render_size(double& w,double& h) {
+    if (w < 1.0) w = 1.0;
+    if (h < 1.0) h = 1.0;
+    double original_w = w;
+    double original_h = h;
+    EM_ASM({
+        if (Module.GHL_LimitRenderSize) {
+            Module.GHL_LimitRenderSize($0,$1);
+        }
+    },&w,&h);
+    if (w != original_w || h!=original_h) {
+        g_mouse_scale_x = w / original_w;
+        g_mouse_scale_y = h / original_h;
+    } else {
+        g_mouse_scale_x = 1.0;
+        g_mouse_scale_y = 1.0;
+    }
+}
 
 extern "C" EMSCRIPTEN_KEEPALIVE void  GHL_Winlib_OnSystemInputTextChanged(const char* text) {
     if (g_application) {
@@ -434,8 +455,8 @@ emscripten_handle_mouse_move(int eventType, const EmscriptenMouseEvent *mouseEve
         ae.type = GHL::EVENT_TYPE_MOUSE_MOVE;
         ae.data.mouse_move.button =  GHL::MOUSE_BUTTON_LEFT;
         ae.data.mouse_move.modificators = 0;
-        ae.data.mouse_move.x = mouseEvent->canvasX * g_pixel_ratio;
-        ae.data.mouse_move.y = mouseEvent->canvasY * g_pixel_ratio;
+        ae.data.mouse_move.x = mouseEvent->canvasX * g_pixel_ratio * g_mouse_scale_x;
+        ae.data.mouse_move.y = mouseEvent->canvasY * g_pixel_ratio * g_mouse_scale_y;
         g_application->OnEvent(&ae);
     }
     return EM_TRUE;
@@ -449,14 +470,14 @@ emscripten_handle_mouse_button(int eventType, const EmscriptenMouseEvent *mouseE
             ae.type = GHL::EVENT_TYPE_MOUSE_PRESS;
             ae.data.mouse_press.button =  GHL::MOUSE_BUTTON_LEFT;
             ae.data.mouse_press.modificators = 0;
-            ae.data.mouse_press.x = mouseEvent->canvasX * g_pixel_ratio;;
-            ae.data.mouse_press.y = mouseEvent->canvasY * g_pixel_ratio;;
+            ae.data.mouse_press.x = mouseEvent->canvasX * g_pixel_ratio * g_mouse_scale_x;
+            ae.data.mouse_press.y = mouseEvent->canvasY * g_pixel_ratio * g_mouse_scale_y;
         } else {
             ae.type = GHL::EVENT_TYPE_MOUSE_RELEASE;
             ae.data.mouse_press.button =  GHL::MOUSE_BUTTON_LEFT;
             ae.data.mouse_press.modificators = 0;
-            ae.data.mouse_press.x = mouseEvent->canvasX * g_pixel_ratio;;
-            ae.data.mouse_press.y = mouseEvent->canvasY * g_pixel_ratio;;
+            ae.data.mouse_press.x = mouseEvent->canvasX * g_pixel_ratio * g_mouse_scale_x;
+            ae.data.mouse_press.y = mouseEvent->canvasY * g_pixel_ratio * g_mouse_scale_y;
         }
         g_application->OnEvent(&ae);
     }
@@ -530,6 +551,7 @@ emscripten_handle_resize(int eventType, const EmscriptenUiEvent *uiEvent, void *
     double w;
     double h;
     emscripten_get_element_css_size(NULL,&w,&h);
+    limit_render_size(w,h);
     emscripten_set_canvas_element_size("#canvas",w*g_pixel_ratio,h*g_pixel_ratio);
     if (g_render) {
         g_render->Resize(w*g_pixel_ratio,h*g_pixel_ratio);
@@ -549,6 +571,7 @@ emscripten_handle_fullscreen_change(int eventType, const EmscriptenFullscreenCha
         emscripten_get_element_css_size(NULL,&w,&h);
         LOG_INFO("exit from fullscreen " << w << "x" << h);
     }
+    limit_render_size(w,h);
     emscripten_set_canvas_element_size("#canvas",w*g_pixel_ratio,h*g_pixel_ratio);
     if (g_render) {
         g_render->Resize(w*g_pixel_ratio,h*g_pixel_ratio);
@@ -621,7 +644,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
     settings.width = w * g_pixel_ratio;
     settings.height = h * g_pixel_ratio;
     settings.depth = false;
-    settings.screen_dpi = 50 * emscripten_get_device_pixel_ratio();
+    settings.screen_dpi = 50 * g_pixel_ratio;
 
 
     app->FillSettings(&settings);
@@ -666,8 +689,11 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
 
     g_done = false;
     LOG_INFO("create render " << settings.width << "x" << settings.height);
-    emscripten_set_canvas_element_size("#canvas",settings.width,settings.height);
-    g_render = GHL_CreateRenderOpenGL(settings.width,settings.height,settings.depth);
+    w = settings.width / g_pixel_ratio;
+    h = settings.height / g_pixel_ratio;
+    limit_render_size(w,h);
+    emscripten_set_canvas_element_size("#canvas",w*g_pixel_ratio,h*g_pixel_ratio);
+    g_render = GHL_CreateRenderOpenGL(w*g_pixel_ratio,h*g_pixel_ratio,settings.depth);
     if ( g_render && g_application ) {
         g_application->SetRender(g_render);
         if (!g_application->Load()) {
