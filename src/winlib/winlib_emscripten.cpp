@@ -61,12 +61,8 @@ static void show_system_input(const GHL::TextInputConfig* input) {
             input = document.createElement("input");
             input.id = 'ghl-system-input';
             input.type = 'text';
-            input.style.width = '100%';
-            input.style.position = 'absolute';
-            input.style.left = '0px';
-            input.style['z-index']='10';
             input.setAttribute('class','emscripten');
-            input = canvas.parentElement.appendChild(input);
+            input = canvas.appendChild(input);
            
 
             input.oninput = function() {
@@ -90,8 +86,8 @@ static void show_system_input(const GHL::TextInputConfig* input) {
                 };
             });
         };
+        input = canvas.parentElement.appendChild(input);
         input.style.display = 'block';
-        input.style.bottom = '0px';
         input.value = '';
         input.focus();
     });
