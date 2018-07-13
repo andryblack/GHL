@@ -416,7 +416,13 @@ namespace GHL {
 				    	const startDelay = audioBuffer.duration + (audioCtx.baseLatency || 128 / audioCtx.sampleRate);
 				    	this.playStartedAt = this.playStartedAt + startDelay;
 				    };
-				    audioSrc.start(this.playStartedAt+this.totalTimeScheduled);
+                    let schedule_time = this.playStartedAt+this.totalTimeScheduled;
+                    if (audioCtx.currentTime > schedule_time) {
+                        this.playStartedAt = audioCtx.currentTime;
+                        this.totalTimeScheduled = 0;
+                        schedule_time = audioCtx.currentTime;
+                    }
+				    audioSrc.start(schedule_time);
 				    this.totalTimeScheduled+= audioBuffer.duration;
 	    		};
                 GHLMusicStream.prototype.process = function() {
