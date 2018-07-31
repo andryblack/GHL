@@ -579,6 +579,24 @@ emscripten_handle_fullscreen_change(int eventType, const EmscriptenFullscreenCha
     return EM_TRUE;
 }
 
+static EM_BOOL
+emscripten_handle_visibilitychange(int eventType, const EmscriptenVisibilityChangeEvent *visibilityChangeEvent, void *userData) {
+    if (visibilityChangeEvent->visibilityState==EMSCRIPTEN_VISIBILITY_VISIBLE) {
+        if (g_application) {
+            GHL::Event ae;
+            ae.type = GHL::EVENT_TYPE_RESUME;
+            g_application->OnEvent(&ae);
+        }
+    } else {
+        if (g_application) {
+            GHL::Event ae;
+            ae.type = GHL::EVENT_TYPE_SUSPEND;
+            g_application->OnEvent(&ae);
+        }
+    }
+    return EM_TRUE;
+}
+
 static GHL::SoundEmscripten g_sound;
 
 static void loop_iteration(void* arg) {
@@ -717,6 +735,8 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
     emscripten_set_keyup_callback("#window", 0, 0, emscripten_handle_key);
     emscripten_set_keypress_callback("#window", 0, 0, emscripten_handle_key_press);
 
+
+    emscripten_set_visibilitychange_callback(0,0,emscripten_handle_visibilitychange);
 
     g_last_time = emscripten_get_now();
     
