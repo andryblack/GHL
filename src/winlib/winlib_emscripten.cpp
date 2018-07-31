@@ -276,6 +276,20 @@ public:
             emscripten_set_main_loop_timing(EM_TIMING_RAF,*state);
             return true;
         } 
+        else if (name==GHL::DEVICE_STATE_SYSTEM_CURSOR && data) {
+            GHL::SystemCursor cursor = static_cast<GHL::SystemCursor>(*(const GHL::UInt32*)data);
+            const char* system_cursor = "default";
+            switch (cursor) {
+                case GHL::SYSTEM_CURSOR_HAND: system_cursor = "pointer"; break;
+                default: break;
+            }
+            EM_ASM({
+                    if (Module['canvas']) {
+                        Module['canvas'].style['cursor'] = Pointer_stringify($0);
+                    }
+                }, system_cursor);
+            return true;
+        }
         return false;
     }
     ///

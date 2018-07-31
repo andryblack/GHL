@@ -395,6 +395,7 @@ public:
         m_loaded = false;
         m_null_cursor = nil;
         m_cursor_visible = YES;
+        m_cursor = GHL::SYSTEM_CURSOR_DEFAULT;
         if (g_need_retina) {
             [self  setWantsBestResolutionOpenGLSurface:YES];
         } else {
@@ -417,14 +418,33 @@ public:
     [self.window invalidateCursorRectsForView:self];
 }
 
+-(void)setCursor:(GHL::SystemCursor) cursor
+{
+    m_cursor = cursor;
+    [self.window invalidateCursorRectsForView:self];
+}
+
 -(void)resetCursorRects
 {
+    [super resetCursorRects];
     if ( !m_null_cursor && !m_cursor_visible ) {
         NSImage* img = [[NSImage alloc] initWithSize:NSMakeSize(8, 8)];
         m_null_cursor = [[NSCursor alloc] initWithImage:img hotSpot:NSMakePoint(0, 0)];
         [img release];
     }
-    [self addCursorRect:self.visibleRect cursor:(m_cursor_visible ? [NSCursor arrowCursor]:m_null_cursor)];
+    if (m_cursor_visible) {
+        NSCursor* cursor = [NSCursor arrowCursor];
+        switch (m_cursor) {
+            case GHL::SYSTEM_CURSOR_HAND:
+                cursor = [NSCursor pointingHandCursor];
+                break;
+            default:
+                break;
+        }
+        [self addCursorRect:self.visibleRect cursor:cursor];
+    } else {
+        [self addCursorRect:self.visibleRect cursor:m_null_cursor];
+    }
 }
 
 
@@ -857,6 +877,10 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 {
     [m_gl_view setCursorVisible:visible];
 }
+-(void) setCursor:(GHL::SystemCursor) cursor
+{
+    [m_gl_view setCursor:cursor];
+}
 -(void)dealloc {
     LOG_INFO( "WinLibAppDelegate::dealloc" );
 	if (m_application)
@@ -1195,6 +1219,12 @@ bool GHL_CALL SystemCocoa::SetDeviceState(GHL::DeviceState name, const void *dat
         BOOL enabled = *(const bool*)data;
         if (delegate) {
             [delegate setResizeableWindow:enabled];
+        }
+        return true;
+    } else if (name==GHL::DEVICE_STATE_SYSTEM_CURSOR && data) {
+        GHL::SystemCursor cursor = static_cast<GHL::SystemCursor>(*(const GHL::UInt32*)data);
+        if (delegate) {
+            [delegate setCursor:cursor];
         }
         return true;
     }

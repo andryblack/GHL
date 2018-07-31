@@ -13,6 +13,12 @@
 
 namespace GHL {
 	
+    /// system cursor
+    enum SystemCursor {
+        SYSTEM_CURSOR_DEFAULT,
+        SYSTEM_CURSOR_HAND,
+    };
+    
 	/// device state
 	enum DeviceState {
 		DEVICE_STATE_ACCELEROMETER_ENABLED,	///< bool
@@ -21,7 +27,8 @@ namespace GHL {
         DEVICE_STATE_SYSTEM_CURSOR_ENABLED, ///< bool
 		DEVICE_STATE_FRAME_INTERVAL,        ///< Int32
         DEVICE_STATE_RESIZEABLE_WINDOW,     ///< bool
-        DEVICE_STATE_KEEP_SCREEN_ON         ///< bool
+        DEVICE_STATE_KEEP_SCREEN_ON,        ///< bool
+        DEVICE_STATE_SYSTEM_CURSOR,         ///< UInt32 ( SystemCursor )
 	};
 	
 	/// device data
