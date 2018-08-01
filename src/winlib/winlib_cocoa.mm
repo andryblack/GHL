@@ -438,6 +438,9 @@ public:
             case GHL::SYSTEM_CURSOR_HAND:
                 cursor = [NSCursor pointingHandCursor];
                 break;
+            case GHL::SYSTEM_CURSOR_MOVE:
+                cursor = [NSCursor closedHandCursor];
+                break;
             default:
                 break;
         }

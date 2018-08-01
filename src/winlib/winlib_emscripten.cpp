@@ -281,6 +281,7 @@ public:
             const char* system_cursor = "default";
             switch (cursor) {
                 case GHL::SYSTEM_CURSOR_HAND: system_cursor = "pointer"; break;
+                case GHL::SYSTEM_CURSOR_MOVE: system_cursor = "move"; break;
                 default: break;
             }
             EM_ASM({

@@ -17,6 +17,7 @@ namespace GHL {
     enum SystemCursor {
         SYSTEM_CURSOR_DEFAULT,
         SYSTEM_CURSOR_HAND,
+        SYSTEM_CURSOR_MOVE
     };
     
 	/// device state
