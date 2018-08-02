@@ -413,6 +413,7 @@ public class Activity  extends android.app.NativeActivity  {
         ensureLoadLibrary();
         Log.v(TAG, "onPause");
         super.onPause();
+        hideSoftKeyboard();
     }
 
     @Override
@@ -435,6 +436,7 @@ public class Activity  extends android.app.NativeActivity  {
 
         //Hide toolbar
         hideToolbar();
+        hideSoftKeyboard();
     }
 
     @Override

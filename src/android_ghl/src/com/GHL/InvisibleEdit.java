@@ -192,7 +192,7 @@ class InvisibleEdit extends EditText {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+        //super.onDraw(canvas);
     }
 
     public void setTextMode(String text,int cursor_position) {
