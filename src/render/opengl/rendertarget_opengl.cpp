@@ -18,7 +18,7 @@
 
 namespace GHL {
 	
-	//static const char* MODULE = "RENDER";
+	static const char* MODULE = "RENDER:OpenGL";
 
 
     RenderTargetOpenGL::RenderTargetOpenGL(RenderOpenGLBase* parent,UInt32 w,UInt32 h,TextureFormat fmt,bool depth) :
@@ -34,10 +34,11 @@ namespace GHL {
         gl.rtapi.FramebufferTexture2D(gl.rtapi.FRAMEBUFFER, gl.rtapi.COLOR_ATTACHMENT0, gl.TEXTURE_2D, m_texture->name(), 0);
 		gl.BindTexture(gl.TEXTURE_2D,0);
 		if (depth) {
-            gl.rtapi.GenRenderbuffers(1, &m_depth_renderbuffer);
-            gl.rtapi.BindRenderbuffer(gl.rtapi.RENDERBUFFER, m_depth_renderbuffer);
-            gl.rtapi.RenderbufferStorage(gl.rtapi.RENDERBUFFER, gl.rtapi.DEPTH_COMPONENT16, w, h);
-            gl.rtapi.FramebufferRenderbuffer(gl.rtapi.FRAMEBUFFER, gl.rtapi.DEPTH_ATTACHMENT, gl.rtapi.RENDERBUFFER, m_depth_renderbuffer);
+            CHECK_GL(gl.rtapi.GenRenderbuffers(1, &m_depth_renderbuffer));
+            CHECK_GL(gl.rtapi.BindRenderbuffer(gl.rtapi.RENDERBUFFER, m_depth_renderbuffer));
+            CHECK_GL(gl.rtapi.RenderbufferStorage(gl.rtapi.RENDERBUFFER, gl.rtapi.DEPTH_COMPONENT16, w, h));
+            CHECK_GL(gl.rtapi.FramebufferRenderbuffer(gl.rtapi.FRAMEBUFFER, gl.rtapi.DEPTH_ATTACHMENT, gl.rtapi.RENDERBUFFER, m_depth_renderbuffer));
+            CHECK_GL(gl.rtapi.BindRenderbuffer(gl.rtapi.RENDERBUFFER, 0));
 		}
 		unbind();
 	}

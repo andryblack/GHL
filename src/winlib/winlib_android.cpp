@@ -22,6 +22,7 @@
 #include <unistd.h>
 #include <sys/uio.h>
 #include <cassert>
+#include <cstdlib>
 
 #include <sys/system_properties.h>
 
