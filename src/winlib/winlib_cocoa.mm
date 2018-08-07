@@ -1135,11 +1135,25 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     if (m_gl_view) {
         [m_window setContentSize:m_window.screen.frame.size];
     }
+    g_fullscreen = g_need_fullscreen = true;
+    if (m_application ) {
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_FULLSCREEN_CHANGED;
+        m_application->OnEvent(&e);
+    }
 }
 
 - (void)windowWillExitFullScreen:(NSNotification *)notification {
     if (m_gl_view) {
         [m_window setContentSize:m_rect.size];
+    }
+}
+- (void)windowDidExitFullScreen:(NSNotification *)notification {
+    g_fullscreen = g_need_fullscreen = false;
+    if (m_application ) {
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_FULLSCREEN_CHANGED;
+        m_application->OnEvent(&e);
     }
 }
 

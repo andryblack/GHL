@@ -229,7 +229,9 @@ public:
     
     ///
     virtual bool GHL_CALL IsFullscreen() const {
-        return false;
+        EmscriptenFullscreenChangeEvent status;
+        emscripten_get_fullscreen_status(&status);
+        return status.isFullscreen;
     }
     ///
     virtual void GHL_CALL SwitchFullscreen(bool fs) {
@@ -590,6 +592,11 @@ emscripten_handle_fullscreen_change(int eventType, const EmscriptenFullscreenCha
     emscripten_set_canvas_element_size("#canvas",w*g_pixel_ratio,h*g_pixel_ratio);
     if (g_render) {
         g_render->Resize(w*g_pixel_ratio,h*g_pixel_ratio);
+    }
+    if (g_application) {
+        GHL::Event ae;
+        ae.type = GHL::EVENT_TYPE_FULLSCREEN_CHANGED;
+        g_application->OnEvent(&ae);
     }
     return EM_TRUE;
 }
