@@ -73,8 +73,24 @@ extern "C" EMSCRIPTEN_KEEPALIVE void  GHL_Winlib_OnSystemInputTextAccepted(const
     }
 }
 
+extern "C" EMSCRIPTEN_KEEPALIVE void  GHL_Winlib_OnSystemInputTextDismiss(const char* text) {
+    if (g_application) {
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_TEXT_INPUT_CLOSED;
+        g_application->OnEvent(&e);
+    }
+}
+
 static void show_system_input(const GHL::TextInputConfig* input) {
     EM_ASM({
+        if (Module['GHL_ShowSystemInput']) {
+            let placeholder = null;
+            if ($1 != 0) {
+                placeholder = Pointer_stringify($1);
+            }
+            Module['GHL_ShowSystemInput']($0,placeholder);
+            return;
+        }
         let input = document.getElementById("ghl-system-input");
         let canvas = document.getElementById('canvas');
         if (!input || input === undefined) {
@@ -111,24 +127,24 @@ static void show_system_input(const GHL::TextInputConfig* input) {
         input.style.display = 'block';
         input.value = '';
         input.focus();
-    });
-    if (input->max_length!=0) {
-        EM_ASM({
-           let input = document.getElementById("ghl-system-input");
-           input.maxlength = $0;
-        },input->max_length);
-    }
-    if (input->placeholder) {
-        EM_ASM({
-           let input = document.getElementById("ghl-system-input");
-           input.placeholder = Pointer_stringify($0);
-        },input->placeholder);
-    }
+        let max_length = $0;
+        let placeholder = $1;
+        if (max_length != 0) {
+            input.maxlength = max_length;
+        }
+        if (placeholder!=0) {
+            input.placeholder = Pointer_stringify(placeholder);
+        }
+    },input->max_length,input->placeholder);
     g_system_input_active = true;
 }
 
 static void hide_system_input() {
     EM_ASM({
+        if (Module['GHL_HideSystemInput']) {
+            Module['GHL_HideSystemInput']();
+            return;
+        }
         let input = document.getElementById("ghl-system-input");
         if (input && input !== undefined) {
             input.style.display = 'none';
