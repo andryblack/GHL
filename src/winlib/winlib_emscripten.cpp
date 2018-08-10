@@ -454,7 +454,8 @@ public:
 
 static SystemEmscripten g_system;
 
-static GHL::Key translate_key(const EmscriptenKeyboardEvent *keyEvent) {
+static GHL::Key translate_key(const EmscriptenKeyboardEvent *keyEvent,bool& is_system) {
+    is_system = true;
     switch (keyEvent->keyCode) {
         case 37:     return GHL::KEY_LEFT;
         case 39:     return GHL::KEY_RIGHT;
@@ -463,6 +464,26 @@ static GHL::Key translate_key(const EmscriptenKeyboardEvent *keyEvent) {
         case 27:     return GHL::KEY_ESCAPE;
         case 13:     return GHL::KEY_ENTER;
         case 8:      return GHL::KEY_BACKSPACE;
+    };
+    is_system = false;
+    switch (keyEvent->keyCode) {
+
+        case 32:      return GHL::KEY_SPACE;
+
+        case 48:      return GHL::KEY_0;
+        case 49:      return GHL::KEY_1;
+        case 50:      return GHL::KEY_2;
+        case 51:      return GHL::KEY_3;
+        case 52:      return GHL::KEY_4;
+        case 53:      return GHL::KEY_5;
+        case 54:      return GHL::KEY_6;
+        case 55:      return GHL::KEY_7;
+        case 56:      return GHL::KEY_8;
+        case 57:      return GHL::KEY_9;
+
+    }
+    if (keyEvent->keyCode >= 65 && keyEvent->keyCode <= 90) {
+        return GHL::Key( int(GHL::KEY_A) + (keyEvent->keyCode-65) );
     }
     return GHL::KEY_NONE;
 }
@@ -537,10 +558,12 @@ emscripten_handle_key(int eventType, const EmscriptenKeyboardEvent *keyEvent, vo
 {
     if (g_system_input_active) 
         return EM_FALSE;
-    if (!g_system.keyboardActive())
-        return EM_FALSE;
     if (g_application) {
-        GHL::Key key = translate_key(keyEvent);
+        bool is_system;
+        GHL::Key key = translate_key(keyEvent,is_system);
+        if (!is_system && g_system.keyboardActive()) {
+            return EM_FALSE;
+        }
         if (key!=GHL::KEY_NONE) {
             GHL::Event ae;
             ae.data.key_press.key = key;
@@ -568,6 +591,9 @@ emscripten_handle_key_press(int eventType, const EmscriptenKeyboardEvent *keyEve
         return EM_FALSE;
     if (!g_system.keyboardActive())
         return EM_FALSE;
+    if (keyEvent->charCode==0) {
+        return EM_FALSE;
+    }
     if (g_application) {
         GHL::Event ae;
         ae.type = GHL::EVENT_TYPE_KEY_PRESS;
@@ -575,6 +601,7 @@ emscripten_handle_key_press(int eventType, const EmscriptenKeyboardEvent *keyEve
         ae.data.key_press.charcode = keyEvent->charCode;
         ae.data.key_press.modificators = 0;
         g_application->OnEvent(&ae);
+        LOG_INFO("key_press " << keyEvent->charCode);
     }
     return EM_TRUE;
 }
