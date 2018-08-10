@@ -131,6 +131,7 @@ namespace GHL
         void DoDrawPrimitives(VertexType v_type);
         bool    m_reset_uniforms;
         const void*               m_current_pointers[VERTEX_MAX_ATTRIBUTES];
+        bool    m_reset_attributes;
         VertexAttributes m_simple_vdef;
         VertexAttributes m_2tex_vdef;        
 	};

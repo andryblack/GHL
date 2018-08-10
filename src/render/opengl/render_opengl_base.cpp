@@ -104,6 +104,7 @@ namespace GHL {
 	RenderOpenGLBase::RenderOpenGLBase(UInt32 w,UInt32 h,bool haveDepth) : RenderImpl(w,h,haveDepth) {
         m_depth_write_enabled = false;
         m_reset_uniforms = true;
+        m_reset_attributes = true;
         
         VertexAttributeDef def;
         def.usage = VERTEX_POSITION;
@@ -345,6 +346,9 @@ namespace GHL {
 	}
 	/// set current vertex buffer
 	void GHL_CALL RenderOpenGLBase::SetVertexBuffer(const VertexBuffer* buf) {
+        if (GetVertexBuffer() != buf) {
+            m_reset_attributes = true;
+        }
 		RenderImpl::SetVertexBuffer(buf);
         if (gl.vboapi.valid) {
             if (buf) {
@@ -577,6 +581,7 @@ namespace GHL {
             }
             m_current_pointers[i] = NO_POINTER;
         }
+        m_reset_attributes = true;
     }
 
     void RenderOpenGLBase::SetupAttribute(const VertexAttributeDef& def,size_t vsize,const void* ptr) {
@@ -612,9 +617,10 @@ namespace GHL {
         for (size_t i=0;i<VERTEX_MAX_ATTRIBUTES;++i) {
             used[i] = false;
         }
+        bool force = m_reset_attributes;
         for (VertexAttributes::const_iterator it = vt.begin();it!=vt.end();++it) {
             const void* ptr = static_cast<const Byte*>(v) + it->offset;
-            if (ptr != m_current_pointers[it->usage]) {
+            if (ptr != m_current_pointers[it->usage] || force) {
                 SetupAttribute(*it, vsize, ptr);
             }
             used[it->usage] = true;
@@ -629,7 +635,7 @@ namespace GHL {
                 m_current_pointers[i] = NO_POINTER;
             }
         }
-
+        m_reset_attributes = false;
     }
     
     /// set projection matrix
