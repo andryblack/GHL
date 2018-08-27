@@ -54,5 +54,6 @@ GHL_API bool GHL_CALL GHL_UnpackZlib(const GHL::Data* src, GHL::Byte* dst, GHL::
 GHL_API GHL::Data* GHL_CALL GHL_UnpackZlibData(const GHL::Data* src);
 GHL_API GHL::Data* GHL_CALL GHL_PackZlib(const GHL::Data* src);
 GHL_API GHL::UInt32 GHL_CALL GHL_DataCRC32(const GHL::Data* data );
+GHL_API GHL::UInt32 GHL_CALL GHL_CRC32(const GHL::Byte* data , GHL::UInt32 data_size);
 
 #endif /*GHL_DATA_H*/
