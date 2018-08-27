@@ -202,3 +202,6 @@ GHL_API GHL::Data* GHL_CALL GHL_UnpackZlibData(const GHL::Data* src) {
 GHL_API GHL::UInt32 GHL_CALL GHL_DataCRC32(const GHL::Data* data ) {
     return crc32(0,data->GetData(),GHL::UInt32(data->GetSize()));
 }
+GHL_API GHL::UInt32 GHL_CALL GHL_CRC32(const GHL::Byte* data , GHL::UInt32 data_size) {
+    return crc32(0,data,data_size);
+}
