@@ -448,7 +448,11 @@ public:
 
 
 
-
+static void set_event_timestamp(GHL::MouseEvent& me,UIEvent* e) {
+    double timestamp = [e timestamp];
+    me.timestamp.secs = timestamp;
+    me.timestamp.usecs = (timestamp - me.timestamp.secs) * 1000000;
+}
 
 
 
@@ -794,6 +798,7 @@ public:
         e.data.mouse_press.modificators = 0;
         e.data.mouse_press.x = pos.x;
         e.data.mouse_press.y = pos.y;
+        set_event_timestamp(e.data.mouse_press,event);
         g_application->OnEvent(&e);
         //LOG_DEBUG("touchBegan " << touch_num << " : " << pos.x << pos.y );
 	}
@@ -819,6 +824,7 @@ public:
         e.data.mouse_release.modificators = 0;
         e.data.mouse_release.x = pos.x;
         e.data.mouse_release.y = pos.y;
+        set_event_timestamp(e.data.mouse_release,event);
         g_application->OnEvent(&e);
         //LOG_DEBUG("touchesEnded " << touch_num << " : " << pos.x << pos.y );
 	}
@@ -847,6 +853,7 @@ public:
         e.data.mouse_move.modificators = 0;
         e.data.mouse_move.x = pos.x;
         e.data.mouse_move.y = pos.y;
+        set_event_timestamp(e.data.mouse_move,event);
         g_application->OnEvent(&e);
         //LOG_DEBUG("touchesMoved " << touch_num << " : " << pos.x << pos.y );
 	}

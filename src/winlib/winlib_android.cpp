@@ -157,6 +157,13 @@ static GHL::Key convert_key(uint32_t k) {
 namespace GHL {
 
 
+    static void set_event_timestamp(GHL::MouseEvent& me,const AInputEvent* e) {
+        int64_t timestamp = AMotionEvent_getEventTime(e);
+        timestamp /= 1000;
+        me.timestamp.secs = timestamp / 1000000;
+        me.timestamp.usecs = (timestamp - int64_t(me.timestamp.secs) * 1000000);
+    }
+
 
     class GHLActivity  : public System {
       
@@ -1086,6 +1093,7 @@ namespace GHL {
                         e.data.mouse_press.modificators = 0;
                         e.data.mouse_press.x = int( AMotionEvent_getX(event,0) );
                         e.data.mouse_press.y = int( AMotionEvent_getY(event,0) );
+                        set_event_timestamp(e.data.mouse_press,event);
                         m_touch_map.clear();
                         m_touch_map[AMotionEvent_getPointerId(event,0)] = e.data.mouse_press.button;
                         //LOG_DEBUG("set touch1 " << AMotionEvent_getPointerId(event,0) << " " << e.data.mouse_press.button);
@@ -1101,6 +1109,7 @@ namespace GHL {
                         e.data.mouse_release.modificators = 0;
                         e.data.mouse_release.x = int( AMotionEvent_getX(event,0) );
                         e.data.mouse_release.y = int( AMotionEvent_getY(event,0) );
+                        set_event_timestamp(e.data.mouse_release,event);
                         m_touch_map.erase(id);
                         //LOG_DEBUG("erase touch1 " << id);
                         m_app->OnEvent(&e);
@@ -1118,6 +1127,7 @@ namespace GHL {
                         e.data.mouse_press.modificators = 0;
                         e.data.mouse_press.x = int( AMotionEvent_getX(event,ptr) );
                         e.data.mouse_press.y = int( AMotionEvent_getY(event,ptr) );
+                        set_event_timestamp(e.data.mouse_press,event);
                         m_touch_map[AMotionEvent_getPointerId(event,ptr)] = e.data.mouse_press.button;
                         //LOG_DEBUG("set touch " << AMotionEvent_getPointerId(event,ptr) << " " << ptr << " " << e.data.mouse_press.button);
                         m_app->OnEvent(&e);
@@ -1133,6 +1143,7 @@ namespace GHL {
                         e.data.mouse_release.modificators = 0;
                         e.data.mouse_release.x = int( AMotionEvent_getX(event,ptr) );
                         e.data.mouse_release.y = int( AMotionEvent_getY(event,ptr) );
+                        set_event_timestamp(e.data.mouse_release,event);
                         m_touch_map.erase(id);
                         //LOG_DEBUG("erase touch " << id);
                         m_app->OnEvent(&e);
@@ -1150,6 +1161,7 @@ namespace GHL {
                             e.data.mouse_move.modificators = 0;
                             e.data.mouse_move.x =  int( AMotionEvent_getX(event,i) );
                             e.data.mouse_move.y =  int( AMotionEvent_getY(event,i) );
+                            set_event_timestamp(e.data.mouse_move,event);
                             m_app->OnEvent(&e);
                         }
                         

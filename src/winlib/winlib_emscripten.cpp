@@ -501,6 +501,11 @@ static GHL::UInt32 translate_mods(const EmscriptenKeyboardEvent *keyEvent) {
     return res;
 };
 
+static void set_event_timestamp(GHL::MouseEvent& me,const EmscriptenMouseEvent* e) {
+    double timestamp = e->timestamp * 1000;
+    me.timestamp.secs = timestamp;
+    me.timestamp.usecs = (timestamp - me.timestamp.secs) * 1000000;
+}
 
 static EM_BOOL
 emscripten_handle_mouse_move(int eventType, const EmscriptenMouseEvent *mouseEvent, void *userData) {
@@ -511,6 +516,7 @@ emscripten_handle_mouse_move(int eventType, const EmscriptenMouseEvent *mouseEve
         ae.data.mouse_move.modificators = 0;
         ae.data.mouse_move.x = mouseEvent->canvasX * g_pixel_ratio * g_mouse_scale_x;
         ae.data.mouse_move.y = mouseEvent->canvasY * g_pixel_ratio * g_mouse_scale_y;
+        set_event_timestamp(ae.data.mouse_move,mouseEvent);
         g_application->OnEvent(&ae);
     }
     return EM_TRUE;
@@ -526,12 +532,14 @@ emscripten_handle_mouse_button(int eventType, const EmscriptenMouseEvent *mouseE
             ae.data.mouse_press.modificators = 0;
             ae.data.mouse_press.x = mouseEvent->canvasX * g_pixel_ratio * g_mouse_scale_x;
             ae.data.mouse_press.y = mouseEvent->canvasY * g_pixel_ratio * g_mouse_scale_y;
+            set_event_timestamp(ae.data.mouse_press,mouseEvent);
         } else {
             ae.type = GHL::EVENT_TYPE_MOUSE_RELEASE;
-            ae.data.mouse_press.button =  GHL::MOUSE_BUTTON_LEFT;
-            ae.data.mouse_press.modificators = 0;
-            ae.data.mouse_press.x = mouseEvent->canvasX * g_pixel_ratio * g_mouse_scale_x;
-            ae.data.mouse_press.y = mouseEvent->canvasY * g_pixel_ratio * g_mouse_scale_y;
+            ae.data.mouse_release.button =  GHL::MOUSE_BUTTON_LEFT;
+            ae.data.mouse_release.modificators = 0;
+            ae.data.mouse_release.x = mouseEvent->canvasX * g_pixel_ratio * g_mouse_scale_x;
+            ae.data.mouse_release.y = mouseEvent->canvasY * g_pixel_ratio * g_mouse_scale_y;
+            set_event_timestamp(ae.data.mouse_release,mouseEvent);
         }
         g_application->OnEvent(&ae);
     }

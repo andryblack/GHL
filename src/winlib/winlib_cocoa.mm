@@ -381,7 +381,11 @@ public:
 @end
 
 
-
+static void set_event_timestamp(GHL::MouseEvent& me,const NSEvent* e) {
+    double timestamp = [e timestamp];
+    me.timestamp.secs = timestamp;
+    me.timestamp.usecs = (timestamp - me.timestamp.secs) * 1000000;
+}
 
 
 @implementation WinLibOpenGLView
@@ -610,6 +614,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     e.data.mouse_press.modificators = [self convertModificators:theEvent];
     e.data.mouse_press.x = local_point.x;
     e.data.mouse_press.y = local_point.y;
+    set_event_timestamp(e.data.mouse_press, theEvent);
     [m_application getApplication]->OnEvent(&e);
 }
 - (void)mouseUp:(NSEvent *)theEvent {
@@ -622,6 +627,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     e.data.mouse_release.modificators = [self convertModificators:theEvent];
     e.data.mouse_release.x = local_point.x;
     e.data.mouse_release.y = local_point.y;
+    set_event_timestamp(e.data.mouse_release, theEvent);
     [m_application getApplication]->OnEvent(&e);
 }
 - (void)mouseMoved:(NSEvent *)theEvent {
@@ -634,6 +640,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     e.data.mouse_move.modificators = [self convertModificators:theEvent];
     e.data.mouse_move.x = local_point.x;
     e.data.mouse_move.y = local_point.y;
+    set_event_timestamp(e.data.mouse_move, theEvent);
     [m_application getApplication]->OnEvent(&e);
 }
 - (void)mouseDragged:(NSEvent *)theEvent {
@@ -646,6 +653,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     e.data.mouse_move.modificators = [self convertModificators:theEvent];
     e.data.mouse_move.x = local_point.x;
     e.data.mouse_move.y = local_point.y;
+    set_event_timestamp(e.data.mouse_move, theEvent);
     [m_application getApplication]->OnEvent(&e);
 }
 - (void)rightMouseDown:(NSEvent *)theEvent {
@@ -658,6 +666,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     e.data.mouse_press.modificators = [self convertModificators:theEvent];
     e.data.mouse_press.x = local_point.x;
     e.data.mouse_press.y = local_point.y;
+    set_event_timestamp(e.data.mouse_press, theEvent);
     [m_application getApplication]->OnEvent(&e);
 }
 - (void)rightMouseUp:(NSEvent *)theEvent {
@@ -670,6 +679,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     e.data.mouse_release.modificators = [self convertModificators:theEvent];
     e.data.mouse_release.x = local_point.x;
     e.data.mouse_release.y = local_point.y;
+    set_event_timestamp(e.data.mouse_release, theEvent);
     [m_application getApplication]->OnEvent(&e);
 }
 - (void)rightMouseDragged:(NSEvent *)theEvent {
@@ -682,6 +692,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     e.data.mouse_move.modificators = [self convertModificators:theEvent];
     e.data.mouse_move.x = local_point.x;
     e.data.mouse_move.y = local_point.y;
+    set_event_timestamp(e.data.mouse_move, theEvent);
     [m_application getApplication]->OnEvent(&e);
 }
 - (void)scrollWheel:(NSEvent *)event {

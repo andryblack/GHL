@@ -25,6 +25,7 @@
 
 #include "ghl_keys.h"
 #include "ghl_types.h"
+#include "ghl_time.h"
 
 namespace GHL
 {
@@ -74,6 +75,7 @@ namespace GHL
         UInt32  modificators;
         Int32   x;
         Int32   y;
+        TimeValue timestamp;
     };
 
     /// Mouse/pointer press event
