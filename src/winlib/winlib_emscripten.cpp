@@ -649,17 +649,26 @@ emscripten_handle_visibilitychange(int eventType, const EmscriptenVisibilityChan
     if (visibilityChangeEvent->visibilityState==EMSCRIPTEN_VISIBILITY_VISIBLE) {
         if (g_application) {
             GHL::Event ae;
-            ae.type = GHL::EVENT_TYPE_RESUME;
+            ae.type = GHL::EVENT_TYPE_ACTIVATE;
             g_application->OnEvent(&ae);
         }
     } else {
         if (g_application) {
             GHL::Event ae;
-            ae.type = GHL::EVENT_TYPE_SUSPEND;
+            ae.type = GHL::EVENT_TYPE_DEACTIVATE;
             g_application->OnEvent(&ae);
         }
     }
     return EM_TRUE;
+}
+
+static const char *emscripten_handle_beforeunload(int eventType, const void *reserved, void *userData) {
+    if (g_application) {
+            GHL::Event ae;
+            ae.type = GHL::EVENT_TYPE_SUSPEND;
+            g_application->OnEvent(&ae);
+    }
+    return 0;
 }
 
 static GHL::SoundEmscripten g_sound;
@@ -802,6 +811,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
 
 
     emscripten_set_visibilitychange_callback(0,0,emscripten_handle_visibilitychange);
+    emscripten_set_beforeunload_callback(0,emscripten_handle_beforeunload);
 
     g_last_time = emscripten_get_now();
     
