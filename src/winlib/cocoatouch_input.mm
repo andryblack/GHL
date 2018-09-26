@@ -136,8 +136,8 @@
             [m_data deleteCharactersInRange:m_selected_range];
             m_selected_range.length = 0;
 //            NSLog(@"deleteBackward selectedRange");
-        } else if (m_data.length > 0) {
-            [m_data deleteCharactersInRange:NSMakeRange(m_data.length-1, 1)];
+        } else if (m_selected_range.location > 0) {
+            [m_data deleteCharactersInRange:NSMakeRange(m_selected_range.location-1, 1)];
             m_selected_range.location -= 1;
         }
         
