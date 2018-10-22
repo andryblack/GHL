@@ -10,14 +10,21 @@
 #include "gles2_api.h"
 #include "../../ghl_log_impl.h"
 
+#ifdef GHL_PLATFORM_EMSCRIPTEN
+#include "render_webgl.h"
+#endif
+
 namespace GHL {
     
     UInt32 g_default_framebuffer = 0;
     
     
+    static const char* MODULE = "RENDER:OpenGLES";
 
     RenderOpenGLES2::RenderOpenGLES2(UInt32 w,UInt32 h,bool depth) : RenderOpenGLBase(w,h,depth) {
-        GetGenerator().set_fshader_header("precision mediump float;\n");
+        m_vertex_shader_prefix = "/*GHL*/\n";
+        m_fragment_shader_prefix = "/*GHL*/\n"
+            "precision mediump float;\n";
     }
     
     bool RenderOpenGLES2::RenderInit() {
@@ -49,7 +56,11 @@ namespace GHL {
 
 GHL_API GHL::RenderImpl* GHL_CALL GHL_CreateRenderOpenGL(GHL::UInt32 w,GHL::UInt32 h,bool depth) {
     GHL::RenderOpenGLBase* render = 0;
+#ifdef GHL_PLATFORM_EMSCRIPTEN
+    render = new GHL::RenderWebGL(w,h,depth);
+#else
     render = new GHL::RenderOpenGLES2(w,h,depth);
+#endif
     if (!render->RenderInit()) {
         render->RenderDone();
         delete render;

@@ -25,6 +25,7 @@
 
 #include "ghl_ref_counter.h"
 #include "ghl_log_impl.h"
+#include "ghl_types.h"
 
 namespace GHL {
     

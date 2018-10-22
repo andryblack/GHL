@@ -38,7 +38,11 @@ namespace GHL {
 		virtual UInt32 GHL_CALL GetWidth() const { return m_width;}
 		/// get texture height
 		virtual UInt32 GHL_CALL GetHeight() const { return m_height;}
-		
+        /// get texture format
+        virtual TextureFormat GHL_CALL GetFormat() const { return m_fmt;}
+        /// get texture is have mipmaps
+        virtual bool GHL_CALL HeveMipmaps() const { return m_have_mipmaps;}
+        
         /// get minification texture filtration
 		virtual TextureFilter GHL_CALL GetMinFilter( ) const { return m_min_filter;}
 		/// set minification texture filtration
@@ -95,18 +99,22 @@ namespace GHL {
         bool    m_data_setted;
         bool    m_is_valid;
 #endif
+        bool    m_have_mipmaps;
     protected:
 
         
-        explicit TextureImpl( RenderImpl* parent, UInt32 w,UInt32 h );
+        explicit TextureImpl( RenderImpl* parent, UInt32 w,UInt32 h,TextureFormat fmt );
         void RestoreTexture(UInt32 stage);
         UInt32	m_width;
         UInt32	m_height;
+        TextureFormat    m_fmt;
         TextureFilter	m_min_filter;
         TextureFilter	m_mag_filter;
         TextureFilter	m_mip_filter;
         TextureWrapMode m_wrap_u;
         TextureWrapMode m_wrap_v;
+        
+        void SetHaveMipmaps(bool m);
     };
     
 }

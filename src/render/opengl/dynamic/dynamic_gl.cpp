@@ -323,6 +323,7 @@ namespace GHL {
             api->vboapi.ARRAY_BUFFER = GLApi_impl::GL_ARRAY_BUFFER;
             api->vboapi.ELEMENT_ARRAY_BUFFER = GLApi_impl::GL_ELEMENT_ARRAY_BUFFER;
             api->vboapi.STATIC_DRAW = GLApi_impl::GL_STATIC_DRAW;
+            api->vboapi.DYNAMIC_DRAW = GLApi_impl::GL_DYNAMIC_DRAW;
             api->vboapi.valid = true;
         } else {
             

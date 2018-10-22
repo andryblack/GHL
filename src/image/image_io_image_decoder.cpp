@@ -97,7 +97,7 @@ namespace GHL {
         return res;
     }
     
-    const Data* ImageIOImageDecoder::Encode( const Image* image,Int32 settings) {
+    const Data* ImageIOImageDecoder::Encode( const Image* image) {
         return 0;
     }
     ImageFileFormat ImageIOImageDecoder::GetFileFormat(const CheckBuffer& buf) const {

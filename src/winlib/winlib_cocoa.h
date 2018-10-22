@@ -7,6 +7,7 @@
 //
 
 #include <ghl_application.h>
+#include <ghl_system.h>
 #import <Cocoa/Cocoa.h>
 
 #include <sys/time.h>
@@ -63,9 +64,11 @@ class SystemCocoa;
 	::timeval	m_timeval;
     NSCursor*   m_null_cursor;
     BOOL        m_cursor_visible;
+    GHL::SystemCursor m_cursor;
 }
 -(void)setApplication:(WinLibAppDelegate*) app;
 -(void)setCursorVisible:(BOOL) visible;
+-(void)setCursor:(GHL::SystemCursor) cursor;
 @end
 
 

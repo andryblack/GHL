@@ -13,6 +13,13 @@
 
 namespace GHL {
 	
+    /// system cursor
+    enum SystemCursor {
+        SYSTEM_CURSOR_DEFAULT,
+        SYSTEM_CURSOR_HAND,
+        SYSTEM_CURSOR_MOVE
+    };
+    
 	/// device state
 	enum DeviceState {
 		DEVICE_STATE_ACCELEROMETER_ENABLED,	///< bool
@@ -21,7 +28,8 @@ namespace GHL {
         DEVICE_STATE_SYSTEM_CURSOR_ENABLED, ///< bool
 		DEVICE_STATE_FRAME_INTERVAL,        ///< Int32
         DEVICE_STATE_RESIZEABLE_WINDOW,     ///< bool
-        DEVICE_STATE_KEEP_SCREEN_ON         ///< bool
+        DEVICE_STATE_KEEP_SCREEN_ON,        ///< bool
+        DEVICE_STATE_SYSTEM_CURSOR,         ///< UInt32 ( SystemCursor )
 	};
 	
 	/// device data
@@ -47,9 +55,19 @@ namespace GHL {
         bool system_input;                      ///< show system input box
         TextInputAcceptButton accept_button;    ///< accept button type
         const char* placeholder;                ///< placeholder text
+        const char* text;                       ///< initial text
+        UInt32  cursor_position;                ///< cursor position
         UInt32  max_length;                     ///< max text length
     };
+    
+    struct FontConfig {
+        const char* name;
+        float size;
+        float xscale;
+        float outline_width;
+    };
 
+    struct Font;
     /// system interface
     struct System {
         /// Exit from application
@@ -70,6 +88,8 @@ namespace GHL {
         virtual void GHL_CALL SetTitle( const char* title ) = 0;
         /// Open external url
         virtual bool GHL_CALL OpenURL( const char* url ) = 0;
+        /// Render text
+        virtual Font* GHL_CALL CreateFont( const FontConfig* config ) = 0;
     };
 }
 

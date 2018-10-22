@@ -24,6 +24,7 @@
 #define GHL_EVENT_H
 
 #include "ghl_keys.h"
+#include "ghl_types.h"
 
 namespace GHL
 {
@@ -35,9 +36,11 @@ namespace GHL
         EVENT_TYPE_MOUSE_PRESS,
         EVENT_TYPE_MOUSE_MOVE,
         EVENT_TYPE_MOUSE_RELEASE,
+        EVENT_TYPE_WHEEL,
         EVENT_TYPE_ACTIVATE,
         EVENT_TYPE_DEACTIVATE,
         EVENT_TYPE_VISIBLE_RECT_CHANGED,
+        EVENT_TYPE_FULLSCREEN_CHANGED,
         EVENT_TYPE_APP_STARTED,
         EVENT_TYPE_HANDLE_URL,
         EVENT_TYPE_KEYBOARD_HIDE,
@@ -88,6 +91,11 @@ namespace GHL
         MouseButton button;
     };
     
+    /// Wheel event
+    struct WheelEvent {
+        float delta;
+    };
+    
     // Soft Keyboard show
     struct VisibleRectChanged {
         Int32 x;
@@ -108,6 +116,7 @@ namespace GHL
     // text input changed
     struct TextInputTextChangedEvent {
         const char* text;
+        UInt32 cursor_position;
     };
     // text input accepted
     struct TextInputAcceptedEvent : TextInputTextChangedEvent {
@@ -124,6 +133,7 @@ namespace GHL
             MousePressEvent     mouse_press;
             MouseMoveEvent      mouse_move;
             MouseReleaseEvent   mouse_release;
+            WheelEvent          wheel;
             VisibleRectChanged  visible_rect_changed;
             AppStartedEvent     app_started;
             HandleUrlEvent      handle_url;

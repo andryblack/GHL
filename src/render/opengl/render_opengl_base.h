@@ -31,6 +31,7 @@ namespace GHL
 	protected:
         GL  gl;
         bool    m_depth_write_enabled;
+        void GetPrimitiveInfo(PrimitiveType type,UInt32 amount,GL::GLenum& ptype,UInt32& iamount) const;
 	public:
 		RenderOpenGLBase(UInt32 w,UInt32 h,bool haveDepth);
 		~RenderOpenGLBase();
@@ -97,6 +98,9 @@ namespace GHL
 		virtual ShaderProgram* GHL_CALL CreateShaderProgram(VertexShader* v,FragmentShader* f) ;
 		virtual void GHL_CALL SetShader(const ShaderProgram* shader);
         
+    protected:
+    	std::string m_vertex_shader_prefix;
+    	std::string m_fragment_shader_prefix;
         
         
         /// set projection matrix
@@ -121,6 +125,7 @@ namespace GHL
         void ResetPointers();
         void SetupAttribute(const VertexAttributeDef& def,size_t vsize,const void* ptr);
         void SetShaderImpl(const ShaderProgram* shader);
+        void DoDrawPrimitives(VertexType v_type);
     private:
         pfpl_render         m_shaders_render;
         pfpl_state_data     m_crnt_state;
@@ -128,7 +133,6 @@ namespace GHL
         float               m_projection_matrix[16];
         float               m_view_matrix[16];
         float               m_projection_view_matrix[16];
-        void DoDrawPrimitives(VertexType v_type);
         bool    m_reset_uniforms;
         const void*               m_current_pointers[VERTEX_MAX_ATTRIBUTES];
         bool    m_reset_attributes;

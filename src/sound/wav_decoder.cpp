@@ -22,12 +22,17 @@
 
 #include "wav_decoder.h"
 #include "ghl_data_stream.h"
+#include "ghl_log_impl.h"
 #include <cstring>
+#include <cassert>
+#include <limits>
 
 
 namespace GHL
 {
 
+    static const char* MODULE = "wav";
+    
 	/** 
 	 * WAVE files decoder
 	 * file format description was found at http://www.sonicspot.com/guide/wavefiles.html
@@ -50,7 +55,7 @@ namespace GHL
         
 		::memset(&m_format,0,sizeof(m_format));
 
-		//std::cout << "WAV: init" << std::endl;
+        LOG_DEBUG("init");
 		
 		/// read shunks
 		while (!ds->Eof())
@@ -63,7 +68,7 @@ namespace GHL
 			//// "fmt "
 			if (::strncmp(reinterpret_cast<const char*>(chunk_name),"fmt ",4)==0) 
 			{
-				//std::cout << "WAV: found chunk 'fmt '" << std::endl;
+                LOG_DEBUG("found chunk 'fmt '");
 
 				if (chunk_size<16) return false;
 				if (ds->Read(reinterpret_cast<Byte*>(&m_format),sizeof(m_format))!=sizeof(m_format)) return false;
@@ -84,20 +89,22 @@ namespace GHL
 						m_type = SAMPLE_TYPE_STEREO_16;
 				}
 				m_freq = m_format.sample_rate;
+                assert(chunk_size<=UInt32(sizeof(m_format)));
 				m_ds->Seek(chunk_size-UInt32(sizeof(m_format)),F_SEEK_CURRENT);
 			} 
 			/// "data"
 			else if (::strncmp(reinterpret_cast<const char*>(chunk_name),"data",4)==0) 
 			{
-				//std::cout << "WAV: found chunk 'data'" << std::endl;
+                LOG_DEBUG("found chunk 'data'");
 				m_samples+=chunk_size/m_format.block_align;
+                assert(chunk_size<=std::numeric_limits<Int32>::max());
 				m_ds->Seek(chunk_size,F_SEEK_CURRENT);
 			}
 			/// another
 			else
 			{
-				//std::cout << "WAV: skip shunk '"<<chunk_name[0]<<chunk_name[1]<<chunk_name[2]<<chunk_name[3]<<"' "<< chunk_size << " bytes" << std::endl;
-				/// skip
+				LOG_DEBUG("skip shunk '"<<chunk_name[0]<<chunk_name[1]<<chunk_name[2]<<chunk_name[3]<<"' "<< chunk_size << " bytes");
+                assert(chunk_size<=std::numeric_limits<Int32>::max());
 				m_ds->Seek(chunk_size,F_SEEK_CURRENT);
 			}
 		}
@@ -169,7 +176,7 @@ namespace GHL
 			return 0;
 		WavDecoder* dec = new WavDecoder(ds);
 		if (!dec->Init()) {
-			delete dec;
+            dec->Release();
 			return 0;
 		}
 		return dec;

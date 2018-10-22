@@ -11,7 +11,9 @@
 #include <string>
 #include <iostream>
 
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_video.h>
+
 #include <sys/time.h>
 
 #ifdef EMSCRIPTEN
@@ -25,6 +27,9 @@ static bool g_done = false;
 static SDL_Window* g_window = 0;
 static GHL::RenderImpl* g_render = 0;
 static GHL::UInt32 g_height = 0;
+static GHL::UInt32 g_width = 0;
+static GHL::UInt32 g_frame_interval = 0;
+
 
 class SystemSDL : public GHL::System {
 private:
@@ -46,16 +51,30 @@ public:
         /// do nothing
     }
     
-    virtual void GHL_CALL ShowKeyboard(const GHL::TextInputConfig* input) {}
+    virtual void GHL_CALL ShowKeyboard(const GHL::TextInputConfig* input) {
+        SDL_StartTextInput();
+    }
         
     ///
-    virtual void GHL_CALL HideKeyboard() {}
+    virtual void GHL_CALL HideKeyboard() {
+        SDL_StopTextInput();
+    }
     
     virtual GHL::UInt32  GHL_CALL GetKeyMods() const {
         return 0;
     }
     ///
     virtual bool GHL_CALL SetDeviceState( GHL::DeviceState name, const void* data) {
+        if (name == GHL::DEVICE_STATE_RESIZEABLE_WINDOW) {
+            bool enabled = *(const bool*)data;
+            SDL_SetWindowResizable(g_window,enabled?SDL_TRUE:SDL_FALSE);
+            return true;
+        }
+        else if (name==GHL::DEVICE_STATE_FRAME_INTERVAL) {
+            const GHL::Int32* state = static_cast<const GHL::Int32*>(data);
+            g_frame_interval = *state;
+            return true;
+        } 
         return false;
     }
     ///
@@ -70,75 +89,169 @@ public:
         /// @todo
         return false;
     }
+    virtual GHL::Font* GHL_CALL CreateFont( const GHL::FontConfig* config ) {
+        return 0;
+    }
 };
 
+static GHL::Key translate_key(SDL_Scancode sc) {
+    switch (sc) {
+        case SDL_SCANCODE_LEFT:     return GHL::KEY_LEFT;
+        case SDL_SCANCODE_RIGHT:    return GHL::KEY_RIGHT;
+        case SDL_SCANCODE_UP:       return GHL::KEY_UP;
+        case SDL_SCANCODE_DOWN:     return GHL::KEY_DOWN;
+        case SDL_SCANCODE_ESCAPE:   return GHL::KEY_ESCAPE;
+        case SDL_SCANCODE_RETURN:   return GHL::KEY_ENTER;
+        case SDL_SCANCODE_BACKSPACE:return GHL::KEY_BACKSPACE;
+    }
+    return GHL::KEY_NONE;
+}
+static GHL::UInt32 translate_mods(Uint16 mods) {
+    GHL::UInt32 res = 0;
+    if (mods & KMOD_SHIFT) {
+        res |= GHL::KEYMOD_SHIFT;
+    }
+    if (mods & KMOD_CTRL) {
+        res |= GHL::KEYMOD_CTRL;
+    }
+    if (mods & KMOD_ALT) {
+        res |= GHL::KEYMOD_ALT;
+    }
+    return res;
+};
+static GHL::UInt32 parse_charcode(const char* data) {
+    const GHL::Byte* str = reinterpret_cast<const GHL::Byte*>(data);
+    GHL::UInt32 ch = 0;
+    unsigned int length = 0;
+    if (*str < 0x80) {
+        ch = *str;
+        return ch;
+    } else if (*str < 0xC0){
+        ch = ' ';
+        return ch;
+    } else if (*str < 0xE0) {
+        length = 2;
+        ch = *str & ~0xC0;
+    }
+    else if (*str < 0xF0) {
+        length = 3;
+        ch = *str & ~0xE0;
+    }
+    else if (*str < 0xF8) {
+        length = 4;
+        ch = *str & ~0xF0;
+    } 
+    else
+    {
+        ch = ' ';
+        return ch;
+    }
+    ++str;
+    switch (length)
+    {
+        case 4:
+            ch <<= 6;
+            ch |= (*str++ & 0x3F);
+        case 3:
+            ch <<= 6;
+            ch |= (*str++ & 0x3F);
+        case 2:
+            ch <<= 6;
+            ch |= (*str++ & 0x3F);
+    }
+    return ch;
+};
 static void loop_iteration(SDL_Window* window) {
     SDL_Event e;
     while (SDL_PollEvent(&e)) {
         switch (e.type) {
-            case SDL_KEYDOWN:
-            case SDL_KEYUP:
-                switch (e.key.keysym.scancode) {
-                    case SDL_SCANCODE_LEFT:
-                    case SDL_SCANCODE_RIGHT: {
-                        // const Uint8* keys = SDL_GetKeyboardState(0);
-                        // Sint16 xpos = 0;
-
-                        // if (keys[SDL_SCANCODE_LEFT] && keys[SDL_SCANCODE_RIGHT]) {
-                        //     xpos = 0;
-                        // } else if (keys[SDL_SCANCODE_LEFT]) {
-                        //     xpos = -1.0f;
-                        // } else if (keys[SDL_SCANCODE_RIGHT]) {
-                        //     xpos = 1.0f;
-                        // }
-
-                        // game->apply_input(Game::InputForce_X_AXIS, xpos);
-                    }
-                        break;
-                    case SDL_SCANCODE_UP:
-                        //game->apply_input(Game::InputForce_SHOOT, e.key.state == SDL_PRESSED ? 1 : 0);
-                        break;
-                    case SDL_SCANCODE_ESCAPE:
-                        //game->apply_input(Game::InputForce_START, e.key.state == SDL_PRESSED ? 1 : 0);
-                    default:
-                        break;
-                }
-                break;
-            case SDL_MOUSEBUTTONDOWN: {
+            case SDL_KEYDOWN: {
                 GHL::Event ae;
-                ae.type = GHL::EVENT_TYPE_MOUSE_PRESS;
-                ae.data.mouse_press.button =  GHL::MOUSE_BUTTON_LEFT;
-                ae.data.mouse_press.modificators = 0;
-                ae.data.mouse_press.x = e.button.x;
-                ae.data.mouse_press.y = e.button.y;
+                ae.type = GHL::EVENT_TYPE_KEY_PRESS;
+                ae.data.key_press.key = translate_key(e.key.keysym.scancode);
+                ae.data.key_press.charcode = 0;
+                ae.data.key_press.modificators = translate_mods(e.key.keysym.mod);
                 g_application->OnEvent(&ae);
+            } break;
+            case SDL_KEYUP: {
+                GHL::Event ae;
+                ae.type = GHL::EVENT_TYPE_KEY_RELEASE;
+                ae.data.key_press.key = translate_key(e.key.keysym.scancode);
+                ae.data.key_press.charcode = 0;
+                ae.data.key_press.modificators =translate_mods(e.key.keysym.mod);
+                g_application->OnEvent(&ae);
+            } break;
+            case SDL_TEXTINPUT: {
+                GHL::Event ae;
+                ae.type = GHL::EVENT_TYPE_KEY_PRESS;
+                ae.data.key_press.key = GHL::KEY_NONE;
+                ae.data.key_press.charcode = parse_charcode(e.text.text);
+                ae.data.key_press.modificators =0;
+                g_application->OnEvent(&ae);
+            } break;
+            case SDL_MOUSEBUTTONDOWN: {
+                if (g_width * g_height) {
+                    GHL::Event ae;
+                    ae.type = GHL::EVENT_TYPE_MOUSE_PRESS;
+                    ae.data.mouse_press.button =  GHL::MOUSE_BUTTON_LEFT;
+                    ae.data.mouse_press.modificators = 0;
+                    ae.data.mouse_press.x = e.button.x * g_render->GetWidth() / g_width;
+                    ae.data.mouse_press.y = e.button.y * g_render->GetHeight() / g_height;
+                    g_application->OnEvent(&ae);
+                }
             }break;
             case SDL_MOUSEBUTTONUP: {
-                GHL::Event ae;
-                ae.type = GHL::EVENT_TYPE_MOUSE_RELEASE;
-                ae.data.mouse_press.button =  GHL::MOUSE_BUTTON_LEFT;
-                ae.data.mouse_press.modificators = 0;
-                ae.data.mouse_press.x = e.button.x;
-                ae.data.mouse_press.y = e.button.y;
-                g_application->OnEvent(&ae);
+                if (g_width * g_height) {
+                    GHL::Event ae;
+                    ae.type = GHL::EVENT_TYPE_MOUSE_RELEASE;
+                    ae.data.mouse_press.button =  GHL::MOUSE_BUTTON_LEFT;
+                    ae.data.mouse_press.modificators = 0;
+                    ae.data.mouse_press.x = e.button.x * g_render->GetWidth() / g_width;
+                    ae.data.mouse_press.y = e.button.y * g_render->GetHeight() / g_height;
+                    g_application->OnEvent(&ae);
+                }
             }break;
             case SDL_MOUSEMOTION: {
-                GHL::Event ae;
-                ae.type = GHL::EVENT_TYPE_MOUSE_MOVE;
-                ae.data.mouse_move.button =  (e.motion.state & SDL_BUTTON_LMASK) ? GHL::MOUSE_BUTTON_LEFT : GHL::MOUSE_BUTTON_NONE;
-                ae.data.mouse_move.modificators = 0;
-                ae.data.mouse_move.x = e.motion.x;
-                ae.data.mouse_move.y = e.motion.y;
-                g_application->OnEvent(&ae);
+                if (g_width * g_height) {
+                    GHL::Event ae;
+                    ae.type = GHL::EVENT_TYPE_MOUSE_MOVE;
+                    ae.data.mouse_move.button =  (e.motion.state & SDL_BUTTON_LMASK) ? GHL::MOUSE_BUTTON_LEFT : GHL::MOUSE_BUTTON_NONE;
+                    ae.data.mouse_move.modificators = 0;
+                    ae.data.mouse_move.x = e.motion.x * g_render->GetWidth() / g_width;
+                    ae.data.mouse_move.y = e.motion.y * g_render->GetHeight() / g_height;
+                    g_application->OnEvent(&ae);
+                }
             }break;
             case SDL_QUIT:
                 g_done = true;
                 return;
                 break;
+            case SDL_WINDOWEVENT: {
+                switch (e.window.event) {
+                    case SDL_WINDOWEVENT_RESIZED:
+                        if (g_render) {
+                            int w,h;
+                            SDL_GL_GetDrawableSize(g_window,&w,&h);
+                            g_render->Resize(w,h);
+                            g_width = e.window.data1;
+                            g_height = e.window.data2;
+                        }
+                        break;
+                }
+            } break;
+            
                 
             default:
                 break;
         }
+    }
+    static GHL::UInt32 frame_cntr = 0;
+    if (g_frame_interval != 0 ) {
+        ++frame_cntr;
+        if (frame_cntr < g_frame_interval) {
+            return;
+        }
+        frame_cntr = 0;
     }
 
     Uint32 cur_time = SDL_GetTicks();
@@ -178,6 +291,13 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
     settings.width = 800;
     settings.height = 600;
     settings.depth = false;
+    settings.screen_dpi = 50;
+
+    float hdpi,vdpi;
+    if (SDL_GetDisplayDPI(0,0,&hdpi,&vdpi)==0) {
+        settings.screen_dpi = (hdpi + vdpi) * 0.5f;
+    }
+
     app->FillSettings(&settings);
 
     GHL::ImageDecoderImpl image_decoder;
@@ -193,14 +313,24 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
     
     g_window = SDL_CreateWindow(
         "GHL", 0, 0, settings.width, settings.height, 
-        SDL_WINDOW_OPENGL);
+        SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI
+        );
+
+    int w = 0;
+    int h = 0;
+    SDL_GetWindowSize(g_window,&w,&h);
+    g_width = w;
+    g_height = h;
 
     SDL_GLContext glcontext = SDL_GL_CreateContext(g_window);
 
-    g_height = settings.height;
+    
+    SDL_GL_GetDrawableSize(g_window,&w,&h);
+    settings.width = w;
+    settings.height = h;
 
     g_done = false;
-
+    LOG_INFO("create render " << settings.width << "x" << settings.height);
     g_render = GHL_CreateRenderOpenGL(settings.width,settings.height,settings.depth);
     if ( g_render && g_application ) {
         g_application->SetRender(g_render);
@@ -216,14 +346,15 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
     g_last_time = SDL_GetTicks();
 
     
-
+    if (!g_done) {
 #ifdef GHL_PLATFORM_EMSCRIPTEN
-    emscripten_set_main_loop_arg((em_arg_callback_func)loop_iteration, g_window, 0, 1);
+        emscripten_set_main_loop_arg((em_arg_callback_func)loop_iteration, g_window, 0, 1);
 #else
-    while (!g_done) {
-        loop_iteration(g_window);
-    }
+        while (!g_done) {
+            loop_iteration(g_window);
+        }
 #endif
+    }
 
     LOG_INFO(  "done" );
     SDL_GL_DeleteContext(glcontext);  

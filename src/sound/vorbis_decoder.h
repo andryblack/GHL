@@ -25,9 +25,13 @@
 
 #include "ghl_sound_decoder.h"
 
+#ifdef GHL_USE_IVORBIS_DECODER
+#include "tremor/ivorbisfile.h"
+#else
 #include "libvorbis/include/vorbis/codec.h"
 #define OV_EXCLUDE_STATIC_CALLBACKS
 #include "libvorbis/include/vorbis/vorbisfile.h"
+#endif
 
 namespace GHL
 {

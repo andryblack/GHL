@@ -11,13 +11,15 @@
 #include "../../ghl_log_impl.h"
 #include "../ghl_sound_decoder.h"
 #include <cassert>
+#include <map>
 
 namespace GHL {
 
     static const char* MODULE = "SOUND:OpenAL";
     
+    
 #define CHECK_ERROR  do { ALenum err = alGetError(); if (err!=AL_NO_ERROR) { \
-		LOG_ERROR(  __FUNCTION__ << " :" << alGetString(err) ); \
+        LOG_ERROR(  __FUNCTION__ << " :" << alGetString(err) );  \
 	} } while(0)
 	
 #define CHECK_ERROR_F(Name)  do { ALenum err = alGetError(); if (err!=AL_NO_ERROR) { \
@@ -25,11 +27,11 @@ namespace GHL {
 	} } while(0)
 	 
 #define CHECK_ERROR  do { ALenum err = alGetError(); if (err!=AL_NO_ERROR) { \
-    LOG_ERROR(  __FUNCTION__ << " :" << alGetString(err) ); \
+    LOG_ERROR(  __FUNCTION__ << " :" << alGetString(err) );  \
     } } while(0)
     
 #define CHECK_AERROR_F(Name)  do { ALCenum err = alcGetError(m_device); if (err!=ALC_NO_ERROR) { \
-    LOG_ERROR( __FUNCTION__ << ":" << #Name << " alc :" << err ); \
+    LOG_ERROR( __FUNCTION__ << ":" << #Name << " alc :" << err );  \
     } } while(0)
 	
 	static ALenum convert_format(SampleType type) {
@@ -48,7 +50,7 @@ namespace GHL {
 		CHECK_ERROR;
 	}
 	SoundEffectOpenAL::~SoundEffectOpenAL() {
-     	alDeleteBuffers(1, &m_buffer);
+        alDeleteBuffers(1, &m_buffer);
         CHECK_ERROR;
 	}
 	
@@ -67,6 +69,7 @@ namespace GHL {
         ALuint  m_source;
         SoundEffectOpenAL*      m_effect;
         SoundInstanceOpenAL*    m_instance;
+        float   m_pitch;
     public:
         SoundChannelOpenAL( ALuint source );
         ~SoundChannelOpenAL();
@@ -119,11 +122,12 @@ namespace GHL {
 	
 	SoundChannelOpenAL::SoundChannelOpenAL(ALuint source) : m_source(source),m_effect(0){
         m_instance = 0;
+        m_pitch = 100.0f;
 	}
 	
 	SoundChannelOpenAL::~SoundChannelOpenAL() {
         Clear();
-		alDeleteSources(1, &m_source);
+        alDeleteSources(1, &m_source);
 		CHECK_ERROR_F(alDeleteSources);
 	}
 	
@@ -172,6 +176,7 @@ namespace GHL {
     }
     
     void SoundChannelOpenAL::SetPitch(float pitch) {
+        m_pitch = pitch;
         alSourcef(m_source, AL_PITCH, pitch / 100.0f );
         CHECK_ERROR_F(alSourcef);
     }
@@ -317,6 +322,9 @@ namespace GHL {
     
     void SoundOpenAL::Suspend() {
         if (m_context) {
+            for (std::list<SoundChannelOpenAL*>::iterator it=m_channels.begin();it!=m_channels.end();++it) {
+                (*it)->Clear();
+            }
             alcMakeContextCurrent(NULL);
             CHECK_AERROR_F(alcMakeContextCurrent);
             alcSuspendContext(m_context);

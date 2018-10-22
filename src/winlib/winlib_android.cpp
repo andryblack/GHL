@@ -14,6 +14,7 @@
 #include "../vfs/vfs_android.h"
 #include "../image/image_decoders.h"
 #include "../sound/android/ghl_sound_android.h"
+#include "../font/font_android.h"
 
 #include <sys/time.h>
 #include <pthread.h>
@@ -251,10 +252,37 @@ namespace GHL {
             }
             return SetGLContext();
         }
+
+        bool show_text_edit(const TextInputConfig* config) {
+            jclass ActivityClass = m_activity->env->GetObjectClass(m_activity->clazz);
+            jmethodID method = m_activity->env->GetMethodID(ActivityClass,"showTextEdit","(Ljava/lang/String;I)V");
+            if (m_activity->env->ExceptionCheck()) {
+                m_activity->env->ExceptionDescribe();
+                m_activity->env->ExceptionClear();
+                ILOG_INFO("[native] not found method");
+                SetGLContext();
+                ANativeActivity_showSoftInput(m_activity,ANATIVEACTIVITY_SHOW_SOFT_INPUT_FORCED);
+                return false;
+            }
+            jstring text = 0;
+            if (config->text) {
+                text = GHL_JNI_CreateStringUTF8(m_activity->env,config->text);
+            }
+            jint cursor_position = config->cursor_position;
+            m_activity->env->CallVoidMethod(m_activity->clazz,method,
+                text,cursor_position);
+            m_activity->env->DeleteLocalRef(ActivityClass);
+            if (text) {
+                m_activity->env->DeleteLocalRef(text);
+            }
+            return SetGLContext();
+        }
         /// Show soft keyboard
         virtual void GHL_CALL ShowKeyboard(const TextInputConfig* input) {
             if (input && input->system_input) {
                 show_system_input(input);    
+            } else if (input && input->text) {
+                show_text_edit(input);
             } else {
                 set_keyboard_visible(true);
             }
@@ -369,9 +397,30 @@ namespace GHL {
             m_activity->env->DeleteLocalRef(urlobj);
             return res;
         }
+
+        virtual Font* GHL_CALL CreateFont( const FontConfig* config ) {
+            jclass ActivityClass = m_activity->env->GetObjectClass(m_activity->clazz);
+            jmethodID method = m_activity->env->GetMethodID(ActivityClass,"createSystemFont","()Lcom/GHL/SystemFont;");
+            if (m_activity->env->ExceptionCheck()) {
+                m_activity->env->ExceptionDescribe();
+                m_activity->env->ExceptionClear();
+                ILOG_INFO("[native] not found createSystemFont method");
+                return 0;
+            }
+            jobject fnt = m_activity->env->CallObjectMethod(m_activity->clazz,method);
+            Font* res = FontAndroid::Create(config,m_activity->env,fnt);
+            m_activity->env->DeleteLocalRef(ActivityClass);
+            m_activity->env->DeleteLocalRef(fnt);
+
+            return res;
+        }
+
+
+
+        ////////////
         static const unsigned int AWINDOW_FLAG_KEEP_SCREEN_ON = 0x00000080;
         void OnCreate() {
-            LOG_INFO("OnCreate");
+            LOG_INFO("OnCreate SDK: " << m_activity->sdkVersion);
               /* Set the window color depth to 24bpp, since the default is
                 * ugly-looking 16bpp. */
             ANativeActivity_setWindowFormat(m_activity, WINDOW_FORMAT_RGBX_8888);
@@ -382,7 +431,7 @@ namespace GHL {
                 m_app->SetSystem(this);
             }
 
-            if (m_app && m_sound.SoundInit()) {
+            if (m_app && m_sound.SoundInit(m_activity->sdkVersion)) {
                 m_app->SetSound(&m_sound);
             }
             
@@ -555,12 +604,17 @@ namespace GHL {
         void DestroyContext() {
             LOG_INFO("DestroyContext");
             if (m_render) {
-                m_app->SetRender(0);
+                if (m_app) {
+                    m_app->SetRender(0);
+                }
                 GHL_DestroyRenderOpenGL(m_render);
                 m_render = 0;
             }
-            DestroySurface();
             if (m_display != EGL_NO_DISPLAY) {
+                if (m_surface != EGL_NO_SURFACE) {
+                     DestroySurface();
+                }
+           
 
                 eglMakeCurrent(m_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
                 if (m_offscreen_surface != EGL_NO_SURFACE) {
@@ -983,7 +1037,7 @@ namespace GHL {
             }
         }
 
-        void onTextInputChanged(const std::string& text) {
+        void onTextInputChanged(const std::string& text, int cursor_position) {
             if (m_app) {
                 check_main_thread();
                 if (!SetGLContext()) {
@@ -992,6 +1046,7 @@ namespace GHL {
                 GHL::Event e;
                 e.type = GHL::EVENT_TYPE_TEXT_INPUT_TEXT_CHANGED;
                 e.data.text_input_text_changed.text = text.c_str();
+                e.data.text_input_text_changed.cursor_position = cursor_position;
                 m_app->OnEvent(&e);
             }
         }
@@ -1141,17 +1196,21 @@ namespace GHL {
         }
         void OnTimerCallback() {
             check_main_thread();
+
+            m_sound.Process();
             
             Render(true);
 
             if (m_running) {
                 ScheduleFrame();
+            } else {
+                LOG_INFO("skip next frame schedule");
             }
         }
         void ScheduleFrame() {
             int8_t cmd = 1;
             if (write(m_msgwrite, &cmd, sizeof(cmd)) != sizeof(cmd)) {
-                LOG_ERROR("Failure writing android_app cmd:" << strerror(errno));
+                LOG_ERROR("Failure writing timer cmd: " << strerror(errno));
             }
         }
         static int ALooper_InputCallback(int fd, int events, void* data) {
@@ -1167,6 +1226,8 @@ namespace GHL {
                 int8_t cmd;
                 if (read(_this->m_msgread, &cmd, sizeof(cmd)) == sizeof(cmd)) {
                     _this->OnTimerCallback();
+                } else {
+                    LOG_ERROR("failed read timer cmd: " << strerror(errno));
                 }
             }
             return 1;
@@ -1485,10 +1546,10 @@ extern "C" JNIEXPORT void JNICALL Java_com_GHL_Activity_nativeOnTextInputAccepte
   }
 
 extern "C" JNIEXPORT void JNICALL Java_com_GHL_Activity_nativeOnTextInputChanged
-  (JNIEnv * env, jclass, jlong instance, jstring text) {
+  (JNIEnv * env, jclass, jlong instance, jstring text, jint cursor_position) {
     if (instance) {
         std::string temp_text = get_string(env,text);
-        reinterpret_cast<GHL::GHLActivity*>(instance)->onTextInputChanged(temp_text);
+        reinterpret_cast<GHL::GHLActivity*>(instance)->onTextInputChanged(temp_text,cursor_position);
     }
   }
 

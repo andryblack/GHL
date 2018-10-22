@@ -399,7 +399,7 @@ namespace GHL {
     
     std::vector<MusicInstanceCocoa*> MusicInstanceCocoa::m_all_music;
     
-    SoundCocoa::SoundCocoa() : m_openal(8) {
+    SoundCocoa::SoundCocoa() : m_effects(4) {
         
     }
     
@@ -407,32 +407,32 @@ namespace GHL {
     bool SoundCocoa::SoundInit() {
         if (!SoundImpl::SoundInit())
             return false;
-        if (!m_openal.SoundInit())
+        if (!m_effects.SoundInit())
             return false;
         return true;
     }
     
     bool SoundCocoa::SoundDone() {
-        m_openal.SoundDone();
+        m_effects.SoundDone();
         return SoundImpl::SoundDone();
     }
     
     void SoundCocoa::Suspend() {
-        m_openal.Suspend();
+        m_effects.Suspend();
     }
     
     void SoundCocoa::Resume() {
         MusicInstanceCocoa::ResumeAll();
-        m_openal.Resume();
+        m_effects.Resume();
     }
     
     /// create sound effect from data
     SoundEffect* GHL_CALL SoundCocoa::CreateEffect( SampleType type, UInt32 freq, Data* data ) {
-        return m_openal.CreateEffect(type, freq, data);
+        return m_effects.CreateEffect(type, freq, data);
     }
     /// play effect
     void GHL_CALL SoundCocoa::PlayEffect( SoundEffect* effect , float vol, float pan, SoundInstance** instance ) {
-        m_openal.PlayEffect(effect, vol, pan, instance);
+        m_effects.PlayEffect(effect, vol, pan, instance);
     }
     
     /// open music

@@ -30,9 +30,11 @@
 
 #import "WinLibCocoaTouchContext.h"
 #import "winlib_cocoatouch.h"
+#import "cocoatouch_input.h"
 
 #include <pthread.h>
 #include <sys/utsname.h>
+#include "../font/font_ct.h"
 
 
 static const char* MODULE = "WINLIB";
@@ -157,7 +159,9 @@ static const size_t max_touches = 10;
 -(void)textFieldDidEndEditing:(UITextField *)textField {
     GHL::Event e;
     e.type = GHL::EVENT_TYPE_TEXT_INPUT_TEXT_CHANGED;
-    e.data.text_input_text_changed.text = textField.text.UTF8String;}
+    e.data.text_input_text_changed.text = textField.text.UTF8String;
+    
+}
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range
     replacementString:(NSString *)string {
@@ -276,52 +280,10 @@ static const size_t max_touches = 10;
 
 @end
 
-@interface HiddenInput : UIView <UIKeyInput>
-
-@property(nonatomic) UITextAutocapitalizationType autocapitalizationType; // default is UITextAutocapitalizationTypeSentences
-@property(nonatomic) UITextAutocorrectionType autocorrectionType;         // default is UITextAutocorrectionTypeDefault
-@property(nonatomic) UITextSpellCheckingType spellCheckingType;  // default is UITextSpellCheckingTypeDefault;
-@property(nonatomic) UIKeyboardType keyboardType;                         // default is UIKeyboardTypeDefault
-@property(nonatomic) UIKeyboardAppearance keyboardAppearance;             // default is UIKeyboardAppearanceDefault
-@property(nonatomic) UIReturnKeyType returnKeyType;                       // default is
-
-@end
 
 
-@implementation HiddenInput
-- (void)insertText:(NSString *)text {
-    if (text!=nil && [text length]>0) {
-        unichar wc = [text characterAtIndex:0];
-        GHL::Event e;
-        e.type = GHL::EVENT_TYPE_KEY_PRESS;
-        e.data.key_press.key = wc == '\n' ? GHL::KEY_ENTER : GHL::KEY_NONE;
-        e.data.key_press.modificators = 0;
-        e.data.key_press.charcode = wc;
-        g_application->OnEvent(&e);
-        e.type = GHL::EVENT_TYPE_KEY_RELEASE;
-        e.data.key_release.key = e.data.key_press.key;
-        g_application->OnEvent(&e);
-    }
-}
-- (void)deleteBackward {
-    GHL::Event e;
-    e.type = GHL::EVENT_TYPE_KEY_PRESS;
-    e.data.key_press.key = GHL::KEY_BACKSPACE;
-    e.data.key_press.modificators = 0;
-    e.data.key_press.charcode = 0;
-    g_application->OnEvent(&e);
-    e.type = GHL::EVENT_TYPE_KEY_RELEASE;
-    e.data.key_release.key = e.data.key_press.key;
-    g_application->OnEvent(&e);
-}
-- (BOOL)hasText {
-    // Return whether there's any text present
-    return YES;
-}
-- (BOOL)canBecomeFirstResponder {
-    return YES;
-}
-@end
+
+
 
 @interface WinLibView : UIView<UITextFieldDelegate> {
     WinLibCocoaTouchContext*    m_context;
@@ -339,6 +301,7 @@ static const size_t max_touches = 10;
 	UITouch* m_touches[max_touches];
     GHL::Int32 m_borders[4];
     bool m_need_relayout;
+    bool m_need_resume_sound;
 }
 
 - (void)prepareOpenGL;
@@ -477,6 +440,10 @@ public:
     virtual bool GHL_CALL OpenURL( const char* url ) {
         return [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithUTF8String:url]]];
     }
+    
+    GHL::Font* GHL_CALL CreateFont( const GHL::FontConfig* config ) {
+        return GHL::FontCT::Create(config);
+    }
 };
 
 
@@ -581,6 +548,7 @@ public:
 #ifndef GHL_NO_SOUND
 		m_sound = GHL_CreateSoundCocoa();
         m_need_reinit_sound = false;
+        m_need_resume_sound = false;
 		if (!m_sound->SoundInit()) {
 			delete m_sound;
 			m_sound = 0;
@@ -595,7 +563,7 @@ public:
 			m_touches[i] = 0;
 		}
 		
-        m_hiddenInput = [[HiddenInput alloc] init];
+        m_hiddenInput = [[HiddenInput alloc] initWithApplication:g_application];
 		[self addSubview:m_hiddenInput];
 		
         [self setAutoresizesSubviews:YES];
@@ -662,10 +630,20 @@ public:
 }
 
 - (void)resumeSound {
-#ifndef GHL_NO_SOUND
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    [session setActive:YES error:nil];
+    m_need_resume_sound = true;
+}
 
+- (void)resumeSoundImpl {
+#ifndef GHL_NO_SOUND
+    LOG_INFO("resumeSound");
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    NSError* err = nil;
+    [session setActive:YES error:&err];
+    if (err) {
+        LOG_ERROR("failed activate audio session: " << err.description.UTF8String);
+        [err release];
+        return;
+    }
     if (m_sound) {
         m_sound->Resume();
     }
@@ -746,6 +724,10 @@ public:
             m_need_reinit_sound = false;
             m_sound->SoundInit();
             g_application->SetSound(m_sound);
+        }
+        if (m_need_resume_sound) {
+            m_need_resume_sound = false;
+            [self resumeSoundImpl];
         }
 #endif
         
@@ -873,6 +855,7 @@ public:
 -(void)showKeyboard:(const GHL::TextInputConfig*) config {
     if (config) {
         [TextInputDelegate configureInput:m_hiddenInput config:config];
+        [m_hiddenInput showWithConfig:config];
     } else {
         
         m_hiddenInput.keyboardType = UIKeyboardTypeDefault;
@@ -883,9 +866,8 @@ public:
         if ([m_hiddenInput respondsToSelector:@selector(setKeyboardAppearance:)]) {
             m_hiddenInput.keyboardAppearance = UIKeyboardAppearanceDark;
         }
-        
+        [m_hiddenInput show];
     }
-    [m_hiddenInput becomeFirstResponder];
 }
 
 -(void)hideKeyboard {

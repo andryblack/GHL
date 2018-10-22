@@ -46,7 +46,8 @@ namespace GHL {
         
         typedef char GLchar;
         typedef unsigned int GLhandle;
-        typedef ptrdiff_t GLsizeiptr;
+        typedef signed long int GLsizeiptr;
+        typedef signed long int GLintptr;
         
         static const GLboolean _TRUE;
         static const GLboolean _FALSE;
@@ -214,6 +215,7 @@ DYNAMIC_GL_FUNCTION(void,GenBuffers,(GLsizei,GLuint *))\
 DYNAMIC_GL_FUNCTION(void,BindBuffer,(GLenum,GLuint))\
 DYNAMIC_GL_FUNCTION(void,DeleteBuffers,(GLsizei,const GLuint *))\
 DYNAMIC_GL_FUNCTION(void,BufferData,(GLenum,GLsizeiptr,const GLvoid *, GLenum))\
+DYNAMIC_GL_FUNCTION(void,BufferSubData,(GLenum,GLintptr,GLsizeiptr,const GLvoid *))\
 
 #define DYNAMIC_GL_FUNCTION(Res,Name,Args) GHL_GL_API Res(*Name)Args;
             DYNAMIC_GL_FUNCTIONS_VBO
@@ -222,6 +224,7 @@ DYNAMIC_GL_FUNCTION(void,BufferData,(GLenum,GLsizeiptr,const GLvoid *, GLenum))\
             GLenum ARRAY_BUFFER;
             GLenum ELEMENT_ARRAY_BUFFER;
             GLenum STATIC_DRAW;
+            GLenum DYNAMIC_DRAW;
             
         } vboapi;
         
@@ -282,7 +285,7 @@ void gl_error_report_bp();
         Func; \
         GL::GLenum err = gl.GetError(); \
         if (err!=gl.NO_ERROR) { \
-            LOG_ERROR("GL error: " << err << " at " << #Func); \
+            LOG_ERROR("GL error: 0x" << std::hex << err << " at " << #Func); \
             gl_error_report_bp(); \
         }\
     } while(false)

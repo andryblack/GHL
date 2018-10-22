@@ -65,22 +65,26 @@ namespace GHL {
 		return  gl.REPEAT;
 	}
 	
-	TextureOpenGL::TextureOpenGL(GL::GLuint name,RenderOpenGLBase* parent,TextureFormat fmt,UInt32 w,UInt32 h) : TextureImpl(parent,w,h), gl(parent->get_api()),
-		m_name(name),
-		m_fmt(fmt),
-		m_have_mipmaps(false)
+	TextureOpenGL::TextureOpenGL(GL::GLuint name,RenderOpenGLBase* parent,TextureFormat fmt,UInt32 w,UInt32 h) : TextureImpl(parent,w,h,fmt), gl(parent->get_api()),
+		m_name(name)
 	{
         (void)MODULE;
 	}
 	
 	TextureOpenGL* TextureOpenGL::Create( RenderOpenGLBase* parent,TextureFormat fmt,UInt32 w,UInt32 h, const Image* data) {
-        if (fmt==TEXTURE_FORMAT_UNKNOWN)
+        if (fmt==TEXTURE_FORMAT_UNKNOWN){
+            LOG_ERROR("unknown format");
             return 0;
+        }
         const GL& gl(parent->get_api());
         GL::GLuint name = 0;
 		CHECK_GL(gl.ActiveTexture(gl.TEXTURE0));
 		CHECK_GL(gl.GenTextures(1, &name));
-		if (!name) return 0;
+        if (!name) {
+            GL::GLenum err = gl.GetError();
+            LOG_ERROR("failed allocate texture " << err);
+            return 0;
+        }
 		CHECK_GL(gl.BindTexture(gl.TEXTURE_2D, name));
 
         CHECK_GL(gl.TexParameteri(gl.TEXTURE_2D,  gl.TEXTURE_MIN_FILTER,  gl.NEAREST));
@@ -179,7 +183,7 @@ namespace GHL {
 	
 	void TextureOpenGL::check_mips() {
 		if (m_mip_filter!=TEX_FILTER_NONE) {
-			if (!m_have_mipmaps) {
+			if (!HeveMipmaps()) {
 				GenerateMipmaps();
 			}
 		}
@@ -264,6 +268,7 @@ namespace GHL {
 	/// generate mipmaps
 	void GHL_CALL TextureOpenGL::GenerateMipmaps() {
 		/// @todo
+        /// SetHaveMipmaps(true);
 	}
 
 }

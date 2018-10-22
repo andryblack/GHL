@@ -11,8 +11,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.BaseInputConnection;
-import android.view.inputmethod.InputConnection;
 
 import android.view.WindowManager;
 import android.view.KeyEvent;
@@ -34,13 +32,14 @@ import android.R;
 import android.os.Looper;
 import android.os.Handler;
 
-import android.graphics.Canvas;
 import android.graphics.*;
 
 import android.media.AudioManager;
 
 import com.GHL.Log;
 import android.widget.TextView;
+
+import com.GHL.SystemFont;
 
 public class Activity  extends android.app.NativeActivity  {
 
@@ -50,133 +49,14 @@ public class Activity  extends android.app.NativeActivity  {
     static native void nativeOnKeyboardHide(long instance);
     static native void nativeOnTextInputDismiss(long instance);
     static native void nativeOnTextInputAccepted(long instance,String text);
-    static native void nativeOnTextInputChanged(long instance,String text);
+    static native void nativeOnTextInputChanged(long instance,String text,int cursor_position);
 
     static native void nativeOnScreenRectChanged(long instance,int left, int top, int width, int height);
     static native boolean nativeOnIntent(long instance,Intent i);
 
     private long m_instance = 0;
 
-    class InvisibleEdit extends EditText {
-        
-        GHLInputConnection ic;
-
-        class GHLInputConnection extends BaseInputConnection {
-           
-            public GHLInputConnection(InvisibleEdit targetView, boolean fullEditor) {
-                super(targetView, fullEditor);
-            }
-
-            @Override
-            public boolean sendKeyEvent(KeyEvent event) {
-                final KeyEvent finalEvent = event;
-                Activity.this.runOnUiThread(new Runnable(){
-                     @Override
-                     public void run() {
-                        nativeOnKey(m_instance,finalEvent.getKeyCode(),finalEvent.getUnicodeChar(),finalEvent.getAction());
-                    }
-                });
-                return true;
-            }
-            @Override
-            public boolean commitText(CharSequence text, int newCursorPosition) {
-                final CharSequence finalText = text;
-                Activity.this.runOnUiThread(new Runnable(){
-                     @Override
-                     public void run() {
-                        for (int i=0;i<finalText.length();i++) {
-                            char c = finalText.charAt(i);
-                            nativeOnKey(m_instance,0,c,0);
-                            nativeOnKey(m_instance,0,c,1);
-                        }
-                    }
-                });
-                return true;
-            }
-
-                        @Override
-            public boolean setComposingText (CharSequence text, int newCursorPosition) {
-                final CharSequence finalText = text;
-                Activity.this.runOnUiThread(new Runnable(){
-                     @Override
-                     public void run() {
-                        for (int i=0;i<finalText.length();i++) {
-                            char c = finalText.charAt(i);
-                            nativeOnKey(m_instance,0,c,0);
-                            nativeOnKey(m_instance,0,c,1);
-                        }
-                    }
-                });
-                return true;
-            }
-            @Override
-            public boolean deleteSurroundingText(int beforeLength, int afterLength) {
-                if (beforeLength > 0 && afterLength == 0) {
-                    nativeOnKey(m_instance,KeyEvent.KEYCODE_DEL,0,0);
-                    nativeOnKey(m_instance,KeyEvent.KEYCODE_DEL,0,1);
-                }
-
-                return true;
-            }
-        }
-
-
-        public InvisibleEdit(Activity context) {
-            super(context);
-            setFocusableInTouchMode(true);
-            setFocusable(true);
-        }
-
-        @Override
-        public boolean dispatchKeyEventPreIme ( KeyEvent event) {
-            final KeyEvent finalEvent = event;
-            runOnUiThread( new Runnable() {
-                @Override
-                public void run() {
-                    if (finalEvent.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-                        nativeOnKeyboardHide(m_instance);
-                    } else {
-                        nativeOnKey(m_instance,finalEvent.getKeyCode(), finalEvent.getUnicodeChar(), finalEvent.getAction() );
-                    }
-                }
-            });
-            return true;
-        }
-
-        @Override
-        public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
-            ic = new GHLInputConnection(this, true);
-
-            outAttrs.inputType = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD;
-            outAttrs.imeOptions = EditorInfo.IME_FLAG_NO_EXTRACT_UI
-                    | 33554432 /* API 11: EditorInfo.IME_FLAG_NO_FULLSCREEN */;
-
-            return ic;
-        }
-
-
-        @Override
-        protected void onLayout(boolean v, int x, int y, int w, int h) {
-            Log.d(TAG,"onLayout " + x + "," + y + "," + w + "," + h );
-            final int fx = x;
-            final int fy = y;
-            final int fw = w;
-            final int fh = h;
-            Activity.this.runOnUiThread(new Runnable(){
-                 @Override
-                 public void run() {
-                    nativeOnScreenRectChanged(m_instance,fx,fy,fw,fh);
-                }
-            });
-            
-        }
-
-
-        @Override
-        protected void onDraw(Canvas canvas) {
-               
-        }
-    }
+    
 
 	private static boolean libloaded = false;
     public static void ensureLoadLibraryForContext( android.content.Context context ) {
@@ -207,10 +87,22 @@ public class Activity  extends android.app.NativeActivity  {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                showTextEditImpl();
+                showTextEditImpl(null,0);
             }
         });
         return true;
+    }
+
+    public void showTextEdit(String text,int cursor_position) {
+        Log.v(TAG, "showTextEdit");
+        final String text_f = text;
+        final int cursor_position_f = cursor_position;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                showTextEditImpl(text_f,cursor_position_f);
+            }
+        });
     }
 
     public boolean hideSoftKeyboard() {
@@ -237,7 +129,9 @@ public class Activity  extends android.app.NativeActivity  {
     private PopupWindow m_text_edit_window = null;
 
 
-    public void showTextInput(int accept_button,String placeholder,int max_length) {
+    public void showTextInput(int accept_button,
+                                String placeholder,
+                                int max_length) {
         Log.v(TAG, "showTextInput");
         final int accept_button_f = accept_button;
         final String placeholder_f = placeholder;
@@ -252,7 +146,9 @@ public class Activity  extends android.app.NativeActivity  {
 
 
 
-    private void showTextInputImpl(int accept_button,String placeholder,int max_length) {
+    private void showTextInputImpl(int accept_button,
+        String placeholder,
+        int max_length) {
         
         if (m_text_input_window == null) {
             Log.v(TAG, "create text_input");
@@ -361,7 +257,9 @@ public class Activity  extends android.app.NativeActivity  {
     }
 
 
-    private void showTextEditImpl() {
+    private void showTextEditImpl(
+        String text,
+        int cursor_position) {
         boolean create = false;
 
         if (m_text_edit_window == null) {
@@ -371,14 +269,16 @@ public class Activity  extends android.app.NativeActivity  {
             LinearLayout containerLayout = new LinearLayout(this);
 
 
-            InvisibleEdit et = new InvisibleEdit(this);
+            InvisibleEdit et = new InvisibleEdit(this,m_instance);
 
             et.setTag("text_edit");
             et.setGravity(Gravity.BOTTOM);
             et.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            et.setImeOptions(EditorInfo.IME_ACTION_DONE);
             et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                    Log.d(TAG,"onEditorAction: " + i);
                     if (i == EditorInfo.IME_ACTION_DONE ) {
                         runOnUiThread( new Runnable() {
                             @Override
@@ -441,10 +341,15 @@ public class Activity  extends android.app.NativeActivity  {
         m_text_edit_window.showAtLocation(getWindow().getDecorView(), Gravity.FILL_VERTICAL, 0, 0);
         m_text_edit_window.update();
 
-        final EditText text_edit = (EditText)(m_text_edit_window.getContentView()).findViewWithTag("text_edit");
+        final InvisibleEdit text_edit = (InvisibleEdit)(m_text_edit_window.getContentView()).findViewWithTag("text_edit");
         if (text_edit != null) {
             Log.v(TAG,"Activate edit input");
-            text_edit.setText("");
+            if (text != null) {
+                Log.i(TAG,"Activate text edit mode");
+                text_edit.setTextMode(text,cursor_position);
+            } else {
+                text_edit.setKeyMode();
+            }
             final InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             Handler handler = new Handler(Looper.getMainLooper());
             handler.postDelayed(new Runnable() {
@@ -508,6 +413,7 @@ public class Activity  extends android.app.NativeActivity  {
         ensureLoadLibrary();
         Log.v(TAG, "onPause");
         super.onPause();
+        hideSoftKeyboard();
     }
 
     @Override
@@ -529,20 +435,8 @@ public class Activity  extends android.app.NativeActivity  {
         }
 
         //Hide toolbar
-        int SDK_INT = android.os.Build.VERSION.SDK_INT;
-        if(SDK_INT >= 11 && SDK_INT < 14)
-        {
-            getWindow().getDecorView().setSystemUiVisibility(View.STATUS_BAR_HIDDEN);
-        }
-        else if(SDK_INT >= 14 && SDK_INT < 19)
-        {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | 
-                View.SYSTEM_UI_FLAG_LOW_PROFILE);
-        }
-        else if(SDK_INT >= 19)
-        {
-            setImmersiveSticky();
-        }
+        hideToolbar();
+        hideSoftKeyboard();
     }
 
     @Override
@@ -581,7 +475,7 @@ public class Activity  extends android.app.NativeActivity  {
         setIntent(intent);
     }
 
-    void setImmersiveSticky() {
+    protected void setImmersiveSticky() {
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
@@ -589,5 +483,24 @@ public class Activity  extends android.app.NativeActivity  {
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+    }
+    protected void hideToolbar() {
+        int SDK_INT = android.os.Build.VERSION.SDK_INT;
+        if(SDK_INT >= 11 && SDK_INT < 14)
+        {
+            getWindow().getDecorView().setSystemUiVisibility(View.STATUS_BAR_HIDDEN);
+        }
+        else if(SDK_INT >= 14 && SDK_INT < 19)
+        {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN );
+        }
+        else if(SDK_INT >= 19)
+        {
+            setImmersiveSticky();
+        }
+    }
+
+    public SystemFont createSystemFont() {
+        return new SystemFont();
     }
 }

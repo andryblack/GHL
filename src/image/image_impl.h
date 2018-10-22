@@ -61,6 +61,10 @@ namespace GHL {
 		virtual bool GHL_CALL SwapRB() { return SwapChannelsRB() ; }
         /// Premultiply alpha
         virtual bool GHL_CALL PremultiplyAlpha();
+        /// Rotate clockwise
+        virtual void GHL_CALL RotateCW();
+        /// Rotate counterclockwise
+        virtual void GHL_CALL RotateCCW();
 		UInt32 GetBpp() const;
 		void FlipV();
     };

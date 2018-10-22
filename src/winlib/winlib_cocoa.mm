@@ -28,6 +28,7 @@
 
 #include "../vfs/vfs_cocoa.h"
 #include "../image/image_decoders.h"
+#include "../font/font_ct.h"
 #include "../sound/ghl_sound_impl.h"
 #include "../ghl_log_impl.h"
 
@@ -337,13 +338,14 @@ public:
                 ::strncpy(dest, [full UTF8String], 32);
                 return true;
             }
-        }
+        } 
 
         return false;
     }
     ///
     virtual void GHL_CALL SetTitle( const char* title );
     virtual bool GHL_CALL OpenURL( const char* url );
+    virtual GHL::Font* GHL_CALL CreateFont( const GHL::FontConfig* config );
 };
 
 
@@ -393,6 +395,7 @@ public:
         m_loaded = false;
         m_null_cursor = nil;
         m_cursor_visible = YES;
+        m_cursor = GHL::SYSTEM_CURSOR_DEFAULT;
         if (g_need_retina) {
             [self  setWantsBestResolutionOpenGLSurface:YES];
         } else {
@@ -415,14 +418,36 @@ public:
     [self.window invalidateCursorRectsForView:self];
 }
 
+-(void)setCursor:(GHL::SystemCursor) cursor
+{
+    m_cursor = cursor;
+    [self.window invalidateCursorRectsForView:self];
+}
+
 -(void)resetCursorRects
 {
+    [super resetCursorRects];
     if ( !m_null_cursor && !m_cursor_visible ) {
         NSImage* img = [[NSImage alloc] initWithSize:NSMakeSize(8, 8)];
         m_null_cursor = [[NSCursor alloc] initWithImage:img hotSpot:NSMakePoint(0, 0)];
         [img release];
     }
-    [self addCursorRect:self.visibleRect cursor:(m_cursor_visible ? [NSCursor arrowCursor]:m_null_cursor)];
+    if (m_cursor_visible) {
+        NSCursor* cursor = [NSCursor arrowCursor];
+        switch (m_cursor) {
+            case GHL::SYSTEM_CURSOR_HAND:
+                cursor = [NSCursor pointingHandCursor];
+                break;
+            case GHL::SYSTEM_CURSOR_MOVE:
+                cursor = [NSCursor closedHandCursor];
+                break;
+            default:
+                break;
+        }
+        [self addCursorRect:self.visibleRect cursor:cursor];
+    } else {
+        [self addCursorRect:self.visibleRect cursor:m_null_cursor];
+    }
 }
 
 
@@ -659,6 +684,12 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     e.data.mouse_move.y = local_point.y;
     [m_application getApplication]->OnEvent(&e);
 }
+- (void)scrollWheel:(NSEvent *)event {
+    GHL::Event e;
+    e.type = GHL::EVENT_TYPE_WHEEL;
+    e.data.wheel.delta = [event scrollingDeltaY];
+    [m_application getApplication]->OnEvent(&e);
+}
 
 - (BOOL) acceptsFirstResponder
 {
@@ -848,6 +879,10 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 -(void) setCursorVisible:(BOOL) visible
 {
     [m_gl_view setCursorVisible:visible];
+}
+-(void) setCursor:(GHL::SystemCursor) cursor
+{
+    [m_gl_view setCursor:cursor];
 }
 -(void)dealloc {
     LOG_INFO( "WinLibAppDelegate::dealloc" );
@@ -1100,11 +1135,25 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     if (m_gl_view) {
         [m_window setContentSize:m_window.screen.frame.size];
     }
+    g_fullscreen = g_need_fullscreen = true;
+    if (m_application ) {
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_FULLSCREEN_CHANGED;
+        m_application->OnEvent(&e);
+    }
 }
 
 - (void)windowWillExitFullScreen:(NSNotification *)notification {
     if (m_gl_view) {
         [m_window setContentSize:m_rect.size];
+    }
+}
+- (void)windowDidExitFullScreen:(NSNotification *)notification {
+    g_fullscreen = g_need_fullscreen = false;
+    if (m_application ) {
+        GHL::Event e;
+        e.type = GHL::EVENT_TYPE_FULLSCREEN_CHANGED;
+        m_application->OnEvent(&e);
     }
 }
 
@@ -1189,8 +1238,20 @@ bool GHL_CALL SystemCocoa::SetDeviceState(GHL::DeviceState name, const void *dat
             [delegate setResizeableWindow:enabled];
         }
         return true;
+    } else if (name==GHL::DEVICE_STATE_SYSTEM_CURSOR && data) {
+        GHL::SystemCursor cursor = static_cast<GHL::SystemCursor>(*(const GHL::UInt32*)data);
+        if (delegate) {
+            [delegate setCursor:cursor];
+        }
+        return true;
     }
     return false;
+}
+
+
+
+GHL::Font* GHL_CALL SystemCocoa::CreateFont( const GHL::FontConfig* config ) {
+    return GHL::FontCT::Create( config );
 }
 
 GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/, char** /*argv*/) {

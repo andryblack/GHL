@@ -97,6 +97,8 @@ namespace GHL {
 	private:
         UInt32 	m_width;
 		UInt32	m_height;
+        UInt32  m_textures_mem;
+        UInt32  m_rt_mem;
         bool    m_have_depth;
 		RenderTargetImpl* m_scene_target;
 		bool	m_scene_started;

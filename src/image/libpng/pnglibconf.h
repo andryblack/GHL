@@ -18,6 +18,7 @@
 #define PNGCBAPI
 #define PNGCAPI
 #define PNG_USER_PRIVATEBUILD
+#define PNG_IMPEXP
 
 /* settings */
 #define PNG_USER_HEIGHT_MAX 2048

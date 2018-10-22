@@ -61,6 +61,8 @@ namespace GHL {
         m_current_v_buffer = 0;
         m_current_i_buffer = 0;
 		m_scene_started = false;
+        m_textures_mem = 0;
+        m_rt_mem = 0;
         (void)MODULE;
     }
 	
@@ -332,14 +334,22 @@ namespace GHL {
 #endif
 
     void RenderImpl::TextureCreated(const TextureImpl * tex)     {
-        (void)tex;
+        if (tex) {
+            m_textures_mem += tex->GetMemoryUsage();
+        }
 #ifdef GHL_DEBUG
         m_textures.push_back(tex);
 #endif
     }
 
     void RenderImpl::TextureReleased(const TextureImpl* tex) {
-        (void)tex;
+        if (tex) {
+            UInt32 mem = tex->GetMemoryUsage();
+#ifdef GHL_DEBUG
+            assert(m_textures_mem>=mem);
+#endif
+            m_textures_mem -= mem;
+        }
 #ifdef GHL_DEBUG
         std::vector<const TextureImpl*>::iterator it = std::find(m_textures.begin(),m_textures.end(),tex);
         assert(it!=m_textures.end() && "release unknown texture");
@@ -350,14 +360,22 @@ namespace GHL {
     }
     
     void RenderImpl::RenderTargetCreated(const RenderTargetImpl * target)  {
-        (void)target;
+        if (target) {
+            m_rt_mem += target->GetMemoryUsage();
+        }
 #ifdef GHL_DEBUG
         m_targets.push_back(target);
 #endif
     }
     
     void RenderImpl::RenderTargetReleased(const RenderTargetImpl * target) {
-        (void)target;
+        if (target) {
+            UInt32 mem = target->GetMemoryUsage();
+#ifdef GHL_DEBUG
+            assert(m_rt_mem >= mem);
+#endif
+            m_rt_mem -= mem;
+        }
 #ifdef GHL_DEBUG
         std::vector<const RenderTargetImpl*>::iterator it = std::find(m_targets.begin(),m_targets.end(),target);
         if (it==m_targets.end()) {
@@ -457,17 +475,8 @@ namespace GHL {
 	
     UInt32 GHL_CALL RenderImpl::GetMemoryUsage() const {
         UInt32 res = 0;
-#ifdef GHL_DEBUG
-        for (size_t i=0;i<m_textures.size();i++) {
-            res += m_textures[i]->GetMemoryUsage();
-        }
-        for (size_t i=0;i<m_targets.size();i++) {
-            res += m_targets[i]->GetTexture()->GetMemoryUsage();
-            if (m_targets[i]->HaveDepth()) {
-                res += m_targets[i]->GetWidth() * m_targets[i]->GetHeight() * 2;
-            }
-        }
-#endif
+        res += m_textures_mem;
+        res += m_rt_mem;
         return res;
     }
     

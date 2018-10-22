@@ -57,4 +57,7 @@
 //#define USE_PNG_DECODER
 //#define USE_JPEG_DECODER
 #endif
+#if defined(GHL_DISABLE_JPEG) && defined(USE_JPEG_DECODER) 
+#undef USE_JPEG_DECODER
+#endif
 #endif /*IMAGE_COFIG_H*/

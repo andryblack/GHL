@@ -20,9 +20,19 @@
     blackicebox (at) gmail (dot) com
 */
 
+#ifndef GHL_DISABLE_VORBIS
 #include "vorbis_decoder.h"
 #include <ghl_data_stream.h>
 #include <cassert>
+
+#ifdef GHL_USE_IVORBIS_DECODER
+#define ov_clear iov_clear
+#define ov_info iov_info
+#define ov_open_callbacks iov_open_callbacks
+#define ov_pcm_total iov_pcm_total
+#define ov_read(vf,buffer,length,bigendianp,word,sgned,bitstream) iov_read(vf,buffer,length,bitstream)
+#define ov_pcm_seek iov_pcm_seek
+#endif
 
 namespace GHL
 {
@@ -116,10 +126,12 @@ namespace GHL
         if (!ds) return 0;
         VorbisDecoder* vd = new VorbisDecoder(ds);
 		if (!vd->Init()) {
-			delete vd;
+            vd->Release();
 			return 0;
 		}
         return vd;
     }
 	
 }
+
+#endif

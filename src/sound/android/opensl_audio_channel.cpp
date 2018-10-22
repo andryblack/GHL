@@ -18,6 +18,7 @@ namespace GHL {
         // get the play interface
         result = (*m_player_obj)->GetInterface(m_player_obj, SL_IID_PLAY, &m_play_i);
         assert(SL_RESULT_SUCCESS == result);
+        assert(m_play_i);
         
         // get the volume interface
         result = (*m_player_obj)->GetInterface(m_player_obj, SL_IID_VOLUME, &m_volume_i);
@@ -46,9 +47,24 @@ namespace GHL {
     }
 
     OpenSLAudioChannelBase::~OpenSLAudioChannelBase() {
+        Destroy();
+    }
+
+    void OpenSLAudioChannelBase::Destroy() {
+        //LOG_DEBUG("OpenSLAudioChannelBase::Destroy >>>>>");
         if (m_player_obj) {
+            // if ((*m_player_obj)->AbortAsyncOperation) {
+            //     (*m_player_obj)->AbortAsyncOperation(m_player_obj);
+            // }
+            // SLuint32 state = 0;
+            // if ((*m_player_obj)->GetState) {
+            //     (*m_player_obj)->GetState(m_player_obj,&state);
+            //     LOG_DEBUG("OpenSLAudioChannelBase::Destroy State: " << state);
+            // }
             (*m_player_obj)->Destroy(m_player_obj);
+            m_player_obj = 0;
         }
+        //LOG_DEBUG("OpenSLAudioChannelBase::Destroy <<<<");
     }
     
     void OpenSLAudioChannelBase::Play() {
@@ -59,13 +75,28 @@ namespace GHL {
         }
     }
     void OpenSLAudioChannelBase::Stop() {
+        //LOG_INFO("OpenSLAudioChannelBase::Stop >>>>");
         if (m_play_i) {
             if ((*m_play_i)->SetPlayState(m_play_i, SL_PLAYSTATE_STOPPED) != SL_RESULT_SUCCESS) {
                 LOG_ERROR("failed SetPlayState(SL_PLAYSTATE_STOPPED)");
             }
         }
+        //LOG_INFO("OpenSLAudioChannelBase::Stop <<<<");
     }
     
+
+    void OpenSLAudioChannelBase::Pause() {
+        if (m_play_i) {
+            if ((*m_play_i)->SetPlayState(m_play_i, SL_PLAYSTATE_PAUSED) != SL_RESULT_SUCCESS) {
+                LOG_ERROR("failed SetPlayState(SL_PLAYSTATE_PAUSED)");
+            }
+        }
+    }
+
+    void OpenSLAudioChannelBase::Resume() {
+        Play();
+    }
+
     void OpenSLAudioChannelBase::SetVolume(float volume) {
         if (m_volume_i) {
             SLmillibel volume_mb;
@@ -125,14 +156,29 @@ namespace GHL {
         }
     }
 
+    bool OpenSLAudioChannelBase::IsStopped() {
+        if (m_play_i) {
+            SLuint32 state;
+            if ( (*m_play_i)->GetPlayState(m_play_i, &state) == SL_RESULT_SUCCESS) {
+                return state != SL_PLAYSTATE_PLAYING;
+            }
+        }
+        return false;
+    }
+    
     OpenSLAudioChannel::OpenSLAudioChannel( SLObjectItf player_obj ,const SLDataFormat_PCM& format) : OpenSLAudioChannelBase( player_obj ),
-    m_format(format),m_buffer_queue(0), m_holder(0) {
+    m_format(format),m_buffer_queue(0), m_holder(0),m_data(0) {
         SLresult result = (*player_obj)->GetInterface(player_obj,       SL_IID_ANDROIDSIMPLEBUFFERQUEUE, &m_buffer_queue);
         assert(SL_RESULT_SUCCESS == result);
+        assert(m_buffer_queue);
     }
     
     OpenSLAudioChannel::~OpenSLAudioChannel() {
         Clear();
+        if (m_data) {
+            m_data->Release();
+            m_data = 0;
+        }
     }
     
     void OpenSLAudioChannel::Clear() {
@@ -159,6 +205,7 @@ namespace GHL {
     void OpenSLAudioChannel::UpdateLastUsed() {
         m_last_used = last_used++;
     }
+
     bool OpenSLAudioChannel::IsStopped() {
         if (m_play_i) {
             SLresult res;
@@ -170,10 +217,23 @@ namespace GHL {
         }
         return false;
     }
-    void OpenSLAudioChannel::PutData(const void* data,size_t size) {
+    void OpenSLAudioChannel::PutData(Data* data) {
         if (!m_buffer_queue)
             return;
         (*m_buffer_queue)->Clear(m_buffer_queue);
-        (*m_buffer_queue)->Enqueue(m_buffer_queue, data , size);
+        if (m_data) {
+            m_data->Release();
+            m_data = 0;
+        }
+        if (data) {
+            m_data = data;
+            m_data->AddRef();
+            (*m_buffer_queue)->Enqueue(m_buffer_queue, data->GetData() , data->GetSize());
+        }
     }
+
+
+
+
+   
 }

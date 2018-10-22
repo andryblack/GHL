@@ -130,7 +130,7 @@ namespace GHL {
                 return true;
             }
         }
-        LOG_VERBOSE("file not exist '" << file << "'");
+        //LOG_VERBOSE("file not exist '" << file << "'");
         return false;
     }
     /// remove file
@@ -171,7 +171,7 @@ namespace GHL {
     /// open file
     DataStream* GHL_CALL VFSPosixImpl::OpenFile(const char* _file){
         (void)MODULE;
-        LOG_VERBOSE("try open file '" << _file << "'");
+        //LOG_VERBOSE("try open file '" << _file << "'");
         if (!_file) return 0;
         if (_file[0]==0) return 0;
         if (!IsFileExists(_file)) return 0;
@@ -179,7 +179,7 @@ namespace GHL {
         if (f) {
             return new PosixFileStream(f);
         }
-        LOG_VERBOSE("failed open file '" << _file << "' " << errno);
+        //LOG_VERBOSE("failed open file '" << _file << "' " << errno);
         return 0;
     }
     

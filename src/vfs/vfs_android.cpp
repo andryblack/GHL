@@ -8,7 +8,7 @@
 
 namespace GHL {
 
-    const char* MODULE = "VFS";
+    static const char* MODULE = "VFS";
     static const UInt32 magick = 0xBEAFAD10;
     
     class AssetFileStream : public RefCounterImpl<DataStream> {

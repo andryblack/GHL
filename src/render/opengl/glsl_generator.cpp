@@ -126,9 +126,6 @@ namespace GHL {
             }
         }
         std::stringstream ss;
-        if  (!m_fshader_header.empty()) {
-            ss << m_fshader_header;
-        }
         for (size_t i=0;i<STATE_MAX_TEXTURE_STAGES;++i) {
             if (entry.texture_stages[i].rgb.c.texture) {
                 ss << "uniform sampler2D texture_" << i << ";\n";

@@ -109,6 +109,8 @@ namespace GHL
 				}
             } else {
                 LOG_ERROR("not implemented conversion");
+                buffer->Release();
+                return false;
             }
 			m_data->Release();
 			m_data = buffer;
@@ -156,11 +158,12 @@ namespace GHL
                 }
             } else {
                 LOG_ERROR("not implemented conversion");
+                buffer->Release();
+                return false;
             }
 			m_data->Release();
 			m_data = buffer;
-        }
-        else if (fmt==IMAGE_FORMAT_GRAY)
+        } else if (fmt==IMAGE_FORMAT_GRAY)
         {
             size_t len = m_width*m_height;
             DataImpl* buffer = new DataImpl( UInt32(len) );
@@ -169,13 +172,19 @@ namespace GHL
                 for (size_t i=0;i<len;i++) {
                     data[i] = 0.299 * original[i*3+0] + 0.587 * original[i*3+1] + 0.114 * original[i*3+2];
                 }
+            }
+            else if (m_fmt==IMAGE_FORMAT_RGBA) {
+                for (size_t i=0;i<len;i++) {
+                    data[i+0]=original[i*4+3];
+                }
             } else {
                 LOG_ERROR("not implemented conversion");
+                buffer->Release();
                 return false;
             }
             m_data->Release();
             m_data = buffer;
-		} else {
+        }else {
 			return false;
 		}
         m_fmt = fmt;
@@ -380,6 +389,57 @@ namespace GHL
                                       copy_data);
         copy_data->Release();
         return res;
+    }
+    
+    static inline void put(Byte* dst,UInt32 x,UInt32 y,UInt32 w,const Byte* src,UInt32 bpp) {
+        dst += (x + y * w) * bpp;
+        while (bpp) {
+            *dst++ = *src++;
+            --bpp;
+        }
+    }
+    static inline const Byte* getp(const Byte* src,UInt32 x,UInt32 y,UInt32 w,UInt32 bpp) {
+        return src + (x+y*w)*bpp;
+    }
+    static Data* rotate_data_cw(Data* src,UInt32 w,UInt32 h,UInt32 bpp) {
+        Data* dst = GHL_CreateData(src->GetSize());
+        const Byte* srcb = src->GetData();
+        Byte* dstb = dst->GetDataPtr();
+        for (UInt32 x=0;x<w;++x) {
+            for (UInt32 y=0;y<h;++y) {
+                put(dstb,y,w-x-1,h,getp(srcb,x,y,w,bpp),bpp);
+            }
+        }
+        src->Release();
+        return dst;
+    }
+    
+    static Data* rotate_data_ccw(Data* src,UInt32 w,UInt32 h,UInt32 bpp) {
+        Data* dst = GHL_CreateData(src->GetSize());
+        const Byte* srcb = src->GetData();
+        Byte* dstb = dst->GetDataPtr();
+        for (UInt32 x=0;x<w;++x) {
+            for (UInt32 y=0;y<h;++y) {
+                put(dstb,h-y-1,x,h,getp(srcb,x,y,w,bpp),bpp);
+            }
+        }
+        src->Release();
+        return dst;
+    }
+    
+    /// Rotate clockwise
+    void GHL_CALL ImageImpl::RotateCW() {
+        m_data = rotate_data_cw(m_data,m_width,m_height,GetBpp());
+        UInt32 w = m_width;
+        m_width = m_height;
+        m_height = w;
+    }
+    /// Rotate counterclockwise
+    void GHL_CALL ImageImpl::RotateCCW() {
+        m_data = rotate_data_ccw(m_data,m_width,m_height,GetBpp());
+        UInt32 w = m_width;
+        m_width = m_height;
+        m_height = w;
     }
 }
 GHL_API GHL::Image* GHL_CALL GHL_CreateImage( GHL::UInt32 w, GHL::UInt32 h,GHL::ImageFormat fmt) {

@@ -129,6 +129,8 @@ namespace GHL {
         def.data = VERTEX_2_FLOAT;
         def.offset = 3*sizeof(float)+sizeof(UInt32)+2*sizeof(float);
         m_2tex_vdef.push_back(def);
+        m_vertex_shader_prefix = "/*GHL*/\n";
+        m_fragment_shader_prefix = "/*GHL*/\n";
     }
 
 	RenderOpenGLBase::~RenderOpenGLBase() {
@@ -358,6 +360,24 @@ namespace GHL {
             }
         } 
 	}
+
+	void RenderOpenGLBase::GetPrimitiveInfo(PrimitiveType type,UInt32 prim_amount,GL::GLenum& element,UInt32& indexes_amount) const {
+		element = gl.TRIANGLES;
+		indexes_amount = prim_amount * 3;
+		if (type==PRIMITIVE_TYPE_TRIANGLE_STRIP) {
+			element = gl.TRIANGLE_STRIP;
+			indexes_amount = prim_amount + 2;
+		} else if (type==PRIMITIVE_TYPE_TRIANGLE_FAN) {
+			element = gl.TRIANGLE_FAN;
+			indexes_amount = prim_amount + 2;
+		} else if (type==PRIMITIVE_TYPE_LINES) {
+			element = gl.LINES;
+			indexes_amount = prim_amount * 2;
+		} else if (type==PRIMITIVE_TYPE_LINE_STRIP) {
+			element = gl.LINE_STRIP;
+			indexes_amount = prim_amount + 1;
+		}
+	}
 	
 		
 	/// draw primitives
@@ -377,19 +397,7 @@ namespace GHL {
         
         GL::GLenum element =gl.TRIANGLES;
 		UInt32 indexes_amount = prim_amount * 3;
-		if (type==PRIMITIVE_TYPE_TRIANGLE_STRIP) {
-			element =gl.TRIANGLE_STRIP;
-			indexes_amount = prim_amount + 2;
-		} else if (type==PRIMITIVE_TYPE_TRIANGLE_FAN) {
-			element =gl.TRIANGLE_FAN;
-			indexes_amount = prim_amount + 2;
-		} else if (type==PRIMITIVE_TYPE_LINES) {
-			element =gl.LINES;
-			indexes_amount = prim_amount * 2;
-		} else if (type==PRIMITIVE_TYPE_LINE_STRIP) {
-			element =gl.LINE_STRIP;
-			indexes_amount = prim_amount + 1;
-		}
+		GetPrimitiveInfo(type,prim_amount,element,indexes_amount);
         
         
         if (gl.vboapi.valid) {
@@ -461,13 +469,14 @@ namespace GHL {
 	}
     
 	
-	static bool LoadShaderGLSL(const GL& gl,GL::GLhandle handle,const Data* ds) {
+	static bool LoadShaderGLSL(const GL& gl,GL::GLhandle handle,const Data* ds, const std::string& prefix) {
         if (!gl.sdrapi.valid) return false;
         const GL::GLchar* source[] = {
+        	reinterpret_cast<const GL::GLchar*>(prefix.c_str()),
 			reinterpret_cast<const GL::GLchar*>(ds->GetData())
 		};
-        GL::GLint len[] = {GL::GLint(ds->GetSize())};
-		CHECK_GL(gl.sdrapi.ShaderSource(handle,1,source,len));
+        GL::GLint len[] = {GL::GLint(prefix.length()),GL::GLint(ds->GetSize())};
+		CHECK_GL(gl.sdrapi.ShaderSource(handle,2,source,len));
 		CHECK_GL(gl.sdrapi.CompileShader(handle));
 		GL::GLint res;
 		gl.sdrapi.GetShaderiv(handle,gl.sdrapi.COMPILE_STATUS,&res);
@@ -477,7 +486,7 @@ namespace GHL {
             GL::GLsizei size = 0;
             gl.sdrapi.GetShaderInfoLog(handle,512,&size,log);
             log[size]=0;
-            LOG_VERBOSE( "shader compile result : " << log );
+            LOG_ERROR( "shader compile result : " << log );
             
             return false;
 		}
@@ -488,7 +497,7 @@ namespace GHL {
         if (!gl.sdrapi.valid) return 0;
         GL::GLhandle handle = 0;
         CHECK_GL(handle = gl.sdrapi.CreateShader(gl.sdrapi.VERTEX_SHADER));
-		if (LoadShaderGLSL(gl,handle,ds)) {
+		if (LoadShaderGLSL(gl,handle,ds,m_vertex_shader_prefix)) {
 			VertexShaderGLSL* fs = new VertexShaderGLSL(this,handle);
 			return fs;
 		}
@@ -502,7 +511,7 @@ namespace GHL {
         if (!gl.sdrapi.valid) return 0;
         GL::GLhandle handle = 0;
         CHECK_GL(handle = gl.sdrapi.CreateShader(gl.sdrapi.FRAGMENT_SHADER));
-		if (LoadShaderGLSL(gl,handle,ds)) {
+		if (LoadShaderGLSL(gl,handle,ds,m_fragment_shader_prefix)) {
 			FragmentShaderGLSL* fs = new FragmentShaderGLSL(this,handle);
 			return fs;
 		}

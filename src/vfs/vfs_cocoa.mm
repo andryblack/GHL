@@ -62,7 +62,8 @@ namespace GHL {
 				[m_file seekToFileOffset:(m_size- offset)];
 				return true;
 			} else if (st == F_SEEK_CURRENT) {
-				[m_file seekToFileOffset:([m_file offsetInFile] + offset)];
+                unsigned long long offset_f = GHL::Int32([m_file offsetInFile]) + offset;
+				[m_file seekToFileOffset:offset_f];
 				return true;
 			}
 			return false;

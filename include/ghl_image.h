@@ -76,6 +76,10 @@ namespace GHL
         virtual bool GHL_CALL Draw(UInt32 x,UInt32 y,const Image* src) = 0;
         /// Premultiply alpha
         virtual bool GHL_CALL PremultiplyAlpha() = 0;
+        /// Rotate clockwise
+        virtual void GHL_CALL RotateCW() = 0;
+        /// Rotate counterclockwise
+        virtual void GHL_CALL RotateCCW() = 0;
     };
 
 } /*namespace*/
