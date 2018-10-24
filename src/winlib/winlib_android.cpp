@@ -167,6 +167,7 @@ namespace GHL {
             : m_app(0)
             , m_activity(activity)
             , m_window(0)
+            , m_window_focused(false)
             , m_vfs(0)
             , m_input_queue(0)
         {
@@ -473,6 +474,14 @@ namespace GHL {
                     m_app->OnEvent(&e);
                     m_app_state = APP_INACTIVE;
                 }
+                if (m_app_state == APP_INACTIVE) {
+                    if (m_window && m_window_focused) {
+                        GHL::Event e;
+                        e.type = GHL::EVENT_TYPE_ACTIVATE;
+                        m_app->OnEvent(&e);
+                        m_app_state = APP_ACTIVE;
+                    }
+                }
             }
             StartTimerThread();
         }
@@ -536,6 +545,9 @@ namespace GHL {
             LOG_VERBOSE("OnWindowFocusChanged:" << hasFocus);
             check_main_thread();
             m_sound.SetFocus(hasFocus);
+            if (m_window) {
+                m_window_focused = hasFocus;
+            }
             if (m_app) {
                 if (hasFocus) {
                     if (m_app_state == APP_INACTIVE) {
@@ -784,6 +796,7 @@ namespace GHL {
             check_main_thread();
           
             if (m_window==0) {
+                m_window_focused = false;
                 // initialize OpenGL ES and EGL
 
                 GHL::Settings settings;
@@ -906,6 +919,7 @@ namespace GHL {
                 DestroySurface();
                 
                 m_window = 0;
+                m_window_focused = false;
             } else {
                 LOG_INFO("skip another window");
             }
@@ -1309,6 +1323,7 @@ namespace GHL {
         Application*        m_app;
         ANativeActivity*    m_activity;
         ANativeWindow*      m_window;
+        bool                m_window_focused;
         VFSAndroidImpl*     m_vfs;
         EGLDisplay          m_display;
         EGLSurface          m_surface;
