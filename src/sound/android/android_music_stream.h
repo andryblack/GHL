@@ -27,7 +27,6 @@ namespace GHL {
 
     class AndroidDecodeMusic : public RefCounterImpl<MusicInstance>, public OpenSLPCMAudioStream::Holder { 
     private:
-        mutable UInt32 m_refs;
         OpenSLPCMAudioStream* m_channel;
         SoundDecoder* m_decoder;
     public:

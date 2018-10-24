@@ -4,22 +4,10 @@
 #include "../ghl_sound_decoder.h"
 #include <cassert>
 
-static const char* MODULE = "snd";
+/*static const char* MODULE = "snd"; */
 
 namespace GHL {
 
-	struct slock {
-	    pthread_mutex_t& m;
-	    slock(pthread_mutex_t& m) : m(m) {
-	        pthread_mutex_lock(&m);
-	    }
-	    ~slock() {
-	        pthread_mutex_unlock(&m);
-	    }
-	private:
-		slock(const slock&);
-		slock& operator = (const slock&);
-	};
 
 	static const size_t DECODE_SAMPLES_BUFFER = 1024;
 
@@ -60,7 +48,6 @@ namespace GHL {
 	
 
 	AndroidDecodeMusic::AndroidDecodeMusic(OpenSLPCMAudioStream* channel,SoundDecoder* decoder) :
-         m_refs(1),
          m_channel(channel),
          m_decoder(decoder)
     {
@@ -69,14 +56,14 @@ namespace GHL {
     }
 
     AndroidDecodeMusic::~AndroidDecodeMusic() {
-    	LOG_INFO("~AndroidDecodeMusic >>>");
+    	//LOG_INFO("~AndroidDecodeMusic >>>");
         if (m_channel) {
             m_channel->ResetHolder(this);
         }
         if (m_decoder) {
             m_decoder->Release();
         }
-        LOG_INFO("~AndroidDecodeMusic <<<");
+        //LOG_INFO("~AndroidDecodeMusic <<<");
     }
 
 
@@ -101,12 +88,14 @@ namespace GHL {
     /// stop
     void GHL_CALL AndroidDecodeMusic::Stop() {
         if (m_channel) {
+            //LOG_INFO("AndroidDecodeMusic::Stop <<<");
             m_channel->Stop();
         }
     }
     /// pause
     void GHL_CALL AndroidDecodeMusic::Pause() {
         if (m_channel) {
+            //LOG_INFO("AndroidDecodeMusic::Pause <<<");
             m_channel->Pause();
         }
     }
