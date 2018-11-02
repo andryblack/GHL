@@ -679,7 +679,11 @@ static void loop_iteration(void* arg) {
 
     if (!g_done) {
         double cur_time = emscripten_get_now();
-        GHL::UInt32 delta = (cur_time - g_last_time)*1000;
+        double ddelta = (cur_time - g_last_time)*1000.0;
+        if (ddelta > 1000000.0) {
+        	ddelta = 1000000.0;
+        }
+        GHL::UInt32 delta = ddelta;
         g_last_time = cur_time;
 
         g_application->OnFrame(delta);
