@@ -322,7 +322,7 @@ public:
                 return buffer;
             });
             char* dest = static_cast<char*>(data);
-            ::strncpy(dest,buffer, 32);
+            ::strlcpy(dest,buffer, 31);
             ::free(buffer);
             return true;
         } else if (name == GHL::DEVICE_DATA_UTC_OFFSET) {
@@ -332,6 +332,30 @@ public:
                 let n = d.getTimezoneOffset();
                 return n*(-60);
             }));
+            return true;
+        } else if (name == GHL::DEVICE_DATA_NAME) {
+            char* buffer = (char*)EM_ASM_INT({
+                let text = navigator.userAgent || "unknown"; 
+                let length = lengthBytesUTF8(text)+1;
+                let buffer = Module._malloc(length);
+                stringToUTF8(text,buffer,length);
+                return buffer;
+            });
+            char* dest = static_cast<char*>(data);
+            ::strlcpy(dest,buffer, 127);
+            ::free(buffer);
+            return true;
+        } else if (name == GHL::DEVICE_DATA_OS) {
+            char* buffer = (char*)EM_ASM_INT({
+                let text = navigator.platform || "unknown"; 
+                let length = lengthBytesUTF8(text)+1;
+                let buffer = Module._malloc(length);
+                stringToUTF8(text,buffer,length);
+                return buffer;
+            });
+            char* dest = static_cast<char*>(data);
+            ::strlcpy(dest,buffer, 31);
+            ::free(buffer);
             return true;
         }
         return false;
@@ -770,11 +794,24 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
             premultipliedAlpha: false
         };
         Module.ctx = Browser.createContext(Module['canvas'], true, true, contextAttributes);
+        if (!Module.ctx && (typeof WebGL2RenderingContext !== 'undefined')) {
+            contextAttributes['majorVersion'] = 1;
+            contextAttributes['minorVersion'] = 0;
+            Module.ctx = Browser.createContext(Module['canvas'], true, true, contextAttributes);
+        }
+        if (Module.ctx) {
+            Module.print("Created WebGL context version:" + Module.ctx.getParameter(Module.ctx.VERSION));
+        }
         return (Module.ctx ? 1 : 0) | 0;
     }),settings.depth?1:0);
 
     if (!r) {
         LOG_ERROR("failed create context");
+        EM_ASM(({
+            if (Module.GHL_OnContextCreateFailed) {
+                Module.GHL_OnContextCreateFailed();
+            }
+        }));
         return 1;
     }
    
