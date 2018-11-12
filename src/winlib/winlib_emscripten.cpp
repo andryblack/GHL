@@ -13,7 +13,7 @@
 #include <string>
 #include <iostream>
 #include <cassert>
-
+#include <cstdint>
 
 #include <sys/time.h>
 #include <EGL/EGL.h>
@@ -45,6 +45,8 @@ static void limit_render_size(double& w,double& h) {
             Module.GHL_LimitRenderSize($0,$1);
         }
     },&w,&h);
+    if (w < 1.0) w = 1.0;
+    if (h < 1.0) h = 1.0;
     if (w != original_w || h!=original_h) {
         g_mouse_scale_x = w / original_w;
         g_mouse_scale_y = h / original_h;
@@ -525,6 +527,16 @@ static GHL::UInt32 translate_mods(const EmscriptenKeyboardEvent *keyEvent) {
     return res;
 };
 
+static GHL::Int32 limit_int32(double value) {
+    if (value >= double(INT32_MAX)) {
+        return INT32_MAX;
+    }
+    if (value <= double(INT32_MIN)) {
+        return INT32_MIN;
+    }
+    return value;
+}
+
 
 static EM_BOOL
 emscripten_handle_mouse_move(int eventType, const EmscriptenMouseEvent *mouseEvent, void *userData) {
@@ -533,8 +545,8 @@ emscripten_handle_mouse_move(int eventType, const EmscriptenMouseEvent *mouseEve
         ae.type = GHL::EVENT_TYPE_MOUSE_MOVE;
         ae.data.mouse_move.button =  GHL::MOUSE_BUTTON_LEFT;
         ae.data.mouse_move.modificators = 0;
-        ae.data.mouse_move.x = mouseEvent->canvasX * g_pixel_ratio * g_mouse_scale_x;
-        ae.data.mouse_move.y = mouseEvent->canvasY * g_pixel_ratio * g_mouse_scale_y;
+        ae.data.mouse_move.x = limit_int32(mouseEvent->canvasX * g_pixel_ratio * g_mouse_scale_x);
+        ae.data.mouse_move.y = limit_int32(mouseEvent->canvasY * g_pixel_ratio * g_mouse_scale_y);
         g_application->OnEvent(&ae);
     }
     return EM_TRUE;
@@ -548,14 +560,14 @@ emscripten_handle_mouse_button(int eventType, const EmscriptenMouseEvent *mouseE
             ae.type = GHL::EVENT_TYPE_MOUSE_PRESS;
             ae.data.mouse_press.button =  GHL::MOUSE_BUTTON_LEFT;
             ae.data.mouse_press.modificators = 0;
-            ae.data.mouse_press.x = mouseEvent->canvasX * g_pixel_ratio * g_mouse_scale_x;
-            ae.data.mouse_press.y = mouseEvent->canvasY * g_pixel_ratio * g_mouse_scale_y;
+            ae.data.mouse_press.x = limit_int32(mouseEvent->canvasX * g_pixel_ratio * g_mouse_scale_x);
+            ae.data.mouse_press.y = limit_int32(mouseEvent->canvasY * g_pixel_ratio * g_mouse_scale_y);
         } else {
             ae.type = GHL::EVENT_TYPE_MOUSE_RELEASE;
             ae.data.mouse_press.button =  GHL::MOUSE_BUTTON_LEFT;
             ae.data.mouse_press.modificators = 0;
-            ae.data.mouse_press.x = mouseEvent->canvasX * g_pixel_ratio * g_mouse_scale_x;
-            ae.data.mouse_press.y = mouseEvent->canvasY * g_pixel_ratio * g_mouse_scale_y;
+            ae.data.mouse_press.x = limit_int32(mouseEvent->canvasX * g_pixel_ratio * g_mouse_scale_x);
+            ae.data.mouse_press.y = limit_int32(mouseEvent->canvasY * g_pixel_ratio * g_mouse_scale_y);
         }
         g_application->OnEvent(&ae);
     }
@@ -704,10 +716,13 @@ static void loop_iteration(void* arg) {
     if (!g_done) {
         double cur_time = emscripten_get_now();
         double ddelta = (cur_time - g_last_time)*1000.0;
+        if (ddelta < 0) {
+            ddelta = 0;
+        }
         if (ddelta > 1000000.0) {
         	ddelta = 1000000.0;
         }
-        GHL::UInt32 delta = ddelta;
+        GHL::UInt32 delta = limit_int32(ddelta);
         g_last_time = cur_time;
 
         g_application->OnFrame(delta);
