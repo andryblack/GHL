@@ -177,6 +177,10 @@ namespace GHL
                 for (size_t i=0;i<len;i++) {
                     data[i+0]=original[i*4+3];
                 }
+            } else if (m_fmt==IMAGE_FORMAT_RGB) {
+                for (size_t i=0;i<len;i++) {
+                    data[i] = 0.299 * original[i*3+0] + 0.587 * original[i*3+1] + 0.114 * original[i*3+2];
+                }
             } else {
                 LOG_ERROR("not implemented conversion");
                 buffer->Release();
@@ -184,7 +188,7 @@ namespace GHL
             }
             m_data->Release();
             m_data = buffer;
-        }else {
+		} else {
 			return false;
 		}
         m_fmt = fmt;
@@ -295,8 +299,9 @@ namespace GHL
 	
 	Image* GHL_CALL ImageImpl::SubImage(UInt32 x,UInt32 y,UInt32 w,UInt32 h) const {
 		if (!m_data) return 0;
-		if (x>m_width) return 0;
-		if (y>m_height) return 0;
+		if (x>=m_width) return 0;
+		if (y>=m_height) return 0;
+        if (w==0 || h==0) return 0;
 		if (w>m_width) return 0;
 		if (h>m_height) return 0;
 		if ((x+w)>m_width) return 0;
