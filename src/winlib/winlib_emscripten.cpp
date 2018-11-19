@@ -252,17 +252,7 @@ public:
         return status.isFullscreen;
     }
     ///
-    virtual void GHL_CALL SwitchFullscreen(bool fs) {
-        EmscriptenFullscreenChangeEvent status;
-        emscripten_get_fullscreen_status(&status);
-        if ((status.isFullscreen && fs)||(!status.isFullscreen && !fs)) 
-            return;
-        if (fs) {
-            emscripten_request_fullscreen("#canvas",0);
-        } else {
-            emscripten_exit_fullscreen();
-        }
-    }
+    virtual void GHL_CALL SwitchFullscreen(bool fs);
     
     virtual void GHL_CALL ShowKeyboard(const GHL::TextInputConfig* input) {
         if (input && input->system_input) {
@@ -706,6 +696,21 @@ static const char *emscripten_handle_beforeunload(int eventType, const void *res
     }
     return 0;
 }
+
+void GHL_CALL SystemEmscripten::SwitchFullscreen(bool fs) {
+        EmscriptenFullscreenChangeEvent status;
+        emscripten_get_fullscreen_status(&status);
+        if ((status.isFullscreen && fs)||(!status.isFullscreen && !fs)) 
+            return;
+       
+        if (fs) {
+            EM_ASM({
+                Module.requestFullscreen(false,true);
+            });
+        } else {
+            emscripten_exit_fullscreen();
+        }
+    }
 
 static GHL::SoundEmscripten g_sound;
 

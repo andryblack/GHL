@@ -294,8 +294,9 @@ namespace GHL
 	
 	Image* GHL_CALL ImageImpl::SubImage(UInt32 x,UInt32 y,UInt32 w,UInt32 h) const {
 		if (!m_data) return 0;
-		if (x>m_width) return 0;
-		if (y>m_height) return 0;
+		if (x>=m_width) return 0;
+		if (y>=m_height) return 0;
+        if (w==0 || h==0) return 0;
 		if (w>m_width) return 0;
 		if (h>m_height) return 0;
 		if ((x+w)>m_width) return 0;
