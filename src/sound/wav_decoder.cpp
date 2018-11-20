@@ -89,7 +89,7 @@ namespace GHL
 						m_type = SAMPLE_TYPE_STEREO_16;
 				}
 				m_freq = m_format.sample_rate;
-                assert(chunk_size<=UInt32(sizeof(m_format)));
+                assert(chunk_size>=UInt32(sizeof(m_format)));
 				m_ds->Seek(chunk_size-UInt32(sizeof(m_format)),F_SEEK_CURRENT);
 			} 
 			/// "data"
