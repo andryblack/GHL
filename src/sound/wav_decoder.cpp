@@ -55,7 +55,7 @@ namespace GHL
         
 		::memset(&m_format,0,sizeof(m_format));
 
-        LOG_DEBUG("init");
+        //LOG_DEBUG("init");
 		
 		/// read shunks
 		while (!ds->Eof())
@@ -68,7 +68,7 @@ namespace GHL
 			//// "fmt "
 			if (::strncmp(reinterpret_cast<const char*>(chunk_name),"fmt ",4)==0) 
 			{
-                LOG_DEBUG("found chunk 'fmt '");
+                //LOG_DEBUG("found chunk 'fmt '");
 
 				if (chunk_size<16) return false;
 				if (ds->Read(reinterpret_cast<Byte*>(&m_format),sizeof(m_format))!=sizeof(m_format)) return false;
@@ -95,7 +95,7 @@ namespace GHL
 			/// "data"
 			else if (::strncmp(reinterpret_cast<const char*>(chunk_name),"data",4)==0) 
 			{
-                LOG_DEBUG("found chunk 'data'");
+                //LOG_DEBUG("found chunk 'data'");
 				m_samples+=chunk_size/m_format.block_align;
                 assert(chunk_size<=std::numeric_limits<Int32>::max());
 				m_ds->Seek(chunk_size,F_SEEK_CURRENT);
