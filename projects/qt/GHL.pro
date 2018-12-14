@@ -178,6 +178,8 @@ linux* {
 #vfs
     SOURCES+=../../src/vfs/vfs_posix.cpp
     HEADERS+=../../src/vfs/vfs_posix.h
+    SOURCES+=../../src/vfs/posix_stream.cpp
+    HEADERS+=../../src/vfs/posix_stream.h
 # XF86VIDMODE
     DEFINES+=HAVE_XF86VMODE
 }

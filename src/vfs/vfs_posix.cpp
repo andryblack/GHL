@@ -10,79 +10,13 @@
 #include "../ghl_ref_counter_impl.h"
 #include "../ghl_log_impl.h"
 #include <ghl_data.h>
+#include "posix_stream.h"
+
 namespace GHL {
     
     static const char* MODULE = "VFS";
 
-    class PosixFileStream : public RefCounterImpl<DataStream> {
-    private:
-        FILE* m_file;
-    public:
-        explicit PosixFileStream(FILE* file) {
-            m_file = file;
-        }
-        virtual ~PosixFileStream() {
-            fclose(m_file);
-        }
-        /// read data
-        virtual UInt32 GHL_CALL Read(Byte* dest,UInt32 bytes) {
-            return fread(dest,1,bytes,m_file);
-        }
-        /// tell
-        virtual UInt32 GHL_CALL Tell() const {
-               return ftell(m_file);
-        }
-        /// seek
-        virtual	bool GHL_CALL Seek(Int32 offset,FileSeekType st) {
-           int dir = 0;
-           switch (st)
-           {
-           case F_SEEK_CURRENT :
-               dir = SEEK_CUR;
-               break;
-           case F_SEEK_END :
-               dir = SEEK_END;
-               break;
-           case F_SEEK_BEGIN :
-               dir = SEEK_SET;
-               break;
-           default: return false;
-           }
-           return fseek(m_file,offset,dir)==0;
-        }
-        /// End of file
-        virtual bool GHL_CALL Eof() const {
-                return feof(m_file) != 0;
-        }
-    };
     
-    class PosixWriteFileStream : public RefCounterImpl<WriteStream> {
-    private:
-        FILE* m_file;
-    public:
-        explicit PosixWriteFileStream(FILE* file) {
-            m_file = file;
-        }
-        virtual ~PosixWriteFileStream() {
-            Close();
-        }
-        virtual void GHL_CALL Flush() {
-            if (m_file) {
-                fflush(m_file);
-            }
-        }
-        virtual void GHL_CALL Close() {
-            if (m_file) {
-                fclose(m_file);
-                m_file = 0;
-            }
-        }
-        /// write data
-        virtual UInt32 GHL_CALL Write(const Byte* src,UInt32 bytes) {
-            if (!m_file) return 0;
-            return fwrite(src,1,bytes,m_file);
-        }
-    };
 
     static void create_dir(const char* filename) {
         std::string dir;

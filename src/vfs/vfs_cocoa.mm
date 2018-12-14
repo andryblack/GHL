@@ -13,107 +13,12 @@
 #include "../ghl_log_impl.h"
 #include "../ghl_ref_counter_impl.h"
 #include <ghl_data.h>
-
+#include "posix_stream.h"
 
 
 namespace GHL {
 
     static const char* MODULE = "VFS";
-	
-	class CocoaReadFileStream : public RefCounterImpl<DataStream> {
-	private:
-		NSFileHandle* m_file;
-		UInt32 m_size;
-		~CocoaReadFileStream() {
-			if (m_file) {
-				[m_file closeFile];
-				[m_file release];
-			}
-		}
-	public:
-		explicit CocoaReadFileStream(NSFileHandle* file) : m_file(file) {
-			[m_file retain];
-			[m_file seekToEndOfFile];
-			m_size = static_cast<UInt32>([m_file offsetInFile]);
-			[m_file seekToFileOffset:0];
-		}
-		/// read data
-		virtual UInt32 GHL_CALL Read(Byte* dest,UInt32 bytes) {
-			NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-			UInt32 len = 0;
-			NSData* data = [m_file readDataOfLength:bytes];
-			if (data) {
-				[data getBytes:dest length:bytes];
-				len = static_cast<UInt32>([data length]);
-			}
-			[pool release];
-			return len;
-		}
-		/// tell
-		virtual UInt32 GHL_CALL Tell() const {
-			return UInt32([m_file offsetInFile]);
-		}
-		/// seek
-		virtual	bool GHL_CALL Seek(Int32 offset,FileSeekType st) {
-			if (st == F_SEEK_BEGIN) {
-				[m_file seekToFileOffset:offset];
-				return true;
-			} else if (st == F_SEEK_END) {
-				[m_file seekToFileOffset:(m_size- offset)];
-				return true;
-			} else if (st == F_SEEK_CURRENT) {
-                unsigned long long offset_f = GHL::Int32([m_file offsetInFile]) + offset;
-				[m_file seekToFileOffset:offset_f];
-				return true;
-			}
-			return false;
-		}
-		/// End of file
-		virtual bool GHL_CALL Eof() const {
-			return [m_file offsetInFile] == m_size;
-		}
-	};
-    
-    
-    class CocoaWriteFileStream : public RefCounterImpl<WriteStream> {
-    private:
-        NSFileHandle* m_file;
-        ~CocoaWriteFileStream() {
-            Close();
-        }
-    public:
-        explicit CocoaWriteFileStream(NSFileHandle* file) : m_file(file) {
-            [m_file retain];
-        }
-        virtual void GHL_CALL Flush() {
-            if (m_file) {
-                [m_file synchronizeFile];
-            }
-        }
-        virtual void GHL_CALL Close() {
-            if (m_file) {
-                [m_file closeFile];
-                [m_file release];
-                m_file = 0;
-            }
-        }
-        /// read data
-        virtual UInt32 GHL_CALL Write(const Byte* src,UInt32 bytes) {
-            if (!m_file) return 0;
-            NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-            UInt32 len = 0;
-            NSData* data = [NSData dataWithBytesNoCopy:const_cast<Byte*>(src) length:bytes freeWhenDone:NO];
-            if (data) @try {
-                [m_file writeData:data];
-                len = UInt32([data length]);
-            } @catch ( NSException* e) {
-                len = 0;
-            }
-            [pool release];
-            return len;
-        }
-    };
-	
 	
 	
 	VFSCocoaImpl::VFSCocoaImpl() {
@@ -184,103 +89,69 @@ namespace GHL {
 	}
 	/// file is exists
 	bool GHL_CALL VFSCocoaImpl::IsFileExists(const char* file) const {
-		std::string filename = file;
-		for (size_t i=0;i<filename.length();i++) {
-			if (filename[i]=='\\') filename[i]='/';
-		}
-		NSString* path = [NSString stringWithUTF8String:filename.c_str()];
+		NSString* path = [NSString stringWithUTF8String:file];
 		return [[NSFileManager defaultManager] fileExistsAtPath:path] == YES;
 	}
 	/// remove file
 	bool GHL_CALL VFSCocoaImpl::DoRemoveFile(const char* file) {
-        std::string filename = file;
-        for (size_t i=0;i<filename.length();i++) {
-            if (filename[i]=='\\') filename[i]='/';
-        }
-        NSString* path = [NSString stringWithUTF8String:filename.c_str()];
+        NSString* path = [NSString stringWithUTF8String:file];
         return [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
 	}
 	/// copy file
 	bool GHL_CALL VFSCocoaImpl::DoCopyFile(const char* from,const char* to) {
-        std::string filename = from;
-        for (size_t i=0;i<filename.length();i++) {
-            if (filename[i]=='\\') filename[i]='/';
-        }
-        NSString* path_from = [NSString stringWithUTF8String:filename.c_str()];
-        filename = to;
-        for (size_t i=0;i<filename.length();i++) {
-            if (filename[i]=='\\') filename[i]='/';
-        }
-        NSString* path_to = [NSString stringWithUTF8String:filename.c_str()];
+        NSString* path_from = [NSString stringWithUTF8String:from];
+        NSString* path_to = [NSString stringWithUTF8String:to];
         return [[NSFileManager defaultManager] copyItemAtPath:path_from toPath:path_to error:nil];
 	}
     /// rename file
     bool GHL_CALL VFSCocoaImpl::DoRenameFile(const char* from,const char* to) {
-        std::string filename = from;
-        for (size_t i=0;i<filename.length();i++) {
-            if (filename[i]=='\\') filename[i]='/';
-        }
-        NSString* path_from = [NSString stringWithUTF8String:filename.c_str()];
-        filename = to;
-        for (size_t i=0;i<filename.length();i++) {
-            if (filename[i]=='\\') filename[i]='/';
-        }
-        NSString* path_to = [NSString stringWithUTF8String:filename.c_str()];
+        NSString* path_from = [NSString stringWithUTF8String:from];
+        NSString* path_to = [NSString stringWithUTF8String:to];
         return [[NSFileManager defaultManager] moveItemAtPath:path_from toPath:path_to error:nil];
     }
     /// create dir
     bool GHL_CALL VFSCocoaImpl::DoCreateDir(const char* fpath) {
-        std::string filename = fpath;
-        for (size_t i=0;i<filename.length();i++) {
-            if (filename[i]=='\\') filename[i]='/';
-        }
-        NSString* path = [NSString stringWithUTF8String:filename.c_str()];
+        NSString* path = [NSString stringWithUTF8String:fpath];
         return [[NSFileManager defaultManager] createDirectoryAtPath:path
                                   withIntermediateDirectories:YES
                                                    attributes:nil error:nil];
     }
 	/// open file
 	DataStream* GHL_CALL VFSCocoaImpl::OpenFile(const char* file) {
-		std::string filename = file;
-		for (size_t i=0;i<filename.length();i++) {
-			if (filename[i]=='\\') filename[i]='/';
-		}
-        NSFileHandle* handle = [NSFileHandle fileHandleForReadingAtPath:[NSString stringWithUTF8String:filename.c_str()]];
-        if (handle) {
-            return new CocoaReadFileStream(handle);
+        (void)MODULE;
+        //LOG_VERBOSE("try open file '" << _file << "'");
+        if (!file) return 0;
+        if (file[0]==0) return 0;
+        FILE* f = fopen(file, "rb" );
+        if (f) {
+            return new PosixFileStream(f);
         }
+        //LOG_VERBOSE("failed open file '" << _file << "' " << errno);
         return 0;
-	}
+    }
     
     /// open file
     WriteStream* GHL_CALL VFSCocoaImpl::OpenFileWrite(const char* file) {
-        std::string filename = file;
-        for (size_t i=0;i<filename.length();i++) {
-            if (filename[i]=='\\') filename[i]='/';
-        }
-        NSString* fileName = [NSString stringWithUTF8String:filename.c_str()];
-        NSString* folder = [fileName stringByDeletingLastPathComponent];
-        NSFileManager* mgr = [NSFileManager defaultManager];
-        BOOL dir = true;
-        if (folder && ![mgr fileExistsAtPath:folder isDirectory:&dir]) {
-            [mgr createDirectoryAtPath:folder withIntermediateDirectories:YES attributes:nil error:nil];
-        }
-        [mgr createFileAtPath:fileName contents:nil attributes:nil];
-        NSFileHandle* handle = [NSFileHandle fileHandleForWritingAtPath:fileName];
-        if (handle) {
-            return new CocoaWriteFileStream(handle);
-        }
+        if (!file) return 0;
+        if (file[0]==0) return 0;
+        
+        NSFileManager* fm = [NSFileManager defaultManager];
+        [fm
+         createDirectoryAtPath:[[NSString stringWithUTF8String:file] stringByDeletingLastPathComponent]
+         withIntermediateDirectories:YES
+         attributes:nil
+         error:nil];
+        
+        FILE* f = fopen(file, "wb"  );
+        if (f)
+            return new PosixWriteFileStream(f);
         return 0;
     }
     
     /// write file
     bool GHL_CALL VFSCocoaImpl::WriteFile(const char* file, const Data* data ) {
-        std::string filename = file;
-        for (size_t i=0;i<filename.length();i++) {
-            if (filename[i]=='\\') filename[i]='/';
-        }
-
-        NSString* path = [NSString stringWithUTF8String:filename.c_str()];
+       
+        NSString* path = [NSString stringWithUTF8String:file];
         
         NSFileManager* fm = [NSFileManager defaultManager];
         [fm

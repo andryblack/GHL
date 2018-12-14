@@ -35,7 +35,8 @@ DIRS+=$(BUILD)
 # VFS
 VFS_SOURCES=ghl_vfs_factory.cpp\
     memory_stream.cpp\
-    vfs_posix.cpp
+    vfs_posix.cpp \
+    posix_stream.cpp
 
 VFS_OBJECTS= $(patsubst %.cpp,$(BUILD)/vfs/%.cpp.o,$(VFS_SOURCES))
 DIRS+=$(BUILD)/vfs

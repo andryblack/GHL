@@ -20,7 +20,8 @@ CPP_FLAGS=$(INCLUDES)
 # VFS
 VFS_SOURCES=ghl_vfs_factory.cpp\
     memory_stream.cpp\
-    vfs_posix.cpp
+    vfs_posix.cpp\
+    posix_stream.cpp
 
 VFS_OBJECTS= $(patsubst %.cpp,$(BUILD)/vfs/%.o,$(VFS_SOURCES))
 DIRS+=$(BUILD)/vfs

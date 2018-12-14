@@ -27,6 +27,7 @@ COMMON_OBJECTS=$(patsubst %.cpp,$(BUILD)/%.o,$(COMMON_SOURCES))
 VFS_SOURCES=ghl_vfs_factory.cpp\
     memory_stream.cpp\
     vfs_posix.cpp \
+    posix_stream.cpp \
     vfs_emscripten.cpp 
 
 VFS_OBJECTS= $(patsubst %.cpp,$(BUILD)/vfs/%.o,$(VFS_SOURCES))

@@ -124,7 +124,7 @@ namespace GHL {
         png_set_read_fn(png_ptr, file, read_data_fcn);
         
         png_set_sig_bytes(png_ptr, 8); // Tell png that we read the signature
-        
+        png_set_crc_action(png_ptr,PNG_CRC_QUIET_USE,PNG_CRC_QUIET_USE);
         png_read_info(png_ptr, info_ptr); // Read the info section of the png file
         
         info->width = png_get_image_width(png_ptr, info_ptr);
@@ -207,7 +207,7 @@ Image* PngDecoder::Decode(DataStream* file)
 	}
 
 	png_set_read_fn(png_ptr, file, read_data_fcn);
-
+    png_set_crc_action(png_ptr,PNG_CRC_QUIET_USE,PNG_CRC_QUIET_USE);
 	png_set_sig_bytes(png_ptr, 8); // Tell png that we read the signature
 
 	png_read_info(png_ptr, info_ptr); // Read the info section of the png file
