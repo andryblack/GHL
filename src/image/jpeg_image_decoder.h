@@ -23,6 +23,8 @@ namespace GHL {
 		virtual ImageFileFormat GetFileFormat(const CheckBuffer&) const;
         virtual bool GetFileInfo(DataStream* ds, ImageInfo* info);
         static const Data* ReEncode(GHL::DataStream* src);
+        static bool GetJpegFileFormat(const CheckBuffer& buf);
+        static bool GetJpegFileInfo(DataStream* ds, ImageInfo* info);
     };
     
 }/*namespace*/

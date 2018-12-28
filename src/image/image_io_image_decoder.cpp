@@ -3,6 +3,7 @@
 #include <CoreGraphics/CoreGraphics.h>
 
 #include "image_io_image_decoder.h"
+#include "jpeg_image_decoder.h"
 #include "image_impl.h"
 
 namespace GHL {
@@ -14,39 +15,6 @@ namespace GHL {
     ImageIOImageDecoder::~ImageIOImageDecoder() {
         
     }
-    
-    static size_t dp_getBytes(void * __nullable info,
-                                                    void *  buffer, size_t count) {
-        DataStream* ds = static_cast<DataStream*>(info);
-        return ds->Read(static_cast<Byte*>(buffer), UInt32(count));
-    }
-    
-    static off_t dp_skipForward(void * __nullable info,
-                                               off_t count) {
-        DataStream* ds = static_cast<DataStream*>(info);
-        if (ds->Seek(Int32(count), F_SEEK_CURRENT))
-            return count;
-        return 0;
-    }
-    
-    static void dp_rewind(void * __nullable info) {
-        DataStream* ds = static_cast<DataStream*>(info);
-        ds->Seek(0, F_SEEK_BEGIN);
-    }
-    
-    static void dp_releaseInfo(void * __nullable info) {
-        DataStream* ds = static_cast<DataStream*>(info);
-        ds->Release();
-    }
-    
-    static CGDataProviderSequentialCallbacks data_provider_callbacks = {
-        0,
-        &dp_getBytes,
-        &dp_skipForward,
-        &dp_rewind,
-        &dp_releaseInfo
-    };
-    
     
     
     void release_data_callback(void * __nullable info,
@@ -100,38 +68,18 @@ namespace GHL {
     const Data* ImageIOImageDecoder::Encode( const Image* image) {
         return 0;
     }
+   
+
     ImageFileFormat ImageIOImageDecoder::GetFileFormat(const CheckBuffer& buf) const {
-        for ( size_t i=0; i<sizeof(CheckBuffer);++i) {
-            if (buf[i]!=0xff) {
-                if( buf[i]==0xd8 && i!=0 )
-                    return IMAGE_FILE_FORMAT_JPEG;
-                break;
-            }
-        }
-        return ImageFileDecoder::GetFileFormat(buf);
+        return JpegDecoder::GetJpegFileFormat(buf) ? GHL::IMAGE_FILE_FORMAT_JPEG : ImageFileDecoder::GetFileFormat(buf);
     }
+    
+    
+   
+    
+    
     bool ImageIOImageDecoder::GetFileInfo(DataStream* ds, ImageInfo* info) {
-        if (!ds) return 0;
-        ds->AddRef();
-        CGDataProviderRef provider = CGDataProviderCreateSequential(ds, &data_provider_callbacks);
-        
-        CGImageRef img =
-        CGImageCreateWithJPEGDataProvider(provider, nil, FALSE, kCGRenderingIntentDefault);
-        
-        CGDataProviderRelease(provider);
-        if (!img)
-            return false;
-        info->file_format = IMAGE_FILE_FORMAT_JPEG;
-        info->width = UInt32(CGImageGetWidth(img));
-        info->height = UInt32(CGImageGetHeight(img));
-        if (CGImageGetBitsPerPixel(img) == 24)
-            info->image_format = IMAGE_FORMAT_RGB;
-        else if (CGImageGetBitsPerPixel(img) == 32)
-            info->image_format = IMAGE_FORMAT_RGB;
-        else if (CGImageGetBitsPerPixel(img) == 8)
-            info->image_format = IMAGE_FORMAT_GRAY;
-        CGImageRelease(img);
-        return true;
+        return JpegDecoder::GetJpegFileInfo(ds, info);
     }
     
     

@@ -21,7 +21,7 @@
  */
 
 #include "ghl_image_config.h"
-#ifdef USE_JPEG_DECODER
+
 #include "jpeg_image_decoder.h"
 #include "image_impl.h"
 
@@ -39,6 +39,7 @@ namespace GHL {
 	
 	static const char* MODULE = "IMAGE:JPEG";
     
+#ifdef USE_JPEG_DECODER
     JpegDecoder::JpegDecoder() : ImageFileDecoder( IMAGE_FILE_FORMAT_JPEG )
     {
     }
@@ -167,74 +168,11 @@ namespace GHL {
     }
     
 	ImageFileFormat JpegDecoder::GetFileFormat(const CheckBuffer& buf) const {
-		for ( size_t i=0; i<sizeof(CheckBuffer);++i) {
-			if (buf[i]!=0xff) {
-				if( buf[i]==0xd8 && i!=0 )
-					return IMAGE_FILE_FORMAT_JPEG;
-				break;
-			}
-		}
-		return ImageFileDecoder::GetFileFormat(buf);
+        return GetJpegFileFormat(buf) ? GHL::IMAGE_FILE_FORMAT_JPEG : ImageFileDecoder::GetFileFormat(buf);
 	}
     
     bool JpegDecoder::GetFileInfo(DataStream* file, ImageInfo* info) {
-    
-        // allocate and initialize JPEG decompression object
-        struct jpeg_decompress_struct cinfo;
-        struct ghl_jpeg_error_mgr jerr;
-        
-        //We have to set up the error handler first, in case the initialization
-        //step fails.  (Unlikely, but it could happen if you are out of memory.)
-        //This routine fills in the contents of struct jerr, and returns jerr's
-        //address which we place into the link field in cinfo.
-        
-        cinfo.err = jpeg_std_error(&jerr);
-        cinfo.err->error_exit = ghl_jpeg_error_exit;
-        cinfo.err->output_message = ghl_jpeg_output_message;
-        
-        // compatibility fudge:
-        // we need to use setjmp/longjmp for error handling as gcc-linux
-        // crashes when throwing within external c code
-        if (setjmp(jerr.setjmp_buffer))
-        {
-            // If we get here, the JPEG code has signaled an error.
-            // We need to clean up the JPEG object and return.
-            
-            jpeg_destroy_decompress(&cinfo);
-            return false;
-        }
-        
-        // Now we can initialize the JPEG decompression object.
-        jpeg_create_decompress(&cinfo);
-        
-        // specify data source
-        ghl_jpeg_source_mgr jsrc;
-        jsrc.stream = file;
-        
-        
-        jsrc.init_source = &ghl_jpeg_source_mgr::ghl_jpeg_init_source;
-        jsrc.fill_input_buffer = &ghl_jpeg_source_mgr::ghl_jpeg_fill_input_buffer;
-        jsrc.skip_input_data = &ghl_jpeg_source_mgr::ghl_jpeg_skip_input_data;
-        jsrc.resync_to_restart = &jpeg_resync_to_restart;
-        jsrc.term_source = &ghl_jpeg_source_mgr::ghl_jpeg_term_source;
-        
-        cinfo.src = &jsrc;
-        
-        // Decodes JPG input from whatever source
-        // Does everything AFTER jpeg_create_decompress
-        // and BEFORE jpeg_destroy_decompress
-        // Caller is responsible for arranging these + setting up cinfo
-        
-        // read file parameters with jpeg_read_header()
-        jpeg_read_header(&cinfo, TRUE);
-
-        info->image_format = IMAGE_FORMAT_RGB;
-        info->width = cinfo.image_width;
-        info->height = cinfo.image_height;
-        
-        jpeg_destroy_decompress(&cinfo);
-        
-        return true;
+        return JpegDecoder::GetJpegFileInfo(file,info);
     }
     
     Image* JpegDecoder::Decode(DataStream* file)
@@ -519,6 +457,155 @@ namespace GHL {
         return dest.data;
     }
     
-} /*namespace*/
 
 #endif
+    
+    static const GHL::Byte JPEG_MARKER_NONE = 0xff;
+    static const GHL::Byte JPEG_MARKER_SOI = 0xd8;
+    static const GHL::Byte JPEG_MARKER_SOF0 = 0xc0;                // Baseline
+    static const GHL::Byte JPEG_MARKER_SOF1 = 0xc1;                // Extended sequential, Huffman
+    static const GHL::Byte JPEG_MARKER_SOF2 = 0xc2;                // Progressive, Huffman
+    static const GHL::Byte JPEG_MARKER_SOF9 = 0xc9;                // Extended sequential, arithmetic
+    static const GHL::Byte JPEG_MARKER_SOF10 = 0xca;               //Progressive, arithmetic
+    static const GHL::Byte JPEG_MARKER_DQT = 0xdb;                  // define quantization table
+    
+    static inline bool is_sof(GHL::Byte m) {
+        return m == JPEG_MARKER_SOF0 ||
+        m == JPEG_MARKER_SOF1 ||
+        m == JPEG_MARKER_SOF2 ||
+        m == JPEG_MARKER_SOF9 ||
+        m == JPEG_MARKER_SOF10;
+    }
+    
+    struct jpeg_ctx {
+        GHL::Byte marker;
+        GHL::Byte buffer[128];
+        GHL::UInt32 size;
+        GHL::UInt32 pos;
+        GHL::DataStream* ds;
+        explicit jpeg_ctx(GHL::DataStream* ds) : marker(JPEG_MARKER_NONE),size(0),pos(0),ds(ds){
+            
+        }
+        void read() {
+            pos = 0;
+            size = ds->Read(buffer, GHL::UInt32(sizeof(buffer)));
+        }
+        GHL::Byte get_byte() {
+            if (pos == size) {
+                read();
+                if (pos == size) {
+                    return 0;
+                }
+            }
+            GHL::Byte ret = buffer[pos];
+            ++pos;
+            return ret;
+        }
+        GHL::UInt16 get16be() {
+            GHL::UInt16 res = get_byte();
+            res <<= 8;
+            res |= get_byte();
+            return res;
+        }
+        GHL::Byte get_marker() {
+            GHL::Byte ret = marker;
+            if (ret != JPEG_MARKER_NONE) {
+                marker = JPEG_MARKER_NONE;
+                return ret;
+            }
+            ret = get_byte();
+            if (ret != 0xff) return JPEG_MARKER_NONE;
+            while (ret == 0xff) {
+                ret = get_byte(); // consume repeated 0xff fill bytes
+            }
+            if (ret == 0 && size==pos && ds->Eof())
+                return JPEG_MARKER_NONE;
+            return ret;
+        }
+        void skip(GHL::UInt32 len) {
+            pos += len;
+            if (pos > size) {
+                len = pos - size;
+                pos = size = 0;
+                ds->Seek(len, GHL::F_SEEK_CURRENT);
+            }
+        }
+    };
+    
+    bool JpegDecoder::GetJpegFileFormat(const CheckBuffer& buf) {
+        for ( size_t i=0; i<sizeof(CheckBuffer);++i) {
+            if (buf[i]!=0xff) {
+                if( buf[i]==JPEG_MARKER_SOI && i!=0 )
+                    return IMAGE_FILE_FORMAT_JPEG;
+                break;
+            }
+        }
+        return IMAGE_FILE_FORMAT_UNKNOWN;
+    }
+    
+    bool JpegDecoder::GetJpegFileInfo(DataStream* ds, ImageInfo* info) {
+        if (!ds) return false;
+        
+        jpeg_ctx ctx(ds);
+        GHL::Byte m = ctx.get_marker();
+        if (m != JPEG_MARKER_SOI) {
+            // should not happen
+            return false;
+        }
+        m = ctx.get_marker();
+        while (!is_sof(m)) {
+            switch (m) {
+                case JPEG_MARKER_NONE: // no marker found
+                    LOG_ERROR("not found marker");
+                    return false;
+                case 0xe0: case 0xe1: case 0xe2: case 0xe3: case 0xe4: case 0xe5: case 0xe6: case 0xe7:
+                case 0xe8: case 0xe9: case 0xea: case 0xeb: case 0xec: case 0xed: case 0xee: case 0xef: { // APP
+                    GHL::UInt16 len = ctx.get16be();
+                    if (len < 2) {
+                        LOG_ERROR("bad APP len");
+                        return false;
+                    }
+                    len-=2;
+                    ctx.skip(len);
+                } break;
+                case JPEG_MARKER_DQT: {
+                    GHL::UInt16 len = ctx.get16be();
+                    if (len < 2) {
+                        LOG_ERROR("bad DQT len");
+                        return false;
+                    }
+                    len-=2;
+                    ctx.skip(len);
+                } break;
+                default:
+                    LOG_ERROR("unexpected marker " << int(m));
+                    return false;
+            }
+            m = ctx.get_marker();
+        }
+        GHL::UInt16 sof_len = ctx.get16be();
+        if (sof_len < 11) {
+            LOG_ERROR("bad SOF len");
+            return false;
+        }
+        GHL::Byte p = ctx.get_byte();
+        if (p!=8) {
+            LOG_ERROR("unsupported BPP:" << int(p));
+            return false;
+        }
+        info->height = ctx.get16be();
+        if (info->height == 0) {
+            LOG_ERROR("unsupported height==0");
+            return false;
+        }
+        info->width = ctx.get16be();
+        if (info->width == 0) {
+            LOG_ERROR("unsupported width==0");
+            return false;
+        }
+        GHL::Byte ccount = ctx.get_byte();
+        info->image_format = ccount == 1 ? GHL::IMAGE_FORMAT_GRAY : GHL::IMAGE_FORMAT_RGB;
+        return true;
+    }
+} /*namespace*/
+
