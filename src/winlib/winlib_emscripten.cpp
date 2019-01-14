@@ -357,8 +357,11 @@ public:
         /// do nothing
     }
     virtual bool GHL_CALL OpenURL( const char* url ) {
-        /// @todo
-        return false;
+        EM_ASM(({
+            let url = Pointer_stringify($0);
+            window.open(url, '_blank');
+        }),url);
+        return true;
     }
     virtual GHL::Font* GHL_CALL CreateFont( const GHL::FontConfig* config ) {
         int handle = EM_ASM_INT(({
