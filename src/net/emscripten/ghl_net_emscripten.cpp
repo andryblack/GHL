@@ -103,23 +103,23 @@ public:
     void PostBinary(GHL::NetworkRequest* handler,const GHL::Byte* data, GHL::UInt32 data_size) {
         handler->AddRef();
         EM_ASM({
-            let _handler = $0;
-            let _url = Pointer_stringify(Module['_GHL_NetworkEmscripten_getURL'](_handler));
-            let http = new XMLHttpRequest();
-            let handle = Browser.getNextWgetRequestHandle();
+            var _handler = $0;
+            var _url = Pointer_stringify(Module['_GHL_NetworkEmscripten_getURL'](_handler));
+            var http = new XMLHttpRequest();
+            var handle = Browser.getNextWgetRequestHandle();
             http.open('POST', _url, true);
             http.responseType = 'arraybuffer';
 
             http.onload = function http_onload(e) {
               if (http.status == 200) {
-                let byteArray = new Uint8Array(http.response);
-                let buffer = _malloc(byteArray.length);
+                var byteArray = new Uint8Array(http.response);
+                var buffer = _malloc(byteArray.length);
                 HEAPU8.set(byteArray, buffer);
                 Module['_GHL_NetworkEmscripten_onLoad'](_handler,buffer,byteArray.length);
                  _free(buffer);
               } else {
-                let length = lengthBytesUTF8(http.statusText)+1;
-                let buffer = Module._malloc(length);
+                var length = lengthBytesUTF8(http.statusText)+1;
+                var buffer = Module._malloc(length);
                 stringToUTF8(http.statusText,buffer,length);
                 Module['_GHL_NetworkEmscripten_onError'](_handler,http.status, buffer);
                 _free(buffer);
@@ -127,8 +127,8 @@ public:
               delete Browser.wgetRequests[handle];
             };
             http.onerror = function http_onerror(e) {
-                let length = lengthBytesUTF8(http.statusText)+1;
-                let buffer = Module._malloc(length);
+                var length = lengthBytesUTF8(http.statusText)+1;
+                var buffer = Module._malloc(length);
                 stringToUTF8(http.statusText,buffer,length);
                 Module['_GHL_NetworkEmscripten_onError'](_handler,http.status, buffer);
                 _free(buffer);
@@ -138,14 +138,14 @@ public:
                 delete Browser.wgetRequests[handle];
             };
 
-            let headers_cnt = Module['_GHL_NetworkEmscripten_getHeadersCount'](_handler);
-            for (let i=0;i<headers_cnt;i++) {
-                let name =  Module['_GHL_NetworkEmscripten_getHeaderName'](_handler,i);
-                let value = Module['_GHL_NetworkEmscripten_getHeaderValue'](_handler,i);
+            var headers_cnt = Module['_GHL_NetworkEmscripten_getHeadersCount'](_handler);
+            for (var i=0;i<headers_cnt;i++) {
+                var name =  Module['_GHL_NetworkEmscripten_getHeaderName'](_handler,i);
+                var value = Module['_GHL_NetworkEmscripten_getHeaderValue'](_handler,i);
                 http.setRequestHeader(Pointer_stringify(name),Pointer_stringify(value));
             };
 
-            let data = HEAPU8.subarray($1,$1+$2);
+            var data = HEAPU8.subarray($1,$1+$2);
             http.send(data);
 
             Browser.wgetRequests[handle] = http;
@@ -198,12 +198,12 @@ public:
                 return 'fetch' in window;
             };
             function isFetchResponseBodySupported() {
-                  let response_support = ('Response' in window);
+                  var response_support = ('Response' in window);
                   if (!response_support ) {
                     return response_support;
                   }
-                  let test_response = new Response();
-                  let body_support = ('body' in test_response);
+                  var test_response = new Response();
+                  var body_support = ('body' in test_response);
                   return body_support; 
             };
             try {
@@ -221,19 +221,19 @@ public:
             };
             console.log('fetch api supported, use it');
             Module.GHL_NetworkEmscripten_fetch = function( _handler, _req ) {
-                let _url = Pointer_stringify(Module['_GHL_NetworkEmscripten_getURL'](_handler));
+                var _url = Pointer_stringify(Module['_GHL_NetworkEmscripten_getURL'](_handler));
                 _req.headers = new Headers();
-                let _headers_cnt = Module['_GHL_NetworkEmscripten_getHeadersCount'](_handler);
-                for (let i=0;i<_headers_cnt;i++) {
-                    let name =  Module['_GHL_NetworkEmscripten_getHeaderName'](_handler,i);
-                    let value = Module['_GHL_NetworkEmscripten_getHeaderValue'](_handler,i);
+                var _headers_cnt = Module['_GHL_NetworkEmscripten_getHeadersCount'](_handler);
+                for (var i=0;i<_headers_cnt;i++) {
+                    var name =  Module['_GHL_NetworkEmscripten_getHeaderName'](_handler,i);
+                    var value = Module['_GHL_NetworkEmscripten_getHeaderValue'](_handler,i);
                     _req.headers.append(Pointer_stringify(name),Pointer_stringify(value));
                 };
-                let onerr = function( e ) {
+                var onerr = function( e ) {
                   if (_handler != 0) { 
-                    let err = ' ' + e; 
-                    let length = lengthBytesUTF8(err)+1; 
-                    let buffer = Module._malloc(length); 
+                    var err = ' ' + e; 
+                    var length = lengthBytesUTF8(err)+1; 
+                    var buffer = Module._malloc(length); 
                     stringToUTF8(err,buffer,length); 
                     Module['_GHL_NetworkEmscripten_onFetchError'](_handler, buffer); 
                     _free(buffer); 
@@ -241,7 +241,7 @@ public:
                   };
                 };
     
-                let pump = function( reader ) {
+                var pump = function( reader ) {
                     return reader.read().then(function(rres) {
                         if (rres.done) {
                             Module['_GHL_NetworkEmscripten_onFetchEnd'](_handler);
@@ -249,7 +249,7 @@ public:
                             return;
                         };
                         const chunk = rres.value; 
-                        let buffer = _malloc(chunk.length); 
+                        var buffer = _malloc(chunk.length); 
                         HEAPU8.set(chunk, buffer); 
                         Module['_GHL_NetworkEmscripten_onFetchData'](_handler,buffer,chunk.length); 
                         _free(buffer);
@@ -259,17 +259,17 @@ public:
                 fetch(_url,_req)
                     .then(function( res ) {
                         Module['_GHL_NetworkEmscripten_onFetchResponse'](_handler,res.status);
-                        for (var pair of res.headers) {
-                            let length = lengthBytesUTF8(pair[0])+1;
-                            let buffer_key = Module._malloc(length);
-                            stringToUTF8(pair[0],buffer_key,length);
-                            length = lengthBytesUTF8(pair[1])+1;
-                            let buffer_value = Module._malloc(length);
-                            stringToUTF8(pair[1],buffer_value,length);
+                        res.headers.forEach(function(value, key ) {
+                            var length = lengthBytesUTF8(key)+1;
+                            var buffer_key = Module._malloc(length);
+                            stringToUTF8(key,buffer_key,length);
+                            length = lengthBytesUTF8(value)+1;
+                            var buffer_value = Module._malloc(length);
+                            stringToUTF8(value,buffer_value,length);
                             Module['_GHL_NetworkEmscripten_onFetchHeader'](_handler,buffer_key,buffer_value);
                             _free(buffer_key);
                             _free(buffer_value);
-                        };
+                        });
                         return pump(res.body.getReader());
                     })
                     .catch(onerr);
@@ -285,8 +285,8 @@ public:
         }
         handler->AddRef();
         EM_ASM({
-            let _handler = $0;
-            let _req = {};
+            var _handler = $0;
+            var _req = {};
             _req.method = 'GET';
             
             Module.GHL_NetworkEmscripten_fetch(_handler,_req);
@@ -302,8 +302,8 @@ public:
         }
         handler->AddRef();
         EM_ASM({
-            let _handler = $0;
-            let _req = {};
+            var _handler = $0;
+            var _req = {};
             _req.method = 'POST';
             _req.body = HEAPU8.subarray($1,$1+$2);
             Module.GHL_NetworkEmscripten_fetch(_handler,_req);
@@ -332,8 +332,8 @@ public:
 
         /// @todo read stream from js
         EM_ASM({
-            let _handler = $0;
-            let _req = {};
+            var _handler = $0;
+            var _req = {};
             _req.method = 'POST';
             _req.body = HEAPU8.subarray($1,$1+$2);
             Module.GHL_NetworkEmscripten_fetch(_handler,_req);

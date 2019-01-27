@@ -86,15 +86,15 @@ extern "C" EMSCRIPTEN_KEEPALIVE void  GHL_Winlib_OnSystemInputTextDismiss(const 
 static void show_system_input(const GHL::TextInputConfig* input) {
     EM_ASM({
         if (Module['GHL_ShowSystemInput']) {
-            let placeholder = null;
+            var placeholder = null;
             if ($1 != 0) {
                 placeholder = Pointer_stringify($1);
             }
             Module['GHL_ShowSystemInput']($0,placeholder);
             return;
         }
-        let input = document.getElementById("ghl-system-input");
-        let canvas = document.getElementById('canvas');
+        var input = document.getElementById("ghl-system-input");
+        var canvas = document.getElementById('canvas');
         if (!input || input === undefined) {
             
             input = document.createElement("input");
@@ -105,9 +105,9 @@ static void show_system_input(const GHL::TextInputConfig* input) {
            
 
             input.oninput = function() {
-                let text = input.value;;
-                let length = lengthBytesUTF8(text)+1;
-                let buffer = Module._malloc(length);
+                var text = input.value;;
+                var length = lengthBytesUTF8(text)+1;
+                var buffer = Module._malloc(length);
                 stringToUTF8(text,buffer,length);
                 Module['_GHL_Winlib_OnSystemInputTextChanged'](buffer);
                 _free(buffer);
@@ -116,9 +116,9 @@ static void show_system_input(const GHL::TextInputConfig* input) {
             input.addEventListener("keyup", function(event) {
                 event.preventDefault();
                 if (event.keyCode === 13) {
-                    let text = input.value;;
-                    let length = lengthBytesUTF8(text)+1;
-                    let buffer = Module._malloc(length);
+                    var text = input.value;;
+                    var length = lengthBytesUTF8(text)+1;
+                    var buffer = Module._malloc(length);
                     stringToUTF8(text,buffer,length);
                     Module['_GHL_Winlib_OnSystemInputTextAccepted'](buffer);
                     _free(buffer);
@@ -129,8 +129,8 @@ static void show_system_input(const GHL::TextInputConfig* input) {
         input.style.display = 'block';
         input.value = '';
         input.focus();
-        let max_length = $0;
-        let placeholder = $1;
+        var max_length = $0;
+        var placeholder = $1;
         if (max_length != 0) {
             input.maxlength = max_length;
         }
@@ -147,7 +147,7 @@ static void hide_system_input() {
             Module['GHL_HideSystemInput']();
             return;
         }
-        let input = document.getElementById("ghl-system-input");
+        var input = document.getElementById("ghl-system-input");
         if (input && input !== undefined) {
             input.style.display = 'none';
         };
@@ -205,14 +205,14 @@ public:
         g->x = 0;
         g->y = 0;
         EM_ASM({
-            let handle = $0;
-            let text = $1;
-            let glyph = $2;
-            let str = UTF32ToString(text);
-            let fnt = Module._text_render.fonts[handle];
-            let img = fnt.render(str);
-            let ghl_img = Module['_GHL_Font_allocate_image'](img.width | 0,img.height | 0);
-            let ghl_img_ptr = Module['_GHL_Font_get_image_data_ptr'](ghl_img);
+            var handle = $0;
+            var text = $1;
+            var glyph = $2;
+            var str = UTF32ToString(text);
+            var fnt = Module._text_render.fonts[handle];
+            var img = fnt.render(str);
+            var ghl_img = Module['_GHL_Font_allocate_image'](img.width | 0,img.height | 0);
+            var ghl_img_ptr = Module['_GHL_Font_get_image_data_ptr'](ghl_img);
             writeArrayToMemory(img.data,ghl_img_ptr);
             Module['_GHL_Font_set_glyph_info'](glyph,ghl_img,img.x|0,img.y|0);
         },m_handle,str,g);
@@ -307,9 +307,9 @@ public:
     virtual bool GHL_CALL GetDeviceData( GHL::DeviceData name, void* data) {
         if (name == GHL::DEVICE_DATA_LANGUAGE) {
             char* buffer = (char*)EM_ASM_INT({
-                let text = navigator.language || navigator.userLanguage; 
-                let length = lengthBytesUTF8(text)+1;
-                let buffer = Module._malloc(length);
+                var text = navigator.language || navigator.userLanguage; 
+                var length = lengthBytesUTF8(text)+1;
+                var buffer = Module._malloc(length);
                 stringToUTF8(text,buffer,length);
                 return buffer;
             });
@@ -320,16 +320,16 @@ public:
         } else if (name == GHL::DEVICE_DATA_UTC_OFFSET) {
             GHL::Int32* output = static_cast<GHL::Int32*>(data);
             *output = static_cast<GHL::Int32>(EM_ASM_INT({
-                let d = new Date();
-                let n = d.getTimezoneOffset();
+                var d = new Date();
+                var n = d.getTimezoneOffset();
                 return n*(-60);
             }));
             return true;
         } else if (name == GHL::DEVICE_DATA_NAME) {
             char* buffer = (char*)EM_ASM_INT({
-                let text = navigator.userAgent || "unknown"; 
-                let length = lengthBytesUTF8(text)+1;
-                let buffer = Module._malloc(length);
+                var text = navigator.userAgent || "unknown"; 
+                var length = lengthBytesUTF8(text)+1;
+                var buffer = Module._malloc(length);
                 stringToUTF8(text,buffer,length);
                 return buffer;
             });
@@ -339,9 +339,9 @@ public:
             return true;
         } else if (name == GHL::DEVICE_DATA_OS) {
             char* buffer = (char*)EM_ASM_INT({
-                let text = navigator.platform || "unknown"; 
-                let length = lengthBytesUTF8(text)+1;
-                let buffer = Module._malloc(length);
+                var text = navigator.platform || "unknown"; 
+                var length = lengthBytesUTF8(text)+1;
+                var buffer = Module._malloc(length);
                 stringToUTF8(text,buffer,length);
                 return buffer;
             });
@@ -358,7 +358,7 @@ public:
     }
     virtual bool GHL_CALL OpenURL( const char* url ) {
         EM_ASM(({
-            let url = Pointer_stringify($0);
+            var url = Pointer_stringify($0);
             window.open(url, '_blank');
         }),url);
         return true;
@@ -383,7 +383,7 @@ public:
                     this._ctx.textBaseline = 'alphabetic';
                     this._ctx.fillStyle = 'rgb(255,255,255)';
                     this._ctx.strokeStyle = 'rgb(255,255,255)';
-                    // let tmp_div = document.createElement("div");
+                    // var tmp_div = document.createElement("div");
                     // tmp_div.style.fontSize = size;
                     // tmp_div.style.visibility = 'hidden';
                     // tmp_div.style.width = 'auto';
@@ -395,12 +395,12 @@ public:
                 };
                 Module._text_render.Font.prototype.render = function(text) {
                     this._ctx.font = this._size + 'px ' + this._name;
-                    let metrics = this._ctx.measureText(text);
-                    let w = metrics.width | 0;
+                    var metrics = this._ctx.measureText(text);
+                    var w = metrics.width | 0;
                     if (w < 1) {
                         w = 1;
                     };
-                    let h = this._size | 0;
+                    var h = this._size | 0;
                     if (canvas.width < w || canvas.height < (h*2)) {
                         this._canvas.width = w; 
                         this._canvas.height = h * 2;
@@ -412,22 +412,22 @@ public:
                     } else {
                         this._ctx.fillText(text,0,h);
                     }
-                    let img = this._ctx.getImageData(0,0,w,h*2);
-                    let d = img.data;
-                    let begin_y = -1;
-                    for (let y=0; (y<h) && (begin_y<0) ;y++) {
-                        let pos = y * w * 4;
-                        for (let x=0;x<w;++x) {
+                    var img = this._ctx.getImageData(0,0,w,h*2);
+                    var d = img.data;
+                    var begin_y = -1;
+                    for (var y=0; (y<h) && (begin_y<0) ;y++) {
+                        var pos = y * w * 4;
+                        for (var x=0;x<w;++x) {
                             if (d[pos+x*4+3] != 0) {
                                 begin_y = y; 
                                 break;
                             };
                         };
                     };
-                    let end_y = -1;
-                    for (let y=0; (y<h) && (end_y<0) ;y++) {
-                        let pos = (h*2-y-1) * w * 4;
-                        for (let x=0;x<w;++x) {
+                    var end_y = -1;
+                    for (var y=0; (y<h) && (end_y<0) ;y++) {
+                        var pos = (h*2-y-1) * w * 4;
+                        for (var x=0;x<w;++x) {
                             if (d[pos+x*4+3] != 0) {
                                 end_y = (h*2-y-1); 
                                 break;
@@ -444,7 +444,7 @@ public:
                         end_y = h+1;
                         begin_y = h;
                     };
-                    let r = {
+                    var r = {
                         x:0,
                         y:(h-begin_y),
                         width: (w | 0),
@@ -454,12 +454,12 @@ public:
                     return r;
                 };
             };
-            let size = $0;
-            let outline = $1;
+            var size = $0;
+            var outline = $1;
             Module._text_render.fonts_cntr++;
-            let handle = Module._text_render.fonts_cntr;
-            let name = Pointer_stringify($2);
-            let fnt = new Module._text_render.Font(size,outline,name);
+            var handle = Module._text_render.fonts_cntr;
+            var name = Pointer_stringify($2);
+            var fnt = new Module._text_render.Font(size,outline,name);
             Module._text_render.fonts[handle] = fnt;
             return handle | 0;
         }),double(config->size),double(config->outline_width),config->name);
@@ -809,7 +809,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
     eglBindAPI(EGL_OPENGL_ES_API);
 
     GHL::UInt32 r = EM_ASM_INT(({
-        let contextAttributes = {
+        var contextAttributes = {
             antialias: false,
             depth: ($0 != 0),
             stencil: false,

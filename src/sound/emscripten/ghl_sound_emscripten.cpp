@@ -72,7 +72,7 @@ namespace GHL {
         virtual void GHL_CALL SetPitch( float pitch ) {
             EM_ASM({
         		try {
-					let node = Module._sound.channels[$0];
+					var node = Module._sound.channels[$0];
 					if (node && ('playbackRate' in node)) {
 						node.playbackRate = $1;
 					};
@@ -85,7 +85,7 @@ namespace GHL {
         virtual void GHL_CALL Stop() {
             EM_ASM({
 				try {
-					let node = Module._sound.channels[$0];
+					var node = Module._sound.channels[$0];
 					if (node && ('stop' in node)) {
 						node.stop();
 					};
@@ -136,21 +136,21 @@ namespace GHL {
     		return 0;
     	}
     	int buffer = EM_ASM_INT({
-    		let numOfchannels = $0;
-    		let sampleRate = $1;
-    		let data = $2;
-    		let data_size = $3;
-    		let length = data_size / (2 * numOfchannels);
-    		let buffer = Module._sound.context.createBuffer(numOfchannels, length, sampleRate);
-    		let base = data >> 1;
-    		for (let ch = 0; ch < numOfchannels; ch++) {
-    			let chData = buffer.getChannelData(ch);
-    			for (let s = 0; s < length; s++) {
+    		var numOfchannels = $0;
+    		var sampleRate = $1;
+    		var data = $2;
+    		var data_size = $3;
+    		var length = data_size / (2 * numOfchannels);
+    		var buffer = Module._sound.context.createBuffer(numOfchannels, length, sampleRate);
+    		var base = data >> 1;
+    		for (var ch = 0; ch < numOfchannels; ch++) {
+    			var chData = buffer.getChannelData(ch);
+    			for (var s = 0; s < length; s++) {
     				chData[s] = HEAP16[base+s*numOfchannels+ch] / 32767;
     			};
     		};
     		Module._sound.buffers_cntr++;
-    		let handle = Module._sound.buffers_cntr;
+    		var handle = Module._sound.buffers_cntr;
     		console.log('created buffer ' + handle);
     		Module._sound.buffers[handle] = buffer;
     		return handle | 0;
@@ -177,12 +177,12 @@ namespace GHL {
     	SoundEffectEmscripten* em_effect = static_cast<SoundEffectEmscripten*>(effect);
 
     	int handle = EM_ASM_INT({
-    		let buffer_handle = $0;
-    		let need_ref = $1;
-    		let vol = $2;
-    		let buffer = Module._sound.buffers[buffer_handle];
-        	let node = Module._sound.context.createBufferSource();
-        	let gainNode = null;
+    		var buffer_handle = $0;
+    		var need_ref = $1;
+    		var vol = $2;
+    		var buffer = Module._sound.buffers[buffer_handle];
+        	var node = Module._sound.context.createBufferSource();
+        	var gainNode = null;
         	if (vol == 1.0) {
         		node.connect(Module._sound.context.destination);
         	} else {
@@ -196,7 +196,7 @@ namespace GHL {
         	
         	if (need_ref){
 	        	Module._sound.channels_cntr++;
-	        	let handle = Module._sound.channels_cntr;
+	        	var handle = Module._sound.channels_cntr;
 	        	Module._sound.channels[handle] = node;
 	        	//console.log('created channel ' + handle);
 	        	return handle | 0;
@@ -339,12 +339,12 @@ namespace GHL {
 
      
     	int handle = EM_ASM_INT(({
-    		let numOfchannels = $0;
-    		let sampleRate = $1;
+    		var numOfchannels = $0;
+    		var sampleRate = $1;
     		if (!Module._sound.music) {
     			Module._sound.music = {};
     			Module._sound.music_cntr = 0;
-    			let GHLMusicStream = function ( numOfchannels, sampleRate ) {
+    			var GHLMusicStream = function ( numOfchannels, sampleRate ) {
     				this.numOfchannels = numOfchannels;
     				this.sampleRate = sampleRate;
     				this.totalTimeScheduled = 0;
@@ -398,15 +398,15 @@ namespace GHL {
 	    			return Module['_GHLSound_DecodeChunk'](this.ptr) == 1;
 	    		};
 				GHLMusicStream.prototype.schedule = function(data,length) {
-	    			let audioCtx = Module._sound.context;
+	    			var audioCtx = Module._sound.context;
 	    			const audioSrc = audioCtx.createBufferSource(),
           				audioBuffer = audioCtx.createBuffer(this.numOfchannels,length, this.sampleRate);
           			this.scheduled_buffers.push(audioSrc);
           			audioSrc.onended = this.onAudioNodeEnded.bind(this);
-          			let base = data >> 1;
-		    		for (let ch = 0; ch < this.numOfchannels; ch++) {
-		    			let chData = audioBuffer.getChannelData(ch);
-		    			for (let s = 0; s < length; s++) {
+          			var base = data >> 1;
+		    		for (var ch = 0; ch < this.numOfchannels; ch++) {
+		    			var chData = audioBuffer.getChannelData(ch);
+		    			for (var s = 0; s < length; s++) {
 		    				chData[s] = HEAP16[base+s*this.numOfchannels+ch] / 32767;
 		    			};
 		    		};
@@ -416,7 +416,7 @@ namespace GHL {
 				    	const startDelay = audioBuffer.duration + (audioCtx.baseLatency || 128 / audioCtx.sampleRate);
 				    	this.playStartedAt = this.playStartedAt + startDelay;
 				    };
-                    let schedule_time = this.playStartedAt+this.totalTimeScheduled;
+                    var schedule_time = this.playStartedAt+this.totalTimeScheduled;
                     if (audioCtx.currentTime > schedule_time) {
                         this.playStartedAt = audioCtx.currentTime;
                         this.totalTimeScheduled = 0;
@@ -438,14 +438,14 @@ namespace GHL {
 	    		};
 	    		Module.GHLMusicStream = GHLMusicStream;
                 Module._sound.processMusic = function() {
-                    for(let music_id in Module._sound.music){
+                    for(var music_id in Module._sound.music){
                          Module._sound.music[music_id].process()
                     }
                 };
     		};
     		Module._sound.music_cntr++;
-    		let handle = Module._sound.music_cntr;
-    		let music = new Module.GHLMusicStream(numOfchannels,sampleRate);
+    		var handle = Module._sound.music_cntr;
+    		var music = new Module.GHLMusicStream(numOfchannels,sampleRate);
     		Module._sound.music[handle] = music;
     		return handle | 0;
     	}),
