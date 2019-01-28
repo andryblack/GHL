@@ -16,7 +16,7 @@
 #include <cstdint>
 
 #include <sys/time.h>
-#include <EGL/EGL.h>
+#include <EGL/egl.h>
 #include <emscripten.h>
 #include <emscripten/html5.h>
 
