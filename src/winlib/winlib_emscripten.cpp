@@ -16,7 +16,6 @@
 #include <cstdint>
 
 #include <sys/time.h>
-#include <EGL/egl.h>
 #include <emscripten.h>
 #include <emscripten/html5.h>
 
@@ -29,9 +28,6 @@ static double g_mouse_scale_x = 1.0;
 static double g_mouse_scale_y = 1.0;
 
 static bool g_window_resizeable = false;
-static EGLDisplay g_egl_display = EGL_NO_DISPLAY;
-static EGLSurface g_egl_surface = EGL_NO_SURFACE;
-static EGLContext g_egl_context = EGL_NO_CONTEXT;
 static double g_pixel_ratio = 1.0;
 static bool g_system_input_active = false;
 
@@ -719,8 +715,6 @@ static GHL::SoundEmscripten g_sound;
 
 static void loop_iteration(void* arg) {
     
-    eglMakeCurrent(g_egl_display,g_egl_surface,g_egl_surface, g_egl_context);
-
     if (!g_done) {
         double cur_time = emscripten_get_now();
         double ddelta = (cur_time - g_last_time)*1000.0;
@@ -795,19 +789,6 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
     
     g_application->SetImageDecoder(&g_image_decoder);
 
-
-    g_egl_display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-    if (g_egl_display == EGL_NO_DISPLAY) {
-        LOG_ERROR("failed get display");
-        return 1;
-    }
-    if (eglInitialize(g_egl_display,0,0)!=EGL_TRUE) {
-        LOG_ERROR("failed initialize display");
-        return 1;
-    }
-   
-    eglBindAPI(EGL_OPENGL_ES_API);
-
     GHL::UInt32 r = EM_ASM_INT(({
         var contextAttributes = {
             antialias: false,
@@ -825,7 +806,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
         if (Module.ctx) {
             Module.print("Created WebGL context version:" + Module.ctx.getParameter(Module.ctx.VERSION));
         }
-        return (Module.ctx ? 1 : 0) | 0;
+        return (Module.ctx ? GL.currentContext.handle : 0) | 0;
     }),settings.depth?1:0);
 
     if (!r) {
@@ -837,11 +818,9 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
         }));
         return 1;
     }
-   
+
     g_sound.SoundInit();
     g_application->SetSound(&g_sound);
-
-    eglMakeCurrent(g_egl_display,g_egl_surface,g_egl_surface, g_egl_context);
 
     g_done = false;
     LOG_INFO("create render " << settings.width << "x" << settings.height);
