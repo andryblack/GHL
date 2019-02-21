@@ -782,124 +782,124 @@ namespace GHL {
         void OnNativeWindowCreated(ANativeWindow* window) {
             LOG_INFO("OnNativeWindowCreated");
             check_main_thread();
-          
-            if (m_window==0) {
+            if (m_window) {
+                LOG_INFO("Destroy current window");
+                DestroySurface();
+                
+                m_window = 0;
                 m_window_focused = false;
-                // initialize OpenGL ES and EGL
+            }
+            m_window_focused = false;
+            // initialize OpenGL ES and EGL
 
-                if (m_display == EGL_NO_DISPLAY) {
-                    m_display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-                    EGLint major=0;
-                    EGLint minor=0;
-                    if (eglInitialize(m_display, &major, &minor)!=EGL_TRUE) {
-                        LOG_ERROR("Unable to eglInitialize");
-                        return;
-                    } else {
-                        LOG_INFO("EGL: " << major << "." << minor);
-                    }
-
-                    
+            if (m_display == EGL_NO_DISPLAY) {
+                m_display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+                EGLint major=0;
+                EGLint minor=0;
+                if (eglInitialize(m_display, &major, &minor)!=EGL_TRUE) {
+                    LOG_ERROR("Unable to eglInitialize");
+                    return;
+                } else {
+                    LOG_INFO("EGL: " << major << "." << minor);
                 }
 
-                if (m_context == EGL_NO_CONTEXT) {
-                    /*
-                     * Here specify the attributes of the desired configuration.
-                     * Below, we select an EGLConfig with at least 8 bits per color
-                     * component compatible with on-screen windows
-                     */
-                    const EGLint attribs[] = {
-                        EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
-                        EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
-                        EGL_BLUE_SIZE, 8,
-                        EGL_GREEN_SIZE, 8,
-                        EGL_RED_SIZE, 8,
-                        EGL_DEPTH_SIZE, 0,
-                        EGL_SAMPLE_BUFFERS, 0,
-                        EGL_SAMPLES, 0,
-                        EGL_NONE
-                    };
+                
+            }
 
-                    if (!CreateContext(attribs)) {
-                        LOG_ERROR("Unable to CreateContext");
-                        return;
-                    }
-                }
+            if (m_context == EGL_NO_CONTEXT) {
+                /*
+                 * Here specify the attributes of the desired configuration.
+                 * Below, we select an EGLConfig with at least 8 bits per color
+                 * component compatible with on-screen windows
+                 */
+                const EGLint attribs[] = {
+                    EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+                    EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
+                    EGL_BLUE_SIZE, 8,
+                    EGL_GREEN_SIZE, 8,
+                    EGL_RED_SIZE, 8,
+                    EGL_DEPTH_SIZE, 0,
+                    EGL_SAMPLE_BUFFERS, 0,
+                    EGL_SAMPLES, 0,
+                    EGL_NONE
+                };
 
-                m_window = window;
-                if (m_surface == EGL_NO_SURFACE) {
-                    if (!CreateSurface()) {
-                        LOG_ERROR("Unable to CreateSurface");
-                        return;
-                    }
+                if (!CreateContext(attribs)) {
+                    LOG_ERROR("Unable to CreateContext");
+                    return;
                 }
-                 
-                
-                
-                
-                
-                
-                EGLint w, h, dummy;
-                   
-                eglQuerySurface(m_display, m_surface, EGL_WIDTH, &w);
-                eglQuerySurface(m_display, m_surface, EGL_HEIGHT, &h);
-                
-                GHL::Settings settings;
-                /// default settings
-                settings.width = w;
-                settings.height = h;
-                settings.fullscreen = true;
-                settings.depth = false;
-                if (m_app)
-                {
-                    m_app->FillSettings(&settings);
+            }
+
+            m_window = window;
+            if (m_surface == EGL_NO_SURFACE) {
+                if (!CreateSurface()) {
+                    LOG_ERROR("Unable to CreateSurface");
+                    return;
+                }
+            }
+             
+            
+            
+            
+            
+            
+            EGLint w, h, dummy;
+               
+            eglQuerySurface(m_display, m_surface, EGL_WIDTH, &w);
+            eglQuerySurface(m_display, m_surface, EGL_HEIGHT, &h);
+            
+            GHL::Settings settings;
+            /// default settings
+            settings.width = w;
+            settings.height = h;
+            settings.fullscreen = true;
+            settings.depth = false;
+            if (m_app)
+            {
+                m_app->FillSettings(&settings);
+                if (m_activity->env->ExceptionCheck()) {
+                    return;
+                }
+            }
+
+            if (settings.depth) {
+                 DestroySurface();
+                 DestroyContext();
+                 const EGLint depth_attribs[] = {
+                    EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+                    EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
+                    EGL_BLUE_SIZE, 8,
+                    EGL_GREEN_SIZE, 8,
+                    EGL_RED_SIZE, 8,
+                    EGL_DEPTH_SIZE, 16,
+                    EGL_SAMPLE_BUFFERS, 0,
+                    EGL_SAMPLES, 0,
+                    EGL_NONE
+                };
+                if (!CreateContext(depth_attribs)) {
+                    LOG_ERROR("Unable to CreateContext with depth");
+                    return;
+                }
+                if (!CreateSurface()) {
+                    LOG_ERROR("Unable to CreateSurface with depth");
+                    return;
+                }
+            }
+
+            
+            if (!m_render) {
+                m_render = GHL_CreateRenderOpenGL(w,h,settings.depth);
+                if ( m_render && m_app ) {
+                    m_app->SetRender(m_render);
+                    m_app->Load();
                     if (m_activity->env->ExceptionCheck()) {
                         return;
                     }
                 }
-
-                if (settings.depth) {
-                     DestroySurface();
-                     DestroyContext();
-                     const EGLint depth_attribs[] = {
-                        EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
-                        EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
-                        EGL_BLUE_SIZE, 8,
-                        EGL_GREEN_SIZE, 8,
-                        EGL_RED_SIZE, 8,
-                        EGL_DEPTH_SIZE, 16,
-                        EGL_SAMPLE_BUFFERS, 0,
-                        EGL_SAMPLES, 0,
-                        EGL_NONE
-                    };
-                    if (!CreateContext(depth_attribs)) {
-                        LOG_ERROR("Unable to CreateContext with depth");
-                        return;
-                    }
-                    if (!CreateSurface()) {
-                        LOG_ERROR("Unable to CreateSurface with depth");
-                        return;
-                    }
-                }
-
-                
-                if (!m_render) {
-                    m_render = GHL_CreateRenderOpenGL(w,h,settings.depth);
-                    if ( m_render && m_app ) {
-                        m_app->SetRender(m_render);
-                        m_app->Load();
-                        if (m_activity->env->ExceptionCheck()) {
-                            return;
-                        }
-                    }
-                }
-                
-
-               
-
-                Render();
-            } else {
-                LOG_INFO("skip another window");
             }
+            
+
+            Render();
         }
 
         void OnNativeWindowResized(ANativeWindow* window) {
