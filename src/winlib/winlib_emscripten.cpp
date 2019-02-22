@@ -34,8 +34,12 @@ static bool g_system_input_active = false;
 static void limit_render_size(double& w,double& h) {
     if (w < 1.0) w = 1.0;
     if (h < 1.0) h = 1.0;
+
     double original_w = w;
     double original_h = h;
+    
+    emscripten_get_element_css_size(NULL,&original_w,&original_h);
+
     EM_ASM({
         if (Module.GHL_LimitRenderSize) {
             Module.GHL_LimitRenderSize($0,$1);
