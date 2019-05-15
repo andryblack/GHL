@@ -25,7 +25,6 @@ namespace GHL {
     private:
         AVAudioFormat* m_format;
         AVAudioPlayerNode* m_player;
-        AVAudioUnitVarispeed* m_pitch;
         AudioEngineSoundInstance* m_instance;
     public:
         explicit AudioEngineChannel(AVAudioFormat* format);
@@ -39,7 +38,6 @@ namespace GHL {
         void stop();
         
         AVAudioPlayerNode* player() const { return m_player; }
-        AVAudioUnitVarispeed* pitch() const { return m_pitch; }
         
         bool is_playing();
         

@@ -54,37 +54,48 @@ namespace GHL {
         //data->AddRef();
         if (GetBits()==16) {
             SetCapacity(data->GetSize()/SoundDecoderBase::GetBps(GetSampleType()));
-//            m_format = [[AVAudioFormat alloc] initWithCommonFormat:AVAudioPCMFormatInt16 sampleRate:freq channels:GetChannels() interleaved:YES];
-//            if (m_format) {
-//                assert(m_format.interleaved);
-//                m_buffer = [[AVAudioPCMBuffer alloc] initWithPCMFormat:m_format frameCapacity:GetSamplesAmount()];
-//                if (m_buffer) {
-//                    m_buffer.frameLength = GetSamplesAmount();
-//                    memcpy(m_buffer.int16ChannelData[0],data->GetData(),data->GetSize());
-////                    m_buffer.mutableAudioBufferList->mBuffers[0].mData = data->GetDataPtr();
-////                    m_buffer.mutableAudioBufferList->mBuffers[0].mDataByteSize = data->GetSize();
-////                    m_buffer.mutableAudioBufferList->mBuffers[0].mNumberChannels = GetChannels();
-////                    m_buffer.mutableAudioBufferList->mNumberBuffers = 1;
-////
-//                    m_valid = true;
-//                }
-//            }
+#if 0
+            m_format = [[AVAudioFormat alloc] initWithCommonFormat:AVAudioPCMFormatInt16 sampleRate:freq channels:GetChannels() interleaved:YES];
+            if (m_format) {
+                assert(m_format.interleaved);
+                m_buffer = [[AVAudioPCMBuffer alloc] initWithPCMFormat:m_format frameCapacity:GetSamplesAmount()];
+                if (m_buffer) {
+                    m_buffer.frameLength = GetSamplesAmount();
+                    memcpy(m_buffer.int16ChannelData[0],data->GetData(),data->GetSize());
+//                    m_buffer.mutableAudioBufferList->mBuffers[0].mData = data->GetDataPtr();
+//                    m_buffer.mutableAudioBufferList->mBuffers[0].mDataByteSize = data->GetSize();
+//                    m_buffer.mutableAudioBufferList->mBuffers[0].mNumberChannels = GetChannels();
+//                    m_buffer.mutableAudioBufferList->mNumberBuffers = 1;
+//
+                    m_valid = true;
+                }
+            }
+#else
             m_format = [[AVAudioFormat alloc] initWithCommonFormat:AVAudioPCMFormatFloat32 sampleRate:freq channels:GetChannels() interleaved:NO];
             if (m_format) {
                 m_buffer = [[AVAudioPCMBuffer alloc] initWithPCMFormat:m_format frameCapacity:GetSamplesAmount()];
                 if (m_buffer) {
-                    m_buffer.frameLength = GetSamplesAmount();
+                    const UInt32 amount = GetSamplesAmount();
+                    m_buffer.frameLength = amount;
                     if (type == SAMPLE_TYPE_STEREO_16) {
-                        for (UInt32 i=0;i<GetSamplesAmount();++i) {
+                        for (UInt32 i=0;i<amount;++i) {
                             SInt16 l = *reinterpret_cast<const SInt16*>(&data->GetData()[i*4]);
                             SInt16 r = *reinterpret_cast<const SInt16*>(&data->GetData()[i*4+2]);
                             m_buffer.floatChannelData[0][i] = float(l) / INT16_MAX;
                             m_buffer.floatChannelData[1][i] = float(r) / INT16_MAX;
                         }
                         m_valid = true;
+                    } else if (type == SAMPLE_TYPE_MONO_16) {
+                        for (UInt32 i=0;i<amount;++i) {
+                            SInt16 v = *reinterpret_cast<const SInt16*>(&data->GetData()[i*2]);
+                            float fv = float(v) / INT16_MAX;
+                            m_buffer.floatChannelData[0][i] = fv;
+                        }
+                        m_valid = true;
                     }
                 }
             }
+#endif
         }
         assert(m_valid);
     }
@@ -97,7 +108,6 @@ namespace GHL {
 	AudioEngineChannel::AudioEngineChannel(AVAudioFormat* format) :
         m_format([format retain]),
 		m_player([[AVAudioPlayerNode alloc] init]),
-        m_pitch([[AVAudioUnitVarispeed alloc] init]),
         m_instance(0){
     }
     
@@ -107,7 +117,6 @@ namespace GHL {
             m_instance->Release();
         }
         [m_player release];
-        [m_pitch release];
         [m_format release];
     }
     
@@ -152,7 +161,12 @@ namespace GHL {
         [m_player setPan:p];
     }
     void AudioEngineChannel::set_pitch(float p) {
-        [m_pitch setRate:p];
+        if (p < 0.5) {
+            p = 0.5;
+        } else if (p > 2.0) {
+            p = 2.0;
+        }
+        [m_player setRate:p];
     }
     
     void AudioEngineChannel::stop() {
@@ -178,9 +192,8 @@ namespace GHL {
             AudioEngineChannel* channel = new AudioEngineChannel(format);
             m_channels.push_back(channel);
             [m_engine attachNode:channel->player()];
-            [m_engine attachNode:channel->pitch()];
-            [m_engine connect:channel->player() to:channel->pitch() format:[m_engine.mainMixerNode inputFormatForBus:0]];
-            [m_engine connect:channel->pitch() to:m_engine.mainMixerNode format:[m_engine.mainMixerNode inputFormatForBus:0]];
+            [m_engine connect:channel->player() to:m_engine.mainMixerNode
+                       format:format];
             return channel;
         }
         for (std::vector<AudioEngineChannel*>::iterator it = m_channels.begin();it!=m_channels.end();++it) {
@@ -242,17 +255,19 @@ namespace GHL {
         [m_engine mainMixerNode];
         m_engine.mainMixerNode.outputVolume = 1.0;
         
+        [m_engine prepare];
+        NSError* error = 0;
+        [m_engine startAndReturnError:&error];
+        if (error) {
+            NSLog(@"AudioEngine start error: %@",[error description]);
+            [error release];
+        }
+        
         return true;
     }
     void SoundAudioEngine::Impl::Done() {
         [m_engine stop];
-        for (std::vector<AudioEngineChannel*>::iterator it = m_channels.begin();it!=m_channels.end();++it) {
-            AudioEngineChannel* channel = *it;
-            [m_engine detachNode:channel->pitch()];
-            [m_engine detachNode:channel->player()];
-            delete channel;
-        }
-        m_channels.clear();
+        release_channels();
         if (m_engine) {
             [m_engine release];
             m_engine = 0;
@@ -263,7 +278,6 @@ namespace GHL {
         for (std::vector<AudioEngineChannel*>::iterator it = m_channels.begin();it!=m_channels.end();++it) {
             AudioEngineChannel* channel = *it;
             channel->stop();
-            [m_engine detachNode:channel->pitch()];
             [m_engine detachNode:channel->player()];
             delete channel;
         }
