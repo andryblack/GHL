@@ -102,8 +102,16 @@ struct jni_global_object
 {
     jobject jobj;
     JNIEnv* env;
+    jni_global_object() : jobj(0),env(0) {}
     explicit jni_global_object(jobject obj,JNIEnv* env) : jobj(obj),env(env) {
         if (jobj) jobj = env->NewGlobalRef(jobj);
+    }
+    void destroy(JNIEnv* env) {
+        if (jobj) {
+            env->DeleteGlobalRef( jobj );
+        }
+        jobj = 0;
+        env = 0;
     }
     ~jni_global_object() {
         if (jobj) {
@@ -216,6 +224,10 @@ protected:
         }
     }
 public:
+    virtual void Destroy(JNIEnv* env) {
+        m_connection.destroy(env);
+        m_buffer.destroy(env);
+    }
     virtual ~NetworkTaskBase() {
          m_handler->Release();
     }
@@ -367,6 +379,8 @@ public:
             case S_ERROR: {
                 return true;
             } break;
+            default:
+                break;
         }     
         return false;
     }
@@ -419,6 +433,8 @@ public:
             case S_WRITE_MORE:
             case S_INIT:
                 return true;
+            default:
+                break;
         }
         return false;
     }
@@ -547,6 +563,11 @@ public:
         }
     }
 
+    virtual void Destroy(JNIEnv* env) {
+        m_out_buffer.destroy(env);
+        NetworkTaskBase::Destroy(env);   
+    }
+
     bool OnConnected() {
         m_state = S_WRITE;
         NET_LOG("OnConnected -> S_WRITE bg");
@@ -627,12 +648,11 @@ private:
     std::list<NetworkTaskBase*> m_to_fg_tasks;
     size_t  m_num_requests;
     
-    pthread_mutex_t m_lock;
+    pthread_cond_t  m_cond;
     pthread_mutex_t m_list_lock;
+    pthread_t m_threads[THREADS_POOL_SIZE];
     
-    pthread_t       m_threads[THREADS_POOL_SIZE];
-    size_t          m_num_threads;
-    bool m_stop;
+    volatile bool m_stop;
 public:
     NetworkAndroid() {
         LOG_INFO("NetworkAndroid");
@@ -697,51 +717,66 @@ public:
 
         env->DeleteLocalRef(HttpURLConnection_class);
 
-        pthread_mutex_init( &m_lock, NULL );
+        pthread_cond_init( &m_cond, NULL );
         pthread_mutex_init( &m_list_lock, NULL );
         m_stop = false;
         
         memset(m_threads,0,sizeof(m_threads));
-        m_num_threads = 1;
         m_num_requests = 0;
-        pthread_create( &m_threads[0], 0, thread_thunk, this );
-
         
+        for (size_t i=0;i<THREADS_POOL_SIZE;++i) {
+            pthread_create( &m_threads[i], 0, thread_thunk, this );
+        }
+
     }
     ~NetworkAndroid() {
-        LOG_INFO("~NetworkAndroid");
-        
-        {
-            slock l(m_lock);
-            m_stop = true;
-        }
-        for (size_t i=0;i<m_num_threads;++i) {
-            if (m_threads[i])
-                pthread_join( m_threads[i], 0 );
-        }
+        LOG_INFO("~NetworkAndroid");        
+    }
+
+    void StopTasks( JNIEnv* env ) {
+        slock l(m_list_lock);
+
         for (std::list<NetworkTaskBase*>::iterator it = m_to_bg_tasks.begin();it!=m_to_bg_tasks.end();++it) {
+            (*it)->Destroy(env);
             delete *it;
         }
+        m_to_bg_tasks.clear();
         for (std::list<NetworkTaskBase*>::iterator it = m_to_fg_tasks.begin();it!=m_to_fg_tasks.end();++it) {
+            (*it)->Destroy(env);
             delete *it;
         }
+        m_to_fg_tasks.clear();
+    }
 
-        JNIEnv* env = 0;
-        g_jvm->GetEnv((void**)&env,JNI_VERSION_1_6);
-        env->DeleteGlobalRef(NetworkTaskBase::m_URL_class);
+    void Destroy( JNIEnv* env ) {
+        StopThreads();
        
-        pthread_mutex_destroy( &m_lock );
-        pthread_mutex_destroy( &m_list_lock );
+        // !! destroy on bg thread
+        StopTasks( env );
 
-        
-    }
-    void StartNewThread() {
-        if (m_num_threads < THREADS_POOL_SIZE) {
-            //ILOG_INFO("start new thread:" << m_num_threads+1);
-            pthread_create( &m_threads[m_num_threads], 0, thread_thunk, this );
-            ++m_num_threads;
+        if (NetworkTaskBase::m_URL_class) {
+            env->DeleteGlobalRef(NetworkTaskBase::m_URL_class);
+            NetworkTaskBase::m_URL_class = 0;
         }
+
+        pthread_cond_destroy( &m_cond );
+        pthread_mutex_destroy( &m_list_lock );  
     }
+
+    void StopThreads() {
+        m_stop = true;
+        //LOG_INFO("StopThreads <<<");
+        for (size_t i=0;i<THREADS_POOL_SIZE;++i) {
+            // wakeup all
+            pthread_cond_broadcast(&m_cond);
+            if (m_threads[i]) {
+                pthread_join( m_threads[i], 0 );
+                m_threads[i] = 0;
+            }
+        }
+        //LOG_INFO("StopThreads >>>");
+    }
+
     /// GET request
     virtual bool GHL_CALL Get(GHL::NetworkRequest* handler) {
         if (!handler || !g_jvm)
@@ -753,6 +788,7 @@ public:
             ++m_num_requests;
             //ILOG_INFO("add request:" << m_num_requests);
             m_to_bg_tasks.push_back(new NetworkTask(env,handler,0));
+            pthread_cond_signal(&m_cond);
         }
         return true;
     }
@@ -770,6 +806,7 @@ public:
             ++m_num_requests;
             //ILOG_INFO("add request:" << m_num_requests);
             m_to_bg_tasks.push_back(new NetworkTask(env,handler,data));
+            pthread_cond_signal(&m_cond);
         }
         return true;
     }
@@ -787,6 +824,7 @@ public:
             ++m_num_requests;
             //ILOG_INFO("add request:" << m_num_requests);
             m_to_bg_tasks.push_back(new NetworkStreamTask(env,handler,data));
+            pthread_cond_signal(&m_cond);
         }
         return true;
     }
@@ -801,9 +839,6 @@ public:
         {
             slock l(m_list_lock);
             fg_tasks.swap(m_to_fg_tasks);
-            if (m_to_bg_tasks.size() > m_num_threads) {
-                StartNewThread();
-            } 
         }
         
         for (std::list<NetworkTaskBase*>::iterator it = fg_tasks.begin();it!=fg_tasks.end();++it) {
@@ -819,6 +854,7 @@ public:
                     //ILOG_INFO("fg->to_bg");
                     slock l(m_list_lock);
                     m_to_bg_tasks.push_back(*it);
+                    pthread_cond_signal(&m_cond);
                 }
             } else {
                 slock l(m_list_lock);
@@ -826,62 +862,49 @@ public:
             }
         }
 
+
         
     }
 
-    bool ProcessBackground(JNIEnv* env,int& counter) {
-        NetworkTaskBase* task = 0;
-        {
-            slock l(m_list_lock);
-            if (!m_to_bg_tasks.empty()) {
-                task = m_to_bg_tasks.front();
-                m_to_bg_tasks.pop_front();
-                counter = 1000;
-            } else {
-                // terminate pool threads on idle 1s
-                pthread_t self = pthread_self();
-                if ((m_num_threads >1) && 
-                    (self == m_threads[m_num_threads-1]) && 
-                    (m_num_requests==0)) {
-                    if (--counter < 0) {
-                        //ILOG_INFO("stop thread:" << m_num_threads-1);
-                        --m_num_threads;
-                        return true;
-                    }
+    void ProcessBackground(JNIEnv* env) {
+        while (!m_stop) {
+            NetworkTaskBase* task = 0;
+            /// get new task
+            {
+                pthread_mutex_lock(&m_list_lock);
+                if (!m_to_bg_tasks.empty()) {
+                    task = m_to_bg_tasks.front();
+                    m_to_bg_tasks.pop_front();
+                } else {
+                    pthread_cond_wait(&m_cond,&m_list_lock);
+                }
+                pthread_mutex_unlock(&m_list_lock);
+            }
+            if (task) {
+                if (!m_stop && task->ProcessBackground(env)) {
+                    // bg part completed
+                    slock l(m_list_lock);
+                    m_to_fg_tasks.push_back(task);
+                } else {
+                     // put back 
+                    slock l(m_list_lock);
+                    m_to_bg_tasks.push_back(task);
                 }
             }
         }
-        if (task) {
-            if (task->ProcessBackground(env)) {
-                slock l(m_list_lock);
-                m_to_fg_tasks.push_back(task);
-            } else {
-                slock l(m_list_lock);
-                m_to_bg_tasks.push_back(task);
-                return false;
-            }
-        }
-        {
-            slock s(m_lock);
-            if (m_stop) {
-                return true;
-            }
-        }
-        usleep(1000);
-        return false;
     }
     static void *thread_thunk( void *arg ) {
         JNIEnv* env = 0;
         pthread_setname_np(pthread_self(),"GHL_Network");
+        JavaVMAttachArgs args;
+        args.version = JNI_VERSION_1_6;
+        args.name = "GHL_Network";
+        args.group = NULL;
+        g_jvm->AttachCurrentThread(&env,&args);
 
-        g_jvm->AttachCurrentThread(&env,0);
-
-        int counter = 1000;
-        while (true) {
-            if (static_cast<NetworkAndroid*>(arg)->ProcessBackground(env,counter)) {
-                break;
-            }
-        }
+        NetworkAndroid* self = static_cast<NetworkAndroid*>(arg);
+        
+        self->ProcessBackground(env);
 
         g_jvm->DetachCurrentThread();
         return 0;
@@ -912,7 +935,37 @@ GHL_API GHL::Network* GHL_CALL GHL_CreateNetwork() {
     return new NetworkAndroid();
 }
 
+static void *destroy_thread_thunk( void *arg ) {
+    JNIEnv* env = 0;
+    JavaVMAttachArgs args;
+    args.version = JNI_VERSION_1_6;
+    args.name = "GHL_DestroyNetwork";
+    args.group = NULL;
+    g_jvm->AttachCurrentThread(&env,&args);
+    NetworkAndroid* net = static_cast<NetworkAndroid*>(arg);
+    net->Destroy(env);
+    delete net;
+    g_jvm->DetachCurrentThread();
+    return 0;
+}
+
+
 
 GHL_API void GHL_CALL GHL_DestroyNetwork(GHL::Network* n) {
-    delete static_cast<NetworkAndroid*>(n);
+    LOG_INFO("GHL_DestroyNetwork");
+
+    NetworkAndroid* net = static_cast<NetworkAndroid*>(n);
+    JNIEnv* env = 0;
+    g_jvm->GetEnv((void**)&env,JNI_VERSION_1_6);
+    if (env) {
+        // stop tasks on main thread
+        net->StopTasks( env );
+    }
+
+    pthread_t tid = 0;
+    pthread_attr_t attr;
+    pthread_attr_init(&attr);
+    pthread_attr_setdetachstate(&attr,PTHREAD_CREATE_DETACHED);
+    pthread_create(&tid,&attr,&destroy_thread_thunk,net);
+    pthread_attr_destroy(&attr);
 }
