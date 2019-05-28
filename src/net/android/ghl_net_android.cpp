@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include <time.h>
 #include "../../ghl_log_impl.h"
+#include "../../ghl_ref_counter_impl.h"
 #include <ghl_data_stream.h>
 
 static const char* MODULE = "Net";
@@ -148,29 +149,132 @@ static bool check_exception( JNIEnv* env ) {
 } 
 static const size_t BUFFER_SIZE = 1024*128;
 
+static jmethodID get_method(JNIEnv* env,jclass c,const char* name,const char* sign) {
+    jmethodID m = env->GetMethodID(c,name,sign); 
+    if (check_exception(env)) {
+        return 0;
+    }
+    return m;
+}
+
+static JNIEnv* get_jni_env() {
+    JNIEnv* env = 0;
+    g_jvm->GetEnv((void**)&env,JNI_VERSION_1_6);
+    return env;
+}
+
+class NetworkContext {
+private:
+    GHL::UInt32 m_refs;
+    static NetworkContext* m_instance;
+public:
+    jclass  URL_class;
+    jmethodID URL_ctr;
+    jmethodID URL_openConnection;
+    
+    jmethodID  HttpURLConnection_setDoOutput;
+    jmethodID  HttpURLConnection_connect;
+    jmethodID  HttpURLConnection_setRequestProperty;
+    jmethodID  HttpURLConnection_getResponseCode;
+    jmethodID  HttpURLConnection_getHeaderFieldKey;
+    jmethodID  HttpURLConnection_getHeaderField;
+    jmethodID  HttpURLConnection_setChunkedStreamingMode;
+    jmethodID  HttpURLConnection_setFixedLengthStreamingMode;
+    jmethodID  HttpURLConnection_setInstanceFollowRedirects;
+    jmethodID  HttpURLConnection_getOutputStream;
+    jmethodID  HttpURLConnection_getInputStream;
+    jmethodID  HttpURLConnection_getErrorStream;
+    jmethodID  HttpURLConnection_disconnect;
+
+    jmethodID  InputStream_read;
+    jmethodID  OutputStream_write;
+    jmethodID  OutputStream_close;
+
+
+    explicit NetworkContext(JNIEnv* env) : m_refs(1) {
+        if (check_exception(env)) {
+            LOG_INFO("clear pending exception");
+        }
+        LOG_INFO("created NetworkContext");
+        URL_class = (jclass)env->NewGlobalRef((jobject)env->FindClass("java/net/URL"));
+        URL_ctr = get_method(env,URL_class,"<init>","(Ljava/lang/String;)V"); 
+        assert(URL_ctr);
+        URL_openConnection = get_method(env,URL_class,"openConnection","()Ljava/net/URLConnection;"); 
+        assert(URL_openConnection);
+
+        jclass HttpURLConnection_class = env->FindClass("java/net/HttpURLConnection");
+        HttpURLConnection_setDoOutput = get_method(env,HttpURLConnection_class,"setDoOutput","(Z)V");
+        assert(HttpURLConnection_setDoOutput);
+        HttpURLConnection_connect = get_method(env,HttpURLConnection_class,"connect","()V");
+        assert(HttpURLConnection_connect);
+        HttpURLConnection_disconnect = get_method(env,HttpURLConnection_class,"disconnect","()V");
+        assert(HttpURLConnection_disconnect);
+        HttpURLConnection_setChunkedStreamingMode = get_method(env,HttpURLConnection_class,"setChunkedStreamingMode","(I)V");
+        assert(HttpURLConnection_setChunkedStreamingMode);
+        HttpURLConnection_setFixedLengthStreamingMode = get_method(env,HttpURLConnection_class,"setFixedLengthStreamingMode","(I)V");
+        assert(HttpURLConnection_setFixedLengthStreamingMode);
+        HttpURLConnection_setInstanceFollowRedirects = get_method(env,HttpURLConnection_class,"setInstanceFollowRedirects","(Z)V");
+        assert(HttpURLConnection_setInstanceFollowRedirects);
+        HttpURLConnection_getInputStream = get_method(env,HttpURLConnection_class,"getInputStream","()Ljava/io/InputStream;");
+        assert(HttpURLConnection_getInputStream);
+        HttpURLConnection_getOutputStream = get_method(env,HttpURLConnection_class,"getOutputStream","()Ljava/io/OutputStream;");
+        assert(HttpURLConnection_getOutputStream);
+        HttpURLConnection_getErrorStream = get_method(env,HttpURLConnection_class,"getErrorStream","()Ljava/io/InputStream;");
+        assert(HttpURLConnection_getErrorStream);
+        HttpURLConnection_getHeaderFieldKey = get_method(env,HttpURLConnection_class,"getHeaderFieldKey","(I)Ljava/lang/String;");
+        assert(HttpURLConnection_getHeaderFieldKey);
+        HttpURLConnection_getHeaderField = get_method(env,HttpURLConnection_class,"getHeaderField","(I)Ljava/lang/String;");
+        assert(HttpURLConnection_getHeaderField);
+        HttpURLConnection_setRequestProperty = get_method(env,HttpURLConnection_class,"setRequestProperty","(Ljava/lang/String;Ljava/lang/String;)V");
+        assert(HttpURLConnection_setRequestProperty);
+        HttpURLConnection_getResponseCode = get_method(env,HttpURLConnection_class,"getResponseCode","()I");
+        assert(HttpURLConnection_getResponseCode);
+        if (check_exception(env)) {
+            LOG_INFO("exception on get method");
+            assert(false);
+        }
+        jclass InputStream = env->FindClass("java/io/InputStream");
+        assert(InputStream);
+        InputStream_read = get_method(env,InputStream,"read","([BII)I");
+        assert(InputStream_read);
+        env->DeleteLocalRef(InputStream);
+
+        jclass OutputStream = env->FindClass("java/io/OutputStream");
+        assert(OutputStream);
+        OutputStream_write = get_method(env,OutputStream,"write","([B)V");
+        assert(OutputStream_write);
+        OutputStream_close = get_method(env,OutputStream,"close","()V");
+        assert(OutputStream_close);
+
+        env->DeleteLocalRef(OutputStream);
+
+        env->DeleteLocalRef(HttpURLConnection_class);
+    }
+    
+    void Release() {
+        assert(m_refs > 0);
+        assert(m_instance == this);
+        --m_refs;
+        if (m_refs == 0) {
+            delete m_instance;
+            LOG_INFO("released NetworkContext");
+            m_instance = 0;
+        }
+    }
+    static NetworkContext* get(JNIEnv* env) {
+        if (m_instance) {
+            ++m_instance->m_refs;
+        } else {
+            m_instance = new NetworkContext(env);
+        }
+        return m_instance;
+    }
+};
+
+
 class NetworkTaskBase {
 public:
-    static jclass  m_URL_class;
-    static jmethodID m_URL_ctr;
-    static jmethodID m_URL_openConnection;
-    
-    static jmethodID  m_HttpURLConnection_setDoOutput;
-    static jmethodID  m_HttpURLConnection_connect;
-    static jmethodID  m_HttpURLConnection_setRequestProperty;
-    static jmethodID  m_HttpURLConnection_getResponseCode;
-    static jmethodID  m_HttpURLConnection_getHeaderFieldKey;
-    static jmethodID  m_HttpURLConnection_getHeaderField;
-    static jmethodID  m_HttpURLConnection_setChunkedStreamingMode;
-    static jmethodID  m_HttpURLConnection_setFixedLengthStreamingMode;
-    static jmethodID  m_HttpURLConnection_setInstanceFollowRedirects;
-    static jmethodID  m_HttpURLConnection_getOutputStream;
-    static jmethodID  m_HttpURLConnection_getInputStream;
-    static jmethodID  m_HttpURLConnection_getErrorStream;
-    static jmethodID  m_HttpURLConnection_disconnect;
-
-    static jmethodID  m_InputStream_read;
-    static jmethodID  m_OutputStream_write;
-    static jmethodID  m_OutputStream_close;
+    NetworkContext* m_ctx;
 protected:
     GHL::UInt32             m_id;
     std::string             m_url;
@@ -195,8 +299,11 @@ protected:
     std::map<std::string,std::string> m_send_headers;
     std::map<std::string,std::string> m_receive_headers;
 
-    explicit NetworkTaskBase(JNIEnv* env,GHL::NetworkRequest* handler) : m_connection(0,env),
+    explicit NetworkTaskBase(JNIEnv* env,GHL::NetworkRequest* handler) : 
+        m_ctx(NetworkContext::get(env)), 
+        m_connection(0,env),
         m_handler(handler),m_buffer(0,env),m_response_code(0) {
+
         //PROFILE(NetworkTask_ctr);
         m_id = next_request_idx;
         ++next_request_idx;
@@ -217,19 +324,16 @@ protected:
 
     void disconnect(JNIEnv* env) {
         if (m_connection.jobj) {
-            env->CallVoidMethod(m_connection.jobj,m_HttpURLConnection_disconnect);
+            env->CallVoidMethod(m_connection.jobj,m_ctx->HttpURLConnection_disconnect);
             if (check_exception(env)) {
                 LOG_ERROR("disconnect failed");
             }
         }
     }
 public:
-    virtual void Destroy(JNIEnv* env) {
-        m_connection.destroy(env);
-        m_buffer.destroy(env);
-    }
     virtual ~NetworkTaskBase() {
          m_handler->Release();
+         m_ctx->Release();
     }
     bool IsComplete() {
         return m_state == S_COMPLETE || m_state == S_ERROR;
@@ -240,13 +344,13 @@ public:
         bool is_success = (m_response_code == 0) || (
             m_response_code < 400);
         jni_object read_stream(env->CallObjectMethod(m_connection.jobj,
-            is_success ? m_HttpURLConnection_getInputStream : m_HttpURLConnection_getErrorStream),env);
+            is_success ? m_ctx->HttpURLConnection_getInputStream : m_ctx->HttpURLConnection_getErrorStream),env);
         if (check_exception(env)) {
             m_state = S_ERROR;
             m_error = "getInputStream failed";
             return true;
         } 
-        int readed = env->CallIntMethod(read_stream.jobj,m_InputStream_read,m_buffer.jobj,m_buffer_size,BUFFER_SIZE-m_buffer_size);
+        int readed = env->CallIntMethod(read_stream.jobj,m_ctx->InputStream_read,m_buffer.jobj,m_buffer_size,BUFFER_SIZE-m_buffer_size);
         NET_LOG("readed " << readed);
         if (check_exception(env) || !read_stream.jobj) {
             m_state = S_ERROR;
@@ -274,14 +378,14 @@ public:
             case S_INIT: {
                 NET_LOG("S_INIT bg");
                 jni_string url_str(m_url.c_str(),env);
-                jni_object url(env->NewObject(m_URL_class,m_URL_ctr,url_str.jstr),env);
+                jni_object url(env->NewObject(m_ctx->URL_class,m_ctx->URL_ctr,url_str.jstr),env);
                 if (check_exception(env)) {
                     m_state = S_ERROR;
                     NET_LOG("S_INIT->S_ERROR 1");
                     m_error = "create url failed";
                     return true;
                 }
-                jni_object connection(env->CallObjectMethod(url.jobj,m_URL_openConnection),env);
+                jni_object connection(env->CallObjectMethod(url.jobj,m_ctx->URL_openConnection),env);
                 if (check_exception(env)) {
                     m_state = S_ERROR;
                     NET_LOG("S_INIT->S_ERROR 2");
@@ -289,7 +393,7 @@ public:
                     return true;
                 }
                 m_connection.jobj = env->NewGlobalRef(connection.jobj);
-                env->CallVoidMethod(m_connection.jobj,m_HttpURLConnection_setInstanceFollowRedirects,JNI_TRUE);
+                env->CallVoidMethod(m_connection.jobj,m_ctx->HttpURLConnection_setInstanceFollowRedirects,JNI_TRUE);
                 
                 if (!ConfigureStream(env)) {
                     return true;
@@ -298,7 +402,7 @@ public:
                         it != m_send_headers.end(); ++it) {
                     jni_string name_str(it->first.c_str(),env);
                     jni_string value_str(it->second.c_str(),env);
-                    env->CallVoidMethod(m_connection.jobj,m_HttpURLConnection_setRequestProperty,
+                    env->CallVoidMethod(m_connection.jobj,m_ctx->HttpURLConnection_setRequestProperty,
                         name_str.jstr,value_str.jstr);
                 }
 
@@ -307,7 +411,7 @@ public:
                 return false;
             } break;
             case S_WRITE: {
-                jni_object out_stream(env->CallObjectMethod(m_connection.jobj,m_HttpURLConnection_getOutputStream),env);
+                jni_object out_stream(env->CallObjectMethod(m_connection.jobj,m_ctx->HttpURLConnection_getOutputStream),env);
                 if (check_exception(env)) {
                     m_state = S_ERROR;
                     NET_LOG("S_WRITE->S_ERROR 2");
@@ -323,7 +427,7 @@ public:
                 
             } break;
             case S_WRITE_MORE: {
-                jni_object out_stream(env->CallObjectMethod(m_connection.jobj,m_HttpURLConnection_getOutputStream),env);
+                jni_object out_stream(env->CallObjectMethod(m_connection.jobj,m_ctx->HttpURLConnection_getOutputStream),env);
                 if (check_exception(env)) {
                     m_state = S_ERROR;
                     NET_LOG("S_WRITE_MORE->S_ERROR 1");
@@ -339,7 +443,7 @@ public:
             } break;
             case S_CONNECT: {
                 NET_LOG("S_CONNECT bg");
-                env->CallVoidMethod(m_connection.jobj,m_HttpURLConnection_connect);
+                env->CallVoidMethod(m_connection.jobj,m_ctx->HttpURLConnection_connect);
                 if (check_exception(env)) {
                     m_state = S_ERROR;
                     NET_LOG("S_CONNECT->S_ERROR 1");
@@ -347,11 +451,11 @@ public:
                     disconnect(env);
                     return true;
                 } 
-                
+
                 return OnConnected();
             } break;
             case S_START_READ: {
-                m_response_code = env->CallIntMethod(m_connection.jobj,m_HttpURLConnection_getResponseCode);
+                m_response_code = env->CallIntMethod(m_connection.jobj,m_ctx->HttpURLConnection_getResponseCode);
                 if (check_exception(env)) {
                     m_state = S_ERROR;
                     //ILOG_INFO("S_START_READ->S_ERROR");
@@ -361,8 +465,8 @@ public:
                 }
 
                 for (int j = 1; ; j++) {
-                    jni_string key( env->CallObjectMethod(m_connection.jobj,m_HttpURLConnection_getHeaderFieldKey,j) ,env );
-                    jni_string value( env->CallObjectMethod(m_connection.jobj,m_HttpURLConnection_getHeaderField,j)  ,env);
+                    jni_string key( env->CallObjectMethod(m_connection.jobj,m_ctx->HttpURLConnection_getHeaderFieldKey,j) ,env );
+                    jni_string value( env->CallObjectMethod(m_connection.jobj,m_ctx->HttpURLConnection_getHeaderField,j)  ,env);
                     if (!key.jstr || !value.jstr) break;
                     m_receive_headers[key.str()]=value.str();
                 }  // end for
@@ -469,7 +573,7 @@ public:
 
     virtual bool ConfigureStream(JNIEnv* env) {
         if (m_send_data) {
-            env->CallVoidMethod(m_connection.jobj,m_HttpURLConnection_setDoOutput,JNI_TRUE);
+            env->CallVoidMethod(m_connection.jobj,m_ctx->HttpURLConnection_setDoOutput,JNI_TRUE);
             if (check_exception(env)) {
                 m_state = S_ERROR;
                 NET_LOG("ConfigureStream->S_ERROR 1");
@@ -477,7 +581,7 @@ public:
                 return false;
             }
             if (m_send_data->GetSize()) {
-                env->CallVoidMethod(m_connection.jobj,m_HttpURLConnection_setFixedLengthStreamingMode,(jint)m_send_data->GetSize());
+                env->CallVoidMethod(m_connection.jobj,m_ctx->HttpURLConnection_setFixedLengthStreamingMode,(jint)m_send_data->GetSize());
                 if (check_exception(env)) {
                     m_state = S_ERROR;
                     ILOG_INFO("setFixedLengthStreamingMode error");
@@ -513,7 +617,7 @@ public:
         }
         env->SetByteArrayRegion(arr,0,m_send_data->GetSize(),
             reinterpret_cast<const jbyte*>(m_send_data->GetData()));
-        env->CallVoidMethod(out_stream.jobj,m_OutputStream_write,arr);
+        env->CallVoidMethod(out_stream.jobj,m_ctx->OutputStream_write,arr);
         env->DeleteLocalRef(arr);
         if (check_exception(env)) {
             m_state = S_ERROR;
@@ -523,7 +627,7 @@ public:
             return true;
         } 
 
-        env->CallVoidMethod(out_stream.jobj,m_OutputStream_close);
+        env->CallVoidMethod(out_stream.jobj,m_ctx->OutputStream_close);
         if (check_exception(env)) {
             m_state = S_ERROR;
             NET_LOG("ProcessWriteStream -> S_ERROR 3");
@@ -563,11 +667,6 @@ public:
         }
     }
 
-    virtual void Destroy(JNIEnv* env) {
-        m_out_buffer.destroy(env);
-        NetworkTaskBase::Destroy(env);   
-    }
-
     bool OnConnected() {
         m_state = S_WRITE;
         NET_LOG("OnConnected -> S_WRITE bg");
@@ -580,14 +679,14 @@ public:
             return false;
         }
                 
-        env->CallVoidMethod(m_connection.jobj,m_HttpURLConnection_setDoOutput,JNI_TRUE);
+        env->CallVoidMethod(m_connection.jobj,m_ctx->HttpURLConnection_setDoOutput,JNI_TRUE);
         if (check_exception(env)) {
             m_state = S_ERROR;
             NET_LOG("ConfigureStream->S_ERROR 1");
             m_error = "set output failed";
             return false;
         }
-        env->CallVoidMethod(m_connection.jobj,m_HttpURLConnection_setChunkedStreamingMode,(jint)BUFFER_SIZE);
+        env->CallVoidMethod(m_connection.jobj,m_ctx->HttpURLConnection_setChunkedStreamingMode,(jint)BUFFER_SIZE);
         if (check_exception(env)) {
             m_state = S_ERROR;
             ILOG_INFO("setChunkedStreamingMode error");
@@ -603,7 +702,7 @@ public:
             NET_LOG("ProcessWriteStream readed: " << readed);
             env->SetByteArrayRegion((jbyteArray)m_out_buffer.jobj,0,readed,
                 reinterpret_cast<const jbyte*>(m_out_raw_buffer));
-            env->CallVoidMethod(out_stream.jobj,m_OutputStream_write,m_out_buffer.jobj);
+            env->CallVoidMethod(out_stream.jobj,m_ctx->OutputStream_write,m_out_buffer.jobj);
 
             if (check_exception(env)) {
                 m_state = S_ERROR;
@@ -617,7 +716,7 @@ public:
             return false;
         } 
 
-        env->CallVoidMethod(out_stream.jobj,m_OutputStream_close);
+        env->CallVoidMethod(out_stream.jobj,m_ctx->OutputStream_close);
         if (check_exception(env)) {
             m_state = S_ERROR;
             NET_LOG("ProcessWriteStream -> S_ERROR 5");
@@ -632,18 +731,13 @@ public:
     }
 };
 
-static jmethodID get_method(JNIEnv* env,jclass c,const char* name,const char* sign) {
-    jmethodID m = env->GetMethodID(c,name,sign); 
-    if (check_exception(env)) {
-        return 0;
-    }
-    return m;
-}
+
 
 #define THREADS_POOL_SIZE 4
 
 class NetworkAndroid : public GHL::Network {
 private:
+    NetworkContext* m_ctx;
     std::list<NetworkTaskBase*> m_to_bg_tasks;
     std::list<NetworkTaskBase*> m_to_fg_tasks;
     size_t  m_num_requests;
@@ -654,68 +748,13 @@ private:
     
     volatile bool m_stop;
 public:
+    static std::list<NetworkAndroid*> m_destroyed_networks;
+public:
     NetworkAndroid() {
         LOG_INFO("NetworkAndroid");
 
-        JNIEnv* env = 0;
-        g_jvm->GetEnv((void**)&env,JNI_VERSION_1_6);
-
-        if (check_exception(env)) {
-            LOG_INFO("clear pending exception");
-        }
-        NetworkTaskBase::m_URL_class = (jclass)env->NewGlobalRef((jobject)env->FindClass("java/net/URL"));
-        NetworkTaskBase::m_URL_ctr = get_method(env,NetworkTaskBase::m_URL_class,"<init>","(Ljava/lang/String;)V"); 
-        assert(NetworkTaskBase::m_URL_ctr);
-        NetworkTaskBase::m_URL_openConnection = get_method(env,NetworkTaskBase::m_URL_class,"openConnection","()Ljava/net/URLConnection;"); 
-        assert(NetworkTask::m_URL_openConnection);
-
-        jclass HttpURLConnection_class = env->FindClass("java/net/HttpURLConnection");
-        NetworkTaskBase::m_HttpURLConnection_setDoOutput = get_method(env,HttpURLConnection_class,"setDoOutput","(Z)V");
-        assert(NetworkTaskBase::m_HttpURLConnection_setDoOutput);
-        NetworkTaskBase::m_HttpURLConnection_connect = get_method(env,HttpURLConnection_class,"connect","()V");
-        assert(NetworkTaskBase::m_HttpURLConnection_connect);
-        NetworkTaskBase::m_HttpURLConnection_disconnect = get_method(env,HttpURLConnection_class,"disconnect","()V");
-        assert(NetworkTaskBase::m_HttpURLConnection_disconnect);
-        NetworkTaskBase::m_HttpURLConnection_setChunkedStreamingMode = get_method(env,HttpURLConnection_class,"setChunkedStreamingMode","(I)V");
-        assert(NetworkTaskBase::m_HttpURLConnection_setChunkedStreamingMode);
-        NetworkTaskBase::m_HttpURLConnection_setFixedLengthStreamingMode = get_method(env,HttpURLConnection_class,"setFixedLengthStreamingMode","(I)V");
-        assert(NetworkTaskBase::m_HttpURLConnection_setFixedLengthStreamingMode);
-        NetworkTaskBase::m_HttpURLConnection_setInstanceFollowRedirects = get_method(env,HttpURLConnection_class,"setInstanceFollowRedirects","(Z)V");
-        assert(NetworkTaskBase::m_HttpURLConnection_setInstanceFollowRedirects);
-        NetworkTaskBase::m_HttpURLConnection_getInputStream = get_method(env,HttpURLConnection_class,"getInputStream","()Ljava/io/InputStream;");
-        assert(NetworkTaskBase::m_HttpURLConnection_getInputStream);
-        NetworkTaskBase::m_HttpURLConnection_getOutputStream = get_method(env,HttpURLConnection_class,"getOutputStream","()Ljava/io/OutputStream;");
-        assert(NetworkTaskBase::m_HttpURLConnection_getOutputStream);
-        NetworkTaskBase::m_HttpURLConnection_getErrorStream = get_method(env,HttpURLConnection_class,"getErrorStream","()Ljava/io/InputStream;");
-        assert(NetworkTaskBase::m_HttpURLConnection_getErrorStream);
-        NetworkTaskBase::m_HttpURLConnection_getHeaderFieldKey = get_method(env,HttpURLConnection_class,"getHeaderFieldKey","(I)Ljava/lang/String;");
-        assert(NetworkTaskBase::m_HttpURLConnection_getHeaderFieldKey);
-        NetworkTaskBase::m_HttpURLConnection_getHeaderField = get_method(env,HttpURLConnection_class,"getHeaderField","(I)Ljava/lang/String;");
-        assert(NetworkTaskBase::m_HttpURLConnection_getHeaderField);
-        NetworkTaskBase::m_HttpURLConnection_setRequestProperty = get_method(env,HttpURLConnection_class,"setRequestProperty","(Ljava/lang/String;Ljava/lang/String;)V");
-        assert(NetworkTaskBase::m_HttpURLConnection_setRequestProperty);
-        NetworkTaskBase::m_HttpURLConnection_getResponseCode = get_method(env,HttpURLConnection_class,"getResponseCode","()I");
-        assert(NetworkTaskBase::m_HttpURLConnection_getResponseCode);
-        if (check_exception(env)) {
-            LOG_INFO("exception on get method");
-            assert(false);
-        }
-        jclass InputStream = env->FindClass("java/io/InputStream");
-        assert(InputStream);
-        NetworkTaskBase::m_InputStream_read = get_method(env,InputStream,"read","([BII)I");
-        assert(NetworkTask::m_InputStream_read);
-        env->DeleteLocalRef(InputStream);
-
-        jclass OutputStream = env->FindClass("java/io/OutputStream");
-        assert(OutputStream);
-        NetworkTaskBase::m_OutputStream_write = get_method(env,OutputStream,"write","([B)V");
-        assert(NetworkTaskBase::m_OutputStream_write);
-        NetworkTaskBase::m_OutputStream_close = get_method(env,OutputStream,"close","()V");
-        assert(NetworkTaskBase::m_OutputStream_close);
-
-        env->DeleteLocalRef(OutputStream);
-
-        env->DeleteLocalRef(HttpURLConnection_class);
+        JNIEnv* env = get_jni_env();
+        m_ctx = NetworkContext::get( env );
 
         pthread_cond_init( &m_cond, NULL );
         pthread_mutex_init( &m_list_lock, NULL );
@@ -730,37 +769,36 @@ public:
 
     }
     ~NetworkAndroid() {
-        LOG_INFO("~NetworkAndroid");        
+        LOG_INFO("~NetworkAndroid"); 
+        pthread_cond_destroy( &m_cond );
+        pthread_mutex_destroy( &m_list_lock );  
+        m_ctx->Release();
     }
 
-    void StopTasks( JNIEnv* env ) {
-        slock l(m_list_lock);
+    bool ProcessDestroy() {
+        m_stop = true;
+        DestroyTasks();
+        if (m_num_requests == 0) {
+            StopThreads();
+            return true;
+        }
+        return false;
+    }
 
+    void DestroyTasks() {
+        slock l(m_list_lock);
         for (std::list<NetworkTaskBase*>::iterator it = m_to_bg_tasks.begin();it!=m_to_bg_tasks.end();++it) {
-            (*it)->Destroy(env);
+            assert(m_num_requests);
+            --m_num_requests;
             delete *it;
         }
         m_to_bg_tasks.clear();
         for (std::list<NetworkTaskBase*>::iterator it = m_to_fg_tasks.begin();it!=m_to_fg_tasks.end();++it) {
-            (*it)->Destroy(env);
+            assert(m_num_requests);
+            --m_num_requests;
             delete *it;
         }
         m_to_fg_tasks.clear();
-    }
-
-    void Destroy( JNIEnv* env ) {
-        StopThreads();
-       
-        // !! destroy on bg thread
-        StopTasks( env );
-
-        if (NetworkTaskBase::m_URL_class) {
-            env->DeleteGlobalRef(NetworkTaskBase::m_URL_class);
-            NetworkTaskBase::m_URL_class = 0;
-        }
-
-        pthread_cond_destroy( &m_cond );
-        pthread_mutex_destroy( &m_list_lock );  
     }
 
     void StopThreads() {
@@ -781,8 +819,7 @@ public:
     virtual bool GHL_CALL Get(GHL::NetworkRequest* handler) {
         if (!handler || !g_jvm)
             return false;
-        JNIEnv* env = 0;
-        g_jvm->GetEnv((void**)&env,JNI_VERSION_1_6);
+        JNIEnv* env = get_jni_env();
         {
             slock l(m_list_lock);
             ++m_num_requests;
@@ -797,8 +834,7 @@ public:
         if (!handler || !g_jvm)
             return false;
         //PROFILE(Post);
-        JNIEnv* env = 0;
-        g_jvm->GetEnv((void**)&env,JNI_VERSION_1_6);
+        JNIEnv* env = get_jni_env();
         
         {
             //PROFILE(Post_m_list_lock);
@@ -816,8 +852,7 @@ public:
             return false;
         if (!data)
             return false;
-        JNIEnv* env = 0;
-        g_jvm->GetEnv((void**)&env,JNI_VERSION_1_6);
+        JNIEnv* env = get_jni_env();
         {
             //PROFILE(Post_m_list_lock);
             slock l(m_list_lock);
@@ -831,9 +866,9 @@ public:
     virtual void GHL_CALL Process() {
         if (!g_jvm)
             return;
-        JNIEnv* env = 0;
-        
-        g_jvm->GetEnv((void**)&env,JNI_VERSION_1_6);
+        JNIEnv* env = get_jni_env();
+
+
     
         std::list<NetworkTaskBase*> fg_tasks;
         {
@@ -863,6 +898,16 @@ public:
         }
 
 
+        // process destroyed networks
+        for (std::list<NetworkAndroid*>::iterator it = m_destroyed_networks.begin();it!=m_destroyed_networks.end();) {
+            if ((*it)->ProcessDestroy()) {
+                delete *it;
+                LOG_INFO("destroy pending Network");
+                it = m_destroyed_networks.erase(it);
+            } else {
+                ++it;
+            }
+        }
         
     }
 
@@ -911,61 +956,21 @@ public:
     }
 };
 
-jclass     NetworkTaskBase::m_URL_class = 0;
-jmethodID  NetworkTaskBase::m_URL_ctr = 0;
-jmethodID  NetworkTaskBase::m_URL_openConnection = 0;
-jmethodID  NetworkTaskBase::m_HttpURLConnection_setDoOutput = 0;
-jmethodID  NetworkTaskBase::m_HttpURLConnection_connect = 0;
-jmethodID  NetworkTaskBase::m_HttpURLConnection_setRequestProperty = 0;
-jmethodID  NetworkTaskBase::m_HttpURLConnection_getResponseCode = 0;
-jmethodID  NetworkTaskBase::m_HttpURLConnection_getHeaderFieldKey = 0;
-jmethodID  NetworkTaskBase::m_HttpURLConnection_getHeaderField = 0;
-jmethodID  NetworkTaskBase::m_HttpURLConnection_setChunkedStreamingMode = 0;
-jmethodID  NetworkTaskBase::m_HttpURLConnection_setFixedLengthStreamingMode = 0;
-jmethodID  NetworkTaskBase::m_HttpURLConnection_setInstanceFollowRedirects = 0;
-jmethodID  NetworkTaskBase::m_HttpURLConnection_getOutputStream = 0;
-jmethodID  NetworkTaskBase::m_HttpURLConnection_getInputStream = 0;
-jmethodID  NetworkTaskBase::m_HttpURLConnection_getErrorStream = 0;
-jmethodID  NetworkTaskBase::m_HttpURLConnection_disconnect = 0;
-jmethodID  NetworkTaskBase::m_InputStream_read = 0;
-jmethodID  NetworkTaskBase::m_OutputStream_write = 0;
-jmethodID  NetworkTaskBase::m_OutputStream_close = 0;
+NetworkContext* NetworkContext::m_instance = 0;
+std::list<NetworkAndroid*> NetworkAndroid::m_destroyed_networks;
 
 GHL_API GHL::Network* GHL_CALL GHL_CreateNetwork() {
     return new NetworkAndroid();
 }
 
-static void *destroy_thread_thunk( void *arg ) {
-    JNIEnv* env = 0;
-    JavaVMAttachArgs args;
-    args.version = JNI_VERSION_1_6;
-    args.name = "GHL_DestroyNetwork";
-    args.group = NULL;
-    g_jvm->AttachCurrentThread(&env,&args);
-    NetworkAndroid* net = static_cast<NetworkAndroid*>(arg);
-    net->Destroy(env);
-    delete net;
-    g_jvm->DetachCurrentThread();
-    return 0;
-}
-
-
-
 GHL_API void GHL_CALL GHL_DestroyNetwork(GHL::Network* n) {
     LOG_INFO("GHL_DestroyNetwork");
-
     NetworkAndroid* net = static_cast<NetworkAndroid*>(n);
-    JNIEnv* env = 0;
-    g_jvm->GetEnv((void**)&env,JNI_VERSION_1_6);
-    if (env) {
-        // stop tasks on main thread
-        net->StopTasks( env );
+    if (net->ProcessDestroy()) {
+        delete net;
+    } else {
+        // delayed delete
+        LOG_INFO("schedule later destroy");
+        NetworkAndroid::m_destroyed_networks.push_back(net);
     }
-
-    pthread_t tid = 0;
-    pthread_attr_t attr;
-    pthread_attr_init(&attr);
-    pthread_attr_setdetachstate(&attr,PTHREAD_CREATE_DETACHED);
-    pthread_create(&tid,&attr,&destroy_thread_thunk,net);
-    pthread_attr_destroy(&attr);
 }
