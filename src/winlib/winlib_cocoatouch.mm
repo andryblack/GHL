@@ -651,7 +651,6 @@ public:
     [session setActive:YES error:&err];
     if (err) {
         LOG_ERROR("failed activate audio session: " << err.description.UTF8String);
-        [err release];
         return;
     }
     if (m_sound) {

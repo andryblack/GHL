@@ -233,7 +233,6 @@ namespace GHL {
             [m_engine startAndReturnError:&error];
             if (error) {
                 NSLog(@"AudioEngine start error: %@",[error description]);
-                [error release];
             }
             if (!m_engine.running) {
                 return;
@@ -300,7 +299,6 @@ namespace GHL {
         [m_engine startAndReturnError:&error];
         if (error) {
             NSLog(@"AudioEngine start error: %@",[error description]);
-            [error release];
         }
     }
     
