@@ -369,7 +369,12 @@ public class Activity  extends android.app.NativeActivity  {
 
     
     public boolean openURL(String url) {
-        startActivity(new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url)));
+        try {
+            Log.i(TAG,"open URL: " + url);
+            startActivity(new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url)));
+        } catch (Exception e) {
+            return false;
+        } 
         return true;
     }
 

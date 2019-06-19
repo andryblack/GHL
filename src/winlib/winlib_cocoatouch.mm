@@ -438,7 +438,12 @@ public:
         /// do nothing
     }
     virtual bool GHL_CALL OpenURL( const char* url ) {
-        return [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithUTF8String:url]]];
+        UIApplication* app = [UIApplication sharedApplication];
+        NSURL* urlobj = [NSURL URLWithString:[NSString stringWithUTF8String:url]];
+        if (![app canOpenURL:urlobj]) {
+            return false;
+        }
+        return [app openURL: urlobj];
     }
     
     GHL::Font* GHL_CALL CreateFont( const GHL::FontConfig* config ) {
