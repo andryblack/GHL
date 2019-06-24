@@ -19,14 +19,59 @@
 #include <ghl_time.h>
 #include <Windowsx.h>
 
-GHL_API GHL::RenderImpl* GHL_CALL GHL_CreateRenderOpenGL(GHL::UInt32 w, GHL::UInt32 h, bool depth);
-GHL_API void GHL_DestroyRenderOpenGL(GHL::RenderImpl* render_);
 
 #ifdef _MSC_VER
 #define snprintf _snprintf
 #endif
 
 static const char* MODULE="WinLib";
+
+
+static const WCHAR WINDOW_CLASS_NAME[] = L"GHL_WINLIB_WINDOW";
+static const WCHAR WINDOW_TITLE[] = L"GHL";
+static const WCHAR INPUT_MODAL_CLASS_NAME[] = L"GHL_WINLIB_INPUT_WINDOW";
+
+
+#ifndef DPI_ENUMS_DECLARED
+typedef enum PROCESS_DPI_AWARENESS
+{
+    PROCESS_DPI_UNAWARE = 0,
+    PROCESS_SYSTEM_DPI_AWARE = 1,
+    PROCESS_PER_MONITOR_DPI_AWARE = 2
+} PROCESS_DPI_AWARENESS;
+#endif
+
+
+typedef BOOL (WINAPI * SETPROCESSDPIAWARE_T)(void);
+typedef HRESULT (WINAPI * SETPROCESSDPIAWARENESS_T)(PROCESS_DPI_AWARENESS);
+
+static bool win32_SetProcessDpiAware(void) {
+    HMODULE shcore = LoadLibraryA("Shcore.dll");
+    SETPROCESSDPIAWARENESS_T SetProcessDpiAwareness = NULL;
+    if (shcore) {
+        SetProcessDpiAwareness = (SETPROCESSDPIAWARENESS_T) GetProcAddress(shcore, "SetProcessDpiAwareness");
+    }
+    HMODULE user32 = LoadLibraryA("User32.dll");
+    SETPROCESSDPIAWARE_T SetProcessDPIAware = NULL;
+    if (user32) {
+        SetProcessDPIAware = (SETPROCESSDPIAWARE_T) GetProcAddress(user32, "SetProcessDPIAware");
+    }
+
+    bool ret = false;
+    if (SetProcessDpiAwareness) {
+        ret = SetProcessDpiAwareness(PROCESS_SYSTEM_DPI_AWARE) == S_OK;
+    } else if (SetProcessDPIAware) {
+        ret = SetProcessDPIAware() != 0;
+    }
+
+    if (user32) {
+        FreeLibrary(user32);
+    }
+    if (shcore) {
+        FreeLibrary(shcore);
+    }
+    return ret;
+}
 
 static GHL::Key convert_key( DWORD code ) {
 	switch (code) {
@@ -37,6 +82,7 @@ static GHL::Key convert_key( DWORD code ) {
 		case VK_DOWN:	return GHL::KEY_DOWN;
 		case VK_ESCAPE:	return GHL::KEY_ESCAPE;
 		case VK_RETURN:	return GHL::KEY_ENTER;
+		case VK_BACK:	return GHL::KEY_BACKSPACE;
 		
 		case 0x30:		return GHL::KEY_0;
 		case 0x31:		return GHL::KEY_1;
@@ -79,28 +125,138 @@ static GHL::Key convert_key( DWORD code ) {
 	return GHL::KEY_NONE;
 }
 
-struct AppContext {
-	GHL::Application* app;
-	BOOL active;
+
+
+class Win32System : public GHL::System {
+private:
+	GHL::Application*	m_app;
+	bool 	m_active;
+	HWND	m_hwnd;
+	HWND 	m_edit;
+	std::string m_title;
+public:
+	explicit Win32System(GHL::Application* app) : 
+		m_app(app), 
+		m_active(true),
+		m_hwnd(0),
+		m_edit(0) {
+	}
+	
+	void SetWnd(HWND wnd) {
+		m_hwnd = wnd;
+		if (!m_title.empty()) {
+			SetTitle(m_title.c_str());
+		}
+	}
+
+	void SetActive(bool a) {
+		m_active = a;
+	}
+	
+	const std::string& GetTitle() const { return m_title; }
+	GHL::Application* GetApp() { return m_app; }
+	bool IsActive() const { return m_active; }
+
+	void GHL_CALL Exit() {
+		PostMessage(m_hwnd,WM_QUIT,0,0);
+	}
+	///
+	virtual bool GHL_CALL IsFullscreen() const {
+		return false;
+	}
+        ///
+	virtual void GHL_CALL SwitchFullscreen(bool fs) {
+		/// @todo
+	}
+        ///
+	virtual void GHL_CALL ShowKeyboard(const GHL::TextInputConfig* input) {
+		if (!m_edit && input && input->system_input)  {
+			RECT rect;
+			GetWindowRect(m_hwnd,&rect);
+			m_edit = CreateWindowW(INPUT_MODAL_CLASS_NAME, 0, 
+				WS_POPUP|WS_CLIPSIBLINGS|WS_VISIBLE|WS_BORDER|WS_THICKFRAME ,
+				 rect.left+4, rect.bottom-4-80, rect.right-rect.left-8, 80, m_hwnd, 0, GetModuleHandle(0), 0);
+			EnableWindow(m_hwnd,FALSE);
+			ShowWindow(m_edit,SW_SHOW);
+			SetFocus(GetDlgItem(m_edit, 1));
+			MSG        msg;
+		    while(GetMessage(&msg,NULL,0,0))
+		    {
+		    	if (msg.message == WM_CLOSE || 
+		    		msg.message == WM_QUIT ||
+		    		msg.message == WM_DESTROY) {
+		    		break;
+		    	}
+		        TranslateMessage(&msg);
+		        DispatchMessage(&msg);
+		    }
+		    EnableWindow(m_hwnd,TRUE);
+		    if (m_edit) {
+		    	DestroyWindow(m_edit);
+		    	m_edit = 0;
+		    }
+		    SetFocus(m_hwnd);
+		}
+	}
+        ///
+	virtual void GHL_CALL HideKeyboard() {
+		if (m_edit) {
+			PostMessageW(m_edit, WM_QUIT, 0, 0);
+		}
+	}
+        ///
+	virtual GHL::UInt32  GHL_CALL GetKeyMods() const {
+		/// @todo
+		return 0;
+	}
+		///
+	virtual bool GHL_CALL SetDeviceState( GHL::DeviceState name, const void* data) {
+		return false;
+	}
+	///
+	virtual bool GHL_CALL GetDeviceData( GHL::DeviceData name, void* data) {
+		return false;
+	}
+        ///
+	virtual void GHL_CALL SetTitle( const char* title ) {
+		m_title = title;
+		if (m_hwnd) {
+			UINT32 l = MultiByteToWideChar(CP_UTF8, 0, title, -1, NULL, 0);
+			WCHAR* text = new WCHAR[l];
+			MultiByteToWideChar(CP_UTF8, 0, title, -1, text, l);
+			SetWindowTextW(m_hwnd,text);
+			delete [] text;
+		}
+	}
+	virtual bool GHL_CALL OpenURL( const char* url ) {
+		UINT32 l = MultiByteToWideChar(CP_UTF8, 0, url, -1, NULL, 0);
+		WCHAR* text = new WCHAR[l];
+		MultiByteToWideChar(CP_UTF8, 0, url, -1, text, l);
+		ShellExecuteW(0, 0, text, 0, 0 , SW_SHOW );
+		delete [] text;
+		return true;
+    }
+    virtual GHL::Font* GHL_CALL CreateFont( const GHL::FontConfig* config ) {
+        /// @todo
+        return 0;
+    }
 };
 
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
-	AppContext* ctx = reinterpret_cast<AppContext*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
-	GHL::Application* appl = ctx ? ctx->app : 0;
+	Win32System* sys = reinterpret_cast<Win32System*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+	GHL::Application* appl = sys ? sys->GetApp() : 0;
 	switch(msg)
 	{
 
 		case WM_MOUSEMOVE: {
-			if ( wparam & MK_LBUTTON ) {
-				GHL::Event e;
-				e.type = GHL::EVENT_TYPE_MOUSE_MOVE;
-				e.data.mouse_move.button = GHL::MOUSE_BUTTON_LEFT;
-				e.data.mouse_move.x = GET_X_LPARAM(lparam);
-				e.data.mouse_move.y = GET_Y_LPARAM(lparam);
-				e.data.mouse_move.modificators = 0;
-				if (appl) appl->OnEvent(&e);
-			}
+			GHL::Event e;
+			e.type = GHL::EVENT_TYPE_MOUSE_MOVE;
+			e.data.mouse_move.button = (wparam & MK_LBUTTON) ? GHL::MOUSE_BUTTON_LEFT : GHL::MOUSE_BUTTON_NONE;
+			e.data.mouse_move.x = GET_X_LPARAM(lparam);
+			e.data.mouse_move.y = GET_Y_LPARAM(lparam);
+			e.data.mouse_move.modificators = 0;
+			if (appl) appl->OnEvent(&e);
 		} break;
 
 		case WM_LBUTTONDOWN: {
@@ -137,7 +293,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 				e.data.key_press.modificators = 0;
 				if (appl) appl->OnEvent(&e);
 			}
-			} break;
+			return TRUE;
+		} break;
 		case WM_KEYUP: {
 			GHL::Key key = convert_key(wparam);
 			if (key!=GHL::KEY_NONE) {
@@ -147,101 +304,156 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 				e.data.key_release.modificators = 0;
 				if (appl) appl->OnEvent(&e);
 			}
-			} break;
-		case WM_CLOSE:
-			SetWindowLongPtr(hwnd,GWLP_USERDATA,(LONG_PTR)0);
-			PostMessage (hwnd, WM_QUIT, 0, 0);
-			return 0;
-			break;
-			
-		case WM_SETCURSOR:
-			/*if (impl) {
-				if(impl->m_window_active && LOWORD(lparam)==HTCLIENT && !impl->m_cursor_visible) SetCursor(NULL);
-				else SetCursor(LoadCursor(NULL, IDC_ARROW));
+			return TRUE;
+		} break;
+
+		case WM_UNICHAR: {
+			if (wparam != UNICODE_NOCHAR) {
+				GHL::Event e;
+				e.type = GHL::EVENT_TYPE_KEY_PRESS;
+				e.data.key_press.key = GHL::KEY_NONE;
+				e.data.key_press.modificators = 0;
+				e.data.key_press.charcode = wparam;
+				if (appl) appl->OnEvent(&e);
+				e.type = GHL::EVENT_TYPE_KEY_RELEASE;
+				if (appl) appl->OnEvent(&e);
 				return FALSE;
-			}*/
+			} 
+			return TRUE;
+		} break;
+
+		case WM_CHAR: {
+			GHL::Event e;
+			e.type = GHL::EVENT_TYPE_KEY_PRESS;
+			e.data.key_press.key = GHL::KEY_NONE;
+			e.data.key_press.modificators = 0;
+			e.data.key_press.charcode = wparam;
+			if (appl) appl->OnEvent(&e);
+			e.type = GHL::EVENT_TYPE_KEY_RELEASE;
+			if (appl) appl->OnEvent(&e);
+			return FALSE;
+		} break;
+
+		case WM_CLOSE:
+			DestroyWindow(hwnd);
+			break;
+
+		case WM_DESTROY:
+			PostQuitMessage(0);
 			break;
 
 		case WM_ACTIVATE: 
-			if (ctx) {
+			if (sys) {
 				if (!HIWORD(wparam))                    // Check Minimization State
 				{
-					ctx->active = TRUE;                    // Program Is Active
+					sys->SetActive(true);
 				}
 				else
 				{
-					ctx->active = FALSE;                   // Program Is No Longer Active
+					sys->SetActive(false);
 				}
 			}
 			break;
-		case WM_SYSCOMMAND:
-			/*if(wparam==SC_CLOSE)
-			{
-				if (impl )
-				{
-					if (impl->m_controller && !impl->m_controller->ExitAllowed())
-						return FALSE;
-					return DefWindowProc(hwnd, msg, wparam, lparam);
-				}
-			}*/
-			break;
+		default:
+			return DefWindowProcW(hwnd, msg, wparam, lparam);
 	}
-	return DefWindowProc(hwnd, msg, wparam, lparam);;
+	return FALSE;
 }
 
-class Win32System : public GHL::System {
-private:
-	HWND	m_hwnd;
-public:
-	explicit Win32System(HWND wnd) : m_hwnd(wnd) {}
-	void GHL_CALL Exit() {
-		PostMessage(m_hwnd,WM_QUIT,0,0);
-	}
-	///
-	virtual bool GHL_CALL IsFullscreen() const {
-		return false;
-	}
-        ///
-	virtual void GHL_CALL SwitchFullscreen(bool fs) {
-		/// @todo
-	}
-        ///
-	virtual void GHL_CALL ShowKeyboard(const GHL::TextInputConfig* input) {
-	}
-        ///
-	virtual void GHL_CALL HideKeyboard() {
-	}
-        ///
-	virtual GHL::UInt32  GHL_CALL GetKeyMods() const {
-		/// @todo
-		return 0;
-	}
-		///
-	virtual bool GHL_CALL SetDeviceState( GHL::DeviceState name, const void* data) {
-		return false;
-	}
-	///
-	virtual bool GHL_CALL GetDeviceData( GHL::DeviceData name, void* data) {
-		return false;
-	}
-        ///
-	virtual void GHL_CALL SetTitle( const char* title ) {
-		/// @todo
-	}
-	virtual bool GHL_CALL OpenURL( const char* url ) {
-        /// @todo
-        return false;
+LRESULT CALLBACK InputEditWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+   switch (msg)
+   {
+    case WM_KEYDOWN:
+         switch (wparam)
+         {
+          case VK_RETURN:
+          	SendMessage(GetParent(hwnd),WM_COMMAND,(WPARAM)2,LPARAM(0));
+          	break;  //or return 0; if you don't want to pass it further to def proc
+         }
+    default: {
+    	WNDPROC oldEditProc = reinterpret_cast<WNDPROC>((LONG_PTR)GetWindowLongPtr(hwnd, GWLP_USERDATA));
+        return CallWindowProc(oldEditProc, hwnd, msg, wparam, lparam);
     }
-};
-static const TCHAR* WINDOW_CLASS_NAME = TEXT("GHL_WINLIB_WINDOW");
+   }
+   return 0;
+}
+
+LRESULT CALLBACK InputWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+	switch(msg)
+	{
+		case WM_CREATE: {
+			RECT rect;
+			GetClientRect(hwnd,&rect);
+			HWND edit = CreateWindowW(L"EDIT", L"",    
+          		WS_VISIBLE | WS_CHILD ,
+          		rect.left+4 , rect.top+4, rect.right-rect.left-8, 25, hwnd, (HMENU) 1, NULL, NULL); 
+			WNDPROC oldEditProc = (WNDPROC)SetWindowLongPtr(edit, GWLP_WNDPROC, (LONG_PTR)InputEditWindowProc);
+			SetWindowLongPtr(edit,GWLP_USERDATA,(LONG_PTR)oldEditProc);
+			CreateWindowW(L"BUTTON", L"Ok",    
+          		WS_VISIBLE | WS_CHILD ,
+          		rect.right-84 , rect.bottom-29, 80, 25, hwnd, (HMENU) 2, NULL, NULL); 
+		} break;
+		case WM_CLOSE:
+      		// Sends us a WM_DESTROY
+      		DestroyWindow(hwnd);
+      		break;
+
+		case WM_DESTROY:
+			break;
+
+		case WM_KEYDOWN: {
+			if (wparam == VK_RETURN) {
+				SendMessageW(hwnd,WM_COMMAND,(WPARAM)2,LPARAM(0));
+				break;
+			}
+			return DefWindowProcW(hwnd, msg, wparam, lparam);
+		} break;
+		
+        case WM_COMMAND:
+            switch(LOWORD(wparam))
+            {
+            case 2:{
+            	HWND parent = GetParent(hwnd);
+            	if (parent) {
+
+            		HWND edit = GetDlgItem(hwnd, 1); // I tried with and without this
+            		int len = GetWindowTextLengthW(edit);
+            		if (len > 0) {
+            			WCHAR* text = new WCHAR[len+1];
+            			GetWindowTextW(edit,text,len+1);
+
+            			UINT32 l = WideCharToMultiByte(CP_UTF8, 0, text, -1, NULL, 0, "?", NULL);
+						char* textu8 = new char[l];
+						WideCharToMultiByte(CP_UTF8, 0, text, -1, textu8, l, "?", NULL);
+						delete [] text;
+
+						Win32System* sys = reinterpret_cast<Win32System*>(GetWindowLongPtr(parent, GWLP_USERDATA));
+						GHL::Application* appl = sys ? sys->GetApp() : 0;
+
+						GHL::Event e;
+						e.type = GHL::EVENT_TYPE_TEXT_INPUT_ACCEPTED;
+						e.data.text_input_accepted.text = textu8;
+						if (appl) appl->OnEvent(&e);
+
+						delete [] textu8;
+            		}
+				}
+				CloseWindow(hwnd);
+               }break;
+            }
+            break;
+        default:
+        	return DefWindowProcW(hwnd, msg, wparam, lparam);
+	}
+	return FALSE;
+}
+
 GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char** argv)
 {
 	(void)argc;
 	(void)argv;
 
-	AppContext ctx;
-	ctx.active = TRUE;
-	ctx.app = app;
+	win32_SetProcessDpiAware(); //true
 
 	OSVERSIONINFO	os_ver;
 	SYSTEMTIME		tm;
@@ -260,9 +472,16 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 	snprintf(buf,256,"Memory: %ldK total, %ldK free",mem_st.dwTotalPhys/1024L,mem_st.dwAvailPhys/1024L);
 	LOG_INFO( buf );
 
+	Win32System sys(app);
+	app->SetSystem(&sys);
 
-	
+	std::string app_name = sys.GetTitle();
+	if (app_name.empty()) {
+		app_name = "ghl_app";
+	}
+
 	GHL::VFSWin32Impl vfs;
+	vfs.SetApplicationName(app_name);
 	app->SetVFS(&vfs);
 
 	GHL::ImageDecoderImpl image;
@@ -276,9 +495,10 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
     }
 
 	HINSTANCE hInstance = GetModuleHandle(0);
-	WNDCLASS		winclass;
+	
 	{
-		winclass.style = CS_DBLCLKS | CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
+		WNDCLASSW		winclass;
+		winclass.style = CS_DBLCLKS | CS_OWNDC | CS_HREDRAW | CS_VREDRAW | CS_BYTEALIGNCLIENT;
 		winclass.lpfnWndProc	= &WindowProc;
 		winclass.cbClsExtra		= 0;
 		winclass.cbWndExtra		= 0;
@@ -288,15 +508,46 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 		winclass.lpszMenuName	= NULL;
 		winclass.lpszClassName	= WINDOW_CLASS_NAME;
 		winclass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-		if (!RegisterClass(&winclass)) {
+		if (!RegisterClassW(&winclass)) {
 			LOG_ERROR( "Can't register window class" );
 			return 1;
 		}
 	}
+	{
+		WNDCLASSW		winclass;
+		winclass.style = 0;
+		winclass.lpfnWndProc	= &InputWindowProc;
+		winclass.cbClsExtra		= 0;
+		winclass.cbWndExtra		= 0;
+		winclass.hInstance		= hInstance;
+		winclass.hCursor		= LoadCursor(NULL, IDC_ARROW);
+		winclass.hbrBackground	= (HBRUSH)GetStockObject(BLACK_BRUSH);
+		winclass.lpszMenuName	= NULL;
+		winclass.lpszClassName	= INPUT_MODAL_CLASS_NAME;
+		winclass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+		if (!RegisterClassW(&winclass)) {
+			LOG_ERROR( "Can't register input window class" );
+			return 1;
+		}
+	}
+
+	HDC screen = GetDC(NULL);
+
 	GHL::Settings settings;
-	settings.width = 800;
-	settings.height = 600;
+	settings.width = GetDeviceCaps(screen,HORZRES);
+	settings.height = GetDeviceCaps(screen,VERTRES);
 	settings.fullscreen = false;
+	settings.depth = false;
+	
+	double hPixelsPerInch = GetDeviceCaps(screen,LOGPIXELSX);
+	double vPixelsPerInch = GetDeviceCaps(screen,LOGPIXELSY);
+	
+	settings.screen_dpi = (hPixelsPerInch + vPixelsPerInch) * 0.5;
+
+	LOG_INFO("screen_dpi: " << settings.screen_dpi);
+
+	ReleaseDC(NULL, screen);
+
 	app->FillSettings(&settings);
 
 	size_t width = settings.width;// +GetSystemMetrics(SM_CXFIXEDFRAME) * 2;
@@ -309,12 +560,6 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 	rect_w.bottom=rect_w.top+height;
 	DWORD style_w=WS_POPUP|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_VISIBLE; 
 
-	/*m_rect_fs.left=0;
-	m_rect_fs.top=0;
-	m_rect_fs.right=m_width;
-	m_rect_fs.bottom=m_height;
-	m_style_fs=WS_POPUP|WS_VISIBLE; 
-	*/
 
 	HWND hwndParent = 0; /// @todo
 	HWND hwnd = 0;
@@ -322,24 +567,19 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 
 	AdjustWindowRect( &rect_w, style_w, FALSE);
 
-		hwnd = CreateWindowEx(0, WINDOW_CLASS_NAME, TEXT("Test"), style_w,
+	hwnd = CreateWindowExW(0, WINDOW_CLASS_NAME, WINDOW_TITLE, style_w,
 				rect_w.left, rect_w.top, rect_w.right-rect_w.left, 
 				rect_w.bottom-rect_w.top,
 				hwndParent, NULL, hInstance, NULL);
-	/*else
-		m_hwnd = CreateWindowExA(WS_EX_TOPMOST, WINDOW_CLASS_NAME, "Test", m_style_fs,
-				0, 0, 0, 0,
-				NULL, NULL, hInstance, NULL);*/
+	
 	if (!hwnd)
 	{
 		LOG_ERROR( "Can't create window" );
 		return 1;
 	}
-	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)&ctx);
-
 	
-	Win32System sys(hwnd);
-	app->SetSystem(&sys);
+	sys.SetWnd(hwnd);
+	SetWindowLongPtrW(hwnd, GWLP_USERDATA, (LONG_PTR)&sys);
 
 #ifndef GHL_NO_SOUND
 	GHL::SoundDSound sound(8);
@@ -430,12 +670,36 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 
 	wglMakeCurrent (hDC, hRC);
 
-	GHL::RenderImpl* render = GHL_CreateRenderOpenGL(settings.width, settings.height, settings.depth);
+	GHL::RenderOpenGLBase* render = GHL_CreateRenderOpenGL(settings.width, settings.height, settings.depth);
 	
 	app->SetRender(render);
 
 	if (!app->Load())
 		return 1;
+
+	{
+		LPWSTR cmdline = GetCommandLineW();
+		if (cmdline && *cmdline != 0) {
+			int num = 0;
+			LPWSTR* args = CommandLineToArgvW(cmdline,&num);
+			if (args && num > 1 && args[1] && args[1][0]) {
+				UINT32 l = WideCharToMultiByte(CP_UTF8, 0, args[1], -1, NULL, 0, "_", NULL);
+				char* textu8 = new char[l];
+				WideCharToMultiByte(CP_UTF8, 0, args[1], -1, textu8, l, "_", NULL);
+				
+
+				GHL::Event e;
+		        e.type = GHL::EVENT_TYPE_HANDLE_URL;
+		        e.data.handle_url.url = textu8;
+		        app->OnEvent(&e);
+
+				delete [] textu8;
+			}
+			if (args) {
+				LocalFree(args);
+			}
+		}
+	}
 
 	bool done = false;
 	timeBeginPeriod(1);
@@ -450,7 +714,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 #endif
 
 		MSG		msg;
-		while (PeekMessage(&msg,hwnd,0,0,PM_REMOVE) && !done)
+		while (PeekMessageW(&msg,NULL,0,0,PM_REMOVE) && !done)
 		{
 			if (msg.message == WM_QUIT) {
 				done = true;
@@ -464,19 +728,22 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 #endif
 				LOG_INFO( "Done" );
 				break;
-			} else
-				DispatchMessage(&msg);
+			} else {
+				TranslateMessage(&msg);
+				DispatchMessageW(&msg);
+			}
 		}
 		if (app) {	
-			if (ctx.active && wglMakeCurrent(hDC, hRC)) {
+			if (sys.IsActive() && wglMakeCurrent(hDC, hRC)) {
 				DWORD now = timeGetTime();
 				DWORD dt = now - ms;
 				ms = now;
 				if (dt>1000)
 					dt = 1000;
 				app->OnFrame(dt * 1000);
+				render->get_api().Finish();
+				SwapBuffers (hDC);
 			}
-			SwapBuffers (hDC);
 			Sleep(1);
 		}
 	}
@@ -495,14 +762,14 @@ static const WCHAR* level_descr[] = {
     L"D:"
 };
 
-
+static WCHAR logbuf[2048];
 GHL_API void GHL_CALL GHL_Log( GHL::LogLevel level,const char* message) {
-	/// @todo
-	WCHAR buf[2048];
-	MultiByteToWideChar(CP_UTF8, 0, message, -1, buf, 2048);
-	OutputDebugStringW( level_descr[level] );
-	OutputDebugStringW( buf );
-	OutputDebugStringW( L"\n" );
+	WCHAR* dst = logbuf;
+	memcpy(dst,level_descr[level],sizeof(WCHAR) * 2);
+	dst += 2;
+	dst += MultiByteToWideChar(CP_UTF8, 0, message, -1, dst, 2048-4);
+	memcpy(dst,L"\n",sizeof(WCHAR) * 2);
+	OutputDebugStringW( logbuf );
 }
 
 GHL_API GHL::UInt32 GHL_CALL GHL_GetCurrentThreadId() {

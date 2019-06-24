@@ -29,7 +29,7 @@
 #  include <stdlib.h>
 #endif
 
-#if defined(Z_SOLO) && !defined(_PTRDIFF_T)
+#if defined(Z_SOLO) && !defined(_PTRDIFF_T) && !defined(_PTRDIFF_T_)
    typedef long ptrdiff_t;  /* guess -- will be caught if guess is wrong */
 #endif
 

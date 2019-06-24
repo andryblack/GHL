@@ -121,26 +121,59 @@ namespace GHL {
         
     };
 
+    static void normalize_dir( std::string& dest, WCHAR* uBuf ) {
+        char buf[MAX_PATH];
+        WideCharToMultiByte(CP_UTF8,0,uBuf,-1,buf,MAX_PATH,0,0);
+        dest = std::string(&buf[0]);
+        size_t pos = dest.rfind('\\');
+        if (pos!=dest.npos)
+            dest.resize(pos+1);
+        pos = 0;
+        while ( (pos=dest.find('\\',pos))!=dest.npos) {
+            dest[pos]='/';
+            pos++;
+        }
+    }
+
 	VFSWin32Impl::VFSWin32Impl() {
+        WCHAR uBuf[MAX_PATH];
+        m_user_dir = ".";
+        m_cache_dir = ".";
+            
 		if (m_data_dir.empty()) {
 				
-				WCHAR uBuf[MAX_PATH];
-				GetModuleFileNameW(GetModuleHandle(0),uBuf,MAX_PATH);
-				char buf[MAX_PATH];
-				WideCharToMultiByte(CP_UTF8,0,uBuf,-1,buf,MAX_PATH,0,0);
-				m_data_dir = std::string(&buf[0]);
-				size_t pos = m_data_dir.rfind('\\');
-				if (pos!=m_data_dir.npos)
-					m_data_dir.resize(pos+1);
-				pos = 0;
-				while ( (pos=m_data_dir.find('\\',pos))!=m_data_dir.npos) {
-					m_data_dir[pos]='/';
-					pos++;
-				}
+			GetModuleFileNameW(GetModuleHandle(0),uBuf,MAX_PATH);
+            normalize_dir(m_data_dir,uBuf);
 
-				LOG_INFO( "Data dir : " << m_data_dir );
+			LOG_INFO( "Data dir : " << m_data_dir );
 		}
+
+        
+        
+
 	}
+
+    void VFSWin32Impl::SetApplicationName(const std::string& name) {
+        // Roaming AppData – Legacy
+        WCHAR uBuf[MAX_PATH];
+        if(SUCCEEDED(SHGetFolderPathW(NULL,  
+                             CSIDL_APPDATA|CSIDL_FLAG_CREATE,  
+                             NULL,  
+                             0,  
+                             uBuf))) 
+        { 
+            normalize_dir(m_user_dir,uBuf);
+            if (!name.empty()) {
+                m_user_dir += "/" + name;
+            }
+            LOG_INFO( "User dir : " << m_user_dir );
+            DoCreateDir(m_user_dir.c_str());
+            m_cache_dir = m_user_dir + "/cache";
+            DoCreateDir(m_cache_dir.c_str());
+        } else {
+            LOG_WARNING("Failed get app data folder");
+        }
+    }
 
 	VFSWin32Impl::~VFSWin32Impl() {
 	}
@@ -157,11 +190,31 @@ namespace GHL {
 		return true;
 	}
 
+    static void create_dir(const WCHAR* filename) {
+        WCHAR dir[MAX_PATH];
+        const WCHAR* pos = filename;
+        while (pos && *pos) {
+            if (*pos == L'\\') {
+                size_t i = pos-filename;
+                memcpy(dir,filename,sizeof(WCHAR)*i);
+                dir[i] = 0;
+                CreateDirectoryW(dir,0);
+            }
+            ++pos;
+        }
+    }
+
 	/// get dir
 	const char* GHL_CALL VFSWin32Impl::GetDir(DirType dt) const {
 		if ( dt == DIR_TYPE_DATA) {
 			return m_data_dir.c_str();
 		}
+        if ( dt == DIR_TYPE_USER_PROFILE) {
+            return m_user_dir.c_str();
+        }
+        if ( dt == DIR_TYPE_CACHE) {
+            return m_cache_dir.c_str();
+        }
 		return ".";
 	}
 
@@ -221,6 +274,7 @@ namespace GHL {
         dwDesiredAccess = dwShareMode = dwFlagsAndAttributes = 0;
         WCHAR tfilename[MAX_PATH];
         if (!get_fs_path(file,tfilename)) return 0;
+        create_dir(tfilename);
         dwDesiredAccess = GENERIC_WRITE;
         dwCreationDisposition = CREATE_ALWAYS;
         dwShareMode = FILE_SHARE_READ;
@@ -270,14 +324,17 @@ namespace GHL {
         DWORD dwDesiredAccess,dwCreationDisposition,dwShareMode,dwFlagsAndAttributes ;
         dwDesiredAccess = dwShareMode = dwFlagsAndAttributes = 0;
         WCHAR tfilename[MAX_PATH];
-        if (!get_fs_path(file,tfilename)) return 0;
+        if (!get_fs_path(file,tfilename)) {
+            return 0;
+        }
+        create_dir(tfilename);
         dwDesiredAccess = GENERIC_WRITE;
         dwCreationDisposition = CREATE_ALWAYS;
         dwShareMode = FILE_SHARE_READ;
         
         f = CreateFileW(tfilename,dwDesiredAccess, dwShareMode, NULL, dwCreationDisposition, dwFlagsAndAttributes, NULL);
         if (f==INVALID_HANDLE_VALUE) {
-            LOG_ERROR( "opening file : " << file );
+            LOG_ERROR( "failed opening write file : " << file );
             return 0;
         }
         return new FileWriteStream(f);

@@ -36,4 +36,7 @@ namespace GHL {
     };
 }
 
+GHL_API GHL::RenderOpenGLBase* GHL_CALL GHL_CreateRenderOpenGL(GHL::UInt32 w,GHL::UInt32 h,bool depth);
+GHL_API void GHL_DestroyRenderOpenGL(GHL::RenderOpenGLBase* render);
+
 #endif /* defined(__GHL__render_opengl2__) */

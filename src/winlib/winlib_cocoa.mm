@@ -7,7 +7,7 @@
 //
 
 
-#include "../render/render_impl.h"
+#include "../render/opengl/render_opengl.h"
 
 #import "winlib_cocoa.h"
 

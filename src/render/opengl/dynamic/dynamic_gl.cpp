@@ -1,6 +1,7 @@
 #include "dynamic_gl.h"
 #include <ghl_api.h>
 #include "../render_opengl_api.h"
+#include <string.h>
 
 #if defined ( GHL_PLATFORM_WIN )
 //#include <windows.h>

@@ -8,7 +8,7 @@ namespace GHL {
 
 	class VFSWin32Impl : public VFS {
 	public:
-		VFSWin32Impl();
+		explicit VFSWin32Impl(  );
 		~VFSWin32Impl();
 		/// get dir
 		virtual const char* GHL_CALL GetDir(DirType dt) const ;
@@ -26,8 +26,12 @@ namespace GHL {
         virtual WriteStream* GHL_CALL OpenFileWrite(const char* file);
 		/// write file
 		virtual bool GHL_CALL WriteFile(const char* file, const Data* data);
+
+		void SetApplicationName(const std::string& name);
 	private:
 		std::string m_data_dir;
+		std::string m_user_dir;
+		std::string m_cache_dir;
 	};
 
 }

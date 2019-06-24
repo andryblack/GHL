@@ -79,6 +79,7 @@ public:
 		// Crack the URL.
 		if (!WinHttpCrackUrl(szURL, 0, 0, &urlComp))
 		{
+			LOG_ERROR("failed parse url");
 			return false;
 		}
 
@@ -123,7 +124,9 @@ public:
 			WINHTTP_ACCESS_TYPE_DEFAULT_PROXY,
 			WINHTTP_NO_PROXY_NAME,
 			WINHTTP_NO_PROXY_BYPASS, WINHTTP_FLAG_ASYNC);
-		
+		if (!hSession) {
+			LOG_ERROR("failed open session");
+		}
 	}
 
 	~NetworkWin32() {
@@ -156,6 +159,15 @@ public:
 		return true;
 	}
 
+	virtual bool GHL_CALL PostStream(GHL::NetworkRequest* handler, GHL::DataStream* data) {
+        if (!handler)
+            return false;
+        if (!data)
+            return false;
+        
+        // @todo
+        return false;
+    }
 
 	virtual void GHL_CALL Process() {
 		ScopedLock lock(this);
@@ -223,8 +235,10 @@ bool NetworkWin32_Request::get() {
 		return false;
 	hConnect = WinHttpConnect(m_context->hSession, szHost,
 		urlComp.nPort, 0);
-	if (hConnect == NULL)
+	if (hConnect == NULL) {
+		LOG_ERROR("failed connect");
 		return false;
+	}
 	DWORD dwOpenRequestFlag = (INTERNET_SCHEME_HTTPS == urlComp.nScheme) ?
 		WINHTTP_FLAG_SECURE : 0;
 	hRequest = WinHttpOpenRequest(hConnect,
@@ -232,29 +246,35 @@ bool NetworkWin32_Request::get() {
 		NULL, WINHTTP_NO_REFERER,
 		WINHTTP_DEFAULT_ACCEPT_TYPES,
 		dwOpenRequestFlag);
-	if (hRequest == NULL)
+	if (hRequest == NULL) {
+		LOG_ERROR("failed open request");
 		return false;
+	}
 	WINHTTP_STATUS_CALLBACK pCallback = WinHttpSetStatusCallback(hRequest,
 		(WINHTTP_STATUS_CALLBACK)&NetworkWin32_Request::AsyncCallback,
 		WINHTTP_CALLBACK_FLAG_ALL_COMPLETIONS ,
-		NULL);
+		0);
 	if (!WinHttpSendRequest(hRequest,
 		WINHTTP_NO_ADDITIONAL_HEADERS, 0,
 		WINHTTP_NO_REQUEST_DATA, 0, 0,
 		(DWORD_PTR)this))
 	{
+		LOG_ERROR("failed send request");
 		return false;
 	}
 	return true;
 }
 
 bool NetworkWin32_Request::post(const GHL::Data* data) {
-	if (!load_url())
+	if (!load_url()) {
 		return false;
+	}
 	hConnect = WinHttpConnect(m_context->hSession, szHost,
 		urlComp.nPort, 0);
-	if (hConnect == NULL)
+	if (hConnect == NULL) {
+		LOG_ERROR("failed connect");
 		return false;
+	}
 	DWORD dwOpenRequestFlag = (INTERNET_SCHEME_HTTPS == urlComp.nScheme) ?
 		WINHTTP_FLAG_SECURE : 0;
 	hRequest = WinHttpOpenRequest(hConnect,
@@ -262,19 +282,22 @@ bool NetworkWin32_Request::post(const GHL::Data* data) {
 		NULL, WINHTTP_NO_REFERER,
 		WINHTTP_DEFAULT_ACCEPT_TYPES,
 		dwOpenRequestFlag);
-	if (hRequest == NULL)
+	if (hRequest == NULL) {
+		LOG_ERROR("failed open request");
 		return false;
+	}
 	m_post_data = data->Clone();
 	WINHTTP_STATUS_CALLBACK pCallback = WinHttpSetStatusCallback(hRequest,
 		(WINHTTP_STATUS_CALLBACK)&NetworkWin32_Request::AsyncCallback,
 		WINHTTP_CALLBACK_FLAG_ALL_COMPLETIONS |
 		WINHTTP_CALLBACK_FLAG_REDIRECT,
-		NULL);
+		0);
 	if (!WinHttpSendRequest(hRequest,
 		WINHTTP_NO_ADDITIONAL_HEADERS, 0,
 		(LPVOID)m_post_data->GetData(), m_post_data->GetSize(), m_post_data->GetSize(),
 		(DWORD_PTR)this))
 	{
+		LOG_ERROR("failed send request");
 		return false;
 	}
 	return true;
@@ -285,8 +308,8 @@ void NetworkWin32_Request::cleanup() {
 	if (hRequest) {
 		WinHttpSetStatusCallback(hRequest,
 			NULL,
-			NULL,
-			NULL);
+			0,
+			0);
 
 		WinHttpCloseHandle(hRequest);
 		hRequest = NULL;

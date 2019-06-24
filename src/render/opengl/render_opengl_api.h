@@ -46,8 +46,9 @@ namespace GHL {
         
         typedef char GLchar;
         typedef unsigned int GLhandle;
-        typedef signed long int GLsizeiptr;
-        typedef signed long int GLintptr;
+
+        typedef ptrdiff_t GLsizeiptr;
+        typedef ptrdiff_t GLintptr;
         
         static const GLboolean _TRUE;
         static const GLboolean _FALSE;
@@ -155,6 +156,7 @@ DYNAMIC_GL_FUNCTION(ActiveTexture,(GLenum))\
 #define DYNAMIC_GL_FUNCTIONS \
 DYNAMIC_GL_FUNCTION(BindTexture,(GLenum,GLuint))\
 DYNAMIC_GL_FUNCTION(Flush,())\
+DYNAMIC_GL_FUNCTION(Finish,())\
 DYNAMIC_GL_FUNCTION(ReadPixels,(GLint,GLint,GLsizei,GLsizei,GLenum,GLenum,GLvoid*))\
 DYNAMIC_GL_FUNCTION(Viewport,(GLint,GLint,GLsizei,GLsizei))\
 DYNAMIC_GL_FUNCTION(Enable,(GLenum))\

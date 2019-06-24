@@ -56,7 +56,7 @@ namespace GHL {
     }
 }
 
-GHL_API GHL::RenderImpl* GHL_CALL GHL_CreateRenderOpenGL(GHL::UInt32 w,GHL::UInt32 h,bool depth) {
+GHL_API GHL::RenderOpenGLBase* GHL_CALL GHL_CreateRenderOpenGL(GHL::UInt32 w,GHL::UInt32 h,bool depth) {
     GHL::RenderOpenGLBase* render = 0;
     render = new GHL::RenderOpenGL2(w,h,depth);
     if (!render->RenderInit()) {
@@ -75,8 +75,7 @@ GHL_API GHL::RenderImpl* GHL_CALL GHL_CreateRenderOpenGL(GHL::UInt32 w,GHL::UInt
 	return render;
 }
 
-GHL_API void GHL_DestroyRenderOpenGL(GHL::RenderImpl* render_) {
-	GHL::RenderOpenGLBase* render = reinterpret_cast<GHL::RenderOpenGLBase*>(render_);
+GHL_API void GHL_DestroyRenderOpenGL(GHL::RenderOpenGLBase* render) {
 	if (render) {
 		render->RenderDone();
 		delete render;
