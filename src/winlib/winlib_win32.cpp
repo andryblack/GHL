@@ -17,7 +17,7 @@
 
 #include <ghl_system.h>
 #include <ghl_time.h>
-#include <Windowsx.h>
+#include <windowsx.h>
 
 
 #ifdef _MSC_VER

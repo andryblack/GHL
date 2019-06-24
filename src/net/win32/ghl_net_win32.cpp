@@ -11,8 +11,8 @@
 
 static const char* MODULE = "Net";
 
-#include <Windows.h>
-#include <Winhttp.h>
+#include <windows.h>
+#include <winhttp.h>
 #include <cassert>
 
 class NetworkWin32;

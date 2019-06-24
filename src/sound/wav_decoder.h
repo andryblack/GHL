@@ -37,7 +37,7 @@ namespace GHL
 #	pragma pack( push, packing )
 #	pragma pack( 1 )
 #	define PACK_STRUCT
-#elif defined( __GNUC__ )
+#elif defined(__GNUC__) || defined(__MINGW32__) || defined(__MINGW64__) || defined(__clang__)
 #	define PACK_STRUCT	__attribute__((packed))
 #else
 #	error compiler not supported
@@ -56,6 +56,8 @@ namespace GHL
 #endif
 
 #undef PACK_STRUCT
+        
+            GHL_STATIC_ASSERT(sizeof(WaveFmtDescr) == (2+2+4+4+2+2));
 
 			WaveFmtDescr	m_format;
 			UInt32	m_unreaded;

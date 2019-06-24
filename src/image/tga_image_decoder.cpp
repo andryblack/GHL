@@ -20,7 +20,7 @@ namespace GHL {
 #	pragma pack( push, packing )
 #	pragma pack( 1 )
 #	define PACK_STRUCT
-#elif defined( __GNUC__ )
+#elif defined(__GNUC__) || defined(__MINGW32__) || defined(__MINGW64__) || defined(__clang__)
 #	define PACK_STRUCT	__attribute__((packed))
 #else
 #   error "unknown compilator need pack structure"
@@ -55,6 +55,8 @@ namespace GHL {
 #if defined(_MSC_VER) ||  defined(__BORLANDC__) || defined (__BCPLUSPLUS__)
 #	pragma pack( pop, packing )
 #endif
+
+    GHL_STATIC_ASSERT(sizeof(TGAHeader) == (18));
 
 #undef PACK_STRUCT
 
