@@ -33,14 +33,18 @@ namespace GHL
 		private:
 
 // byte-align structures
-#if defined(_MSC_VER) || defined(__BORLANDC__) || defined (__BCPLUSPLUS__)
-#	pragma pack( push, packing )
-#	pragma pack( 1 )
-#	define PACK_STRUCT
-#elif defined(__GNUC__) || defined(__MINGW32__) || defined(__MINGW64__) || defined(__clang__)
-#	define PACK_STRUCT	__attribute__((packed))
+#if defined(_MSC_VER) ||  defined(__BORLANDC__) || defined (__BCPLUSPLUS__)
+#    pragma pack( push, packing )
+#    pragma pack( 1 )
+#    define PACK_STRUCT
+#elif defined(__MINGW32__) || defined(__MINGW64__)
+        _Pragma("pack(push,1)")
+#   define PACK_STRUCT
+#elif defined(__GNUC__) || defined(__clang__)
+#    define PACK_STRUCT    __attribute__((packed))
 #else
-#	error compiler not supported
+#   error "unknown compilator need pack structure"
+#    define PACK_STRUCT
 #endif
 			struct WaveFmtDescr {
 				UInt16	compression_code;
@@ -51,8 +55,10 @@ namespace GHL
 				UInt16 	bits_per_sample;
 			} PACK_STRUCT;
 // Default alignment
-#if defined(_MSC_VER) || defined(__BORLANDC__) || defined (__BCPLUSPLUS__)
-#	pragma pack( pop, packing )
+#if defined(_MSC_VER) ||  defined(__BORLANDC__) || defined (__BCPLUSPLUS__)
+#    pragma pack( pop, packing )
+#elif defined(__MINGW32__) || defined(__MINGW64__)
+        _Pragma("pack(pop)")
 #endif
 
 #undef PACK_STRUCT
