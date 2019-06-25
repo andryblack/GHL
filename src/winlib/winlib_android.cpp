@@ -8,7 +8,7 @@
 #include <ghl_system.h>
 #include <ghl_event.h>
 #include <EGL/egl.h>
-#include "../render/render_impl.h"
+#include "../render/opengl/render_opengl.h"
 #include "ghl_application.h"
 #include "../ghl_log_impl.h"
 #include "../vfs/vfs_android.h"
@@ -1332,7 +1332,7 @@ namespace GHL {
         EGLSurface          m_offscreen_surface;
         EGLContext          m_context;
         EGLConfig           m_config;
-        RenderImpl*         m_render;
+        RenderOpenGLBase*   m_render;
         timeval             m_last_time;
         AInputQueue*        m_input_queue;
         
