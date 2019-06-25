@@ -30,7 +30,7 @@ static const char* MODULE="WinLib";
 static const WCHAR WINDOW_CLASS_NAME[] = L"GHL_WINLIB_WINDOW";
 static const WCHAR WINDOW_TITLE[] = L"GHL";
 static const WCHAR INPUT_MODAL_CLASS_NAME[] = L"GHL_WINLIB_INPUT_WINDOW";
-
+static const DWORD LAUNCH_ARGS_COPYDATA_TAG = 100;
 
 #ifndef DPI_ENUMS_DECLARED
 typedef enum PROCESS_DPI_AWARENESS
@@ -354,6 +354,15 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 				}
 			}
 			break;
+		case WM_COPYDATA: {
+			const PCOPYDATASTRUCT cpdata = (const PCOPYDATASTRUCT)lparam;
+			if (cpdata && cpdata->dwData == LAUNCH_ARGS_COPYDATA_TAG) {
+				GHL::Event e;
+		        e.type = GHL::EVENT_TYPE_HANDLE_URL;
+		        e.data.handle_url.url = (const char*)cpdata->lpData;
+		        if (appl) appl->OnEvent(&e);
+			}
+		} break;
 		default:
 			return DefWindowProcW(hwnd, msg, wparam, lparam);
 	}
@@ -448,10 +457,68 @@ LRESULT CALLBACK InputWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 	return FALSE;
 }
 
+
+static BOOL CALLBACK ApplicationWindowSearcher(HWND hWnd, LPARAM lParam) {
+	static const DWORD len = sizeof(WINDOW_CLASS_NAME)/sizeof(WCHAR);
+	WCHAR classname[len];
+	if (GetClassNameW(hWnd,classname,len)) {
+		if (memcmp(classname,WINDOW_CLASS_NAME,sizeof(WINDOW_CLASS_NAME))==0) {
+			/// found by class
+			WCHAR module_path[MAX_PATH];
+			WCHAR my_modulr_path[MAX_PATH];
+			if (GetWindowModuleFileNameW(hWnd,module_path,MAX_PATH) == 
+				GetModuleFileNameW(NULL, my_modulr_path, MAX_PATH )) {
+				if (wcscmp(module_path,my_modulr_path)==0) {
+					// some app
+					SetForegroundWindow(hWnd);
+					const char* launch_arg = (const char*)lParam;
+					if (launch_arg && *launch_arg) {
+
+						COPYDATASTRUCT cpdata;
+						cpdata.dwData = LAUNCH_ARGS_COPYDATA_TAG;
+						cpdata.cbData = strlen(launch_arg)+1;
+						cpdata.lpData = (PVOID)launch_arg;
+						SendMessage( hWnd,
+		                   WM_COPYDATA,
+		                   (WPARAM)(HWND) 0,
+		                   (LPARAM) (LPVOID) &cpdata );
+					}
+					return FALSE;
+				}
+			}
+		}
+	}
+	return TRUE;
+}
+
 GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char** argv)
 {
+	
 	(void)argc;
 	(void)argv;
+
+	std::string launch_arg;
+
+	{
+		LPWSTR cmdline = GetCommandLineW();
+		if (cmdline && *cmdline != 0) {
+			int num = 0;
+			LPWSTR* args = CommandLineToArgvW(cmdline,&num);
+			if (args && num > 1 && args[1] && args[1][0]) {
+				UINT32 l = WideCharToMultiByte(CP_UTF8, 0, args[1], -1, NULL, 0, "_", NULL);
+				char* textu8 = new char[l];
+				WideCharToMultiByte(CP_UTF8, 0, args[1], -1, textu8, l, "_", NULL);
+				
+				launch_arg = textu8;
+				
+				delete [] textu8;
+			}
+			if (args) {
+				LocalFree(args);
+			}
+		}
+	}
+
 
 	win32_SetProcessDpiAware(); //true
 
@@ -480,6 +547,14 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 		app_name = "ghl_app";
 	}
 
+	HINSTANCE hInstance = GetModuleHandle(0);
+	
+	HANDLE sinagleapp_mutex = CreateMutexA(NULL,TRUE,("Global_" + app_name + "_single_app_mutex").c_str());
+	if (GetLastError() == ERROR_ALREADY_EXISTS) {
+		EnumWindows(ApplicationWindowSearcher,(LPARAM)launch_arg.c_str());
+		return 0;
+	}
+
 	GHL::VFSWin32Impl vfs;
 	vfs.SetApplicationName(app_name);
 	app->SetVFS(&vfs);
@@ -494,7 +569,6 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
         app->OnEvent(&e);
     }
 
-	HINSTANCE hInstance = GetModuleHandle(0);
 	
 	{
 		WNDCLASSW		winclass;
@@ -677,30 +751,13 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 	if (!app->Load())
 		return 1;
 
-	{
-		LPWSTR cmdline = GetCommandLineW();
-		if (cmdline && *cmdline != 0) {
-			int num = 0;
-			LPWSTR* args = CommandLineToArgvW(cmdline,&num);
-			if (args && num > 1 && args[1] && args[1][0]) {
-				UINT32 l = WideCharToMultiByte(CP_UTF8, 0, args[1], -1, NULL, 0, "_", NULL);
-				char* textu8 = new char[l];
-				WideCharToMultiByte(CP_UTF8, 0, args[1], -1, textu8, l, "_", NULL);
-				
-
-				GHL::Event e;
-		        e.type = GHL::EVENT_TYPE_HANDLE_URL;
-		        e.data.handle_url.url = textu8;
-		        app->OnEvent(&e);
-
-				delete [] textu8;
-			}
-			if (args) {
-				LocalFree(args);
-			}
-		}
+	if (!launch_arg.empty()) {
+		GHL::Event e;
+        e.type = GHL::EVENT_TYPE_HANDLE_URL;
+        e.data.handle_url.url = launch_arg.c_str();
+        app->OnEvent(&e);
 	}
-
+	
 	bool done = false;
 	timeBeginPeriod(1);
 	DWORD ms = timeGetTime();
@@ -749,6 +806,10 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app,int argc, char*
 	}
 	GHL_DestroyRenderOpenGL(render);
 	timeEndPeriod(1);
+
+	if (sinagleapp_mutex) {
+		CloseHandle(sinagleapp_mutex);
+	}
 	
 	return 0;
 }
