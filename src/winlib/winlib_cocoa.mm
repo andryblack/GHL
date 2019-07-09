@@ -408,8 +408,8 @@ public:
     return self;
 }
 
--(void)setApplication:(WinLibAppDelegate*) app {
-	m_application = app;
+-(GHL::Application*) getApplication {
+    return [(WinLibApplication*)[NSApplication sharedApplication] getApplication];
 }
 
 -(void)setCursorVisible:(BOOL) visible
@@ -564,7 +564,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     e.data.key_press.key = key;
     e.data.key_press.charcode = [[event characters] characterAtIndex:0];
     e.data.key_press.modificators = [self convertModificators:event];
-    [m_application getApplication]->OnEvent(&e);
+    [self getApplication]->OnEvent(&e);
 }
 - (void)keyUp:(NSEvent *)event {
 	unichar c = [[event charactersIgnoringModifiers] characterAtIndex:0];
@@ -577,7 +577,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     e.type = GHL::EVENT_TYPE_KEY_RELEASE;
     e.data.key_release.key = key;
     e.data.key_release.modificators = [self convertModificators:event];
-    [m_application getApplication]->OnEvent(&e);
+    [self getApplication]->OnEvent(&e);
 }
 -(void)flagsChanged:(NSEvent *)theEvent {
     unsigned short kk = [theEvent keyCode];
@@ -589,7 +589,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     e.type = GHL::EVENT_TYPE_KEY_RELEASE;
     e.data.key_release.key = key;
     e.data.key_release.modificators = [self convertModificators:theEvent];
-    [m_application getApplication]->OnEvent(&e);
+    [self getApplication]->OnEvent(&e);
 }
 - (NSPoint) scale_point:(NSPoint)point {
     NSPoint res = point;
@@ -610,7 +610,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     e.data.mouse_press.modificators = [self convertModificators:theEvent];
     e.data.mouse_press.x = local_point.x;
     e.data.mouse_press.y = local_point.y;
-    [m_application getApplication]->OnEvent(&e);
+    [self getApplication]->OnEvent(&e);
 }
 - (void)mouseUp:(NSEvent *)theEvent {
     NSPoint event_location = [theEvent locationInWindow];
@@ -622,7 +622,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     e.data.mouse_release.modificators = [self convertModificators:theEvent];
     e.data.mouse_release.x = local_point.x;
     e.data.mouse_release.y = local_point.y;
-    [m_application getApplication]->OnEvent(&e);
+    [self getApplication]->OnEvent(&e);
 }
 - (void)mouseMoved:(NSEvent *)theEvent {
     NSPoint event_location = [theEvent locationInWindow];
@@ -634,7 +634,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     e.data.mouse_move.modificators = [self convertModificators:theEvent];
     e.data.mouse_move.x = local_point.x;
     e.data.mouse_move.y = local_point.y;
-    [m_application getApplication]->OnEvent(&e);
+    [self getApplication]->OnEvent(&e);
 }
 - (void)mouseDragged:(NSEvent *)theEvent {
     NSPoint event_location = [theEvent locationInWindow];
@@ -646,7 +646,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     e.data.mouse_move.modificators = [self convertModificators:theEvent];
     e.data.mouse_move.x = local_point.x;
     e.data.mouse_move.y = local_point.y;
-    [m_application getApplication]->OnEvent(&e);
+    [self getApplication]->OnEvent(&e);
 }
 - (void)rightMouseDown:(NSEvent *)theEvent {
     NSPoint event_location = [theEvent locationInWindow];
@@ -658,7 +658,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     e.data.mouse_press.modificators = [self convertModificators:theEvent];
     e.data.mouse_press.x = local_point.x;
     e.data.mouse_press.y = local_point.y;
-    [m_application getApplication]->OnEvent(&e);
+    [self getApplication]->OnEvent(&e);
 }
 - (void)rightMouseUp:(NSEvent *)theEvent {
     NSPoint event_location = [theEvent locationInWindow];
@@ -670,7 +670,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     e.data.mouse_release.modificators = [self convertModificators:theEvent];
     e.data.mouse_release.x = local_point.x;
     e.data.mouse_release.y = local_point.y;
-    [m_application getApplication]->OnEvent(&e);
+    [self getApplication]->OnEvent(&e);
 }
 - (void)rightMouseDragged:(NSEvent *)theEvent {
     NSPoint event_location = [theEvent locationInWindow];
@@ -682,13 +682,13 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     e.data.mouse_move.modificators = [self convertModificators:theEvent];
     e.data.mouse_move.x = local_point.x;
     e.data.mouse_move.y = local_point.y;
-    [m_application getApplication]->OnEvent(&e);
+    [self getApplication]->OnEvent(&e);
 }
 - (void)scrollWheel:(NSEvent *)event {
     GHL::Event e;
     e.type = GHL::EVENT_TYPE_WHEEL;
     e.data.wheel.delta = [event scrollingDeltaY];
-    [m_application getApplication]->OnEvent(&e);
+    [self getApplication]->OnEvent(&e);
 }
 
 - (BOOL) acceptsFirstResponder
@@ -705,8 +705,9 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     NSTimeInterval interval = g_frame_interval/60.0f;
     if (m_timer) {
         [m_timer invalidate];
+        [m_timer release];
     }
-    m_timer = [NSTimer scheduledTimerWithTimeInterval: interval target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
+    m_timer = [[NSTimer scheduledTimerWithTimeInterval: interval target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES] retain];
 }
 - (void)prepareOpenGL {
 	LOG_INFO( "WinLibOpenGLView::prepareOpenGL" ); 
@@ -723,8 +724,8 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 									 GHL::UInt32(size.height),g_need_depth);
 	if (m_render) {
         LOG_VERBOSE( "WinLibOpenGLView::prepareOpenGL render created" );
-        [m_application getApplication]->SetRender(m_render);
-        if ([m_application getApplication]->Load()) {
+        [self getApplication]->SetRender(m_render);
+        if ([self getApplication]->Load()) {
             LOG_VERBOSE( "WinLibOpenGLView::prepareOpenGL application loaded" );
             [self setTimerInterval];
             m_loaded = true;
@@ -772,7 +773,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 		
 		[[self openGLContext] makeCurrentContext];
 		m_render->ResetRenderState();
-		GHL::Application* app = [m_application getApplication];
+		GHL::Application* app = [self getApplication];
 		if (app->OnFrame(dt)) {
         }
         [[self openGLContext] flushBuffer];
@@ -798,10 +799,8 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     (void)theTimer;
     
     if ( g_fullscreen != g_need_fullscreen ) {
-        WinLibAppDelegate* delegate = (WinLibAppDelegate*)[NSApplication sharedApplication].delegate;
-        if (delegate) {
-            [delegate switchFullscreen];
-        }
+        WinLibApplication* app = (WinLibApplication*)[NSApplication sharedApplication];
+        [app switchFullscreen];
     }
     
     if ([self window] && [self.window isVisible] && self.canDraw) {
@@ -812,38 +811,51 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 
 -(void)dealloc {
     LOG_INFO( "WinLibOpenGLView::dealloc" );
-	if (m_timer) {
-		[m_timer release];
-	}
-	if (m_render) {
-		GHL_DestroyRenderOpenGL( m_render );
-		m_render = 0;
-	}
-    [m_null_cursor release];
+    [self destroy];
+	
 	[super dealloc];
+}
+
+-(void)destroy {
+    if (m_timer) {
+        [m_timer invalidate];
+        [m_timer release];
+        m_timer = nil;
+    }
+    if (m_render) {
+        GHL_DestroyRenderOpenGL( m_render );
+        m_render = 0;
+    }
+    [m_null_cursor release];
+    m_null_cursor = nil;
 }
 
 @end
 
 
-@implementation WinLibAppDelegate
+@implementation WinLibApplication
 
-
-- (id)initWithApplication:(GHL::Application*) app {
-    self = [super init];
-    if (self) {
-        // Initialization code here.
-        m_application = app;
-		m_system = new SystemCocoa(app);
-        m_gl_view = nil;
+- (id)init {
+    if (self = [super init]) {
+        m_application = 0;
+        m_system = 0;
+        m_gl_view = 0;
         m_sheets_level = 0;
-		m_appName = (NSString*)[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
-		m_vfs = new GHL::VFSCocoaImpl();
-		m_imageDecoder = new GHL::ImageDecoderImpl();
-		m_sound = 0;
-        LOG_INFO( "WinLibAppDelegate::init" );
+        m_vfs = 0;
+        m_imageDecoder = 0;
+        m_sound = 0;
     }
     return self;
+}
+
+- (void)start:(GHL::Application*) app {
+    // Initialization code here.
+    m_application = app;
+    m_system = new SystemCocoa(app);
+    m_appName = (NSString*)[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
+    m_vfs = new GHL::VFSCocoaImpl();
+    m_imageDecoder = new GHL::ImageDecoderImpl();
+    LOG_INFO( "WinLibApplication::start" );
 }
 
 -(void) initSound {
@@ -885,24 +897,13 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     [m_gl_view setCursor:cursor];
 }
 -(void)dealloc {
-    LOG_INFO( "WinLibAppDelegate::dealloc" );
-	if (m_application)
-		m_application->Release();
-	delete m_vfs;
-	delete m_imageDecoder;
-	delete m_system;
-	if (m_sound) {
-#ifndef GHL_NOSOUND
-		m_sound->SoundDone();
-		delete m_sound;
-#endif
-		m_sound = 0;
-	}
+    LOG_INFO( "WinLibApplication::dealloc" );
+    [self destroyObjects];
 	[super dealloc];
 }
 
 - (void)createWindow {
-    LOG_INFO( "WinLibAppDelegate::createWindow" );
+    LOG_INFO( "WinLibApplication::createWindow" );
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	
 	
@@ -918,7 +919,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
     screen = [NSScreen mainScreen];
     
     if (!m_window) {
-        LOG_DEBUG( "WinLibAppDelegate::createWindow create new window" );
+        LOG_DEBUG( "WinLibApplication::createWindow create new window" );
         m_window = [[WinLibWindow alloc] initWithContentRect:rect styleMask:style backing:NSBackingStoreBuffered defer:YES];
         [m_window disableFlushWindow];
         [m_window setContentView:m_gl_view];
@@ -981,7 +982,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-    LOG_INFO( "WinLibAppDelegate::applicationDidFinishLaunching" );
+    LOG_INFO( "WinLibApplication::applicationDidFinishLaunching" );
     (void)aNotification;
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     
@@ -1056,10 +1057,7 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
         LOG_ERROR("creating WinLibOpenGLView failed");
         return;
     }
-    [gl retain];
-	[gl setApplication:self];
-	
-    
+   
     g_fullscreen = g_need_fullscreen = settings.fullscreen;
     
     m_gl_view = gl;
@@ -1072,11 +1070,12 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 	
 	[pool release];
 }
-- (void)applicationWillTerminate:(NSNotification *)aNotification {
-    LOG_INFO( "WinLibAppDelegate::applicationWillTerminate" );
-    (void)aNotification;
-	if (m_application)
+
+
+-(void)destroyObjects {
+    if (m_application) {
 		m_application->Release();
+    }
 	m_application = 0;
 	delete m_vfs;
 	m_vfs = 0;
@@ -1089,10 +1088,26 @@ static GHL::Key translate_key(unichar c,unsigned short kk) {
 #endif
 		m_sound = 0;
 	}
-	if (m_window)
+    delete m_system;
+    m_system = 0;
+    if (m_gl_view) {
+        [m_gl_view destroy];
+        [m_gl_view release];
+        m_gl_view = nil;
+    }
+    
+    if (m_window) {
+        [m_window setContentView:nil];
 		[m_window release];
-	
+        m_window = nil;
+    }
 }
+
+- (void)applicationWillTerminate:(NSNotification *)aNotification {
+    LOG_INFO( "WinLibApplication::applicationWillTerminate" );
+    [self destroyObjects];
+}
+
 - (void)applicationDidBecomeActive:(NSNotification *)notification {
     LOG_VERBOSE("Activated");
     if (m_application  ) {
@@ -1208,9 +1223,9 @@ void GHL_CALL SystemCocoa::SwitchFullscreen(bool fs) {
 ///
 void GHL_CALL SystemCocoa::SetTitle( const char* title ) {
     g_title = title;
-    WinLibAppDelegate* delegate = (WinLibAppDelegate*)[NSApplication sharedApplication].delegate;
-    if (delegate) {
-        [delegate updateWindowTitle];
+    WinLibApplication* app = (WinLibApplication*)[NSApplication sharedApplication];
+    if (app) {
+        [app updateWindowTitle];
     }
 }
 
@@ -1219,29 +1234,29 @@ bool GHL_CALL SystemCocoa::OpenURL( const char* url ) {
 }
 
 bool GHL_CALL SystemCocoa::SetDeviceState(GHL::DeviceState name, const void *data) {
-    WinLibAppDelegate* delegate = (WinLibAppDelegate*)[NSApplication sharedApplication].delegate;
-  
+    WinLibApplication* app = (WinLibApplication*)[NSApplication sharedApplication];
+    
     if ( name == GHL::DEVICE_STATE_SYSTEM_CURSOR_ENABLED && data ) {
         BOOL enabled = *(const bool*)data;
-        if (delegate) {
-            [delegate setCursorVisible:enabled];
+        if (app) {
+            [app setCursorVisible:enabled];
         }
       return true;
     } else if (name==GHL::DEVICE_STATE_FRAME_INTERVAL) {
         const GHL::Int32* state = (const GHL::Int32*)data;
         g_frame_interval = *state;
-        [delegate setTimerInterval];
+        [app setTimerInterval];
         return true;
     } else if (name==GHL::DEVICE_STATE_RESIZEABLE_WINDOW) {
         BOOL enabled = *(const bool*)data;
-        if (delegate) {
-            [delegate setResizeableWindow:enabled];
+        if (app) {
+            [app setResizeableWindow:enabled];
         }
         return true;
     } else if (name==GHL::DEVICE_STATE_SYSTEM_CURSOR && data) {
         GHL::SystemCursor cursor = static_cast<GHL::SystemCursor>(*(const GHL::UInt32*)data);
-        if (delegate) {
-            [delegate setCursor:cursor];
+        if (app) {
+            [app setCursor:cursor];
         }
         return true;
     }
@@ -1259,11 +1274,12 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
     LOG_INFO( "GHL_StartApplication" );
     
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-	[NSApplication sharedApplication];
-	WinLibAppDelegate* delegate = [[WinLibAppDelegate alloc] initWithApplication:app];
-    app->SetVFS([delegate getVFS]);
-    app->SetSystem([delegate getSystem]);
-	app->SetImageDecoder([delegate getImageDecoder]);
+    WinLibApplication* nsapp = (WinLibApplication*)[WinLibApplication sharedApplication];
+    [nsapp start:app];
+    app->SetVFS([nsapp getVFS]);
+    app->SetSystem([nsapp getSystem]);
+	app->SetImageDecoder([nsapp getImageDecoder]);
+    [nsapp setDelegate:nsapp];
 	
 	/// create menu
     
@@ -1286,7 +1302,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
         //[NSApp performSelector:@selector(setAppleMenu:) withObject:submenu];
         
         NSMenuItem * appItem = [submenu addItemWithTitle:[NSString stringWithFormat:@"%@ %@",
-                                                                     NSLocalizedString(@"Quit", nil), [delegate getAppName]]
+                                                                     NSLocalizedString(@"Quit", nil), [nsapp getAppName]]
                                                              action:@selector(terminate:)
                                                       keyEquivalent:@"q"];
         [appItem setTarget:NSApp];
@@ -1315,8 +1331,7 @@ GHL_API int GHL_CALL GHL_StartApplication( GHL::Application* app , int /*argc*/,
         [NSApp setMainMenu:mainMenu];
         //[NSApp setServicesMenu:[[[NSMenu alloc] initWithTitle:@"Services"] autorelease]];
 	}
-    [[NSApplication sharedApplication] setDelegate:delegate];
-	
+    
 	[pool release];
 	[NSApp run];
 	

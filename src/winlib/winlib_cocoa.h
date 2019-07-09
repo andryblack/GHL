@@ -23,7 +23,7 @@ class SystemCocoa;
 @class WinLibOpenGLView;
 @class WinLibWindow;
 
-@interface WinLibAppDelegate : NSObject <NSApplicationDelegate,NSWindowDelegate> {
+@interface WinLibApplication : NSApplication <NSApplicationDelegate,NSWindowDelegate> {
 	GHL::Application* m_application;
     int             m_sheets_level;
 	SystemCocoa*	m_system;
@@ -35,6 +35,7 @@ class SystemCocoa;
     WinLibOpenGLView*   m_gl_view;
     NSRect      m_rect;
 }
+-(void)start:(GHL::Application*) app;
 -(GHL::Application*) getApplication;
 -(GHL::VFSCocoaImpl*) getVFS;
 -(GHL::ImageDecoderImpl*) getImageDecoder;
@@ -54,10 +55,8 @@ class SystemCocoa;
 @end
 
 
-
 @interface WinLibOpenGLView : NSOpenGLView 
 {
-	WinLibAppDelegate* m_application;
 	GHL::RenderOpenGLBase* m_render;
 	NSTimer*	m_timer;
 	bool	m_loaded;
@@ -66,9 +65,9 @@ class SystemCocoa;
     BOOL        m_cursor_visible;
     GHL::SystemCursor m_cursor;
 }
--(void)setApplication:(WinLibAppDelegate*) app;
 -(void)setCursorVisible:(BOOL) visible;
 -(void)setCursor:(GHL::SystemCursor) cursor;
+-(void)destroy;
 @end
 
 
