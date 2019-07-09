@@ -83,12 +83,6 @@
     if (m_defaultFramebuffer) {
         glBindFramebuffer(GL_FRAMEBUFFER, m_defaultFramebuffer);
     }
-//    if (m_colorRenderbuffer) {
-//        glBindRenderbuffer(GL_RENDERBUFFER, m_colorRenderbuffer);
-//    }
-//    if (m_depthRenderbuffer) {
-//        glBindRenderbuffer(GL_RENDERBUFFER, m_depthRenderbuffer);
-//    }
 }
 
 -(void)present

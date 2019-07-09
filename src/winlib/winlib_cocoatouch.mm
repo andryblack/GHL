@@ -724,20 +724,24 @@ public:
 		m_loaded = true;
 	}
 	::gettimeofday(&m_timeval,0);
+    [self drawFrame];
 	[pool drain];
 }
 
 - (void)drawRect:(CGRect)dirtyRect {
-    (void)dirtyRect;
-	if (m_loaded  && m_active) {
-		NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-		::timeval time;
-		::gettimeofday(&time,0);
-		GHL::UInt32 dt = static_cast<GHL::UInt32>((time.tv_sec - m_timeval.tv_sec)*1000000 + time.tv_usec - m_timeval.tv_usec);
-		m_timeval = time;
-		[self makeCurrent];
-		GHL::g_default_framebuffer = [m_context defaultFramebuffer];
-    
+}
+
+- (void)drawFrame {
+    if (m_loaded  && m_active) {
+        ::timeval time;
+        ::gettimeofday(&time,0);
+        GHL::UInt32 dt = static_cast<GHL::UInt32>((time.tv_sec - m_timeval.tv_sec)*1000000 + time.tv_usec - m_timeval.tv_usec);
+        m_timeval = time;
+        
+        NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+        [self makeCurrent];
+        GHL::g_default_framebuffer = [m_context defaultFramebuffer];
+        
 #ifndef GHL_NO_SOUND
         if (m_need_reinit_sound) {
             m_need_reinit_sound = false;
@@ -756,12 +760,14 @@ public:
             m_need_relayout = false;
             g_application->OnEvent(&e);
         }
-		if (g_application->OnFrame(dt)) {
-			
-		}
+        
+        
+        if (g_application->OnFrame(dt)) {
+            
+        }
         [m_context present];
         [pool drain];
-	}
+    }
 }
 
 - (int)touchNum:(UITouch*)touch {
@@ -857,17 +863,10 @@ public:
 }
 
 
-- (void)timerFireMethod:(NSTimer*)theTimer {
-    (void)theTimer;
-	if (m_active) {
-        [self drawRect:[self bounds]];
-	}
-}
-
 - (void)tick:(CADisplayLink*)displayLink {
     (void)displayLink;
     if (m_active) {
-        [self drawRect:[self bounds]];
+        [self drawFrame];
     }
 }
 
@@ -1162,7 +1161,6 @@ public:
     e.type = GHL::EVENT_TYPE_DEACTIVATE;
     g_application->OnEvent(&e);
 	[view setActive:false];
-	//[view drawRect:[view bounds]];
 	LOG_INFO("Deactivated");
 }
 
@@ -1173,7 +1171,7 @@ public:
     e.type = GHL::EVENT_TYPE_ACTIVATE;
     g_application->OnEvent(&e);
 	[view setActive:true];
-	//if ([view loaded]) [view drawRect:[view bounds]];
+	
 	LOG_INFO("Activated");
 }
 
