@@ -215,6 +215,16 @@ public:
 	}
 	///
 	virtual bool GHL_CALL GetDeviceData( GHL::DeviceData name, void* data) {
+		switch (name) {
+			case GHL::DEVICE_DATA_VIEW:
+				if (data) {
+					*static_cast<HWND*>(data) = m_hwnd;
+					return true;
+				}
+				break;
+			default:
+				break;
+		}
 		return false;
 	}
         ///
