@@ -90,6 +90,7 @@ namespace GHL {
             CGContextSetTextDrawingMode(ctx, kCGTextFill);
         } else {
             CGContextSetTextDrawingMode(ctx, kCGTextStroke);
+            CGContextSetGrayStrokeColor(ctx, 1, 1);
             CGContextSetLineWidth(ctx, get_config().outline_width * 2);
         }
         CGContextSetShouldSubpixelPositionFonts(ctx,false);
